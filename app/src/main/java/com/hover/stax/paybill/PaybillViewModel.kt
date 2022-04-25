@@ -2,12 +2,14 @@ package com.hover.stax.paybill
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.actions.ActionRepo
+import com.hover.stax.contacts.ContactRepo
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +18,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class PaybillViewModel(application: Application, repo: DatabaseRepo, val billRepo: PaybillRepo,) : AbstractFormViewModel(application, repo) {
+class PaybillViewModel(application: Application, contactRepo: ContactRepo, val actionRepo: ActionRepo, val billRepo: PaybillRepo, val accountRepo: AccountRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val savedPaybills = MutableLiveData<List<Paybill>>()
     val popularPaybills = MutableLiveData<List<HoverAction>>()
@@ -35,8 +37,8 @@ class PaybillViewModel(application: Application, repo: DatabaseRepo, val billRep
     }
 
     fun getPopularPaybills(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        repo.getAccount(accountId)?.let {
-            val actions = repo.getActions(it.channelId, HoverAction.C2B).filterNot { action -> action.to_institution_id == 0 }
+        accountRepo.getAccount(accountId)?.let {
+            val actions = actionRepo.getActions(it.channelId, HoverAction.C2B).filterNot { action -> action.to_institution_id == 0 }
             popularPaybills.postValue(actions)
         }
     }

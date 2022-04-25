@@ -10,8 +10,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.isAbsolutelyEmpty
 import com.hover.stax.utils.toFilteringStandard
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 
 import timber.log.Timber
 
-class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
+class LibraryViewModel(val application: Application, val repo: ChannelRepo) : ViewModel() {
 
     var allChannels: LiveData<List<Channel>> = MutableLiveData()
     val stagedChannels = MediatorLiveData<List<Channel>>()

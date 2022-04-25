@@ -22,7 +22,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.database.Converters;
-import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.schedules.ScheduleRepo;
 import com.hover.stax.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -108,7 +108,7 @@ public class StaxContact {
         else return c.getString(R.string.descrip_multcontacts, contacts.size());
     }
 
-    public static StaxContact findOrInit(Intent intent, String countryAlpha2, DatabaseRepo dr) {
+    public static StaxContact findOrInit(Intent intent, String countryAlpha2, ContactRepo dr) {
         StaxContact sc = checkInKeys(intent, countryAlpha2, dr);
         if (sc == null) sc = checkOutKeys(intent, countryAlpha2, dr);
         if (sc == null) sc = new StaxContact(intent);
@@ -117,7 +117,7 @@ public class StaxContact {
     }
 
     @SuppressWarnings("unchecked")
-    private static StaxContact checkInKeys(Intent intent, String countryAlpha2, DatabaseRepo dr) {
+    private static StaxContact checkInKeys(Intent intent, String countryAlpha2, ContactRepo dr) {
         HashMap<String, String> inExtras = (HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
         if (inExtras != null && inExtras.containsKey(StaxContact.ID_KEY))
             return dr.getContact(inExtras.get(StaxContact.ID_KEY));
@@ -129,7 +129,7 @@ public class StaxContact {
     }
 
     @SuppressWarnings("unchecked")
-    private static StaxContact checkOutKeys(Intent intent, String countryAlpha2, DatabaseRepo dr) {
+    private static StaxContact checkOutKeys(Intent intent, String countryAlpha2, ContactRepo dr) {
         HashMap<String, String> outExtras = (HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
 
         if (outExtras != null && outExtras.containsKey(SENDER_PHONE_KEY))
@@ -144,7 +144,7 @@ public class StaxContact {
         return null;
     }
 
-    private static StaxContact getContactByPhoneValue(HashMap<String, String> map, String key, String countryAlpha2, DatabaseRepo dr) {
+    private static StaxContact getContactByPhoneValue(HashMap<String, String> map, String key, String countryAlpha2, ContactRepo dr) {
         StaxContact c = dr.getContactByPhone(PhoneHelper.getNationalSignificantNumber(map.get(key), countryAlpha2));
         if (c == null) c = dr.getContactByPhone(map.get(key));
         return c;

@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat.getColor
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -27,6 +29,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -40,6 +43,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private lateinit var recipientInstitutionSelect: ActionSelect
     private lateinit var contactInput: ContactInput
     private lateinit var recipientValue: Stax2LineItem
+    private lateinit var feeBtn: TextView
 
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
@@ -83,13 +87,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         contactInput = binding.editCard.contactSelect
         recipientInstitutionSelect = binding.editCard.actionSelect
         recipientValue = binding.summaryCard.recipientValue
+        feeBtn = binding.summaryCard.feeValue
 
         if (actionSelectViewModel.filteredActions.value != null)
             recipientInstitutionSelect.updateActions(actionSelectViewModel.filteredActions.value!!)
 
         super.init(root)
 
-        accountDropdown.setFetchAccountListener(this)
+        feeBtn.setText("Check fee")
+        feeBtn.setTextColor(getColor(requireContext(), R.color.stax_state_blue))
 
         amountInput.apply {
             setText(transferViewModel.amount.value)
@@ -128,6 +134,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
             recipientInstitutionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
+
+            Timber.e("in: %s", it.required_params)
+            Timber.e("out: %s", it.output_params)
         }
     }
 
@@ -196,6 +205,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun startListeners() {
         setAmountInputListener()
         setContactInputListener()
+        feeBtn.setOnClickListener { checkFee() }
 
         recipientInstitutionSelect.setListener(this)
         fab.setOnClickListener { fabClicked() }
@@ -229,15 +239,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
+    private fun checkFee() {
+
+    }
+
     private fun fabClicked() {
         if (validates()) {
             if (transferViewModel.isEditing.value == true) {
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else {
-                (requireActivity() as MainActivity).submit(
-                    accountDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!
-                )
+                (requireActivity() as MainActivity).run(accountDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!,
+                    actionSelectViewModel.activeAction.value!!, transferViewModel.wrapExtras(), 0)
                 findNavController().popBackStack()
             }
         } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
@@ -283,7 +296,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         channelsViewModel.activeAccount.value?.let {
             if (!channelsViewModel.isValidAccount()) {
                 accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-                fetchAccounts(it)
                 return false
             }
         }

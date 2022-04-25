@@ -287,6 +287,7 @@
     <string name="note_cardhead">Description</string>
     <string name="request_note_label">What is your request for?</string>
     <string name="recipient_label">To</string>
+    <string name="transfer_fee_label">Fee</string>
     <string name="sender_label">From</string>
     <string name="send_who_header">Send money to</string>
     <string name="airtime_who_header">Buy airtime for</string>

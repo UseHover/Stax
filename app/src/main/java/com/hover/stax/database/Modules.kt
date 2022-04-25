@@ -3,6 +3,7 @@ package com.hover.stax.database
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.addChannels.AddChannelsViewModel
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelsViewModel
@@ -18,6 +19,7 @@ import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestDetailViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transactions.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
@@ -27,29 +29,30 @@ import org.koin.dsl.module
 val appModule = module {
     viewModel { FaqViewModel() }
     viewModel { ActionSelectViewModel(get()) }
-    viewModel { ChannelsViewModel(get(), get()) }
-    viewModel { AccountDetailViewModel(get(), get()) }
-    viewModel { NewRequestViewModel(get(), get()) }
-    viewModel { TransferViewModel(get(), get()) }
-    viewModel { ScheduleDetailViewModel(get()) }
-    viewModel { BalancesViewModel(get(), get()) }
+    viewModel { AddChannelsViewModel(get(), get(), get(), get()) }
+    viewModel { ChannelsViewModel(get(), get(), get(), get()) }
+    viewModel { AccountDetailViewModel(get(), get(), get(), get(), get()) }
+    viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
+    viewModel { TransferViewModel(get(), get(), get(), get()) }
+    viewModel { ScheduleDetailViewModel(get(), get(), get()) }
+    viewModel { BalancesViewModel(get(), get(), get()) }
     viewModel { TransactionHistoryViewModel(get()) }
     viewModel { BannerViewModel(get(), get()) }
-    viewModel { FutureViewModel(get()) }
+    viewModel { FutureViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get())}
-    viewModel { TransactionDetailsViewModel(get(), get()) }
+    viewModel { TransactionDetailsViewModel(get(), get(), get(), get()) }
     viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
-    viewModel { BountyViewModel(get(), get()) }
+    viewModel { BountyViewModel(get(), get(), get(), get()) }
     viewModel { FinancialTipsViewModel() }
-    viewModel { PaybillViewModel(get(), get(), get()) }
-    viewModel { RequestDetailViewModel(get()) }
+    viewModel { PaybillViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { RequestDetailViewModel(get(), get(), get()) }
 }
 
 val dataModule = module(createdAtStart = true) {
     single { AppDatabase.getInstance(get()) }
     single { HoverRoomDatabase.getInstance(get()) }
 
-    single { DatabaseRepo(get(), get()) }
+    single { ScheduleRepo(get()) }
     single { PaybillRepo(get()) }
 }

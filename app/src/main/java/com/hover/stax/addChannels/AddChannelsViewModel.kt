@@ -14,8 +14,10 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -26,7 +28,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class AddChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),
+class AddChannelsViewModel(val application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo) : ViewModel(),
     PushNotificationTopicsInterface {
 
     val allChannels: LiveData<List<Channel>> = repo.publishedChannels
@@ -162,7 +164,7 @@ class AddChannelsViewModel(val application: Application, val repo: DatabaseRepo)
     }
 
     private fun updateAccounts() = viewModelScope.launch(Dispatchers.IO) {
-        val savedAccounts = repo.getAllAccounts()
+        val savedAccounts = accountRepo.getAllAccounts()
         if (savedAccounts.isNullOrEmpty()) return@launch
 
         if (savedAccounts.none { it.isDefault }) {
@@ -170,7 +172,7 @@ class AddChannelsViewModel(val application: Application, val repo: DatabaseRepo)
 
             if (defaultChannel != null) {
                 val ids = savedAccounts.filter { it.channelId == defaultChannel.id }.map { it.id }.toList()
-                ids.minOrNull()?.let { id -> repo.update(savedAccounts.first { it.id == id }) }
+                ids.minOrNull()?.let { id -> accountRepo.update(savedAccounts.first { it.id == id }) }
             }
         } else {
             Timber.e("Nothing to update. Default account set")
@@ -178,7 +180,7 @@ class AddChannelsViewModel(val application: Application, val repo: DatabaseRepo)
     }
 
     fun loadAccounts() = viewModelScope.launch {
-        repo.getAccounts().collect { accounts.postValue(it) }
+        accountRepo.getAccounts().collect { accounts.postValue(it) }
     }
 
     @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
@@ -189,18 +191,18 @@ class AddChannelsViewModel(val application: Application, val repo: DatabaseRepo)
     }
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
-        val defaultAccount = repo.getDefaultAccount()
+        val defaultAccount = accountRepo.getDefaultAccount()
 
         channels.forEach {
             with(it) {
                 val accountName: String = if (getFetchAccountAction(it.id) == null) name else Constants.PLACEHOLDER //placeholder alias for easier identification later
                 val account = Account(accountName, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
-                repo.insert(account)
+                accountRepo.insert(account)
             }
         }
     }
 
-    fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
+    fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
     private fun filterSimChannels(channels: List<Channel>) {
         if(!channels.isNullOrEmpty()) {

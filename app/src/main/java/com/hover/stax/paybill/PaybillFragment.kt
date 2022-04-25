@@ -22,6 +22,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
+import com.hover.stax.home.AbstractHoverCallerActivity
 import com.hover.stax.home.MainActivity
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
@@ -332,10 +333,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         val actionToRun = paybillViewModel.selectedAction.value
 
         if (!actions.isNullOrEmpty() && channel != null && account != null)
-            (requireActivity() as MainActivity).submitPaymentRequest(
-                actionToRun
-                    ?: actions.first(), channel, account
-            )
+            (requireActivity() as AbstractHoverCallerActivity).run(account, actionToRun?: actions.first(), null, 0)
         else
             Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
     }

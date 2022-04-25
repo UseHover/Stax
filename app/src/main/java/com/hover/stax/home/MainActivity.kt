@@ -31,11 +31,10 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
+class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
     BiometricChecker.AuthListener, PushNotificationTopicsInterface, StaxGoogleLoginInterface {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
-    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val loginViewModel: LoginViewModel by viewModel()
@@ -72,8 +71,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         navHelper.setUpNav()
     }
 
-    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
-
     fun checkPermissionsAndNavigate(navDirections: NavDirections) {
         navHelper.checkPermissionsAndNavigate(navDirections)
     }
@@ -93,16 +90,11 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     private fun startObservers() {
         with(balancesViewModel) {
-            setListener(this@MainActivity)
-
             //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
             val accountsObserver = Observer<List<Account>> { t -> logResult("Observing selected channels", t?.size ?: 0) }
 
             accounts.observe(this@MainActivity, accountsObserver)
-            toRun.observe(this@MainActivity) { logResult("Observing action to run", it.size) }
-            runFlag.observe(this@MainActivity) { logResult("Observing run flag ", it) }
-            actions.observe(this@MainActivity) { logResult("Observing actions", it.size) }
         }
     }
 
@@ -189,14 +181,12 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         }
     }
 
-    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) = run(actionPair, index)
-
-    override fun onTapRefresh(accountId: Int) {
-        if (accountId == DUMMY)
+    override fun onTapRefresh(account: Account?) {
+        if (account == null)
             checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
         else {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
-            balancesViewModel.setRunning(accountId)
+            run(account, HoverAction.BALANCE, null, account.id)
         }
     }
 
@@ -227,7 +217,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
             requestCode == bountyRequest -> showBountyDetails(data)
             else -> {
                 if (requestCode != Constants.TRANSFER_REQUEST) {
-                    balancesViewModel.setRan(requestCode)
                     balancesViewModel.showBalances(true)
                 }
                 showPopUpTransactionDetailsIfRequired(data)

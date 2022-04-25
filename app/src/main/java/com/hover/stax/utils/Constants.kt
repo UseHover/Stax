@@ -18,6 +18,7 @@ object Constants {
     const val SCHEDULE_REQUEST = 204
     const val FETCH_ACCOUNT_REQUEST = 205
     const val PAYBILL_REQUEST = 206
+    const val BOUNTY_REQUEST = 207
 
     const val REQUEST_REQUEST = 301
     const val SMS = 303

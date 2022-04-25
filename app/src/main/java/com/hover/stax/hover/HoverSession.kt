@@ -7,7 +7,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
+import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.PhoneHelper
 
 import com.hover.stax.utils.AnalyticsUtil
@@ -21,14 +21,16 @@ import timber.log.Timber
 class HoverSession private constructor(b: Builder) {
 
     private val frag: Fragment?
+    private val account: Account
     private val action: HoverAction
     private val requestCode: Int
     private val finalScreenTime: Int
-    private val accountId: String?
 
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
             .apply {
                 setEnvironment(if (Utils.getBoolean(Constants.TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
+                extra(Constants.ACCOUNT_NAME, account.name)
+                private_extra(Constants.ACCOUNT_ID, account.id.toString())
                 request(b.action.public_id)
                 setHeader(getMessage(b.action, b.activity))
                 initialProcessingMessage("")
@@ -36,23 +38,32 @@ class HoverSession private constructor(b: Builder) {
                 finalMsgDisplayTime(finalScreenTime)
                 style(R.style.StaxHoverTheme)
                 sessionOverlayLayout(R.layout.stax_transacting_in_progress)
-                private_extra(Constants.ACCOUNT_ID, accountId)
             }
 
     private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject) {
-        val requiredExtras = action.required_params
+        addPublicExtras(builder, extras)
+        addPrivateExtras(builder, extras)
+    }
+
+    private fun addPublicExtras(builder: HoverParameters.Builder, extras: JSONObject) {
         val keys: Iterator<*> = extras.keys()
         while (keys.hasNext()) {
             val key = keys.next() as String
-            val normalizedVal = parseExtra(key, extras.optString(key), requiredExtras)
+            val normalizedVal = parseExtra(key, extras.optString(key), action.required_params)
             if (normalizedVal != null) builder.extra(key, normalizedVal)
         }
     }
 
-    private fun parseExtra(key: String, value: String?, requiredExtras: JSONObject): String? {
-        if (value == null || !requiredExtras.has(key)) {
-            return null
+    private fun addPrivateExtras(builder: HoverParameters.Builder, extras: JSONObject) {
+        val keys: Iterator<*> = extras.keys()
+        while (keys.hasNext()) {
+            val key = keys.next() as String
+            builder.extra(key, extras.optString(key))
         }
+    }
+
+    private fun parseExtra(key: String, value: String?, required: JSONObject): String? {
+        if (value == null || !required.has(key)) return null
         return if (key == HoverAction.PHONE_KEY) {
             PhoneHelper.normalizeNumberByCountry(value, action.country_alpha2, action.to_country_alpha2)
         } else value
@@ -73,17 +84,16 @@ class HoverSession private constructor(b: Builder) {
         if (frag != null) frag.startActivityForResult(i, requestCode) else a.startActivityForResult(i, requestCode)
     }
 
-    class Builder(a: HoverAction?, c: Channel, activity: Activity, code: Int) {
+    class Builder(a: HoverAction?, c: Account, activity: Activity, code: Int) {
         val activity: Activity
         var fragment: Fragment? = null
-        val channel: Channel
+        val account: Account
         val action: HoverAction
         val extras: JSONObject
         var requestCode: Int
         var finalScreenTime = 4000
-        var account: String? = null
 
-        constructor(a: HoverAction?, c: Channel, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
+        constructor(a: HoverAction?, c: Account, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
             fragment = frag
         }
 
@@ -96,14 +106,25 @@ class HoverSession private constructor(b: Builder) {
             return this
         }
 
+        fun extras(es: HashMap<String, String>): Builder {
+            try {
+                es.forEach { extras.put(it.key, it.value) }
+            } catch (e: JSONException) {
+                Timber.e("Failed to add extra")
+            }
+            return this
+        }
+
         fun finalScreenTime(ms: Int): Builder {
             finalScreenTime = ms
             return this
         }
 
-        fun setAccountId(id: String) {
-            account = id
-        }
+//        fun rebuildFrom(transaction: StaxTransaction) {
+//            extra(HoverAction.AMOUNT_KEY, Utils.formatAmount(transaction.amount.toString()))
+//            extra(HoverAction.ACCOUNT_KEY, transaction.accountNumber)
+//            extra(HoverAction.PHONE_KEY, transaction.accountNumber)
+//        }
 
         fun run(): HoverSession {
             return HoverSession(this)
@@ -111,8 +132,9 @@ class HoverSession private constructor(b: Builder) {
 
         init {
             requireNotNull(a) { "Action must not be null" }
+            requireNotNull(c) { "Account must not be null" }
             this.activity = activity
-            channel = c
+            account = c
             action = a
             extras = JSONObject()
             requestCode = code
@@ -122,10 +144,10 @@ class HoverSession private constructor(b: Builder) {
     init {
         Hover.setPermissionActivity(Constants.PERM_ACTIVITY, b.activity)
         frag = b.fragment
+        account = b.account
         action = b.action
         requestCode = b.requestCode
         finalScreenTime = b.finalScreenTime
-        accountId = b.account
         val builder = getBasicBuilder(b)
         addExtras(builder, b.extras)
         startHover(builder, b.activity)

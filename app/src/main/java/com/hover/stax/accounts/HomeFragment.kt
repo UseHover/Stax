@@ -52,17 +52,12 @@ class HomeFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter
     }
 
     override fun clickedChannel(channel: Channel) {
-
         lifecycleScope.launch {
             viewModel.setActiveChannel(channel)
 //            fetchAccounts(fetchAction, channel)
 //
 //                findNavController().popBackStack()
         }
-    }
-
-    private fun fetchAccounts(action: HoverAction, channel: Channel) {
-        (activity as? MainActivity)?.makeCall(action, channel)
     }
 
     override fun accountSelected(account: Account) {

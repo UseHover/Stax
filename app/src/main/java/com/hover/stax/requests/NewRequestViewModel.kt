@@ -6,9 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.Constants
@@ -17,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
+class NewRequestViewModel(application: Application, val repo: RequestRepo, val accountRepo: AccountRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val activeAccount = MutableLiveData<Account?>()
     val activeChannel = MutableLiveData<Channel>()
@@ -40,7 +43,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         activeChannel.postValue(c)
 
         viewModelScope.launch(Dispatchers.IO) {
-            val account = repo.getAccounts(c.id).firstOrNull()
+            val account = accountRepo.getAccounts(c.id).firstOrNull()
             setActiveAccount(account)
         }
     }
@@ -88,13 +91,12 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         setAmount(s.amount)
 
         viewModelScope.launch {
-            val contacts = repo.getContacts(s.recipient_ids.split(",").toTypedArray())
+            val contacts = contactRepo.getContacts(s.recipient_ids.split(",").toTypedArray())
             requestees.postValue(contacts)
         }
     }
 
     fun createRequest() {
-        repo.update(activeChannel.value)
         saveContacts()
 
         val request = Request(amount.value, note.value, requesterNumber.value, activeChannel.value!!.institutionId)
@@ -115,7 +117,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
             viewModelScope.launch {
                 if (!contact.accountNumber.isNullOrEmpty()) {
                     contact.lastUsedTimestamp = DateUtils.now()
-                    repo.save(contact)
+                    contactRepo.save(contact)
                 }
             }
         }

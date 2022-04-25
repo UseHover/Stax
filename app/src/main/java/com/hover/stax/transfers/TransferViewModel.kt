@@ -7,18 +7,19 @@ import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.requests.Request
+import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
- class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
+class TransferViewModel(application: Application, val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
@@ -33,7 +34,7 @@ import timber.log.Timber
 
     private fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
-            val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
+            val contacts = contactRepo.getContacts(contactIds.split(",").toTypedArray())
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())
         }
     }
@@ -56,7 +57,7 @@ import timber.log.Timber
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number)
-                    val sc = repo.getContactByPhone(formattedPhone)
+                    val sc = contactRepo.getContactByPhone(formattedPhone)
                     sc?.let { contact.postValue(it) }
                 } catch (e: NumberFormatException) {
                     AnalyticsUtil.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
@@ -79,8 +80,21 @@ import timber.log.Timber
         }
     }
 
+    fun wrapExtras(): HashMap<String, String> {
+        val extras: HashMap<String, String> = hashMapOf()
+        if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
+        if (contact.value != null) extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
+        if (contact.value != null) extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
+        if (note.value != null) extras[HoverAction.NOTE_KEY] = note.value!!
+        return extras
+    }
+
+    private fun addExtra() {
+
+    }
+
     fun decrypt(encryptedString: String): LiveData<Request> {
-        request = repo.decrypt(encryptedString, application)
+        request = requestRepo.decrypt(encryptedString, application)
         return request
     }
 
@@ -102,7 +116,7 @@ import timber.log.Timber
         schedule.value?.let {
             if (it.end_date <= DateUtils.today()) {
                 it.complete = true
-                repo.update(it)
+                scheduleRepo.update(it)
             }
         }
     }
@@ -111,7 +125,7 @@ import timber.log.Timber
         contact.value?.let { sc ->
             viewModelScope.launch {
                 sc.lastUsedTimestamp = DateUtils.now()
-                repo.save(sc)
+                contactRepo.save(sc)
             }
         }
     }

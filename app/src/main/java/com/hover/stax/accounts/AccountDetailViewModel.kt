@@ -3,15 +3,17 @@ package com.hover.stax.accounts
 import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
+import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
 
-class AccountDetailViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
+class AccountDetailViewModel(val application: Application, val repo: AccountRepo, val transactionRepo: TransactionRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo) : ViewModel() {
 
     private val id = MutableLiveData<Int>()
     var account: LiveData<Account> = MutableLiveData()
@@ -25,9 +27,9 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
 
     init {
         account = Transformations.switchMap(id, repo::getLiveAccount)
-        channel = Transformations.switchMap(account) { it?.let { repo.getLiveChannel(it.channelId) } }
-        transactions = Transformations.switchMap(account) { it?.let { repo.getAccountTransactions(it) } }
-        actions = Transformations.switchMap(id, repo::getChannelActions)
+        channel = Transformations.switchMap(account) { it?.let { channelRepo.getLiveChannel(it.channelId) } }
+        transactions = Transformations.switchMap(account) { it?.let { transactionRepo.getAccountTransactions(it) } }
+        actions = Transformations.switchMap(id, actionRepo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
     }
@@ -35,9 +37,9 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
     fun setAccount(accountId: Int) = id.postValue(accountId)
 
     private fun loadSpentThisMonth(id: Int): LiveData<Double>? =
-        repo.getSpentAmount(id, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))
+        transactionRepo.getSpentAmount(id, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))
 
-    private fun loadFeesThisYear(id: Int): LiveData<Double>? = repo.getFees(id, calendar.get(Calendar.YEAR))
+    private fun loadFeesThisYear(id: Int): LiveData<Double>? = transactionRepo.getFees(id, calendar.get(Calendar.YEAR))
 
     fun updateAccountName(newName: String) = viewModelScope.launch {
         val a = account.value!!
@@ -56,11 +58,11 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
         val accounts = repo.getAllAccounts()
 
         if (repo.getAccounts(account.channelId).size == 1) {
-            val channel = repo.getChannel(account.channelId)!!.apply {
+            val channel = channelRepo.getChannel(account.channelId)!!.apply {
                 selected = false
                 defaultAccount = false
             }
-            repo.update(channel)
+            channelRepo.update(channel)
         }
 
         repo.delete(account)
@@ -70,10 +72,10 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
                 it.isDefault = true
                 repo.update(it)
 
-                val channel = repo.getChannel(it.channelId)!!.apply {
+                val channel = channelRepo.getChannel(it.channelId)!!.apply {
                     defaultAccount = true
                 }
-                repo.update(channel)
+                channelRepo.update(channel)
             }
     }
 }

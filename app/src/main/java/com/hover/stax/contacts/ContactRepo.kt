@@ -3,7 +3,6 @@ package com.hover.stax.contacts
 import androidx.lifecycle.LiveData
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.AnalyticsUtil
 
 class ContactRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {

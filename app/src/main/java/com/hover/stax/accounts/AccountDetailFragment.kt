@@ -227,7 +227,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         binding.scheduledCard.root.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it.id) }
+    private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it) }
 
     override fun viewRequestDetail(id: Int) {
         NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToRequestDetailsFragment(id))

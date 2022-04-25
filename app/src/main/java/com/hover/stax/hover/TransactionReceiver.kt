@@ -6,9 +6,15 @@ import android.content.Intent
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.requests.RequestRepo
+import com.hover.stax.schedules.ScheduleRepo
+import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +27,12 @@ import java.util.regex.Pattern
 
 class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val repo: DatabaseRepo by inject()
+    private val repo: TransactionRepo by inject()
+    private val actionRepo: ActionRepo by inject()
+    private val channelRepo: ChannelRepo by inject()
+    private val accountRepo: AccountRepo by inject()
+    private val contactRepo: ContactRepo by inject()
+    private val requestRepo: RequestRepo by inject()
 
     private var channel: Channel? = null
     private var account: Account? = null
@@ -34,11 +45,11 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
 
                 actionId?.let {
-                    action = repo.getAction(it)
+                    action = actionRepo.getAction(it)
 
                     //added null check to prevent npe whenever action is null
                     action?.let { a ->
-                        channel = repo.getChannel(a.channel_id)
+                        channel = channelRepo.getChannel(a.channel_id)
 
                         createAccounts(intent)
                         updateBalance(intent)
@@ -58,7 +69,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             if (inputExtras.containsKey(Constants.ACCOUNT_ID)) {
                 val accountId = inputExtras[Constants.ACCOUNT_ID]
                 accountId?.let {
-                    account = repo.getAccount(accountId.toInt())
+                    account = accountRepo.getAccount(accountId.toInt())
                     Timber.e("$account")
                 }
             }
@@ -69,16 +80,16 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
             if (account != null && parsedVariables.containsKey("balance")) {
                 account!!.updateBalance(parsedVariables)
-                repo.update(account!!)
+                accountRepo.update(account!!)
             }
         }
     }
 
     private fun updateContacts(intent: Intent) {
-        contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, repo)
+        contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, contactRepo)
         contact?.let {
             it.updateNames(intent)
-            repo.save(it)
+            contactRepo.save(it)
         }
     }
 
@@ -88,14 +99,14 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
     private fun updateRequests(intent: Intent) {
         if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.RECEIVE) {
-            repo.requests.forEach {
+            requestRepo.requests.forEach {
                 if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(
                         it.amount
                             ?: "00"
                     ) == Utils.getAmount(getAmount(intent)!!)
                 ) {
                     it.matched_transaction_uuid = intent.getStringExtra(TransactionContract.COLUMN_UUID)
-                    repo.update(it)
+                    requestRepo.update(it)
                 }
             }
         }
@@ -118,12 +129,12 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
             if (parsedVariables.containsKey("userAccountList")) {
-                val accounts = repo.getAllAccounts().toMutableList()
+                val accounts = accountRepo.getAllAccounts().toMutableList()
                 val parsedAccounts = parseAccounts(parsedVariables["userAccountList"]!!)
 
                 removePlaceholders(parsedAccounts, accounts.map { it.channelId }.toIntArray())
 
-                repo.saveAccounts(parseAccounts(parsedVariables["userAccountList"]!!))
+                accountRepo.saveAccounts(parseAccounts(parsedVariables["userAccountList"]!!))
             }
         }
     }
@@ -138,7 +149,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             accounts.add(newAccount)
         }
 
-        if (repo.getDefaultAccount() == null && accounts.isNotEmpty())
+        if (accountRepo.getDefaultAccount() == null && accounts.isNotEmpty())
             accounts.first().isDefault = true
 
         return accounts
@@ -148,7 +159,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         parsedAccounts.forEach {
             if (savedAccounts.contains(it.channelId)) {
                 Timber.e("Removing ${it.channelId} from ${it.name}")
-                repo.deleteAccount(it.channelId, Constants.PLACEHOLDER)
+                accountRepo.deleteAccount(it.channelId, Constants.PLACEHOLDER)
             }
         }
     }

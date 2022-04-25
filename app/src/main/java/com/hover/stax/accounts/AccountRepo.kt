@@ -3,7 +3,7 @@ package com.hover.stax.accounts
 import androidx.lifecycle.LiveData
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.Flow
 
@@ -55,6 +55,6 @@ class AccountRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun deleteAccount(channelId: Int, name: String) { accountDao.delete(channelId, name) }
 
     companion object {
-        private val TAG = DatabaseRepo::class.java.simpleName
+        private val TAG = ScheduleRepo::class.java.simpleName
     }
 }

@@ -23,6 +23,7 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
+import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
@@ -38,10 +39,11 @@ import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchListener {
+abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
     val channelsViewModel: ChannelsViewModel by sharedViewModel()
@@ -139,27 +141,6 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
             if (event.action == MotionEvent.ACTION_DOWN)
                 NavUtil.navigate(findNavController(), navDirections)
             true
-        }
-    }
-
-    override fun fetchAccounts(account: Account) {
-        dialog = StaxDialog(requireActivity())
-            .setDialogTitle(getString(R.string.incomplete_account_setup_header))
-            .setDialogMessage(getString(R.string.incomplete_account_setup_desc, account.alias))
-            .setPosButton(R.string.check_balance_title) { runBalanceCheck(account.channelId) }
-            .setNegButton(R.string.btn_cancel, null)
-        dialog!!.showIt()
-    }
-
-    private fun runBalanceCheck(channelId: Int) = lifecycleScope.launch(Dispatchers.IO) {
-        channelsViewModel.getChannel(channelId)?.let { channel ->
-            val action = channelsViewModel.getFetchAccountAction(channelId)
-            channelsViewModel.setActiveChannel(channel)
-
-            if (action != null)
-                (activity as? MainActivity)?.makeCall(action, channel)
-            else
-                UIHelper.flashMessage(requireActivity(), getString(R.string.action_run_error))
         }
     }
 }

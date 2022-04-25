@@ -2,7 +2,6 @@ package com.hover.stax.login
 
 import android.app.Application
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,13 +10,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
@@ -25,14 +19,13 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.IOException
-import kotlin.math.sign
 
 
 private const val EMAIL = "email"
 private const val USERNAME = "username"
 private const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 
-class LoginViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
+class LoginViewModel(val repo: ScheduleRepo, val application: Application) : ViewModel() {
 
     lateinit var signInClient: GoogleSignInClient
 

@@ -5,15 +5,16 @@ import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
+import com.hover.stax.actions.ActionRepo
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
 
-class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
+class TransactionDetailsViewModel(val application: Application, val repo: TransactionRepo, val actionRepo: ActionRepo, val contactRepo: ContactRepo) : ViewModel() {
 
     val transaction = MutableLiveData<StaxTransaction>()
     val messages = MediatorLiveData<List<UssdCallResponse>>()
@@ -34,15 +35,15 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
     }
 
     private fun getLiveAction(txn: StaxTransaction?): LiveData<HoverAction>? = if (txn != null)
-        repo.getLiveAction(txn.action_id)
+        actionRepo.getLiveAction(txn.action_id)
     else null
 
     private fun getLiveContact(txn: StaxTransaction?): LiveData<StaxContact>? = if (txn != null)
-        repo.getLiveContact(txn.counterparty_id)
+        contactRepo.getLiveContact(txn.counterparty_id)
     else null
 
     fun setTransaction(uuid: String) = viewModelScope.launch(Dispatchers.IO) {
-        repo.getTransactionAsync(uuid).collect { transaction.postValue(it) }
+        transaction.postValue(repo.getTransaction(uuid))
     }
 
     private fun loadMessages(txn: StaxTransaction?) {

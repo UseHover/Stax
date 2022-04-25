@@ -35,7 +35,6 @@ import timber.log.Timber
 class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
     private val channelsViewModel: AddChannelsViewModel by viewModel()
-    private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
@@ -186,39 +185,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
             channelsViewModel.setChannelsSelected(selectedChannels)
             channelsViewModel.createAccounts(selectedChannels)
 
-            showCheckBalanceDialog(
-                if (selectedChannels.size > 1) R.string.check_balance_alt_plural
-                else R.string.check_balance_alt,
-                selectedChannels
-            )
+            AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
         }
     }
 
-    private fun showCheckBalanceDialog(message: Int, channels: List<Channel>) {
-        dialog = StaxDialog(requireActivity())
-            .setDialogTitle(R.string.check_balance_title)
-            .setDialogMessage(message)
-            .setNegButton(R.string.later) { runActions(channels, false) }
-            .setPosButton(R.string.check_balance_title) { runActions(channels, true) }
-        dialog!!.showIt()
-    }
-
-    private fun runActions(channels: List<Channel>, checkBalance: Boolean) {
-        if (activity != null && isAdded)
-            requireActivity().onBackPressed()
-
-        if (checkBalance)
-            balancesViewModel.actions.observe(viewLifecycleOwner) {
-                if (channels.size == 1)
-                    balancesViewModel.setRunning(channels.first())
-                else
-                    balancesViewModel.setAllRunning(requireActivity())
-            }
-    }
-
     override fun clickedChannel(channel: Channel) {
-        if (!channel.selected)
-            showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
+        AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
     }
 
     //channels will be loaded only once after install then deferred to weekly.

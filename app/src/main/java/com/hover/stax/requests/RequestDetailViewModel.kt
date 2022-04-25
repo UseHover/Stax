@@ -2,12 +2,14 @@ package com.hover.stax.requests
 
 import androidx.lifecycle.*
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RequestDetailViewModel(val repo: DatabaseRepo) : ViewModel() {
+class RequestDetailViewModel(val repo: ChannelRepo, val requestRepo: RequestRepo, val contactRepo: ContactRepo) : ViewModel() {
 
     val request: MutableLiveData<Request> = MutableLiveData()
     var channel: LiveData<Channel> = MutableLiveData()
@@ -19,15 +21,15 @@ class RequestDetailViewModel(val repo: DatabaseRepo) : ViewModel() {
     }
 
     fun setRequest(id: Int) = viewModelScope.launch(Dispatchers.IO) {
-        request.postValue(repo.getRequest(id))
+        request.postValue(requestRepo.getRequest(id))
     }
 
     private fun loadRecipients(r: Request): LiveData<List<StaxContact>> {
-        return repo.getLiveContacts(r.requestee_ids.split(",").toTypedArray())
+        return contactRepo.getLiveContacts(r.requestee_ids.split(",").toTypedArray())
     }
 
     fun deleteRequest() = viewModelScope.launch(Dispatchers.IO) {
-        repo.delete(request.value)
+        requestRepo.delete(request.value)
     }
 
 }

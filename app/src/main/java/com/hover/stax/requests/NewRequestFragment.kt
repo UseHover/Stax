@@ -31,6 +31,7 @@ import timber.log.Timber
 class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface {
 
     private lateinit var requestViewModel: NewRequestViewModel
+
     private lateinit var amountInput: StaxTextInputLayout
     private lateinit var requesterNumberInput: StaxTextInputLayout
     private lateinit var noteInput: StaxTextInputLayout
@@ -84,8 +85,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         shareCard = binding.shareCard.root
 
         super.init(root)
-
-        accountDropdown.setFetchAccountListener(this)
     }
 
     override fun startObservers(root: View) {
@@ -239,7 +238,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         requestViewModel.activeAccount.value?.let {
             if (!requestViewModel.isValidAccount()) {
                 accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-                fetchAccounts(it)
                 return false
             }
         }

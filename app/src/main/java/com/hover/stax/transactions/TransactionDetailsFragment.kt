@@ -129,7 +129,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         retryButton.setOnClickListener {
             updateRetryCounter(transaction.action_id)
             this.dismiss()
-            (requireActivity() as MainActivity).reBuildHoverSession(transaction)
+            (requireActivity() as MainActivity).retry(transaction)
         }
     }
 

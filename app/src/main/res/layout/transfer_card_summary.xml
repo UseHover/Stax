@@ -27,6 +27,21 @@
                 android:textSize="@dimen/text_21" />
         </TableRow>
 
+        <TableRow android:id="@+id/feeRow">
+
+            <TextView
+                android:text="@string/transfer_fee_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+            <TextView
+                android:id="@+id/feeValue"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_21" />
+        </TableRow>
+
         <TableRow
             android:id="@+id/accountsRow"
             android:layout_marginTop="@dimen/margin_21">

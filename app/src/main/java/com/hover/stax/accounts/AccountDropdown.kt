@@ -26,7 +26,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private var showSelected: Boolean = true
     private var helperText: String? = null
     private var highlightListener: HighlightListener? = null
-    private var accountFetchListener: AccountFetchListener? = null
 
     var highlightedAccount: Account? = null
 
@@ -61,12 +60,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         account?.let {
             autoCompleteTextView.setText(it.alias, false)
             UIHelper.loadPicasso(it.logoUrl, size55, this)
-
-            if (account.name == Constants.PLACEHOLDER) {
-                accountFetchListener?.fetchAccounts(account)
-            } else {
-                highlightedAccount = account
-            }
+            highlightedAccount = account
         }
     }
 
@@ -100,7 +94,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             accounts.observe(lifecycleOwner) { accountUpdate(it) }
 
             selectedChannels.observe(lifecycleOwner, selectedObserver)
-            activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
+            activeAccount.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
             channelActions.observe(lifecycleOwner) {
                 setState(it, viewModel)
             }
@@ -109,7 +103,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun setState(actions: List<HoverAction>, viewModel: ChannelsViewModel) {
         when {
-            viewModel.activeChannel.value != null && (actions.isNullOrEmpty()) -> setState(
+            viewModel.activeAccount.value != null && (actions.isNullOrEmpty()) -> setState(
                 context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
@@ -124,7 +118,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                     ), INFO
                 )
 
-            viewModel.activeChannel.value != null && showSelected -> setState(helperText, SUCCESS)
+            viewModel.activeAccount.value != null && showSelected -> setState(helperText, SUCCESS)
         }
     }
 
@@ -142,15 +136,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
     }
 
-    fun setFetchAccountListener(listener: AccountFetchListener) {
-        accountFetchListener = listener
-    }
-
     interface HighlightListener {
         fun highlightAccount(account: Account)
-    }
-
-    interface AccountFetchListener {
-        fun fetchAccounts(account: Account)
     }
 }

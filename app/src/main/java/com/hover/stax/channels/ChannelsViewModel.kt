@@ -5,30 +5,31 @@ import android.content.BroadcastReceiver
 import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.actions.ActionRepo
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),
+class ChannelsViewModel(val application: Application, val repo: ChannelRepo, val actionRepo: ActionRepo, val accountRepo: AccountRepo) : ViewModel(),
     AccountDropdown.HighlightListener {
 
     private var type = MutableLiveData<String>()
 
     val allChannels: LiveData<List<Channel>> = repo.publishedChannels
     val selectedChannels: LiveData<List<Channel>> = repo.selected
-
     val activeChannel = MediatorLiveData<Channel?>()
+
     val channelActions = MediatorLiveData<List<HoverAction>>()
+
     val accounts = MutableLiveData<List<Account>>()
     val activeAccount = MutableLiveData<Account>()
+
     private var simReceiver: BroadcastReceiver? = null
 
     init {
@@ -37,30 +38,30 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         channelActions.apply {
             addSource(type, this@ChannelsViewModel::loadActions)
             addSource(selectedChannels, this@ChannelsViewModel::loadActions)
-            addSource(activeChannel, this@ChannelsViewModel::loadActions)
+            addSource(activeAccount, this@ChannelsViewModel::loadActions)
         }
 
-        loadAccounts()
+        accounts.postValue(accountRepo.getAllAccounts())
     }
 
     fun setType(t: String) {
         type.value = t
     }
 
-    fun getActionType(): String = type.value!!
+    fun setActiveAccount(account: Account?) {
+        activeAccount.postValue(account!!)
+    }
 
     private fun setActiveChannelIfNull(channels: List<Channel>) {
         if (!channels.isNullOrEmpty() && activeChannel.value == null)
             activeChannel.value = channels.firstOrNull { it.defaultAccount }
-    }
+        }
 
     fun setActiveChannel(channel: Channel) {
         activeChannel.postValue(channel)
     }
 
-    fun setActiveAccount(account: Account?) {
-        activeAccount.postValue(account!!)
-    }
+    fun getActionType(): String = type.value!!
 
     private fun setActiveChannel(actions: List<HoverAction>) {
         if (actions.isNullOrEmpty()) return
@@ -72,16 +73,19 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    private fun loadActions(t: String?) {
-        if (t == null) return
+    private fun loadActions(type: String?) {
+        if (type == null) return
 
-        if ((t == HoverAction.BALANCE && selectedChannels.value == null) || (t != HoverAction.BALANCE && activeChannel.value == null)) return
-        if (t == HoverAction.BALANCE) loadActions(selectedChannels.value!!, t) else loadActions(activeChannel.value!!, t)
+        if (accounts.value.isNullOrEmpty()) return
+        if (type == HoverAction.BALANCE)
+            loadActions(selectedChannels.value!!, type)
+        else
+            loadActions(activeAccount.value!!, type)
     }
 
-    private fun loadActions(channel: Channel?) {
-        if (channel == null || type.value.isNullOrEmpty()) return
-        loadActions(channel, type.value!!)
+    private fun loadActions(account: Account?) {
+        if (account == null || type.value.isNullOrEmpty()) return
+        loadActions(account, type.value!!)
     }
 
     private fun loadActions(channels: List<Channel>) {
@@ -91,27 +95,23 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             loadActions(channels, type.value!!)
     }
 
-    private fun loadActions(channel: Channel, t: String) = viewModelScope.launch(Dispatchers.IO) {
+    private fun loadActions(account: Account, t: String) = viewModelScope.launch(Dispatchers.IO) {
         channelActions.postValue(
-            if (t == HoverAction.P2P) repo.getTransferActions(channel.id)
-            else repo.getActions(channel.id, t))
-    }
-
-    fun loadAccounts() = viewModelScope.launch {
-        repo.getAccounts().collect { accounts.postValue(it) }
+            if (t == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
+            else actionRepo.getActions(account.channelId, t))
     }
 
     private fun loadActions(channels: List<Channel>, t: String) {
         val ids = channels.map { it.id }.toIntArray()
 
         viewModelScope.launch {
-            channelActions.value = repo.getActions(ids, t)
+            channelActions.value = actionRepo.getActions(ids, t)
         }
     }
 
     fun errorCheck(): String? {
         return when {
-            activeChannel.value == null || activeAccount.value == null -> application.getString(R.string.channels_error_noselect)
+            activeAccount.value == null -> application.getString(R.string.channels_error_noselect)
             channelActions.value.isNullOrEmpty() -> application.getString(
                 R.string.no_actions_fielderror,
                 HoverAction.getHumanFriendlyType(application, type.value)
@@ -125,10 +125,10 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun setChannelFromRequest(r: Request?) {
         if (r != null && !selectedChannels.value.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                var actions = repo.getActions(getChannelIds(selectedChannels.value!!), r.requester_institution_id)
+                var actions = actionRepo.getActions(getChannelIds(selectedChannels.value!!), r.requester_institution_id)
 
                 if (actions.isEmpty() && !allChannels.value.isNullOrEmpty())
-                    actions = repo.getActions(getChannelIds(allChannels.value!!), r.requester_institution_id)
+                    actions = actionRepo.getActions(getChannelIds(allChannels.value!!), r.requester_institution_id)
 
                 if (actions.isNotEmpty())
                     channelActions.postValue(actions)
@@ -142,7 +142,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun view(s: Schedule) {
         setType(s.type)
-        setActiveChannel(repo.getChannel(s.channel_id)!!)
     }
 
     fun getChannel(channelId: Int): Channel? = repo.getChannel(channelId)
@@ -152,21 +151,17 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun getFetchAccountAction(channelId: Int): HoverAction? {
-        return if (repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).isNullOrEmpty()) null
-            else repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS)[0]
+        return if (actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).isNullOrEmpty()) null
+            else actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS)[0]
     }
 
     fun fetchAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        val channelAccounts = repo.getAccounts(channelId)
+        val channelAccounts = accountRepo.getAccounts(channelId)
         accounts.postValue(channelAccounts)
     }
 
     override fun highlightAccount(account: Account) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val channel = repo.getChannel(account.channelId)
-            setActiveChannel(channel!!)
-            activeAccount.postValue(account)
-        }
+        activeAccount.postValue(account)
     }
 
     fun setDefaultAccount(account: Account) {
@@ -175,11 +170,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             //remove current default account
             val current: Account? = accts.firstOrNull { it.isDefault }
             current?.isDefault = false
-            repo.update(current)
+            accountRepo.update(current)
 
             val a = accts.first { it.id == account.id }
             a.isDefault = true
-            repo.update(a)
+            accountRepo.update(a)
         }
     }
 
