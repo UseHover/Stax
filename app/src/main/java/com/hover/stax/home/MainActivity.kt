@@ -241,7 +241,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                     balancesViewModel.setRan(requestCode)
                     balancesViewModel.showBalances(true)
                 }
-                showPopUpTransactionDetailsIfRequired(data)
+//                showPopUpTransactionDetailsIfRequired(data)
             }
         }
     }

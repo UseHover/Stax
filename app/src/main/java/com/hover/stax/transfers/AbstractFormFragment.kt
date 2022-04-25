@@ -3,13 +3,11 @@ package com.hover.stax.transfers
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
@@ -93,12 +91,12 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     }
 
     private fun setupActionDropdownObservers() {
-        val activeChannelObserver = object: Observer<Channel?> {
+        val activeChannelObserver = object : Observer<Channel?> {
             override fun onChanged(t: Channel?) {
                 Timber.e("Got new active channel ${this.javaClass.simpleName}, ${t?.countryAlpha2}")
             }
         }
-        val actionsObserver = object: Observer<List<HoverAction>> {
+        val actionsObserver = object : Observer<List<HoverAction>> {
             override fun onChanged(t: List<HoverAction>?) {
                 Timber.e("Got new actions ${this.javaClass.simpleName}: %s", t?.size)
             }
