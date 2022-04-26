@@ -74,14 +74,14 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
         return if (!requestee.value?.accountNumber.isNullOrEmpty())
             null
         else
-            application.getString(R.string.request_error_recipient)
+            getString(R.string.request_error_recipient)
     }
 
-    fun accountError(): String? = if (activeAccount.value != null) null else application.getString(R.string.accounts_error_noselect)
+    fun accountError(): String? = if (activeAccount.value != null) null else getString(R.string.accounts_error_noselect)
 
     fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
 
-    fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else application.getString(R.string.requester_number_fielderror)
+    fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else getString(R.string.requester_number_fielderror)
 
     fun validNote(): Boolean = !note.value.isNullOrEmpty()
 
@@ -105,7 +105,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun saveRequest() {
         if (formulatedRequest.value != null) {
-            val request = Request(formulatedRequest.value!!, requestee.value, application)
+            val request = Request(formulatedRequest.value!!, requestee.value, getApplication())
             repo.insert(request)
 
             finalRequests.value = listOf(request)

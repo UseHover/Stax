@@ -131,16 +131,14 @@ public class StaxContact {
     @SuppressWarnings("unchecked")
     private static StaxContact checkOutKeys(Intent intent, String countryAlpha2, ContactRepo dr) {
         HashMap<String, String> outExtras = (HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-
-        if (outExtras != null && outExtras.containsKey(SENDER_PHONE_KEY))
-            return getContactByPhoneValue(outExtras, SENDER_PHONE_KEY, countryAlpha2, dr);
-        else if (outExtras != null && outExtras.containsKey(SENDER_ACCOUNT_KEY))
-            return dr.getContactByPhone(outExtras.get(SENDER_ACCOUNT_KEY));
-        else if (outExtras != null && outExtras.containsKey(RECIPIENT_PHONE_KEY))
+         if (outExtras != null && outExtras.containsKey(RECIPIENT_PHONE_KEY))
             return getContactByPhoneValue(outExtras, RECIPIENT_PHONE_KEY, countryAlpha2, dr);
         else if (outExtras != null && outExtras.containsKey(RECIPIENT_ACCOUNT_KEY))
             return dr.getContactByPhone(outExtras.get(RECIPIENT_ACCOUNT_KEY));
-
+        else if (outExtras != null && outExtras.containsKey(SENDER_PHONE_KEY))
+             return getContactByPhoneValue(outExtras, SENDER_PHONE_KEY, countryAlpha2, dr);
+        else if (outExtras != null && outExtras.containsKey(SENDER_ACCOUNT_KEY))
+             return dr.getContactByPhone(outExtras.get(SENDER_ACCOUNT_KEY));
         return null;
     }
 

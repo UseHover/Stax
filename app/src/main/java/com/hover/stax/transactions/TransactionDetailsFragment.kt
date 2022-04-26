@@ -21,12 +21,13 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.ApplicationInstance
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
+import com.hover.stax.home.AbstractHoverCallerActivity
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -36,7 +37,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import java.lang.Exception
 
 
 class TransactionDetailsFragment : DialogFragment(), Target{
@@ -63,15 +63,8 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         uuid = requireArguments().getString(UUID)
         viewModel.setTransaction(uuid!!)
+        logView()
 
-        val data = JSONObject()
-        try {
-            data.put("uuid", uuid)
-        } catch (e: JSONException) {
-            logErrorAndReportToFirebase(TransactionDetailsFragment::class.java.simpleName, e.message!!, e)
-        }
-
-        logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data, requireContext())
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -88,10 +81,14 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         super.onViewCreated(view, savedInstanceState)
         startObservers()
         if (!isFullScreen) setToPopupDesign()
+        setListeners();
+    }
+
+    private fun setListeners() {
         binding.transactionDetailsCard.setOnClickIcon { this.dismiss() }
         binding.primaryStatus.viewLogText.setOnClickListener { showUSSDLog() }
         with(binding.infoCard.detailsStaxUuid.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
-        with(binding.infoCard.detailsServiceId.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
+        with(binding.infoCard.confirmCodeCopy.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
     }
 
     private fun showUSSDLog() {
@@ -100,8 +97,9 @@ class TransactionDetailsFragment : DialogFragment(), Target{
 
     private fun startObservers() {
         viewModel.transaction.observe(viewLifecycleOwner) { showTransaction(it) }
-        viewModel.action.observe(viewLifecycleOwner) { it?.let { showActionDetails(it) } }
+        viewModel.action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         viewModel.contact.observe(viewLifecycleOwner) { updateRecipient(it) }
+        viewModel.account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
     }
 
     private fun setToPopupDesign() {
@@ -113,23 +111,27 @@ class TransactionDetailsFragment : DialogFragment(), Target{
 
     private fun setupRetryBountyButton() {
         val bountyButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
-        val retryButton = binding.secondaryStatus.btnRetryTransaction
+        val retryButton = binding.secondaryStatus.btnRetry
         bountyButtonsLayout.visibility = VISIBLE
         retryButton.setOnClickListener { retryBountyClicked() }
     }
 
     private fun showButtonToClick(): TextView {
         val transactionButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
-        val retryButton = binding.secondaryStatus.btnRetryTransaction
+        val retryButton = binding.secondaryStatus.btnRetry
         transactionButtonsLayout.visibility = VISIBLE
         return retryButton
     }
 
     private fun retryTransactionClicked(transaction: StaxTransaction, retryButton: TextView) {
         retryButton.setOnClickListener {
-            updateRetryCounter(transaction.action_id)
-            this.dismiss()
-            (requireActivity() as MainActivity).retry(transaction)
+            if (viewModel.account.value == null || viewModel.action.value == null || viewModel.contact.value == null || viewModel.transaction.value == null)
+                UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
+            else {
+                updateRetryCounter(transaction.action_id)
+                (requireActivity() as AbstractHoverCallerActivity).run(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
+                this.dismiss()
+            }
         }
     }
 
@@ -153,29 +155,40 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         retryCounter[id] = 0
     }
 
+    private fun shouldShowNewBalance(transaction: StaxTransaction) : Boolean {
+        return !transaction.isBalanceType && !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
+    }
+
     private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
 
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
-            if (transaction.isRecorded)
-                setupRetryBountyButton()
-            else if (transaction.status == Transaction.FAILED) {
-                val button = showButtonToClick()
-                if (shouldContactSupport(transaction.action_id))
-                    setupContactSupportButton(transaction.action_id, button)
-                else
-                    retryTransactionClicked(transaction, button)
-            }
-            else binding.secondaryStatus.transactionRetryButtonLayoutId.visibility = GONE
+            addRetryOrSupportButton(transaction)
             updateDetails(transaction)
         }
     }
 
-    private fun shouldShowNewBalance(transaction: StaxTransaction) : Boolean {
-        return !transaction.isBalanceType && !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
+    private fun addRetryOrSupportButton(transaction: StaxTransaction) {
+        if (transaction.isRecorded)
+            setupRetryBountyButton()
+        else if (transaction.status == Transaction.FAILED) {
+            val button = showButtonToClick()
+            if (shouldContactSupport(transaction.action_id))
+                setupContactSupportButton(transaction.action_id, button)
+            else
+                retryTransactionClicked(transaction, button)
+        }
+        else binding.secondaryStatus.transactionRetryButtonLayoutId.visibility = GONE
     }
+
     @SuppressLint("SetTextI18n")
     private fun updateDetails(transaction: StaxTransaction) {
+        setTitle(transaction)
+        setDetailsData(transaction)
+        setVisibleDetails(transaction)
+    }
+
+    private fun setTitle(transaction: StaxTransaction) {
         if (isFullScreen)
             binding.transactionDetailsCard.setTitle(transaction.description)
         else {
@@ -184,23 +197,25 @@ class TransactionDetailsFragment : DialogFragment(), Target{
                     transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext())
                 )
         }
-
-        setDetailsData(transaction)
-        setVisibleDetails(transaction)
-        updateDetailsRequiringAction(viewModel.action.value, viewModel.transaction.value)
-        updateStatus(viewModel.action.value, transaction)
     }
+
+    private fun generateTitle(transaction: StaxTransaction): String {
+        var textValue = transaction.fullStatus.getTitle(requireContext())
+        if (transaction.fullStatus.getReason().isNotEmpty())
+            textValue = textValue + ": " + transaction.fullStatus.getReason()
+        return textValue
+    }
+
     private fun setDetailsData(transaction: StaxTransaction) {
-        if(shouldShowNewBalance(transaction)) {
-            binding.primaryStatus.newBalance.apply {
-                text = getString(R.string.new_balance, transaction.displayBalance)
-                visibility = VISIBLE
-            }
-        }
+        if(shouldShowNewBalance(transaction))
+            binding.primaryStatus.newBalance.text = getString(R.string.new_balance, transaction.displayBalance)
+        binding.primaryStatus.statusText.text = generateTitle(transaction)
+        binding.primaryStatus.statusIcon.setImageResource(transaction.fullStatus.getIcon())
+
         binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding.infoCard.detailsAmount.text = transaction.displayAmount
         binding.infoCard.detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
-        binding.infoCard.detailsServiceId.content.text = transaction.confirm_code
+        binding.infoCard.confirmCodeCopy.content.text = transaction.confirm_code
         binding.infoCard.detailsStaxUuid.content.text = transaction.uuid
         binding.infoCard.detailsStaxStatus.apply {
             text = transaction.fullStatus.getPlainTitle(requireContext())
@@ -212,63 +227,36 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     }
 
     private fun setVisibleDetails(transaction: StaxTransaction) {
+        binding.primaryStatus.newBalance.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
+        binding.secondaryStatus.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
+        binding.secondaryStatus.statusIcon.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.infoCard.reasonRow.visibility = if(transaction.isFailed) VISIBLE else GONE
         binding.infoCard.amountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
         binding.infoCard.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
-        binding.infoCard.recipAccountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
-        binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else VISIBLE
+        binding.infoCard.recipInstitutionRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
+        binding.infoCard.confirmCodeRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else VISIBLE
         binding.infoCard.feeRow.visibility = if(transaction.fee == null) GONE else VISIBLE
+
     }
 
-    private fun updateDetailsRequiringAction(action: HoverAction?, transaction: StaxTransaction?) {
-        if(action !=null && transaction !=null) {
-            binding.infoCard.detailsStaxType.text = transaction.fullStatus.getDisplayType(requireContext(), action)
-            binding.infoCard.detailsStaxAccount.text = action.from_institution_name
-            binding.infoCard.detailsFeeLabel.text = getString(R.string.transaction_fee, action.from_institution_name)
-        }
-    }
+    private fun updateAction(action: HoverAction) {
+        if (viewModel.transaction.value != null) {
+            if (viewModel.transaction.value!!.isFailed)
+                UIHelper.loadPicasso(getString(R.string.root_url) + action.from_institution_logo, this)
 
-    private fun showActionDetails(action: HoverAction) {
-        if (!isFullScreen) {
-            binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(action, viewModel.contact.value, requireContext()))
-        }
-        binding.infoCard.detailsNetwork.text = action.from_institution_name
-        updateStatus(action, viewModel.transaction.value)
-        updateDetailsRequiringAction(viewModel.action.value, viewModel.transaction.value)
-    }
-
-    private fun updateStatus(action: HoverAction?, transaction: StaxTransaction?) {
-        if (action != null && transaction != null) {
-            setPrimaryStatus(transaction)
-            setSecondaryStatus(action, transaction)
-        }
-    }
-
-    private fun setPrimaryStatus(transaction: StaxTransaction?) {
-        transaction?.let {
-            var textValue= transaction.fullStatus.getTitle(requireContext())
-            if(transaction.fullStatus.getReason().isNotEmpty()) textValue = textValue   +": "+ transaction.fullStatus.getReason()
-
-            binding.primaryStatus.statusText.text = textValue
-            binding.primaryStatus.statusIcon.setImageResource(transaction.fullStatus.getIcon())
-        }
-    }
-
-    private fun setSecondaryStatus(action: HoverAction?, transaction: StaxTransaction?) {
-        transaction?.let {
-            if(transaction.isSuccessful) binding.secondaryStatus.root.visibility = GONE
-
-            else {
-                binding.secondaryStatus.root.visibility = VISIBLE
-                binding.secondaryStatus.statusText.apply {
-                    val content = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
-                    text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
-                    movementMethod = LinkMovementMethod.getInstance()
-                }
-                if(transaction.isFailed) action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + it.from_institution_logo, this) }
-                else binding.secondaryStatus.statusIcon.visibility = GONE
+            binding.secondaryStatus.statusText.apply {
+                val content = viewModel.transaction.value!!.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+                text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                movementMethod = LinkMovementMethod.getInstance()
             }
         }
+        binding.infoCard.detailsStaxType.text = viewModel.transaction.value?.fullStatus?.getDisplayType(requireContext(), action)
+        binding.infoCard.detailsFeeLabel.text = getString(R.string.transaction_fee, action.from_institution_name)
+//        if () binding.infoCard.detailsInstitution.setSubtitle(action.from_institution_name)
+    }
+
+    private fun updateAccount(account: Account) {
+        binding.infoCard.detailsInstitution.setTitle(account.name)
     }
 
     private fun updateRecipient(contact: StaxContact?) {
@@ -283,8 +271,8 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     private fun retryBountyClicked() {
         this.dismiss()
 
-        viewModel.transaction.value?.let {
-            (requireActivity() as MainActivity).retryCall(it.action_id)
+        viewModel.action.value?.let {
+            (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
         }
     }
 
@@ -304,6 +292,17 @@ class TransactionDetailsFragment : DialogFragment(), Target{
 
             return fragment
         }
+    }
+
+    private fun logView() {
+        val data = JSONObject()
+        try {
+            data.put("uuid", uuid)
+        } catch (e: JSONException) {
+            logErrorAndReportToFirebase(TransactionDetailsFragment::class.java.simpleName, e.message!!, e)
+        }
+
+        logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data, requireContext())
     }
 
     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {

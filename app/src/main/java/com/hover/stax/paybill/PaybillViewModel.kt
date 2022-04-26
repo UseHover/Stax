@@ -9,6 +9,7 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.contacts.ContactRepo
+import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.AnalyticsUtil
@@ -52,7 +53,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
 
         val paybill = Paybill(
                 action.to_institution_name, action.to_institution_id.toString(), null, action.channel_id,
-                0, application.getString(R.string.root_url).plus(action.to_institution_logo)
+                0, getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
     }
@@ -108,24 +109,24 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
             Timber.e(e)
         }
 
-        AnalyticsUtil.logAnalyticsEvent(application.getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, application)
+        AnalyticsUtil.logAnalyticsEvent(getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, getApplication())
     }
 
     fun businessNoError(): String? = if (businessNumber.value.isNullOrEmpty())
-        application.getString(R.string.paybill_error_business_number)
+        getString(R.string.paybill_error_business_number)
     else null
 
     fun amountError(): String? {
         return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
-        else application.getString(R.string.amount_fielderror)
+        else getString(R.string.amount_fielderror)
     }
 
     fun accountNoError(): String? = if (accountNumber.value.isNullOrEmpty())
-        application.getString(R.string.transfer_error_recipient_account)
+        getString(R.string.transfer_error_recipient_account)
     else null
 
     fun nameError(): String? = if (nickname.value.isNullOrEmpty())
-        application.getString(R.string.bill_name_error)
+        getString(R.string.bill_name_error)
     else null
 
     fun deletePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
@@ -154,5 +155,13 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         amount.postValue(null)
         nickname.postValue(null)
         iconDrawable.postValue(0)
+    }
+
+    fun wrapExtras(): HashMap<String, String> {
+        val extras: HashMap<String, String> = hashMapOf()
+        if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
+        if (businessNumber.value != null) extras[BUSINESS_NO] = businessNumber.value!!
+        if (accountNumber.value != null) extras[HoverAction.ACCOUNT_KEY] = accountNumber.value!!
+        return extras
     }
 }

@@ -13,21 +13,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
-import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.home.MainActivity
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
@@ -36,10 +30,7 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
@@ -52,7 +43,7 @@ abstract class AbstractFormFragment : Fragment() {
     private var editRequestCard: LinearLayout? = null
 
     private lateinit var summaryCard: StaxCardView
-    lateinit var accountDropdown: AccountDropdown
+    lateinit var payWithDropdown: AccountDropdown
     lateinit var fab: Button
 
     private lateinit var noWorryText: TextView
@@ -66,13 +57,14 @@ abstract class AbstractFormFragment : Fragment() {
         noWorryText = root.findViewById(R.id.noWorryText)
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
-        accountDropdown = root.findViewById(R.id.accountDropdown)
+        payWithDropdown = root.findViewById(R.id.payWithDropdown)
     }
 
     @CallSuper
     open fun startObservers(root: View) {
-        accountDropdown.setListener(channelsViewModel)
-        accountDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
+        summaryCard.setOnClickIcon { abstractFormViewModel.setEditing(true) }
+        payWithDropdown.setListener(channelsViewModel)
+        payWithDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
         setupActionDropdownObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
     }
@@ -89,7 +81,14 @@ abstract class AbstractFormFragment : Fragment() {
 
         noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
         summaryCard.visibility = if (isEditing) View.GONE else View.VISIBLE
-        fab.text = if (isEditing) getString(R.string.btn_continue) else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow) else getString(R.string.fab_transfernow)
+        fab.text = chooseFabText(isEditing)
+    }
+
+    fun chooseFabText(isEditing: Boolean): String {
+        return if (isEditing) getString(R.string.btn_continue)
+            else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
+            else if (type == HoverAction.C2B) getString(R.string.fab_airtimenow)
+            else getString(R.string.fab_transfernow)
     }
 
     open fun contactPicker(requestCode: Int, c: Context) {
@@ -135,9 +134,14 @@ abstract class AbstractFormFragment : Fragment() {
 
     abstract fun onContactSelected(requestCode: Int, contact: StaxContact)
 
+    override fun onPause() {
+        super.onPause()
+        abstractFormViewModel.setEditing(true)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     fun setDropdownTouchListener(navDirections: NavDirections) {
-        accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
+        payWithDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN)
                 NavUtil.navigate(findNavController(), navDirections)
             true

@@ -187,7 +187,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
     private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
-        (requireActivity() as MainActivity).makeCall(b.action)
+        (requireActivity() as MainActivity).makeRegularCall(b.action, R.string.clicked_start_bounty)
     }
 
     private fun showLoadingState() {

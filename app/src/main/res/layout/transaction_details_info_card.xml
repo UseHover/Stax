@@ -88,20 +88,18 @@
     </TableRow>
 
     <TableRow
-            android:id="@+id/recipAccountRow"
+            android:id="@+id/recipInstitutionRow"
             android:layout_marginTop="@dimen/margin_18">
 
         <TextView
-                android:text="@string/network_label"
+                android:text="@string/institution_label"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
 
-        <TextView
-                android:id="@+id/details_network"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
+        <com.hover.stax.views.Stax2LineItem
+            android:id="@+id/details_institution"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd" />
     </TableRow>
 
     <TableRow
@@ -152,7 +150,7 @@
     </TableRow>
 
     <TableRow
-            android:id="@+id/serviceIdRow"
+            android:id="@+id/confirmCodeRow"
             android:layout_marginTop="@dimen/margin_18">
 
         <TextView
@@ -160,12 +158,11 @@
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
 
-        <include
+        <include android:id="@+id/confirmCodeCopy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            layout="@layout/stax_copiable_text_layout"
-            android:id="@+id/details_service_id"/>
+            layout="@layout/stax_copiable_text_layout"/>
     </TableRow>
 
     <TableRow android:layout_marginTop="@dimen/margin_18">

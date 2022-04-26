@@ -10,25 +10,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.home.AbstractHoverCallerActivity
-import com.hover.stax.home.MainActivity
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -39,7 +32,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private var _binding: FragmentPaybillBinding? = null
     private val binding get() = _binding!!
 
-    private val paybillViewModel: PaybillViewModel by sharedViewModel()
+    private val viewModel: PaybillViewModel by sharedViewModel()
 
     private val args: PaybillFragmentArgs by navArgs()
 
@@ -55,11 +48,11 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
         //TODO test updating of business
         if (args.updateBusiness) {
-            binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.businessNumber.value)
+            binding.editCard.businessNoInput.setText(viewModel.businessNumber.value)
         }
 
         initListeners()
-        startObservers()
+        startObservers(view)
         setTextWatchers()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
@@ -71,9 +64,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         setContinueBtnClickListener()
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
-        TODO("Not yet implemented")
-    }
+    override fun onContactSelected(requestCode: Int, contact: StaxContact) {}
 
     private fun setSaveBillCheckedChangeListener() = with(binding.saveBillLayout) {
         saveBill.setOnCheckedChangeListener { _, isChecked ->
@@ -86,10 +77,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setBusinessNoTouchListener() =
-        binding.billDetailsLayout.businessNoInput.editText.setOnTouchListener { _, event ->
+        binding.editCard.businessNoInput.editText.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 resetViews()
-                paybillViewModel.reset()
+                viewModel.reset()
 
                 channelsViewModel.activeAccount.value?.id?.let {
                     NavUtil.navigate(findNavController(), PaybillFragmentDirections.actionPaybillFragmentToPaybillListFragment(it))
@@ -98,25 +89,25 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             } else false
         }
 
-    private fun setContinueBtnClickListener() = binding.continueBtn.setOnClickListener {
+    private fun setContinueBtnClickListener() = binding.fab.setOnClickListener {
         if (validates()) {
-            if (paybillViewModel.isEditing.value == true) {
+            if (viewModel.isEditing.value == true) {
                 if (binding.saveBillLayout.saveBill.isChecked)
                     savePaybill()
                 else
-                    paybillViewModel.setEditing(false)
+                    viewModel.setEditing(false)
             } else submitRequest()
         } else {
-            Timber.e("Not validated")
+            UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
         }
     }
 
     private fun savePaybill() {
-        val selected = paybillViewModel.selectedPaybill.value
+        val selected = viewModel.selectedPaybill.value
         val hasChanges = when {
             selected == null -> false
             selected.name != binding.saveBillLayout.billNameInput.text -> true
-            selected.logo != paybillViewModel.iconDrawable.value -> true
+            selected.logo != viewModel.iconDrawable.value -> true
             selected.recurringAmount == 0 && binding.saveBillLayout.amountCheckBox.isChecked -> true
             selected.recurringAmount != 0 && !binding.saveBillLayout.amountCheckBox.isChecked -> true
             else -> false
@@ -124,120 +115,82 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
         when {
             selected != null && selected.isSaved && hasChanges -> showUpdatePaybillConfirmation()
-            selected != null && selected.isSaved && !hasChanges -> paybillViewModel.setEditing(false)
+            selected != null && selected.isSaved && !hasChanges -> viewModel.setEditing(false)
             else -> {
-                paybillViewModel.savePaybill(
+                viewModel.savePaybill(
                     channelsViewModel.activeAccount.value,
                     binding.saveBillLayout.amountCheckBox.isChecked
                 )
                 UIHelper.flashMessage(requireActivity(), R.string.paybill_save_success) //TODO add to other language strings
-                paybillViewModel.setEditing(false)
+                viewModel.setEditing(false)
             }
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun startObservers() {
-        with(paybillViewModel) {
-            selectedPaybill.observe(viewLifecycleOwner) {
-                it?.let {
-                    with(binding.billDetailsLayout) {
-                        businessNoInput.setText(it.businessNo)
-                        accountNoInput.setText(it.accountNo ?: "")
+    override fun startObservers(root: View) {
+        super.startObservers(root)
 
-                        if (it.recurringAmount != 0)
-                            amountInput.setText(it.recurringAmount.toString())
-                        else
-                            amountInput.setText("")
-                    }
+        observeBill()
+        observeAccountNo()
+        observeAmount()
+        observeNickname()
+        observeIcon()
+    }
 
-                    updateSavePaybillState(it)
+    private fun observeBill() {
+        viewModel.selectedPaybill.observe(viewLifecycleOwner) {
+            it?.let {
+                with(binding.editCard) {
+                    businessNoInput.setText(it.businessNo)
+                    accountNoInput.setText(it.accountNo ?: "")
+
+                    if (it.recurringAmount != 0)
+                        amountInput.setText(it.recurringAmount.toString())
+                    else
+                        amountInput.setText("")
                 }
-            }
 
-            isEditing.observe(viewLifecycleOwner) { if (it == false) showSummary() else showContent() }
-
-            iconDrawable.observe(viewLifecycleOwner) {
-                if (it != 0) {
-                    binding.saveBillLayout.billIconLayout.billIcon.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            it
-                        )
-                    )
-                }
-            }
-        }
-
-        with(channelsViewModel) {
-            binding.billDetailsLayout.accountDropdown.apply {
-                setListener(this@with)
-                setObservers(this@with, viewLifecycleOwner)
-            }
-
-            setupActionDropdownObservers(this, viewLifecycleOwner)
-
-            accounts.observe(viewLifecycleOwner) {
-                if (it.isEmpty())
-                    binding.billDetailsLayout.accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
-                        if (event.action == MotionEvent.ACTION_DOWN)
-                            NavUtil.navigate(findNavController(), PaybillFragmentDirections.actionPaybillFragmentToAccountsFragment())
-                        true
-                    }
+                updateSaveCardState(it)
             }
         }
     }
 
-    private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        val activeChannelObserver = Observer<Channel?> { Timber.i("Got new active channel: $it ${it?.countryAlpha2}") }
-        val actionsObserver = Observer<List<HoverAction>> { Timber.i("Got new actions: %s", it?.size) }
-
-        viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
-        viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
-    }
-
-    private fun showContent() {
-        with(binding) {
-            paybillSummary.paybillSummaryCard.visibility = View.GONE
-            toggleMainContent(true)
-
-            continueBtn.text = getString(R.string.btn_continue)
+    private fun observeAmount() {
+        viewModel.amount.observe(viewLifecycleOwner) {
+            it?.let { binding.summaryCard.amountValue.text = Utils.formatAmount(it) }
         }
     }
 
-    private fun showSummary() {
-        toggleMainContent(false)
-
-        with(binding.paybillSummary) {
-            paybillSummaryCard.visibility = View.VISIBLE
-
-            with(paybillViewModel) {
-                paybillSummaryCard.setOnClickIcon { setEditing(true) }
-                payFromAcct.text = channelsViewModel.activeAccount.value?.name
-                recipient.text = if (!nickname.value.isNullOrEmpty()) buildString {
-                    append(nickname.value)
-                    append(" (")
-                    append(businessNumber.value)
-                    append(")")
-                } else businessNumber.value
-                accountNo.text = accountNumber.value
-                amountValue.text = amount.value
-            }
+    private fun observeAccountNo() {
+        viewModel.accountNumber.observe(viewLifecycleOwner) {
+            it?.let { binding.summaryCard.accountNo.text = it }
         }
+    }
 
-        binding.continueBtn.text = getString(R.string.pay_now)
+    private fun observeNickname() {
+        viewModel.nickname.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                binding.summaryCard.recipient.setTitle(it)
+                binding.summaryCard.recipient.setSubtitle(viewModel.businessNumber.value)
+            } else
+                binding.summaryCard.recipient.setTitle(viewModel.businessNumber.value)
+        }
+    }
+
+    private fun observeIcon() {
+        viewModel.iconDrawable.observe(viewLifecycleOwner) {
+            if (it != 0)
+                binding.saveBillLayout.billIconLayout.billIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), it))
+        }
     }
 
     private fun toggleMainContent(show: Boolean) {
-        binding.billDetailsLayout.cardPaybillDetails.visibility =
-            if (show) View.VISIBLE else View.GONE
         binding.saveBillLayout.cardSavePaybill.visibility = if (show) View.VISIBLE else View.GONE
-
-        if (show) binding.continueBtn.visibility = View.VISIBLE
     }
 
     private fun setTextWatchers() {
-        with(binding.billDetailsLayout) {
+        with(binding.editCard) {
             businessNoInput.addTextChangedListener(businessNoWatcher)
             accountNoInput.addTextChangedListener(accountNoWatcher)
             amountInput.addTextChangedListener(amountWatcher)
@@ -250,7 +203,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            paybillViewModel.setAmount(charSequence.toString().replace(",".toRegex(), ""))
+            viewModel.setAmount(charSequence.toString().replace(",".toRegex(), ""))
         }
     }
 
@@ -258,7 +211,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            paybillViewModel.setBusinessNumber(charSequence.toString())
+            viewModel.setBusinessNumber(charSequence.toString())
         }
     }
 
@@ -266,7 +219,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            paybillViewModel.setAccountNumber(charSequence.toString().replace(",".toRegex(), ""))
+            viewModel.setAccountNumber(charSequence.toString().replace(",".toRegex(), ""))
         }
     }
 
@@ -274,44 +227,37 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            paybillViewModel.setNickname(charSequence.toString())
+            viewModel.setNickname(charSequence.toString())
         }
     }
 
     private fun validates(): Boolean {
-        val businessNoError = paybillViewModel.businessNoError()
-        val accountNoError = paybillViewModel.accountNoError()
-        val amountError = paybillViewModel.amountError()
-        val nickNameError = paybillViewModel.nameError()
+        val businessNoError = viewModel.businessNoError()
+        val accountNoError = viewModel.accountNoError()
+        val amountError = viewModel.amountError()
+        val nickNameError = viewModel.nameError()
         val saveBill = binding.saveBillLayout.saveBill.isChecked
 
-        with(binding.billDetailsLayout) {
-            businessNoInput.setState(
-                businessNoError,
-                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-            )
-            accountNoInput.setState(
-                accountNoError,
-                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-            )
-            amountInput.setState(
-                amountError,
-                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-            )
+        with(binding.editCard) {
+            businessNoInput.setState(businessNoError,
+                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            accountNoInput.setState(accountNoError,
+                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            amountInput.setState(amountError,
+                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         }
 
-        if (saveBill)
-            binding.saveBillLayout.billNameInput.setState(
-                nickNameError,
-                if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-            )
+        if (saveBill) {
+            binding.saveBillLayout.billNameInput.setState(nickNameError,
+                if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        }
 
         return businessNoError == null && accountNoError == null && amountError == null && (if (saveBill) nickNameError == null else true)
     }
 
     private fun showIconsChooser() = with(binding) {
         toggleMainContent(false)
-        binding.continueBtn.visibility = View.GONE
+        binding.fab.visibility = View.GONE
 
         with(paybillIconsLayout) {
             cardPaybillIcons.visibility = View.VISIBLE
@@ -330,17 +276,17 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         val channel = activeChannel.value
         val account = activeAccount.value
 
-        val actionToRun = paybillViewModel.selectedAction.value
+        val actionToRun = viewModel.selectedAction.value
 
         if (!actions.isNullOrEmpty() && channel != null && account != null)
-            (requireActivity() as AbstractHoverCallerActivity).run(account, actionToRun?: actions.first(), null, 0)
+            (requireActivity() as AbstractHoverCallerActivity).run(account, actionToRun?: actions.first(), viewModel.wrapExtras(), 0)
         else
             Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
     }
 
     override fun onPause() {
         super.onPause()
-        paybillViewModel.reset()
+        viewModel.reset()
         resetViews()
     }
 
@@ -353,35 +299,26 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private fun resetViews() {
         binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
         binding.saveBillLayout.billNameInput.setHint(getString(R.string.nickname))
-
-
-        with(binding.billDetailsLayout) {
-            accountDropdown.setHint(getString(R.string.account_label))
-            businessNoInput.setHint(getString(R.string.business_number_label))
-            accountNoInput.setHint(getString(R.string.account_number_label))
-            amountInput.setHint(getString(R.string.transfer_amount_label))
-
-            businessNoInput.binding.inputLayout.setEndIconDrawable(R.drawable.ic_chevron_right)
-        }
+        binding.editCard.businessNoInput.binding.inputLayout.setEndIconDrawable(R.drawable.ic_chevron_right)
     }
 
     override fun onSelectIcon(id: Int) {
-        paybillViewModel.setIconDrawable(id)
+        viewModel.setIconDrawable(id)
 
         binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
         toggleMainContent(true)
     }
 
-    private fun updateSavePaybillState(paybill: Paybill) = with(binding.saveBillLayout) {
+    private fun updateSaveCardState(paybill: Paybill) = with(binding.saveBillLayout) {
         if (paybill.isSaved) {
             saveBill.isChecked = true
             billNameInput.setText(paybill.name)
             amountCheckBox.isChecked = paybill.recurringAmount != 0
-            if (amountCheckBox.isChecked) paybillViewModel.setAmount(paybill.recurringAmount.toString())
+            if (amountCheckBox.isChecked) viewModel.setAmount(paybill.recurringAmount.toString())
 
             if (paybill.logo != 0) {
                 billIconLayout.billIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), paybill.logo))
-                paybillViewModel.setIconDrawable(paybill.logo)
+                viewModel.setIconDrawable(paybill.logo)
             }
         } else {
             //helps maintain the correct state when checking if the saved paybill has changed
@@ -389,20 +326,20 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             billNameInput.setText("")
             amountCheckBox.isChecked = false
             binding.saveBillLayout.cardSavePaybill.visibility = View.GONE
-            paybillViewModel.setIconDrawable(0)
+            viewModel.setIconDrawable(0)
         }
     }
 
-    private fun showUpdatePaybillConfirmation() = paybillViewModel.selectedPaybill.value?.let {
+    private fun showUpdatePaybillConfirmation() = viewModel.selectedPaybill.value?.let {
         dialog = StaxDialog(requireActivity())
             .setDialogTitle(getString(R.string.paybill_update_header))
             .setDialogMessage(getString(R.string.paybill_update_msg, it.name))
             .setNegButton(R.string.btn_cancel, null)
             .setPosButton(R.string.btn_update) { _ ->
                 if (activity != null) {
-                    paybillViewModel.updatePaybill(it, binding.saveBillLayout.amountCheckBox.isChecked)
+                    viewModel.updatePaybill(it, binding.saveBillLayout.amountCheckBox.isChecked)
                     UIHelper.flashMessage(requireActivity(), R.string.paybill_update_success)
-                    paybillViewModel.setEditing(false)
+                    viewModel.setEditing(false)
                 }
             }
         dialog!!.showIt()
@@ -410,8 +347,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if (paybillViewModel.isEditing.value == false)
-                paybillViewModel.setEditing(true)
+            if (viewModel.isEditing.value == false)
+                viewModel.setEditing(true)
             else
                 findNavController().popBackStack()
         }

@@ -32,12 +32,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
-    BiometricChecker.AuthListener, PushNotificationTopicsInterface, StaxGoogleLoginInterface {
+    BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
-    private val loginViewModel: LoginViewModel by viewModel()
     private val bountyRequest = 3000
 
     private lateinit var binding: ActivityMainBinding
@@ -186,7 +185,7 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
             checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
         else {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
-            run(account, HoverAction.BALANCE, null, account.id)
+            run(account, HoverAction.BALANCE)
         }
     }
 
@@ -222,13 +221,5 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
                 showPopUpTransactionDetailsIfRequired(data)
             }
         }
-    }
-
-    override fun googleLoginSuccessful() {
-        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST) navHelper.navigateToBountyList()
-    }
-
-    override fun googleLoginFailed() {
-        UIHelper.flashMessage(this, R.string.login_google_err)
     }
 }

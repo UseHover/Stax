@@ -13,10 +13,10 @@
             android:layout_marginTop="@dimen/margin_13">
 
         <com.hover.stax.accounts.AccountDropdown
-                android:id="@+id/accountDropdown"
+                android:id="@+id/payWithDropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/account_label"
+                android:hint="@string/pay_with_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/accountDropdown" />
+                app:layout_constraintTop_toBottomOf="@id/payWithDropdown" />
 
         <com.hover.stax.views.StaxTextInputLayout
                 android:id="@+id/accountNoInput"

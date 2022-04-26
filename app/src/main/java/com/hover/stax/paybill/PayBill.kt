@@ -4,6 +4,8 @@ import androidx.room.*
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 
+const val BUSINESS_NO = "businessNo"
+
 @Entity(
         tableName = "paybills",
         foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"]),

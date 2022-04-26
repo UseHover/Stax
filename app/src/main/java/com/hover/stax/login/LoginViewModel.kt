@@ -1,11 +1,9 @@
 package com.hover.stax.login
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -25,7 +23,7 @@ private const val EMAIL = "email"
 private const val USERNAME = "username"
 private const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 
-class LoginViewModel(val repo: ScheduleRepo, val application: Application) : ViewModel() {
+class LoginViewModel(val repo: ScheduleRepo, application: Application) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient
 
@@ -54,7 +52,7 @@ class LoginViewModel(val repo: ScheduleRepo, val application: Application) : Vie
             progress.value = 33
         } catch (e: ApiException) {
             Timber.e(e, "Google sign in failed")
-            onError(application.getString(R.string.login_google_err))
+            onError((getApplication() as Context).getString(R.string.login_google_err))
         }
     }
 
@@ -64,22 +62,22 @@ class LoginViewModel(val repo: ScheduleRepo, val application: Application) : Vie
             progress.value = 66
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val result = LoginNetworking(application).uploadUserToStax(email, username, optedIn.value!!, token)
+                    val result = LoginNetworking(getApplication()).uploadUserToStax(email, username, optedIn.value!!, token)
                     Timber.e("Uploading user to stax came back: ${result.code}")
 
                     if (result.code in 200..299) onSuccess(
                         JSONObject(result.body!!.string())
                     )
-                    else onError(application.getString(R.string.upload_user_error))
+                    else onError((getApplication() as Context).getString(R.string.upload_user_error))
                 } catch (e: IOException) {
-                    onError(application.getString(R.string.upload_user_error))
+                    onError((getApplication() as Context).getString(R.string.upload_user_error))
                 }
             }
         }
     }
 
     fun uploadLastUser() {
-        val account = GoogleSignIn.getLastSignedInAccount(application)
+        val account = GoogleSignIn.getLastSignedInAccount(getApplication())
         if (account != null) uploadUserToStax(email.value, account.displayName!!, account.idToken)
         else Timber.e("No account found")
     }
@@ -110,25 +108,25 @@ class LoginViewModel(val repo: ScheduleRepo, val application: Application) : Vie
         Timber.e("setting username %s", name)
         if (!name.isNullOrEmpty()) {
             username.postValue(name)
-            Utils.saveString(USERNAME, name, application)
+            Utils.saveString(USERNAME, name, getApplication())
         }
     }
 
     private fun setEmail(address: String?) {
-        Utils.saveString(EMAIL, address, application)
+        Utils.saveString(EMAIL, address, getApplication())
         email.postValue(address)
     }
 
     private fun getEmail(): String? {
-        if (Utils.getString(EMAIL, application) == null && Utils.getString(BOUNTY_EMAIL_KEY, application) != null) {
-            email.value = Utils.getString(BOUNTY_EMAIL_KEY, application)
-            Utils.saveString(EMAIL, email.value, application)
-        } else email.value = Utils.getString(EMAIL, application)
+        if (Utils.getString(EMAIL, getApplication()) == null && Utils.getString(BOUNTY_EMAIL_KEY, getApplication()) != null) {
+            email.value = Utils.getString(BOUNTY_EMAIL_KEY, getApplication())
+            Utils.saveString(EMAIL, email.value, getApplication())
+        } else email.value = Utils.getString(EMAIL, getApplication())
         return email.value
     }
 
     private fun getUsername(): String? {
-        username.value = Utils.getString(USERNAME, application)
+        username.value = Utils.getString(USERNAME, getApplication())
         return username.value
     }
 
@@ -137,7 +135,7 @@ class LoginViewModel(val repo: ScheduleRepo, val application: Application) : Vie
         Timber.e(message)
         signInClient.signOut().addOnCompleteListener {
             AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
-            AnalyticsUtil.logAnalyticsEvent(message, application)
+            AnalyticsUtil.logAnalyticsEvent(message, getApplication())
 
             resetAccountDetails()
 
@@ -147,7 +145,7 @@ class LoginViewModel(val repo: ScheduleRepo, val application: Application) : Vie
     }
 
     fun silentSignOut() = signInClient.signOut().addOnCompleteListener {
-        AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.logout), application)
+        AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.logout), getApplication())
         resetAccountDetails()
 
         email.value = null
@@ -157,8 +155,8 @@ class LoginViewModel(val repo: ScheduleRepo, val application: Application) : Vie
     }
 
     private fun resetAccountDetails() {
-        Utils.removeString(EMAIL, application)
-        Utils.removeString(USERNAME, application)
+        Utils.removeString(EMAIL, getApplication())
+        Utils.removeString(USERNAME, getApplication())
     }
 
 }

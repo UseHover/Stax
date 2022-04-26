@@ -8,9 +8,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.R
+import com.hover.stax.bounties.BountyEmailFragmentDirections
+import com.hover.stax.settings.SettingsFragment
+import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
+abstract class AbstractGoogleAuthActivity : AppCompatActivity(), StaxGoogleLoginInterface {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
@@ -61,6 +64,15 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
                 loginViewModel.signIntoGoogle(data, true)
             }
         }
+    }
+
+    override fun googleLoginSuccessful() {
+        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST)
+            BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment()
+    }
+
+    override fun googleLoginFailed() {
+        UIHelper.flashMessage(this, R.string.login_google_err)
     }
 
     companion object {

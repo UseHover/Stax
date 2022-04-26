@@ -6,13 +6,14 @@
         android:layout_marginVertical="@dimen/margin_13">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:descendantFocusability="afterDescendants"
-            android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="afterDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
         <include
-                android:id="@+id/billDetailsLayout"
+                android:id="@+id/editCard"
                 layout="@layout/paybill_card_details" />
 
         <include
@@ -20,7 +21,7 @@
                 layout="@layout/paybill_card_save_bill" />
 
         <include
-                android:id="@+id/paybillSummary"
+                android:id="@+id/summaryCard"
                 layout="@layout/paybill_summary" />
 
         <include
@@ -29,7 +30,7 @@
                 android:visibility="gone" />
 
         <Button
-                android:id="@+id/continue_btn"
+                android:id="@+id/fab"
                 style="@style/StaxFabExtended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,7 +38,8 @@
                 android:layout_marginHorizontal="@dimen/margin_13"
                 android:layout_marginTop="10dp"
                 app:fontFamily="@font/brutalista_medium"
-                android:text="@string/btn_continue" />
+                android:text="@string/btn_continue"
+                app:layout_anchorGravity="end|bottom" />
 
     </LinearLayout>
 

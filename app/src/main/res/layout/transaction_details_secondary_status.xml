@@ -39,7 +39,7 @@
         android:visibility="visible">
 
         <TextView
-            android:id="@+id/btnRetryTransaction"
+            android:id="@+id/btnRetry"
             android:background="@color/stax_state_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -264,6 +264,7 @@
 
     <!-- Transfer -->
     <string name="loading_link_dialoghead">Loading, one moment</string>
+    <string name="pay_with_label">Pay with</string>
     <string name="transfer_amount_label">Amount</string>
     <string name="account_label">Account</string>
     <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
@@ -392,7 +393,8 @@
     <string name="moneyin_label">Money in this month</string>
     <string name="fees_label">Fees paid to %1$s this year</string>
     <string name="transactions_cardhead">Transactions</string>
-    <string name="network_label">Recipient account</string>
+    <string name="institution_label">Recipient institution</string>
+    <string name="network_label">Recipient network</string>
     <string name="id_label">Transaction ID</string>
     <string name="stax_id_label">Stax ID</string>
     <string name="session_cardhead">USSD log</string>
@@ -662,6 +664,7 @@
     <string name="ussd_lib">Dial USSD</string>
 
     <string name="error_running_action">Sorry, this service integration is broken.</string>
+    <string name="error_still_loading">Please wait a moment and try again.</string>
 
     <!-- Financial Tips -->
     <string name="financial_wellness_tips">Financial Wellness Tips</string>

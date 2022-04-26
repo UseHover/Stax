@@ -6,7 +6,7 @@
         android:orientation="vertical">
 
     <com.hover.stax.accounts.AccountDropdown
-            android:id="@+id/accountDropdown"
+            android:id="@+id/payWithDropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/put_in"

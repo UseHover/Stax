@@ -15,8 +15,8 @@ import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
+import com.hover.stax.accounts.*;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
@@ -29,10 +29,10 @@ import timber.log.Timber;
 @Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
 
-    public final static String CONFIRM_CODE_KEY = "confirmCode", FEE_KEY = "fee", CATEGORY_INCOMPLETE_SESSION = "incomplete_session";
+    public final static String CONFIRM_CODE_KEY = "confirmCode", FEE_KEY = "fee";
     public final static String MMI_ERROR = "mmi-error", PIN_ERROR = "pin-error", BALANCE_ERROR = "balance-error",
             UNREGISTERED_ERROR = "unregistered-error", INVALID_ENTRY_ERROR = "invalid-entry",
-            NO_RESPONSE_ERROR = "no-response", INCOMPLETE_ERROR = "incomplete", UNSPECIFIED_ERROR = "unspecified-error";
+            NO_RESPONSE_ERROR = "no-response", INCOMPLETE_ERROR = "incomplete";
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -97,8 +97,8 @@ public class StaxTransaction {
     @ColumnInfo(name = "account_name")
     public Integer accountName;
 
-    @ColumnInfo(name = "new_balance")
-    public Integer newBalance;
+    @ColumnInfo(name = "note")
+    public String note;
 
     // FIXME: DO not use! This is covered by contact model. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
     @ColumnInfo(name = "counterparty")
@@ -151,8 +151,10 @@ public class StaxTransaction {
             confirm_code = extras.get(CONFIRM_CODE_KEY);
         if (extras.containsKey(HoverAction.BALANCE))
             balance = extras.get(HoverAction.BALANCE);
-        if (extras.containsKey(Constants.ACCOUNT_ID))
-            accountId = Integer.parseInt(extras.get(Constants.ACCOUNT_ID));
+        if (extras.containsKey(AccountKt.ACCOUNT_ID))
+            accountId = Integer.parseInt(extras.get(AccountKt.ACCOUNT_ID));
+        if (extras.containsKey(HoverAction.NOTE_KEY))
+            note = extras.get(HoverAction.NOTE_KEY);
     }
 
     private String generateDescription(HoverAction action, StaxContact contact, Context c) {

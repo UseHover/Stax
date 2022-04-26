@@ -39,8 +39,7 @@ object Constants {
     const val FRAGMENT_DIRECT = "fragment_direct"
     const val FROM_FCM = "from_notification"
     const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
-    const val ACCOUNT_NAME = "accountName"
-    const val ACCOUNT_ID = "accountId"
+
     const val ACTION = "action"
     const val TRANSACTION_TYPE = "transaction_type"
     const val CHANNELS_REFRESHED = "has_refreshed_channels"

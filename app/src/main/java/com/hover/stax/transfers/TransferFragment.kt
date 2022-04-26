@@ -69,7 +69,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         super.onResume()
 
         amountInput.setHint(getString(R.string.transfer_amount_label))
-        accountDropdown.setHint(getString(R.string.account_label))
+        payWithDropdown.setHint(getString(R.string.account_label))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -249,7 +249,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else {
-                (requireActivity() as MainActivity).run(accountDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!,
+                (requireActivity() as MainActivity).run(payWithDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!,
                     actionSelectViewModel.activeAction.value!!, transferViewModel.wrapExtras(), 0)
                 findNavController().popBackStack()
             }
@@ -283,7 +283,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val channelError = channelsViewModel.errorCheck()
-        accountDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        payWithDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val actionError = actionSelectViewModel.errorCheck()
         recipientInstitutionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -295,7 +295,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         channelsViewModel.activeAccount.value?.let {
             if (!channelsViewModel.isValidAccount()) {
-                accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
+                payWithDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
                 return false
             }
         }
@@ -354,7 +354,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         contactInput.setText(r.requester_number, false)
 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
-        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
+        payWithDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
     }
 

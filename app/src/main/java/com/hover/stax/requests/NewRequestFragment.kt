@@ -227,7 +227,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun validates(): Boolean {
         val accountError = requestViewModel.accountError()
-        accountDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val requesterAcctNoError = requestViewModel.requesterAcctNoError()
         requesterNumberInput.setState(requesterAcctNoError, if (requesterAcctNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -237,7 +237,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         requestViewModel.activeAccount.value?.let {
             if (!requestViewModel.isValidAccount()) {
-                accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
+                payWithDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
                 return false
             }
         }

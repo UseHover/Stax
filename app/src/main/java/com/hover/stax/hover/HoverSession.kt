@@ -3,9 +3,12 @@ package com.hover.stax.hover
 import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.Fragment
+import com.hover.stax.accounts.ACCOUNT_NAME
+import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.HoverParameters
+import com.hover.sdk.utils.TimerSingleton
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.PhoneHelper
@@ -29,12 +32,13 @@ class HoverSession private constructor(b: Builder) {
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
             .apply {
                 setEnvironment(if (Utils.getBoolean(Constants.TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
-                extra(Constants.ACCOUNT_NAME, account.name)
-                private_extra(Constants.ACCOUNT_ID, account.id.toString())
+                extra(ACCOUNT_NAME, account.name)
+                private_extra(ACCOUNT_ID, account.id.toString())
                 request(b.action.public_id)
                 setHeader(getMessage(b.action, b.activity))
                 initialProcessingMessage("")
                 showUserStepDescriptions(true)
+                timeout(TimerSingleton.TIMER_LENGTH)
                 finalMsgDisplayTime(finalScreenTime)
                 style(R.style.StaxHoverTheme)
                 sessionOverlayLayout(R.layout.stax_transacting_in_progress)

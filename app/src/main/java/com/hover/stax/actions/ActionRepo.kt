@@ -6,7 +6,7 @@ import com.hover.sdk.actions.HoverActionDao
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.database.AppDatabase
 
-class ActionRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
+class ActionRepo(sdkDb: HoverRoomDatabase) {
     private val actionDao: HoverActionDao = sdkDb.actionDao()
 
     fun getAction(public_id: String): HoverAction? {

@@ -2,6 +2,7 @@ package com.hover.stax.channels
 
 import android.app.Application
 import android.content.BroadcastReceiver
+import android.content.Context
 import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.actions.HoverAction
@@ -16,7 +17,7 @@ import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ChannelsViewModel(val application: Application, val repo: ChannelRepo, val actionRepo: ActionRepo, val accountRepo: AccountRepo) : ViewModel(),
+class ChannelsViewModel(application: Application, val repo: ChannelRepo, val actionRepo: ActionRepo, val accountRepo: AccountRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
     private var type = MutableLiveData<String>()
@@ -41,7 +42,9 @@ class ChannelsViewModel(val application: Application, val repo: ChannelRepo, val
             addSource(activeAccount, this@ChannelsViewModel::loadActions)
         }
 
-        accounts.postValue(accountRepo.getAllAccounts())
+        viewModelScope.launch(Dispatchers.IO) {
+            accounts.postValue(accountRepo.getAllAccounts())
+        }
     }
 
     fun setType(t: String) {
@@ -111,10 +114,10 @@ class ChannelsViewModel(val application: Application, val repo: ChannelRepo, val
 
     fun errorCheck(): String? {
         return when {
-            activeAccount.value == null -> application.getString(R.string.channels_error_noselect)
-            channelActions.value.isNullOrEmpty() -> application.getString(
+            activeAccount.value == null -> (getApplication() as Context).getString(R.string.channels_error_noselect)
+            channelActions.value.isNullOrEmpty() -> (getApplication() as Context).getString(
                 R.string.no_actions_fielderror,
-                HoverAction.getHumanFriendlyType(application, type.value)
+                HoverAction.getHumanFriendlyType(getApplication(), type.value)
             )
             else -> null
         }
@@ -181,7 +184,7 @@ class ChannelsViewModel(val application: Application, val repo: ChannelRepo, val
     override fun onCleared() {
         try {
             simReceiver?.let {
-                LocalBroadcastManager.getInstance(application).unregisterReceiver(it)
+                LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(it)
             }
         } catch (ignored: Exception) {
         }

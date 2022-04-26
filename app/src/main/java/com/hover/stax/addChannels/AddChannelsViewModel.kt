@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class AddChannelsViewModel(val application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo) : ViewModel(),
+class AddChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val allChannels: LiveData<List<Channel>> = repo.publishedChannels
@@ -70,15 +70,15 @@ class AddChannelsViewModel(val application: Application, val repo: ChannelRepo, 
             sims.postValue(deviceSims)
 
             val countryCodes = deviceSims.map { it.countryIso }.toSet()
-            Utils.putStringSet(Constants.COUNTRIES, countryCodes, application)
+            Utils.putStringSet(Constants.COUNTRIES, countryCodes, getApplication())
         }
 
         simReceiver?.let {
-            LocalBroadcastManager.getInstance(application)
-                .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+            LocalBroadcastManager.getInstance(getApplication())
+                .registerReceiver(it, IntentFilter(Utils.getPackage(getApplication()).plus(".NEW_SIM_INFO_ACTION")))
         }
 
-        Hover.updateSimInfo(application)
+        Hover.updateSimInfo(getApplication())
     }
 
     private fun setSimBroadcastReceiver() {
@@ -146,21 +146,21 @@ class AddChannelsViewModel(val application: Application, val repo: ChannelRepo, 
                 channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
                 repo.update(channel)
 
-                ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, application)
+                ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, getApplication())
             }
         }
     }
 
     private fun logChoice(channel: Channel) {
-        joinChannelGroup(channel.id, application.applicationContext)
+        joinChannelGroup(channel.id, getApplication() as Context)
         val args = JSONObject()
 
         try {
-            args.put(application.getString(R.string.added_channel_id), channel.id)
+            args.put((getApplication() as Context).getString(R.string.added_channel_id), channel.id)
         } catch (ignored: Exception) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.new_channel_selected), args, application.baseContext)
+        AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
     private fun updateAccounts() = viewModelScope.launch(Dispatchers.IO) {
@@ -179,7 +179,7 @@ class AddChannelsViewModel(val application: Application, val repo: ChannelRepo, 
         }
     }
 
-    fun loadAccounts() = viewModelScope.launch {
+    fun loadAccounts() = viewModelScope.launch(Dispatchers.IO) {
         accountRepo.getAccounts().collect { accounts.postValue(it) }
     }
 

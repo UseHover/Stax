@@ -1,6 +1,7 @@
 package com.hover.stax.transfers
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -15,6 +16,7 @@ import com.hover.stax.requests.Request
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,12 +72,12 @@ class TransferViewModel(application: Application, val requestRepo: RequestRepo, 
 
     fun amountErrors(): String? {
         return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
-        else application.getString(R.string.amount_fielderror)
+        else getString(R.string.amount_fielderror)
     }
 
     fun recipientErrors(a: HoverAction?): String? {
         return when {
-            (a != null && a.requiresRecipient() && (contact.value == null || contact.value?.accountNumber == null)) -> application.getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
+            (a != null && a.requiresRecipient() && (contact.value == null || contact.value?.accountNumber == null)) -> getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
             else -> null
         }
     }
@@ -83,18 +85,17 @@ class TransferViewModel(application: Application, val requestRepo: RequestRepo, 
     fun wrapExtras(): HashMap<String, String> {
         val extras: HashMap<String, String> = hashMapOf()
         if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
-        if (contact.value != null) extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
-        if (contact.value != null) extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
+        if (contact.value != null) {
+            extras[StaxContact.ID_KEY] = contact.value!!.id
+            extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
+            extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
+        }
         if (note.value != null) extras[HoverAction.NOTE_KEY] = note.value!!
         return extras
     }
 
-    private fun addExtra() {
-
-    }
-
     fun decrypt(encryptedString: String): LiveData<Request> {
-        request = requestRepo.decrypt(encryptedString, application)
+        request = requestRepo.decrypt(encryptedString, getApplication())
         return request
     }
 

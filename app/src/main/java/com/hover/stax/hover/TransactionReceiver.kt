@@ -3,6 +3,8 @@ package com.hover.stax.hover
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+
+import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.accounts.Account
@@ -13,7 +15,6 @@ import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.requests.RequestRepo
-import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
@@ -66,8 +67,8 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         if (intent.hasExtra(TransactionContract.COLUMN_INPUT_EXTRAS)) {
             val inputExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as HashMap<String, String>
 
-            if (inputExtras.containsKey(Constants.ACCOUNT_ID)) {
-                val accountId = inputExtras[Constants.ACCOUNT_ID]
+            if (inputExtras.containsKey(ACCOUNT_ID)) {
+                val accountId = inputExtras[ACCOUNT_ID]
                 accountId?.let {
                     account = accountRepo.getAccount(accountId.toInt())
                     Timber.e("$account")
