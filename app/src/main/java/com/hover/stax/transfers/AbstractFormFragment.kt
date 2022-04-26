@@ -41,8 +41,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     var editCard: StaxCardView? = null
     private var editRequestCard: LinearLayout? = null
-
-    private lateinit var summaryCard: StaxCardView
+    var summaryCard: StaxCardView? = null
     lateinit var payWithDropdown: AccountDropdown
     lateinit var fab: Button
 
@@ -62,7 +61,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     @CallSuper
     open fun startObservers(root: View) {
-        summaryCard.setOnClickIcon { abstractFormViewModel.setEditing(true) }
+        summaryCard?.setOnClickIcon { abstractFormViewModel.setEditing(true) }
         payWithDropdown.setListener(channelsViewModel)
         payWithDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
         setupActionDropdownObservers()
@@ -80,7 +79,7 @@ abstract class AbstractFormFragment : Fragment() {
         editRequestCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
 
         noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
-        summaryCard.visibility = if (isEditing) View.GONE else View.VISIBLE
+        summaryCard?.visibility = if (isEditing) View.GONE else View.VISIBLE
         fab.text = chooseFabText(isEditing)
     }
 

@@ -29,6 +29,17 @@
                 layout="@layout/paybill_card_icons"
                 android:visibility="gone" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_13"
+            android:lineSpacingExtra="2sp"
+            android:id="@+id/noWorryText"
+            android:text="@string/noworry_explain"
+            android:textColor="@color/offWhite"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:textSize="@dimen/text_16" />
+
         <Button
                 android:id="@+id/fab"
                 style="@style/StaxFabExtended"

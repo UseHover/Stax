@@ -9,6 +9,8 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
 import com.hover.stax.financialTips.FinancialTipsViewModel
@@ -18,6 +20,7 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -29,6 +32,7 @@ class HomeFragment : Fragment() {
 
     private val bannerViewModel: BannerViewModel by viewModel()
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
+    private val channelViewModel: ChannelsViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -49,6 +53,7 @@ class HomeFragment : Fragment() {
         }
 
         setUpWellnessTips()
+        channelViewModel.selectedChannels.observe(viewLifecycleOwner, this::setPaybillVisibility)
     }
 
     private fun setupBanner() {
@@ -69,15 +74,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        setPaybillVisibility()
-    }
-
-    private fun setPaybillVisibility() {
-        val countries = Utils.getStringSet(Constants.COUNTRIES, requireActivity())
+    private fun setPaybillVisibility(channels: List<Channel>) {
         binding.paybill.apply {
-            if (!countries.isNullOrEmpty() && countries.any { it.contentEquals("KE", ignoreCase = true) }) {
+            if (!channels.isNullOrEmpty() && channels.any { it.countryAlpha2.contentEquals("KE", ignoreCase = true) }) {
                 visibility = View.VISIBLE
                 setOnClickListener {
                     navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment(false))

@@ -191,6 +191,7 @@ class AddChannelsViewModel(application: Application, val repo: ChannelRepo, val 
     }
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
+        setChannelsSelected(channels)
         val defaultAccount = accountRepo.getDefaultAccount()
 
         channels.forEach {

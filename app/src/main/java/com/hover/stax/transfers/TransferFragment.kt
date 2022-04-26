@@ -81,8 +81,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun init(root: View) {
-        setTitle()
+        super.init(root)
 
+        setTitle()
         amountInput = binding.editCard.amountInput
         contactInput = binding.editCard.contactSelect
         recipientInstitutionSelect = binding.editCard.actionSelect
@@ -91,8 +92,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         if (actionSelectViewModel.filteredActions.value != null)
             recipientInstitutionSelect.updateActions(actionSelectViewModel.filteredActions.value!!)
-
-        super.init(root)
 
         feeBtn.setText("Check fee")
         feeBtn.setTextColor(getColor(requireContext(), R.color.stax_state_blue))

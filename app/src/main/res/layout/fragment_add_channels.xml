@@ -29,7 +29,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/selectedList"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"/>
 
             </com.hover.stax.views.StaxCardView>
 
@@ -73,6 +74,7 @@
                     android:id="@+id/channelsList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
                     app:layout_constraintTop_toBottomOf="@id/error_text" />
 
             </com.hover.stax.views.StaxCardView>

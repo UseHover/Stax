@@ -67,34 +67,42 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.channelsListCard.showProgressIndicator()
 
         binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
+        fillUpChanelLists()
+        setupEmptyState()
+
+        setUpMultiselect()
+        setSearchInputWatcher()
+
+        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
+        channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
+        channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
+
+        setFabListener()
+    }
+
+    private fun fillUpChanelLists() {
         binding.selectedList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
             setHasFixedSize(true)
-            isNestedScrollingEnabled = false
         }
 
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
             setHasFixedSize(true)
             adapter = selectAdapter
-            isNestedScrollingEnabled = false
         }
-        setupEmptyState()
-
-        setUpMultiselect()
-        setSearchInputWatcher()
-
-
-        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
-        channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
     }
+
     private fun setupEmptyState() {
         binding.emptyState.root.visibility = GONE
         binding.emptyState.informUs.setOnClickListener {
             RequestServiceDialog(requireActivity()).showIt()
         }
+    }
+
+    private fun setFabListener() {
+        binding.continueBtn.setOnClickListener { saveAndGoHome(tracker!!) }
     }
 
     private fun setSearchInputWatcher() {
@@ -117,10 +125,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
             .build()
         selectAdapter.setTracker(tracker!!)
-
-        binding.continueBtn.setOnClickListener {
-            aggregateSelectedChannels(tracker!!)
-        }
     }
 
     private fun onSelectedLoaded(channels: List<Channel>) {
@@ -171,22 +175,24 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         }
     }
 
-    private fun aggregateSelectedChannels(tracker: SelectionTracker<Long>) {
+    private fun saveAndGoHome(tracker: SelectionTracker<Long>) {
         if (tracker.selection.isEmpty)
             setError(R.string.channels_error_noselect)
         else {
             binding.errorText.visibility = GONE
-
-            val selectedChannels = mutableListOf<Channel>()
-            tracker.selection.forEach { selection ->
-                selectedChannels.addAll(selectAdapter.channelList.filter { it.id.toLong() == selection })
-            }
-
-            channelsViewModel.setChannelsSelected(selectedChannels)
-            channelsViewModel.createAccounts(selectedChannels)
-
+            aggregateSelectedChannels(tracker)
+            Timber.e("Navigating home now")
             AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
         }
+    }
+
+    private fun aggregateSelectedChannels(tracker: SelectionTracker<Long>) {
+        val selectedChannels = mutableListOf<Channel>()
+        tracker.selection.forEach { selection ->
+            selectedChannels.addAll(selectAdapter.channelList.filter { it.id.toLong() == selection })
+        }
+
+        channelsViewModel.createAccounts(selectedChannels)
     }
 
     override fun clickedChannel(channel: Channel) {

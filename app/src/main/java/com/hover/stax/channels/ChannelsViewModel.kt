@@ -77,7 +77,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val act
     }
 
     private fun loadActions(type: String?) {
-        if (type == null) return
+        if (type == null || activeAccount.value == null) return
 
         if (accounts.value.isNullOrEmpty()) return
         if (type == HoverAction.BALANCE)

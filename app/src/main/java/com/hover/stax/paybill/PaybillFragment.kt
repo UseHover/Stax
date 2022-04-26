@@ -18,12 +18,14 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.home.AbstractHoverCallerActivity
 import com.hover.stax.transfers.AbstractFormFragment
+import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
+import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -32,11 +34,14 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private var _binding: FragmentPaybillBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: PaybillViewModel by sharedViewModel()
+    private lateinit var viewModel: PaybillViewModel
 
     private val args: PaybillFragmentArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        abstractFormViewModel = getSharedViewModel<PaybillViewModel>()
+        viewModel = abstractFormViewModel as PaybillViewModel
+
         _binding = FragmentPaybillBinding.inflate(inflater, container, false)
         channelsViewModel.setType(HoverAction.C2B)
         return binding.root
@@ -45,14 +50,18 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill)), requireActivity())
+        init(binding.root)
+    }
 
+    override fun init(root: View) {
+        super.init(binding.root)
         //TODO test updating of business
         if (args.updateBusiness) {
             binding.editCard.businessNoInput.setText(viewModel.businessNumber.value)
         }
 
         initListeners()
-        startObservers(view)
+        startObservers(root)
         setTextWatchers()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
@@ -79,9 +88,6 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private fun setBusinessNoTouchListener() =
         binding.editCard.businessNoInput.editText.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                resetViews()
-                viewModel.reset()
-
                 channelsViewModel.activeAccount.value?.id?.let {
                     NavUtil.navigate(findNavController(), PaybillFragmentDirections.actionPaybillFragmentToPaybillListFragment(it))
                 } ?: Timber.e("Active account not set")
@@ -284,21 +290,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.reset()
-        resetViews()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //sometimes when navigating back from another fragment, the labels get all messed up
-        resetViews()
-    }
-
     private fun resetViews() {
         binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
-        binding.saveBillLayout.billNameInput.setHint(getString(R.string.nickname))
         binding.editCard.businessNoInput.binding.inputLayout.setEndIconDrawable(R.drawable.ic_chevron_right)
     }
 
