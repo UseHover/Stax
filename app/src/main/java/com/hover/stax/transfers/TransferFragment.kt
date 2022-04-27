@@ -167,8 +167,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
 
-//            if (args.transactionUUID == null)
-//                accountDropdown.setCurrentAccount()
+            if (args.transactionUUID == null)
+                accountDropdown.setCurrentAccount()
         }
     }
 
