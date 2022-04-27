@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
@@ -75,10 +76,10 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     )
 
     override fun init(root: View) {
-        amountInput = binding.editRequestCard.cardAmount.amountInput
-        requesteeInput = binding.editRequestCard.cardRequestee.contactSelect
-        requesterNumberInput = binding.editRequestCard.cardRequester.accountNumberInput
-        noteInput = binding.editRequestCard.transferNote.noteInput
+        amountInput = binding.editCard.cardAmount.amountInput
+        requesteeInput = binding.editCard.cardRequestee.contactSelect
+        requesterNumberInput = binding.editCard.cardRequester.accountNumberInput
+        noteInput = binding.editCard.transferNote.noteInput
 
         recipientValue = binding.summaryCard.recipientValue
         accountValue = binding.summaryCard.accountValue
@@ -92,20 +93,20 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         //https://stackoverflow.com/a/54939860/2371515
-        val channelsObserver = Observer<Channel?> { c ->
-            c?.let {
-                requestViewModel.setActiveChannel(it)
+        val accountsObserver = Observer<Account?> { a ->
+            a?.let {
+                requestViewModel.setActiveAccount(it)
                 accountValue.setTitle(it.toString())
             }
         }
 
-        with(channelsViewModel) {
+        with(accountsViewModel) {
             accounts.observe(viewLifecycleOwner) {
                 //no channels selected. navigate user to accounts fragment
                 if (it.isNullOrEmpty())
                     setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
             }
-            activeChannel.observe(viewLifecycleOwner, channelsObserver)
+            activeAccount.observe(viewLifecycleOwner, accountsObserver)
         }
 
         with(requestViewModel) {

@@ -1,23 +1,20 @@
 package com.hover.stax.transfers
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.requests.Request
 import com.hover.stax.requests.RequestRepo
-import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
+import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -28,8 +25,8 @@ class TransferViewModel(application: Application, val requestRepo: RequestRepo, 
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
 
-    fun setTransactionType(transaction_type: String) {
-        TransactionType.type = transaction_type
+    init {
+        request
     }
 
     fun setAmount(a: String) = amount.postValue(a)
@@ -45,20 +42,16 @@ class TransferViewModel(application: Application, val requestRepo: RequestRepo, 
 
     fun forceUpdateContactUI() = contact.postValue(contact.value)
 
-    fun setRecipient(r: String) {
-        if (contact.value != null && contact.value.toString() == r) return
-        contact.value = StaxContact(r)
+    fun setRecipient(str: String) {
+        if (contact.value != null && contact.value.toString() == str) return
+        contact.value = if (str.isNullOrEmpty()) StaxContact() else StaxContact(str)
     }
 
-    fun resetRecipient() {
-        contact.value = StaxContact()
-    }
-
-    fun setRecipientSmartly(r: Request?, channel: Channel) {
+    fun setRecipientSmartly(r: Request?, countryAlpha2: String?) {
         r?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number)
+                    val formattedPhone = PhoneHelper.getNationalSignificantNumber(r.requester_number, countryAlpha2 ?: Lingver.getInstance().getLocale().country)
                     val sc = contactRepo.getContactByPhone(formattedPhone)
                     sc?.let { contact.postValue(it) }
                 } catch (e: NumberFormatException) {
@@ -95,19 +88,15 @@ class TransferViewModel(application: Application, val requestRepo: RequestRepo, 
     }
 
     fun decrypt(encryptedString: String): LiveData<Request> {
-        request = requestRepo.decrypt(encryptedString, getApplication())
+        viewModelScope.launch {
+            request = requestRepo.decrypt(encryptedString, getApplication())
+        }
         return request
     }
 
-    fun view(s: Schedule) {
-        schedule.postValue(s)
-        setTransactionType(s.type)
-        setAmount(s.amount)
-        setContact(s.recipient_ids)
-        setNote(s.note)
-    }
-
-    fun view(r: Request) {
+    fun load(r: Request) {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), getApplication())
+        setRecipientSmartly(r, r.requester_country_alpha2)
         setAmount(r.amount)
         setContact(r.requestee_ids)
         setNote(r.note)
@@ -131,7 +120,7 @@ class TransferViewModel(application: Application, val requestRepo: RequestRepo, 
         }
     }
 
-    fun reset() {
+    override fun reset() {
         amount.value = null
         contact.value = null
     }

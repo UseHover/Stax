@@ -7,22 +7,25 @@ import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.Flow
 
-class AccountRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
+class AccountRepo(db: AppDatabase) {
     private val accountDao: AccountDao = db.accountDao()
 
     //    val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
 
     fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
+    fun getAllLiveAccounts(): LiveData<List<Account>> = accountDao.getLiveAccounts()
 
     fun getAccountsCount(): Int = accountDao.getDataCount()
 
-    fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
+    fun getAccountsByChannel(channelId: Int): List<Account> = accountDao.getAccountsByChannel(channelId)
 
     fun getDefaultAccount(): Account? = accountDao.getDefaultAccount()
 
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
     fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
+
+    fun getAccountsByInstitution(institutionId: Int): LiveData<List<Account>> = accountDao.getAccountsByInstitution(institutionId)
 
     fun getAccounts(): Flow<List<Account>> = accountDao.getAccounts()
 

@@ -3,6 +3,7 @@ package com.hover.stax.requests
 import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
@@ -23,38 +24,30 @@ import java.util.*
 class NewRequestViewModel(application: Application, val repo: RequestRepo, val accountRepo: AccountRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val activeAccount = MutableLiveData<Account?>()
-    val activeChannel = MutableLiveData<Channel>()
     val amount = MutableLiveData<String?>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
     val requestee = MutableLiveData<StaxContact?>()
-    val requesterNumber = MediatorLiveData<String>()
+    var requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String?>()
 
     val formulatedRequest = MutableLiveData<Request>()
     private val finalRequests = MutableLiveData<List<Request>>()
 
     init {
-        requesterNumber.addSource(activeChannel, this::setRequesterNumber)
+        requesterNumber.addSource(activeAccount) { setRequesterNumber(it) }
     }
 
     fun setAmount(a: String?) = amount.postValue(a)
 
-    fun setActiveChannel(c: Channel) {
-        activeChannel.postValue(c)
+    fun setActiveAccount(account: Account) = activeAccount.postValue(account)
 
-        viewModelScope.launch(Dispatchers.IO) {
-            val account = accountRepo.getAccounts(c.id).firstOrNull()
-            setActiveAccount(account)
-        }
+    private fun setRequesterNumber(a: Account?) {
+        requesterNumber.postValue(a?.accountNo ?: "")
     }
 
-    private fun setActiveAccount(account: Account?) = activeAccount.postValue(account)
-
-    private fun setRequesterNumber(c: Channel) = requesterNumber.postValue(c.accountNo)
-
     fun setRequesterNumber(number: String) {
+        activeAccount.value?.let { it.accountNo = number }
         requesterNumber.postValue(number)
-        activeChannel.value?.let { it.accountNo = number }
     }
 
     fun setRecipient(recipient: String) {
@@ -99,7 +92,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
     fun createRequest() {
         saveContacts()
 
-        val request = Request(amount.value, note.value, requesterNumber.value, activeChannel.value!!.institutionId)
+        val request = Request(amount.value, note.value, requesterNumber.value, activeAccount.value!!.institutionId)
         formulatedRequest.value = request
     }
 
@@ -123,7 +116,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
         }
     }
 
-    fun reset() {
+    override fun reset() {
         setAmount(null)
         setNote(null)
         requestee.value = null

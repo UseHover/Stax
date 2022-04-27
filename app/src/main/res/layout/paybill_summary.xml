@@ -70,7 +70,7 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/accountLabel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recipient"
-                tools:text="@string/account_label" />
+                tools:text="@string/account_no_label" />
 
         <TextView
                 android:id="@+id/amountLabel"

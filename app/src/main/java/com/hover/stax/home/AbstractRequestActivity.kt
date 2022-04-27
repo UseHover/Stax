@@ -5,6 +5,7 @@ import android.os.Handler
 import android.view.View
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestSenderInterface
 import com.hover.stax.requests.SmsSentObserver
@@ -15,27 +16,7 @@ import com.hover.stax.utils.Constants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class AbstractRequestActivity : AbstractHoverCallerActivity(), RequestSenderInterface, SmsSentObserver.SmsSentListener {
-
     private val requestViewModel: NewRequestViewModel by viewModel()
-    private val scheduleViewModel: ScheduleDetailViewModel by viewModel()
-    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
-    private val transferViewModel: TransferViewModel by viewModel()
-
-    fun createFromSchedule(scheduleId: Int, isRequestType: Boolean) {
-        with(scheduleViewModel) {
-            if (isRequestType) {
-                schedule.observe(this@AbstractRequestActivity) { it?.let { requestViewModel.setSchedule(it) } }
-                AnalyticsUtil.logAnalyticsEvent(getString(com.hover.stax.R.string.clicked_schedule_notification), this@AbstractRequestActivity)
-            } else {
-                action.observe(this@AbstractRequestActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
-                schedule.observe(this@AbstractRequestActivity) { it?.let { transferViewModel.view(it) } }
-            }
-
-            setSchedule(scheduleId)
-        }
-
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this)
-    }
 
     fun sendSms() {
         requestViewModel.saveRequest()
@@ -45,7 +26,7 @@ abstract class AbstractRequestActivity : AbstractHoverCallerActivity(), RequestS
 
     fun sendWhatsapp() {
         requestViewModel.saveRequest()
-        sendWhatsapp(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.activeChannel.value, this)
+        sendWhatsapp(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.activeAccount.value, this)
     }
 
     fun copyShareLink(view: View) {

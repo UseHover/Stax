@@ -19,7 +19,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
-import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.destruct.SelfDestructActivity
@@ -42,7 +42,7 @@ import timber.log.Timber
 
 class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val accountsViewModel: AccountsViewModel by viewModel()
     private lateinit var remoteConfig: FirebaseRemoteConfig
     private lateinit var workManager: WorkManager
     private var hasAccounts = false
@@ -65,7 +65,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startBackgroundProcesses() {
-        with(channelsViewModel) {
+        with(accountsViewModel) {
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
             allChannels.observe(this@RoutingActivity) {
                 if (it.isEmpty())

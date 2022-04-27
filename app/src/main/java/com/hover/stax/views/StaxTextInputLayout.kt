@@ -45,6 +45,15 @@ class StaxTextInputLayout(context: Context, attrs: AttributeSet) : AbstractState
         if (inputType > 0) binding.inputEditText.inputType = inputType
     }
 
+    fun setMutlipartText(text: String?, subtext: String?) {
+        if (text.isNullOrEmpty())
+            setText(subtext)
+        else if (subtext.isNullOrEmpty())
+            setText(text)
+        else
+            setText("$text ($subtext)")
+    }
+
     fun setText(text: String?) {
         text?.let {
             editText.setText(it)

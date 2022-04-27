@@ -11,6 +11,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
@@ -18,7 +19,7 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import timber.log.Timber
 
-class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root), Target {
+class ChannelViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root), Target {
 
     var id: TextView? = null
     private var channelText: AppCompatTextView? = null

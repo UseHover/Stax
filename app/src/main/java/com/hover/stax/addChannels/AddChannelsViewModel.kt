@@ -197,7 +197,7 @@ class AddChannelsViewModel(application: Application, val repo: ChannelRepo, val 
         channels.forEach {
             with(it) {
                 val accountName: String = if (getFetchAccountAction(it.id) == null) name else Constants.PLACEHOLDER //placeholder alias for easier identification later
-                val account = Account(accountName, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+                val account = Account(accountName, name, logoUrl, accountNo, id, it.countryAlpha2, it.id, primaryColorHex, secondaryColorHex, defaultAccount == null)
                 accountRepo.insert(account)
             }
         }

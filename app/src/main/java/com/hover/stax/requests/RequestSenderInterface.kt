@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.TextView
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
@@ -33,19 +34,19 @@ interface RequestSenderInterface {
         a.startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS)
     }
 
-    fun sendWhatsapp(r: Request?, requestees: List<StaxContact?>?, channel: Channel?, a: Activity) {
+    fun sendWhatsapp(r: Request?, requestees: List<StaxContact?>?, account: Account?, a: Activity) {
         if (r == null || requestees == null) {
             showError(a)
             return
         }
         logAnalyticsEvent(a.getString(R.string.clicked_send_whatsapp_request), a)
-        if (requestees.size == 1) sendWhatsAppToSingleContact(r, requestees, channel, a) else sendWhatsAppToMultipleContacts(r.generateMessage(a), a)
+        if (requestees.size == 1) sendWhatsAppToSingleContact(r, requestees, account, a) else sendWhatsAppToMultipleContacts(r.generateMessage(a), a)
     }
 
-    fun sendWhatsAppToSingleContact(r: Request, requestees: List<StaxContact?>?, channel: Channel?, a: Activity) {
+    fun sendWhatsAppToSingleContact(r: Request, requestees: List<StaxContact?>?, account: Account?, a: Activity) {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_VIEW
-        val whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, channel) + "&text=" + r.generateMessage(a)
+        val whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, account) + "&text=" + r.generateMessage(a)
         sendIntent.data = Uri.parse(whatsapp)
         try {
             a.startActivityForResult(sendIntent, Constants.SMS)

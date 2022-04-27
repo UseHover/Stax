@@ -5,7 +5,7 @@ import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.utils.AnalyticsUtil
 
-class ContactRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
+class ContactRepo(db: AppDatabase) {
     private val contactDao: ContactDao = db.contactDao()
 
     val allContacts: LiveData<List<StaxContact>>

@@ -1,8 +1,10 @@
 package com.hover.stax.paybill
 
 import androidx.room.*
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
+import javax.annotation.Nullable
 
 const val BUSINESS_NO = "businessNo"
 
@@ -22,11 +24,12 @@ data class Paybill(
         @ColumnInfo(name = "account_no")
         var accountNo: String? = null,
 
-        @ColumnInfo(index = true)
-        val channelId: Int,
+        @Nullable
+        @ColumnInfo(name = "action_id", defaultValue = "")
+        var actionId: String? = null,
 
         @ColumnInfo(index = true)
-        val accountId: Int,
+        val accountId: Int = 0,
 
         @ColumnInfo(name = "logo_url")
         val logoUrl: String
@@ -37,6 +40,9 @@ data class Paybill(
 
     @ColumnInfo(name = "recurring_amount")
     var recurringAmount: Int = 0
+
+    @ColumnInfo(index = true)
+    var channelId: Int = 0
 
     var logo: Int = 0
 

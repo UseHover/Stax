@@ -5,12 +5,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -20,7 +21,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.accounts.AccountDropdown
-import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
@@ -28,8 +30,10 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
+import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -37,10 +41,10 @@ import timber.log.Timber
 abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
-    val channelsViewModel: ChannelsViewModel by sharedViewModel()
+    val accountsViewModel: AccountsViewModel by sharedViewModel()
+    val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
 
     var editCard: StaxCardView? = null
-    private var editRequestCard: LinearLayout? = null
     var summaryCard: StaxCardView? = null
     lateinit var payWithDropdown: AccountDropdown
     lateinit var fab: Button
@@ -49,41 +53,53 @@ abstract class AbstractFormFragment : Fragment() {
 
     var dialog: StaxDialog? = null
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        abstractFormViewModel.reset()
+    }
+
     @CallSuper
     open fun init(root: View) {
         editCard = root.findViewById(R.id.editCard)
-        editRequestCard = root.findViewById(R.id.editRequestCard)
         noWorryText = root.findViewById(R.id.noWorryText)
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
         payWithDropdown = root.findViewById(R.id.payWithDropdown)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
     @CallSuper
     open fun startObservers(root: View) {
         summaryCard?.setOnClickIcon { abstractFormViewModel.setEditing(true) }
-        payWithDropdown.setListener(channelsViewModel)
-        payWithDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
+        payWithDropdown.setListener(accountsViewModel)
+        payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         setupActionDropdownObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
     }
 
     private fun setupActionDropdownObservers() {
-        channelsViewModel.activeChannel.observe(viewLifecycleOwner) { Timber.e("Got new active channel ${this.javaClass.simpleName}: $it ${it?.countryAlpha2}") }
-        channelsViewModel.channelActions.observe(viewLifecycleOwner) { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
+        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { Timber.e("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
+        accountsViewModel.channelActions.observe(viewLifecycleOwner) { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { Timber.e("Got new active channel ${this.javaClass.simpleName}: $it ${it?.public_id}") }
     }
 
 
+    @CallSuper
     open fun showEdit(isEditing: Boolean) {
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
-        editRequestCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
-
-        noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
         summaryCard?.visibility = if (isEditing) View.GONE else View.VISIBLE
+        noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
         fab.text = chooseFabText(isEditing)
     }
 
-    fun chooseFabText(isEditing: Boolean): String {
+    fun setInputState(hasFocus: Boolean, input: StaxTextInputLayout, errors: String?) {
+        if (!hasFocus)
+            input.setState(errors, if (errors == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        else
+            input.setState(null, AbstractStatefulInput.NONE)
+    }
+
+    private fun chooseFabText(isEditing: Boolean): String {
         return if (isEditing) getString(R.string.btn_continue)
             else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
             else if (type == HoverAction.C2B) getString(R.string.fab_airtimenow)
@@ -145,5 +161,15 @@ abstract class AbstractFormFragment : Fragment() {
                 NavUtil.navigate(findNavController(), navDirections)
             true
         }
+    }
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (abstractFormViewModel.isEditing.value == false)
+                abstractFormViewModel.setEditing(true)
+            else
+                findNavController().popBackStack()
+        }
+
     }
 }

@@ -57,6 +57,9 @@ public class Channel implements Comparable<Channel> {
     @NonNull
     @ColumnInfo(name = "selected", defaultValue = "0")
     public boolean selected;
+
+
+    // Dont use the below, it needs to be removed
     @NonNull
     @ColumnInfo(name = "defaultAccount", defaultValue = "0")
     public boolean defaultAccount;

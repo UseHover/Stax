@@ -6,7 +6,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 
-class ChannelsAdapter(var channelList: List<Channel>, var selectListener: SelectListener?) : RecyclerView.Adapter<ChannelsViewHolder>() {
+class ChannelsAdapter(var channels: List<Channel>, var selectListener: SelectListener?) : RecyclerView.Adapter<ChannelViewHolder>() {
 
     private var selectionTracker: SelectionTracker<Long>? = null
 
@@ -14,25 +14,25 @@ class ChannelsAdapter(var channelList: List<Channel>, var selectListener: Select
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelViewHolder {
         val binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ChannelsViewHolder(binding)
+        return ChannelViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ChannelsViewHolder, position: Int) {
-        val channel = channelList[holder.adapterPosition]
+    override fun onBindViewHolder(holder: ChannelViewHolder, position: Int) {
+        val channel = channels[holder.adapterPosition]
         holder.bind(channel, selectionTracker != null, selectionTracker?.isSelected(channel.id.toLong()))
         holder.itemView.setOnClickListener { selectListener?.clickedChannel(channel) }
     }
 
-    override fun getItemCount(): Int = channelList.size
+    override fun getItemCount(): Int = channels.size
 
     override fun getItemId(position: Int): Long {
-        return channelList[position].id.toLong()
+        return channels[position].id.toLong()
     }
 
     fun updateList(list: List<Channel>) {
-        channelList = list
+        channels = list
         notifyDataSetChanged()
     }
 

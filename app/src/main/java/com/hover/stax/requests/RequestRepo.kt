@@ -10,7 +10,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import java.security.NoSuchAlgorithmException
 
-class RequestRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
+class RequestRepo(db: AppDatabase) {
     private val decryptedRequest: MutableLiveData<Request> = MutableLiveData()
 
     private val requestDao: RequestDao = db.requestDao()

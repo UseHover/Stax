@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
@@ -22,7 +23,6 @@ import timber.log.Timber
 class PaybillViewModel(application: Application, contactRepo: ContactRepo, val actionRepo: ActionRepo, val billRepo: PaybillRepo, val accountRepo: AccountRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val savedPaybills = MutableLiveData<List<Paybill>>()
-    val popularPaybills = MutableLiveData<List<HoverAction>>()
 
     val selectedPaybill = MutableLiveData<Paybill?>()
     val businessNumber = MutableLiveData<String?>()
@@ -31,28 +31,17 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     val amount = MutableLiveData<String?>()
     val iconDrawable = MutableLiveData(0)
 
-    val selectedAction = MutableLiveData<HoverAction>()
-
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
         billRepo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
-    }
-
-    fun getPopularPaybills(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        accountRepo.getAccount(accountId)?.let {
-            val actions = actionRepo.getActions(it.channelId, HoverAction.C2B).filterNot { action -> action.to_institution_id == 0 }
-            popularPaybills.postValue(actions)
-        }
     }
 
     fun selectPaybill(paybill: Paybill) {
         selectedPaybill.value = paybill
     }
 
-    fun selectAction(action: HoverAction) {
-        selectedAction.value = action
-
+    fun selectPaybill(action: HoverAction) {
         val paybill = Paybill(
-                action.to_institution_name, action.to_institution_id.toString(), null, action.channel_id,
+                action.to_institution_name, action.required_params.toString(), null, action.public_id,
                 0, getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
@@ -78,12 +67,12 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         this.nickname.value = nickname
     }
 
-    fun savePaybill(account: Account?, recurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+    fun savePaybill(account: Account?, action: HoverAction?, recurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         val businessNo = businessNumber.value
         val accountNo = accountNumber.value
 
-        if (account != null) {
-            val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, account.channelId, account.id, selectedPaybill.value?.logoUrl
+        if (account != null && action != null) {
+            val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, action.public_id, account.id, selectedPaybill.value?.logoUrl
                     ?: account.logoUrl).apply {
                 isSaved = true
                 logo = iconDrawable.value ?: 0
@@ -94,7 +83,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
 
             logPaybill(payBill)
         } else {
-            Timber.e("Active account not set")
+            Timber.e("Action or account not set")
         }
     }
 
@@ -104,7 +93,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         try {
             data.put("name", paybill.name)
             data.put("businessNo", paybill.businessNo)
-            data.put("channelId", paybill.channelId)
+            data.put("actionId", paybill.actionId)
         } catch (e: Exception) {
             Timber.e(e)
         }
@@ -148,13 +137,15 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         }
     }
 
-    fun reset() = viewModelScope.launch {
-        selectedPaybill.postValue(null)
-        businessNumber.postValue(null)
-        accountNumber.postValue(null)
-        amount.postValue(null)
-        nickname.postValue(null)
-        iconDrawable.postValue(0)
+    override fun reset() {
+        viewModelScope.launch {
+            selectedPaybill.postValue(null)
+            businessNumber.postValue(null)
+            accountNumber.postValue(null)
+            amount.postValue(null)
+            nickname.postValue(null)
+            iconDrawable.postValue(0)
+        }
     }
 
     fun wrapExtras(): HashMap<String, String> {

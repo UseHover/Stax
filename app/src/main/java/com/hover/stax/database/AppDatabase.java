@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
         entities = {
                 Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class, Paybill.class
         },
-        version = 37,
+        version = 38,
         autoMigrations = {
                 @AutoMigration(from = 36, to = 37)
         }
@@ -127,6 +127,14 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_accountId ON paybills (accountId)");
         }
     };
+
+    static final Migration M37_38 = new Migration(37, 38) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE paybills ADD COLUMN action_id TEXT DEFAULT ''");
+        }
+    };
+
     private static final int NUMBER_OF_THREADS = 8;
     static public final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     private static volatile AppDatabase INSTANCE;
@@ -150,6 +158,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             .addMigrations(M33_34)
                             .addMigrations(M34_35)
                             .addMigrations(M35_36)
+                            .addMigrations(M37_38)
                             .build();
                 }
             }

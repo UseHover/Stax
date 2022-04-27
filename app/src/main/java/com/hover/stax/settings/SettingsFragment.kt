@@ -15,16 +15,14 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
-import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class SettingsFragment : Fragment() {
@@ -34,7 +32,7 @@ class SettingsFragment : Fragment() {
     private var accountAdapter: ArrayAdapter<Account>? = null
     private var clickCounter = 0
 
-    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
+    private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val loginViewModel: LoginViewModel by sharedViewModel()
 
     private var dialog: StaxDialog? = null
@@ -70,7 +68,7 @@ class SettingsFragment : Fragment() {
             NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount())
         }
 
-        channelsViewModel.accounts.observe(viewLifecycleOwner) {
+        accountsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE
                 binding.settingsCard.connectAccounts.visibility = VISIBLE
@@ -140,12 +138,12 @@ class SettingsFragment : Fragment() {
             account
         else {
             val a = accounts.minByOrNull { it.id }
-            a?.let { channelsViewModel.setDefaultAccount(it) }
+            a?.let { accountsViewModel.setDefaultAccount(it) }
             a
         }
 
         spinner.setText(defaultAccount?.alias, false)
-        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) channelsViewModel.setDefaultAccount(accounts[pos]) }
+        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) accountsViewModel.setDefaultAccount(accounts[pos]) }
     }
 
     private fun setUpEnableTestMode() {

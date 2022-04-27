@@ -28,6 +28,15 @@ abstract class AbstractFormViewModel(application: Application, val contactRepo: 
         isEditing.postValue(editing)
     }
 
+    fun setTransactionType(transaction_type: String) {
+        TransactionType.type = transaction_type
+    }
+
+    fun load(s: Schedule) {
+        schedule.postValue(s)
+        setTransactionType(s.type)
+    }
+
     fun saveSchedule(s: Schedule) {
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.scheduled_complete, s.type), getApplication())
         scheduleRepo.insert(s)
@@ -36,4 +45,6 @@ abstract class AbstractFormViewModel(application: Application, val contactRepo: 
     fun getString(stringId: Int): String {
         return (getApplication() as Context).getString(stringId)
     }
+
+    abstract fun reset()
 }

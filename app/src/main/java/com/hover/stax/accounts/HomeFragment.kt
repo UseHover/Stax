@@ -5,26 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsAdapter
-import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentAccountsBinding
-import com.hover.stax.home.MainActivity
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.utils.UIHelper
-import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class HomeFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
+class HomeFragment : Fragment(), AccountsAdapter.SelectListener {
 
     private var _binding: FragmentAccountsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ChannelsViewModel by viewModel()
+    private val accountsViewModel: AccountsViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAccountsBinding.inflate(inflater, container, false)
@@ -34,43 +29,23 @@ class HomeFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectAdapter = ChannelsAdapter(ArrayList(), this)
+        val selectAdapter = AccountsAdapter(ArrayList(), this)
 
-        binding.accountsList.apply {
+        binding.accountsRecycler.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())
             adapter = selectAdapter
         }
 
         binding.accountListCard.setOnClickIcon { findNavController().popBackStack() }
 
-        with(viewModel) {
-            accounts.observe(viewLifecycleOwner) {
-                if (it.isNotEmpty())
-                    showAccountsList(it)
-            }
-        }
-    }
-
-    override fun clickedChannel(channel: Channel) {
-        lifecycleScope.launch {
-            viewModel.setActiveChannel(channel)
-//            fetchAccounts(fetchAction, channel)
-//
-//                findNavController().popBackStack()
+        accountsViewModel.accounts.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty())
+                showAccountsList(it)
         }
     }
 
     override fun accountSelected(account: Account) {
-        viewModel.setActiveAccount(account)
-        findNavController().popBackStack()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        with(viewModel) {
-            activeChannel.value?.let { fetchAccounts(it.id) }
-        }
+        accountsViewModel.setActiveAccount(account)
     }
 
     private fun showAccountsList(accounts: List<Account>) {
@@ -81,11 +56,8 @@ class HomeFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter
                 visibility = View.VISIBLE
                 setOnClickListener { this.visibility = View.GONE; binding.accountListCard.visibility = View.VISIBLE }
             }
-            accountsInfo.text = getString(R.string.account_select_header, viewModel.activeChannel.value?.name, getTransactionType())
-            accountsList.apply {
-                layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-                adapter = AccountsAdapter(accounts, this@HomeFragment)
-            }
+            accountsInfo.text = getString(R.string.account_select_header, accountsViewModel.activeAccount.value?.name, getTransactionType())
+            accountsRecycler.adapter = AccountsAdapter(accounts, this@HomeFragment)
         }
     }
 

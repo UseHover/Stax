@@ -9,6 +9,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
+import com.hover.stax.accounts.Account;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.PhoneHelper;
 import com.hover.stax.contacts.StaxContact;
@@ -41,11 +42,17 @@ public class Request {
     @ColumnInfo(name = "amount")
     public String amount;
 
+    @ColumnInfo(name = "requester_account_id")
+    public int requester_account_id;
+
     @ColumnInfo(name = "requester_institution_id")
     public int requester_institution_id;
 
     @ColumnInfo(name = "requester_number")
     public String requester_number;
+
+    @ColumnInfo(name = "requester_country_alpha2")
+    public String requester_country_alpha2;
 
     @ColumnInfo(name = "note")
     public String note;
@@ -172,11 +179,11 @@ public class Request {
         return phones.toString();
     }
 
-    String generateWhatsappRecipientString(List<StaxContact> contacts, Channel c) {
+    String generateWhatsappRecipientString(List<StaxContact> contacts, Account a) {
         StringBuilder phones = new StringBuilder();
         for (int r = 0; r < contacts.size(); r++) {
             if (phones.length() > 0) phones.append(",");
-            phones.append(PhoneHelper.getInternationalNumberNoPlus(contacts.get(r).accountNumber, c != null ? c.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()));
+            phones.append(PhoneHelper.getInternationalNumberNoPlus(contacts.get(r).accountNumber, a != null ? a.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()));
         }
         return phones.toString();
     }

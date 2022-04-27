@@ -16,7 +16,7 @@ import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
-class TransactionRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
+class TransactionRepo(db: AppDatabase) {
     private val transactionDao: TransactionDao = db.transactionDao()
 
     val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction>>?

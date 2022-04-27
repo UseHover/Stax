@@ -48,7 +48,7 @@
 
             <TextView
                 android:id="@+id/accountsLabel"
-                android:text="@string/accounts_label"
+                android:text="@string/pay_with_label"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
 

@@ -13,8 +13,14 @@ interface AccountDao {
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
     fun getAllAccounts(): List<Account>
 
+    @Query("SELECT * FROM accounts ORDER BY alias ASC")
+    fun getLiveAccounts(): LiveData<List<Account>>
+
     @Query("SELECT * FROM accounts WHERE channelId = :channelId ORDER BY alias ASC")
-    fun getAccounts(channelId: Int): List<Account>
+    fun getAccountsByChannel(channelId: Int): List<Account>
+
+    @Query("SELECT * FROM accounts WHERE institutionId = :institutionId ORDER BY alias ASC")
+    fun getAccountsByInstitution(institutionId: Int): LiveData<List<Account>>
 
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
     fun getAccounts(): Flow<List<Account>>

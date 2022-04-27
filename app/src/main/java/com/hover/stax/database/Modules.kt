@@ -9,7 +9,7 @@ import com.hover.stax.addChannels.AddChannelsViewModel
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelRepo
-import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.financialTips.FinancialTipsViewModel
@@ -38,7 +38,7 @@ val appModule = module {
     viewModel { HoverViewModel(get(), get(), get()) }
     viewModel { ActionSelectViewModel(get()) }
     viewModel { AddChannelsViewModel(get(), get(), get(), get()) }
-    viewModel { ChannelsViewModel(get(), get(), get(), get()) }
+    viewModel { AccountsViewModel(get(), get(), get(), get()) }
     viewModel { AccountDetailViewModel(get(), get(), get(), get(), get()) }
     viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
     viewModel { TransferViewModel(get(), get(), get(), get()) }
@@ -61,12 +61,12 @@ val dataModule = module(createdAtStart = true) {
     single { AppDatabase.getInstance(get()) }
     single { HoverRoomDatabase.getInstance(get()) }
 
-    single { TransactionRepo(get(), get()) }
+    single { TransactionRepo(get()) }
     single { ChannelRepo(get(), get()) }
     single { ActionRepo(get()) }
-    single { ContactRepo(get(), get()) }
-    single { AccountRepo(get(), get()) }
-    single { RequestRepo(get(), get()) }
+    single { ContactRepo(get()) }
+    single { AccountRepo(get()) }
+    single { RequestRepo(get()) }
     single { ScheduleRepo(get()) }
     single { PaybillRepo(get()) }
 }

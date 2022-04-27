@@ -11,17 +11,14 @@ import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.DUMMY
-import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
-import com.hover.stax.login.LoginViewModel
-import com.hover.stax.login.StaxGoogleLoginInterface
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.USSDLogBottomSheetFragment
@@ -34,6 +31,7 @@ import timber.log.Timber
 class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
     BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
+    private val channelViewModel: AccountsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
@@ -148,10 +146,6 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
 
     private fun initFromIntent() {
         when {
-            intent.hasExtra(Schedule.SCHEDULE_ID) -> createFromSchedule(
-                intent.getIntExtra(Schedule.SCHEDULE_ID, -1),
-                intent.getBooleanExtra(Constants.REQUEST_TYPE, false)
-            )
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
             intent.hasExtra(FinancialTipsFragment.TIP_ID) -> navHelper.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
             else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
@@ -159,14 +153,13 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
     }
 
     private fun createFromRequest(link: String) {
-        transferViewModel.decrypt(link)
-        observeRequest()
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
-    }
-
-    private fun observeRequest() {
         val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
-        transferViewModel.request.observe(this@MainActivity) { it?.let { alertDialog?.dismiss() } }
+        transferViewModel.request.observe(this@MainActivity) { it?.let {
+            transferViewModel.load(it)
+            alertDialog?.dismiss()
+        } }
+        transferViewModel.decrypt(link)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -215,9 +208,7 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
             requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
             requestCode == bountyRequest -> showBountyDetails(data)
             else -> {
-                if (requestCode != Constants.TRANSFER_REQUEST) {
-                    balancesViewModel.showBalances(true)
-                }
+                balancesViewModel.setBalanceState(true)
                 showPopUpTransactionDetailsIfRequired(data)
             }
         }

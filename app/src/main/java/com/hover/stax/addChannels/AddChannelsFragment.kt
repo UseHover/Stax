@@ -17,7 +17,6 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
-import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.*
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
@@ -27,7 +26,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
 
 import com.hover.stax.views.StaxDialog
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -189,7 +187,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     private fun aggregateSelectedChannels(tracker: SelectionTracker<Long>) {
         val selectedChannels = mutableListOf<Channel>()
         tracker.selection.forEach { selection ->
-            selectedChannels.addAll(selectAdapter.channelList.filter { it.id.toLong() == selection })
+            selectedChannels.addAll(selectAdapter.channels.filter { it.id.toLong() == selection })
         }
 
         channelsViewModel.createAccounts(selectedChannels)

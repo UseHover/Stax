@@ -7,12 +7,8 @@ import android.util.AttributeSet
 import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelsViewModel
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
@@ -83,17 +79,9 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
 
-    fun setObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
+    fun setObservers(viewModel: AccountsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            val selectedObserver = object : Observer<List<Channel>> {
-                override fun onChanged(t: List<Channel>?) {
-                    Timber.e("Got new selected channels ${t?.size}")
-                }
-            }
-
             accounts.observe(lifecycleOwner) { accountUpdate(it) }
-
-            selectedChannels.observe(lifecycleOwner, selectedObserver)
             activeAccount.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
             channelActions.observe(lifecycleOwner) {
                 setState(it, viewModel)
@@ -101,7 +89,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
-    private fun setState(actions: List<HoverAction>, viewModel: ChannelsViewModel) {
+    private fun setState(actions: List<HoverAction>, viewModel: AccountsViewModel) {
         when {
             viewModel.activeAccount.value != null && (actions.isNullOrEmpty()) -> setState(
                 context.getString(
