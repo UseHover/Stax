@@ -193,6 +193,17 @@
     <string name="perms_basic_desc">To find all your various accounts and detect transactions on those accounts, allow Stax access to your phone and SMSs.</string>
     <string name="permissions_overlay_desc">These permissions allow Stax to dial USSD codes on your behalf and create an overlay that shows you the transaction progress.</string>
     <string name="permissions_accessibility_desc">In order to provide you with the ability to check your balance, transfer money or buy airtime, Stax needs your display and accessibility permission</string>
+    <string name="app_permissions">App permissions</string>
+    <string name="manage_permissions_title">Manage permissions</string>
+    <string name="manage_permission_desc">Grant Stax all the permissions required. This gives you full access to supported features</string>
+    <string name="perm_calls_title">Calls</string>
+    <string name="perm_calls_desc">Stax needs this permission to be able to detect services available to you.</string>
+    <string name="perm_sms_title">SMS</string>
+    <string name="perm_sms_desc">Stax needs this permission to be able to detect transaction statuses via SMS</string>
+    <string name="perm_display_title">Display</string>
+    <string name="perm_display_desc">Stax needs this permission to be able to dial USSD codes on your behalf and show you the transaction progress</string>
+    <string name="perm_accessibility_title">Accessibility</string>
+    <string name="perm_accessibility_desc">Stax needs this permission to check your balances, transfer money and more</string>
 
 
     <string name="permission_support_desc">We need phone permissions to generate your support ID</string>
