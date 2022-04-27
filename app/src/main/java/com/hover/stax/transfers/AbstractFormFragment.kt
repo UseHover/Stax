@@ -13,7 +13,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
@@ -75,7 +74,7 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     }
 
     private fun setupActionDropdownObservers() {
-        val activeChannelObserver = Observer<Channel?> { Timber.e("Got new active channel ${this.javaClass.simpleName}, ${it?.countryAlpha2}")}
+        val activeChannelObserver = Observer<Channel?> { Timber.e("Got new active channel ${this.javaClass.simpleName}, ${it?.countryAlpha2}") }
         val actionsObserver = Observer<List<HoverAction>> { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
 
         channelsViewModel.activeChannel.observe(viewLifecycleOwner, activeChannelObserver)
