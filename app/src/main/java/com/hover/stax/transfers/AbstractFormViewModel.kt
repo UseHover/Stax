@@ -2,6 +2,7 @@ package com.hover.stax.transfers
 
 import android.app.Application
 import android.content.Context
+import androidx.annotation.CallSuper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +18,7 @@ abstract class AbstractFormViewModel(application: Application, val contactRepo: 
 
     var recentContacts: LiveData<List<StaxContact>> = MutableLiveData()
     val schedule = MutableLiveData<Schedule>()
-    val isEditing = MutableLiveData(false)
+    val isEditing = MutableLiveData(true)
 
     init {
         isEditing.value = true
@@ -46,5 +47,6 @@ abstract class AbstractFormViewModel(application: Application, val contactRepo: 
         return (getApplication() as Context).getString(stringId)
     }
 
-    abstract fun reset()
+    @CallSuper
+    open fun reset() { isEditing.postValue(true) }
 }

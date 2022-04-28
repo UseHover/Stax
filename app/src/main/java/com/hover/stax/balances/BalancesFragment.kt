@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.FragmentBalanceBinding
 import com.hover.stax.home.MainActivity
@@ -31,6 +32,7 @@ class BalancesFragment : Fragment() {
     private var _binding: FragmentBalanceBinding? = null
     private val binding get() = _binding!!
 
+    private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private lateinit var cardStackAdapter: BalanceCardStackAdapter
 
@@ -54,7 +56,7 @@ class BalancesFragment : Fragment() {
         setUpHiddenStack()
 
         val observer = Observer<List<Account>> { t -> updateAccounts(ArrayList(t)) }
-        balancesViewModel.accounts.observe(viewLifecycleOwner, observer)
+        accountsViewModel.accounts.observe(viewLifecycleOwner, observer)
     }
 
     private fun setUpLinkNewAccount() {
@@ -80,6 +82,7 @@ class BalancesFragment : Fragment() {
         balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView.also {
             it.layoutManager = UIHelper.setMainLinearManagers(context)
             it.setHasFixedSize(true)
+            it.visibility = View.GONE
         }
     }
 
@@ -89,21 +92,24 @@ class BalancesFragment : Fragment() {
         balanceStack.apply {
             setAdapter(cardStackAdapter)
             setOverlapGaps(STACK_OVERLAY_GAP)
+            rotationX = ROTATE_UPSIDE_DOWN
         }
     }
 
-    private fun showBalanceCards(status: Boolean) {
+    private fun showBalanceCards(show: Boolean) {
         AnalyticsUtil.logAnalyticsEvent(getString(if (balancesViewModel.showBalances.value != true) R.string.show_balances else R.string.hide_balances), requireActivity())
-        toggleLink(status)
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
+            if (show) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
         )
-        balanceStack.visibility = if (status) View.GONE else View.VISIBLE
-        if (status) binding.homeCardBalances.balancesMl.transitionToEnd() else binding.homeCardBalances.balancesMl.transitionToStart()
+        if (showAddSecondAccount) addAccountBtn.visibility = if (show) View.VISIBLE else View.GONE
+
+        if (show) binding.homeCardBalances.balancesMl.transitionToEnd() else binding.homeCardBalances.balancesMl.transitionToStart()
+
+        balanceStack.visibility = if (show) View.GONE else View.VISIBLE
+//        balanceStack.setOverlapGaps(if (show) STACK_OVERLAY_GAP else 0)
     }
 
     private fun updateAccounts(accounts: ArrayList<Account>) {
-        showAddSecondAccount = !accounts.isNullOrEmpty() && accounts.none { it.id == DUMMY } && accounts.size > 1
         accounts.let {
             addDummyAccountsIfRequired(accounts)
             cardStackAdapter.updateData(accounts.reversed())
@@ -120,6 +126,7 @@ class BalancesFragment : Fragment() {
     }
 
     private fun addDummyAccountsIfRequired(accounts: ArrayList<Account>?) {
+        showAddSecondAccount = !accounts.isNullOrEmpty() && accounts.none { it.id == DUMMY } && accounts.size > 1
         accounts?.let {
             if (it.isEmpty()) {
                 accounts.add(Account(getString(R.string.your_main_account), GREEN_BG).dummy())
@@ -129,10 +136,6 @@ class BalancesFragment : Fragment() {
                 accounts.add(Account(getString(R.string.your_other_account), BLUE_BG).dummy())
             }
         }
-    }
-
-    private fun toggleLink(show: Boolean) {
-        if (showAddSecondAccount) addAccountBtn.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

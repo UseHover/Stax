@@ -36,15 +36,29 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     }
 
     fun selectPaybill(paybill: Paybill) {
+        Timber.e("selecting paybill by paybill: %s", paybill.name)
         selectedPaybill.value = paybill
+        businessNumber.value = paybill.businessNo
+        if (paybill.accountNo != null) accountNumber.value = paybill.accountNo
+        if (paybill.recurringAmount != 0) amount.value = paybill.recurringAmount.toString()
+        if (nickname.value == null) nickname.value = paybill.name
+        iconDrawable.value = paybill.logo
     }
 
     fun selectPaybill(action: HoverAction) {
+        Timber.e("selecting paybill by action: %s", action.to_institution_name)
         val paybill = Paybill(
-                action.to_institution_name, action.required_params.toString(), null, action.public_id,
+                action.to_institution_name, extractBizNumber(action), null, action.public_id,
                 0, getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
+    }
+
+    fun extractBizNumber(action: HoverAction): String {
+        Timber.e("params: %s", action.required_params)
+        if (action.getVarValue(BUSINESS_NO) != null)
+            return action.getVarValue(BUSINESS_NO)
+        else return ""
     }
 
     fun setBusinessNumber(number: String) {
@@ -138,6 +152,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     }
 
     override fun reset() {
+        super.reset()
         viewModelScope.launch {
             selectedPaybill.postValue(null)
             businessNumber.postValue(null)

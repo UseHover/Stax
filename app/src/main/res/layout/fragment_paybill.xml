@@ -14,7 +14,7 @@
 
         <include
                 android:id="@+id/editCard"
-                layout="@layout/paybill_card_details" />
+                layout="@layout/paybill_card_edit" />
 
         <include
                 android:id="@+id/saveBillLayout"

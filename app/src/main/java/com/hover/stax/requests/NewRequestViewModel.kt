@@ -117,6 +117,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
     }
 
     override fun reset() {
+        super.reset()
         setAmount(null)
         setNote(null)
         requestee.value = null

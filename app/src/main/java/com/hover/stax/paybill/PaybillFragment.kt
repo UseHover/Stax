@@ -20,7 +20,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.views.AbstractStatefulInput
+import com.hover.stax.views.StatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
@@ -64,10 +64,6 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {}
-
-    private fun inputListeners() {
-
-    }
 
     private fun setSaveBillCheckedChangeListener() = with(binding.saveBillLayout) {
         saveBill.setOnCheckedChangeListener { _, isChecked ->
@@ -249,16 +245,16 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
         with(binding.editCard) {
             businessNoInput.setState(businessNoError,
-                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+                if (businessNoError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
             accountNoInput.setState(accountNoError,
-                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+                if (accountNoError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
             amountInput.setState(amountError,
-                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+                if (amountError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
         }
 
         if (saveBill) {
             binding.saveBillLayout.billNameInput.setState(nickNameError,
-                if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+                if (nickNameError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
         }
 
         return businessNoError == null && accountNoError == null && amountError == null && (if (saveBill) nickNameError == null else true)
@@ -277,7 +273,6 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private fun startSession() = with(accountsViewModel) {
         val actions = channelActions.value
         val account = activeAccount.value
-
         val actionToRun = actionSelectViewModel.activeAction.value
 
         if (!actions.isNullOrEmpty() && account != null)

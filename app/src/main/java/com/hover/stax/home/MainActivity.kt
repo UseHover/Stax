@@ -14,9 +14,11 @@ import com.hover.stax.accounts.DUMMY
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionDetailsFragment
@@ -31,9 +33,10 @@ import timber.log.Timber
 class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
     BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
-    private val channelViewModel: AccountsViewModel by viewModel()
+    private val accountsViewModel: AccountsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
+    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val bountyRequest = 3000
 
@@ -47,6 +50,10 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
         binding = ActivityMainBinding.inflate(layoutInflater)
         navHelper = NavHelper(this)
         setContentView(binding.root)
+
+        accountsViewModel.activeAccount.observe(this) { Timber.e("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
+        accountsViewModel.channelActions.observe(this) { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
+        actionSelectViewModel.activeAction.observe(this) { Timber.e("Got new active channel ${this.javaClass.simpleName}: $it ${it?.public_id}") }
 
         navHelper.setUpNav()
 
@@ -86,7 +93,7 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
     }
 
     private fun startObservers() {
-        with(balancesViewModel) {
+        with(accountsViewModel) {
             //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
             val accountsObserver = Observer<List<Account>> { t -> logResult("Observing selected channels", t?.size ?: 0) }
