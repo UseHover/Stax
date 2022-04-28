@@ -28,23 +28,7 @@ class TransactionHistoryViewModel(val repo: DatabaseRepo) : ViewModel() {
         return if (balancesTransactions >= 4) true else transfersAndAirtime >= 2
     }
 
-    suspend fun getActionAndChannel(actionId: String, channelId: Int): Pair<HoverAction, Channel> {
-        val pairResult: Deferred<Pair<HoverAction, Channel>> = viewModelScope.async(Dispatchers.IO) {
-            val action: HoverAction = repo.getAction(actionId)!!
-            val channel: Channel = repo.getChannel(channelId)!!
-            return@async Pair(action, channel)
-        }
 
-        return pairResult.await()
-    }
-
-    suspend fun getAccountNumber(contact_id: String): String? {
-        val accountNumberDeferred: Deferred<String?> = viewModelScope.async {
-            val contact: StaxContact? = repo.getContactAsync(contact_id)
-            return@async contact?.accountNumber
-        }
-        return accountNumberDeferred.await()
-    }
 
     init {
         staxTransactions = repo.completeAndPendingTransferTransactions!!

@@ -8,6 +8,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.hover.HoverSession
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
@@ -25,7 +26,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private val hasRunList = ArrayList<Int>()
     private var hasActive: Boolean = false
 
-    var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
+    var selectedChannels: LiveData<List<Channel>> = repo.selected
     var accounts = MutableLiveData<List<Account>>()
 
     var shouldShowBalances = MutableLiveData(false)
@@ -36,7 +37,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private var runBalanceError = MutableLiveData<Boolean>()
 
     init {
-        selectedChannels = repo.selected
         loadAccounts()
 
         actions = Transformations.switchMap(selectedChannels, this::loadActions)
@@ -99,8 +99,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun onActionsLoaded(actions: List<HoverAction>) {
         viewModelScope.launch(Dispatchers.IO) {
             when {
-                runFlag.value == null || toRun.value!!.isNotEmpty() -> {
-                }
+                runFlag.value == null || toRun.value!!.isNotEmpty() -> {}
                 runFlag.value == ALL -> startRun(getAccountActions(actions))
                 runFlag.value != NONE -> startRun(getAccountActions(runFlag.value!!))
             }
@@ -137,7 +136,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun runNext(actionPairs: List<Pair<Account?, HoverAction>>, index: Int) {
         if (listener != null && !hasActive) {
             hasActive = true
-            listener?.startRun(actionPairs[index], index)
+            listener?.startBalancesRun(actionPairs[index], index)
         } else if (!hasActive) {
             UIHelper.flashMessage(application, "Failed to start run, please try again")
         }
@@ -199,7 +198,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     interface RunBalanceListener {
-        fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int)
+        fun startBalancesRun(actionPair: Pair<Account?, HoverAction>, index: Int)
     }
 
     companion object {

@@ -232,8 +232,7 @@ object Utils {
         val data = JSONObject()
         try {
             data.put("shortcode", shortCode)
-        } catch (ignored: JSONException) {
-        }
+        } catch (ignored: JSONException) {}
 
         AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
 

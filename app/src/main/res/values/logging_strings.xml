@@ -96,7 +96,7 @@
 	<string name="changed_default_account" translatable="false">Changed default account</string>
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
 	<string name="clicked_run_bounty_session" translatable="false">Clicked run bounty USSD session</string>
-	<string name="clicked_retry_bounty_session" translatable="false">Clicked retry bounty from transaction detail page</string>
+	<string name="clicked_retry_session" translatable="false">Clicked retry %1$s from transaction detail page</string>
 	<string name="create_login_success" translatable="false">User created successfully</string>
 	<string name="visited_rating_review_screen" translatable="false">Visited ratings and review screen</string>
 	<string name="clicked_rating_star" translatable="false">Clicked rating stars and giving review</string>

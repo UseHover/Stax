@@ -21,13 +21,13 @@ data class Paybill(
         var accountNo: String? = null,
 
         @ColumnInfo(index = true)
-        val channelId: Int,
+        var channelId: Int,
 
         @ColumnInfo(index = true)
-        val accountId: Int,
+        var accountId: Int,
 
         @ColumnInfo(name = "logo_url")
-        val logoUrl: String
+        var logoUrl: String
 ) : Comparable<Paybill> {
 
     @PrimaryKey(autoGenerate = true)

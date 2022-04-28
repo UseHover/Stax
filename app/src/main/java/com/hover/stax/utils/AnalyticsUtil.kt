@@ -1,5 +1,6 @@
 package com.hover.stax.utils
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import com.amplitude.api.Amplitude
@@ -9,6 +10,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
+import com.hover.stax.R
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -41,6 +43,15 @@ object AnalyticsUtil {
 		logAmplitude(event, args, context)
 		logFirebase(event, args, context)
 		logAppsFlyer(event, args, context)
+	}
+
+	fun logFailedAction(actionId: String, activity: Activity) {
+		activity.runOnUiThread { UIHelper.flashMessage(activity, activity.getString(R.string.error_running_action)) }
+		val data = JSONObject()
+		try {
+			data.put("actionId", actionId)
+		} catch (e: JSONException) { Timber.e(e)}
+		logAnalyticsEvent("Failed Actions", data, activity)
 	}
 
 	private fun logAmplitude(event: String, args: JSONObject?, context: Context) {

@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
+import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
@@ -21,9 +22,12 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
     var contact: LiveData<StaxContact> = MutableLiveData()
     var sms: LiveData<List<UssdCallResponse>> = MutableLiveData()
 
+    val actionAndChannelPair: MediatorLiveData<Pair<HoverAction, Channel>> = MediatorLiveData()
+
     init {
         action = Transformations.switchMap(transaction) { getLiveAction(it) }
         contact = Transformations.switchMap(transaction) { getLiveContact(it) }
+        actionAndChannelPair.addSource(transaction) {setActionAndChannel(it)}
 
         messages.apply {
             addSource(transaction) { loadMessages(it) }
@@ -70,5 +74,13 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
             smses.add(UssdCallResponse(null, sms.msg))
         }
         return smses
+    }
+
+    private fun setActionAndChannel(transaction: StaxTransaction){
+        viewModelScope.launch(Dispatchers.IO) {
+            val action: HoverAction = repo.getAction(transaction.action_id)!!
+            val channel: Channel = repo.getChannel(transaction.channel_id)!!
+            actionAndChannelPair.postValue(Pair(action, channel))
+        }
     }
 }

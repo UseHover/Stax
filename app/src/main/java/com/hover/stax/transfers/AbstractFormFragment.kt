@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -23,11 +24,11 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.home.MainActivity
+import com.hover.stax.home.SDKBuilder
 import com.hover.stax.permissions.PermissionUtils
+import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.TransactionType.Companion.type
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.NavUtil
-import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.*
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.Dispatchers
@@ -152,8 +153,11 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
             val action = channelsViewModel.getFetchAccountAction(channelId)
             channelsViewModel.setActiveChannel(channel)
 
-            if (action != null)
-                (activity as? MainActivity)?.makeCall(action, channel)
+            if (action != null) {
+                Timber.i("Running balance check")
+                val intent = SDKBuilder.createIntent(action, channel, requireContext())
+                startActivity(intent)
+            }
             else
                 UIHelper.flashMessage(requireActivity(), getString(R.string.action_run_error))
         }

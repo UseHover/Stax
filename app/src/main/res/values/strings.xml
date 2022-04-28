@@ -159,6 +159,7 @@
     <string name="your_accounts">Your accounts</string>
     <string name="add_an_account">Add an account</string>
     <string name="add_accounts_to_stax">Add accounts to Stax</string>
+    <string name="accounts_fetched_success">Accounts fetched successfully</string>
 
     <string name="search">Search</string>
     <string name="no_accounts_found_desc"><![CDATA[ It looks like "<b><font color="#39CBFC"> %1$s </font> </b>" has not been listed on Stax yet or its an invalid entry.<br/>Try searching for something else.]]></string>

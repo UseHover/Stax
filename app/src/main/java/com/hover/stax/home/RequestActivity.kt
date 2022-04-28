@@ -5,6 +5,7 @@ import android.os.Handler
 import android.view.View
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestSenderInterface
 import com.hover.stax.requests.SmsSentObserver
@@ -14,7 +15,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class AbstractRequestActivity : AbstractSDKCaller(), RequestSenderInterface, SmsSentObserver.SmsSentListener {
+abstract class RequestActivity : AbstractGoogleAuthActivity(), RequestSenderInterface, SmsSentObserver.SmsSentListener {
 
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val scheduleViewModel: ScheduleDetailViewModel by viewModel()
@@ -24,11 +25,11 @@ abstract class AbstractRequestActivity : AbstractSDKCaller(), RequestSenderInter
     fun createFromSchedule(scheduleId: Int, isRequestType: Boolean) {
         with(scheduleViewModel) {
             if (isRequestType) {
-                schedule.observe(this@AbstractRequestActivity) { it?.let { requestViewModel.setSchedule(it) } }
-                AnalyticsUtil.logAnalyticsEvent(getString(com.hover.stax.R.string.clicked_schedule_notification), this@AbstractRequestActivity)
+                schedule.observe(this@RequestActivity) { it?.let { requestViewModel.setSchedule(it) } }
+                AnalyticsUtil.logAnalyticsEvent(getString(com.hover.stax.R.string.clicked_schedule_notification), this@RequestActivity)
             } else {
-                action.observe(this@AbstractRequestActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
-                schedule.observe(this@AbstractRequestActivity) { it?.let { transferViewModel.
+                action.observe(this@RequestActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
+                schedule.observe(this@RequestActivity) { it?.let { transferViewModel.
                 view(it) } }
             }
 

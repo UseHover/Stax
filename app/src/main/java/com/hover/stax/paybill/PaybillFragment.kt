@@ -1,6 +1,7 @@
 package com.hover.stax.paybill
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -21,11 +23,14 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.home.SDKBuilder
+import com.hover.stax.transfers.TransactionType
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -327,13 +332,29 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
         val actionToRun = paybillViewModel.selectedAction.value
 
-        if (!actions.isNullOrEmpty() && channel != null && account != null)
-            (requireActivity() as MainActivity).submitPaymentRequest(
-                actionToRun
-                    ?: actions.first(), channel, account
-            )
-        else
-            Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
+        if (!actions.isNullOrEmpty() && channel != null && account != null) {
+            val payBill = paybillViewModel.createPayBill(account, true)
+            val action = actionToRun ?: actions.first()
+            val intent = SDKBuilder.createIntent(action, channel, account, payBill, requireContext())
+            callSDKSafely(intent, action.public_id)
+        }
+        else Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
+    }
+    private fun callSDKSafely(intent: Intent, actionId: String) {
+        try {
+            (requireActivity() as MainActivity).sdkLauncherForPayBill.launch(intent)
+            logPayBill()
+        }
+        catch (e : Exception) {
+            AnalyticsUtil.logFailedAction(actionId, requireActivity())
+            Timber.e(e)
+        }
+    }
+
+    private fun logPayBill() {
+        val data = JSONObject()
+        try { data.put("businessNo", paybillViewModel.businessNumber.value) } catch (e: Exception) { Timber.e(e) }
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), data, requireContext())
     }
 
     override fun onPause() {

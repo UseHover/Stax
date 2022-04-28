@@ -14,9 +14,10 @@ import com.hover.stax.accounts.DUMMY
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
-import com.hover.stax.contacts.StaxContact
+import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
+import com.hover.stax.hover.HoverSession
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.login.StaxGoogleLoginInterface
 import com.hover.stax.notifications.PushNotificationTopicsInterface
@@ -26,22 +27,19 @@ import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.USSDLogBottomSheetFragment
-import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
+class MainActivity : RequestActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
     BiometricChecker.AuthListener, PushNotificationTopicsInterface, StaxGoogleLoginInterface {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
-    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val loginViewModel: LoginViewModel by viewModel()
-    private val bountyRequest = 3000
 
     private lateinit var binding: ActivityMainBinding
 
@@ -49,7 +47,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Hover.setPermissionActivity(Constants.PERM_ACTIVITY,  this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         navHelper = NavHelper(this)
         setContentView(binding.root)
@@ -73,8 +71,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         super.onResume()
         navHelper.setUpNav()
     }
-
-    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
     fun checkPermissionsAndNavigate(navDirections: NavDirections) {
         navHelper.checkPermissionsAndNavigate(navDirections)
@@ -116,7 +112,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.i(result.plus(" $size"))
     }
 
-    private fun showMessage(str: String) = UIHelper.flashMessage(this, findViewById(R.id.fab), str)
 
     private fun checkForRequest(intent: Intent) {
         if (intent.hasExtra(Constants.REQUEST_LINK)) {
@@ -133,36 +128,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                 Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(this)), this)
             else
                 navHelper.checkPermissionsAndNavigate(toWhere)
-        }
-    }
-
-    private fun onRequest(data: Intent) {
-        if (data.action == Constants.SCHEDULED)
-            showMessage(getString(R.string.toast_request_scheduled, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
-        else
-            showMessage(getString(R.string.toast_confirm_request))
-    }
-
-    private fun showBountyDetails(data: Intent?) {
-        Timber.e("Request code is bounty")
-        if (data != null) {
-            val transactionUUID = data.getStringExtra("uuid")
-            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
-        }
-    }
-
-    private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
-        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            transferViewModel.reset()
-            NavUtil.showTransactionDetailsFragment(
-                data.extras!!.getString("uuid")!!,
-                supportFragmentManager,
-                false
-            )
-        }
-        else {
-            navHelper.navigateTransfer(TransactionType.type)
-            transferViewModel.setEditing(false)
         }
     }
 
@@ -200,7 +165,33 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         }
     }
 
-    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) = run(actionPair, index)
+    override fun startBalancesRun(actionPair: Pair<Account?, HoverAction>, index: Int) {
+        if (balancesViewModel.getChannel(actionPair.second.channel_id) != null) {
+            val hsb = HoverSession.Builder(actionPair.second, balancesViewModel.getChannel(actionPair.second.channel_id)!!, this@MainActivity)
+                .extra(Constants.ACCOUNT_NAME, actionPair.first?.name)
+            actionPair.first?.let { hsb.setAccountId(it.id.toString()) }
+
+            if (index + 1 < balancesViewModel.accounts.value!!.size) hsb.finalScreenTime(0)
+
+            runBalance(hsb.getIntent(), index)
+        } else {
+            //the only way to get the reference to the observer is to move this out onto it's own block.
+            val selectedChannelsObserver = object : Observer<List<Channel>> {
+                override fun onChanged(t: List<Channel>?) {
+                    if (t != null && balancesViewModel.getChannel(t, actionPair.second.channel_id) != null) {
+                        startBalancesRun(actionPair, 0)
+                        balancesViewModel.selectedChannels.removeObserver(this)
+                    }
+                }
+            }
+            balancesViewModel.selectedChannels.observe(this, selectedChannelsObserver)
+        }
+    }
+
+    private fun runBalance(intent: Intent?, requestCode: Int) {
+        if(balancesViewModel.toRun.value?.size == 1) sdkLauncherForSingleBalance.launch(intent)
+        else startActivityForResult(intent, requestCode)
+    }
 
     override fun onTapRefresh(accountId: Int) {
         if (accountId == DUMMY)
@@ -231,18 +222,10 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.e("received result. %s", data?.action)
         Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
-        when {
-            requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED ->
-                showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
-            requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
-            requestCode == bountyRequest -> showBountyDetails(data)
-            else -> {
-                if (requestCode != Constants.TRANSFER_REQUEST) {
-                    balancesViewModel.setRan(requestCode)
-                    balancesViewModel.showBalances(true)
-                }
-                showPopUpTransactionDetailsIfRequired(data)
-            }
+        //Only chained-balances make use of onActivityResult with loop indexes as request code , but still add an extra check
+        if(requestCode < 50 && resultCode == RESULT_OK) {
+            balancesViewModel.setRan(requestCode)
+            balancesViewModel.showBalances(true)
         }
     }
 

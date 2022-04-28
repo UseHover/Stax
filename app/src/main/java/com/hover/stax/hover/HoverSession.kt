@@ -2,6 +2,7 @@ package com.hover.stax.hover
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
@@ -18,38 +19,35 @@ import org.json.JSONObject
 import timber.log.Timber
 
 
-class HoverSession private constructor(b: Builder) {
+class HoverSession private constructor(bd: Builder) {
+    private val b: Builder = bd;
 
-    private val frag: Fragment?
-    private val action: HoverAction
-    private val requestCode: Int
-    private val finalScreenTime: Int
-    private val accountId: String?
-
-    private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
+    private fun createBuilder(): HoverParameters.Builder = HoverParameters.Builder(b.context)
             .apply {
-                setEnvironment(if (Utils.getBoolean(Constants.TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
+                setEnvironment(if (Utils.getBoolean(Constants.TEST_MODE, b.context)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
                 request(b.action.public_id)
-                setHeader(getMessage(b.action, b.activity))
+                setHeader(getMessage(b.action, b.context))
                 initialProcessingMessage("")
                 showUserStepDescriptions(true)
-                finalMsgDisplayTime(finalScreenTime)
+                finalMsgDisplayTime(b.finalScreenTime)
                 style(R.style.StaxHoverTheme)
                 sessionOverlayLayout(R.layout.stax_transacting_in_progress)
-                private_extra(Constants.ACCOUNT_ID, accountId)
+                private_extra(Constants.ACCOUNT_ID,  b.account)
+                setRequireExtras(this, b)
             }
 
-    private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject) {
-        val requiredExtras = action.requiredParams
+    private fun setRequireExtras(builder: HoverParameters.Builder, b: Builder) {
+        val extras = b.extras
+        val requiredExtras = b.action.requiredParams
         val keys: Iterator<*> = extras.keys()
         while (keys.hasNext()) {
             val key = keys.next() as String
-            val normalizedVal = parseExtra(key, extras.optString(key), requiredExtras)
+            val normalizedVal = parseExtra(key, extras.optString(key), requiredExtras, b.action)
             if (normalizedVal != null) builder.extra(key, normalizedVal)
         }
     }
 
-    private fun parseExtra(key: String, value: String?, requiredExtras: List<String>): String? {
+    private fun parseExtra(key: String, value: String?, requiredExtras: List<String>, action: HoverAction): String? {
         if (value == null || !requiredExtras.contains(key)) {
             return null
         }
@@ -70,20 +68,18 @@ class HoverSession private constructor(b: Builder) {
     private fun startHover(builder: HoverParameters.Builder, a: Activity) {
         val i = builder.buildIntent()
         AnalyticsUtil.logAnalyticsEvent(a.getString(R.string.start_load_screen), a)
-        if (frag != null) frag.startActivityForResult(i, requestCode) else a.startActivityForResult(i, requestCode)
     }
 
-    class Builder(a: HoverAction?, c: Channel, activity: Activity, code: Int) {
-        val activity: Activity
+    class Builder(a: HoverAction?, c: Channel, context: Context) {
+        val context : Context
         var fragment: Fragment? = null
         val channel: Channel
         val action: HoverAction
         val extras: JSONObject
-        var requestCode: Int
         var finalScreenTime = 4000
         var account: String? = null
 
-        constructor(a: HoverAction?, c: Channel, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
+        constructor(a: HoverAction?, c: Channel, context: Context, requestCode: Int, frag: Fragment?) : this(a, c, context) {
             fragment = frag
         }
 
@@ -105,29 +101,16 @@ class HoverSession private constructor(b: Builder) {
             account = id
         }
 
-        fun run(): HoverSession {
-            return HoverSession(this)
+        fun getIntent(): Intent {
+            return HoverSession(this).createBuilder().buildIntent()
         }
 
         init {
             requireNotNull(a) { "Action must not be null" }
-            this.activity = activity
+            this.context = context
             channel = c
             action = a
             extras = JSONObject()
-            requestCode = code
         }
-    }
-
-    init {
-        Hover.setPermissionActivity(Constants.PERM_ACTIVITY, b.activity)
-        frag = b.fragment
-        action = b.action
-        requestCode = b.requestCode
-        finalScreenTime = b.finalScreenTime
-        accountId = b.account
-        val builder = getBasicBuilder(b)
-        addExtras(builder, b.extras)
-        startHover(builder, b.activity)
     }
 }

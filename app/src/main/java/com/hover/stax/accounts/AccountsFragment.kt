@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,10 +16,15 @@ import com.hover.stax.channels.ChannelsAdapter
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentAccountsBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.home.SDKBuilder
+import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.TransactionType
+import com.hover.stax.utils.Constants
+import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
 
@@ -61,7 +68,7 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
 
             if (fetchAction != null) {
                 viewModel.setActiveChannel(channel)
-                fetchAccounts(fetchAction, channel)
+                launchFetchAccounts(fetchAction, channel)
             } else {
                 viewModel.createAccounts(listOf(channel))
                 findNavController().popBackStack()
@@ -69,8 +76,9 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
         }
     }
 
-    private fun fetchAccounts(action: HoverAction, channel: Channel) {
-        (activity as? MainActivity)?.makeCall(action, channel)
+    private fun launchFetchAccounts(action: HoverAction, channel: Channel) {
+        val intent =  SDKBuilder.createIntent(action, channel, requireContext())
+        (requireActivity() as MainActivity).sdkLauncherForFetchAccount.launch(intent)
     }
 
     override fun accountSelected(account: Account) {

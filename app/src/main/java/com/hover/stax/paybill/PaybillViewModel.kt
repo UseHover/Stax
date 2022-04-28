@@ -79,20 +79,22 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         isEditing.value = editing
     }
 
-    fun savePaybill(account: Account?, recurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+    fun createPayBill(account: Account, recurringAmount: Boolean) : Paybill {
         val businessNo = businessNumber.value
         val accountNo = accountNumber.value
+        val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, account.channelId, account.id, selectedPaybill.value?.logoUrl
+            ?: account.logoUrl).apply {
+            isSaved = true
+            logo = iconDrawable.value ?: 0
+        }
+        if (recurringAmount) payBill.recurringAmount = amount.value!!.toInt()
+        return payBill
+    }
 
+    fun savePaybill(account: Account?, recurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         if (account != null) {
-            val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, account.channelId, account.id, selectedPaybill.value?.logoUrl
-                    ?: account.logoUrl).apply {
-                isSaved = true
-                logo = iconDrawable.value ?: 0
-            }
-            if (recurringAmount) payBill.recurringAmount = amount.value!!.toInt()
-
+            val payBill = createPayBill(account, recurringAmount)
             repo.save(payBill)
-
             logPaybill(payBill)
         } else {
             Timber.e("Active account not set")

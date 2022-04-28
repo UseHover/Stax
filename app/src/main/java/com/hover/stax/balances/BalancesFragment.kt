@@ -9,20 +9,24 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.DUMMY
+import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.FragmentBalanceBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.HoverSession
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class BalancesFragment : Fragment() {
+class BalancesFragment : Fragment(){
 
     private lateinit var addChannelLink: CardView
     private lateinit var balanceTitle: TextView

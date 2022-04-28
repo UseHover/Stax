@@ -1,6 +1,7 @@
 package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -24,8 +25,10 @@ import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.home.SDKBuilder
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
+import com.hover.stax.utils.AnalyticsUtil.logFailedAction
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -100,6 +103,7 @@ class TransactionDetailsFragment : DialogFragment(), Target {
         viewModel.transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         viewModel.action.observe(viewLifecycleOwner) { it?.let { showActionDetails(it) } }
         viewModel.contact.observe(viewLifecycleOwner) { updateRecipient(it) }
+        viewModel.actionAndChannelPair.observe(viewLifecycleOwner) {Timber.i("${it.first.public_id} in actionAndChannel loaded")}
     }
 
     private fun setToPopupDesign() {
@@ -107,29 +111,6 @@ class TransactionDetailsFragment : DialogFragment(), Target {
         binding.transactionDetailsCard.setIcon(R.drawable.ic_close_white)
         binding.transactionDetailsCard.setTitle(R.drawable.ic_close_white)
         binding.transactionDetailsCard.makeFlatView()
-    }
-
-    private fun setupRetryBountyButton() {
-        val bountyButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
-        val retryButton = binding.secondaryStatus.btnRetryTransaction
-        bountyButtonsLayout.visibility = VISIBLE
-        retryButton.setOnClickListener { retryBountyClicked() }
-    }
-
-    private fun showButtonToClick(): TextView {
-        val transactionButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
-        val retryButton = binding.secondaryStatus.btnRetryTransaction
-        transactionButtonsLayout.visibility = VISIBLE
-        return retryButton
-    }
-
-    private fun retryTransactionClicked(transaction: StaxTransaction, retryButton: TextView) {
-        retryButton.setOnClickListener {
-            updateRetryCounter(transaction.action_id)
-            this.dismiss()
-            if (transaction.isBalanceType) (requireActivity() as MainActivity).reBuildHoverSession(transaction)
-            else (requireActivity() as MainActivity).navigateTransferAutoFill(transaction.transaction_type, transaction.uuid)
-        }
     }
 
     private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {
@@ -166,6 +147,57 @@ class TransactionDetailsFragment : DialogFragment(), Target {
                     retryTransactionClicked(transaction, button)
             } else binding.secondaryStatus.transactionRetryButtonLayoutId.visibility = GONE
             updateDetails(transaction)
+        }
+    }
+
+    private fun showButtonToClick(): TextView {
+        val transactionButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
+        val retryButton = binding.secondaryStatus.btnRetryTransaction
+        transactionButtonsLayout.visibility = VISIBLE
+        return retryButton
+    }
+
+    private fun setupRetryBountyButton() {
+        val bountyButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
+        val retryButton = binding.secondaryStatus.btnRetryTransaction
+        bountyButtonsLayout.visibility = VISIBLE
+        retryButton.setOnClickListener { retryBountyClicked() }
+    }
+
+    private fun retryBountyClicked() {
+        this.dismiss()
+        viewModel.transaction.value?.let {
+            val tType = if(it.isRecorded) getString(R.string.bounty) else it.transaction_type
+            logAnalyticsEvent(getString(R.string.clicked_retry_session, tType), requireContext())
+            val intent = SDKBuilder.createIntent(it.action_id, requireContext())
+            callSDKSafely(intent, it.action_id)
+        }
+    }
+
+    private fun retryTransactionClicked(transaction: StaxTransaction, retryButton: TextView) {
+        retryButton.setOnClickListener {
+            updateRetryCounter(transaction.action_id)
+            this.dismiss()
+            val mainActivity  = (requireActivity() as MainActivity)
+            if (transaction.isBalanceType) callSession(transaction)
+            else mainActivity.navigateTransferAutoFill(transaction.transaction_type, transaction.uuid)
+        }
+    }
+
+    private fun callSession(transaction: StaxTransaction) {
+        val actionAndChannelPair = viewModel.actionAndChannelPair.value!!
+        val intent = SDKBuilder.createIntent(transaction, actionAndChannelPair, requireContext())
+        callSDKSafely(intent, transaction.action_id)
+    }
+
+    private fun callSDKSafely(intent: Intent, actionId: String) {
+        try {
+            val mainActivity  = (requireActivity() as MainActivity)
+            mainActivity.sdkLauncherForSingleBalance.launch(intent)
+        }
+        catch (e : Exception) {
+            logFailedAction(actionId, requireActivity())
+            Timber.e(e)
         }
     }
 
@@ -275,14 +307,6 @@ class TransactionDetailsFragment : DialogFragment(), Target {
                 binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(viewModel.action.value, contact, requireContext()))
             binding.infoCard.detailsRecipient.setContact(contact)
         } else binding.infoCard.detailsRecipient.setTitle(getString(R.string.self_choice))
-    }
-
-    private fun retryBountyClicked() {
-        this.dismiss()
-
-        viewModel.transaction.value?.let {
-            (requireActivity() as MainActivity).retryCall(it.action_id)
-        }
     }
 
     override fun onDestroyView() {
