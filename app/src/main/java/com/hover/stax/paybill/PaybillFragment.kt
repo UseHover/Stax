@@ -10,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -23,7 +22,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.SDKBuilder
+import com.hover.stax.home.SDKIntent
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
@@ -335,7 +334,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
         if (!actions.isNullOrEmpty() && channel != null && account != null) {
             val payBill = paybillViewModel.createPayBill(account, true)
             val action = actionToRun ?: actions.first()
-            val intent = SDKBuilder.createIntent(action, channel, account, payBill, requireContext())
+            val intent = SDKIntent.create(action, channel, account, payBill, requireContext())
             callSDKSafely(intent, action.public_id)
         }
         else Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")

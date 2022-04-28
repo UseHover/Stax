@@ -8,9 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -20,8 +17,7 @@ import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.SDKBuilder
-import com.hover.stax.schedules.Schedule
+import com.hover.stax.home.SDKIntent
 import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
@@ -264,7 +260,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         actionSelectViewModel.activeAction.value?.let {
             val channel = channelsViewModel.activeChannel.value!!
             val account = accountDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!
-            val intent = SDKBuilder.createIntent(it, channel, account, actionSelectViewModel.nonStandardVariables.value, transferViewModel, requireContext())
+            val intent = SDKIntent.create(it, channel, account, actionSelectViewModel.nonStandardVariables.value, transferViewModel, requireContext())
             callSDKSafely(intent, actionSelectViewModel.activeAction.value!!.public_id)
         }
     }

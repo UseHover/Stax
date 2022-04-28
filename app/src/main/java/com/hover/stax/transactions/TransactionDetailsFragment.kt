@@ -25,7 +25,7 @@ import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.SDKBuilder
+import com.hover.stax.home.SDKIntent
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.AnalyticsUtil.logFailedAction
@@ -169,7 +169,7 @@ class TransactionDetailsFragment : DialogFragment(), Target {
         viewModel.transaction.value?.let {
             val tType = if(it.isRecorded) getString(R.string.bounty) else it.transaction_type
             logAnalyticsEvent(getString(R.string.clicked_retry_session, tType), requireContext())
-            val intent = SDKBuilder.createIntent(it.action_id, requireContext())
+            val intent = SDKIntent.create(it.action_id, requireContext())
             callSDKSafely(intent, it.action_id)
         }
     }
@@ -186,7 +186,7 @@ class TransactionDetailsFragment : DialogFragment(), Target {
 
     private fun callSession(transaction: StaxTransaction) {
         val actionAndChannelPair = viewModel.actionAndChannelPair.value!!
-        val intent = SDKBuilder.createIntent(transaction, actionAndChannelPair, requireContext())
+        val intent = SDKIntent.create(transaction, actionAndChannelPair, requireContext())
         callSDKSafely(intent, transaction.action_id)
     }
 

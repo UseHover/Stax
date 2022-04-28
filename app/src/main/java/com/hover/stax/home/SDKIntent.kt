@@ -16,20 +16,20 @@ import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import java.util.LinkedHashMap
 
-object SDKBuilder: PushNotificationTopicsInterface {
+object SDKIntent: PushNotificationTopicsInterface {
 
-    fun createIntent(transaction: StaxTransaction, actionAndChannelPair: Pair<HoverAction, Channel>, c: Context) : Intent {
+    fun create(transaction: StaxTransaction, actionAndChannelPair: Pair<HoverAction, Channel>, c: Context) : Intent {
         val hsb = HoverSession.Builder(actionAndChannelPair.first, actionAndChannelPair.second, c)
             .extra(HoverAction.AMOUNT_KEY, Utils.formatAmount(transaction.amount.toString()))
         return hsb.getIntent()
     }
 
-    fun createIntent(action: HoverAction, channel: Channel, c: Context) : Intent {
+    fun create(action: HoverAction, channel: Channel, c: Context) : Intent {
         val hsb = HoverSession.Builder(action, channel, c)
         return hsb.getIntent()
     }
 
-    fun createIntent(action: HoverAction, channel: Channel, account: Account, paybill: Paybill, c: Context) : Intent {
+    fun create(action: HoverAction, channel: Channel, account: Account, paybill: Paybill, c: Context) : Intent {
         val hsb = HoverSession.Builder(action, channel, c)
             .extra(HoverAction.AMOUNT_KEY, paybill.recurringAmount.toString())
             .extra("businessNo", paybill.businessNo)
@@ -39,16 +39,16 @@ object SDKBuilder: PushNotificationTopicsInterface {
         return hsb.getIntent()
     }
 
-    fun createIntent(a: HoverAction, c: Context) : Intent{
+    fun create(a: HoverAction, c: Context) : Intent{
         updatePushNotifGroupStatus(a, c)
-        return createIntent(a.public_id, c)
+        return create(a.public_id, c)
     }
 
-    fun createIntent(actionId: String, c: Context) : Intent {
+    fun create(actionId: String, c: Context) : Intent {
         return HoverParameters.Builder(c).request(actionId).setEnvironment(HoverParameters.MANUAL_ENV).buildIntent();
     }
 
-    fun createIntent(action: HoverAction,
+    fun create(action: HoverAction,
                              channel: Channel,
                              selectedAccount: Account? = null,
                              nonStandardVariables: LinkedHashMap<String, String>?,

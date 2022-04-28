@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -19,7 +18,7 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.SDKBuilder
+import com.hover.stax.home.SDKIntent
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.UpdateBountyTransactionsWorker
 import com.hover.stax.utils.*
@@ -187,7 +186,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_run_bounty_session), requireContext())
-        val intent = SDKBuilder.createIntent(b.action, requireContext())
+        val intent = SDKIntent.create(b.action, requireContext())
         (requireActivity() as MainActivity).sdkLauncherForBounty.launch(intent)
     }
 

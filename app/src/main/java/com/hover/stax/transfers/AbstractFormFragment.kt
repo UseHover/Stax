@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -23,10 +22,8 @@ import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.home.MainActivity
-import com.hover.stax.home.SDKBuilder
+import com.hover.stax.home.SDKIntent
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxCardView
@@ -155,7 +152,7 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
 
             if (action != null) {
                 Timber.i("Running balance check")
-                val intent = SDKBuilder.createIntent(action, channel, requireContext())
+                val intent = SDKIntent.create(action, channel, requireContext())
                 startActivity(intent)
             }
             else
