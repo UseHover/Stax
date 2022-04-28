@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.hover.stax.views.StaxCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:showBack="true"
+        android:layout_marginTop="@dimen/margin_16"
+        app:subtitle="@string/manage_permission_desc"
+        app:title="@string/manage_permissions_title">
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/calls_permission_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_13"
+            android:checked="false"
+            android:fontFamily="@font/brutalista_bold"
+            android:textStyle="bold"
+            android:text="@string/perm_calls_title"
+            android:textSize="@dimen/text_19" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:textColor="@color/offWhite"
+            android:text="@string/perm_calls_desc"
+            android:textSize="@dimen/text_16" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/sms_permission_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_16"
+            android:checked="false"
+            android:fontFamily="@font/brutalista_bold"
+            android:textStyle="bold"
+            android:text="@string/perm_sms_title"
+            android:textSize="@dimen/text_19" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:textColor="@color/offWhite"
+            android:text="@string/perm_sms_desc"
+            android:textSize="@dimen/text_16" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/display_permission_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_16"
+            android:checked="false"
+            android:fontFamily="@font/brutalista_bold"
+            android:textStyle="bold"
+            android:text="@string/perm_display_title"
+            android:textSize="@dimen/text_19" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:textColor="@color/offWhite"
+            android:text="@string/perm_display_desc"
+            android:textSize="@dimen/text_16" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/accessibility_permission_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/text_16"
+            android:layout_marginTop="@dimen/margin_16"
+            android:checked="false"
+            android:fontFamily="@font/brutalista_bold"
+            android:textStyle="bold"
+            android:text="@string/perm_accessibility_title"
+            android:textSize="@dimen/text_19" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/text_16"
+            android:textColor="@color/offWhite"
+            android:text="@string/perm_accessibility_desc"
+            android:textSize="@dimen/text_16" />
+
+    </com.hover.stax.views.StaxCardView>
+
+</androidx.core.widget.NestedScrollView>

@@ -53,6 +53,7 @@ class SettingsFragment : Fragment() {
         setUpShare()
         setUpMeta()
         setUpChooseLang()
+        setUpManagePermissions()
         setupLearnCard()
         setUpSupport()
         setUpEnableTestMode()
@@ -65,6 +66,12 @@ class SettingsFragment : Fragment() {
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
         if (loginViewModel.userIsNotSet()) loginViewModel.uploadLastUser()
+    }
+
+    private fun setUpManagePermissions(){
+        binding.permissionCard.permission.setOnClickListener {
+            NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToManagePermissionFragment())
+        }
     }
 
     private fun setUpMeta() {
