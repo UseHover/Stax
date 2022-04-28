@@ -20,7 +20,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.views.StatefulInput
+import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
@@ -245,16 +245,16 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
         with(binding.editCard) {
             businessNoInput.setState(businessNoError,
-                if (businessNoError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
+                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
             accountNoInput.setState(accountNoError,
-                if (accountNoError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
+                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
             amountInput.setState(amountError,
-                if (amountError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
+                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         }
 
         if (saveBill) {
             binding.saveBillLayout.billNameInput.setState(nickNameError,
-                if (nickNameError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
+                if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         }
 
         return businessNoError == null && accountNoError == null && amountError == null && (if (saveBill) nickNameError == null else true)

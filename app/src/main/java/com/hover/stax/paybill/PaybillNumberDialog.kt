@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.DialogPaybillNumberBinding
 import com.hover.stax.utils.NavUtil
-import com.hover.stax.views.StatefulInput
+import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -57,7 +57,7 @@ class PaybillNumberDialog : DialogFragment() {
 
     private fun validates(): Boolean {
         val businessNoError = viewModel.businessNoError()
-        binding.businessNoInput.setState(businessNoError, if (businessNoError == null) StatefulInput.SUCCESS else StatefulInput.ERROR)
+        binding.businessNoInput.setState(businessNoError, if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         return businessNoError == null
     }

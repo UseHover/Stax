@@ -25,6 +25,11 @@ class StaxTextInputLayout(context: Context, attrs: AttributeSet) : AbstractState
         fillAttrs()
     }
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        fillAttrs()
+    }
+
     override fun initView() {
         super.initView()
         editText = binding.inputEditText
@@ -38,6 +43,11 @@ class StaxTextInputLayout(context: Context, attrs: AttributeSet) : AbstractState
         } finally {
             a.recycle()
         }
+    }
+
+    fun setHint(helperText: CharSequence?) {
+        hint = helperText?.toString()
+        hint?.let { binding.inputLayout.hint = it }
     }
 
     private fun fillAttrs() {
