@@ -24,14 +24,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-                android:id="@+id/payFromAcct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_21"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="MPESA" />
+        <com.hover.stax.views.Stax2LineItem
+            android:id="@+id/account_value"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="MPESA" />
 
         <TextView
                 android:id="@+id/toLabel"
@@ -50,7 +51,7 @@
                 android:textSize="@dimen/text_21"
                 app:layout_constraintBaseline_toBaselineOf="@id/toLabel"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/payFromAcct" />
+                app:layout_constraintTop_toBottomOf="@id/account_value" />
 
         <TextView
                 android:id="@+id/accountLabel"
@@ -62,7 +63,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toLabel" />
 
-        <TextView
+        <com.hover.stax.views.Stax2LineItem
                 android:id="@+id/accountNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

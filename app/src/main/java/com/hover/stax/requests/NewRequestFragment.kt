@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
@@ -33,9 +32,9 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private lateinit var requestViewModel: NewRequestViewModel
 
-    private lateinit var amountInput: StaxTextInputLayout
-    private lateinit var requesterNumberInput: StaxTextInputLayout
-    private lateinit var noteInput: StaxTextInputLayout
+    private lateinit var amountInput: StaxTextInput
+    private lateinit var requesterNumberInput: StaxTextInput
+    private lateinit var noteInput: StaxTextInput
     private lateinit var requesteeInput: ContactInput
     private lateinit var accountValue: Stax2LineItem
     private lateinit var shareCard: StaxCardView

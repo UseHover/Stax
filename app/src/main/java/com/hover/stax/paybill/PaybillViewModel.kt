@@ -14,6 +14,7 @@ import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -29,20 +30,28 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     val accountNumber = MutableLiveData<String?>()
     val nickname = MutableLiveData<String?>()
     val amount = MutableLiveData<String?>()
-    val iconDrawable = MutableLiveData(0)
+    val iconDrawable = MutableLiveData(R.drawable.ic_edit)
+
+    val saveBill = MutableLiveData(false)
+    val saveAmount = MutableLiveData(false)
 
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
         billRepo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
     }
 
     fun selectPaybill(paybill: Paybill) {
-        Timber.e("selecting paybill by paybill: %s", paybill.name)
+        Timber.e("selecting paybill by paybill: %s", paybill.businessNo)
+        Timber.e("current amount: %s", amount.value)
+        Timber.e("isSaved: %s", paybill.isSaved)
+
         selectedPaybill.value = paybill
         businessNumber.value = paybill.businessNo
         if (paybill.accountNo != null) accountNumber.value = paybill.accountNo
         if (paybill.recurringAmount != 0) amount.value = paybill.recurringAmount.toString()
-        if (nickname.value == null) nickname.value = paybill.name
+        saveBill.value = paybill.isSaved
+        if (paybill.isSaved) nickname.value = paybill.name
         iconDrawable.value = paybill.logo
+        saveAmount.value = paybill.recurringAmount != 0
     }
 
     fun selectPaybill(action: HoverAction) {
@@ -55,7 +64,6 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     }
 
     fun extractBizNumber(action: HoverAction): String {
-        Timber.e("params: %s", action.required_params)
         if (action.getVarValue(BUSINESS_NO) != null)
             return action.getVarValue(BUSINESS_NO)
         else return ""
@@ -73,32 +81,21 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         amount.value = value
     }
 
+    fun setSave(shouldSave: Boolean) {
+        this.saveBill.value = shouldSave
+    }
+
+    fun setSaveAmount(shouldSave: Boolean) {
+        this.saveAmount.value = shouldSave
+    }
+
     fun setIconDrawable(drawable: Int) {
         iconDrawable.value = drawable
     }
 
     fun setNickname(nickname: String) {
-        this.nickname.value = nickname
-    }
-
-    fun savePaybill(account: Account?, action: HoverAction?, recurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {
-        val businessNo = businessNumber.value
-        val accountNo = accountNumber.value
-
-        if (account != null && action != null) {
-            val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, action.public_id, account.id, selectedPaybill.value?.logoUrl
-                    ?: account.logoUrl).apply {
-                isSaved = true
-                logo = iconDrawable.value ?: 0
-            }
-            if (recurringAmount) payBill.recurringAmount = amount.value!!.toInt()
-
-            billRepo.save(payBill)
-
-            logPaybill(payBill)
-        } else {
-            Timber.e("Action or account not set")
-        }
+        if (this.nickname.value != nickname)
+            this.nickname.value = nickname
     }
 
     private fun logPaybill(paybill: Paybill, isSaved: Boolean = true) {
@@ -128,7 +125,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         getString(R.string.transfer_error_recipient_account)
     else null
 
-    fun nameError(): String? = if (nickname.value.isNullOrEmpty())
+    fun nameError(): String? = if (saveBill.value!! && nickname.value.isNullOrEmpty())
         getString(R.string.bill_name_error)
     else null
 
@@ -137,14 +134,54 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         logPaybill(paybill, false)
     }
 
-    fun updatePaybill(paybill: Paybill, setRecurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+    fun hasEditedSaved(): Boolean {
+        val selected = selectedPaybill.value
+        Timber.e("is saved? %b", selected?.isSaved)
+        return when {
+            selected == null || !selected.isSaved -> false
+            !saveBill.value!! -> false
+            selected.name != nickname.value -> true
+            selected.logo != iconDrawable.value -> true
+            selected.accountNo != accountNumber.value -> true
+            saveAmount.value!! && selected.recurringAmount.toString() != amount.value!! -> true
+            else -> false
+        }
+    }
+
+    fun savePaybill(account: Account?, action: HoverAction?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val businessNo = businessNumber.value
+            val accountNo = accountNumber.value
+
+            if (account != null && action != null) {
+                val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, action.public_id, account.id, getIcon(account)).apply {
+                    isSaved = true
+                    logo = iconDrawable.value ?: 0
+                    channelId = account.channelId
+                }
+                if (saveAmount.value!!) payBill.recurringAmount = amount.value!!.toInt()
+
+                billRepo.save(payBill)
+                logPaybill(payBill)
+            } else {
+                Timber.e("Action or account not set")
+            }
+        }
+        setEditing(false)
+    }
+
+    private fun getIcon(account: Account): String {
+        return selectedPaybill.value?.logoUrl ?: account.logoUrl
+    }
+
+    fun updatePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
         with(paybill) {
             apply {
                 name = nickname.value!!
                 businessNo = businessNumber.value!!
                 accountNo = accountNumber.value!!
                 logo = iconDrawable.value ?: 0
-                recurringAmount = if (setRecurringAmount) amount.value!!.toInt() else 0
+                recurringAmount = if (saveAmount.value!!) amount.value!!.toInt() else 0
             }
 
             billRepo.update(this)
@@ -160,6 +197,8 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
             amount.postValue(null)
             nickname.postValue(null)
             iconDrawable.postValue(0)
+            saveBill.postValue(false)
+            saveAmount.postValue(false)
         }
     }
 

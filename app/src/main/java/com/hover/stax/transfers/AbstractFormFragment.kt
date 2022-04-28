@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.MotionEvent
 import android.view.View
@@ -33,7 +32,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
-import com.hover.stax.views.StaxTextInputLayout
+import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -44,7 +43,7 @@ abstract class AbstractFormFragment : Fragment() {
     val accountsViewModel: AccountsViewModel by sharedViewModel()
     val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
 
-    var editCard: StaxCardView? = null
+    var editCard: View? = null
     var summaryCard: StaxCardView? = null
     lateinit var payWithDropdown: AccountDropdown
     lateinit var fab: Button
@@ -52,11 +51,6 @@ abstract class AbstractFormFragment : Fragment() {
     private lateinit var noWorryText: TextView
 
     var dialog: StaxDialog? = null
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        abstractFormViewModel.reset()
-    }
 
     @CallSuper
     open fun init(root: View) {
@@ -78,9 +72,9 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun setupActionDropdownObservers() {
-        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { Timber.e("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
+        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { Timber.e("Got new active account ${this.javaClass.simpleName}: $it") }
         accountsViewModel.channelActions.observe(viewLifecycleOwner) { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
-        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { Timber.e("Got new active channel ${this.javaClass.simpleName}: $it ${it?.public_id}") }
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { Timber.e("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
     }
 
 
@@ -92,7 +86,7 @@ abstract class AbstractFormFragment : Fragment() {
         fab.text = chooseFabText(isEditing)
     }
 
-    fun setInputState(hasFocus: Boolean, input: StaxTextInputLayout, errors: String?) {
+    fun setInputState(hasFocus: Boolean, input: StaxTextInput, errors: String?) {
         if (!hasFocus)
             input.setState(errors, if (errors == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         else
@@ -170,6 +164,10 @@ abstract class AbstractFormFragment : Fragment() {
             else
                 findNavController().popBackStack()
         }
+    }
 
+    override fun onDestroy() {
+        abstractFormViewModel.reset()
+        super.onDestroy()
     }
 }

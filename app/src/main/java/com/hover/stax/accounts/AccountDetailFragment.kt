@@ -25,7 +25,7 @@ import com.hover.stax.transactions.TransactionHistoryAdapter
 import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
-import com.hover.stax.views.StaxTextInputLayout
+import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -94,7 +94,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         }
     }
 
-    private fun toggleButtonHighlight(v: StaxTextInputLayout, btn: AppCompatButton, newText: String, comparator: String?) {
+    private fun toggleButtonHighlight(v: StaxTextInput, btn: AppCompatButton, newText: String, comparator: String?) {
         if (newText.isNotEmpty() && comparator != null && newText != comparator)
             v.setState(null, AbstractStatefulInput.NONE)
         btn.backgroundTintList = ColorStateList.valueOf(
@@ -112,7 +112,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         validateInput(binding.manageCard.accountNumberInput, viewModel.account.value?.accountNo, R.string.account_number_error, viewModel::updateAccountNumber)
     }
 
-    private fun validateInput(v: StaxTextInputLayout, comparison: String?, errorMsg: Int, successFun: (text: String) -> Unit) {
+    private fun validateInput(v: StaxTextInput, comparison: String?, errorMsg: Int, successFun: (text: String) -> Unit) {
         val msg = validates(v, comparison, errorMsg)
         if (msg == null)
             successFun(v.text)
@@ -122,7 +122,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         )
     }
 
-    private fun validates(v: StaxTextInputLayout, comparison: String?, errorMsg: Int): String? {
+    private fun validates(v: StaxTextInput, comparison: String?, errorMsg: Int): String? {
         return if (v.text.isEmpty() || v.text == comparison) getString(errorMsg)
         else null
     }

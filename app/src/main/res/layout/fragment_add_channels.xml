@@ -42,7 +42,7 @@
                     app:showBack="false"
                     app:title="@string/add_an_account">
 
-                <com.hover.stax.views.StaxTextInputLayout
+                <com.hover.stax.views.StaxTextInput
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/search"

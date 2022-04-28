@@ -38,17 +38,12 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
         channelActions.apply {
             addSource(type, this@AccountsViewModel::loadActions)
-            addSource(accounts, this@AccountsViewModel::loadActions)
             addSource(activeAccount, this@AccountsViewModel::loadActions)
         }
     }
 
     fun setType(t: String) {
         type.value = t
-    }
-
-    fun setActiveAccount(account: Account?) {
-        activeAccount.postValue(account!!)
     }
 
     private fun setActiveAccountIfNull(accounts: List<Account>) {
@@ -62,10 +57,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         if (type == null || activeAccount.value == null) return
 
         if (accounts.value.isNullOrEmpty()) return
-        if (type == HoverAction.BALANCE)
-            loadActions(accounts.value!!, type)
-        else
-            loadActions(activeAccount.value!!, type)
+        loadActions(activeAccount.value!!, type)
     }
 
     private fun loadActions(account: Account?) {
@@ -73,25 +65,10 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         loadActions(account, type.value!!)
     }
 
-    private fun loadActions(accounts: List<Account>) {
-        if (accounts.isNullOrEmpty()) return
-
-        if (type.value == HoverAction.BALANCE)
-            loadActions(accounts, type.value!!)
-    }
-
     private fun loadActions(account: Account, t: String) = viewModelScope.launch(Dispatchers.IO) {
         channelActions.postValue(
             if (t == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
             else actionRepo.getActions(account.channelId, t))
-    }
-
-    private fun loadActions(accounts: List<Account>, t: String) {
-        val ids = accounts.map { it.channelId }.toIntArray()
-
-        viewModelScope.launch {
-            channelActions.value = actionRepo.getActions(ids, t)
-        }
     }
 
     fun errorCheck(): String? {

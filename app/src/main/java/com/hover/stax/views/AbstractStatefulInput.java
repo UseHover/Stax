@@ -33,12 +33,18 @@ public abstract class AbstractStatefulInput extends FrameLayout {
         inputLayout = findViewById(R.id.inputLayout);
     }
 
+    protected void setHelperText(String message) {
+        inputLayout.setHelperText(message);
+        invalidate();
+        requestLayout();
+    }
+
     public void setError(@Nullable CharSequence errorText) {
         setState(errorText == null ? null : errorText.toString(), errorText == null ? NONE : ERROR);
     }
 
     public void setState(String message, int state) {
-        inputLayout.setHelperText(message);
+        setHelperText(message);
         switch (state) {
             case INFO:
                 setColorAndIcon(R.color.blue_state_color, R.drawable.ic_info);
@@ -57,6 +63,8 @@ public abstract class AbstractStatefulInput extends FrameLayout {
                 setColorAndIcon(R.color.offwhite_state_color, 0);
                 break;
         }
+        invalidate();
+        requestLayout();
     }
 
     private void setColorAndIcon(int color, int drawable) {
@@ -78,5 +86,20 @@ public abstract class AbstractStatefulInput extends FrameLayout {
         } catch (IOException | XmlPullParserException | NullPointerException e) {
             Timber.e(e, "Failed to load color state list");
         }
+        invalidate();
+        requestLayout();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        inputLayout = null;
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (inputLayout != null)
+            inputLayout.invalidate();
     }
 }

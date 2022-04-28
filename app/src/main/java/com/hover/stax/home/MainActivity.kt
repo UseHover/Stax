@@ -53,7 +53,7 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
 
         accountsViewModel.activeAccount.observe(this) { Timber.e("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
         accountsViewModel.channelActions.observe(this) { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
-        actionSelectViewModel.activeAction.observe(this) { Timber.e("Got new active channel ${this.javaClass.simpleName}: $it ${it?.public_id}") }
+        actionSelectViewModel.activeAction.observe(this) { Timber.e("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
 
         navHelper.setUpNav()
 
@@ -134,7 +134,7 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
     }
 
     private fun showBountyDetails(data: Intent?) {
-        Timber.e("Request code is bounty")
+        Timber.i("Request code is bounty")
         if (data != null) {
             val transactionUUID = data.getStringExtra("uuid")
             if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
@@ -201,13 +201,13 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
     }
 
     override fun onAuthSuccess(action: HoverAction?) {
-        Timber.e("Auth success on action: ${action?.public_id}")
+        Timber.v("Auth success on action: ${action?.public_id}")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Timber.e("received result. %s", data?.action)
-        Timber.e("uuid? %s", data?.extras?.getString("uuid"))
+        Timber.v("received result. %s", data?.action)
+        Timber.v("uuid? %s", data?.extras?.getString("uuid"))
 
         when {
             requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED ->

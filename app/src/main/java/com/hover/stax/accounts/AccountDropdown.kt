@@ -83,7 +83,12 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     fun setObservers(viewModel: AccountsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
             accounts.observe(lifecycleOwner) { accountUpdate(it) }
-            activeAccount.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
+
+            activeAccount.observe(lifecycleOwner) {
+                if (it != null && showSelected)
+                    setState(helperText, NONE);
+            }
+
             channelActions.observe(lifecycleOwner) {
                 setState(it, viewModel)
             }

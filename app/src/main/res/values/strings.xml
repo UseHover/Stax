@@ -130,6 +130,7 @@
     <string name="bal_cardhead">Balances</string>
     <string name="channels_error_nodata">Please turn on data to load services.</string>
     <string name="channels_error_nosim">Please insert a supported SIM to filter choices.</string>
+    <string name="paybill_error_nosupport">This account does not support bill payments</string>
     <string name="channels_error_noselect">You must select a service.</string>
     <string name="accounts_error_no_accounts">No accounts added</string>
     <string name="link_account">Link account</string>

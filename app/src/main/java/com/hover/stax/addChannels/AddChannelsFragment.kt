@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -180,6 +181,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
             binding.errorText.visibility = GONE
             aggregateSelectedChannels(tracker)
             Timber.e("Navigating home now")
+            findNavController().popBackStack()
             AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
         }
     }

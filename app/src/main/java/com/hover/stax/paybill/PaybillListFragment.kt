@@ -17,6 +17,7 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillActionsAdapter.PaybillActionsClickListener {
 
@@ -27,7 +28,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private val paybillViewModel: PaybillViewModel by sharedViewModel()
 
-    private val args: PaybillListFragmentArgs by navArgs()
+//    private val args: PaybillListFragmentArgs by navArgs()
 
     private var dialog: StaxDialog? = null
 
@@ -59,7 +60,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
         accountsViewModel.channelActions.observe(viewLifecycleOwner) { updateActions(it) }
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
-            paybillViewModel.selectPaybill(it)
+            it?.let { paybillViewModel.selectPaybill(it) }
         }
     }
 
@@ -118,12 +119,14 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     }
 
     override fun onSelectPaybill(paybill: Paybill) {
+        Timber.e("Select by bill: %s", paybill.name)
         paybillViewModel.selectPaybill(paybill)
         actionSelectViewModel.setActiveAction(paybill.actionId)
         findNavController().popBackStack()
     }
 
     override fun onSelectPaybill(action: HoverAction) {
+        Timber.e("Select by action: %s", action.public_id)
         paybillViewModel.selectPaybill(action)
         actionSelectViewModel.setActiveAction(action)
         requireActivity().supportFragmentManager.popBackStack();

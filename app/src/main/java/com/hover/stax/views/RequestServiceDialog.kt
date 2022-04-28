@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.hover.stax.R
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.UIHelper
 import org.json.JSONObject
 
 open class RequestServiceDialog (private var ctx: Context, private var mView: View) : AlertDialog(ctx) {
@@ -21,8 +20,8 @@ open class RequestServiceDialog (private var ctx: Context, private var mView: Vi
 	private var institutionValue: String = ""
 	private var shortCodeValue: String = ""
 
-	private lateinit var institutionInput: StaxTextInputLayout
-	private lateinit var shortCodeInput: StaxTextInputLayout
+	private lateinit var institutionInput: StaxTextInput
+	private lateinit var shortCodeInput: StaxTextInput
 	private lateinit var activity: Activity
 
 	constructor(a: Activity) : this(a, a.layoutInflater, R.layout.request_for_service) {

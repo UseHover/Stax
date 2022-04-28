@@ -12,7 +12,7 @@
             android:hint="@string/put_in"
             app:initial_helper_text="@string/put_in_desc" />
 
-    <com.hover.stax.views.StaxTextInputLayout
+    <com.hover.stax.views.StaxTextInput
             android:id="@+id/accountNumberInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
