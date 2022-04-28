@@ -3,7 +3,6 @@ package com.hover.stax
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
 import com.amplitude.api.Amplitude
-import com.appsflyer.AppsFlyerLib
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
@@ -22,7 +20,6 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.destruct.SelfDestructActivity
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
 import com.hover.stax.inapp_banner.BannerUtils
@@ -123,26 +120,8 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
                 Timber.i("Onboarding variant fetched $variant")
                 Utils.saveString(Constants.VARIANT, variant, this@RoutingActivity)
 
-                if (!selfDestructWhenAppVersionExpires())
-                    validateUser()
+                validateUser()
             }
-        }
-    }
-
-    private fun selfDestructWhenAppVersionExpires(): Boolean {
-        return try {
-            val currentVersionCode = packageManager.getPackageInfo(packageName, 0).versionCode
-
-            val forceUpdateVersionCode = remoteConfig.getString("force_update_app_version").toInt()
-            if (forceUpdateVersionCode > currentVersionCode) {
-                startActivity(Intent(this, SelfDestructActivity::class.java))
-                finish()
-                true
-            } else false
-        } catch (e: PackageManager.NameNotFoundException) {
-            false
-        } catch (e: NumberFormatException) {
-            false
         }
     }
 
