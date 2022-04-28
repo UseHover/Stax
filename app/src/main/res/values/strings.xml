@@ -690,5 +690,7 @@
     <!-- marketing login prompt dialog -->
     <string name="login_dialog_title">Sign In</string>
     <string name="login_dialog_desc">Please sign in to Stax with Google to be able to receive marketing updates.</string>
+    <string name="update_downloaded">An update has just been downloaded.</string>
+    <string name="restart">Restart</string>
 
 </resources>
