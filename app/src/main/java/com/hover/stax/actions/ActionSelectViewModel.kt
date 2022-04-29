@@ -9,6 +9,7 @@ import com.hover.stax.accounts.ACCOUNT_NAME
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
 import com.hover.stax.R
+import com.hover.stax.contacts.StaxContact
 import com.hover.stax.utils.Constants
 import java.util.LinkedHashMap
 
@@ -58,4 +59,8 @@ import java.util.LinkedHashMap
         map[key] = value
         nonStandardVariables.postValue(map!!)
     }
+
+     fun wrapExtras(): HashMap<String, String> {
+         return nonStandardVariables.value ?: hashMapOf()
+     }
 }

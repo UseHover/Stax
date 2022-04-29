@@ -215,10 +215,16 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setEditing(false)
             } else {
                 (requireActivity() as MainActivity).run(payWithDropdown.highlightedAccount ?: accountsViewModel.activeAccount.value!!,
-                    actionSelectViewModel.activeAction.value!!, transferViewModel.wrapExtras(), 0)
+                    actionSelectViewModel.activeAction.value!!, getExtras(), 0)
                 findNavController().popBackStack()
             }
         } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+    }
+
+    private fun getExtras(): HashMap<String, String> {
+        val extras = transferViewModel.wrapExtras()
+        extras.putAll(actionSelectViewModel.wrapExtras())
+        return extras
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {

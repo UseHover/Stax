@@ -1,37 +1,27 @@
 package com.hover.stax.accounts
 
 import android.app.Application
-import android.content.BroadcastReceiver
 import android.content.Context
 import androidx.lifecycle.*
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionRepo
-import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
-import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, val channelRepo: ChannelRepo) : AndroidViewModel(application),
+class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
-
-    private var type = MutableLiveData<String>()
 
     val accounts: LiveData<List<Account>> = repo.getAllLiveAccounts()
     val activeAccount: MediatorLiveData<Account> = MediatorLiveData()
-    val activeAccountChannel: LiveData<Channel?>
 
+    private var type = MutableLiveData<String>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
-
-    private var simReceiver: BroadcastReceiver? = null
 
     init {
         activeAccount.addSource(accounts, this@AccountsViewModel::setActiveAccountIfNull)
-        activeAccountChannel = Transformations.map(activeAccount) { it?.let { channelRepo.getChannel(it.channelId) } }
 
         channelActions.apply {
             addSource(type, this@AccountsViewModel::loadActions)
@@ -101,15 +91,5 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             a.isDefault = true
             repo.update(a)
         }
-    }
-
-    override fun onCleared() {
-        try {
-            simReceiver?.let {
-                LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(it)
-            }
-        } catch (ignored: Exception) {
-        }
-        super.onCleared()
     }
 }

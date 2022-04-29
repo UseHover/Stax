@@ -45,29 +45,16 @@ class HoverSession private constructor(b: Builder) {
             }
 
     private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject) {
-        addPublicExtras(builder, extras)
-        addPrivateExtras(builder, extras)
-    }
-
-    private fun addPublicExtras(builder: HoverParameters.Builder, extras: JSONObject) {
         val keys: Iterator<*> = extras.keys()
         while (keys.hasNext()) {
             val key = keys.next() as String
-            val normalizedVal = parseExtra(key, extras.optString(key), action.required_params)
+            val normalizedVal = parseExtra(key, extras.optString(key))
             if (normalizedVal != null) builder.extra(key, normalizedVal)
         }
     }
 
-    private fun addPrivateExtras(builder: HoverParameters.Builder, extras: JSONObject) {
-        val keys: Iterator<*> = extras.keys()
-        while (keys.hasNext()) {
-            val key = keys.next() as String
-            builder.extra(key, extras.optString(key))
-        }
-    }
-
-    private fun parseExtra(key: String, value: String?, required: JSONObject): String? {
-        if (value == null || !required.has(key)) return null
+    private fun parseExtra(key: String, value: String?): String? {
+        if (value == null) return null
         return if (key == HoverAction.PHONE_KEY) {
             PhoneHelper.normalizeNumberByCountry(value, action.country_alpha2, action.to_country_alpha2)
         } else value
@@ -123,12 +110,6 @@ class HoverSession private constructor(b: Builder) {
             finalScreenTime = ms
             return this
         }
-
-//        fun rebuildFrom(transaction: StaxTransaction) {
-//            extra(HoverAction.AMOUNT_KEY, Utils.formatAmount(transaction.amount.toString()))
-//            extra(HoverAction.ACCOUNT_KEY, transaction.accountNumber)
-//            extra(HoverAction.PHONE_KEY, transaction.accountNumber)
-//        }
 
         fun run(): HoverSession {
             return HoverSession(this)

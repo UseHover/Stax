@@ -37,12 +37,12 @@ val appModule = module {
     viewModel { HoverViewModel(get(), get(), get()) }
     viewModel { ActionSelectViewModel(get()) }
     viewModel { ChannelsViewModel(get(), get(), get(), get()) }
-    viewModel { AccountsViewModel(get(), get(), get(), get()) }
+    viewModel { AccountsViewModel(get(), get(), get()) }
     viewModel { AccountDetailViewModel(get(), get(), get(), get(), get()) }
     viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
     viewModel { TransferViewModel(get(), get(), get(), get()) }
     viewModel { ScheduleDetailViewModel(get(), get(), get()) }
-    viewModel { BalancesViewModel(get(), get(), get()) }
+    viewModel { BalancesViewModel(get()) }
     viewModel { TransactionHistoryViewModel(get()) }
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get(), get(), get()) }

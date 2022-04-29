@@ -24,15 +24,7 @@ abstract class AbstractHoverCallerActivity : AbstractGoogleAuthActivity(), PushN
         hsb.run()
     } catch (e: Exception) {
         runOnUiThread { UIHelper.flashMessage(this, getString(R.string.error_running_action)) }
-
-        val data = JSONObject()
-        try {
-            data.put("actionId", hsb.action.id)
-        } catch (ignored: JSONException) {
-        }
-
-        AnalyticsUtil.logAnalyticsEvent("Failed Actions", data, this)
-        Timber.e(e)
+        createLog(hsb, "Failed Actions")
     }
 
     fun run(account: Account, type: String) {
@@ -43,41 +35,18 @@ abstract class AbstractHoverCallerActivity : AbstractGoogleAuthActivity(), PushN
         val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity,index)
         if (!extras.isNullOrEmpty()) hsb.extras(extras)
         runAction(hsb)
+        createLog(hsb, getString(R.string.finish_transfer, action.transaction_type))
     }
 
-//    private fun makeCall(action: HoverAction, account: Account? = null, selectedAccount: Account? = null) {
-//        val hsb = HoverSession.Builder(action, channel ?: channelsViewModel.activeChannel.value!!, this, getRequestCode(action.transaction_type))
-//
-//        if (action.transaction_type != HoverAction.FETCH_ACCOUNTS) {
-//            hsb.extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
-//                    .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
-//                    .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
-//
-//            actionSelectViewModel.nonStandardVariables.value?.forEach {
-//                hsb.extra(it.key, it.value)
-//            }
-//
-//            selectedAccount?.run { hsb.setAccountId(id.toString()) }
-//            transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
-//        }
-//
-//        runAction(hsb)
-//    }
-
-//fun submitPaymentRequest(action: HoverAction, account: Account) {
-//
-//
-//    runAction(hsb)
-//
-//    val data = JSONObject()
-//    try {
-//        data.put("businessNo", paybillViewModel.businessNumber.value)
-//    } catch (e: Exception) {
-//        Timber.e(e)
-//    }
-//
-//    AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), data, this)
-//}
+    private fun createLog(hsb: HoverSession.Builder, event: String) {
+        val data = JSONObject()
+        try {
+            data.put("actionId", hsb.action.id)
+        } catch (ignored: JSONException) {
+        }
+        AnalyticsUtil.logAnalyticsEvent(event, data, this)
+        Timber.e(event)
+    }
 
     private fun getRequestCode(transactionType: String): Int {
         return if (transactionType == HoverAction.FETCH_ACCOUNTS) Constants.FETCH_ACCOUNT_REQUEST

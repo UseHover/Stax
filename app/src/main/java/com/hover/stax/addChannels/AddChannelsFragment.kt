@@ -68,7 +68,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.showProgressIndicator()
 
         binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
-        fillUpChanelLists()
+        fillUpChannelLists()
         setupEmptyState()
 
         setUpMultiselect()
@@ -85,7 +85,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         setFabListener()
     }
 
-    private fun fillUpChanelLists() {
+    private fun fillUpChannelLists() {
         binding.selectedList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
             setHasFixedSize(true)

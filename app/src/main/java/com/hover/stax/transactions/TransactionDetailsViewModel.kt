@@ -10,8 +10,8 @@ import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.schedules.ScheduleRepo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
@@ -52,7 +52,7 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
     else null
 
     fun setTransaction(uuid: String) = viewModelScope.launch(Dispatchers.IO) {
-        transaction.postValue(repo.getTransaction(uuid))
+        repo.getTransactionAsync(uuid).collect { transaction.postValue(it) }
     }
 
     private fun loadMessages(txn: StaxTransaction?) {

@@ -24,7 +24,6 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
@@ -40,7 +39,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
 
     var countryChoice: MediatorLiveData<String> = MediatorLiveData()
     val filterQuery = MutableLiveData<String?>()
-
     private var countryChannels = MediatorLiveData<List<Channel>>()
 
     val filteredChannels = MediatorLiveData<List<Channel>>()

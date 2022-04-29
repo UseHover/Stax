@@ -23,7 +23,7 @@ private const val EMAIL = "email"
 private const val USERNAME = "username"
 private const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 
-class LoginViewModel(val repo: ScheduleRepo, application: Application) : AndroidViewModel(application) {
+class LoginViewModel(application: Application, val repo: ScheduleRepo) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient
 
