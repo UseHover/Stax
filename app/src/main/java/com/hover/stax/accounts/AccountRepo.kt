@@ -10,9 +10,8 @@ import kotlinx.coroutines.flow.Flow
 class AccountRepo(db: AppDatabase) {
     private val accountDao: AccountDao = db.accountDao()
 
-    //    val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
-
     fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
+
     fun getAllLiveAccounts(): LiveData<List<Account>> = accountDao.getLiveAccounts()
 
     fun getAccountsCount(): Int = accountDao.getDataCount()
@@ -44,7 +43,7 @@ class AccountRepo(db: AppDatabase) {
                     }
                 }
             } catch (e: Exception) {
-                AnalyticsUtil.logErrorAndReportToFirebase(AccountRepo.TAG, "failed to insert/update account", e)
+                AnalyticsUtil.logErrorAndReportToFirebase(TAG, "failed to insert/update account", e)
             }
         }
     }
@@ -58,6 +57,6 @@ class AccountRepo(db: AppDatabase) {
     fun deleteAccount(channelId: Int, name: String) { accountDao.delete(channelId, name) }
 
     companion object {
-        private val TAG = ScheduleRepo::class.java.simpleName
+        private val TAG = AccountRepo::class.java.simpleName
     }
 }

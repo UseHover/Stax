@@ -18,6 +18,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.*
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
@@ -77,7 +78,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         channelsViewModel.allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, channelsViewModel.countryChoice.value) } }
         channelsViewModel.sims.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} sims") }
         channelsViewModel.simCountryList.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} hnis") }
-        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
+        channelsViewModel.accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         channelsViewModel.filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
         channelsViewModel.countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
 
@@ -138,12 +139,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         selectAdapter.setTracker(tracker!!)
     }
 
-    private fun onSelectedLoaded(channels: List<Channel>) {
+    private fun onSelectedLoaded(accounts: List<Account>) {
         binding.channelsListCard.hideProgressIndicator()
 
-        showSelected(!channels.isNullOrEmpty())
-        if (!channels.isNullOrEmpty())
-            binding.selectedList.adapter = ChannelsAdapter(channels, this)
+        showSelected(!accounts.isNullOrEmpty())
+        if (!accounts.isNullOrEmpty())
+            binding.selectedList.adapter = AccountsAdapter(accounts)
     }
 
     private fun showSelected(visible: Boolean) {
