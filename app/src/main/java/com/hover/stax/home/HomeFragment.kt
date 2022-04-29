@@ -9,6 +9,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
@@ -52,7 +53,7 @@ class HomeFragment : Fragment() {
         }
 
         setUpWellnessTips()
-        accountsViewModel.selectedChannels.observe(viewLifecycleOwner, this::setPaybillVisibility)
+        accountsViewModel.accounts.observe(viewLifecycleOwner, this::setPaybillVisibility)
     }
 
     private fun setupBanner() {
@@ -73,9 +74,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setPaybillVisibility(channels: List<Channel>) {
+    private fun setPaybillVisibility(accounts: List<Account>?) {
         binding.paybill.apply {
-            if (!channels.isNullOrEmpty() && channels.any { it.countryAlpha2.contentEquals("KE", ignoreCase = true) }) {
+            if (accounts?.any { it.countryAlpha2.contentEquals("KE", ignoreCase = true) } == true) {
                 visibility = View.VISIBLE
                 setOnClickListener {
                     navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment(false))

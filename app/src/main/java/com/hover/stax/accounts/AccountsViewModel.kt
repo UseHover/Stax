@@ -27,9 +27,6 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     val channelActions = MediatorLiveData<List<HoverAction>>()
 
-    val allChannels: LiveData<List<Channel>> = channelRepo.publishedChannels
-    val selectedChannels: LiveData<List<Channel>> = channelRepo.selected
-
     private var simReceiver: BroadcastReceiver? = null
 
     init {
@@ -83,8 +80,6 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
     fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
-
-    private fun getChannelIds(accounts: List<Account>?): IntArray? = accounts?.map { it.channelId }?.toIntArray()
 
     fun view(s: Schedule) {
         setType(s.type)
