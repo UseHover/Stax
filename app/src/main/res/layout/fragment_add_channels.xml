@@ -50,6 +50,13 @@
                     android:imeOptions="actionDone"
                     android:id="@+id/searchInput"/>
 
+                <com.hover.stax.countries.CountryDropdown
+                    android:id="@+id/country_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:hint="@string/select_country" />
+
                 <include layout="@layout/no_account_empty_state" android:id="@+id/emptyState"/>
 
                 <TextView

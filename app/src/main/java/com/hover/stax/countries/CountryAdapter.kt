@@ -31,7 +31,7 @@ class CountryAdapter(val codes: Array<String>, context: Context) : ArrayAdapter<
         return view
     }
 
-    fun getCountryString(code: String): String = if (code == CODE_ALL_COUNTRIES)
+    fun getCountryString(code: String?): String = if (code.isNullOrEmpty() || code == CODE_ALL_COUNTRIES)
         context.getString(R.string.all_countries_with_emoji)
     else
         context.getString(R.string.country_with_emoji, countryCodeToEmoji(code), getFullCountryName(code))

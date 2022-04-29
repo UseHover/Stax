@@ -696,7 +696,7 @@
 
     <string name="filtering_in_progress">Filtrage, veuillez patienter…</string>
 
-    <string name="country">Pays</string>
+    <string name="country_placeholder">Pays</string>
 
     <string name="country_error_nodata">Veuillez activer les données pour charger les services et les pays.</string>
 

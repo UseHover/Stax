@@ -101,12 +101,11 @@ class BalancesFragment : Fragment() {
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
             if (show) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
         )
-        if (showAddSecondAccount) addAccountBtn.visibility = if (show) View.VISIBLE else View.GONE
 
+        showAddAccount(accountsViewModel.accounts.value, show)
         if (show) binding.homeCardBalances.balancesMl.transitionToEnd() else binding.homeCardBalances.balancesMl.transitionToStart()
 
         balanceStack.visibility = if (show) View.GONE else View.VISIBLE
-//        balanceStack.setOverlapGaps(if (show) STACK_OVERLAY_GAP else 0)
     }
 
     private fun updateAccounts(accounts: ArrayList<Account>) {
@@ -114,9 +113,11 @@ class BalancesFragment : Fragment() {
             addDummyAccountsIfRequired(accounts)
             cardStackAdapter.updateData(accounts.reversed())
             updateBalanceCardStackHeight(accounts.size)
+            showAddAccount(accounts, balancesViewModel.showBalances.value!!)
         }
         val balancesAdapter = BalanceAdapter(accounts, activity as MainActivity)
         balancesRecyclerView.adapter = balancesAdapter
+        showBalanceCards(balancesViewModel.showBalances.value!!)
     }
 
     private fun updateBalanceCardStackHeight(numOfItems: Int) {
@@ -125,16 +126,18 @@ class BalancesFragment : Fragment() {
         balanceStack.layoutParams = params
     }
 
+    private fun showAddAccount(accounts: List<Account>?, show: Boolean) {
+        addAccountBtn.visibility = if (accounts != null && accounts.size > 1 && show) View.VISIBLE else View.GONE
+    }
+
     private fun addDummyAccountsIfRequired(accounts: ArrayList<Account>?) {
-        showAddSecondAccount = !accounts.isNullOrEmpty() && accounts.none { it.id == DUMMY } && accounts.size > 1
         accounts?.let {
             if (it.isEmpty()) {
                 accounts.add(Account(getString(R.string.your_main_account), GREEN_BG).dummy())
                 accounts.add(Account(getString(R.string.your_other_account), BLUE_BG).dummy())
             }
-            if (it.size == 1) {
+            if (it.size == 1)
                 accounts.add(Account(getString(R.string.your_other_account), BLUE_BG).dummy())
-            }
         }
     }
 

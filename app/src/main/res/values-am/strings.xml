@@ -653,7 +653,7 @@
 
     <string name="filtering_in_progress">በማጣራት ፣ እባክዎን ይጠብቁ…</string>
 
-    <string name="country">ሀገር</string>
+    <string name="country_placeholder">ሀገር</string>
 
     <string name="country_error_nodata">አገልግሎቶችን እና አገሮችን ለመጫን እባክዎ ውሂብን ያብሩ።</string>
 

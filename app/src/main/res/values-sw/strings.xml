@@ -696,7 +696,7 @@
 
     <string name="filtering_in_progress">Inachuja, tafadhali subiri…</string>
 
-    <string name="country">Nchi</string>
+    <string name="country_placeholder">Nchi</string>
 
     <string name="country_error_nodata">Tafadhali washa data ili kupakia huduma na nchi.</string>
 

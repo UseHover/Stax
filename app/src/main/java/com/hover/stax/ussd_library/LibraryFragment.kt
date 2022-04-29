@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.hover.stax.R
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
@@ -23,7 +24,7 @@ import timber.log.Timber
 
 class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
 
-    private val viewModel: LibraryViewModel by viewModel()
+    private val viewModel: ChannelsViewModel by viewModel()
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
@@ -48,10 +49,11 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
 
     private fun setObservers() {
         with(viewModel) {
-            stagedChannels.observe(viewLifecycleOwner) { Timber.i("staged channels loaded")}
+            allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
+            sims.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} sims") }
+            simCountryList.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} hnis") }
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
-            country.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
-            allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, viewModel.country.value) } }
+            countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
         }
     }
 
@@ -67,7 +69,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                viewModel.runChannelFilter(charSequence.toString())
+                viewModel.updateSearch(charSequence.toString())
             }
         }
         binding.searchInput.addTextChangedListener(searchInputWatcher)
@@ -77,7 +79,6 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
         binding.countryCard.hideProgressIndicator()
 
         if (!channels.isNullOrEmpty()) showList(channels)
-        else if (viewModel.isInSearchMode()) showEmptyState()
         else showLoading()
     }
 
@@ -103,6 +104,6 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     }
 
     override fun countrySelect(countryCode: String) {
-        viewModel.setCountry(countryCode)
+        viewModel.updateCountry(countryCode)
     }
 }

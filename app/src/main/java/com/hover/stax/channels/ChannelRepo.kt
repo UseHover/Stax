@@ -16,6 +16,9 @@ class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val presentSims: List<SimInfo>
         get() = simDao.present
 
+    val presentSimsLive: LiveData<List<SimInfo>>
+        get() = simDao.presentLive
+
     fun getSims(hnis: Array<String?>?): List<SimInfo> {
         return simDao.getPresentByHnis(hnis)
     }

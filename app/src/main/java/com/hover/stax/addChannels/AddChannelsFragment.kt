@@ -19,6 +19,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.channels.*
+import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -31,9 +32,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
+class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryAdapter.SelectListener {
 
-    private val channelsViewModel: AddChannelsViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by viewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
@@ -70,12 +71,15 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         setupEmptyState()
 
         setUpMultiselect()
+        setUpCountryChoice()
         setSearchInputWatcher()
 
+        channelsViewModel.allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, channelsViewModel.countryChoice.value) } }
+        channelsViewModel.sims.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} sims") }
+        channelsViewModel.simCountryList.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} hnis") }
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
-        channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
+        channelsViewModel.filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
+        channelsViewModel.countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
 
         setFabListener()
     }
@@ -104,15 +108,23 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.continueBtn.setOnClickListener { saveAndGoHome(tracker!!) }
     }
 
+    private fun setUpCountryChoice() {
+        binding.countryDropdown.setListener(this)
+    }
+
     private fun setSearchInputWatcher() {
         val searchInputWatcher: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-               channelsViewModel.runChannelFilter(charSequence.toString())
+               channelsViewModel.updateSearch(charSequence.toString())
             }
         }
         binding.searchInput.addTextChangedListener(searchInputWatcher)
+    }
+
+    override fun countrySelect(countryCode: String) {
+        channelsViewModel.updateCountry(countryCode)
     }
 
     private fun setUpMultiselect() {

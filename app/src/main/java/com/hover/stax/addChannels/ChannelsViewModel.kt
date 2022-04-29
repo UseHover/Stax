@@ -18,6 +18,7 @@ import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -28,20 +29,23 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class AddChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
+class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
+    val accounts = MutableLiveData<List<Account>>()
     val allChannels: LiveData<List<Channel>> = repo.publishedChannels
+
     val selectedChannels: LiveData<List<Channel>> = repo.selected
 
     var sims = MutableLiveData<List<SimInfo>>()
-    var simHniList: LiveData<List<String>> = MutableLiveData()
+    var simCountryList: LiveData<List<String>> = MutableLiveData()
 
-    var simChannels = MediatorLiveData<List<Channel>>()
+    var countryChoice: MediatorLiveData<String> = MediatorLiveData()
+    val filterQuery = MutableLiveData<String?>()
+
+    var countryChannels = MediatorLiveData<List<Channel>>()
+
     val filteredChannels = MediatorLiveData<List<Channel>>()
-    val filterQuery = MutableLiveData<String>()
-
-    val accounts = MutableLiveData<List<Account>>()
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -52,26 +56,22 @@ class AddChannelsViewModel(application: Application, val repo: ChannelRepo, val 
 
         setSimBroadcastReceiver()
         loadSims()
-        simHniList = Transformations.map(sims, this::getHnisAndSubscribeToFirebase)
-        simChannels.apply {
-            addSource(allChannels, this@AddChannelsViewModel::onChannelsUpdateHnis)
-            addSource(simHniList, this@AddChannelsViewModel::onSimUpdate)
+        simCountryList = Transformations.map(sims, this::getCountriesAndFirebaseSubscriptions)
+        countryChoice.addSource(simCountryList, this@ChannelsViewModel::onSimUpdate)
+
+        countryChannels.apply {
+            addSource(allChannels, this@ChannelsViewModel::onAllChannelsUpdate)
+            addSource(countryChoice, this@ChannelsViewModel::onChoiceUpdate)
         }
 
-        filteredChannels.addSource(allChannels, this@AddChannelsViewModel::filterSimChannels)
-        filteredChannels.addSource(simChannels, this@AddChannelsViewModel::filterSimChannels)
+        filteredChannels.addSource(filterQuery, this@ChannelsViewModel::search)
+        filteredChannels.addSource(countryChannels, this@ChannelsViewModel::updateCountryChannels)
 
         loadAccounts()
     }
 
     private fun loadSims() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val deviceSims = repo.presentSims
-            sims.postValue(deviceSims)
-
-            val countryCodes = deviceSims.map { it.countryIso }.toSet()
-            Utils.putStringSet(Constants.COUNTRIES, countryCodes, getApplication())
-        }
+        viewModelScope.launch(Dispatchers.IO) { sims.postValue(repo.presentSims) }
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(getApplication())
@@ -91,37 +91,39 @@ class AddChannelsViewModel(application: Application, val repo: ChannelRepo, val 
         }
     }
 
-    private fun onChannelsUpdateHnis(channels: List<Channel>) {
-        updateSimChannels(simChannels, channels, simHniList.value)
+    private fun onAllChannelsUpdate(channels: List<Channel>?) {
+        updateCountryChannels(channels, countryChoice.value)
     }
 
-    private fun onSimUpdate(hniList: List<String>) {
-        updateSimChannels(simChannels, allChannels.value, hniList)
+    private fun onChoiceUpdate(countryCode: String?) {
+        updateCountryChannels(allChannels.value, countryCode)
     }
 
-    private fun updateSimChannels(simChannels: MediatorLiveData<List<Channel>>, channels: List<Channel>?, hniList: List<String>?) {
+    private fun onSimUpdate(countryCodes: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (channels == null || hniList == null) return@launch
-
-            val simChannelList = ArrayList<Channel>()
-
-            for (i in channels.indices) {
-                val hniArr = channels[i].hniList.split(",")
-
-                for (s in hniArr) {
-                    if (hniList.contains(s)) {
-                        if (!simChannelList.contains(channels[i]))
-                            simChannelList.add(channels[i])
-                    }
+            if (!countryCodes.isNullOrEmpty()) {
+                for (code in countryCodes) {
+                    if (repo.getChannelsByCountry(code).isNotEmpty())
+                        updateCountry(code)
                 }
             }
+        }
+     }
 
-            simChannels.postValue(simChannelList)
+    private fun updateCountryChannels(channels: List<Channel>?, countryCode: String?) {
+        countryChannels.value = when {
+            countryCode.isNullOrEmpty() || countryCode == CountryAdapter.CODE_ALL_COUNTRIES -> channels
+            else -> channels?.filter { it.countryAlpha2 == countryChoice.value }
         }
     }
 
-    private fun getHnisAndSubscribeToFirebase(sims: List<SimInfo>?): List<String>? {
-        if (sims == null) return null
+    private fun getCountriesAndFirebaseSubscriptions(sims: List<SimInfo>?): List<String>? {
+        setFirebaseSubscriptions(sims)
+        return sims?.map { it.countryIso }
+    }
+
+    private fun setFirebaseSubscriptions(sims: List<SimInfo>?) {
+        if (sims == null) return
 
         val hniList = ArrayList<String>()
 
@@ -132,11 +134,9 @@ class AddChannelsViewModel(application: Application, val repo: ChannelRepo, val 
                 hniList.add(sim.osReportedHni)
             }
         }
-
-        return hniList
     }
 
-    fun setChannelsSelected(channels: List<Channel>?) {
+    private fun setChannelsSelected(channels: List<Channel>?) {
         viewModelScope.launch(Dispatchers.IO) {
             if (channels.isNullOrEmpty()) return@launch
 
@@ -205,31 +205,43 @@ class AddChannelsViewModel(application: Application, val repo: ChannelRepo, val 
 
     fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
-    private fun filterSimChannels(channels: List<Channel>) {
-        if(!channels.isNullOrEmpty()) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val filteredList = channels.filter { toMatchingString(toFilterableString(it)).contains(toMatchingString(filterQuery.value!!)) }
-                Timber.i("accounts matched size is: ${filteredList.size}")
-                filteredChannels.postValue(filteredList)
-            }
+    fun updateSearch(value: String) {
+        filterQuery.value = value
+    }
+
+    private fun search(value: String?) {
+        countryChannels.value?.let { runFilter(it, value) }
+    }
+
+    fun updateCountry(code: String) {
+        Timber.e("setting country to %s", code)
+        countryChoice.postValue(code.uppercase())
+    }
+
+    private fun updateCountryChannels(channels: List<Channel>?) {
+        channels?.let { runFilter(it, filterQuery.value) }
+    }
+
+    private fun runFilter(channels: List<Channel>, value: String?) {
+        viewModelScope.launch {
+            filteredChannels.value =
+                channels.filter { standarizeString(it.toString()).contains(standarizeString(value)) }
         }
     }
 
-    fun runChannelFilter(value: String) {
-        filterQuery.value = value
+    private fun standarizeString(value: String?) : String {
+        // a non null String always contains an empty string
+        if (value == null) return ""
+        return value.lowercase().replace(" ", "").replace("#", "").replace("-", "");
     }
 
-    private fun toFilterableString(channel: Channel): String {
-        return channel.name + channel.rootCode
+    override fun onCleared() {
+        try {
+            simReceiver?.let {
+                LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(it)
+            }
+        } catch (ignored: Exception) {}
+        super.onCleared()
     }
 
-    fun filterSimChannels(value: String) {
-        filterQuery.value = value
-        val listToFilter : List<Channel>? = if(!simChannels.value.isNullOrEmpty()) simChannels.value else allChannels.value
-        filterSimChannels(listToFilter!!)
-    }
-
-    private fun toMatchingString(value: String) : String {
-        return value.lowercase().replace(" ", "");
-    }
 }

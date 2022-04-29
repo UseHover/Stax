@@ -6,6 +6,7 @@ import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.views.StaxDropdownLayout
 import kotlinx.coroutines.*
+import timber.log.Timber
 
 class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
@@ -18,7 +19,7 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             return
         }
 
-        countryAdapter = CountryAdapter(getCountryCodes(channels), context)
+        countryAdapter = CountryAdapter(getCountryCodes(channels, currentCountry), context)
         autoCompleteTextView.apply {
             setAdapter(countryAdapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as String) }
@@ -27,11 +28,11 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         setDropdownValue(currentCountry)
     }
 
-    private fun getCountryCodes(channelList: List<Channel>): Array<String> {
+    private fun getCountryCodes(channelList: List<Channel>, currentCountry: String?): Array<String> {
         val codes: Deferred<Array<String>> = CoroutineScope(Dispatchers.IO).async {
             val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
-            countryCodes.addAll(channelList.distinctBy { it.countryAlpha2 }.sortedBy { it.countryAlpha2 }.map { it.countryAlpha2 })
-
+            countryCodes.addAll(channelList.map { it.countryAlpha2 }.distinct().sorted())
+            Timber.e("udpdating list %s", countryCodes[1])
             return@async countryCodes.toTypedArray()
         }
 
@@ -54,13 +55,11 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     fun setDropdownValue(countryCode: String?) {
+        Timber.e("Setting code: %s", countryCode)
         countryAdapter?.let {
-            autoCompleteTextView.setText(
-                it.getCountryString(
-                    if (!countryCode.isNullOrEmpty()) countryCode
-                    else CountryAdapter.CODE_ALL_COUNTRIES
-                )
-            )
+            Timber.e("country count: %s", it.count)
+            autoCompleteTextView.setText(it.getCountryString(countryCode))
+            Timber.e("view says: %s", autoCompleteTextView.text)
         }
     }
 }

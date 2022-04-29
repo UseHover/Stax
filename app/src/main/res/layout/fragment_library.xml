@@ -20,8 +20,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
-                    android:hint="@string/select_country"
-                    android:text="@string/country" />
+                    android:hint="@string/select_country" />
 
             <com.hover.stax.views.StaxTextInput
                 android:layout_width="match_parent"

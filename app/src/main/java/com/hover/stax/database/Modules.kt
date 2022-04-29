@@ -5,7 +5,7 @@ import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.addChannels.AddChannelsViewModel
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelRepo
@@ -17,7 +17,6 @@ import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.hover.HoverViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
-import com.hover.stax.ussd_library.LibraryViewModel
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.paybill.PaybillViewModel
@@ -37,7 +36,7 @@ val appModule = module {
     viewModel { FaqViewModel() }
     viewModel { HoverViewModel(get(), get(), get()) }
     viewModel { ActionSelectViewModel(get()) }
-    viewModel { AddChannelsViewModel(get(), get(), get(), get()) }
+    viewModel { ChannelsViewModel(get(), get(), get(), get()) }
     viewModel { AccountsViewModel(get(), get(), get(), get()) }
     viewModel { AccountDetailViewModel(get(), get(), get(), get(), get()) }
     viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
@@ -49,7 +48,6 @@ val appModule = module {
     viewModel { FutureViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get())}
     viewModel { TransactionDetailsViewModel(get(), get(), get(), get(), get()) }
-    viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get(), get(), get()) }
     viewModel { FinancialTipsViewModel() }

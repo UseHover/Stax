@@ -43,7 +43,6 @@ object Constants {
     const val ACTION = "action"
     const val TRANSACTION_TYPE = "transaction_type"
     const val CHANNELS_REFRESHED = "has_refreshed_channels"
-    const val COUNTRIES = "countries"
 
     const val RECIPIENT_INSTITUTION = "recipientInstitution"
 
