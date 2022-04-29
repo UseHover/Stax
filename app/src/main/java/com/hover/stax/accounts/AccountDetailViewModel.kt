@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.actions.ActionRepo
+import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.transactions.StaxTransaction

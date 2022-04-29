@@ -8,13 +8,17 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.FragmentBalanceBinding
+import com.hover.stax.home.AbstractHoverCallerActivity
+import com.hover.stax.home.HomeFragmentDirections
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
@@ -22,7 +26,7 @@ import com.hover.stax.views.staxcardstack.StaxCardStackView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class BalancesFragment : Fragment() {
+class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
 
     private lateinit var addAccountBtn: CardView
     private lateinit var balanceTitle: TextView
@@ -36,8 +40,6 @@ class BalancesFragment : Fragment() {
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private lateinit var cardStackAdapter: BalanceCardStackAdapter
 
-    private var showAddSecondAccount = false
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBalanceBinding.inflate(inflater, container, false)
         return binding.root
@@ -50,13 +52,28 @@ class BalancesFragment : Fragment() {
     }
 
     private fun setUpBalances() {
-        balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
         setUpBalanceHeader()
         setUpBalanceList()
         setUpHiddenStack()
 
+        balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
         val observer = Observer<List<Account>> { t -> updateAccounts(ArrayList(t)) }
         accountsViewModel.accounts.observe(viewLifecycleOwner, observer)
+        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
+            attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
+        }
+        balancesViewModel.userRequestedBalanceAccount.observe(viewLifecycleOwner) {
+            attemptCallHover(it, balancesViewModel.balanceAction.value)
+        }
+    }
+
+    private fun attemptCallHover(account: Account?, action: HoverAction?) {
+        action?.let { account?.let { callHover(account, action) } }
+    }
+
+    private fun callHover(account: Account, action: HoverAction) {
+        balancesViewModel.requestBalance(null)
+        (requireActivity() as AbstractHoverCallerActivity).run(account, action)
     }
 
     private fun setUpLinkNewAccount() {
@@ -115,7 +132,7 @@ class BalancesFragment : Fragment() {
             updateBalanceCardStackHeight(accounts.size)
             showAddAccount(accounts, balancesViewModel.showBalances.value!!)
         }
-        val balancesAdapter = BalanceAdapter(accounts, activity as MainActivity)
+        val balancesAdapter = BalanceAdapter(accounts, this)
         balancesRecyclerView.adapter = balancesAdapter
         showBalanceCards(balancesViewModel.showBalances.value!!)
     }
@@ -139,6 +156,22 @@ class BalancesFragment : Fragment() {
             if (it.size == 1)
                 accounts.add(Account(getString(R.string.your_other_account), BLUE_BG).dummy())
         }
+    }
+
+    override fun onTapRefresh(account: Account?) {
+        if (account == null)
+            (requireActivity() as MainActivity).checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
+        else {
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
+            balancesViewModel.requestBalance(account)
+        }
+    }
+
+    override fun onTapDetail(accountId: Int) {
+        if (accountId == DUMMY)
+            (requireActivity() as MainActivity).checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
+        else
+            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
     }
 
     override fun onDestroyView() {

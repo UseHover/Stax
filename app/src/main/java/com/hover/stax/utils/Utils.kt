@@ -106,11 +106,15 @@ object Utils {
     }
 
     @JvmStatic
-    fun formatAmount(number: String): String {
-        return if (number == "0") "0,000" else try {
-            formatAmount(getAmount(number))
-        } catch (e: Exception) {
-            number
+    fun formatAmount(number: String?): String {
+        return when {
+            number == "0" -> "0,000"
+            number == null -> "--"
+            else -> try {
+                formatAmount(getAmount(number))
+            } catch (e: Exception) {
+                number
+            }
         }
     }
 

@@ -30,8 +30,7 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
-    BiometricChecker.AuthListener, PushNotificationTopicsInterface {
+class MainActivity : AbstractRequestActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
     private val accountsViewModel: AccountsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by viewModel()
@@ -178,22 +177,6 @@ class MainActivity : AbstractRequestActivity(), BalanceAdapter.BalanceListener,
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
         }
-    }
-
-    override fun onTapRefresh(account: Account?) {
-        if (account == null)
-            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
-        else {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
-            run(account, HoverAction.BALANCE)
-        }
-    }
-
-    override fun onTapDetail(accountId: Int) {
-        if (accountId == DUMMY)
-            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
-        else
-            navHelper.navigateAccountDetails(accountId)
     }
 
     override fun onAuthError(error: String) {

@@ -266,6 +266,7 @@
     <!-- Transfer -->
     <string name="loading_link_dialoghead">Loading, one moment</string>
     <string name="pay_with_label">Pay with</string>
+    <string name="paid_with_label">Paid with</string>
     <string name="transfer_amount_label">Amount</string>
     <string name="account_label">Account number</string>
     <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>

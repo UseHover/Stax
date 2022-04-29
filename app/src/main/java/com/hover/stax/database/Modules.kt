@@ -14,7 +14,6 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
-import com.hover.stax.hover.HoverViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
@@ -34,7 +33,6 @@ import org.koin.dsl.module
 
 val appModule = module {
     viewModel { FaqViewModel() }
-    viewModel { HoverViewModel(get(), get(), get()) }
     viewModel { ActionSelectViewModel(get()) }
     viewModel { ChannelsViewModel(get(), get(), get(), get()) }
     viewModel { AccountsViewModel(get(), get(), get()) }
@@ -42,7 +40,7 @@ val appModule = module {
     viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
     viewModel { TransferViewModel(get(), get(), get(), get()) }
     viewModel { ScheduleDetailViewModel(get(), get(), get()) }
-    viewModel { BalancesViewModel(get()) }
+    viewModel { BalancesViewModel(get(), get()) }
     viewModel { TransactionHistoryViewModel(get()) }
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get(), get(), get()) }

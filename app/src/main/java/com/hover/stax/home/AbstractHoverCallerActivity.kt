@@ -5,7 +5,6 @@ import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.hover.HoverSession
-import com.hover.stax.hover.HoverViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
@@ -13,12 +12,9 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 abstract class AbstractHoverCallerActivity : AbstractGoogleAuthActivity(), PushNotificationTopicsInterface {
-
-    private val viewModel: HoverViewModel by viewModel()
 
     private fun runAction(hsb: HoverSession.Builder) = try {
         hsb.run()
@@ -27,12 +23,12 @@ abstract class AbstractHoverCallerActivity : AbstractGoogleAuthActivity(), PushN
         createLog(hsb, "Failed Actions")
     }
 
-    fun run(account: Account, type: String) {
-        run(account, viewModel.getAction(account.channelId, type), null, account.id) // Constants.REQUEST_REQUEST
+    fun run(account: Account, action: HoverAction) {
+        run(account, action, null, account.id) // Constants.REQUEST_REQUEST
     }
 
-    fun run(account: Account, action: HoverAction, extras: HashMap<String, String>?, index: Int) {
-        val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity,index)
+    fun run(account: Account, action: HoverAction, extras: HashMap<String, String>?, requestCode: Int) {
+        val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity, requestCode)
         if (!extras.isNullOrEmpty()) hsb.extras(extras)
         runAction(hsb)
         createLog(hsb, getString(R.string.finish_transfer, action.transaction_type))

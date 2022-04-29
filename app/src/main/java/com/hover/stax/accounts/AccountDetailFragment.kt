@@ -13,11 +13,16 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.balances.BalanceAdapter
+import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
+import com.hover.stax.home.AbstractHoverCallerActivity
+import com.hover.stax.home.HomeFragmentDirections
 import com.hover.stax.home.MainActivity
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
@@ -26,13 +31,15 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
-    RequestsAdapter.SelectListener {
+    RequestsAdapter.SelectListener, BalanceAdapter.BalanceListener {
 
-    private val viewModel: AccountDetailViewModel by viewModel()
+    private val viewModel: AccountDetailViewModel by sharedViewModel()
+    private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val futureViewModel: FutureViewModel by viewModel()
 
     private var transactionsAdapter: TransactionHistoryAdapter? = null
@@ -68,7 +75,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         binding.balanceCard.balanceAmount.text = " - "
         binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
         binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onRefresh() }
+        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onTapRefresh(viewModel.account.value) }
     }
 
     private fun setUpManage() {
@@ -128,6 +135,8 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun setupObservers() {
+        observeBalanceCheck()
+
         with(viewModel) {
             account.observe(viewLifecycleOwner) {
                 it?.let { acct ->
@@ -170,6 +179,33 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 binding.detailsFees.text = Utils.formatAmount(it ?: 0.0)
             }
         }
+    }
+
+    private fun observeBalanceCheck() {
+        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
+            attemptCallHover(viewModel.account.value, it)
+        }
+        viewModel.account.observe(viewLifecycleOwner) {
+            attemptCallHover(it, balancesViewModel.balanceAction.value)
+        }
+    }
+
+    override fun onTapRefresh(account: Account?) {
+        account?.let {
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
+            balancesViewModel.requestBalance(account)
+        }
+    }
+
+    override fun onTapDetail(accountId: Int) { }
+
+    private fun attemptCallHover(account: Account?, action: HoverAction?) {
+        action?.let { account?.let { callHover(account, action) } }
+    }
+
+    private fun callHover(account: Account, action: HoverAction) {
+        balancesViewModel.requestBalance(null)
+        (requireActivity() as AbstractHoverCallerActivity).run(account, action)
     }
 
     private fun setUpRemoveAccount(account: Account) {
@@ -226,8 +262,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         val visible = !schedules.isNullOrEmpty() || !requests.isNullOrEmpty()
         binding.scheduledCard.root.visibility = if (visible) View.VISIBLE else View.GONE
     }
-
-    private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it) }
 
     override fun viewRequestDetail(id: Int) {
         NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToRequestDetailsFragment(id))

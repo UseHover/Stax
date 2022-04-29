@@ -227,10 +227,7 @@ public class StaxTransaction {
     }
 
     public String getDisplayBalance() {
-        if(!balance.isEmpty()) {
-            return Utils.formatAmount(balance);
-        }
-        else return balance;
+        return Utils.formatAmount(balance);
     }
 
     @NotNull

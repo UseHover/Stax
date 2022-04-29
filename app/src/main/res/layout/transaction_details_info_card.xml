@@ -59,7 +59,7 @@
     <TableRow android:layout_marginTop="@dimen/margin_18">
 
         <TextView
-            android:text="@string/account_label"
+            android:text="@string/paid_with_label"
             android:textColor="@color/offWhite"
             android:textSize="@dimen/text_16" />
 

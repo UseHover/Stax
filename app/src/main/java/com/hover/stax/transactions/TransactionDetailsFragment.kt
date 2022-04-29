@@ -42,8 +42,10 @@ import timber.log.Timber
 class TransactionDetailsFragment : DialogFragment(), Target{
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
+
     private var _binding: FragmentTransactionBinding? = null
     private val binding get() = _binding!!
+
     private val retryCounter = ApplicationInstance.txnDetailsRetryCounter
 
     private var uuid: String? = null
@@ -189,14 +191,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     }
 
     private fun setTitle(transaction: StaxTransaction) {
-        if (isFullScreen)
-            binding.transactionDetailsCard.setTitle(transaction.description)
-        else {
-            if (viewModel.action.value != null)
-                binding.transactionDetailsCard.setTitle(
-                    transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext())
-                )
-        }
+        binding.transactionDetailsCard.setTitle(transaction.description)
     }
 
     private fun generateTitle(transaction: StaxTransaction): String {
@@ -256,7 +251,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     }
 
     private fun updateAccount(account: Account) {
-        binding.infoCard.detailsInstitution.setTitle(account.name)
+        binding.infoCard.detailsStaxAccount.text = account.name
     }
 
     private fun updateRecipient(contact: StaxContact?) {
