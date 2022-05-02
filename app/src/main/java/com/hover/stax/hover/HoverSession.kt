@@ -70,6 +70,11 @@ class HoverSession private constructor(b: Builder) {
         }
     }
 
+    private fun stopEarly(builder: HoverParameters.Builder, varName: String?) {
+        if (varName != null && action.output_params.has(varName))
+            builder.stopAt(action.output_params.getInt(varName))
+    }
+
     private fun startHover(builder: HoverParameters.Builder, a: Activity) {
         val i = builder.buildIntent()
         AnalyticsUtil.logAnalyticsEvent(a.getString(R.string.start_load_screen), a)
@@ -84,6 +89,7 @@ class HoverSession private constructor(b: Builder) {
         val extras: JSONObject
         var requestCode: Int
         var finalScreenTime = 4000
+        var stopVar: String? = null
 
         constructor(a: HoverAction?, c: Account, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
             fragment = frag
@@ -104,6 +110,11 @@ class HoverSession private constructor(b: Builder) {
             } catch (e: JSONException) {
                 Timber.e("Failed to add extra")
             }
+            return this
+        }
+
+        fun stopAt(varName: String): Builder {
+            stopVar = varName
             return this
         }
 
@@ -136,6 +147,7 @@ class HoverSession private constructor(b: Builder) {
         finalScreenTime = b.finalScreenTime
         val builder = getBasicBuilder(b)
         addExtras(builder, b.extras)
+        stopEarly(builder, b.stopVar)
         startHover(builder, b.activity)
     }
 }

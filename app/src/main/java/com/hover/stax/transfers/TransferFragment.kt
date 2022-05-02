@@ -74,15 +74,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         binding.summaryCard.feeValue.textSize = 13.0F
         binding.summaryCard.feeValue.setTextColor(getColor(requireContext(), R.color.stax_state_blue))
         binding.summaryCard.feeValue.setOnClickListener { checkFee() }
-        showCheckFeeOption()
     }
 
     private fun checkFee() {
         callHover(FEE_REQUEST)
     }
 
-    private fun showCheckFeeOption() {
-        binding.summaryCard.feeValue.visibility = if (actionSelectViewModel.activeAction.value?.output_params?.opt("fee") != null) View.VISIBLE else ViewGroup.GONE
+    private fun showCheckFeeOption(action: HoverAction) {
+        Timber.e("action out params: %s", action.output_params)
+        binding.summaryCard.feeRow.visibility = if (action.output_params?.opt("fee") != null) View.VISIBLE else ViewGroup.GONE
     }
 
     private fun setTransactionType(txnType: String) {
@@ -136,9 +136,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
             binding.editCard.actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
-
-            Timber.e("in: %s", it.required_params)
-            Timber.e("out: %s", it.output_params)
+            showCheckFeeOption(it)
         }
     }
 
@@ -230,6 +228,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun callHover(requestCode: Int) {
+        Timber.e("Calling thru activity")
         (requireActivity() as AbstractHoverCallerActivity).run(payWithDropdown.highlightedAccount ?: accountsViewModel.activeAccount.value!!,
             actionSelectViewModel.activeAction.value!!, getExtras(), requestCode)
     }

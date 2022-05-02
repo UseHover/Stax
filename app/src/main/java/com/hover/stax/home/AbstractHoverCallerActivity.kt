@@ -18,8 +18,6 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-const val SCHEDULED = "SCHEDULED"
-
 const val TRANSFER_REQUEST = 203
 const val SCHEDULE_REQUEST = 204
 const val REQUEST_REQUEST = 301
@@ -44,9 +42,10 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
     }
 
     fun run(account: Account, action: HoverAction, extras: HashMap<String, String>?, requestCode: Int) {
+        Timber.e("Building sesh")
         val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity, requestCode)
         if (!extras.isNullOrEmpty()) hsb.extras(extras)
-        if (requestCode == FEE_REQUEST)
+        if (requestCode == FEE_REQUEST) hsb.stopAt("fee")
         runAction(hsb)
         createLog(hsb, getString(R.string.finish_transfer, action.transaction_type))
     }
@@ -79,13 +78,13 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Timber.v("received result. %s", data?.action)
-        Timber.v("uuid? %s", data?.extras?.getString("uuid"))
+        Timber.e("received result. %s", data?.action)
+        Timber.e("extras? %s", data?.extras)
 
-        when {
-            requestCode == REQUEST_REQUEST -> showMessage(getString(R.string.toast_confirm_request))
-            requestCode == BOUNTY_REQUEST -> showBountyDetails(data)
-            requestCode == FEE_REQUEST -> showFeeDetails(data)
+        when (requestCode) {
+            REQUEST_REQUEST -> showMessage(getString(R.string.toast_confirm_request))
+            BOUNTY_REQUEST -> showBountyDetails(data)
+            FEE_REQUEST -> showFeeDetails(data)
             else -> {
                 balancesViewModel.setBalanceState(true)
                 showPopUpTransactionDetailsIfRequired(data)
@@ -123,11 +122,13 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
     private fun getFee(data: Intent): String {
         if (data.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
+            Timber.e("parsed vars is non-null: %s", parsedVariables)
 
             if (parsedVariables.containsKey("fee") && parsedVariables["fee"] != null) {
                 return parsedVariables["fee"]!!
             }
         }
+        Timber.e("parsed vars is null")
         return "No fee information found"
     }
 
