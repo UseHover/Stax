@@ -17,13 +17,9 @@ public class PhoneHelper {
     final static private String TAG = "PhoneHelper";
 
     public static String normalizeNumberByCountry(String number, String from_country, String to_country) {
-        Timber.e("normalizing number: %s", number);
-        Timber.e("normalizing number from: %s", from_country.toUpperCase());
-        Timber.e("normalizing number for: %s", to_country.toUpperCase());
         String phoneNumber = number;
         try {
             phoneNumber = convertToCountry(number, from_country, to_country.toUpperCase());
-            Log.e("Contact", "Normalized number: " + phoneNumber);
         } catch (NumberParseException e) {
             Log.e("Contact", "error formating number", e);
         }

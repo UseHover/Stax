@@ -32,7 +32,6 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         val codes: Deferred<Array<String>> = CoroutineScope(Dispatchers.IO).async {
             val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
             countryCodes.addAll(channelList.map { it.countryAlpha2 }.distinct().sorted())
-            Timber.e("udpdating list %s", countryCodes[1])
             return@async countryCodes.toTypedArray()
         }
 
@@ -55,11 +54,8 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     fun setDropdownValue(countryCode: String?) {
-        Timber.e("Setting code: %s", countryCode)
         countryAdapter?.let {
-            Timber.e("country count: %s", it.count)
             autoCompleteTextView.setText(it.getCountryString(countryCode))
-            Timber.e("view says: %s", autoCompleteTextView.text)
         }
     }
 }

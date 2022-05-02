@@ -94,7 +94,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     }
 
     private fun showUSSDLog() {
-        (requireActivity() as MainActivity).showUSSDLogBottomSheet(uuid!!)
+        (requireActivity() as AbstractHoverCallerActivity).showUSSDLogBottomSheet(uuid!!)
     }
 
     private fun startObservers() {

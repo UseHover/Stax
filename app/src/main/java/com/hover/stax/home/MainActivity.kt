@@ -84,15 +84,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         navHelper.checkPermissionsAndNavigate(navDirections)
     }
 
-    fun showUSSDLogBottomSheet(uuid: String) {
-        USSDLogBottomSheetFragment().apply {
-            val bundle = Bundle()
-            bundle.putString(TransactionDetailsFragment.UUID, uuid)
-            arguments = bundle
-            show(supportFragmentManager, tag)
-        }
-    }
-
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {
         if (it) StaxAppReview.launchStaxReview(this@MainActivity)
     }

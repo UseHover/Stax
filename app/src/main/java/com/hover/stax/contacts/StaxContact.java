@@ -22,7 +22,6 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.database.Converters;
-import com.hover.stax.schedules.ScheduleRepo;
 import com.hover.stax.utils.DateUtils;
 
 import java.util.ArrayList;

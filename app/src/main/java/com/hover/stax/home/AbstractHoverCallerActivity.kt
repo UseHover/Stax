@@ -2,6 +2,7 @@ package com.hover.stax.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import android.os.Bundle
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.TransactionContract
@@ -11,6 +12,8 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
+import com.hover.stax.transactions.TransactionDetailsFragment
+import com.hover.stax.transactions.USSDLogBottomSheetFragment
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException
@@ -138,6 +141,15 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
                 supportFragmentManager,
                 false
             )
+        }
+    }
+
+    fun showUSSDLogBottomSheet(uuid: String) {
+        USSDLogBottomSheetFragment().apply {
+            val bundle = Bundle()
+            bundle.putString(TransactionDetailsFragment.UUID, uuid)
+            arguments = bundle
+            show(supportFragmentManager, tag)
         }
     }
 
