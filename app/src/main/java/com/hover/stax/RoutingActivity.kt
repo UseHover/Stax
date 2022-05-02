@@ -19,27 +19,30 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
-import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.destruct.SelfDestructActivity
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.PERM_ACTIVITY
 import com.hover.stax.inapp_banner.BannerUtils
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.onboarding.OnBoardingActivity
+import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+
+const val FRAGMENT_DIRECT = "fragment_direct"
+const val FROM_FCM = "from_notification"
+const val VARIANT = "variant"
 
 class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
@@ -110,14 +113,14 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
 
     private fun logPushNotificationIfRequired() = intent.extras?.let {
-        val fcmTitle = it.getString(Constants.FROM_FCM)
+        val fcmTitle = it.getString(FROM_FCM)
         fcmTitle?.let { title -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
     }
 
     private fun initHover() {
         Hover.initialize(this)
         Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, R.drawable.ic_stax, this)
-        Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this)
+        Hover.setPermissionActivity(PERM_ACTIVITY, this)
     }
 
     private fun initRemoteConfigs() {
@@ -128,7 +131,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             fetchAndActivate().addOnCompleteListener {
                 val variant = remoteConfig.getString("onboarding_mvt_variant")
                 Timber.i("Onboarding variant fetched $variant")
-                Utils.saveString(Constants.VARIANT, variant, this@RoutingActivity)
+                Utils.saveString(VARIANT, variant, this@RoutingActivity)
 
                 if (!selfDestructWhenAppVersionExpires())
                     validateUser()
@@ -221,7 +224,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun goToFulfillRequestActivity(intent: Intent) {
-        startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))
+        startActivity(Intent(this, MainActivity::class.java).putExtra(REQUEST_LINK, intent.data.toString()))
         finish()
     }
 

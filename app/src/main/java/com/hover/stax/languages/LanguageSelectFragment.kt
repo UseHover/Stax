@@ -12,10 +12,11 @@ import com.appsflyer.AppsFlyerLib
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentLanguageBinding
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.yariksoffice.lingver.Lingver
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+const val LANGUAGE_CHECK = "Language"
 
 class LanguageSelectFragment : Fragment() {
 
@@ -75,7 +76,7 @@ class LanguageSelectFragment : Fragment() {
     private fun onContinue() {
         Lingver.getInstance().setLocale(requireActivity(), selectedCode!!)
         Lang.logChange(selectedCode!!, requireActivity())
-        Utils.saveInt(Constants.LANGUAGE_CHECK, 1, requireActivity())
+        Utils.saveInt(LANGUAGE_CHECK, 1, requireActivity())
 
         requireActivity().recreate()
         findNavController().popBackStack()

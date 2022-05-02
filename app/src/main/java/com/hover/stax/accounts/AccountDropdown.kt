@@ -9,7 +9,6 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.LifecycleOwner
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import com.squareup.picasso.Picasso
@@ -20,7 +19,6 @@ import timber.log.Timber
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet), Target {
 
     private var showSelected: Boolean = true
-    private var helperText: String? = null
     private var highlightListener: HighlightListener? = null
 
     var highlightedAccount: Account? = null
@@ -56,7 +54,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private fun setDropdownValue(account: Account?) {
         account?.let {
             autoCompleteTextView.setText(it.alias, false)
-            UIHelper.loadPicasso(it.logoUrl, size55, this)
+            UIHelper.loadPicasso(it.logoUrl, resources.getDimensionPixelSize(R.dimen.logoDiam), this)
             highlightedAccount = account
         }
     }

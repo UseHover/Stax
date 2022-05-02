@@ -17,8 +17,8 @@ import androidx.fragment.app.DialogFragment;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.hover.HoverSessionKt;
 import com.hover.stax.utils.AnalyticsUtil;
-import com.hover.stax.utils.Constants;
 
 public class PermissionsFragment extends DialogFragment {
     public final static int PHONE = 0, SMS = 1, OVERLAY = 2, ACCESS = 3;
@@ -63,7 +63,7 @@ public class PermissionsFragment extends DialogFragment {
     public void requestAccessibility() {
         hasLeft = true;
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_accessibility_requested), requireContext());
-        Hover.setPermissionActivity(Constants.PERM_ACTIVITY, getContext());
+        Hover.setPermissionActivity(HoverSessionKt.PERM_ACTIVITY, getContext());
         helper.requestAccessPerm();
     }
 

@@ -15,8 +15,8 @@ import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
-import com.hover.stax.home.MainActivity
-import com.hover.stax.utils.Constants
+import com.hover.stax.home.AbstractHoverCallerActivity
+import com.hover.stax.home.FEE_REQUEST
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
@@ -60,16 +60,29 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if (actionSelectViewModel.filteredActions.value != null)
             binding.editCard.actionSelect.updateActions(actionSelectViewModel.filteredActions.value!!)
 
-        binding.summaryCard.feeValue.text = "check fee"
-        binding.summaryCard.feeValue.textSize = 13.0F
-        binding.summaryCard.feeValue.setTextColor(getColor(requireContext(), R.color.stax_state_blue))
-        binding.summaryCard.feeValue.setOnClickListener { checkFee() }
+        setUpFee()
     }
 
     private fun setTitle() {
         val titleRes = if (TransactionType.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
         binding.editCard.root.setTitle(getString(titleRes))
         binding.summaryCard.root.setTitle(getString(titleRes))
+    }
+
+    private fun setUpFee() {
+        binding.summaryCard.feeValue.text = "check fee"
+        binding.summaryCard.feeValue.textSize = 13.0F
+        binding.summaryCard.feeValue.setTextColor(getColor(requireContext(), R.color.stax_state_blue))
+        binding.summaryCard.feeValue.setOnClickListener { checkFee() }
+        showCheckFeeOption()
+    }
+
+    private fun checkFee() {
+        callHover(FEE_REQUEST)
+    }
+
+    private fun showCheckFeeOption() {
+        binding.summaryCard.feeValue.visibility = if (actionSelectViewModel.activeAction.value?.output_params?.opt("fee") != null) View.VISIBLE else ViewGroup.GONE
     }
 
     private fun setTransactionType(txnType: String) {
@@ -200,12 +213,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setContact(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(GET_CONTACT, requireContext()) }
         }
-    }
-
-    private fun checkFee() {
-
     }
 
     private fun fabClicked() {
@@ -214,11 +223,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else {
-                (requireActivity() as MainActivity).run(payWithDropdown.highlightedAccount ?: accountsViewModel.activeAccount.value!!,
-                    actionSelectViewModel.activeAction.value!!, getExtras(), 0)
+                callHover(0)
                 findNavController().popBackStack()
             }
         } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+    }
+
+    private fun callHover(requestCode: Int) {
+        (requireActivity() as AbstractHoverCallerActivity).run(payWithDropdown.highlightedAccount ?: accountsViewModel.activeAccount.value!!,
+            actionSelectViewModel.activeAction.value!!, getExtras(), requestCode)
     }
 
     private fun getExtras(): HashMap<String, String> {

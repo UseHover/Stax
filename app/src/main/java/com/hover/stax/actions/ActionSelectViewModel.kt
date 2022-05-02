@@ -4,16 +4,15 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
 import com.hover.stax.accounts.ACCOUNT_NAME
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
 import com.hover.stax.R
-import com.hover.stax.contacts.StaxContact
-import com.hover.stax.utils.Constants
 import java.util.LinkedHashMap
 
- class ActionSelectViewModel(application: Application) : AndroidViewModel(application) {
+const val RECIPIENT_INSTITUTION = "recipientInstitution"
+
+class ActionSelectViewModel(application: Application) : AndroidViewModel(application) {
 
     val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()
@@ -50,7 +49,7 @@ import java.util.LinkedHashMap
     }
 
     private fun isStandardVariable(key: String): Boolean {
-        return key in listOf(PHONE_KEY, ACCOUNT_KEY, AMOUNT_KEY, NOTE_KEY, PIN_KEY, Constants.RECIPIENT_INSTITUTION, ACCOUNT_NAME)
+        return key in listOf(PHONE_KEY, ACCOUNT_KEY, AMOUNT_KEY, NOTE_KEY, PIN_KEY, RECIPIENT_INSTITUTION, ACCOUNT_NAME)
     }
 
     fun updateNonStandardVariables(key: String, value: String) {

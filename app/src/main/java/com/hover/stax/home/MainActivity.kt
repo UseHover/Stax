@@ -7,6 +7,7 @@ import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.permissions.PermissionHelper
+import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
@@ -21,7 +22,9 @@ import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.requests.NewRequestViewModel
+import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.requests.RequestSenderInterface
+import com.hover.stax.requests.SMS
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionDetailsFragment
@@ -41,7 +44,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
-    private val bountyRequest = 3000
 
     private lateinit var binding: ActivityMainBinding
 
@@ -109,54 +111,27 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         Timber.i(result.plus(" $size"))
     }
 
-    private fun showMessage(str: String) = UIHelper.flashMessage(this, findViewById(R.id.fab), str)
-
     private fun checkForRequest(intent: Intent) {
-        if (intent.hasExtra(Constants.REQUEST_LINK)) {
+        if (intent.hasExtra(REQUEST_LINK)) {
             navHelper.checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P))
-            createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
+            createFromRequest(intent.getStringExtra(REQUEST_LINK)!!)
         }
     }
 
     private fun checkForFragmentDirection(intent: Intent) {
-        if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
-            val toWhere = intent.extras!!.getInt(Constants.FRAGMENT_DIRECT, 0)
+        if (intent.hasExtra(FRAGMENT_DIRECT)) {
+            val toWhere = intent.extras!!.getInt(FRAGMENT_DIRECT, 0)
 
-            if (toWhere == Constants.NAV_EMAIL_CLIENT)
+            if (toWhere == NAV_EMAIL_CLIENT)
                 Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(this)), this)
             else
                 navHelper.checkPermissionsAndNavigate(toWhere)
         }
     }
 
-    private fun onRequest(data: Intent) {
-        if (data.action == Constants.SCHEDULED)
-            showMessage(getString(R.string.toast_request_scheduled, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
-        else
-            showMessage(getString(R.string.toast_confirm_request))
-    }
-
-    private fun showBountyDetails(data: Intent?) {
-        Timber.i("Request code is bounty")
-        if (data != null) {
-            val transactionUUID = data.getStringExtra("uuid")
-            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
-        }
-    }
-
-    private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
-        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            NavUtil.showTransactionDetailsFragment(
-                data.extras!!.getString("uuid")!!,
-                supportFragmentManager,
-                false
-            )
-        }
-    }
-
     private fun initFromIntent() {
         when {
-            intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
+            intent.hasExtra(REQUEST_LINK) -> createFromRequest(intent.getStringExtra(REQUEST_LINK)!!)
             intent.hasExtra(FinancialTipsFragment.TIP_ID) -> navHelper.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
             else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
@@ -174,10 +149,10 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == Constants.SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
+        if (requestCode == SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
             sendSms(requestViewModel)
-        } else if (requestCode == Constants.SMS) {
+        } else if (requestCode == SMS) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
         }
@@ -189,22 +164,5 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
 
     override fun onAuthSuccess(action: HoverAction?) {
         Timber.v("Auth success on action: ${action?.public_id}")
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Timber.v("received result. %s", data?.action)
-        Timber.v("uuid? %s", data?.extras?.getString("uuid"))
-
-        when {
-            requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED ->
-                showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
-            requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
-            requestCode == bountyRequest -> showBountyDetails(data)
-            else -> {
-                balancesViewModel.setBalanceState(true)
-                showPopUpTransactionDetailsIfRequired(data)
-            }
-        }
     }
 }

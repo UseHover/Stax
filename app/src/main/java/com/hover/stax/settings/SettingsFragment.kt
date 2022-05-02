@@ -24,6 +24,7 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
+const val TEST_MODE = "test_mode"
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
@@ -148,10 +149,10 @@ class SettingsFragment : Fragment() {
 
     private fun setUpEnableTestMode() {
         binding.settingsCard.testMode.setOnCheckedChangeListener { _, isChecked ->
-            Utils.saveBoolean(Constants.TEST_MODE, isChecked, requireContext())
+            Utils.saveBoolean(TEST_MODE, isChecked, requireContext())
             UIHelper.flashMessage(requireContext(), if (isChecked) R.string.test_mode_toast else R.string.test_mode_disabled)
         }
-        binding.settingsCard.testMode.visibility = if (Utils.getBoolean(Constants.TEST_MODE, requireContext())) VISIBLE else GONE
+        binding.settingsCard.testMode.visibility = if (Utils.getBoolean(TEST_MODE, requireContext())) VISIBLE else GONE
         binding.disclaimer.setOnClickListener {
             clickCounter++
             if (clickCounter == 5) UIHelper.flashMessage(requireContext(), R.string.test_mode_almost_toast) else if (clickCounter == 7) enableTestMode()
@@ -159,7 +160,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun enableTestMode() {
-        Utils.saveBoolean(Constants.TEST_MODE, true, requireActivity())
+        Utils.saveBoolean(TEST_MODE, true, requireActivity())
         binding.settingsCard.testMode.visibility = VISIBLE
         UIHelper.flashMessage(requireContext(), R.string.test_mode_toast)
     }

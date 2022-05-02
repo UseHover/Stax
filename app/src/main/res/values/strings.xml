@@ -700,4 +700,8 @@
     <string name="btn_not_now">Not Now</string>
 
 
+    <!-- Fees -->
+    <string name="fee_fetched_header">Business number</string>
+    <string name="got_it">Got it</string>
+
 </resources>

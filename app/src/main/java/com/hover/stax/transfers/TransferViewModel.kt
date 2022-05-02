@@ -18,12 +18,12 @@ import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TransferViewModel(application: Application, val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+class TransferViewModel(application: Application, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
-    val note = MutableLiveData<String>()
-    var request: LiveData<Request> = MutableLiveData()
+    val note = MutableLiveData<String?>()
+    var request: MutableLiveData<Request?> = MutableLiveData()
 
     init {
         request
@@ -87,7 +87,7 @@ class TransferViewModel(application: Application, val requestRepo: RequestRepo, 
         return extras
     }
 
-    fun decrypt(encryptedString: String): LiveData<Request> {
+    fun decrypt(encryptedString: String): LiveData<Request?> {
         viewModelScope.launch {
             request = requestRepo.decrypt(encryptedString, getApplication())
         }
@@ -121,7 +121,10 @@ class TransferViewModel(application: Application, val requestRepo: RequestRepo, 
     }
 
     override fun reset() {
+        super.reset()
         amount.value = null
         contact.value = null
+        note.value = null
+        request.value = null
     }
 }

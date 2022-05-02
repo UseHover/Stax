@@ -11,7 +11,6 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.ActionSelectBinding
-import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
 import com.squareup.picasso.Picasso
@@ -66,7 +65,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
 
         setState(null, AbstractStatefulInput.SUCCESS)
         binding.actionDropdown.autoCompleteTextView.setText(action.toString(), false)
-        UIHelper.loadPicasso(context.getString(R.string.root_url).plus(action.to_institution_logo), size55, this)
+        UIHelper.loadPicasso(context.getString(R.string.root_url).plus(action.to_institution_logo), resources.getDimensionPixelSize(R.dimen.logoDiam), this)
 
         val options = getWhoMeOptions(action.to_institution_id)
         if (options.size == 1) selectOnlyOption(options.first())

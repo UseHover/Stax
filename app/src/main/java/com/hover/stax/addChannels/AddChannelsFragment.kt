@@ -23,7 +23,6 @@ import com.hover.stax.channels.*
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
@@ -32,6 +31,7 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+const val CHANNELS_REFRESHED = "has_refreshed_channels"
 
 class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryAdapter.SelectListener {
 
@@ -214,7 +214,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     //channels will be loaded only once after install then deferred to weekly.
     private fun refreshChannelsIfRequired() {
-        if (!Utils.getBoolean(Constants.CHANNELS_REFRESHED, requireActivity())) {
+        if (!Utils.getBoolean(CHANNELS_REFRESHED, requireActivity())) {
             Timber.i("Reloading channels")
             val wm = WorkManager.getInstance(requireContext())
             wm.beginUniqueWork(
@@ -222,7 +222,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
                 UpdateChannelsWorker.makeWork()
             ).enqueue()
 
-            Utils.saveBoolean(Constants.CHANNELS_REFRESHED, true, requireActivity())
+            Utils.saveBoolean(CHANNELS_REFRESHED, true, requireActivity())
             return
         }
 

@@ -147,7 +147,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
                     binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.detailsCard.officialName.text = if(acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
+                    binding.detailsCard.officialName.text = if(acct.name == PLACEHOLDER) acct.alias else acct.name
 
                     binding.manageCard.nicknameInput.setText(acct.alias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)

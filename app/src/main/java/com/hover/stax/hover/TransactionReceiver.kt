@@ -9,6 +9,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
@@ -16,7 +17,6 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.transactions.TransactionRepo
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -160,7 +160,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         parsedAccounts.forEach {
             if (savedAccounts.contains(it.channelId)) {
                 Timber.e("Removing ${it.channelId} from ${it.name}")
-                accountRepo.deleteAccount(it.channelId, Constants.PLACEHOLDER)
+                accountRepo.deleteAccount(it.channelId, PLACEHOLDER)
             }
         }
     }

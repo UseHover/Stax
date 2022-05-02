@@ -15,7 +15,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -63,11 +62,11 @@ class ActionDropdownAdapter<T>(val actions: List<T>, context: Context) : ArrayAd
             if (action is HoverAction) {
                 id?.text = action.id.toString()
                 channelText?.text = action.toString()
-                UIHelper.loadPicasso(baseUrl.plus(action.to_institution_logo), Constants.size55, this)
+                UIHelper.loadPicasso(baseUrl.plus(action.to_institution_logo), binding.root.resources.getDimensionPixelSize(R.dimen.logoDiam), this)
             } else if (action is Account) {
                 id?.text = action.id.toString()
                 channelText?.text = action.alias
-                UIHelper.loadPicasso(baseUrl.plus(action.logoUrl), Constants.size55, this)
+                UIHelper.loadPicasso(baseUrl.plus(action.logoUrl), binding.root.resources.getDimensionPixelSize(R.dimen.logoDiam), this)
             }
         }
 

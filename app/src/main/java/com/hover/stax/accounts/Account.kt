@@ -7,6 +7,7 @@ import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
 
 const val DUMMY = -1
+const val PLACEHOLDER = "placeholder"
 const val ACCOUNT_NAME: String = "account_name"
 const val ACCOUNT_ID: String = "account_id"
 

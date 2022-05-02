@@ -15,8 +15,19 @@ import com.hover.stax.R
 import com.hover.stax.bounties.BountyEmailFragmentDirections
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
+
+const val NAV_HOME = 600
+const val NAV_TRANSFER = 601
+const val NAV_AIRTIME = 602
+const val NAV_REQUEST = 603
+const val NAV_BALANCE = 604
+const val NAV_SETTINGS = 605
+const val NAV_LINK_ACCOUNT = 606
+const val NAV_PAYBILL = 608
+const val NAV_EMAIL_CLIENT = 609
+const val NAV_USSD_LIB = 610
+const val PERMS_REQ_CODE = 700
 
 class NavHelper(val activity: AppCompatActivity) {
 
@@ -81,22 +92,22 @@ class NavHelper(val activity: AppCompatActivity) {
             exemptRoutes.contains(it) || permissionHelper.hasBasicPerms() -> NavUtil.navigate(getNavController(), it)
             else -> PermissionUtils.showInformativeBasicPermissionDialog(
                 0,
-                { PermissionUtils.requestPerms(Constants.PERMS_REQ_CODE, activity) },
+                { PermissionUtils.requestPerms(PERMS_REQ_CODE, activity) },
                 { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
             )
         }
     }
 
     private fun getNavDirections(destId: Int): NavDirections? = when (destId) {
-        R.id.navigation_request, Constants.NAV_REQUEST -> MainNavigationDirections.actionGlobalNavigationRequest()
-        R.id.navigation_settings, Constants.NAV_SETTINGS -> MainNavigationDirections.actionGlobalNavigationSettings()
-        R.id.navigation_home, Constants.NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
-        R.id.libraryFragment, Constants.NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
-        R.id.navigation_balance, Constants.NAV_BALANCE -> MainNavigationDirections.actionGlobalNavigationBalance()
-        Constants.NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
-        Constants.NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
-        Constants.NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
-        Constants.NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment(false)
+        R.id.navigation_request, NAV_REQUEST -> MainNavigationDirections.actionGlobalNavigationRequest()
+        R.id.navigation_settings, NAV_SETTINGS -> MainNavigationDirections.actionGlobalNavigationSettings()
+        R.id.navigation_home, NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
+        R.id.libraryFragment, NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
+        R.id.navigation_balance, NAV_BALANCE -> MainNavigationDirections.actionGlobalNavigationBalance()
+        NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
+        NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
+        NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
+        NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment(false)
         else -> null //invalid or unmapped route, return nothing
     }
 }

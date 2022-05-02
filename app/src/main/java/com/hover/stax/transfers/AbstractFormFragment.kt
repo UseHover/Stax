@@ -26,7 +26,6 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
@@ -36,6 +35,8 @@ import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
+const val ADD_SERVICE = 200
+const val GET_CONTACT = 201
 
 abstract class AbstractFormFragment : Fragment() {
 
@@ -129,7 +130,7 @@ abstract class AbstractFormFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode != Constants.ADD_SERVICE && resultCode == Activity.RESULT_OK) {
+        if (requestCode != ADD_SERVICE && resultCode == Activity.RESULT_OK) {
             val staxContact = StaxContact(data, requireContext())
             staxContact.accountNumber?.let {
                 AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_select_success), requireContext())

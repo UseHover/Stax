@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxCardViewBinding
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 
 open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -87,7 +86,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     }
 
     fun setIcon(iconUrl: String) {
-        UIHelper.loadPicasso(iconUrl,Constants.size24, binding.backButton)
+        UIHelper.loadPicasso(iconUrl, resources.getDimensionPixelSize(R.dimen.logoDiam), binding.backButton)
     }
 
     fun setOnClickIcon(listener: OnClickListener?) {

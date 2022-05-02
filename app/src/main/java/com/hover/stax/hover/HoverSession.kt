@@ -12,14 +12,15 @@ import com.hover.sdk.utils.TimerSingleton
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.PhoneHelper
+import com.hover.stax.settings.TEST_MODE
 
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 
+const val PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity"
 
 class HoverSession private constructor(b: Builder) {
 
@@ -31,7 +32,7 @@ class HoverSession private constructor(b: Builder) {
 
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
             .apply {
-                setEnvironment(if (Utils.getBoolean(Constants.TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
+                setEnvironment(if (Utils.getBoolean(TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
                 extra(ACCOUNT_NAME, account.name)
                 private_extra(ACCOUNT_ID, account.id.toString())
                 request(b.action.public_id)
@@ -127,7 +128,7 @@ class HoverSession private constructor(b: Builder) {
     }
 
     init {
-        Hover.setPermissionActivity(Constants.PERM_ACTIVITY, b.activity)
+        Hover.setPermissionActivity(PERM_ACTIVITY, b.activity)
         frag = b.fragment
         account = b.account
         action = b.action

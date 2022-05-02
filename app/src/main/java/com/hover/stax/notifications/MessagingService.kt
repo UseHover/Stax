@@ -13,10 +13,11 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.hover.stax.FRAGMENT_DIRECT
+import com.hover.stax.FROM_FCM
 import com.hover.stax.R
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
-import com.hover.stax.utils.Constants
 import timber.log.Timber
 import kotlin.random.Random
 
@@ -89,8 +90,8 @@ class MessagingService : FirebaseMessagingService() {
         } else {
             val intent = Intent(this, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                putExtra(Constants.FROM_FCM, title)
-                putExtra(Constants.FRAGMENT_DIRECT, redirect)
+                putExtra(FROM_FCM, title)
+                putExtra(FRAGMENT_DIRECT, redirect)
             }
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
         }

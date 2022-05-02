@@ -10,12 +10,13 @@ import android.view.View
 import android.widget.TextView
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper.flashMessage
 import com.hover.stax.utils.Utils.copyToClipboard
+
+const val REQUEST_LINK = "request_link"
+const val SMS = 303
 
 interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
 
@@ -53,7 +54,7 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
         }
 
         logAnalyticsEvent(a.getString(R.string.clicked_send_sms_request), a)
-        a.startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS)
+        a.startActivityForResult(Intent.createChooser(sendIntent, "Request"), SMS)
     }
 
     fun sendWhatsapp(r: Request?, requestees: List<StaxContact?>?, account: Account?, a: Activity) {
@@ -71,7 +72,7 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
         val whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, account) + "&text=" + r.generateMessage(a)
         sendIntent.data = Uri.parse(whatsapp)
         try {
-            a.startActivityForResult(sendIntent, Constants.SMS)
+            a.startActivityForResult(sendIntent, SMS)
         } catch (ignored: ActivityNotFoundException) {
         }
     }

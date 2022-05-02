@@ -15,13 +15,13 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -151,7 +151,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         channels.forEachIndexed { i, it ->
             logChoice(it)
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
-            val accountName: String = if (getFetchAccountAction(it.id) == null) it.name else Constants.PLACEHOLDER //placeholder alias for easier identification later
+            val accountName: String = if (getFetchAccountAction(it.id) == null) it.name else PLACEHOLDER //placeholder alias for easier identification later
             val account = Account(accountName, it.name, it.logoUrl, it.accountNo, it.id, it.countryAlpha2, it.id, it.primaryColorHex, it.secondaryColorHex, defaultAccount == null && i == 0)
             accountRepo.insert(account)
         }

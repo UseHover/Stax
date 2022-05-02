@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
-import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target

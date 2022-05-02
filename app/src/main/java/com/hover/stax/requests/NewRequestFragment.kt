@@ -16,11 +16,10 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
-import com.hover.stax.home.MainActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
+import com.hover.stax.transfers.GET_CONTACT
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.*
@@ -166,14 +165,13 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 requestViewModel.addRecipient(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(GET_CONTACT, requireContext()) }
         }
 
         fab.setOnClickListener { fabClicked() }
     }
 
     private fun setClickListeners() {
-        val activity = activity as MainActivity
         binding.shareCard.smsShareSelection.setOnClickListener { sendSms(requestViewModel) }
         binding.shareCard.whatsappShareSelection.setOnClickListener { sendWhatsapp(requestViewModel) }
         binding.shareCard.copylinkShareSelection.setOnClickListener { copyShareLink(it, requestViewModel) }

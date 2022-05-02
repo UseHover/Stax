@@ -13,7 +13,8 @@ import com.hover.stax.R
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.home.MainActivity
-import com.hover.stax.utils.Constants
+import com.hover.stax.home.SCHEDULE_REQUEST
+import com.hover.stax.schedules.Schedule.REQUEST_TYPE
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.concurrent.TimeUnit
@@ -53,10 +54,10 @@ class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(contex
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             action = s.type
             putExtra(Schedule.SCHEDULE_ID, s.id)
-            putExtra(Constants.REQUEST_TYPE, s.type == Constants.REQUEST_TYPE)
+            putExtra(REQUEST_TYPE, s.type == REQUEST_TYPE)
         }
 
-        return PendingIntent.getActivity(applicationContext, Constants.SCHEDULE_REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(applicationContext, SCHEDULE_REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     companion object {

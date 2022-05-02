@@ -11,8 +11,6 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import java.security.NoSuchAlgorithmException
 
 class RequestRepo(db: AppDatabase) {
-    private val decryptedRequest: MutableLiveData<Request> = MutableLiveData()
-
     private val requestDao: RequestDao = db.requestDao()
 
     val liveRequests: LiveData<List<Request>>
@@ -29,21 +27,23 @@ class RequestRepo(db: AppDatabase) {
         return requestDao[id]
     }
 
-    fun decrypt(encrypted: String, c: Context): LiveData<Request> {
-        decryptedRequest.value = null
+    fun decrypt(encrypted: String, c: Context): MutableLiveData<Request?> {
+        val liveRequest: MutableLiveData<Request?> = MutableLiveData()
+        liveRequest.value = null
         val removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "")
 
         //Only old stax versions contains ( in the link
-        if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString)
-        else decryptRequest(removedBaseUrlString, c)
-        return decryptedRequest
+        if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString, liveRequest)
+        else liveRequest.postValue(decryptRequest(removedBaseUrlString, c))
+
+        return liveRequest
     }
 
-    private fun decryptRequest(param: String, c: Context) {
-        decryptedRequest.postValue(Request(Request.decryptBijective(param, c)))
+    private fun decryptRequest(param: String, c: Context): Request {
+        return Request(Request.decryptBijective(param, c))
     }
 
-    private fun decryptRequestForOldVersions(param: String) {
+    private fun decryptRequestForOldVersions(param: String, ld: MutableLiveData<Request?>) {
         var params = param
         try {
             val e = Request.getEncryptionSettings().build()
@@ -52,7 +52,7 @@ class RequestRepo(db: AppDatabase) {
             }
             e.decryptAsync(params.replace("[(]".toRegex(), "+"), object : Encryption.Callback {
                 override fun onSuccess(result: String) {
-                    decryptedRequest.postValue(Request(result))
+                    return ld.postValue(Request(result))
                 }
 
                 override fun onError(exception: Exception) {

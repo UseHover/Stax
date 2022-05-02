@@ -24,6 +24,7 @@ public abstract class AbstractStatefulInput extends FrameLayout {
     public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4;
 
     private TextInputLayout inputLayout;
+    protected String helperText;
 
     public AbstractStatefulInput(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -34,6 +35,7 @@ public abstract class AbstractStatefulInput extends FrameLayout {
     }
 
     protected void setHelperText(String message) {
+        helperText = message;
         inputLayout.setHelperText(message);
         invalidate();
         requestLayout();
@@ -93,6 +95,7 @@ public abstract class AbstractStatefulInput extends FrameLayout {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        helperText = null;
         inputLayout = null;
     }
 
