@@ -9,11 +9,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.R
 import com.hover.stax.bounties.BountyEmailFragmentDirections
+import com.hover.stax.home.AbstractHoverCallerActivity
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class AbstractGoogleAuthActivity : AppCompatActivity(), StaxGoogleLoginInterface {
+abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxGoogleLoginInterface {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface

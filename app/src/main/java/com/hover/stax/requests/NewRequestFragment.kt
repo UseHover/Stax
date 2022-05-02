@@ -28,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
 
-class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface {
+class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface, RequestSenderInterface {
 
     private lateinit var requestViewModel: NewRequestViewModel
 
@@ -174,9 +174,9 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun setClickListeners() {
         val activity = activity as MainActivity
-        binding.shareCard.smsShareSelection.setOnClickListener { activity.sendSms() }
-        binding.shareCard.whatsappShareSelection.setOnClickListener { activity.sendWhatsapp() }
-        binding.shareCard.copylinkShareSelection.setOnClickListener { activity.copyShareLink(it) }
+        binding.shareCard.smsShareSelection.setOnClickListener { sendSms(requestViewModel) }
+        binding.shareCard.whatsappShareSelection.setOnClickListener { sendWhatsapp(requestViewModel) }
+        binding.shareCard.copylinkShareSelection.setOnClickListener { copyShareLink(it, requestViewModel) }
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -255,22 +255,12 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         }
     })
 
-    /**
-     * Since the fragment is only created after first launch, amount, requestee and note fields will be repopulated with viewmodel values.
-     * To manage this, whenever summary card is shown and the fragment is paused, edit mode is enabled to allow for correct state management
-     * when fragment is resumed.
-     */
-    override fun onPause() {
-        super.onPause()
-        requestViewModel.setEditing(true)
-    }
-
     private fun askAreYouSure() {
         requestDialog = StaxDialog(requireActivity())
             .setDialogTitle(R.string.reqsave_head)
             .setDialogMessage(R.string.reqsave_msg)
             .setPosButton(R.string.btn_save) { saveUnsent() }
-            .setNegButton(R.string.btn_dontsave) { (activity as MainActivity).cancel() }
+            .setNegButton(R.string.btn_dontsave) { findNavController().popBackStack() }
         requestDialog!!.showIt()
     }
 

@@ -1,5 +1,6 @@
 package com.hover.stax.home
 
+import androidx.appcompat.app.AppCompatActivity
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
@@ -14,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 
-abstract class AbstractHoverCallerActivity : AbstractGoogleAuthActivity(), PushNotificationTopicsInterface {
+abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificationTopicsInterface {
 
     private fun runAction(hsb: HoverSession.Builder) = try {
         hsb.run()

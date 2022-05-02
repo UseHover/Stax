@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
+import android.view.View
 import android.widget.TextView
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
@@ -15,7 +17,27 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper.flashMessage
 import com.hover.stax.utils.Utils.copyToClipboard
 
-interface RequestSenderInterface {
+interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
+
+    fun sendSms(requestViewModel: NewRequestViewModel) {
+        requestViewModel.saveRequest()
+        SmsSentObserver(this, listOf(requestViewModel.requestee.value), Handler(), requestViewModel.getApplication()).start()
+        sendSms(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.getApplication())
+    }
+
+    fun sendWhatsapp(requestViewModel: NewRequestViewModel) {
+        requestViewModel.saveRequest()
+        sendWhatsapp(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.activeAccount.value, requestViewModel.getApplication())
+    }
+
+    fun copyShareLink(view: View, requestViewModel: NewRequestViewModel) {
+        requestViewModel.saveRequest()
+        copyShareLink(requestViewModel.formulatedRequest.value, view.findViewById(R.id.copylink_share_selection), requestViewModel.getApplication())
+    }
+
+    override fun onSmsSendEvent(sent: Boolean) {
+        // TODO: show message, end fragment
+    }
 
     fun sendSms(r: Request?, requestees: List<StaxContact?>?, a: Activity) {
         if (r == null || requestees == null) {

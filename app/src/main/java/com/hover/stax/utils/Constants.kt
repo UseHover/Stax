@@ -32,7 +32,6 @@ object Constants {
     const val LANGUAGE_CHECK = "Language"
     const val PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity"
     const val TRANSFERRED = "TRANSFERRED"
-    const val TRANSFERRED_INT = 1001
     const val SCHEDULED = "SCHEDULED"
     const val REQUEST_TYPE = "request"
     const val REQUEST_LINK = "request_link"
@@ -41,7 +40,6 @@ object Constants {
     const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
 
     const val ACTION = "action"
-    const val TRANSACTION_TYPE = "transaction_type"
     const val CHANNELS_REFRESHED = "has_refreshed_channels"
 
     const val RECIPIENT_INSTITUTION = "recipientInstitution"

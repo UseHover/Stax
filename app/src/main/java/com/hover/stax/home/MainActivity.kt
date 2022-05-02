@@ -17,8 +17,11 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
+import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.paybill.PaybillViewModel
+import com.hover.stax.requests.NewRequestViewModel
+import com.hover.stax.requests.RequestSenderInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionDetailsFragment
@@ -30,11 +33,12 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class MainActivity : AbstractRequestActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
+class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface {
 
     private val accountsViewModel: AccountsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
+    private val requestViewModel: NewRequestViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val bountyRequest = 3000
@@ -172,7 +176,7 @@ class MainActivity : AbstractRequestActivity(), BiometricChecker.AuthListener, P
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
-            sendSms()
+            sendSms(requestViewModel)
         } else if (requestCode == Constants.SMS) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
