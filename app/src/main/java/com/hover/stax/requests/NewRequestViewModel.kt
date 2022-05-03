@@ -88,7 +88,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
     fun createRequest() {
         saveContacts()
 
-        val request = Request(amount.value, note.value, requesterNumber.value, activeAccount.value!!.institutionId)
+        val request = Request(amount.value, note.value, requesterNumber.value, activeAccount.value!!.institutionId!!)
         formulatedRequest.value = request
     }
 

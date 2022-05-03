@@ -28,7 +28,7 @@ data class Account(
         var accountNo: String?,
 
         @ColumnInfo
-        var institutionId: Int,
+        var institutionId: Int?,
 
         @JvmField
         @ColumnInfo

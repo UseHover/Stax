@@ -42,10 +42,7 @@ public class Request {
     @ColumnInfo(name = "amount")
     public String amount;
 
-    @ColumnInfo(name = "requester_account_id")
-    public int requester_account_id;
-
-    @ColumnInfo(name = "requester_institution_id")
+    @ColumnInfo(name = "requester_institution_id", defaultValue = "0")
     public int requester_institution_id;
 
     @ColumnInfo(name = "requester_number")
@@ -66,6 +63,9 @@ public class Request {
     @NonNull
     @ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
     public Long date_sent;
+
+    @ColumnInfo(name = "requester_account_id")
+    public Integer requester_account_id;
 
     public Request() {
     }

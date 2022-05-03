@@ -3,19 +3,14 @@ package com.hover.stax.channels;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import com.hover.stax.utils.DateUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -28,29 +23,38 @@ public class Channel implements Comparable<Channel> {
     @NonNull
     @ColumnInfo(name = "name")
     public String name;
+
     @NonNull
     @ColumnInfo(name = "country_alpha2")
     public String countryAlpha2;
+
     @ColumnInfo(name = "root_code")
     public String rootCode;
+
     @NonNull
     @ColumnInfo(name = "currency")
     public String currency;
+
     @NonNull
     @ColumnInfo(name = "hni_list")
     public String hniList;
+
     @NonNull
     @ColumnInfo(name = "logo_url")
     public String logoUrl;
+
     @NonNull
     @ColumnInfo(name = "institution_id")
     public int institutionId;
+
     @NonNull
     @ColumnInfo(name = "primary_color_hex")
     public String primaryColorHex;
+
     @NonNull
     @ColumnInfo(name = "published", defaultValue = "0")
     public Boolean published;
+
     @NonNull
     @ColumnInfo(name = "secondary_color_hex")
     public String secondaryColorHex;

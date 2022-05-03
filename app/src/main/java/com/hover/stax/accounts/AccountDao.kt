@@ -7,9 +7,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AccountDao {
 
-//    @Query("SELECT * FROM accounts ORDER BY alias ASC")
-//    fun getAllAccountsLive(): LiveData<List<Account>>
-
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
     fun getAllAccounts(): List<Account>
 

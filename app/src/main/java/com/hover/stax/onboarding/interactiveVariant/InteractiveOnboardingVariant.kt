@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.appsflyer.internal.ac
+import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentInteractiveOnboardingBinding
 import com.hover.stax.onboarding.OnBoardingActivity
@@ -43,6 +45,7 @@ internal class InteractiveOnboardingVariant : Fragment() {
             logQuestionClicked(1)
             NavUtil.navigate(findNavController(), InteractiveOnboardingVariantDirections.actionInteractiveOnboardingFragmentToInteractiveTutorialFragment())
         }
+
         binding.onboardingVariant2Question2.setOnClickListener {
             logQuestionClicked(2)
             NavUtil.navigate(

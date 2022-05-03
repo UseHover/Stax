@@ -94,15 +94,16 @@ public class StaxTransaction {
     @ColumnInfo(name = "account_id")
     public Integer accountId;
 
-    @ColumnInfo(name = "account_name")
-    public Integer accountName;
-
     @ColumnInfo(name = "note")
     public String note;
 
-    // FIXME: DO not use! This is covered by contact model. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
+    // FIXME: DO not use! Below is covered by contact and account models. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
+
     @ColumnInfo(name = "counterparty")
     public String counterparty;
+
+    @ColumnInfo(name = "account_name")
+    public String accountName;
 
     public StaxTransaction() {
     }
