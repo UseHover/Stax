@@ -12,6 +12,7 @@
 	<dimen name="radius">5dp</dimen>
 	<dimen name="elevation">10dp</dimen>
 
+	<dimen name="chooserDiam" tools:ignore="PxUsage">89px</dimen>
 	<dimen name="logoDiam" tools:ignore="PxUsage">55px</dimen>
 	<dimen name="iconDiam" tools:ignore="PxUsage">24px</dimen>
 

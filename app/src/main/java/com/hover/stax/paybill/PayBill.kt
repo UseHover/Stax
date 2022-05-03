@@ -18,8 +18,11 @@ data class Paybill(
 
         var name: String,
 
+        @ColumnInfo(name = "business_name")
+        var businessName: String?,
+
         @ColumnInfo(name = "business_no")
-        var businessNo: String,
+        var businessNo: String?,
 
         @ColumnInfo(name = "account_no")
         var accountNo: String? = null,

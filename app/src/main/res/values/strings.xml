@@ -280,6 +280,7 @@
     <string name="paid_with_label">Paid with</string>
     <string name="transfer_amount_label">Amount</string>
     <string name="account_label">Account number</string>
+    <string name="for_label">For</string>
     <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
     <string name="recipientphone_label">Contact phone number</string>
     <string name="recipientacct_label">Contact account number</string>

@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cardSavePaybill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_8">
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_marginStart="@dimen/margin_8">
 
         <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/saveBill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_5"
                 android:paddingStart="@dimen/margin_13"
                 android:paddingEnd="@dimen/margin_5"
                 android:text="@string/save_bill"
@@ -23,49 +16,46 @@
                 android:textSize="@dimen/text_16" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/saveBillCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
+            android:id="@+id/saveDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_21">
 
-            <include
-                    android:id="@+id/billIconLayout"
-                    layout="@layout/item_icons"
-                    android:layout_width="@dimen/margin_65"
-                    android:layout_height="@dimen/margin_65"
-                    android:layout_marginStart="@dimen/margin_5"
-                    android:layout_marginVertical="@dimen/margin_8"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <ImageView android:id="@+id/billIcon"
+                android:layout_width="@dimen/chooserDiam"
+                android:layout_height="@dimen/chooserDiam"
+                android:layout_margin="@dimen/margin_8"
+                android:padding="@dimen/margin_8"
+                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_smile"
+                android:background="@drawable/icon_bg_circle"/>
 
             <com.hover.stax.views.StaxTextInput
-                    android:id="@+id/billNameInput"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_5"
-                    android:hint="@string/bill_name_label"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapWords"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/billIconLayout"
-                    app:layout_constraintTop_toTopOf="@id/billIconLayout"
-                    app:layout_constraintBottom_toBottomOf="@id/billIconLayout" />
+                android:id="@+id/billNameInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/bill_name_label"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords"
+                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/billIcon"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/saveAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_5"
-                    android:textColor="@color/white"
-                    android:paddingStart="@dimen/margin_13"
-                    android:paddingEnd="@dimen/margin_5"
-                    android:text="@string/amount_checkbox_label"
-                    android:textSize="@dimen/text_16"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/billIconLayout" />
+                android:id="@+id/saveAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:paddingStart="@dimen/margin_13"
+                android:paddingEnd="@dimen/margin_5"
+                android:text="@string/amount_checkbox_label"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintStart_toStartOf="@id/billIcon"
+                app:layout_constraintTop_toBottomOf="@id/billNameInput"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.hover.stax.views.StaxCardView>

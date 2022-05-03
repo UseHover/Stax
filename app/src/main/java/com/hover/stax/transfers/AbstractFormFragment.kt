@@ -73,9 +73,9 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun setupActionDropdownObservers() {
-        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { Timber.e("Got new active account ${this.javaClass.simpleName}: $it") }
-        accountsViewModel.channelActions.observe(viewLifecycleOwner) { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
-        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { Timber.e("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
+        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { Timber.v("Got new active account ${this.javaClass.simpleName}: $it") }
+        accountsViewModel.channelActions.observe(viewLifecycleOwner) { Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
     }
 
 
@@ -160,6 +160,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
+            Timber.e("Caught back press. isediting: %s", abstractFormViewModel.isEditing.value)
             if (abstractFormViewModel.isEditing.value == false)
                 abstractFormViewModel.setEditing(true)
             else
@@ -169,6 +170,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     override fun onDestroy() {
         abstractFormViewModel.reset()
+        actionSelectViewModel.activeAction.value = null
         super.onDestroy()
     }
 }

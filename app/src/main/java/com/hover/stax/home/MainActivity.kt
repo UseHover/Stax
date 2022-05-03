@@ -56,9 +56,9 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         navHelper = NavHelper(this)
         setContentView(binding.root)
 
-        accountsViewModel.activeAccount.observe(this) { Timber.e("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
-        accountsViewModel.channelActions.observe(this) { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
-        actionSelectViewModel.activeAction.observe(this) { Timber.e("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
+        accountsViewModel.activeAccount.observe(this) { Timber.v("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
+        accountsViewModel.channelActions.observe(this) { Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
+        actionSelectViewModel.activeAction.observe(this) { Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
 
         navHelper.setUpNav()
 

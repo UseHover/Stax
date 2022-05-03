@@ -28,13 +28,10 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private val paybillViewModel: PaybillViewModel by sharedViewModel()
 
-//    private val args: PaybillListFragmentArgs by navArgs()
-
     private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPaybillListBinding.inflate(inflater, container, false)
-//        accountsViewModel.setActiveAccount(args.accountId)
         return binding.root
     }
 
@@ -48,7 +45,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     }
 
     private fun startListeners() {
-        binding.contentLayout.setOnClickIcon { NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment(false)) }
+        binding.contentLayout.setOnClickIcon { NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment()) }
 
         binding.newPaybill.newPaybillCard.setOnClickListener {
             PaybillNumberDialog().show(childFragmentManager, PaybillNumberDialog::class.java.simpleName)
@@ -119,14 +116,12 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     }
 
     override fun onSelectPaybill(paybill: Paybill) {
-        Timber.e("Select by bill: %s", paybill.name)
         paybillViewModel.selectPaybill(paybill)
         actionSelectViewModel.setActiveAction(paybill.actionId)
         findNavController().popBackStack()
     }
 
     override fun onSelectPaybill(action: HoverAction) {
-        Timber.e("Select by action: %s", action.public_id)
         paybillViewModel.selectPaybill(action)
         actionSelectViewModel.setActiveAction(action)
         requireActivity().supportFragmentManager.popBackStack();

@@ -79,7 +79,7 @@ class HomeFragment : Fragment() {
             if (accounts?.any { it.countryAlpha2.contentEquals("KE", ignoreCase = true) } == true) {
                 visibility = View.VISIBLE
                 setOnClickListener {
-                    navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment(false))
+                    navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
                 }
             } else
                 visibility = View.GONE

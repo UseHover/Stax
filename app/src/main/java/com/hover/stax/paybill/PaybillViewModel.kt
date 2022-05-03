@@ -26,11 +26,13 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     val savedPaybills = MutableLiveData<List<Paybill>>()
 
     val selectedPaybill = MutableLiveData<Paybill?>()
+
+    val businessName = MutableLiveData<String?>()
     val businessNumber = MutableLiveData<String?>()
     val accountNumber = MutableLiveData<String?>()
     val nickname = MutableLiveData<String?>()
     val amount = MutableLiveData<String?>()
-    val iconDrawable = MutableLiveData(R.drawable.ic_edit)
+    val iconDrawable = MutableLiveData(R.drawable.ic_smile)
 
     val saveBill = MutableLiveData(false)
     val saveAmount = MutableLiveData(false)
@@ -45,31 +47,46 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         Timber.e("isSaved: %s", paybill.isSaved)
 
         selectedPaybill.value = paybill
+
+        businessName.value = paybill.businessName
         businessNumber.value = paybill.businessNo
-        if (paybill.accountNo != null) accountNumber.value = paybill.accountNo
-        if (paybill.recurringAmount != 0) amount.value = paybill.recurringAmount.toString()
+        accountNumber.value = paybill.accountNo
+        amount.value = if (paybill.recurringAmount == 0) "" else paybill.recurringAmount.toString()
         saveBill.value = paybill.isSaved
-        if (paybill.isSaved) nickname.value = paybill.name
+        nickname.value = paybill.name
         iconDrawable.value = paybill.logo
         saveAmount.value = paybill.recurringAmount != 0
     }
 
     fun selectPaybill(action: HoverAction) {
+//        deSelectPaybill()
         Timber.e("selecting paybill by action: %s", action.to_institution_name)
         val paybill = Paybill(
-                action.to_institution_name, extractBizNumber(action), null, action.public_id,
+                "", extractBizNumber(action), action.to_institution_name, null, action.public_id,
                 0, getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
     }
 
-    fun extractBizNumber(action: HoverAction): String {
+    private fun deSelectPaybill() {
+        iconDrawable.value = R.drawable.ic_edit
+        Timber.e("deselecting %s", selectedPaybill.value?.name)
+        if (selectedPaybill.value?.name != null) nickname.value = null
+        if (selectedPaybill.value?.isSaved == true) saveBill.value = false
+        if (selectedPaybill.value?.accountNo != null) accountNumber.value = null
+        if (selectedPaybill.value?.recurringAmount != 0) amount.value = null
+        saveAmount.value = false
+        selectedPaybill.value = null
+    }
+
+    private fun extractBizNumber(action: HoverAction): String {
         if (action.getVarValue(BUSINESS_NO) != null)
             return action.getVarValue(BUSINESS_NO)
         else return ""
     }
 
     fun setBusinessNumber(number: String) {
+        deSelectPaybill()
         businessNumber.value = number
     }
 
@@ -94,8 +111,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     }
 
     fun setNickname(nickname: String) {
-        if (this.nickname.value != nickname)
-            this.nickname.value = nickname
+        this.nickname.value = nickname
     }
 
     private fun logPaybill(paybill: Paybill, isSaved: Boolean = true) {
@@ -112,18 +128,25 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         AnalyticsUtil.logAnalyticsEvent(getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, getApplication())
     }
 
-    fun businessNoError(): String? = if (businessNumber.value.isNullOrEmpty())
-        getString(R.string.paybill_error_business_number)
-    else null
+    fun businessNoError(): String? {
+        Timber.e("biz no: %s", businessNumber.value)
+        return if (businessNumber.value.isNullOrEmpty())
+            getString(R.string.paybill_error_business_number)
+        else null
+    }
 
     fun amountError(): String? {
+        Timber.e("amount: %s", amount.value)
         return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
         else getString(R.string.amount_fielderror)
     }
 
-    fun accountNoError(): String? = if (accountNumber.value.isNullOrEmpty())
-        getString(R.string.transfer_error_recipient_account)
-    else null
+    fun accountNoError(): String? {
+        Timber.e("acct no: %s", accountNumber.value)
+        return if (accountNumber.value.isNullOrEmpty())
+            getString(R.string.transfer_error_recipient_account)
+        else null
+    }
 
     fun nameError(): String? = if (saveBill.value!! && nickname.value.isNullOrEmpty())
         getString(R.string.bill_name_error)
@@ -150,11 +173,12 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
 
     fun savePaybill(account: Account?, action: HoverAction?) {
         viewModelScope.launch(Dispatchers.IO) {
+            Timber.e("saving bill")
             val businessNo = businessNumber.value
             val accountNo = accountNumber.value
 
             if (account != null && action != null) {
-                val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, action.public_id, account.id, getIcon(account)).apply {
+                val payBill = Paybill(nickname.value!!, action.to_institution_name, businessNo!!, accountNo, action.public_id, account.id, getIcon(account)).apply {
                     isSaved = true
                     logo = iconDrawable.value ?: 0
                     channelId = account.channelId
@@ -175,6 +199,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     }
 
     fun updatePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("updating bill")
         with(paybill) {
             apply {
                 name = nickname.value!!
@@ -190,8 +215,10 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
 
     override fun reset() {
         super.reset()
+        Timber.e("resetting")
         viewModelScope.launch {
             selectedPaybill.postValue(null)
+            businessName.postValue(null)
             businessNumber.postValue(null)
             accountNumber.postValue(null)
             amount.postValue(null)

@@ -32,7 +32,7 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
 
     fun setActions(actions: List<HoverAction>) = filteredActions.postValue(actions)
 
-     fun setActiveAction(actionId: String?) = actionId?.let { activeAction.postValue(filteredActions.value?.find { it.public_id == actionId }) }
+     fun setActiveAction(actionId: String?) = actionId?.let { setActiveAction(filteredActions.value?.find { it.public_id == actionId }) }
 
     fun setActiveAction(action: HoverAction?) = action?.let { activeAction.postValue(it) }
 

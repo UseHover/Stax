@@ -328,9 +328,6 @@
             android:name="com.hover.stax.paybill.PaybillFragment"
             android:label="@string/cta_paybill"
             tools:layout="@layout/fragment_paybill">
-        <argument
-                android:name="updateBusiness"
-                app:argType="boolean" />
         <action
                 android:id="@+id/action_paybillFragment_to_paybillListFragment"
                 app:destination="@id/paybillListFragment" />
@@ -345,8 +342,7 @@
         <action
                 android:id="@+id/action_paybillListFragment_to_paybillFragment"
                 app:destination="@id/paybillFragment"
-                app:popUpTo="@id/paybillFragment"
-                app:popUpToInclusive="true" />
+                app:popUpTo="@id/paybillFragment" />
     </fragment>
 
 </navigation>
