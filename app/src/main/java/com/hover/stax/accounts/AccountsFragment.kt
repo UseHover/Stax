@@ -1,9 +1,12 @@
 package com.hover.stax.accounts
 
+import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,6 +22,7 @@ import com.hover.stax.transfers.TransactionType
 import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
 
@@ -70,9 +74,19 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
         }
     }
 
+    private val sdkLauncherForFetchAccount = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { intent ->
+        Timber.e("Accounts fetched")
+        if (intent.resultCode == RESULT_OK) {
+            intent.data?.let {
+                val message: String = getString(R.string.accounts_fetched_success)
+                UIHelper.flashMessage(requireActivity(), binding.root, message)
+            }
+        }
+    }
+
     private fun launchFetchAccounts(action: HoverAction, channel: Channel) {
         val intent =  SDKIntent.create(action, channel, requireContext())
-        (requireActivity() as MainActivity).sdkLauncherForFetchAccount.launch(intent)
+        sdkLauncherForFetchAccount.launch(intent)
     }
 
     override fun accountSelected(account: Account) {

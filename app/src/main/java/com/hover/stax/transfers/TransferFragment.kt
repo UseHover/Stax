@@ -1,5 +1,7 @@
 package com.hover.stax.transfers
 
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -8,8 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
@@ -18,6 +24,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.SDKIntent
+import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
@@ -45,6 +52,31 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
 
+    private val sdkLauncherForTransfer = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { intent ->
+        when (intent.resultCode) {
+            RESULT_OK -> {
+                intent.data?.let {
+                    transferViewModel.reset()
+
+                    val uuid = it.getStringExtra("uuid")
+
+                    if(it.action == Constants.SCHEDULED) {
+                        val message = getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(it.getLongExtra(
+                            Schedule.DATE_KEY, 0)))
+                        UIHelper.flashMessage(requireActivity(), binding.root, message)
+                    }
+                    else if (uuid != null) {
+                        NavUtil.navigate(findNavController(), MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid))
+                    }
+                }
+            }
+            RESULT_CANCELED -> {
+                Timber.e("Transfer cancelled")
+                transferViewModel.setEditing(false)
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
@@ -52,7 +84,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         setTransactionType(args.transactionType)
 
         args.transactionUUID?.let {
-            Timber.e("TxnUUID is $it. Setting autofill")
             transferViewModel.autoFill(it)
         }
 
@@ -267,8 +298,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun callSDKSafely(intent: Intent, actionId: String) {
         try {
-            val mainActivity = (requireActivity() as MainActivity)
-            mainActivity.sdkLauncherForTransfer.launch(intent)
+            sdkLauncherForTransfer.launch(intent)
         }
         catch (e : Exception) {
             AnalyticsUtil.logFailedAction(actionId, requireActivity())

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
@@ -38,6 +40,14 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     private val binding get() = _binding!!
 
     private var dialog: StaxDialog? = null
+
+    private val sdkLauncherForBounty = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { intent ->
+        Timber.e("Bounty data returned")
+        intent.data?.let {
+            val transactionUUID = it.getStringExtra("uuid")
+            if (transactionUUID != null) NavUtil.navigate(findNavController(), MainNavigationDirections.actionGlobalTxnDetailsFragment(transactionUUID))
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
@@ -148,7 +158,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     override fun viewTransactionDetail(uuid: String?) {
-        NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
+        uuid?.let { NavUtil.navigate(findNavController(), MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid)) }
     }
 
     override fun viewBountyDetail(b: Bounty) {
@@ -187,7 +197,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_run_bounty_session), requireContext())
         val intent = SDKIntent.create(b.action, requireContext())
-        (requireActivity() as MainActivity).sdkLauncherForBounty.launch(intent)
+        sdkLauncherForBounty.launch(intent)
     }
 
     private fun showLoadingState() {

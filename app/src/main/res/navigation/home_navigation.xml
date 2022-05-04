@@ -41,6 +41,10 @@
             android:id="@+id/action_global_PaybillFragment"
             app:destination="@id/paybillFragment" />
 
+    <action
+            android:id="@+id/action_global_TxnDetailsFragment"
+            app:destination="@id/txnDetailsFragment"/>
+
     <fragment
             android:id="@+id/navigation_home"
             android:name="com.hover.stax.home.HomeFragment"
@@ -74,13 +78,13 @@
             tools:layout="@layout/fragment_balance">
         <deepLink
                 android:id="@+id/balanceDL"
-                app:mimeType="text/plain"
                 android:autoVerify="true"
+                app:mimeType="text/plain"
                 app:uri="stax.me/balance" />
         <deepLink
                 android:id="@+id/historyDL"
-                app:mimeType="text/plain"
                 android:autoVerify="true"
+                app:mimeType="text/plain"
                 app:uri="stax.me/history" />
     </fragment>
 
@@ -96,8 +100,8 @@
                 app:popUpToInclusive="true" />
         <deepLink
                 android:id="@+id/linkAccountDL"
-                app:mimeType="text/plain"
                 android:autoVerify="true"
+                app:mimeType="text/plain"
                 app:uri="stax.me/linkaccount" />
     </fragment>
 
@@ -207,8 +211,8 @@
             tools:layout="@layout/fragment_library">
         <deepLink
                 android:id="@+id/libDL"
-                app:mimeType="text/plain"
                 android:autoVerify="true"
+                app:mimeType="text/plain"
                 app:uri="stax.me/lib" />
     </fragment>
 
@@ -248,8 +252,8 @@
 
         <deepLink
                 android:id="@+id/transferDL"
-                app:mimeType="text/plain"
                 android:autoVerify="true"
+                app:mimeType="text/plain"
                 app:uri="stax.me/transfer/{transactionType}" />
     </fragment>
     <fragment
@@ -284,8 +288,8 @@
                 app:destination="@id/accountsFragment" />
         <deepLink
                 android:id="@+id/requestDL"
-                app:mimeType="text/plain"
                 android:autoVerify="true"
+                app:mimeType="text/plain"
                 app:uri="stax.me/request" />
     </fragment>
 
@@ -334,8 +338,8 @@
                 app:popUpToInclusive="true" />
         <deepLink
                 android:id="@+id/tipsDL"
-                app:mimeType="text/plain"
                 android:autoVerify="true"
+                app:mimeType="text/plain"
                 app:uri="stax.me/financialTips?id={tipId}" />
     </fragment>
     <fragment
@@ -356,6 +360,7 @@
     <fragment
             android:id="@+id/paybillListFragment"
             android:name="com.hover.stax.paybill.PaybillListFragment"
+            tools:layout="@layout/fragment_paybill_list"
             android:label="PaybillListFragment">
         <action
                 android:id="@+id/action_paybillListFragment_to_paybillFragment"
@@ -365,6 +370,16 @@
         <argument
                 android:name="accountId"
                 app:argType="integer" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/txnDetailsFragment"
+            android:name="com.hover.stax.transactions.TransactionDetailsFragment"
+            tools:layout="@layout/fragment_transaction"
+            android:label="TransactionDetails">
+        <argument
+                android:name="uuid"
+                app:argType="string" />
     </fragment>
 
 </navigation>
