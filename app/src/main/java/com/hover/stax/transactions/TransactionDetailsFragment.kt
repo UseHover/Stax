@@ -24,7 +24,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
-import com.hover.stax.home.AbstractHoverCallerActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase

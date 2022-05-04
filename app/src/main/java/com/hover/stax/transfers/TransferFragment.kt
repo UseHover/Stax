@@ -15,8 +15,8 @@ import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
-import com.hover.stax.home.AbstractHoverCallerActivity
-import com.hover.stax.home.FEE_REQUEST
+import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput

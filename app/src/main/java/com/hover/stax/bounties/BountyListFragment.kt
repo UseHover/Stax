@@ -18,6 +18,7 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.UpdateBountyTransactionsWorker
 import com.hover.stax.utils.AnalyticsUtil
@@ -187,7 +188,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
     private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
-        (requireActivity() as MainActivity).makeRegularCall(b.action, R.string.clicked_start_bounty)
+        (requireActivity() as AbstractHoverCallerActivity).makeRegularCall(b.action, R.string.clicked_start_bounty)
     }
 
     private fun showLoadingState() {

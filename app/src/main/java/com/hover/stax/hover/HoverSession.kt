@@ -71,6 +71,7 @@ class HoverSession private constructor(b: Builder) {
     }
 
     private fun startHover(builder: HoverParameters.Builder, a: Activity) {
+        Timber.e("starting hover")
         val i = builder.buildIntent()
         AnalyticsUtil.logAnalyticsEvent(a.getString(R.string.start_load_screen), a)
         if (frag != null) frag.startActivityForResult(i, requestCode) else a.startActivityForResult(i, requestCode)

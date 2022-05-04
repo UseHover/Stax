@@ -1,4 +1,4 @@
-package com.hover.stax.home
+package com.hover.stax.hover
 
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
@@ -49,7 +49,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
     fun run(account: Account, action: HoverAction, extras: HashMap<String, String>?, requestCode: Int) {
         val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity, requestCode)
         if (!extras.isNullOrEmpty()) hsb.extras(extras)
-        if (requestCode == FEE_REQUEST)
         runAction(hsb)
         createLog(hsb, getString(R.string.finish_transfer, action.transaction_type))
     }
@@ -85,10 +84,10 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         Timber.v("received result. %s", data?.action)
         Timber.v("uuid? %s", data?.extras?.getString("uuid"))
 
-        when {
-            requestCode == REQUEST_REQUEST -> showMessage(getString(R.string.toast_confirm_request))
-            requestCode == BOUNTY_REQUEST -> showBountyDetails(data)
-            requestCode == FEE_REQUEST -> showFeeDetails(data)
+        when (requestCode) {
+            REQUEST_REQUEST -> showMessage(getString(R.string.toast_confirm_request))
+            BOUNTY_REQUEST -> showBountyDetails(data)
+            FEE_REQUEST -> showFeeDetails(data)
             else -> {
                 balancesViewModel.setBalanceState(true)
                 showPopUpTransactionDetailsIfRequired(data)

@@ -11,7 +11,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
-import com.hover.stax.home.AbstractHoverCallerActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper

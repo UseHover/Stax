@@ -11,8 +11,6 @@ import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.DUMMY
-import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
@@ -20,16 +18,12 @@ import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.requests.RequestSenderInterface
 import com.hover.stax.requests.SMS
-import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.transactions.USSDLogBottomSheetFragment
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
