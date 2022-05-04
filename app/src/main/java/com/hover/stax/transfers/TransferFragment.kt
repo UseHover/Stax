@@ -1,5 +1,6 @@
 package com.hover.stax.transfers
 
+import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
@@ -11,8 +12,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
@@ -50,24 +53,27 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
 
     private val sdkLauncherForTransfer = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { intent ->
-        Timber.e("Transfer action returned")
-        if (intent.resultCode == RESULT_OK) {
-            intent.data?.let {
-                transferViewModel.reset()
+        when (intent.resultCode) {
+            RESULT_OK -> {
+                intent.data?.let {
+                    transferViewModel.reset()
 
-                if(it.action == Constants.SCHEDULED) {
-                    val message = getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(it.getLongExtra(
-                        Schedule.DATE_KEY, 0)))
-                    UIHelper.flashMessage(requireActivity(), binding.root, message)
-                }
-                else if (it.getStringExtra("uuid") != null) {
-                    NavUtil.showTransactionDetailsFragment(it.getStringExtra("uuid"), childFragmentManager, false)
+                    val uuid = it.getStringExtra("uuid")
+
+                    if(it.action == Constants.SCHEDULED) {
+                        val message = getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(it.getLongExtra(
+                            Schedule.DATE_KEY, 0)))
+                        UIHelper.flashMessage(requireActivity(), binding.root, message)
+                    }
+                    else if (uuid != null) {
+                        NavUtil.navigate(findNavController(), MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid))
+                    }
                 }
             }
-        }
-        else if(intent.resultCode == AppCompatActivity.RESULT_CANCELED) {
-            Timber.e("Transfer cancelled")
-            transferViewModel.setEditing(false)
+            RESULT_CANCELED -> {
+                Timber.e("Transfer cancelled")
+                transferViewModel.setEditing(false)
+            }
         }
     }
 
@@ -78,7 +84,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         setTransactionType(args.transactionType)
 
         args.transactionUUID?.let {
-            Timber.e("TxnUUID is $it. Setting autofill")
             transferViewModel.autoFill(it)
         }
 

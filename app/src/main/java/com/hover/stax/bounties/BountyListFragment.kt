@@ -13,6 +13,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
@@ -44,7 +45,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         Timber.e("Bounty data returned")
         intent.data?.let {
             val transactionUUID = it.getStringExtra("uuid")
-            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, childFragmentManager, true)
+            if (transactionUUID != null) NavUtil.navigate(findNavController(), MainNavigationDirections.actionGlobalTxnDetailsFragment(transactionUUID))
         }
     }
 
@@ -157,7 +158,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     override fun viewTransactionDetail(uuid: String?) {
-        NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
+        uuid?.let { NavUtil.navigate(findNavController(), MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid)) }
     }
 
     override fun viewBountyDetail(b: Bounty) {

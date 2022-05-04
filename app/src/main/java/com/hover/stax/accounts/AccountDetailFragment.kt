@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -237,7 +238,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id))
     }
 
-    override fun viewTransactionDetail(uuid: String?) = NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
+    override fun viewTransactionDetail(uuid: String?) {
+        uuid?.let { NavUtil.navigate(findNavController(), MainNavigationDirections.actionGlobalTxnDetailsFragment(it)) }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

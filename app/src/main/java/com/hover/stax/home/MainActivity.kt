@@ -12,7 +12,6 @@ import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.DUMMY
-import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
@@ -25,9 +24,7 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.settings.SettingsFragment
-import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.transactions.USSDLogBottomSheetFragment
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
@@ -51,14 +48,14 @@ class MainActivity : RequestActivity(), BalancesViewModel.RunBalanceListener, Ba
         intent.data?.let {
             val transactionUUID = it.getStringExtra("uuid")
             if (transactionUUID != null) {
-                NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
+                navHelper.navigateToTxnDetails(transactionUUID)
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Hover.setPermissionActivity(Constants.PERM_ACTIVITY,  this)
+        Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         navHelper = NavHelper(this)
         setContentView(binding.root)
@@ -85,15 +82,6 @@ class MainActivity : RequestActivity(), BalancesViewModel.RunBalanceListener, Ba
 
     fun checkPermissionsAndNavigate(navDirections: NavDirections) {
         navHelper.checkPermissionsAndNavigate(navDirections)
-    }
-
-    fun showUSSDLogBottomSheet(uuid: String) {
-        USSDLogBottomSheetFragment().apply {
-            val bundle = Bundle()
-            bundle.putString(TransactionDetailsFragment.UUID, uuid)
-            arguments = bundle
-            show(supportFragmentManager, tag)
-        }
     }
 
     fun navigateTransferAutoFill(type: String, transactionUUID: String) {
@@ -200,7 +188,7 @@ class MainActivity : RequestActivity(), BalancesViewModel.RunBalanceListener, Ba
     }
 
     private fun runBalance(intent: Intent?, requestCode: Int) {
-        if(balancesViewModel.toRun.value?.size == 1) sdkLauncherForSingleBalance.launch(intent)
+        if (balancesViewModel.toRun.value?.size == 1) sdkLauncherForSingleBalance.launch(intent)
         else startActivityForResult(intent, requestCode)
     }
 
@@ -234,7 +222,7 @@ class MainActivity : RequestActivity(), BalancesViewModel.RunBalanceListener, Ba
         Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
         //Only chained-balances make use of onActivityResult with loop indexes as request code , but still add an extra check
-        if(requestCode < 50 && resultCode == RESULT_OK) {
+        if (requestCode < 50 && resultCode == RESULT_OK) {
             balancesViewModel.setRan(requestCode)
             balancesViewModel.showBalances(true)
         }

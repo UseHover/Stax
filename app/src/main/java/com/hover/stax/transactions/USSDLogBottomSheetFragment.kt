@@ -21,7 +21,7 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 	override fun onCreateView(inflater: LayoutInflater,
 	                          container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View {
-		val uuid = requireArguments().getString(TransactionDetailsFragment.UUID)
+		val uuid = requireArguments().getString(UUID)
 		viewModel.setTransaction(uuid!!)
 		_binding = UssdLogBottomsheetBinding.inflate(inflater, container, false)
 		return binding.root

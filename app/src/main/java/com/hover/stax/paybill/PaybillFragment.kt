@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
@@ -50,8 +51,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
         Timber.e("PayBill transaction data returned")
         intent.data?.let {
             val transactionUUID = it.getStringExtra("uuid")
-            Timber.e("Returned with uuid $transactionUUID")
-            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, childFragmentManager, true)
+            if (transactionUUID != null) NavUtil.navigate(findNavController(), MainNavigationDirections.actionGlobalTxnDetailsFragment(transactionUUID))
         }
     }
 
