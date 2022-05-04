@@ -86,7 +86,11 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
             //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
-            val accountsObserver = Observer<List<Account>> { t -> logResult("Observing selected channels", t?.size ?: 0) }
+            val accountsObserver = object : Observer<List<Account>> {
+                override fun onChanged(t: List<Account>?) {
+                    logResult("Observing selected channels", t?.size ?: 0)
+                }
+            }
 
             accounts.observe(this@MainActivity, accountsObserver)
             toRun.observe(this@MainActivity) { logResult("Observing action to run", it.size) }
@@ -181,12 +185,15 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) = run(actionPair, index)
 
     override fun onTapRefresh(accountId: Int) {
-        if (accountId == DUMMY)
-            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
-        else {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
-            balancesViewModel.setRunning(accountId)
-        }
+        if (PermissionHelper(this).hasBasicPerms()) {
+            if (accountId == DUMMY)
+                checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
+            else {
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
+                balancesViewModel.setRunning(accountId)
+            }
+        } else
+            navHelper.requestBasicPerms()
     }
 
     override fun onTapDetail(accountId: Int) {
