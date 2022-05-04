@@ -81,11 +81,7 @@ class NavHelper(val activity: AppCompatActivity) {
 
         when {
             exemptRoutes.contains(it) || permissionHelper.hasBasicPerms() -> NavUtil.navigate(getNavController(), it)
-            else -> PermissionUtils.showInformativeBasicPermissionDialog(
-                0,
-                { PermissionUtils.requestPerms(Constants.PERMS_REQ_CODE, activity) },
-                { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
-            )
+            else -> requestBasicPerms()
         }
     }
 
@@ -100,5 +96,12 @@ class NavHelper(val activity: AppCompatActivity) {
         Constants.NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
         Constants.NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment(false)
         else -> null //invalid or unmapped route, return nothing
+    }
+
+    fun requestBasicPerms(){
+        PermissionUtils.showInformativeBasicPermissionDialog(
+            0,
+            { PermissionUtils.requestPerms(Constants.PERMS_REQ_CODE, activity) },
+            { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity)
     }
 }

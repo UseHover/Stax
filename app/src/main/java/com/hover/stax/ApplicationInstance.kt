@@ -5,8 +5,10 @@ import android.content.ComponentCallbacks
 import androidx.annotation.RequiresApi
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
+import com.appsflyer.AppsFlyerProperties
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.hover.sdk.api.Hover
 import com.hover.stax.database.appModule
 import com.hover.stax.database.dataModule
 import com.hover.stax.database.networkModule
@@ -73,6 +75,10 @@ class ApplicationInstance : Application() {
 
         AppsFlyerLib.getInstance().apply {
             init(getString(R.string.appsflyer_key), conversionListener, this@ApplicationInstance)
+
+            if(AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID) == null)
+                setCustomerUserId(Hover.getDeviceId(this@ApplicationInstance))
+
             start(this@ApplicationInstance)
         }
     }

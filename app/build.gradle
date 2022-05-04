@@ -45,8 +45,8 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 130
-        versionName "1.9.1.5" //final version 1.10.0
+        versionCode 131
+        versionName "1.9.1.7" //final version 1.10.0
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -126,8 +126,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.biometric:biometric:1.1.0"
     implementation 'com.google.android.material:material:1.5.0'
@@ -163,7 +163,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
     //auth
-    implementation 'com.google.android.gms:play-services-auth:20.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation 'com.amplitude:android-sdk:2.23.2'

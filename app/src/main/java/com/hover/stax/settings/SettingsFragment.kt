@@ -233,7 +233,6 @@ class SettingsFragment : Fragment() {
     }
 
     private fun marketingOptIn(optedIn: Boolean) {
-        Timber.e("Opted in $optedIn")
         binding.staxSupport.contactCard.showProgressIndicator()
         loginViewModel.optInMarketing(optedIn)
 

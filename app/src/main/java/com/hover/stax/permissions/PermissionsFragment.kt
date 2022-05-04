@@ -19,14 +19,14 @@ import kotlinx.coroutines.launch
 
 class PermissionsFragment : DialogFragment() {
 
-    private var helper: PermissionHelper? = null
+    private lateinit var helper: PermissionHelper
     private var dialog: StaxPermissionDialog? = null
     private var current = 0
     private var hasLeft = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         helper = PermissionHelper(context)
-        current = if (helper!!.hasOverlayPerm()) ACCESS else OVERLAY
+        current = if (helper.hasOverlayPerm()) ACCESS else OVERLAY
 
         logAnalyticsEvent(getString(if (current == OVERLAY) R.string.perms_overlay_dialog else R.string.perms_accessibility_dialog), requireContext())
 
@@ -43,14 +43,14 @@ class PermissionsFragment : DialogFragment() {
     private fun requestOverlay() {
         hasLeft = true
         logAnalyticsEvent(getString(R.string.perms_overlay_requested), requireContext())
-        helper!!.requestOverlayPerm()
+        helper.requestOverlayPerm()
     }
 
     private fun requestAccessibility() {
         hasLeft = true
         logAnalyticsEvent(getString(R.string.perms_accessibility_requested), requireContext())
         Hover.setPermissionActivity(Constants.PERM_ACTIVITY, context)
-        helper!!.requestAccessPerm()
+        helper.requestAccessPerm()
     }
 
     override fun onResume() {
@@ -63,13 +63,13 @@ class PermissionsFragment : DialogFragment() {
         if (hasLeft) {
             if (current == OVERLAY) logAnalyticsEvent(
                 getString(
-                    if (helper!!.hasOverlayPerm()) R.string.perms_overlay_granted
+                    if (helper.hasOverlayPerm()) R.string.perms_overlay_granted
                     else R.string.perms_overlay_notgranted
                 ), requireContext()
             ) else if (current == ACCESS)
                 logAnalyticsEvent(
                     getString(
-                        if (helper!!.hasAccessPerm()) R.string.perms_accessibility_granted
+                        if (helper.hasAccessPerm()) R.string.perms_accessibility_granted
                         else R.string.perms_accessibility_notgranted
                     ), requireContext()
                 )
@@ -77,15 +77,16 @@ class PermissionsFragment : DialogFragment() {
     }
 
     private fun maybeUpdateToNext() {
-        if (arguments?.getInt(STARTWITH) == ACCESS && !helper!!.hasAccessPerm())
+        if (arguments?.getInt(STARTWITH) == ACCESS && !helper.hasAccessPerm())
             setOnlyNeedAccess()
-        else if (current == OVERLAY && helper!!.hasOverlayPerm() && !helper!!.hasAccessPerm())
+        else if (current == OVERLAY && helper.hasOverlayPerm() && !helper.hasAccessPerm()) {
             lifecycleScope.launch {
                 delay(500)
                 animateToStep2()
             }
-        else if (helper!!.hasAccessPerm())
+        } else if (helper.hasAccessPerm()) {
             animateToDone()
+        }
     }
 
     private fun setOnlyNeedAccess() {
