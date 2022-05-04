@@ -2,14 +2,14 @@ package com.hover.stax.login
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.R
-import com.hover.stax.home.SDKLaunchers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class AbstractGoogleAuthActivity : SDKLaunchers() {
+abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface

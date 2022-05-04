@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -44,6 +45,15 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
     private val paybillViewModel: PaybillViewModel by sharedViewModel()
 
     private val args: PaybillFragmentArgs by navArgs()
+
+    private val sdkLauncherForPayBill = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { intent ->
+        Timber.e("PayBill transaction data returned")
+        intent.data?.let {
+            val transactionUUID = it.getStringExtra("uuid")
+            Timber.e("Returned with uuid $transactionUUID")
+            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, childFragmentManager, true)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPaybillBinding.inflate(inflater, container, false)
@@ -339,9 +349,10 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
         }
         else Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
     }
+
     private fun callSDKSafely(intent: Intent, actionId: String) {
         try {
-            (requireActivity() as MainActivity).sdkLauncherForPayBill.launch(intent)
+            sdkLauncherForPayBill.launch(intent)
             logPayBill()
         }
         catch (e : Exception) {

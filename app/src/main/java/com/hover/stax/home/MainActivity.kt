@@ -2,6 +2,7 @@ package com.hover.stax.home
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
@@ -44,6 +45,16 @@ class MainActivity : RequestActivity(), BalancesViewModel.RunBalanceListener, Ba
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var navHelper: NavHelper
+
+    private val sdkLauncherForSingleBalance = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { intent ->
+        Timber.i("Transaction details: data returned")
+        intent.data?.let {
+            val transactionUUID = it.getStringExtra("uuid")
+            if (transactionUUID != null) {
+                NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

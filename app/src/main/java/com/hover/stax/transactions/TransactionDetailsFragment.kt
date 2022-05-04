@@ -12,6 +12,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.os.bundleOf
@@ -30,6 +31,7 @@ import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.AnalyticsUtil.logFailedAction
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.squareup.picasso.Picasso
@@ -49,6 +51,16 @@ class TransactionDetailsFragment : DialogFragment(), Target {
 
     private var uuid: String? = null
     private var isFullScreen = false
+
+    private val sdkLauncherForSingleBalance = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { intent ->
+        Timber.i("Transaction details: data returned")
+        intent.data?.let {
+            val transactionUUID = it.getStringExtra("uuid")
+            if (transactionUUID != null) {
+                NavUtil.showTransactionDetailsFragment(transactionUUID, childFragmentManager, true)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -192,8 +204,7 @@ class TransactionDetailsFragment : DialogFragment(), Target {
 
     private fun callSDKSafely(intent: Intent, actionId: String) {
         try {
-            val mainActivity  = (requireActivity() as MainActivity)
-            mainActivity.sdkLauncherForSingleBalance.launch(intent)
+            sdkLauncherForSingleBalance.launch(intent)
         }
         catch (e : Exception) {
             logFailedAction(actionId, requireActivity())
