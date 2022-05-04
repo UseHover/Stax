@@ -54,11 +54,11 @@ class BalancesFragment : Fragment() {
         initBalanceCard()
 
         val observer = object : Observer<List<Account>> {
-            override fun onChanged(t: List<Account>?) {
-                if (!t.isNullOrEmpty())
+            override fun onChanged(t: List<Account>) {
                     updateServices(ArrayList(t))
             }
         }
+
         with(balancesViewModel) {
             accounts.observe(viewLifecycleOwner, observer)
             shouldShowBalances.observe(viewLifecycleOwner) {
