@@ -42,7 +42,7 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
 
     private fun initNonStandardVariables(action: HoverAction) {
         val variableMap = LinkedHashMap<String, String>()
-        action.required_params.keys().forEach {
+        action.requiredParams.forEach {
             if (!isStandardVariable(it)) variableMap[it] = ""
         }
         nonStandardVariables.postValue(variableMap)

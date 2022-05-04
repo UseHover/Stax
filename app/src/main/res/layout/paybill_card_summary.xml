@@ -35,11 +35,11 @@
             tools:text="MPESA" />
 
         <TextView
-            android:id="@+id/toLabel"
+            android:id="@+id/businessLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_26"
-            android:text="@string/recipient_label"
+            android:text="@string/business_label"
             android:textSize="@dimen/text_16"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/payWithLabel" />
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_21"
-            app:layout_constraintBaseline_toBaselineOf="@id/toLabel"
+            app:layout_constraintBaseline_toBaselineOf="@id/businessLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/account_value" />
 
@@ -61,7 +61,7 @@
             android:text="@string/account_label"
             android:textSize="@dimen/text_16"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toLabel" />
+            app:layout_constraintTop_toBottomOf="@id/businessLabel" />
 
         <TextView
             android:id="@+id/accountNo"
@@ -78,8 +78,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_26"
-            android:text="@string/for_label"
+            android:text="@string/paybill_name_label"
             android:textSize="@dimen/text_16"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/accountLabel" />
 
@@ -88,10 +89,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_21"
+            android:visibility="gone"
             app:layout_constraintBaseline_toBaselineOf="@id/nameLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/accountNo"
-            tools:text="@string/for_label" />
+            tools:text="@string/paybill_name_label" />
 
         <TextView
                 android:id="@+id/amountLabel"

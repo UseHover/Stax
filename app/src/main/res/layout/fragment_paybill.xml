@@ -18,11 +18,11 @@
 
         <include
                 android:id="@+id/saveCard"
-                layout="@layout/paybill_card_save_bill" />
+                layout="@layout/paybill_card_save" />
 
         <include
                 android:id="@+id/summaryCard"
-                layout="@layout/paybill_summary" />
+                layout="@layout/paybill_card_summary" />
 
         <include
                 android:id="@+id/paybillIconsLayout"

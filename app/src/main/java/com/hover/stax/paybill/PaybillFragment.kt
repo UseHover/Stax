@@ -163,7 +163,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     private fun observeBill() {
         viewModel.selectedPaybill.observe(viewLifecycleOwner) {
-            actionSelectViewModel.setActiveAction(it?.actionId) }
+            actionSelectViewModel.setActiveAction(it?.actionId)
+            binding.saveCard.saveBill.isChecked = it?.isSaved == true
+            binding.saveCard.saveAmount.isChecked = it?.recurringAmount != 0
+        }
 
         viewModel.businessNumber.observe(viewLifecycleOwner) {
             updateBiz(viewModel.businessName.value, it) }
@@ -193,7 +196,6 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     private fun observeSave() {
         viewModel.saveBill.observe(viewLifecycleOwner) {
-            binding.saveCard.ch
             binding.saveCard.saveDetails.visibility = if (it == true) View.VISIBLE else View.GONE
         }
         observeIcon()
@@ -203,9 +205,9 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private fun observeName() {
         viewModel.nickname.observe(viewLifecycleOwner) {
             binding.saveCard.billNameInput.setText(it)
-            if (it != null) binding.summaryCard.nameValue.text = it
-            binding.summaryCard.nameLabel.visibility = if (it == null) View.GONE else View.VISIBLE
-            binding.summaryCard.nameValue.visibility = if (it == null) View.GONE else View.VISIBLE
+            if (!it.isNullOrEmpty()) binding.summaryCard.nameValue.text = it
+            binding.summaryCard.nameLabel.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+            binding.summaryCard.nameValue.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
         }
     }
 

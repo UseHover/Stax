@@ -82,7 +82,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun showCheckFeeOption() {
-        binding.summaryCard.feeValue.visibility = if (actionSelectViewModel.activeAction.value?.output_params?.opt("fee") != null) View.VISIBLE else ViewGroup.GONE
+        binding.summaryCard.feeValue.visibility = if (actionSelectViewModel.activeAction.value?.requiredParams?.contains("fee") == true) View.VISIBLE else ViewGroup.GONE
     }
 
     private fun setTransactionType(txnType: String) {
@@ -137,8 +137,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             binding.editCard.actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
 
-            Timber.e("in: %s", it.required_params)
-            Timber.e("out: %s", it.output_params)
+            Timber.e("in: %s", it.requiredParams)
+            Timber.e("out: %s", it.requiredParams)
         }
     }
 
@@ -314,7 +314,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         } else {
             transferViewModel.forceUpdateContactUI()
             binding.editCard.contactSelect.setHint(
-                if (action.required_params.has(HoverAction.ACCOUNT_KEY))
+                if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
                     getString(R.string.recipientacct_label)
                 else
                     getString(R.string.recipientphone_label)

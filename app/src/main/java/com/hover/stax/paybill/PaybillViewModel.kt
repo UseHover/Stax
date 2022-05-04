@@ -62,7 +62,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
 //        deSelectPaybill()
         Timber.e("selecting paybill by action: %s", action.to_institution_name)
         val paybill = Paybill(
-                "", extractBizNumber(action), action.to_institution_name, null, action.public_id,
+                "", action.to_institution_name, extractBizNumber(action), null, action.public_id,
                 0, getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
@@ -88,6 +88,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     fun setBusinessNumber(number: String) {
         deSelectPaybill()
         businessNumber.value = number
+        businessName.value = null
     }
 
     fun setAccountNumber(number: String) {
