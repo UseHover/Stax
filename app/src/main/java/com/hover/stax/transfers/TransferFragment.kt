@@ -121,7 +121,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 binding.summaryCard.accountValue.setTitle(it.toString())
 
             }
-
             binding.editCard.actionSelect.visibility = if (account != null) View.VISIBLE else View.GONE
         }
     }
@@ -325,7 +324,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun onDestroyView() {
         super.onDestroyView()
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
-
         _binding = null
     }
 

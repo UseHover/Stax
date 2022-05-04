@@ -301,9 +301,11 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     }
 
     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-        val d = RoundedBitmapDrawableFactory.create(resources, bitmap)
-        d.isCircular = true
-        binding.secondaryStatus.statusIcon.setImageDrawable(d)
+        try {
+            val d = RoundedBitmapDrawableFactory.create(requireContext().resources, bitmap)
+            d.isCircular = true
+            binding.secondaryStatus.statusIcon.setImageDrawable(d)
+        } catch (e: IllegalStateException) { Timber.e(e) }
     }
 
     override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) { Timber.i("On bitmap failed") }

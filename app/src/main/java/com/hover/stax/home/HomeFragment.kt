@@ -45,8 +45,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupBanner()
 
-        binding.airtime.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(HoverAction.AIRTIME)) }
-        binding.transfer.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(HoverAction.P2P)) }
+        binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
+        binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
@@ -56,6 +56,9 @@ class HomeFragment : Fragment() {
         accountsViewModel.accounts.observe(viewLifecycleOwner, this::setPaybillVisibility)
     }
 
+    private fun getTransferDirection(type: String) : NavDirections {
+        return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type)
+    }
     private fun setupBanner() {
         with(bannerViewModel) {
             qualifiedBanner.observe(viewLifecycleOwner) { banner ->

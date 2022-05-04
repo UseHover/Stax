@@ -79,7 +79,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
 
         if (!request.amount.isNullOrEmpty()) {
             binding.summaryCard.amountRow.visibility = View.VISIBLE
-            binding.summaryCard.amountValue.text = Utils.formatAmount(request.amount)
+            binding.summaryCard.amountValue.text = Utils.formatAmount(request.amount!!)
         } else
             binding.summaryCard.amountRow.visibility = View.GONE
 

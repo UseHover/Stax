@@ -25,11 +25,7 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
     val note = MutableLiveData<String?>()
     var request: MutableLiveData<Request?> = MutableLiveData()
 
-    init {
-        request
-    }
-
-    fun setAmount(a: String) = amount.postValue(a)
+    fun setAmount(a: String?) = amount.postValue(a)
 
     private fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
@@ -61,7 +57,7 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
         }
     }
 
-    private fun setNote(n: String) = note.postValue(n)
+    private fun setNote(n: String?) = note.postValue(n)
 
     fun amountErrors(): String? {
         return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
