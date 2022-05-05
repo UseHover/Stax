@@ -188,6 +188,7 @@ class TransactionDetailsFragment : Fragment(), Target {
             text = transaction.fullStatus.getPlainTitle(requireContext())
             setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.fullStatus.getIcon(), 0)
         }
+
         detailsStaxReason.text = transaction.fullStatus.getReason()
         transaction.fee?.let { binding.infoCard.detailsFee.text = Utils.formatAmount(it) }
     }
