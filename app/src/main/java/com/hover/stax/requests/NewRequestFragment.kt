@@ -18,7 +18,6 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
-import com.hover.stax.transfers.GET_CONTACT
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -137,7 +136,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         fab.visibility = if (isEditing) View.VISIBLE else View.GONE
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+    override fun onContactSelected(contact: StaxContact) {
         requestViewModel.addRecipient(contact)
         requesteeInput.setSelected(contact)
     }
@@ -165,7 +164,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 requestViewModel.addRecipient(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(requireActivity()) }
         }
 
         fab.setOnClickListener { fabClicked() }

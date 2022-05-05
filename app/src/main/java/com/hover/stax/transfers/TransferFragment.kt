@@ -41,6 +41,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         transferViewModel = abstractFormViewModel as TransferViewModel
 
         setTransactionType(args.transactionType)
+
+        args.transactionUUID?.let {
+            Timber.e("TxnUUID is $it. Setting autofill")
+        }
+
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -212,7 +217,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setContact(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(requireActivity()) }
         }
     }
 
@@ -280,7 +285,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+    override fun onContactSelected(contact: StaxContact) {
         transferViewModel.setContact(contact)
         binding.editCard.contactSelect.setSelected(contact)
     }
@@ -323,6 +328,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }

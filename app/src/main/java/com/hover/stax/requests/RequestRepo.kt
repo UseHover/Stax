@@ -23,7 +23,7 @@ class RequestRepo(db: AppDatabase) {
     val requests: List<Request>
         get() = requestDao.unmatched
 
-    fun getRequest(id: Int): Request {
+    fun getRequest(id: Int): Request? {
         return requestDao[id]
     }
 

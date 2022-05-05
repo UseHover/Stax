@@ -55,8 +55,13 @@ class NavHelper(val activity: AppCompatActivity) {
 
     fun navigateToBountyList() = NavUtil.navigate(getNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
 
-    fun navigateTransfer(type: String) =
-        checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(type))
+    fun showTxnDetails(uuid: String) = NavUtil.showTransactionDetailsFragment(getNavController(), uuid)
+
+    fun navigateTransfer(type: String, txnUUID: String? = null) {
+        val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
+        txnUUID?.let { transferDirection.transactionUUID = it }
+        checkPermissionsAndNavigate(transferDirection)
+    }
 
     private fun getNavController(): NavController = navHostFragment!!.navController
 
@@ -81,7 +86,6 @@ class NavHelper(val activity: AppCompatActivity) {
         }
     }
 
-
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(getNavDirections(toWhere))
 
     fun checkPermissionsAndNavigate(navDirections: NavDirections?) = navDirections?.let {
@@ -94,11 +98,7 @@ class NavHelper(val activity: AppCompatActivity) {
 
         when {
             exemptRoutes.contains(it) || permissionHelper.hasBasicPerms() -> NavUtil.navigate(getNavController(), it)
-            else -> PermissionUtils.showInformativeBasicPermissionDialog(
-                0,
-                { PermissionUtils.requestPerms(PERMS_REQ_CODE, activity) },
-                { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
-            )
+            else -> requestBasicPerms()
         }
     }
 
@@ -113,5 +113,12 @@ class NavHelper(val activity: AppCompatActivity) {
         NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
         NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment()
         else -> null //invalid or unmapped route, return nothing
+    }
+
+    fun requestBasicPerms(){
+        PermissionUtils.showInformativeBasicPermissionDialog(
+            0,
+            { PermissionUtils.requestPerms(PERMS_REQ_CODE, activity) },
+            { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity)
     }
 }

@@ -9,11 +9,13 @@ import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.home.NavHelper
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.USSDLogBottomSheetFragment
+import com.hover.stax.transactions.UUID
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException
@@ -107,7 +109,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         Timber.i("Request code is bounty")
         if (data != null) {
             val transactionUUID = data.getStringExtra("uuid")
-            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
+            if (transactionUUID != null) NavHelper(this).showTxnDetails(transactionUUID)
         }
     }
 
@@ -135,18 +137,14 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            NavUtil.showTransactionDetailsFragment(
-                data.extras!!.getString("uuid")!!,
-                supportFragmentManager,
-                false
-            )
+            NavHelper(this).showTxnDetails(data.extras!!.getString("uuid")!!)
         }
     }
 
     fun showUSSDLogBottomSheet(uuid: String) {
         USSDLogBottomSheetFragment().apply {
             val bundle = Bundle()
-            bundle.putString(TransactionDetailsFragment.UUID, uuid)
+            bundle.putString(UUID, uuid)
             arguments = bundle
             show(supportFragmentManager, tag)
         }

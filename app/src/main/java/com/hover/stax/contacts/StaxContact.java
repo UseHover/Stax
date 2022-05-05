@@ -79,8 +79,7 @@ public class StaxContact {
     }
 
     @SuppressLint("Range")
-    public StaxContact(Intent data, Context c) {
-        Uri contactData = data.getData();
+    public StaxContact(Uri contactData, Context c) {
         if (contactData != null) {
             Cursor cur = c.getContentResolver().query(contactData, null, null, null, null);
             if (cur != null && cur.getCount() > 0 && cur.moveToNext()) {

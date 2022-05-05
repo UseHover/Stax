@@ -32,7 +32,7 @@ class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, priva
 
             binding.root.setOnClickListener { clickListener.onSelectPaybill(action) }
 
-            UIHelper.loadPicasso(binding.billIcon.context.getString(R.string.root_url).plus(action.to_institution_logo), binding.billIcon)
+            UIHelper.loadImage(binding.root.context, binding.billIcon.context.getString(R.string.root_url).plus(action.to_institution_logo), binding.billIcon)
         }
     }
 

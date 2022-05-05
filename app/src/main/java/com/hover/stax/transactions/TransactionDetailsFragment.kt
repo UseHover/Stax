@@ -11,11 +11,12 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
@@ -29,6 +30,8 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
+import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.squareup.picasso.Picasso
@@ -38,8 +41,9 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+const val UUID = "uuid"
 
-class TransactionDetailsFragment : DialogFragment(), Target{
+class TransactionDetailsFragment : Fragment(), Target {
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
 
@@ -48,53 +52,38 @@ class TransactionDetailsFragment : DialogFragment(), Target{
 
     private val retryCounter = ApplicationInstance.txnDetailsRetryCounter
 
-    private var uuid: String? = null
-    private var isFullScreen = false
+    private val args: TransactionDetailsFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isFullScreen = requireArguments().getBoolean(IS_FULLSCREEN)
-        if (isFullScreen) setFullScreen()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (!isFullScreen) popUpSize()
-    }
+    private lateinit var childFragManager: FragmentManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        uuid = requireArguments().getString(UUID)
+        val uuid = requireArguments().getString(UUID)
         viewModel.setTransaction(uuid!!)
-        logView()
+        logView(uuid)
 
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
+
+        childFragManager = childFragmentManager
+
         return binding.root
-    }
-
-    private fun setFullScreen() {
-        setStyle(STYLE_NO_FRAME, R.style.StaxDialogFullScreen)
-    }
-
-    private fun DialogFragment.popUpSize() {
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startObservers()
-        if (!isFullScreen) setToPopupDesign()
         setListeners();
     }
 
     private fun setListeners() {
-        binding.transactionDetailsCard.setOnClickIcon { this.dismiss() }
+        binding.transactionDetailsCard.setOnClickIcon { NavUtil.navigate(findNavController(), TransactionDetailsFragmentDirections.actionTxnDetailsFragmentToNavigationHome()) }
         binding.primaryStatus.viewLogText.setOnClickListener { showUSSDLog() }
         with(binding.infoCard.detailsStaxUuid.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
         with(binding.infoCard.confirmCodeCopy.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
     }
 
     private fun showUSSDLog() {
-        (requireActivity() as AbstractHoverCallerActivity).showUSSDLogBottomSheet(uuid!!)
+        val log = USSDLogBottomSheetFragment.newInstance(args.uuid)
+        log.show(childFragManager, USSDLogBottomSheetFragment::class.java.simpleName)
     }
 
     private fun startObservers() {
@@ -102,13 +91,6 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         viewModel.action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         viewModel.contact.observe(viewLifecycleOwner) { updateRecipient(it) }
         viewModel.account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
-    }
-
-    private fun setToPopupDesign() {
-        binding.ftMainBg.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.colorPrimary))
-        binding.transactionDetailsCard.setIcon(R.drawable.ic_close_white)
-        binding.transactionDetailsCard.setTitle(R.drawable.ic_close_white)
-        binding.transactionDetailsCard.makeFlatView()
     }
 
     private fun setupRetryBountyButton() {
@@ -132,7 +114,6 @@ class TransactionDetailsFragment : DialogFragment(), Target{
             else {
                 updateRetryCounter(transaction.action_id)
                 (requireActivity() as AbstractHoverCallerActivity).run(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
-                this.dismiss()
             }
         }
     }
@@ -141,7 +122,6 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         contactSupportTextView.setText(R.string.email_support)
         contactSupportTextView.setOnClickListener {
             resetTryAgainCounter(id)
-            this.dismiss()
             val deviceId = Hover.getDeviceId(requireContext())
             val subject = "Stax Transaction failure - support id- {${deviceId}}"
             Utils.openEmail(subject, requireActivity())
@@ -201,24 +181,24 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         return textValue
     }
 
-    private fun setDetailsData(transaction: StaxTransaction) {
-        if(shouldShowNewBalance(transaction))
+    private fun setDetailsData(transaction: StaxTransaction) = with(binding.infoCard) {
+        if (shouldShowNewBalance(transaction))
             binding.primaryStatus.newBalance.text = getString(R.string.new_balance, transaction.displayBalance)
         binding.primaryStatus.statusText.text = generateTitle(transaction)
         binding.primaryStatus.statusIcon.setImageResource(transaction.fullStatus.getIcon())
 
-        binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
-        binding.infoCard.detailsAmount.text = transaction.displayAmount
-        binding.infoCard.detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
-        binding.infoCard.confirmCodeCopy.content.text = transaction.confirm_code
-        binding.infoCard.detailsStaxUuid.content.text = transaction.uuid
-        binding.infoCard.detailsStaxStatus.apply {
+        detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
+        detailsAmount.text = transaction.displayAmount
+        detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
+        confirmCodeCopy.content.text = transaction.confirm_code
+        detailsStaxUuid.content.text = transaction.uuid
+        detailsStaxStatus.apply {
             text = transaction.fullStatus.getPlainTitle(requireContext())
             setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.fullStatus.getIcon(), 0)
         }
 
-        binding.infoCard.detailsStaxReason.text = transaction.fullStatus.getReason()
-        transaction.fee?.let{binding.infoCard.detailsFee.text = Utils.formatAmount(it)}
+        detailsStaxReason.text = transaction.fullStatus.getReason()
+        transaction.fee?.let { binding.infoCard.detailsFee.text = Utils.formatAmount(it) }
     }
 
     private fun setVisibleDetails(transaction: StaxTransaction) {
@@ -237,17 +217,19 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     private fun updateAction(action: HoverAction) {
         if (viewModel.transaction.value != null) {
             if (viewModel.transaction.value!!.isFailed)
-                UIHelper.loadPicasso(getString(R.string.root_url) + action.from_institution_logo, this)
+                UIHelper.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo, binding.secondaryStatus.statusIcon)
 
             binding.secondaryStatus.statusText.apply {
-                val content = viewModel.transaction.value!!.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+                val content = viewModel.transaction.value!!.fullStatus.getStatusDetail(
+                    action,
+                    viewModel.messages.value?.last(),
+                    viewModel.sms.value,
+                    requireContext()
+                )
                 text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 movementMethod = LinkMovementMethod.getInstance()
             }
         }
-        binding.infoCard.detailsStaxType.text = viewModel.transaction.value?.fullStatus?.getDisplayType(requireContext(), action)
-        binding.infoCard.detailsFeeLabel.text = getString(R.string.transaction_fee, action.from_institution_name)
-//        if () binding.infoCard.detailsInstitution.setSubtitle(action.from_institution_name)
     }
 
     private fun updateAccount(account: Account) {
@@ -256,16 +238,12 @@ class TransactionDetailsFragment : DialogFragment(), Target{
 
     private fun updateRecipient(contact: StaxContact?) {
         if (contact != null) {
-            if (!isFullScreen && viewModel.action.value != null)
-                binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(viewModel.action.value, contact, requireContext()))
             binding.infoCard.detailsRecipient.setContact(contact)
         }
         else binding.infoCard.detailsRecipient.setTitle(getString(R.string.self_choice))
     }
 
     private fun retryBountyClicked() {
-        this.dismiss()
-
         viewModel.action.value?.let {
             (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
         }
@@ -276,20 +254,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         _binding = null
     }
 
-    companion object {
-        const val UUID = "uuid"
-        const val IS_FULLSCREEN = "isFullScreen"
-
-        fun newInstance(uuid: String, isFullScreen: Boolean): TransactionDetailsFragment {
-            val fragment = TransactionDetailsFragment().apply {
-                arguments = bundleOf(UUID to uuid, IS_FULLSCREEN to isFullScreen)
-            }
-
-            return fragment
-        }
-    }
-
-    private fun logView() {
+    private fun logView(uuid: String) {
         val data = JSONObject()
         try {
             data.put("uuid", uuid)
@@ -305,9 +270,16 @@ class TransactionDetailsFragment : DialogFragment(), Target{
             val d = RoundedBitmapDrawableFactory.create(requireContext().resources, bitmap)
             d.isCircular = true
             binding.secondaryStatus.statusIcon.setImageDrawable(d)
-        } catch (e: IllegalStateException) { Timber.e(e) }
+        } catch (e: IllegalStateException) {
+            Timber.e(e)
+        }
     }
 
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) { Timber.i("On bitmap failed") }
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) { Timber.i("On prepare load") }
+    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+        Timber.i("On bitmap failed")
+    }
+
+    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+        Timber.i("On prepare load")
+    }
 }

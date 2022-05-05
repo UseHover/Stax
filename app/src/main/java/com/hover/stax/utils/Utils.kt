@@ -253,13 +253,4 @@ object Utils {
         else
             UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
     }
-
-//    fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (T) -> Unit) {
-//        observe(owner, object: Observer<T> {
-//            override fun onChanged(value: T) {
-//                removeObserver(this)
-//                observer(value)
-//            }
-//        })
-//    }
 }

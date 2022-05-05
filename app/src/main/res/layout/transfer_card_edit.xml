@@ -8,10 +8,12 @@
         app:title="@string/nav_airtime">
 
     <com.hover.stax.accounts.AccountDropdown
-            android:id="@+id/payWithDropdown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/pay_with_label" />
+        android:id="@+id/payWithDropdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="false"
+        android:hint="@string/pay_with_label" />
+
 
     <com.hover.stax.actions.ActionSelect
             android:id="@+id/action_select"

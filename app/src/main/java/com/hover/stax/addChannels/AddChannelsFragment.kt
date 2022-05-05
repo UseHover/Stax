@@ -19,6 +19,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountsAdapter
 import com.hover.stax.channels.*
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding

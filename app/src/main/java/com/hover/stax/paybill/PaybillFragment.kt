@@ -14,6 +14,7 @@ import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
@@ -78,7 +79,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         }
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {}
+    override fun onContactSelected(contact: StaxContact) {}
 
     private fun setBusinessNoTouchListener() =
         binding.editCard.businessNoInput.setOnClickListener {

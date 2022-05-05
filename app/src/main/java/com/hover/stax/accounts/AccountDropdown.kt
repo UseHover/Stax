@@ -1,22 +1,19 @@
 package com.hover.stax.accounts
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.LifecycleOwner
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import timber.log.Timber
 
 
-class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet), Target {
+class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
     private var showSelected: Boolean = true
     private var highlightListener: HighlightListener? = null
@@ -44,7 +41,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun accountUpdate(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty() /*&& !hasExistingContent()*/) {
+        if (!accounts.isNullOrEmpty()) {
             updateChoices(accounts)
         } else if (!hasExistingContent()) {
             setState(context.getString(R.string.accounts_error_no_accounts), NONE)
@@ -54,20 +51,29 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private fun setDropdownValue(account: Account?) {
         account?.let {
             autoCompleteTextView.setText(it.alias, false)
-            UIHelper.loadPicasso(it.logoUrl, resources.getDimensionPixelSize(R.dimen.logoDiam), this)
+
+            val target = object : CustomTarget<Drawable>() {
+                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                    autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
+                }
+            }
+
+            UIHelper.loadImage(context, account.logoUrl, target)
             highlightedAccount = account
         }
     }
 
     private fun updateChoices(accounts: List<Account>) {
         if (highlightedAccount == null) setDropdownValue(null)
-
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
-
         onSelect(accounts.firstOrNull { it.isDefault })
     }
 
@@ -84,7 +90,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
             activeAccount.observe(lifecycleOwner) {
                 if (it != null && showSelected)
-                    setState(helperText, NONE);
+                    setState(helperText, NONE)
             }
 
             channelActions.observe(lifecycleOwner) {
@@ -112,20 +118,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
             viewModel.activeAccount.value != null && showSelected -> setState(helperText, SUCCESS)
         }
-    }
-
-    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-        val d: RoundedBitmapDrawable = RoundedBitmapDrawableFactory.create(context.resources, bitmap)
-        d.isCircular = true
-        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null)
-    }
-
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-        Timber.e(e)
-    }
-
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
     }
 
     interface HighlightListener {

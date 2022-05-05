@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.hover.stax.R
@@ -13,6 +14,7 @@ import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
+
 	private val viewModel: TransactionDetailsViewModel by viewModel()
 
 	private var _binding: UssdLogBottomsheetBinding? = null
@@ -21,7 +23,7 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 	override fun onCreateView(inflater: LayoutInflater,
 	                          container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View {
-		val uuid = requireArguments().getString(TransactionDetailsFragment.UUID)
+		val uuid = requireArguments().getString(UUID)
 		viewModel.setTransaction(uuid!!)
 		_binding = UssdLogBottomsheetBinding.inflate(inflater, container, false)
 		return binding.root
@@ -36,7 +38,6 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 	}
 
 	private fun setCardTitle() {
-
 		viewModel.action.observe(viewLifecycleOwner){
 			if(it !=null) {
 				val type = viewModel.transaction.value!!.fullStatus.getDisplayType(requireContext(), it)
@@ -70,6 +71,10 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 
 	companion object {
 		const val UUID = "uuid"
+
+		fun newInstance(uuid: String): USSDLogBottomSheetFragment = USSDLogBottomSheetFragment().apply {
+			arguments = bundleOf(UUID to uuid)
+		}
 	}
 
 	override fun onDestroyView() {

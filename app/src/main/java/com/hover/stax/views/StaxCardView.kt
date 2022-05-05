@@ -86,7 +86,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     }
 
     fun setIcon(iconUrl: String) {
-        UIHelper.loadPicasso(iconUrl, resources.getDimensionPixelSize(R.dimen.logoDiam), binding.backButton)
+        UIHelper.loadImage(context, iconUrl, binding.backButton)
     }
 
     fun setOnClickIcon(listener: OnClickListener?) {

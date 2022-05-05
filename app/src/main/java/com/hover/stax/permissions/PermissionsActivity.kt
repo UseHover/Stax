@@ -7,6 +7,7 @@ import com.hover.sdk.permissions.PermissionHelper
 import android.app.Activity
 import com.hover.stax.permissions.PermissionsFragment
 import com.hover.sdk.actions.HoverAction
+import timber.log.Timber
 
 class PermissionsActivity : AppCompatActivity() {
 
@@ -15,9 +16,13 @@ class PermissionsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_permissions)
 
         if (PermissionHelper(this).hasAllPerms()) {
+            Timber.e("Has all perms, should wrap up now")
             setResult(RESULT_OK)
             finish()
-        } else showDialog()
+        } else {
+            Timber.e("Showing dialog again")
+            showDialog()
+        }
     }
 
     private fun showDialog() {

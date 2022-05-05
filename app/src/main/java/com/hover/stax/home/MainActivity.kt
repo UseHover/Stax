@@ -86,7 +86,11 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         with(accountsViewModel) {
             //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
-            val accountsObserver = Observer<List<Account>> { t -> logResult("Observing selected channels", t?.size ?: 0) }
+            val accountsObserver = object : Observer<List<Account>> {
+                override fun onChanged(t: List<Account>?) {
+                    logResult("Observing selected channels", t?.size ?: 0)
+                }
+            }
 
             accounts.observe(this@MainActivity, accountsObserver)
         }
