@@ -105,6 +105,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 //no channels selected. navigate user to accounts fragment
                 if (it.isNullOrEmpty())
                     setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
+                accountDropdown.setCurrentAccount()
             }
             activeChannel.observe(viewLifecycleOwner, channelsObserver)
         }
