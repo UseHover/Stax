@@ -14,7 +14,6 @@ import com.hover.stax.accounts.DUMMY
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
-import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.login.LoginViewModel
@@ -80,15 +79,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         navHelper.checkPermissionsAndNavigate(navDirections)
     }
 
-    fun showUSSDLogBottomSheet(uuid: String) {
-        USSDLogBottomSheetFragment().apply {
-            val bundle = Bundle()
-            bundle.putString(TransactionDetailsFragment.UUID, uuid)
-            arguments = bundle
-            show(supportFragmentManager, tag)
-        }
-    }
-
     fun navigateTransferAutoFill(type: String, transactionUUID: String) {
         navHelper.navigateTransfer(type, transactionUUID)
     }
@@ -103,7 +93,11 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
             //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
-            val accountsObserver = Observer<List<Account>> { t -> logResult("Observing selected channels", t?.size ?: 0) }
+            val accountsObserver = object: Observer<List<Account>> {
+                override fun onChanged(t: List<Account>?) {
+                    logResult("Observing selected channels", t?.size ?: 0)
+                }
+            }
 
             accounts.observe(this@MainActivity, accountsObserver)
             toRun.observe(this@MainActivity) { logResult("Observing action to run", it.size) }
@@ -147,23 +141,20 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.e("Request code is bounty")
         if (data != null) {
             val transactionUUID = data.getStringExtra("uuid")
-            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
+            if (transactionUUID != null) navHelper.showTxnDetails(transactionUUID)
         }
     }
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
             transferViewModel.reset()
-            NavUtil.showTransactionDetailsFragment(
-                data.extras!!.getString("uuid")!!,
-                supportFragmentManager,
-                false
-            )
+            navHelper.showTxnDetails(data.extras!!.getString("uuid")!!)
         }
-        else {
-            navHelper.navigateTransfer(TransactionType.type)
-            transferViewModel.setEditing(false)
-        }
+
+//        else {
+//            navHelper.navigateTransfer(TransactionType.type)
+//            transferViewModel.setEditing(false)
+//        }
     }
 
     private fun initFromIntent() {

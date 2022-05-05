@@ -46,6 +46,8 @@ class NavHelper(val activity: AppCompatActivity) {
 
     fun navigateToBountyList() = NavUtil.navigate(getNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
 
+    fun showTxnDetails(uuid: String) = NavUtil.showTransactionDetailsFragment(getNavController(), uuid)
+
     fun navigateTransfer(type: String, txnUUID: String? = null) {
         val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
         txnUUID?.let { transferDirection.transactionUUID = it }
