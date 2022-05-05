@@ -38,8 +38,8 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
     private fun getP2pRecipientString(c: Context): String {
         return when {
             action.isCrossBorder -> c.getString(R.string.descrip_bounty_cross_country, getCountryName(action.to_country_alpha2), action.to_institution_name)
-            action.isOnNetwork -> action.from_institution_name
-            else -> action.to_institution_name
+            action.isOnNetwork -> c.getString(R.string.descrip_bounty_offnet, action.from_institution_name)
+            else -> c.getString(R.string.descrip_bounty_offnet, action.to_institution_name)
         }
     }
 
