@@ -154,7 +154,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTotalFees(accountId, year.toString())
     }
 
-    private fun getTransaction(uuid: String?): StaxTransaction? {
+    fun getTransaction(uuid: String?): StaxTransaction? {
         return transactionDao.getTransaction(uuid)
     }
 
