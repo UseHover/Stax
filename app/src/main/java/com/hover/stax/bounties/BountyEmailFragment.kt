@@ -46,8 +46,17 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
 
     private fun startObservers() {
         with(loginViewModel) {
-            val emailObserver = Observer<String?> { t -> Timber.e("Got email from Google $t") }
-            val usernameObserver = Observer<String?> { t -> Timber.e("Got username : $t") }
+            val emailObserver = object: Observer<String?> {
+                override fun onChanged(t: String?) {
+                    Timber.e("Got email from Google $t")
+                }
+
+            }
+            val usernameObserver = object: Observer<String?> {
+                override fun onChanged(t: String?) {
+                    Timber.e("Got username : $t")
+                }
+            }
 
             progress.observe(viewLifecycleOwner) { updateProgress(it) }
             error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
