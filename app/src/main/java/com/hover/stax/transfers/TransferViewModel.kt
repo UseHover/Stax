@@ -24,7 +24,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
     var request: LiveData<Request> = MutableLiveData()
-    var completeAutoFilling : MutableLiveData<Pair<Int, Boolean>> = MutableLiveData()
+    var completeAutoFilling: MutableLiveData<AutofillData> = MutableLiveData()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -39,23 +39,22 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun autoFill(transactionUUID: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val transaction = repo.getTransaction(transactionUUID)
-            if(transaction !=null) {
-                val action = repo.getAction(transaction.action_id)
-                action?.let {
-                    val contact = repo.getContactAsync(transaction.counterparty_id)
-                    autoFill(transaction.amount.toString(), contact, action.to_institution_id, true)
-                }
+    fun autoFill(transactionUUID: String) = viewModelScope.launch(Dispatchers.IO) {
+        val transaction = repo.getTransaction(transactionUUID)
+        if (transaction != null) {
+            val action = repo.getAction(transaction.action_id)
+
+            action?.let {
+                val contact = repo.getContactAsync(transaction.counterparty_id)
+                autoFill(transaction.amount.toString(), contact, AutofillData(action.to_institution_id, transaction.channel_id, transaction.accountId, true))
             }
         }
     }
 
-    private fun autoFill(amount: String, contact: StaxContact?, institutionId: Int? = null, showEditing : Boolean? = false) {
+    private fun autoFill(amount: String, contact: StaxContact?, autofillData: AutofillData) {
         setContact(contact)
         setAmount(amount)
-        institutionId?.let { completeAutoFilling.postValue(Pair(first = institutionId, second = showEditing!!)) }
+        autofillData.institutionId?.let { completeAutoFilling.postValue(autofillData) }
     }
 
     fun setContact(sc: StaxContact?) = sc?.let {
@@ -116,7 +115,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     }
 
     fun view(r: Request) {
-        autoFill(r.amount!!, StaxContact(r.requester_number), r.requester_institution_id, r.amount.isNullOrEmpty())
+        autoFill(r.amount!!, StaxContact(r.requester_number), AutofillData(r.requester_institution_id, -1, -1, r.amount.isNullOrEmpty()))
         setNote(r.note)
     }
 
@@ -141,5 +140,8 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun reset() {
         amount.value = null
         contact.value = null
+        completeAutoFilling.value = null
     }
 }
+
+data class AutofillData(val institutionId: Int?, val channelId: Int, val accountId: Int, val isEditing: Boolean)

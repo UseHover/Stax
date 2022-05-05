@@ -150,7 +150,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     override fun viewTransactionDetail(uuid: String?) {
-        NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
+        uuid?.let { NavUtil.showTransactionDetailsFragment(findNavController(), uuid) }
     }
 
     override fun viewBountyDetail(b: Bounty) {

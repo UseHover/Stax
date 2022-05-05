@@ -52,6 +52,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         transferViewModel = abstractFormViewModel as TransferViewModel
 
         setTransactionType(args.transactionType)
+
+        args.transactionUUID?.let {
+            Timber.e("TxnUUID is $it. Setting autofill")
+            transferViewModel.autoFill(it)
+        }
+
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -68,9 +74,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         accountDropdown.setHint(getString(R.string.account_label))
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        transferViewModel.reset() //TODO remove if values are removed
         init(binding.root)
         startObservers(binding.root)
         startListeners()
@@ -123,7 +129,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
             request.observe(viewLifecycleOwner) {
                 AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
-                it?.let { transferViewModel.view(it) }
+                it?.let { view(it) }
             }
         }
     }
@@ -160,6 +166,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+
+            if (args.transactionUUID == null)
+                accountDropdown.setCurrentAccount()
         }
     }
 
@@ -170,11 +179,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             }
         }
     }
+
     private fun observeAutoFillToInstitution() {
         transferViewModel.completeAutoFilling.observe(viewLifecycleOwner) {
-            it?.let {
-                completeAutoFilling(it.first, it.second)
-            }
+            if (it != null && args.transactionUUID != null)
+                completeAutoFilling(it)
         }
     }
 
@@ -235,7 +244,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setContact(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(requireActivity()) }
         }
     }
 
@@ -301,7 +310,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+    override fun onContactSelected(contact: StaxContact) {
+//        transferViewModel.setEditing(true)
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
@@ -342,16 +352,17 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun completeAutoFilling(institutionId: Int?, showEditing: Boolean) {
-        institutionId?.let {channelsViewModel.setChannelFromInstitutionId(institutionId)}
+    private fun completeAutoFilling(data: AutofillData) {
+        channelsViewModel.setChannelFromId(data.channelId, data.accountId)
         transferViewModel.contact.value?.let { contactInput.setText(it.shortName(), false) }
         amountInput.setText(transferViewModel.amount.value)
-        transferViewModel.setEditing(showEditing)
-        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, institutionId.toString()), AbstractStatefulInput.INFO)
+        transferViewModel.setEditing(data.isEditing)
+        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, data.institutionId.toString()), AbstractStatefulInput.INFO)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }

@@ -46,8 +46,13 @@ class NavHelper(val activity: AppCompatActivity) {
 
     fun navigateToBountyList() = NavUtil.navigate(getNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
 
-    fun navigateTransfer(type: String) =
-        checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(type))
+    fun showTxnDetails(uuid: String) = NavUtil.showTransactionDetailsFragment(getNavController(), uuid)
+
+    fun navigateTransfer(type: String, txnUUID: String? = null) {
+        val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
+        txnUUID?.let { transferDirection.transactionUUID = it }
+        checkPermissionsAndNavigate(transferDirection)
+    }
 
     private fun getNavController(): NavController = navHostFragment!!.navController
 
@@ -71,7 +76,6 @@ class NavHelper(val activity: AppCompatActivity) {
                 nav.menu.findItem(R.id.navigation_settings).isChecked = true
         }
     }
-
 
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(getNavDirections(toWhere))
 
