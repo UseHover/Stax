@@ -13,8 +13,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.ActionSelectBinding
-import com.hover.stax.utils.Constants.size55
-import com.hover.stax.utils.GlideApp
+import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
 import timber.log.Timber
 
@@ -78,12 +77,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
             }
         }
 
-        GlideApp.with(context)
-            .load(context.getString(R.string.root_url).plus(action.to_institution_logo))
-            .placeholder(R.color.buttonColor)
-            .circleCrop()
-            .override(size55)
-            .into(target)
+        UIHelper.loadImage(context, context.getString(R.string.root_url).plus(action.to_institution_logo), target)
 
         val options = getWhoMeOptions(action.to_institution_id)
         if (options.size == 1) selectOnlyOption(options.first())

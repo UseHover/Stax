@@ -38,11 +38,7 @@ class PaybillAdapter(private val paybills: List<Paybill>, private val clickListe
                 binding.iconLayout.visibility = View.GONE
                 binding.billLogo.visibility = View.VISIBLE
 
-                GlideApp.with(binding.root.context)
-                    .load(paybill.logoUrl)
-                    .placeholder(R.color.buttonColor)
-                    .circleCrop()
-                    .into(binding.billLogo)
+                UIHelper.loadImage(binding.root.context, paybill.logoUrl, binding.billLogo)
             }
 
             binding.root.setOnClickListener { clickListener.onSelectPaybill(paybill) }

@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.ItemPaybillActionBinding
-import com.hover.stax.utils.GlideApp
 import com.hover.stax.utils.UIHelper
 
 class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, private val clickListener: PaybillActionsClickListener)
@@ -33,11 +32,7 @@ class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, priva
 
             binding.root.setOnClickListener { clickListener.onSelectPaybill(action) }
 
-            GlideApp.with(binding.root.context)
-                .load(binding.billIcon.context.getString(R.string.root_url).plus(action.to_institution_logo))
-                .placeholder(R.color.buttonColor)
-                .circleCrop()
-                .into(binding.billIcon)
+            UIHelper.loadImage(binding.root.context, binding.billIcon.context.getString(R.string.root_url).plus(action.to_institution_logo), binding.billIcon)
         }
     }
 

@@ -4,14 +4,17 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.hover.stax.R
 import timber.log.Timber
@@ -30,7 +33,6 @@ object UIHelper {
         s.show()
     }
 
-    @JvmStatic
     fun flashMessage(context: Context, message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
@@ -62,7 +64,6 @@ object UIHelper {
         }
     }
 
-
     fun setTextUnderline(textView: TextView, cs: String?) {
         val content = SpannableString(cs)
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
@@ -73,4 +74,17 @@ object UIHelper {
             Timber.e(e)
         }
     }
+
+    fun loadImage(context: Context, url: String, imageView: ImageView) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .into(imageView)
+
+    fun loadImage(context: Context, url: String, target: CustomTarget<Drawable>) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .override(Constants.size55)
+        .into(target)
 }

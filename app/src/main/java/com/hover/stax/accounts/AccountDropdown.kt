@@ -13,8 +13,7 @@ import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.Constants.size55
-import com.hover.stax.utils.GlideApp
+import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import timber.log.Timber
 
@@ -69,12 +68,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                 }
             }
 
-            GlideApp.with(context)
-                .load(account.logoUrl)
-                .placeholder(R.color.buttonColor)
-                .circleCrop()
-                .override(size55)
-                .into(target)
+            UIHelper.loadImage(context, account.logoUrl, target)
 
             if (account.name == Constants.PLACEHOLDER) {
                 accountFetchListener?.fetchAccounts(account)

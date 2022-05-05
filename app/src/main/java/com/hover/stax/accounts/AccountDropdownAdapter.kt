@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import com.hover.stax.R
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
-import com.hover.stax.utils.GlideApp
+import com.hover.stax.utils.UIHelper
 
 class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : ArrayAdapter<Account>(context, 0, accounts) {
 
@@ -40,14 +39,8 @@ class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : Ar
         fun setAccount(account: Account) {
             binding.serviceItemNameId.text = account.alias
 
-            GlideApp.with(binding.root.context)
-                .load(account.logoUrl)
-                .placeholder(R.color.buttonColor)
-                .circleCrop()
-                .into(binding.serviceItemImageId)
+            UIHelper.loadImage(binding.root.context, account.logoUrl, binding.serviceItemImageId)
         }
 
-
     }
-
 }

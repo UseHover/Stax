@@ -12,8 +12,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.GlideApp
+import com.hover.stax.utils.UIHelper
 
 class ActionDropdownAdapter<T>(val actions: List<T>, context: Context) : ArrayAdapter<T>(context, 0, actions) {
 
@@ -66,12 +65,7 @@ class ActionDropdownAdapter<T>(val actions: List<T>, context: Context) : ArrayAd
                 logoUrl = baseUrl.plus(action.logoUrl)
             }
 
-            GlideApp.with(binding.root.context)
-                .load(logoUrl)
-                .placeholder(R.color.buttonColor)
-                .circleCrop()
-                .override(Constants.size55)
-                .into(logo!!)
+            UIHelper.loadImage(binding.root.context, logoUrl!!, logo!!)
         }
     }
 

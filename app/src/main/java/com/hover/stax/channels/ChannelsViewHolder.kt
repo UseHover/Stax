@@ -8,9 +8,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
-import com.hover.stax.R
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
-import com.hover.stax.utils.GlideApp
+import com.hover.stax.utils.UIHelper
 
 class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -34,11 +33,7 @@ class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : Recycler
         id!!.text = channel.id.toString()
         channelText!!.text = channel.toString()
 
-        GlideApp.with(binding.root.context)
-            .load(channel.logoUrl)
-            .placeholder(R.color.buttonColor)
-            .circleCrop()
-            .into(logo!!)
+        UIHelper.loadImage(binding.root.context, channel.logoUrl, logo!!)
     }
 
     fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> = object : ItemDetailsLookup.ItemDetails<Long>() {
