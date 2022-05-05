@@ -259,7 +259,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val requests: List<Request>
         get() = requestDao.unmatched
 
-    fun getRequest(id: Int): Request {
+    fun getRequest(id: Int): Request? {
         return requestDao[id]
     }
 
@@ -280,7 +280,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     private fun decryptRequestForOldVersions(param: String) {
         var params = param
         try {
-            val e = Request.getEncryptionSettings().build()
+            val e = Request.encryptionSettings.build()
             if (Request.isShortLink(params)) {
                 params = Shortlink(params).expand()
             }

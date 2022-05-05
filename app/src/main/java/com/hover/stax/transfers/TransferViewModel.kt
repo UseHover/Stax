@@ -18,18 +18,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
- class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
+class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
-    val note = MutableLiveData<String>()
+    val note = MutableLiveData<String?>()
     var request: LiveData<Request> = MutableLiveData()
+    var completeAutoFilling: MutableLiveData<AutofillData> = MutableLiveData()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
     }
 
-    fun setAmount(a: String) = amount.postValue(a)
+    fun setAmount(a: String?) = amount.postValue(a)
 
     private fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
@@ -38,7 +39,28 @@ import timber.log.Timber
         }
     }
 
-    fun setContact(sc: StaxContact?) = sc?.let { contact.postValue(it) }
+    fun autoFill(transactionUUID: String) = viewModelScope.launch(Dispatchers.IO) {
+        val transaction = repo.getTransaction(transactionUUID)
+        if (transaction != null) {
+            val action = repo.getAction(transaction.action_id)
+
+            action?.let {
+                val contact = repo.getContactAsync(transaction.counterparty_id)
+                autoFill(transaction.amount.toString(), contact, AutofillData(action.to_institution_id, transaction.channel_id, transaction.accountId, true))
+            }
+        }
+    }
+
+    private fun autoFill(amount: String, contact: StaxContact?, autofillData: AutofillData) {
+        setContact(contact)
+        setAmount(amount)
+        autofillData.institutionId?.let { completeAutoFilling.postValue(autofillData) }
+    }
+
+    fun setContact(sc: StaxContact?) = sc?.let {
+        Timber.i("contact is not null when posted")
+        contact.postValue(it)
+    }
 
     fun forceUpdateContactUI() = contact.postValue(contact.value)
 
@@ -51,11 +73,11 @@ import timber.log.Timber
         contact.value = StaxContact()
     }
 
-    fun setRecipientSmartly(r: Request?, channel: Channel) {
-        r?.let {
+    fun setRecipientSmartly(contactNum: String?, channel: Channel) {
+        contactNum.let {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number)
+                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, contactNum)
                     val sc = repo.getContactByPhone(formattedPhone)
                     sc?.let { contact.postValue(it) }
                 } catch (e: NumberFormatException) {
@@ -65,7 +87,7 @@ import timber.log.Timber
         }
     }
 
-    private fun setNote(n: String) = note.postValue(n)
+    private fun setNote(n: String?) = note.postValue(n)
 
     fun amountErrors(): String? {
         return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
@@ -93,8 +115,7 @@ import timber.log.Timber
     }
 
     fun view(r: Request) {
-        setAmount(r.amount)
-        setContact(r.requestee_ids)
+        autoFill(r.amount!!, StaxContact(r.requester_number), AutofillData(r.requester_institution_id, -1, -1, r.amount.isNullOrEmpty()))
         setNote(r.note)
     }
 
@@ -119,5 +140,8 @@ import timber.log.Timber
     fun reset() {
         amount.value = null
         contact.value = null
+        completeAutoFilling.value = null
     }
 }
+
+data class AutofillData(val institutionId: Int?, val channelId: Int, val accountId: Int, val isEditing: Boolean)

@@ -81,6 +81,6 @@ public class ContactInput extends LinearLayout {
     private void setState(View v, boolean hasFocus) {
         if (!hasFocus)
             contactInputLayout.setState(null,
-                    contactAutocomplete.getText() != null && contactAutocomplete.getText().toString() != null && !contactAutocomplete.getText().toString().isEmpty() ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.NONE);
+                    contactAutocomplete.getText() != null && !contactAutocomplete.getText().toString().isEmpty() ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.NONE);
     }
 }

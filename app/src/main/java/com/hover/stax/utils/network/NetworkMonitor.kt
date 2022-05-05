@@ -61,9 +61,9 @@ constructor(val context: Context) {
         }
     }
 
-    var isNetworkConnected: Boolean by Delegates.observable(true, { _, _, newValue ->
+    var isNetworkConnected: Boolean by Delegates.observable(true) { _, _, newValue ->
         StateLiveData.get().postValue(newValue)
-    })
+    }
 
     class StateLiveData : MutableLiveData<Boolean>() {
 
