@@ -36,6 +36,7 @@
                 android:layout_weight="1"
                 android:drawablePadding="@dimen/margin_3"
                 android:textAlignment="viewEnd"
+                android:gravity="center_vertical|end"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
     </TableRow>

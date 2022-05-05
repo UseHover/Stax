@@ -72,7 +72,7 @@ class TransactionDetailsFragment : Fragment(), Target {
         super.onViewCreated(view, savedInstanceState)
         startObservers()
 
-        binding.transactionDetailsCard.setOnClickIcon { findNavController().popBackStack() }
+        binding.transactionDetailsCard.setOnClickIcon { findNavController().popBackStack(R.id.navigation_home, true) }
         binding.primaryStatus.viewLogText.setOnClickListener { showUSSDLog() }
         with(binding.infoCard.detailsStaxUuid.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
         with(binding.infoCard.detailsServiceId.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
