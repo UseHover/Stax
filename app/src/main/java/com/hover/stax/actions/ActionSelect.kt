@@ -1,25 +1,25 @@
 package com.hover.stax.actions
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.ActionSelectBinding
 import com.hover.stax.utils.Constants.size55
-import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.GlideApp
 import com.hover.stax.views.AbstractStatefulInput
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import timber.log.Timber
 
 
-class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), RadioGroup.OnCheckedChangeListener, Target {
+class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), RadioGroup.OnCheckedChangeListener {
     private var allActions: List<HoverAction>? = null
     private var uniqueInstitutions: List<HoverAction>? = null
     private var highlightedAction: HoverAction? = null
@@ -66,7 +66,24 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
 
         setState(null, AbstractStatefulInput.SUCCESS)
         binding.actionDropdown.autoCompleteTextView.setText(action.toString(), false)
-        UIHelper.loadPicasso(context.getString(R.string.root_url).plus(action.to_institution_logo), size55, this)
+
+        val target = object : CustomTarget<Drawable>() {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
+                binding.actionDropdown.autoCompleteTextView.invalidate()
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
+            }
+        }
+
+        GlideApp.with(context)
+            .load(context.getString(R.string.root_url).plus(action.to_institution_logo))
+            .placeholder(R.color.buttonColor)
+            .circleCrop()
+            .override(size55)
+            .into(target)
 
         val options = getWhoMeOptions(action.to_institution_id)
         if (options.size == 1) selectOnlyOption(options.first())
@@ -128,20 +145,6 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         if (checkedId == -1 || allActions.isNullOrEmpty() || allActions?.find { it.id == checkedId } == null) return
         val a = allActions!!.find { it.id == checkedId }!!
         selectAction(a)
-    }
-
-    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-        val drawable = RoundedBitmapDrawableFactory.create(context.resources, bitmap).apply { isCircular = true }
-        binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
-        binding.actionDropdown.autoCompleteTextView.invalidate()
-    }
-
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-        Timber.e(e?.localizedMessage)
-    }
-
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-        binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
     }
 
     interface HighlightListener {

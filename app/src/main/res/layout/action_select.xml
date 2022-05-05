@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:id="@+id/actionSelect"
-	android:orientation="vertical">
+        android:id="@+id/actionSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-	<com.hover.stax.views.StaxDropdownLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:id="@+id/action_dropdown"
-	    android:visibility="gone"
-	    android:hint="@string/network_label" />
+    <com.hover.stax.views.StaxDropdownLayout
+            android:id="@+id/action_dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:hint="@string/network_label"
+            android:visibility="gone" />
 
-	<TextView
-		android:id="@+id/header"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_10"
-		android:layout_marginBottom="@dimen/margin_13"
-		android:textSize="@dimen/text_19"
-		android:text="@string/airtime_who_header"
-		android:visibility="gone"/>
+    <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_13"
+            android:text="@string/airtime_who_header"
+            android:textSize="@dimen/text_19"
+            android:visibility="gone" />
 
-	<RadioGroup
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginHorizontal="@dimen/margin_21"
-	    android:layout_marginBottom="@dimen/margin_21"
-	    android:id="@+id/isSelfRadio"/>
+    <RadioGroup
+            android:id="@+id/isSelfRadio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_21"
+            android:layout_marginBottom="@dimen/margin_21" />
 </LinearLayout>

@@ -1,8 +1,6 @@
 package com.hover.stax.actions
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +8,12 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.UIHelper
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
-import timber.log.Timber
+import com.hover.stax.utils.GlideApp
 
 class ActionDropdownAdapter<T>(val actions: List<T>, context: Context) : ArrayAdapter<T>(context, 0, actions) {
 
@@ -47,7 +41,7 @@ class ActionDropdownAdapter<T>(val actions: List<T>, context: Context) : ArrayAd
 
     override fun getItem(position: Int): T? = if (actions.isEmpty()) null else actions[position]
 
-    class ActionViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : Target {
+    class ActionViewHolder(val binding: StaxSpinnerItemWithLogoBinding) {
 
         private var id: TextView? = null
         private var logo: ImageView? = null
@@ -60,29 +54,25 @@ class ActionDropdownAdapter<T>(val actions: List<T>, context: Context) : ArrayAd
         }
 
         fun setAction(action: Any?, baseUrl: String) {
+            var logoUrl: String? = null
+
             if (action is HoverAction) {
                 id?.text = action.id.toString()
                 channelText?.text = action.toString()
-                UIHelper.loadPicasso(baseUrl.plus(action.to_institution_logo), Constants.size55, this)
+                logoUrl = baseUrl.plus(action.to_institution_logo)
             } else if (action is Account) {
                 id?.text = action.id.toString()
                 channelText?.text = action.alias
-                UIHelper.loadPicasso(baseUrl.plus(action.logoUrl), Constants.size55, this)
+                logoUrl = baseUrl.plus(action.logoUrl)
             }
-        }
 
-        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-            val drawable = RoundedBitmapDrawableFactory.create(id!!.context.resources, bitmap).apply { isCircular = true }
-            logo!!.setImageDrawable(drawable)
+            GlideApp.with(binding.root.context)
+                .load(logoUrl)
+                .placeholder(R.color.buttonColor)
+                .circleCrop()
+                .override(Constants.size55)
+                .into(logo!!)
         }
-
-        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-            Timber.e(e?.localizedMessage)
-        }
-
-        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-        }
-
     }
 
 }
