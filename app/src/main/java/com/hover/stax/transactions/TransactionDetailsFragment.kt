@@ -29,6 +29,7 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.squareup.picasso.Picasso
@@ -72,7 +73,7 @@ class TransactionDetailsFragment : Fragment(), Target {
         super.onViewCreated(view, savedInstanceState)
         startObservers()
 
-        binding.transactionDetailsCard.setOnClickIcon { findNavController().popBackStack(R.id.navigation_home, true) }
+        binding.transactionDetailsCard.setOnClickIcon { NavUtil.navigate(findNavController(), TransactionDetailsFragmentDirections.actionTxnDetailsFragmentToNavigationHome()) }
         binding.primaryStatus.viewLogText.setOnClickListener { showUSSDLog() }
         with(binding.infoCard.detailsStaxUuid.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
         with(binding.infoCard.detailsServiceId.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }

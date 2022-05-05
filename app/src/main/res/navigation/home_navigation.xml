@@ -43,7 +43,7 @@
 
     <action
             android:id="@+id/action_global_TxnDetailsFragment"
-            app:destination="@id/txnDetailsFragment" />
+            app:destination="@id/transactionDetailsFragment" />
 
     <fragment
             android:id="@+id/navigation_home"
@@ -151,6 +151,11 @@
         <action
                 android:id="@+id/action_transactionDetailsFragment_to_bountyListFragment"
                 app:destination="@id/bountyListFragment" />
+        <action
+                android:id="@+id/action_txnDetailsFragment_to_navigationHome"
+                app:destination="@id/navigation_home"
+                app:popUpTo="@id/transactionDetailsFragment"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -370,16 +375,6 @@
         <argument
                 android:name="accountId"
                 app:argType="integer" />
-    </fragment>
-
-    <fragment
-            android:id="@+id/txnDetailsFragment"
-            android:name="com.hover.stax.transactions.TransactionDetailsFragment"
-            android:label="TransactionDetails"
-            tools:layout="@layout/fragment_transaction">
-        <argument
-                android:name="uuid"
-                app:argType="string" />
     </fragment>
 
 </navigation>
