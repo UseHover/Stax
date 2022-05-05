@@ -1,28 +1,24 @@
 package com.hover.stax.accounts
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import timber.log.Timber
 
 
-class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet), Target {
+class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
     private var showSelected: Boolean = true
     private var helperText: String? = null
@@ -61,7 +57,18 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private fun setDropdownValue(account: Account?) {
         account?.let {
             autoCompleteTextView.setText(it.alias, false)
-            UIHelper.loadPicasso(it.logoUrl, size55, this)
+
+            val target = object : CustomTarget<Drawable>() {
+                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                    autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
+                }
+            }
+
+            UIHelper.loadImage(context, account.logoUrl, target)
 
             if (account.name == Constants.PLACEHOLDER) {
                 accountFetchListener?.fetchAccounts(account)
@@ -141,20 +148,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
             viewModel.activeChannel.value != null && showSelected -> setState(helperText, SUCCESS)
         }
-    }
-
-    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-        val d: RoundedBitmapDrawable = RoundedBitmapDrawableFactory.create(context.resources, bitmap)
-        d.isCircular = true
-        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null)
-    }
-
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-        Timber.e(e)
-    }
-
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
     }
 
     fun setFetchAccountListener(listener: AccountFetchListener) {

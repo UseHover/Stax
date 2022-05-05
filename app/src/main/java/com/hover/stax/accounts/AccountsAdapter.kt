@@ -1,17 +1,12 @@
 package com.hover.stax.accounts
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.RecyclerView
+import com.hover.stax.R
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.UIHelper
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
-import timber.log.Timber
+import com.hover.stax.utils.GlideApp
 
 class AccountsAdapter(val accounts: List<Account>, val selectListener: SelectListener) : RecyclerView.Adapter<AccountsAdapter.ViewHolder>() {
 
@@ -26,26 +21,20 @@ class AccountsAdapter(val accounts: List<Account>, val selectListener: SelectLis
 
     override fun getItemCount(): Int = accounts.size
 
-    inner class ViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root), Target {
+    inner class ViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(account: Account) {
             binding.serviceItemNameId.text = account.alias
-            UIHelper.loadPicasso(account.logoUrl, Constants.size55, this)
+
+            GlideApp.with(binding.root.context)
+                .load(account.logoUrl)
+                .placeholder(R.color.buttonColor)
+                .circleCrop()
+                .override(Constants.size55)
+                .into(binding.serviceItemImageId)
 
             binding.root.setOnClickListener { selectListener.accountSelected(account) }
         }
-
-        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-            val d = RoundedBitmapDrawableFactory.create(binding.root.context.resources, bitmap)
-            d.isCircular = true
-            binding.serviceItemImageId.setImageDrawable(d)
-        }
-
-        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-            Timber.e(e)
-        }
-
-        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
     }
 
     interface SelectListener {
