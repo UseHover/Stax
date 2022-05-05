@@ -4,7 +4,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:minHeight="?attr/listPreferredItemHeight"
         android:textColor="@drawable/spinner_state_selector">
 
     <TextView
@@ -20,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
             android:layout_alignStart="@id/title"
+            android:visibility="gone"
             android:textAppearance="?attr/textAppearanceListItemSecondary"
             android:textColor="@color/offWhite"
             android:textSize="@dimen/text_13" />

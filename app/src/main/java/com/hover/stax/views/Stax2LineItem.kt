@@ -23,7 +23,10 @@ class Stax2LineItem(context: Context, attrs: AttributeSet?) : RelativeLayout(con
     }
 
     fun setSubtitle(sub: String?) {
-        if (sub != null) binding.subtitle.text = sub
+        if (sub != null) {
+            binding.subtitle.text = sub
+            binding.subtitle.visibility = VISIBLE
+        }
     }
 
     fun setContact(contact: StaxContact?) {

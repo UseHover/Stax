@@ -310,12 +310,12 @@
     <string name="noworry_explain">You can review this info in the next step.</string>
     <string name="descrip_multcontacts">%1$d contacts</string>
 
-    <string name="descrip_balance">%1$s check balance</string>
-    <string name="descrip_airtime_sent">%1$s send airtime to %2$s</string>
-    <string name="descrip_transfer_sent">%1$s send money to %2$s</string>
+    <string name="descrip_balance">%1$s balance</string>
+    <string name="descrip_airtime_sent">Sent %1$s airtime to %2$s</string>
+    <string name="descrip_transfer_sent">Send %1$s money to %2$s</string>
     <string name="descrip_transfer_received">received money from %1$s</string>
     <string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
-    <string name="descrip_bill_paid">pay %1$s bill</string>
+    <string name="descrip_bill_paid">Paid %1$s to %2$s</string>
     <string name="descrip_recorded">Recorded USSD session on %1$s</string>
     <string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
@@ -405,9 +405,27 @@
     <string name="network_label">Recipient account</string>
     <string name="id_label">Transaction ID</string>
     <string name="stax_id_label">Stax ID</string>
-    <string name="session_cardhead">Messages</string>
+    <string name="session_cardhead">USSD log</string>
+    <string name="session_fullDesc_cardhead">USSD log for %1$s - %2$s</string>
+
+    <string name="transaction_fee">%1$s transaction fee</string>
     <string name="view_full_details">View full details</string>
     <string name="new_balance">New balance %1$s</string>
+    <string name="failed_label">Failed</string>
+    <string name="successful_label">Successful</string>
+    <string name="viewUSSDLog">View USSD Log</string>
+    <string name="status_label">Status</string>
+    <string name="reason_label">Reason</string>
+    <string name="type_label">Type</string>
+    <string name="display_transfer_money">Transfer money to %1$s</string>
+    <string name="display_bill_payment">Bill payment</string>
+    <string name="display_money_received">Money received</string>
+    <string name="tap_to_copy">(Tap to copy)</string>
+
+    <!-- INFO SYSTEM -->
+    <string name="transaction_status_info_title">About transaction status</string>
+    <string name="transaction_status_info_content">Stax works by sending USSD messages in the background. Transaction status depends on mobile and bank availability. We do not hold money.</string>
+
 
     <!-- Canceling -->
     <string name="cancelfuture_head">Cancel future transaction</string>

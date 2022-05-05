@@ -25,6 +25,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private var highlightListener: HighlightListener? = null
     private var accountFetchListener: AccountFetchListener? = null
 
+    private var accountList: List<Account> = ArrayList()
+
     var highlightedAccount: Account? = null
 
     init {
@@ -47,7 +49,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun accountUpdate(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty() /*&& !hasExistingContent()*/) {
+        if (!accounts.isNullOrEmpty()) {
             updateChoices(accounts)
         } else if (!hasExistingContent()) {
             setState(context.getString(R.string.accounts_error_no_accounts), NONE)
@@ -80,15 +82,15 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun updateChoices(accounts: List<Account>) {
         if (highlightedAccount == null) setDropdownValue(null)
-
+        accountList = accounts
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
-
-        onSelect(accounts.firstOrNull { it.isDefault })
     }
+
+    fun setCurrentAccount() = onSelect(accountList.firstOrNull { it.isDefault })
 
     private fun onSelect(account: Account?) {
         setDropdownValue(account)
@@ -99,33 +101,35 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            val simsObserver = object : Observer<List<SimInfo>> {
+            val simsObserver = object: Observer<List<SimInfo>> {
                 override fun onChanged(t: List<SimInfo>?) {
                     Timber.i("Got sims ${t?.size}")
                 }
             }
-
             val hniListObserver = object : Observer<List<String>> {
                 override fun onChanged(t: List<String>?) {
                     Timber.i("Got new sim hni list $t")
                 }
             }
-
             val selectedObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
                     Timber.e("Got new selected channels ${t?.size}")
+                }
+            }
+            val accountObserver = object: Observer<Account> {
+                override fun onChanged(t: Account?) {
+                    setDropdownValue(t)
                 }
             }
 
             sims.observe(lifecycleOwner, simsObserver)
             simHniList.observe(lifecycleOwner, hniListObserver)
             accounts.observe(lifecycleOwner) { accountUpdate(it) }
+            activeAccount.observe(lifecycleOwner, accountObserver)
 
             selectedChannels.observe(lifecycleOwner, selectedObserver)
             activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
-            channelActions.observe(lifecycleOwner) {
-                setState(it, viewModel)
-            }
+            channelActions.observe(lifecycleOwner) { setState(it, viewModel) }
         }
     }
 

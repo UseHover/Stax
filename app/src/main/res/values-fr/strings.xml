@@ -306,8 +306,6 @@
 
     <string name="descrip_transfer_received">reçu de l\'argent de %1$s</string>
 
-    <string name="descrip_bill_paid">%1$s facture payée</string>
-
     <string name="descrip_recorded">Session USSD enregistrée le %1$s</string>
 
     <string name="fab_transfernow">Envoyez de l\'argent maintenant</string>

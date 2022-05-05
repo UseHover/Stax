@@ -15,6 +15,7 @@
             android:completionThreshold="0"
             android:dropDownWidth="wrap_content"
             android:dropDownHeight="wrap_content"
+            android:drawablePadding="@dimen/margin_10"
             android:imeOptions="actionDone"
             android:textColor="@color/offWhite"
             android:autofillHints="phone"

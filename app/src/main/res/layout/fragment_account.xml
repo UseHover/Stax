@@ -68,6 +68,9 @@
                             android:layout_weight="1"
                             android:text="@string/fees_label"
                             android:textColor="@color/offWhite"
+                            android:paddingBottom="@dimen/margin_8"
+                            android:layout_marginEnd="@dimen/margin_34"
+                            android:layout_height="wrap_content"
                             android:textSize="@dimen/text_16" />
 
                     <TextView

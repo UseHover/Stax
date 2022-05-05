@@ -28,6 +28,13 @@
         <attr name="android:imeOptions" />
     </declare-styleable>
 
+    <declare-styleable name="StaxInfoTextView">
+        <attr name="android:text" />
+        <attr name="infoTitle" format="string"/>
+        <attr name="infoContent" format="string"/>
+    </declare-styleable>
+
+
     <declare-styleable name="CustomSwipeRefreshLayout">
         <attr name="enable_top_progress_bar" format="boolean" />
         <attr name="refresh_mode" format="enum">
