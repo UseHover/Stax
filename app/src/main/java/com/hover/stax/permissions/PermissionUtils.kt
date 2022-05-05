@@ -11,12 +11,20 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.views.StaxDialog
+import timber.log.Timber
 
 object PermissionUtils {
 
     fun requestPerms(requestCode: Int, a: Activity) {
         val ph = PermissionHelper(a)
-        if (!ph.hasPhonePerm() && !ph.hasPhonePerm()) logAnalyticsEvent(a.getString(R.string.perms_basic_requested), a) else if (!ph.hasPhonePerm()) logAnalyticsEvent(a.getString(R.string.perms_phone_requested), a) else if (!ph.hasSmsPerm()) logAnalyticsEvent(a.getString(R.string.perms_sms_requested), a)
+
+        when {
+            !ph.hasPhonePerm() && !ph.hasSmsPerm() -> logAnalyticsEvent(a.getString(R.string.perms_basic_requested), a)
+            !ph.hasPhonePerm() -> logAnalyticsEvent(a.getString(R.string.perms_phone_requested), a)
+            !ph.hasSmsPerm() -> logAnalyticsEvent(a.getString(R.string.perms_sms_requested), a)
+        }
+
+        Timber.e("Requesting basic permissions")
         ph.requestBasicPerms(a, requestCode)
     }
 
@@ -42,7 +50,11 @@ object PermissionUtils {
     }
 
     private fun logDenyResult(ph: PermissionHelper, a: Activity) {
-        if (!ph.hasPhonePerm() && !ph.hasPhonePerm()) logAnalyticsEvent(a.getString(R.string.perms_basic_denied), a) else if (!ph.hasPhonePerm()) logAnalyticsEvent(a.getString(R.string.perms_phone_denied), a) else if (!ph.hasSmsPerm()) logAnalyticsEvent(a.getString(R.string.perms_sms_denied), a)
+        when {
+            !ph.hasPhonePerm() && !ph.hasSmsPerm() -> logAnalyticsEvent(a.getString(R.string.perms_basic_denied), a)
+            !ph.hasPhonePerm() -> logAnalyticsEvent(a.getString(R.string.perms_phone_denied), a)
+            !ph.hasSmsPerm() -> logAnalyticsEvent(a.getString(R.string.perms_sms_denied), a)
+        }
     }
 
     fun hasContactPermission(c: Context?): Boolean {

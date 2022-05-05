@@ -10,6 +10,7 @@ import com.hover.sdk.actions.HoverActionDao
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
+import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
@@ -79,9 +80,9 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return channelDao.getChannels(countryCode.uppercase())
     }
 
-    fun update(channel: Channel?) = AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
+    fun update(channel: Channel?) = channelDao.update(channel)
 
-    fun insert(channel: Channel) = AppDatabase.databaseWriteExecutor.execute { channelDao.insert(channel) }
+    fun insert(channel: Channel) = channelDao.insert(channel)
 
     // SIMs
     val presentSims: List<SimInfo>
@@ -153,7 +154,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTotalFees(accountId, year.toString())
     }
 
-    fun getTransaction(uuid: String?): StaxTransaction? {
+    private fun getTransaction(uuid: String?): StaxTransaction? {
         return transactionDao.getTransaction(uuid)
     }
 

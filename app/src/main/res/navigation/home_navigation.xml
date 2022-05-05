@@ -105,6 +105,13 @@
                 app:uri="stax.me/linkaccount" />
     </fragment>
 
+
+    <fragment
+        android:id="@+id/navigation_manage_permission"
+        android:name="com.hover.stax.permissions.ManagePermissionsFragment"
+        android:label="@string/manage_permissions_title"
+        tools:layout="@layout/manage_permissions_layout"/>
+
     <fragment
             android:id="@+id/navigation_settings"
             android:name="com.hover.stax.settings.SettingsFragment"
@@ -128,11 +135,16 @@
         <action
                 android:id="@+id/action_navigation_settings_to_wellnessFragment"
                 app:destination="@id/tipsFragment" />
+
+        <action android:id="@+id/action_navigation_settings_to_managePermissionFragment"
+            app:destination="@+id/navigation_manage_permission"/>
+
         <deepLink
                 android:id="@+id/settingsDL"
                 app:mimeType="text/plain"
                 app:uri="stax.me/settings" />
     </fragment>
+
 
     <fragment
             android:id="@+id/faqFragment"

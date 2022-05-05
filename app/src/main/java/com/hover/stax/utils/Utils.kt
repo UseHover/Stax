@@ -7,6 +7,9 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils

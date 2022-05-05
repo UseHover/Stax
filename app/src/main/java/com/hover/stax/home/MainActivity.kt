@@ -22,10 +22,7 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.settings.SettingsFragment
-import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.transactions.USSDLogBottomSheetFragment
-import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
@@ -93,7 +90,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
             //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
-            val accountsObserver = object: Observer<List<Account>> {
+            val accountsObserver = object : Observer<List<Account>> {
                 override fun onChanged(t: List<Account>?) {
                     logResult("Observing selected channels", t?.size ?: 0)
                 }
@@ -194,12 +191,15 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) = run(actionPair, index)
 
     override fun onTapRefresh(accountId: Int) {
-        if (accountId == DUMMY)
-            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
-        else {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
-            balancesViewModel.setRunning(accountId)
-        }
+        if (PermissionHelper(this).hasBasicPerms()) {
+            if (accountId == DUMMY)
+                checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
+            else {
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
+                balancesViewModel.setRunning(accountId)
+            }
+        } else
+            navHelper.requestBasicPerms()
     }
 
     override fun onTapDetail(accountId: Int) {

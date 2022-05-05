@@ -96,6 +96,7 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
                 Timber.e("Got new active channel ${this.javaClass.simpleName}, ${t?.countryAlpha2}")
             }
         }
+
         val actionsObserver = object : Observer<List<HoverAction>> {
             override fun onChanged(t: List<HoverAction>?) {
                 Timber.e("Got new actions ${this.javaClass.simpleName}: %s", t?.size)
