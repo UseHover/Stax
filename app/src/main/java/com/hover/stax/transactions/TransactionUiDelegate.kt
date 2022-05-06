@@ -58,7 +58,7 @@ interface TransactionUiDelegate {
             transaction.displayBalance
         else transaction.humanStatus(c)
 
-        if (transaction.transaction_type != Transaction.PENDING)
+        if (transaction.transaction_type == Transaction.FAILED)
             str = "$str: ${transaction.humanCategory(c)}"
         return str
     }

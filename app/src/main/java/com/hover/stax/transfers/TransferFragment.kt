@@ -138,11 +138,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun observeActionSelection() {
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
-            binding.editCard.actionSelect.selectRecipientNetwork(it)
-            setRecipientHint(it)
+            it?.let {
+                binding.editCard.actionSelect.selectRecipientNetwork(it)
+                setRecipientHint(it)
 
-            Timber.e("in: %s", it.requiredParams)
-            Timber.e("out: %s", it.requiredParams)
+                Timber.e("in: %s", it.requiredParams)
+                Timber.e("out: %s", it.requiredParams)
+            }
         }
     }
 

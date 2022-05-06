@@ -40,12 +40,14 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
         return if (activeAction.value == null) (getApplication() as Context).getString(R.string.action_fielderror) else null
     }
 
-    private fun initNonStandardVariables(action: HoverAction) {
-        val variableMap = LinkedHashMap<String, String>()
-        action.requiredParams.forEach {
-            if (!isStandardVariable(it)) variableMap[it] = ""
+    private fun initNonStandardVariables(action: HoverAction?) {
+        action?.let {
+            val variableMap = LinkedHashMap<String, String>()
+            action.requiredParams.forEach {
+                if (!isStandardVariable(it)) variableMap[it] = ""
+            }
+            nonStandardVariables.postValue(variableMap)
         }
-        nonStandardVariables.postValue(variableMap)
     }
 
     private fun isStandardVariable(key: String): Boolean {
