@@ -19,7 +19,7 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             return
         }
 
-        countryAdapter = CountryAdapter(getCountryCodes(channels, currentCountry), context)
+        countryAdapter = CountryAdapter(getCountryCodes(channels), context)
         autoCompleteTextView.apply {
             setAdapter(countryAdapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as String) }
@@ -28,8 +28,8 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         setDropdownValue(currentCountry)
     }
 
-    private fun getCountryCodes(channelList: List<Channel>, currentCountry: String?): Array<String> {
-        val codes: Deferred<Array<String>> = CoroutineScope(Dispatchers.IO).async {
+    private fun getCountryCodes(channelList: List<Channel>): Array<String> {
+        val codes: Deferred<Array<String>> = CoroutineScope(Dispatchers.Default).async {
             val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
             countryCodes.addAll(channelList.map { it.countryAlpha2 }.distinct().sorted())
             return@async countryCodes.toTypedArray()

@@ -122,7 +122,7 @@ object Utils {
     }
 
     @JvmStatic
-    fun formatAmount(number: Double): String {
+    fun formatAmount(number: Double?): String {
         return try {
             val formatter = DecimalFormat("#,##0.00")
             formatter.maximumFractionDigits = 0

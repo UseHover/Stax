@@ -1,4 +1,4 @@
-package com.hover.stax.transactions
+package com.hover.stax.transactionDetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -40,7 +40,7 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 	private fun setCardTitle() {
 		viewModel.action.observe(viewLifecycleOwner){
 			if (it != null) {
-				val type = viewModel.transaction.value!!.fullStatus.getDisplayType(requireContext(), it.to_institution_name)
+				val type = viewModel.transaction.value!!.humanTransactionType(requireContext(), it.to_institution_name)
 				binding.messagesCard.apply{
 					setTitle(getString(R.string.session_fullDesc_cardhead, it.from_institution_name, type ))
 					setIcon(getString(R.string.root_url) + it.from_institution_logo)

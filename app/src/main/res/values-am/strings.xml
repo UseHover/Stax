@@ -273,9 +273,9 @@
 
     <string name="descrip_multcontacts">%1$d እውቂያዎች</string>
 
-    <string name="descrip_airtime_sent">%1$d የአየር ሰዓት ወደ %2$s ልኳል</string>
+    <string name="descrip_airtime_sent">%1$s የአየር ሰዓት ወደ %2$s ልኳል</string>
 
-    <string name="descrip_transfer_sent">%1$d ገንዘብ ለ %2$s ልኳል</string>
+    <string name="descrip_transfer_sent">%1$s ገንዘብ ለ %2$s ልኳል</string>
 
     <string name="descrip_transfer_received">ገንዘብ ከ %1$s ተቀብሏል</string>
 

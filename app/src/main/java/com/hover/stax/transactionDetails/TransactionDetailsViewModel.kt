@@ -1,15 +1,18 @@
-package com.hover.stax.transactions
+package com.hover.stax.transactionDetails
 
 import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
+import com.hover.sdk.transactions.Transaction
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -23,6 +26,7 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
     var contact: LiveData<StaxContact> = MutableLiveData()
     var action: LiveData<HoverAction> = MutableLiveData()
 
+    var hoverTransaction = MutableLiveData<Transaction>()
     val messages = MediatorLiveData<List<UssdCallResponse>>()
     var sms: LiveData<List<UssdCallResponse>> = MutableLiveData()
 
@@ -40,7 +44,7 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
     }
 
     private fun getLiveAccount(txn: StaxTransaction?): LiveData<Account>? = if (txn != null)
-        accountRepo.getLiveAccount(txn.accountId)
+        accountRepo.getLiveAccount(txn.accountId!!)
     else null
 
     private fun getLiveAction(txn: StaxTransaction?): LiveData<HoverAction>? = if (txn != null)
@@ -64,12 +68,17 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
     }
 
     private fun loadMessages(txn: StaxTransaction, a: HoverAction) {
-        messages.value = UssdCallResponse.generateConvo(Hover.getTransaction(txn.uuid, getApplication()), a)
+        val t = Hover.getTransaction(txn.uuid, getApplication())
+        hoverTransaction.value = t
+        messages.value = UssdCallResponse.generateConvo(t, a)
     }
 
     private fun loadSms(txn: StaxTransaction): List<UssdCallResponse>? {
         val t = Hover.getTransaction(txn.uuid, getApplication())
-        return generateSmsConvo(if (t.smsHits != null && t.smsHits.length() > 0) t.smsHits else t.smsMisses)
+        hoverTransaction.value = t
+        return generateSmsConvo(
+            if (t.smsHits != null && t.smsHits.length() > 0) t.smsHits
+            else t.smsMisses)
     }
 
     private fun generateSmsConvo(smsArr: JSONArray): ArrayList<UssdCallResponse> {
@@ -77,7 +86,12 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
         for (i in 0 until smsArr.length()) {
             val sms = getSMSMessageByUUID(smsArr.optString(i), getApplication())
             Timber.e(sms.uuid)
-            smses.add(UssdCallResponse(null, sms.msg))
+            smses.add(
+                UssdCallResponse(
+                    null,
+                    sms.msg
+                )
+            )
         }
         return smses
     }
@@ -87,8 +101,8 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
         if (transaction.value?.amount != null) extras[HoverAction.AMOUNT_KEY] = transaction.value!!.amount.toString()
         if (contact.value?.accountNumber != null) extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
         if (contact.value?.accountNumber != null) extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
-        if (transaction.value?.counterparty_id != null) extras[StaxContact.ID_KEY] = transaction.value!!.counterparty_id
-        if (transaction.value?.note != null) extras[HoverAction.NOTE_KEY] = transaction.value!!.note
+        if (transaction.value?.counterparty_id != null) extras[StaxContact.ID_KEY] = transaction.value!!.counterparty_id!!
+        if (transaction.value?.note != null) extras[HoverAction.NOTE_KEY] = transaction.value!!.note!!
         Timber.e("Extras %s", extras.keys)
         return extras
     }

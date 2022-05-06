@@ -10,7 +10,7 @@
         android:paddingBottom="11dp">
 
     <TextView
-            android:id="@+id/li_description"
+            android:id="@+id/li_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_13"

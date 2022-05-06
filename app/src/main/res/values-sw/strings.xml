@@ -300,9 +300,9 @@
 
     <string name="descrip_multcontacts">Wasiliani %1$d</string>
 
-    <string name="descrip_airtime_sent">%1$d umetuma muda wa maongezi kwa %2$s</string>
+    <string name="descrip_airtime_sent">%1$s umetuma muda wa maongezi kwa %2$s</string>
 
-    <string name="descrip_transfer_sent">%1$d umetuma pesa kwa %2$s</string>
+    <string name="descrip_transfer_sent">%1$s umetuma pesa kwa %2$s</string>
 
     <string name="descrip_transfer_received">umepokea pesa kutoka kwa %1$s</string>
 

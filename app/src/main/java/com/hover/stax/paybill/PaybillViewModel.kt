@@ -62,7 +62,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
 //        deSelectPaybill()
         Timber.e("selecting paybill by action: %s", action.to_institution_name)
         val paybill = Paybill(
-                "", action.to_institution_name, extractBizNumber(action), null, action.public_id,
+                "", action.to_institution_name, Paybill.extractBizNumber(action), null, action.public_id,
                 0, getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
@@ -77,12 +77,6 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         if (selectedPaybill.value?.recurringAmount != 0) amount.value = null
         saveAmount.value = false
         selectedPaybill.value = null
-    }
-
-    private fun extractBizNumber(action: HoverAction): String {
-        if (action.getVarValue(BUSINESS_NO) != null)
-            return action.getVarValue(BUSINESS_NO)
-        else return ""
     }
 
     fun setBusinessNumber(number: String) {

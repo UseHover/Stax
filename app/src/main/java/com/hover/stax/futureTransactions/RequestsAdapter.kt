@@ -26,7 +26,7 @@ class RequestsAdapter(private var requestList: List<Request>?,
 
 	override fun onBindViewHolder(holder: RequestsViewHolder, position: Int) {
 		val r = requestList!![position]
-		holder.binding.liDescription.text = r.description
+		holder.binding.liTitle.text = r.description
 		holder.binding.liAmount.text = if (r.amount != null) formatAmount(r.amount!!) else "none"
 		holder.binding.liHeader.visibility = if (shouldShowDate(r, position)) View.VISIBLE else View.GONE
 		holder.binding.liHeader.text = humanFriendlyDate(r.date_sent)

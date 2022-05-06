@@ -1,10 +1,9 @@
-package com.hover.stax.transactions
+package com.hover.stax.transactionDetails
 
 import android.graphics.Paint
 import com.hover.stax.utils.Utils.dial
-import com.hover.stax.transactions.UssdCallResponse
 import androidx.recyclerview.widget.RecyclerView
-import com.hover.stax.transactions.MessagesAdapter.TransactionMessageViewHolder
+import com.hover.stax.transactionDetails.MessagesAdapter.TransactionMessageViewHolder
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View

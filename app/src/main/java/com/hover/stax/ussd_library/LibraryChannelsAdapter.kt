@@ -25,7 +25,7 @@ class LibraryChannelsAdapter(private val channelList: List<Channel>) : RecyclerV
 
         fun bindItems(channel: Channel) {
             with(binding) {
-                liDescription.text = channel.name
+                liTitle.text = channel.name
                 liButton.apply {
                     text = liButton.context.getString(R.string.dial_btn, channel.rootCode)
                     setOnClickListener { Utils.dial(channel.rootCode, binding.root.context) }

@@ -2,7 +2,6 @@ package com.hover.stax.hover
 
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -14,8 +13,6 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.home.NavHelper
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
-import com.hover.stax.transactions.USSDLogBottomSheetFragment
-import com.hover.stax.transactions.UUID
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException

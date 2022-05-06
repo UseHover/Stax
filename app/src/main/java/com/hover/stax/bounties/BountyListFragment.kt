@@ -17,10 +17,8 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentBountyListBinding
-import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.transactions.StaxTransaction
-import com.hover.stax.transactions.UpdateBountyTransactionsWorker
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper

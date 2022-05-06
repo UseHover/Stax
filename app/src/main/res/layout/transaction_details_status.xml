@@ -4,7 +4,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/failure_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/grey_background"
@@ -18,7 +18,7 @@
                 android:layout_marginStart="@dimen/margin_16" />
 
         <TextView
-                android:id="@+id/status_text"
+                android:id="@+id/long_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_16"

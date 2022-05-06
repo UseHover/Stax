@@ -154,7 +154,7 @@
 
     <fragment
             android:id="@+id/transactionDetailsFragment"
-            android:name="com.hover.stax.transactions.TransactionDetailsFragment"
+            android:name="com.hover.stax.transactionDetails.TransactionDetailsFragment"
             android:label="TransactionDetailsFragment"
             tools:layout="@layout/fragment_transaction">
         <argument

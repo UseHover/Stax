@@ -27,7 +27,7 @@ class PaybillAdapter(private val paybills: List<Paybill>, private val clickListe
 
         fun bindItems(paybill: Paybill) {
             binding.nickname.text = paybill.toString()
-            binding.accountNumber.text = binding.root.context.getString(R.string.account_no_label, paybill.accountNo)
+            binding.accountNumber.text = binding.root.context.getString(R.string.account_no_detail, paybill.accountNo)
 
             if (paybill.logo != 0) {
                 binding.billLogo.visibility = View.GONE

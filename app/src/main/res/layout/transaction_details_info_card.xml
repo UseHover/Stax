@@ -31,8 +31,7 @@
                 app:infoTitle="@string/transaction_status_info_title" />
 
         <TextView
-                android:id="@+id/details_stax_status"
-                android:layout_width="wrap_content"
+                android:id="@+id/status_value"
                 android:layout_weight="1"
                 android:drawablePadding="@dimen/margin_3"
                 android:textAlignment="viewEnd"
@@ -42,16 +41,16 @@
     </TableRow>
 
     <TableRow
-            android:id="@+id/reasonRow"
+            android:id="@+id/categoryRow"
             android:layout_marginTop="@dimen/margin_18">
 
         <TextView
-                android:text="@string/reason_label"
+                android:text="@string/category_label"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
 
         <TextView
-                android:id="@+id/details_stax_reason"
+                android:id="@+id/categoryValue"
                 android:layout_weight="1"
                 android:textAlignment="viewEnd"
                 android:textColor="@color/offWhite"
@@ -101,7 +100,7 @@
                 android:textSize="@dimen/text_16" />
 
         <com.hover.stax.views.Stax2LineItem
-            android:id="@+id/details_institution"
+            android:id="@+id/institutionValue"
             android:layout_weight="1"
             android:textAlignment="viewEnd" />
     </TableRow>
@@ -141,6 +140,25 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/feeRow"
+        android:layout_marginTop="@dimen/margin_18">
+
+        <TextView
+            android:id="@+id/fee_label"
+            android:text="@string/transaction_fee"
+            android:maxWidth="@dimen/margin_176"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
+
+        <TextView
+            android:id="@+id/fee_value"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
+    </TableRow>
+
+    <TableRow
         android:id="@+id/balanceRow"
         android:layout_marginTop="@dimen/margin_18">
 
@@ -158,25 +176,6 @@
     </TableRow>
 
     <TableRow
-            android:id="@+id/feeRow"
-            android:layout_marginTop="@dimen/margin_18">
-
-        <TextView
-                android:id="@+id/fee_label"
-                android:text="@string/transaction_fee"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-        <TextView
-                android:id="@+id/fee_value"
-                android:layout_weight="1"
-                android:text=" - "
-                android:textAlignment="viewEnd"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-    </TableRow>
-
-    <TableRow
             android:id="@+id/confirmCodeRow"
             android:layout_marginTop="@dimen/margin_18">
 
@@ -186,10 +185,10 @@
                 android:textSize="@dimen/text_16" />
 
         <include android:id="@+id/confirmCodeCopy"
-            android:layout_width="match_parent"
+            layout="@layout/stax_copiable_text_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            layout="@layout/stax_copiable_text_layout"/>
+            android:layout_weight="1"/>
     </TableRow>
 
     <TableRow android:layout_marginTop="@dimen/margin_18">
@@ -202,11 +201,9 @@
         <include
                 android:id="@+id/details_stax_uuid"
                 layout="@layout/stax_copiable_text_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:gravity="end" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </TableRow>
 

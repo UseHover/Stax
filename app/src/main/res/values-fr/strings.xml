@@ -300,9 +300,9 @@
 
     <string name="descrip_multcontacts">%1$d contacts</string>
 
-    <string name="descrip_airtime_sent">%1$d a envoyé du temps d\'antenne à %2$s</string>
+    <string name="descrip_airtime_sent">%1$s a envoyé du temps d\'antenne à %2$s</string>
 
-    <string name="descrip_transfer_sent">%1$d a envoyé de l\'argent à %2$s</string>
+    <string name="descrip_transfer_sent">%1$s a envoyé de l\'argent à %2$s</string>
 
     <string name="descrip_transfer_received">reçu de l\'argent de %1$s</string>
 

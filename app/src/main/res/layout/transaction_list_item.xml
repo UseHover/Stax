@@ -38,7 +38,7 @@
 			android:layout_gravity="center_vertical"
 			android:gravity="center_vertical">
 
-			<TextView android:id="@+id/li_description"
+			<TextView android:id="@+id/li_title"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="center_vertical"
@@ -46,7 +46,7 @@
 				android:textSize="@dimen/text_16"
 				android:fontFamily="@font/brutalista_regular"/>
 
-			<TextView android:id="@+id/li_status"
+			<TextView android:id="@+id/li_detail"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/margin_5"

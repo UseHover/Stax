@@ -24,9 +24,9 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         getAttrs(context, attributeSet)
     }
 
-    override fun getAttrs(context: Context, attributeSet: AttributeSet) {
-        super.getAttrs(context, attributeSet)
-        val attributes = context.theme.obtainStyledAttributes(attributeSet, R.styleable.ChannelDropdown, 0, 0)
+    override fun getAttrs(context: Context, attrs: AttributeSet) {
+        super.getAttrs(context, attrs)
+        val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.ChannelDropdown, 0, 0)
 
         try {
             showSelected = attributes.getBoolean(R.styleable.ChannelDropdown_show_selected, true)
