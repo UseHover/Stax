@@ -4,6 +4,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -33,14 +34,13 @@ class NavHelper(val activity: AppCompatActivity) {
 
     private var navController: NavController? = null
     private var appBarConfiguration: AppBarConfiguration? = null
-    private var navHostFragment: NavHostFragment? = null
 
     fun setUpNav() {
         val nav = activity.findViewById<BottomNavigationView>(R.id.nav_view)
-        navHostFragment = activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFragment?.let { navController = it.navController }
 
-        navHostFragment?.let {
-            navController = getNavController()
+        navController?.let {
             NavigationUI.setupWithNavController(nav, navController!!)
             appBarConfiguration = AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_balance, R.id.navigation_request, R.id.libraryFragment, R.id.navigation_settings
@@ -51,11 +51,15 @@ class NavHelper(val activity: AppCompatActivity) {
         setDestinationChangeListener(nav)
     }
 
-    fun navigateWellness(tipId: String?) = NavUtil.navigate(getNavController(), MainNavigationDirections.actionGlobalWellnessFragment(tipId))
+    fun navigateWellness(tipId: String?) = navController?.let {
+        NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment(tipId)) }
 
-    fun navigateToBountyList() = NavUtil.navigate(getNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
+    fun navigateToBountyList() = navController?.let {
+        NavUtil.navigate(it, BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment()) }
 
-    fun showTxnDetails(uuid: String) = NavUtil.showTransactionDetailsFragment(getNavController(), uuid)
+//    fun showTxnDetails(uuid: String) = navController?.let {
+//        NavUtil.showTransactionDetailsFragment(it, uuid) }
+    fun showTxnDetails(uuid: String) = MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid)
 
     fun navigateTransfer(type: String, txnUUID: String? = null) {
         val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
@@ -63,15 +67,13 @@ class NavHelper(val activity: AppCompatActivity) {
         checkPermissionsAndNavigate(transferDirection)
     }
 
-    private fun getNavController(): NavController = navHostFragment!!.navController
-
     private fun setNavClickListener(nav: BottomNavigationView) {
         nav.setOnItemSelectedListener {
             checkPermissionsAndNavigate(getNavDirections(it.itemId))
             true
         }
         nav.setOnItemReselectedListener {
-            if (getNavController().currentDestination?.id != it.itemId) {
+            if (navController?.currentDestination?.id != it.itemId) {
                 checkPermissionsAndNavigate(getNavDirections(it.itemId))
             }
         }
@@ -97,8 +99,9 @@ class NavHelper(val activity: AppCompatActivity) {
         )
 
         when {
-            exemptRoutes.contains(it) || permissionHelper.hasBasicPerms() -> NavUtil.navigate(getNavController(), it)
-            else -> requestBasicPerms()
+            exemptRoutes.contains(it) || permissionHelper.hasBasicPerms() -> {
+                navController?.let { NavUtil.navigate(navController!!, navDirections) }
+            } else -> requestBasicPerms()
         }
     }
 

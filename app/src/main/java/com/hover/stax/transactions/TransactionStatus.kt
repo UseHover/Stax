@@ -45,12 +45,12 @@ class TransactionStatus(val transaction: StaxTransaction) {
 
     }
 
-    fun getDisplayType(c: Context, a: HoverAction): String {
+    fun getDisplayType(c: Context, to_institution_name: String): String {
         return when (transaction.transaction_type) {
             HoverAction.BALANCE -> c.getString(R.string.check_balance)
             HoverAction.AIRTIME -> c.getString(R.string.buy_airtime)
-            HoverAction.P2P -> c.getString(R.string.display_transfer_money, a.to_institution_name)
-            HoverAction.ME2ME -> c.getString(R.string.display_transfer_money, a.to_institution_name)
+            HoverAction.P2P -> c.getString(R.string.display_transfer_money, to_institution_name)
+            HoverAction.ME2ME -> c.getString(R.string.display_transfer_money, to_institution_name)
             HoverAction.C2B -> c.getString(R.string.display_bill_payment)
             HoverAction.RECEIVE -> c.getString(R.string.display_money_received)
             else -> "Other"

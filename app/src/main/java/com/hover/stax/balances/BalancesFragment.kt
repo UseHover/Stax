@@ -73,7 +73,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
 
     private fun callHover(account: Account, action: HoverAction) {
         balancesViewModel.requestBalance(null)
-        (requireActivity() as AbstractHoverCallerActivity).run(account, action)
+        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 
     private fun setUpLinkNewAccount() {

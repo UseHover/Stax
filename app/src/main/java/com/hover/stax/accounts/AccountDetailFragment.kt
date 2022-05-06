@@ -202,7 +202,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun callHover(account: Account, action: HoverAction) {
         balancesViewModel.requestBalance(null)
-        (requireActivity() as AbstractHoverCallerActivity).run(account, action)
+        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 
     private fun setUpRemoveAccount(account: Account) {

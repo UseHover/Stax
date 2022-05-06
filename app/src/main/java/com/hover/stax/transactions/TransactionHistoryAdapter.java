@@ -47,7 +47,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
         StaxTransaction t = transactions.get(position);
 
         holder.binding.liDescription.setText(String.format("%s%s", t.description.substring(0, 1).toUpperCase(), t.description.substring(1)));
-        holder.binding.liAmount.setText(t.getDisplayAmount());
+        holder.binding.liAmount.setText(t.getSignedAmount(t.amount));
         holder.binding.liHeader.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
         holder.binding.liHeader.setText(DateUtils.humanFriendlyDate(t.initiated_at));
 

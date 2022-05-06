@@ -14,7 +14,6 @@ import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
@@ -256,7 +255,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         val actionToRun = actionSelectViewModel.activeAction.value
 
         if (!actions.isNullOrEmpty() && account != null)
-            (requireActivity() as AbstractHoverCallerActivity).run(account, actionToRun?: actions.first(), viewModel.wrapExtras(), 0)
+            (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun?: actions.first(), viewModel.wrapExtras(), 0)
         else
             Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $account")
     }

@@ -3,6 +3,8 @@ package com.hover.stax.hover
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.TransactionContract
@@ -10,10 +12,8 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.home.NavHelper
-import com.hover.stax.hover.HoverSession
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
-import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.USSDLogBottomSheetFragment
 import com.hover.stax.transactions.UUID
 import com.hover.stax.utils.*
@@ -36,6 +36,8 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     private val balancesViewModel: BalancesViewModel by viewModel()
 
+    lateinit var navHelper: NavHelper
+
     private fun runAction(hsb: HoverSession.Builder) = try {
         hsb.run()
         updatePushNotifGroupStatus()
@@ -44,11 +46,11 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         createLog(hsb, "Failed Actions")
     }
 
-    fun run(account: Account, action: HoverAction) {
-        run(account, action, null, account.id) // Constants.REQUEST_REQUEST
+    fun runSession(account: Account, action: HoverAction) {
+        runSession(account, action, null, account.id) // Constants.REQUEST_REQUEST
     }
 
-    fun run(account: Account, action: HoverAction, extras: HashMap<String, String>?, requestCode: Int) {
+    fun runSession(account: Account, action: HoverAction, extras: HashMap<String, String>?, requestCode: Int) {
         val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity, requestCode)
         if (!extras.isNullOrEmpty()) hsb.extras(extras)
         runAction(hsb)
@@ -83,8 +85,9 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Timber.v("received result. %s", data?.action)
-        Timber.v("uuid? %s", data?.extras?.getString("uuid"))
+        Timber.e("code: %s", requestCode)
+        Timber.e("received result. %s", data?.action)
+        Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
         when (requestCode) {
             REQUEST_REQUEST -> showMessage(getString(R.string.toast_confirm_request))
@@ -137,16 +140,8 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            NavHelper(this).showTxnDetails(data.extras!!.getString("uuid")!!)
-        }
-    }
-
-    fun showUSSDLogBottomSheet(uuid: String) {
-        USSDLogBottomSheetFragment().apply {
-            val bundle = Bundle()
-            bundle.putString(UUID, uuid)
-            arguments = bundle
-            show(supportFragmentManager, tag)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.transactionDetailsFragment,
+                bundleOf(Pair("uuid", data.extras!!.getString("uuid")!!)))
         }
     }
 

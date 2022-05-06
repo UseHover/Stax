@@ -3,15 +3,11 @@ package com.hover.stax.views
 import android.app.Activity
 import android.content.Context
 import android.graphics.PorterDuff
-import android.os.Build
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
@@ -47,7 +43,7 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
     }
 
     fun setDialogTitle(title: String?): StaxDialog {
-        mView.findViewById<LinearLayout>(R.id.header)?.let { it.visibility = View.VISIBLE }
+        mView.findViewById<LinearLayout>(R.id.transaction_header)?.let { it.visibility = View.VISIBLE }
         mView.findViewById<View?>(R.id.title)?.let { (it as TextView).text = title }
 
         return this

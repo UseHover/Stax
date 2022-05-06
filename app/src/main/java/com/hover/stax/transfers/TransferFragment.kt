@@ -234,7 +234,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun callHover(requestCode: Int) {
-        (requireActivity() as AbstractHoverCallerActivity).run(payWithDropdown.highlightedAccount ?: accountsViewModel.activeAccount.value!!,
+        (requireActivity() as AbstractHoverCallerActivity).runSession(payWithDropdown.highlightedAccount ?: accountsViewModel.activeAccount.value!!,
             actionSelectViewModel.activeAction.value!!, getExtras(), requestCode)
     }
 

@@ -12,24 +12,17 @@
             app:showBack="true"
             app:title="@string/nav_transaction">
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <include
+                    android:id="@+id/transaction_header"
+                    layout="@layout/transaction_details_header" />
 
             <include
-                    android:id="@+id/primaryStatus"
-                    layout="@layout/transaction_details_primarystatus" />
+                    android:id="@+id/statusInfo"
+                    layout="@layout/transaction_details_status" />
 
             <include
-                    android:id="@+id/secondaryStatus"
-                    layout="@layout/transaction_details_secondary_status" />
-
-            <include
-                    android:id="@+id/info_card"
+                    android:id="@+id/details"
                     layout="@layout/transaction_details_info_card" />
-
-        </LinearLayout>
 
     </com.hover.stax.views.StaxCardView>
 

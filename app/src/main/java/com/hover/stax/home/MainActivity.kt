@@ -1,7 +1,10 @@
 package com.hover.stax.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
@@ -41,19 +44,12 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var navHelper: NavHelper
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
         navHelper = NavHelper(this)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        accountsViewModel.activeAccount.observe(this) { Timber.v("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
-        accountsViewModel.channelActions.observe(this) { Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
-        actionSelectViewModel.activeAction.observe(this) { Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
-
         navHelper.setUpNav()
 
         initFromIntent()
@@ -63,6 +59,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         observeForAppReview()
         setGoogleLoginInterface(this)
     }
+
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -83,21 +80,19 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     }
 
     private fun startObservers() {
+        // The class name is to prevent the SAM constructor from being compiled to singleton causing breakages. See
+        // https://stackoverflow.com/a/54939860/2371515
+        actionSelectViewModel.activeAction.observe(this) {
+            Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
+
         with(accountsViewModel) {
-            //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
-            //https://stackoverflow.com/a/54939860/2371515
-            val accountsObserver = object : Observer<List<Account>> {
-                override fun onChanged(t: List<Account>?) {
-                    logResult("Observing selected channels", t?.size ?: 0)
-                }
-            }
-
-            accounts.observe(this@MainActivity, accountsObserver)
+            activeAccount.observe(this@MainActivity) {
+                Timber.v("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
+            channelActions.observe(this@MainActivity) {
+                Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
+            accounts.observe(this@MainActivity) {
+                Timber.v("Observing accounts ${this.javaClass.simpleName}: %s", it?.size) }
         }
-    }
-
-    private fun logResult(result: String, size: Int) {
-        Timber.i(result.plus(" $size"))
     }
 
     private fun checkForRequest(intent: Intent) {

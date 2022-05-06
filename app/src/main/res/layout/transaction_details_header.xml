@@ -6,9 +6,10 @@
         android:orientation="vertical">
 
     <ImageView
-            android:id="@+id/statusIcon"
-            android:layout_width="@dimen/margin_55"
-            android:layout_height="@dimen/margin_55" />
+        android:id="@+id/status_icon"
+        android:layout_width="@dimen/margin_55"
+        android:layout_height="@dimen/margin_55"
+        android:contentDescription="@string/successful_content_descrip" />
 
     <TextView
             android:id="@+id/status_text"
@@ -20,12 +21,11 @@
             android:textSize="@dimen/text_21" />
 
     <TextView
-            android:id="@+id/newBalance"
+            android:id="@+id/main_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:visibility="gone" />
+            android:gravity="center_horizontal" />
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/viewLogText"

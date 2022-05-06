@@ -12,7 +12,7 @@
             android:paddingVertical="@dimen/margin_16">
 
         <ImageView
-                android:id="@+id/status_icon"
+                android:id="@+id/institution_logo"
                 android:layout_width="@dimen/margin_43"
                 android:layout_height="@dimen/margin_43"
                 android:layout_marginStart="@dimen/margin_16" />

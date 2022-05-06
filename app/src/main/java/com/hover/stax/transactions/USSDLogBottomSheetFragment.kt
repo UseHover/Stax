@@ -39,8 +39,8 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 
 	private fun setCardTitle() {
 		viewModel.action.observe(viewLifecycleOwner){
-			if(it !=null) {
-				val type = viewModel.transaction.value!!.fullStatus.getDisplayType(requireContext(), it)
+			if (it != null) {
+				val type = viewModel.transaction.value!!.fullStatus.getDisplayType(requireContext(), it.to_institution_name)
 				binding.messagesCard.apply{
 					setTitle(getString(R.string.session_fullDesc_cardhead, it.from_institution_name, type ))
 					setIcon(getString(R.string.root_url) + it.from_institution_logo)

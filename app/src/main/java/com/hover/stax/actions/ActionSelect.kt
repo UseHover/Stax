@@ -51,7 +51,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         uniqueInstitutions = sort(filteredActions)
         val actionDropdownAdapter = ActionDropdownAdapter(uniqueInstitutions!!, context)
 
-        binding.header.setText(if (uniqueInstitutions!!.firstOrNull()?.transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
+        binding.actionHeader.setText(if (uniqueInstitutions!!.firstOrNull()?.transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
         binding.actionDropdown.visibility = if (showRecipientNetwork(uniqueInstitutions!!)) View.VISIBLE else View.GONE
         binding.actionDropdown.autoCompleteTextView.setAdapter(actionDropdownAdapter)
     }
@@ -97,7 +97,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     }
 
     private fun selectOnlyOption(option: HoverAction) {
-        binding.header.visibility = GONE
+        binding.actionHeader.visibility = GONE
         binding.isSelfRadio.visibility = GONE
         if (!option.requiresRecipient())
             setState(context.getString(R.string.self_only_money_warning), AbstractStatefulInput.INFO)
@@ -106,7 +106,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
 
     private fun createOptions(recipientInstitutionActions: List<HoverAction>) {
         val radioVisibility = if (recipientInstitutionActions.size > 1) VISIBLE else GONE
-        binding.header.visibility = radioVisibility
+        binding.actionHeader.visibility = radioVisibility
         binding.isSelfRadio.removeAllViews()
         binding.isSelfRadio.clearCheck()
         binding.isSelfRadio.visibility = radioVisibility
