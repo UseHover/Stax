@@ -170,10 +170,10 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         fab.setOnClickListener { fabClicked() }
     }
 
-    private fun setClickListeners() {
-        binding.shareCard.smsShareSelection.setOnClickListener { sendSms(requestViewModel) }
-        binding.shareCard.whatsappShareSelection.setOnClickListener { sendWhatsapp(requestViewModel) }
-        binding.shareCard.copylinkShareSelection.setOnClickListener { copyShareLink(it, requestViewModel) }
+    private fun setClickListeners() = with(binding.shareCard) {
+        smsShareSelection.setOnClickListener { sendSms(requestViewModel) }
+        whatsappShareSelection.setOnClickListener { sendWhatsapp(requestViewModel) }
+        copylinkShareSelection.setOnClickListener { copyShareLink(it, requestViewModel) }
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {

@@ -3,6 +3,7 @@ package com.hover.stax.requests
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Handler
@@ -92,24 +93,24 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    fun copyShareLink(r: Request?, copyBtn: TextView, a: Activity) {
+    fun copyShareLink(r: Request?, copyBtn: TextView, c: Context) {
         when {
-            r == null -> showError(a)
-            copyToClipboard(r.generateMessage(a), a) -> {
-                logAnalyticsEvent(a.getString(R.string.clicked_copylink_request), a)
+            r == null -> showError(c)
+            copyToClipboard(r.generateMessage(c), c) -> {
+                logAnalyticsEvent(c.getString(R.string.clicked_copylink_request), c)
                 copyBtn.isActivated = true
-                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, a.resources.getDrawable(R.drawable.img_check), null, null)
-                copyBtn.text = a.getString(R.string.link_copied_label)
+                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, c.resources.getDrawable(R.drawable.img_check), null, null)
+                copyBtn.text = c.getString(R.string.link_copied_label)
             }
             else -> {
                 copyBtn.isActivated = false
-                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, a.resources.getDrawable(R.drawable.img_copy), null, null)
-                copyBtn.text = a.getString(R.string.copyLink_label)
+                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, c.resources.getDrawable(R.drawable.img_copy), null, null)
+                copyBtn.text = c.getString(R.string.copyLink_label)
             }
         }
     }
 
-    fun showError(a: Activity) {
-        flashMessage(a, a.getString(R.string.loading_link_dialoghead))
+    fun showError(c: Context) {
+        flashMessage(c, c.getString(R.string.loading_link_dialoghead))
     }
 }
