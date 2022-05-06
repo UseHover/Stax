@@ -140,6 +140,10 @@ data class StaxTransaction(
 		}
 	}
 
+	val isRetryable: Boolean
+		get() = transaction_type == HoverAction.P2P || transaction_type == HoverAction.AIRTIME
+				|| transaction_type == HoverAction.BALANCE
+
 	val isFailed: Boolean
 		get() = status == Transaction.FAILED
 	val isSuccessful: Boolean

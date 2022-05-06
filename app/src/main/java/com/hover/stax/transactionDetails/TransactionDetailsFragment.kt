@@ -185,7 +185,7 @@ class TransactionDetailsFragment : Fragment() {
             val button = showButtonToClick()
             if (shouldContactSupport(transaction.action_id))
                 setupContactSupportButton(transaction.action_id, button)
-            else
+            else if (transaction.isRetryable)
                 createRetryListener(transaction, button)
         }
         else binding.statusInfo.transactionRetryButtonLayoutId.visibility = GONE
