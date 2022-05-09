@@ -12,36 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_10">
 
-        <TableRow android:id="@+id/amountRow">
-
-            <TextView
-                android:text="@string/transfer_amount_label"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-            <TextView
-                android:id="@+id/amountValue"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_21" />
-        </TableRow>
-
-        <TableRow android:id="@+id/feeRow" android:visibility="gone">
-
-            <TextView
-                android:text="@string/transfer_fee_label"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-            <TextView
-                android:id="@+id/feeValue"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_21" />
-        </TableRow>
-
         <TableRow
             android:id="@+id/accountsRow"
             android:layout_marginTop="@dimen/margin_21">
@@ -71,6 +41,36 @@
                 android:id="@+id/recipientValue"
                 android:layout_weight="1"
                 android:textAlignment="viewEnd" />
+        </TableRow>
+
+        <TableRow android:id="@+id/amountRow">
+
+            <TextView
+                android:text="@string/transfer_amount_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+            <TextView
+                android:id="@+id/amountValue"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_21" />
+        </TableRow>
+
+        <TableRow android:id="@+id/feeRow" android:visibility="gone">
+
+            <TextView
+                android:text="@string/transfer_fee_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+            <TextView
+                android:id="@+id/feeValue"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_21" />
         </TableRow>
 
         <TableRow

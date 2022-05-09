@@ -87,7 +87,8 @@ class TransactionDetailsFragment : Fragment() {
         viewModel.action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         viewModel.contact.observe(viewLifecycleOwner) { updateRecipient(it) }
         viewModel.account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
-        viewModel.hoverTransaction.observe(viewLifecycleOwner) { it?.let { updateSpecial(it) } }
+        viewModel.hoverTransaction.observe(viewLifecycleOwner) { it?.let { updateTransaction(it) } }
+        viewModel.messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
     }
 
     private fun showTransaction(transaction: StaxTransaction?) {
@@ -166,10 +167,23 @@ class TransactionDetailsFragment : Fragment() {
         binding.details.feeLabel.text = getString(R.string.transaction_fee, account.name)
     }
 
-    private fun updateSpecial(t: Transaction) {
+    private fun updateTransaction(t: Transaction) {
         viewModel.action.value?.let {
             if (it.transaction_type == HoverAction.C2B && t.input_extras.has(HoverAction.ACCOUNT_KEY)) {
                 binding.details.recipientValue.setTitle(t.input_extras.getString(HoverAction.ACCOUNT_KEY))
+            }
+        }
+    }
+
+    private fun updateMessages(ussdCallResponses: List<UssdCallResponse>?) {
+        viewModel.action.value?.let {
+            viewModel.transaction.value?.let { t ->
+                binding.statusInfo.longDescription.text = t.longDescription(
+                    it,
+                    ussdCallResponses?.last(),
+                    viewModel.sms.value,
+                    requireContext()
+                )
             }
         }
     }

@@ -64,6 +64,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         checkForRequest(intent!!)
+        checkForFragmentDirection(intent)
     }
 
     override fun onResume() {
@@ -97,7 +98,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
 
     private fun checkForRequest(intent: Intent) {
         if (intent.hasExtra(REQUEST_LINK)) {
-            navHelper.checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P))
             createFromRequest(intent.getStringExtra(REQUEST_LINK)!!)
         }
     }
@@ -122,13 +122,15 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     }
 
     private fun createFromRequest(link: String) {
-        val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
-        transferViewModel.request.observe(this@MainActivity) { it?.let {
-            transferViewModel.load(it)
-            alertDialog?.dismiss()
-        } }
-        transferViewModel.decrypt(link)
+        navHelper.checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P))
+        addLoadingDialog()
+        transferViewModel.load(link)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
+    }
+
+    private fun addLoadingDialog() {
+        val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
+        transferViewModel.isLoading.observe(this@MainActivity) { if (!it) alertDialog?.dismiss() }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

@@ -28,7 +28,7 @@ object UIHelper {
     }
 
     private fun showSnack(view: View, message: String?) {
-        val s = Snackbar.make(view, message!!, Snackbar.LENGTH_SHORT)
+        val s = Snackbar.make(view, message!!, Snackbar.LENGTH_LONG)
         s.anchorView = view
         s.show()
     }

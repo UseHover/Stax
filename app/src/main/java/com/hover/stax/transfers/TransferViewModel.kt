@@ -24,16 +24,10 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
-    var request: MutableLiveData<Request?> = MutableLiveData()
+
+    val isLoading = MutableLiveData<Boolean>(false)
 
     fun setAmount(a: String?) = amount.postValue(a)
-
-    private fun setContact(contactIds: List<String>?) = contactIds?.let {
-        viewModelScope.launch {
-            val contacts = contactRepo.getContacts(contactIds.toTypedArray())
-            if (contacts.isNotEmpty()) contact.postValue(contacts.first())
-        }
-    }
 
     fun setContact(sc: StaxContact?) = sc?.let { contact.postValue(it) }
 
@@ -46,18 +40,21 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
         contact.value = if (str.isNullOrEmpty()) StaxContact() else StaxContact(str)
     }
 
-    fun setRecipientSmartly(r: Request?, countryAlpha2: String?) {
-        r?.let {
-            viewModelScope.launch(Dispatchers.IO) {
+    private fun setRecipientSmartly(r: Request?, countryAlpha2: String?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            r?.let {
                 try {
-                    val formattedPhone = PhoneHelper.getNationalSignificantNumber(r.requester_number, countryAlpha2 ?: Lingver.getInstance().getLocale().country)
+                    val formattedPhone = PhoneHelper.getNationalSignificantNumber(
+                        r.requester_number,
+                        countryAlpha2 ?: Lingver.getInstance().getLocale().country)
                     val sc = contactRepo.getContactByPhone(formattedPhone)
-                    sc?.let { contact.postValue(it) }
+                    contact.postValue( sc ?: StaxContact(r.requester_number))
+                    isLoading.postValue(false)
                 } catch (e: NumberFormatException) {
-                    AnalyticsUtil.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
+                    AnalyticsUtil.logErrorAndReportToFirebase(
+                        TransferViewModel::class.java.simpleName, e.message!!, e)
                 }
             }
-        }
     }
 
     private fun setNote(n: String?) = note.postValue(n)
@@ -86,27 +83,15 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
         return extras
     }
 
-    fun decrypt(encryptedString: String): LiveData<Request?> {
-        viewModelScope.launch {
-            request = requestRepo.decrypt(encryptedString, getApplication())
-        }
-        return request
-    }
-
-    fun load(r: Request) {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), getApplication())
-        setRecipientSmartly(r, r.requester_country_alpha2)
-        setAmount(r.amount)
-        setContact(r.requestee_ids.split(","))
-        setNote(r.note)
-    }
-
-    fun checkSchedule() {
-        schedule.value?.let {
-            if (it.end_date <= DateUtils.today()) {
-                it.complete = true
-                scheduleRepo.update(it)
-            }
+    fun load(encryptedString: String) = viewModelScope.launch {
+        isLoading.postValue(true)
+        val r: Request? = requestRepo.decrypt(encryptedString, getApplication())
+        Timber.v("Loaded request %s", r)
+        r?.let {
+            setRecipientSmartly(r, r.requester_country_alpha2)
+            setAmount(r.amount)
+            setNote(r.note)
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), getApplication())
         }
     }
 
@@ -124,6 +109,5 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
         amount.value = null
         contact.value = null
         note.value = null
-        request.value = null
     }
 }

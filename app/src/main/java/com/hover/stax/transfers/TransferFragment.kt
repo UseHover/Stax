@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.getColor
+import androidx.core.view.isEmpty
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -109,7 +110,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
-        observeRequest()
     }
 
     private fun observeAccountList() {
@@ -121,21 +121,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun observeActiveAccount() {
         accountsViewModel.activeAccount.observe(viewLifecycleOwner) { account ->
-            account?.let {
-                transferViewModel.request.value?.let { request ->
-                    transferViewModel.setRecipientSmartly(request, it.countryAlpha2)
-                    payWithDropdown.setState(getString(R.string.channel_request_fieldinfo, request.requester_institution_id.toString()), AbstractStatefulInput.INFO)
-                }
-                binding.summaryCard.accountValue.setTitle(it.toString())
-
-            }
+            account?.let { binding.summaryCard.accountValue.setTitle(it.toString()) }
             binding.editCard.actionSelect.visibility = if (account != null) View.VISIBLE else View.GONE
-        }
-    }
-
-    private fun observeRequest() {
-        transferViewModel.request.observe(viewLifecycleOwner) {
-            transferViewModel.setRecipientSmartly(it, accountsViewModel.activeAccount.value?.countryAlpha2)
         }
     }
 
@@ -170,6 +157,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeAmount() {
         transferViewModel.amount.observe(viewLifecycleOwner) {
             it?.let {
+                if (binding.editCard.amountInput.text.isEmpty())
+                    binding.editCard.amountInput.setText(it)
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             }
         }
