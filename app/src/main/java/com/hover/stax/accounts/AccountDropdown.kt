@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
@@ -42,7 +43,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun accountUpdate(accounts: List<Account>) {
         if (!accounts.isNullOrEmpty()) {
-            updateChoices(accounts)
+            updateChoices(accounts.toMutableList())
         } else if (!hasExistingContent()) {
             setState(context.getString(R.string.accounts_error_no_accounts), NONE)
         }
@@ -67,8 +68,9 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
-    private fun updateChoices(accounts: List<Account>) {
+    private fun updateChoices(accounts: MutableList<Account>) {
         if (highlightedAccount == null) setDropdownValue(null)
+        accounts.add(Account("Add account"))
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
@@ -79,7 +81,10 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun onSelect(account: Account?) {
         setDropdownValue(account)
-        account?.let { highlightListener?.highlightAccount(it) }
+        if (account != null && account.id != 0)
+            account.let { highlightListener?.highlightAccount(it) }
+        else
+            findNavController().navigate(R.id.navigation_linkAccount)
     }
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0

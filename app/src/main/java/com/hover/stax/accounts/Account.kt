@@ -51,6 +51,8 @@ data class Account(
             name, name, channel.logoUrl, "", channel.institutionId, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex
     )
 
+    constructor(name: String) : this(name, primaryColor = "#292E35")
+
     constructor(name: String, primaryColor: String) : this(
             name, alias = name, logoUrl = "", accountNo = "", institutionId = -1, countryAlpha2 = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
     )
