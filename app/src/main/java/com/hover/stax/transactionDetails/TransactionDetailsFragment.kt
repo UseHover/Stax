@@ -1,5 +1,6 @@
 package com.hover.stax.transactionDetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +8,10 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -21,11 +24,13 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.home.MainActivity
+import com.hover.stax.home.NavHelper
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import org.json.JSONException
@@ -207,13 +212,23 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun createRetryListener(transaction: StaxTransaction, retryButton: TextView) {
         retryButton.setOnClickListener {
-            if (viewModel.account.value == null || viewModel.action.value == null || viewModel.contact.value == null || viewModel.transaction.value == null)
+            if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
                 UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
-            else {
-                updateRetryCounter(transaction.action_id)
-                (requireActivity() as AbstractHoverCallerActivity).runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
-            }
+            else { retry(transaction) }
         }
+    }
+
+    private fun retry(transaction: StaxTransaction) {
+        updateRetryCounter(transaction.action_id)
+        if (transaction.transaction_type == HoverAction.BALANCE) {
+            (requireActivity() as AbstractHoverCallerActivity)
+                .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
+        } else { navToTransferDetail(transaction) }
+    }
+
+    private fun navToTransferDetail(transaction: StaxTransaction) {
+        NavUtil.navigateTransfer(findNavController(), transaction.transaction_type,
+            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id)
     }
 
     private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {

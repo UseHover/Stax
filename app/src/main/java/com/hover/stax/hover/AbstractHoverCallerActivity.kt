@@ -92,7 +92,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
             FEE_REQUEST -> showFeeDetails(data)
             else -> {
                 balancesViewModel.setBalanceState(true)
-                showPopUpTransactionDetailsIfRequired(data)
+                navToTransactionDetail(data)
             }
         }
     }
@@ -107,10 +107,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     private fun showBountyDetails(data: Intent?) {
         Timber.i("Request code is bounty")
-        if (data != null) {
-            val transactionUUID = data.getStringExtra("uuid")
-            if (transactionUUID != null) NavHelper(this).showTxnDetails(transactionUUID)
-        }
+        navToTransactionDetail(data)
     }
 
     private fun showFeeDetails(data: Intent?) {
@@ -135,10 +132,10 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         return "No fee information found"
     }
 
-    private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
+    private fun navToTransactionDetail(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            findNavController(R.id.nav_host_fragment).navigate(R.id.transactionDetailsFragment,
-                bundleOf(Pair("uuid", data.extras!!.getString("uuid")!!)))
+            NavUtil.showTransactionDetailsFragment(findNavController(R.id.nav_host_fragment),
+                data.extras!!.getString("uuid")!!)
         }
     }
 

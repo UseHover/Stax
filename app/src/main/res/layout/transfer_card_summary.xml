@@ -27,7 +27,7 @@
                 android:textSize="@dimen/text_21" />
         </TableRow>
 
-        <TableRow android:id="@+id/feeRow">
+        <TableRow android:id="@+id/feeRow" android:visibility="gone">
 
             <TextView
                 android:text="@string/transfer_fee_label"

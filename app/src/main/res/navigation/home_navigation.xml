@@ -262,10 +262,20 @@
                 android:name="transactionType"
                 app:argType="string" />
         <argument
-                android:name="transactionUUID"
-                android:defaultValue="@null"
-                app:argType="string"
-                app:nullable="true" />
+            android:name="accountId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="amount"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="contactId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
 
         <deepLink
                 android:id="@+id/transferDL"

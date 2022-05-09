@@ -54,16 +54,11 @@ class NavHelper(val activity: AppCompatActivity) {
     fun navigateWellness(tipId: String?) = navController?.let {
         NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment(tipId)) }
 
-    fun navigateToBountyList() = navController?.let {
-        NavUtil.navigate(it, BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment()) }
-
-//    fun showTxnDetails(uuid: String) = navController?.let {
-//        NavUtil.showTransactionDetailsFragment(it, uuid) }
-    fun showTxnDetails(uuid: String) = MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid)
-
-    fun navigateTransfer(type: String, txnUUID: String? = null) {
+    fun navigateTransfer(type: String, accountId: String? = null, amount: String? = null, contactId: String? = null) {
         val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
-        txnUUID?.let { transferDirection.transactionUUID = it }
+        accountId?.let { transferDirection.accountId = it }
+        amount?.let { transferDirection.amount = it }
+        contactId?.let { transferDirection.contactId = it }
         checkPermissionsAndNavigate(transferDirection)
     }
 

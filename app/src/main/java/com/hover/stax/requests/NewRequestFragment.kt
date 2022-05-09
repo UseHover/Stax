@@ -164,7 +164,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 requestViewModel.addRecipient(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(requireActivity()) }
+            setChooseContactListener { startContactPicker(requireActivity()) }
         }
 
         fab.setOnClickListener { fabClicked() }

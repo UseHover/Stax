@@ -13,4 +13,12 @@ object NavUtil {
     fun showTransactionDetailsFragment(navController: NavController, uuid: String) {
         navigate(navController, MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid))
     }
+
+    fun navigateTransfer(navController: NavController, type: String, accountId: String? = null, amount: String? = null, contactId: String? = null) {
+        val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
+        accountId?.let { transferDirection.accountId = it }
+        amount?.let { transferDirection.amount = it }
+        contactId?.let { transferDirection.contactId = it }
+        navigate(navController, transferDirection)
+    }
 }

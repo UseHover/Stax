@@ -38,6 +38,8 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             activeAccount.postValue(accounts.firstOrNull { it.isDefault })
     }
 
+    fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value?.find { it.id == accountId }) }
+
     fun getActionType(): String = type.value!!
 
     private fun loadActions(type: String?) {

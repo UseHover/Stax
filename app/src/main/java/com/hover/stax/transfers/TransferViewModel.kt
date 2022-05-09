@@ -17,6 +17,7 @@ import com.hover.stax.utils.DateUtils
 import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TransferViewModel(application: Application, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
@@ -27,18 +28,20 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
 
     fun setAmount(a: String?) = amount.postValue(a)
 
-    private fun setContact(contactIds: String?) = contactIds?.let {
+    private fun setContact(contactIds: List<String>?) = contactIds?.let {
         viewModelScope.launch {
-            val contacts = contactRepo.getContacts(contactIds.split(",").toTypedArray())
+            val contacts = contactRepo.getContacts(contactIds.toTypedArray())
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())
         }
     }
 
     fun setContact(sc: StaxContact?) = sc?.let { contact.postValue(it) }
 
-    fun forceUpdateContactUI() = contact.postValue(contact.value)
+    fun setContact(contactId: String) = viewModelScope.launch(Dispatchers.IO) {
+        contact.postValue(contactRepo.getContact(contactId))
+    }
 
-    fun setRecipient(str: String) {
+    fun setRecipientNumber(str: String) {
         if (contact.value != null && contact.value.toString() == str) return
         contact.value = if (str.isNullOrEmpty()) StaxContact() else StaxContact(str)
     }
@@ -94,7 +97,7 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), getApplication())
         setRecipientSmartly(r, r.requester_country_alpha2)
         setAmount(r.amount)
-        setContact(r.requestee_ids)
+        setContact(r.requestee_ids.split(","))
         setNote(r.note)
     }
 

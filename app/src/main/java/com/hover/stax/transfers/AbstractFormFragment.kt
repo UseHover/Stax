@@ -35,8 +35,6 @@ import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
-const val ADD_SERVICE = 200
-
 abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
@@ -51,27 +49,6 @@ abstract class AbstractFormFragment : Fragment() {
     private lateinit var noWorryText: TextView
 
     var dialog: StaxDialog? = null
-
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            log(getString(R.string.contact_perm_success))
-            contactPickerLauncher.launch(null)
-        } else {
-            log(getString(R.string.contact_perm_denied))
-            UIHelper.flashMessage(requireContext(), getString(R.string.toast_error_contactperm))
-        }
-    }
-
-    private val contactPickerLauncher = registerForActivityResult(ActivityResultContracts.PickContact()) { data ->
-        val staxContact = StaxContact(data, requireActivity())
-        staxContact.accountNumber?.let {
-            log(getString(R.string.contact_select_success))
-            onContactSelected(staxContact)
-        } ?: run {
-            log(getString(R.string.contact_select_error))
-            UIHelper.flashMessage(requireContext(), getString(R.string.toast_error_contactselect))
-        }
-    }
 
     @CallSuper
     open fun init(root: View) {
@@ -98,11 +75,8 @@ abstract class AbstractFormFragment : Fragment() {
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
     }
 
-
     @CallSuper
     open fun showEdit(isEditing: Boolean) {
-        Timber.e("Is editing : $isEditing")
-
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
         summaryCard?.visibility = if (isEditing) View.GONE else View.VISIBLE
         noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
@@ -123,13 +97,33 @@ abstract class AbstractFormFragment : Fragment() {
             else getString(R.string.fab_transfernow)
     }
 
-    open fun contactPicker(c: Context) {
+    open fun startContactPicker(c: Context) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.try_contact_select), c)
 
         if (PermissionUtils.hasContactPermission(c))
             contactPickerLauncher.launch(null)
         else
             requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            log(getString(R.string.contact_perm_success))
+            contactPickerLauncher.launch(null)
+        } else { showError(R.string.toast_error_contactperm, R.string.contact_perm_denied) }
+    }
+
+    private val contactPickerLauncher = registerForActivityResult(ActivityResultContracts.PickContact()) { data ->
+        val staxContact = StaxContact(data, requireActivity())
+        staxContact.accountNumber?.let {
+            log(getString(R.string.contact_select_success))
+            onContactSelected(staxContact)
+        } ?: run { showError(R.string.toast_error_contactselect, R.string.contact_select_error) }
+    }
+
+    private fun showError(userMsg: Int, logMsg: Int) {
+        log(getString(logMsg))
+        UIHelper.flashMessage(requireContext(), getString(userMsg))
     }
 
     abstract fun onContactSelected(contact: StaxContact)

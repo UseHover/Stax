@@ -42,10 +42,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         setTransactionType(args.transactionType)
 
-        args.transactionUUID?.let {
-            Timber.e("TxnUUID is $it. Setting autofill")
-        }
-
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -55,6 +51,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         init(binding.root)
         startObservers(binding.root)
         startListeners()
+        fillFromArgs()
+    }
+
+    private fun fillFromArgs() {
+        args.accountId?.let { accountsViewModel.setActiveAccount(Integer.parseInt(it)) }
+        args.amount?.let { binding.editCard.amountInput.setText(it) }
+        args.contactId?.let { transferViewModel.setContact(it) }
     }
 
     override fun init(root: View) {
@@ -159,6 +162,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun observeSelectedContact() {
         transferViewModel.contact.observe(viewLifecycleOwner) {
+            binding.editCard.contactSelect.setSelected(it)
             binding.summaryCard.recipientValue.setContact(it)
         }
     }
@@ -219,7 +223,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setContact(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(requireActivity()) }
+            setChooseContactListener { startContactPicker(requireActivity()) }
         }
     }
 
@@ -258,7 +262,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, afterCount: Int) {
-            transferViewModel.setRecipient(charSequence.toString())
+            transferViewModel.setRecipientNumber(charSequence.toString())
         }
     }
 
@@ -318,7 +322,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if (!action.requiresRecipient()) {
             binding.summaryCard.recipientValue.setContent(getString(R.string.self_choice), "")
         } else {
-            transferViewModel.forceUpdateContactUI()
+//            transferViewModel.forceUpdateContactUI()
             binding.editCard.contactSelect.setHint(
                 if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
                     getString(R.string.recipientacct_label)
