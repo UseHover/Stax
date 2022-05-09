@@ -28,7 +28,6 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     private val binding get() = _binding!!
 
     init {
-        Timber.e("Initi action select. highlighted?: %s", highlightedAction?.id.toString())
         _binding = ActionSelectBinding.inflate(LayoutInflater.from(context), this, true)
         createListeners()
         visibility = GONE

@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
@@ -136,9 +137,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             it?.let {
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
-
-                Timber.e("in: %s", it.requiredParams)
-                Timber.e("out: %s", it.requiredParams)
             }
         }
     }
@@ -153,16 +151,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun observeSelectedContact() {
-        transferViewModel.contact.observe(viewLifecycleOwner) {
-            binding.editCard.contactSelect.setSelected(it)
+        transferViewModel.contact.observe(viewLifecycleOwner) { it?.let {
             binding.summaryCard.recipientValue.setContact(it)
-        }
+        } }
     }
 
     private fun observeAmount() {
         transferViewModel.amount.observe(viewLifecycleOwner) {
             it?.let {
-                if (binding.editCard.amountInput.text.isEmpty())
+                if (binding.editCard.amountInput.text.isEmpty() && it.isNotEmpty())
                     binding.editCard.amountInput.setText(it)
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             }
@@ -180,7 +177,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         transferViewModel.recentContacts.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
                 binding.editCard.contactSelect.setRecent(it, requireActivity())
-                transferViewModel.contact.value?.let { ct -> binding.editCard.contactSelect.setSelected(ct) }
+                transferViewModel.contact.value?.let { ct ->
+                    if (ct.id != null) binding.editCard.contactSelect.setSelected(ct)
+                }
             }
         }
     }
@@ -212,6 +211,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun setContactInputListener() {
         binding.editCard.contactSelect.apply {
+            setSelected(transferViewModel.contact.value)
             setAutocompleteClickListener { view, _, position, _ ->
                 val contact = view.getItemAtPosition(position) as StaxContact
                 transferViewModel.setContact(contact)

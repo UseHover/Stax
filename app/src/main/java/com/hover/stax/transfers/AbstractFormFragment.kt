@@ -121,8 +121,8 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private val contactPickerLauncher = registerForActivityResult(ActivityResultContracts.PickContact()) { data ->
-        val staxContact = StaxContact(data, requireActivity())
-        staxContact.accountNumber?.let {
+        val staxContact = data?.let { StaxContact(data, requireActivity()) }
+        staxContact?.id?.let {
             log(getString(R.string.contact_select_success))
             onContactSelected(staxContact)
         } ?: run { showError(R.string.toast_error_contactselect, R.string.contact_select_error) }

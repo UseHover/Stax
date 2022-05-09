@@ -77,8 +77,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         setSearchInputWatcher()
 
         channelsViewModel.allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, channelsViewModel.countryChoice.value) } }
-        channelsViewModel.sims.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} sims") }
-        channelsViewModel.simCountryList.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} hnis") }
+        channelsViewModel.sims.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} sims") }
+        channelsViewModel.simCountryList.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} hnis") }
         channelsViewModel.accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         channelsViewModel.filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
         channelsViewModel.countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
@@ -194,7 +194,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         else {
             binding.errorText.visibility = GONE
             aggregateSelectedChannels(tracker)
-            Timber.e("Navigating home now")
             findNavController().popBackStack()
             AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
         }
