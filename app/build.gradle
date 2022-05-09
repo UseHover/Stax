@@ -45,8 +45,8 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 131
-        versionName "1.9.1.7" //final version 1.10.0
+        versionCode 132
+        versionName "1.10.0" //final version 1.10.0
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -71,7 +71,6 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "SELF_DESTRUCT", "\"1622450539\""
             FirebasePerformance {
                 instrumentationEnabled false
             }
@@ -80,7 +79,6 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            buildConfigField "String", "SELF_DESTRUCT", "\"1625097599\"" // June 30, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             file(keystorePath).with { propertiesFile ->
