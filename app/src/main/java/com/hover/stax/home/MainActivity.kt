@@ -76,6 +76,10 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         navHelper.checkPermissionsAndNavigate(navDirections)
     }
 
+    fun navigateTransferAutoFill(type: String, transactionUUID: String) {
+        navHelper.navigateTransfer(type, transactionUUID)
+    }
+
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {
         if (it) StaxAppReview.launchStaxReview(this@MainActivity)
     }
@@ -134,18 +138,20 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.e("Request code is bounty")
         if (data != null) {
             val transactionUUID = data.getStringExtra("uuid")
-            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
+            if (transactionUUID != null) navHelper.showTxnDetails(transactionUUID)
         }
     }
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            NavUtil.showTransactionDetailsFragment(
-                data.extras!!.getString("uuid")!!,
-                supportFragmentManager,
-                false
-            )
+            transferViewModel.reset()
+            navHelper.showTxnDetails(data.extras!!.getString("uuid")!!)
         }
+
+//        else {
+//            navHelper.navigateTransfer(TransactionType.type)
+//            transferViewModel.setEditing(false)
+//        }
     }
 
     private fun initFromIntent() {

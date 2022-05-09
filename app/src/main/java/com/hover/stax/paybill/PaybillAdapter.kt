@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.ItemPaybillSavedBinding
+import com.hover.stax.utils.GlideApp
 import com.hover.stax.utils.UIHelper
 
 class PaybillAdapter(private val paybills: List<Paybill>, private val clickListener: ClickListener) : RecyclerView.Adapter<PaybillAdapter.PaybillViewHolder>() {
@@ -31,11 +32,13 @@ class PaybillAdapter(private val paybills: List<Paybill>, private val clickListe
             if (paybill.logo != 0) {
                 binding.billLogo.visibility = View.GONE
                 binding.iconLayout.visibility = View.VISIBLE
+                GlideApp.with(binding.root.context).clear(binding.billLogo)
                 binding.billIcon.setImageDrawable(ContextCompat.getDrawable(binding.billIcon.context, paybill.logo))
             } else {
                 binding.iconLayout.visibility = View.GONE
                 binding.billLogo.visibility = View.VISIBLE
-                UIHelper.loadPicasso(paybill.logoUrl, binding.billLogo)
+
+                UIHelper.loadImage(binding.root.context, paybill.logoUrl, binding.billLogo)
             }
 
             binding.root.setOnClickListener { clickListener.onSelectPaybill(paybill) }

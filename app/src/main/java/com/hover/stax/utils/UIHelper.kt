@@ -2,10 +2,9 @@ package com.hover.stax.utils
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
@@ -14,11 +13,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.hover.stax.R
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import timber.log.Timber
 
 object UIHelper {
@@ -35,7 +34,6 @@ object UIHelper {
         s.show()
     }
 
-    @JvmStatic
     fun flashMessage(context: Context, message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
@@ -59,26 +57,6 @@ object UIHelper {
         }
     }
 
-    fun loadPicasso(url: String?, size: Int, target: Target?) {
-        Picasso.get()
-            .load(url)
-            .config(Bitmap.Config.RGB_565)
-            .resize(size, size).into(target!!)
-    }
-
-    fun loadPicasso(url: String?, imageView: ImageView?) {
-        Picasso.get().load(url).config(Bitmap.Config.RGB_565).placeholder(R.color.buttonColor).into(imageView)
-    }
-
-    fun loadPicasso(resId: Int, size: Int, target: Target?) {
-        Picasso.get()
-            .load(resId)
-            .config(Bitmap.Config.RGB_565)
-            .resize(size, size).into(target!!)
-    }
-
-    fun loadPicasso(url: String, target: Target) = Picasso.get().load(url).config(Bitmap.Config.RGB_565).into(target)
-
     fun setFullscreenView(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             activity.window.setDecorFitsSystemWindows(false)
@@ -86,7 +64,6 @@ object UIHelper {
             activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         }
     }
-
 
     fun setTextUnderline(textView: TextView, cs: String?) {
         val content = SpannableString(cs)
@@ -98,4 +75,23 @@ object UIHelper {
             Timber.e(e)
         }
     }
+
+    fun loadImage(fragment: Fragment, url: String, imageView: ImageView) = GlideApp.with(fragment)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .into(imageView)
+
+    fun loadImage(context: Context, url: String, imageView: ImageView) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .into(imageView)
+
+    fun loadImage(context: Context, url: String, target: CustomTarget<Drawable>) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .override(Constants.size55)
+        .into(target)
 }

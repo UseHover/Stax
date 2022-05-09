@@ -6,8 +6,18 @@
     android:layout_height="wrap_content">
 
 	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/timeStampIntro"
+		android:textColor="@color/grey"
+		android:visibility="gone"
+		android:layout_marginBottom="@dimen/margin_5"
+		android:paddingHorizontal="@dimen/margin_16"
+		android:layout_alignParentEnd="true" />
+	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
+		android:layout_below="@id/timeStampIntro"
 	    android:maxWidth="200dp"
 	    android:textColor="@color/offWhite"
 	    android:textSize="@dimen/text_13"
@@ -20,6 +30,15 @@
 	    android:layout_alignParentEnd="true" />
 
 	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/timeStampEnded"
+		android:layout_below="@id/message_enteredValue"
+		android:textColor="@color/grey"
+		android:visibility="gone"
+		android:paddingHorizontal="@dimen/margin_16"
+		android:layout_alignParentStart="true" />
+	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:maxWidth="250dp"
@@ -31,7 +50,7 @@
 		android:textSize="@dimen/text_13"
 	    android:background="@drawable/bubble_left"
 	    android:id="@+id/message_content"
-	    android:layout_below="@id/message_enteredValue"
+	    android:layout_below="@id/timeStampEnded"
 	    android:layout_marginTop="8dp"
 	    android:layout_alignParentStart="true" />
 

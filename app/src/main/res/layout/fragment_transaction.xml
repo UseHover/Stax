@@ -1,106 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/ft_mainBg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:descendantFocusability="afterDescendants"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_13">
 
-    <androidx.core.widget.NestedScrollView
+    <com.hover.stax.views.StaxCardView
+            android:id="@+id/transactionDetailsCard"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:showBack="true"
+            app:title="@string/nav_transaction">
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_13"
-                android:layout_marginBottom="@dimen/margin_55"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <com.hover.stax.views.StaxCardView
-                    android:id="@+id/transactionDetailsCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:showBack="true"
-                    app:title="@string/nav_transaction">
+            <include
+                    android:id="@+id/primaryStatus"
+                    layout="@layout/transaction_details_primarystatus" />
 
-                <include
-                        android:id="@+id/info_card"
-                        layout="@layout/transaction_details_info_card" />
-            </com.hover.stax.views.StaxCardView>
+            <include
+                    android:id="@+id/secondaryStatus"
+                    layout="@layout/transaction_details_secondary_status" />
 
+            <include
+                    android:id="@+id/info_card"
+                    layout="@layout/transaction_details_info_card" />
 
-            <com.hover.stax.views.StaxCardView
-                    android:id="@+id/status_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:backRes="@drawable/ic_info"
-                    app:defaultBackPress="false"
-                    app:showBack="true"
-                    app:staxCardColor="@color/colorPrimary"
-                    app:title="">
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    <TextView
-                            android:id="@+id/status_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/margin_10"
-                            android:layout_marginBottom="@dimen/margin_3"
-                            android:textSize="@dimen/text_16" />
-
-                    <RelativeLayout
-                            android:id="@+id/transactionRetryButtonLayoutId"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:gravity="end"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                        <androidx.appcompat.widget.AppCompatButton
-                                android:id="@+id/btnRetryTransaction"
-                                style="@style/StaxButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:fontFamily="@font/brutalista_medium"
-                                android:text="@string/try_again" />
-
-                    </RelativeLayout>
-                </LinearLayout>
-
-            </com.hover.stax.views.StaxCardView>
-
-            <com.hover.stax.views.StaxCardView
-                    android:id="@+id/messagesCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:title="@string/session_cardhead">
-
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/convo_recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_10" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/sms_recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_10"
-                        android:layout_marginBottom="@dimen/margin_21" />
-
-            </com.hover.stax.views.StaxCardView>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
-    <include
-            android:id="@+id/retrySubmit"
-            layout="@layout/bounty_retry_submit_btn_layout" />
-</RelativeLayout>
+    </com.hover.stax.views.StaxCardView>
+
+</androidx.core.widget.NestedScrollView>

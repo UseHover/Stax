@@ -157,13 +157,13 @@ public class StaxTransaction {
             case HoverAction.BALANCE:
                 return c.getString(R.string.descrip_balance, action.from_institution_name);
             case HoverAction.AIRTIME:
-                return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
+                return c.getString(R.string.descrip_airtime_sent, getDisplayAmount(), contact == null ? c.getString(R.string.self_choice) : contact.shortName());
             case HoverAction.P2P:
-                return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, contact.shortName());
+                return c.getString(R.string.descrip_transfer_sent, getDisplayAmount(), contact.shortName());
             case HoverAction.ME2ME:
-                return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
+                return c.getString(R.string.descrip_transfer_sent, getDisplayAmount(), action.to_institution_name);
             case HoverAction.C2B:
-                return c.getString(R.string.descrip_bill_paid, action.to_institution_name);
+                return c.getString(R.string.descrip_bill_paid, getDisplayAmount(), action.to_institution_name);
             case HoverAction.RECEIVE:
                 return c.getString(R.string.descrip_transfer_received, contact.shortName());
             case HoverAction.FETCH_ACCOUNTS:
@@ -199,6 +199,9 @@ public class StaxTransaction {
     public TransactionStatus getFullStatus() {
         return new TransactionStatus(this);
     }
+    public Boolean  isFailed(){ return status.equals(Transaction.FAILED); }
+    public Boolean isSuccessful() {return status.equals(Transaction.SUCCEEDED);}
+    public Boolean isBalanceType() {return transaction_type.equals(HoverAction.BALANCE);}
 
     public boolean isRecorded() {
         return environment == HoverParameters.MANUAL_ENV;
@@ -212,7 +215,14 @@ public class StaxTransaction {
             else if (isRecorded())
                 return "\\u2014";
             return a;
-        } else return null;
+        } else return "";
+    }
+
+    public String getDisplayBalance() {
+        if(!balance.isEmpty()) {
+            return Utils.formatAmount(balance);
+        }
+        else return balance;
     }
 
     @NotNull

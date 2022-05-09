@@ -27,6 +27,7 @@
         <entry key="app/src/main/res/drawable/ic_stax_new_logo.xml" value="0.249" />
         <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
+        <entry key="app/src/main/res/drawable/icon_bg_circle.xml" value="0.2295" />
         <entry key="app/src/main/res/drawable/splash_window_background.xml" value="0.2395" />
         <entry key="app/src/main/res/font/brutalista_font.xml" value="0.47265625" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.25" />
@@ -99,7 +100,6 @@
         <entry key="app/src/main/res/layout/item_sigin_viewpager.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/library_list_item.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/manage_permissions_layout.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/no_account_empty_state.xml" value="0.3319746376811594" />
         <entry key="app/src/main/res/layout/non_standard_variable_item.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.19145299145299147" />
@@ -131,7 +131,6 @@
         <entry key="app/src/main/res/layout/settings_card_language.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/settings_card_learn.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
-        <entry key="app/src/main/res/layout/settings_card_permissions.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/settings_card_support.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_ussd_library.xml" value="0.19145299145299147" />
@@ -154,7 +153,7 @@
         <entry key="app/src/main/res/layout/summarycard_nontemplate_items.xml" value="0.42734375" />
         <entry key="app/src/main/res/layout/support_stax_layout.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/transaction_card_history.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.22" />
         <entry key="app/src/main/res/layout/transaction_details_primarystatus.xml" value="0.20643363728470113" />
         <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.1" />
         <entry key="app/src/main/res/layout/transaction_details_topstatus_view.xml" value="0.35733695652173914" />
@@ -187,7 +186,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

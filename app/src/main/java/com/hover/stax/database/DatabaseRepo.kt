@@ -154,7 +154,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTotalFees(accountId, year.toString())
     }
 
-    private fun getTransaction(uuid: String?): StaxTransaction? {
+    fun getTransaction(uuid: String?): StaxTransaction? {
         return transactionDao.getTransaction(uuid)
     }
 
@@ -260,7 +260,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val requests: List<Request>
         get() = requestDao.unmatched
 
-    fun getRequest(id: Int): Request {
+    fun getRequest(id: Int): Request? {
         return requestDao[id]
     }
 
@@ -281,7 +281,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     private fun decryptRequestForOldVersions(param: String) {
         var params = param
         try {
-            val e = Request.getEncryptionSettings().build()
+            val e = Request.encryptionSettings.build()
             if (Request.isShortLink(params)) {
                 params = Shortlink(params).expand()
             }

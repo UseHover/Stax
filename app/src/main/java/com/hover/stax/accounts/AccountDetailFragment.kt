@@ -237,7 +237,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id))
     }
 
-    override fun viewTransactionDetail(uuid: String?) = NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
+    override fun viewTransactionDetail(uuid: String?)  {
+        uuid?.let { NavUtil.showTransactionDetailsFragment(findNavController(), it) }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

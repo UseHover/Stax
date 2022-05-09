@@ -93,10 +93,12 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         //https://stackoverflow.com/a/54939860/2371515
-        val channelsObserver = Observer<Channel?> { c ->
-            c?.let {
-                requestViewModel.setActiveChannel(it)
-                accountValue.setTitle(it.toString())
+        val channelsObserver = object: Observer<Channel?> {
+            override fun onChanged(c: Channel?) {
+                c?.let {
+                    requestViewModel.setActiveChannel(it)
+                    accountValue.setTitle(it.toString())
+                }
             }
         }
 
@@ -105,6 +107,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 //no channels selected. navigate user to accounts fragment
                 if (it.isNullOrEmpty())
                     setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
+                accountDropdown.setCurrentAccount()
             }
             activeChannel.observe(viewLifecycleOwner, channelsObserver)
         }
@@ -139,7 +142,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         fab.visibility = if (isEditing) View.VISIBLE else View.GONE
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+    override fun onContactSelected(contact: StaxContact) {
         requestViewModel.addRecipient(contact)
         requesteeInput.setSelected(contact)
     }
@@ -167,7 +170,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 requestViewModel.addRecipient(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(requireActivity()) }
         }
 
         fab.setOnClickListener { fabClicked() }

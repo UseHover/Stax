@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -23,7 +22,6 @@ import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
@@ -54,10 +52,8 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
         channelsViewModel.setType(HoverAction.C2B)
 
-        //TODO test updating of business
-        if (args.updateBusiness) {
+        if (args.updateBusiness)
             binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.businessNumber.value)
-        }
 
         initListeners()
         startObservers()
@@ -181,6 +177,8 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
                             NavUtil.navigate(findNavController(), PaybillFragmentDirections.actionPaybillFragmentToAccountsFragment())
                         true
                     }
+                else
+                    binding.billDetailsLayout.accountDropdown.setCurrentAccount()
             }
         }
     }
@@ -191,6 +189,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
                 Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
             }
         }
+
         val actionsObserver = object : Observer<List<HoverAction>> {
             override fun onChanged(t: List<HoverAction>?) {
                 Timber.i("Got new actions: %s", t?.size)

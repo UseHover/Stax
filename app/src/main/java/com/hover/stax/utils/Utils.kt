@@ -11,15 +11,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.google.firebase.messaging.FirebaseMessaging
-import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
-import io.sentry.util.StringUtils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.util.*
+
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"
@@ -250,13 +249,4 @@ object Utils {
         else
             UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
     }
-
-//    fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (T) -> Unit) {
-//        observe(owner, object: Observer<T> {
-//            override fun onChanged(value: T) {
-//                removeObserver(this)
-//                observer(value)
-//            }
-//        })
-//    }
 }

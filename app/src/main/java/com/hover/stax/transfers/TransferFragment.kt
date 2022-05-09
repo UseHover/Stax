@@ -17,7 +17,6 @@ import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.requests.Request
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
@@ -27,6 +26,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -52,6 +52,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         transferViewModel = abstractFormViewModel as TransferViewModel
 
         setTransactionType(args.transactionType)
+
+        args.transactionUUID?.let {
+            Timber.e("TxnUUID is $it. Setting autofill")
+            transferViewModel.autoFill(it)
+        }
+
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -70,7 +76,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        transferViewModel.reset()
+        transferViewModel.reset() //TODO remove if values are removed
         init(binding.root)
         startObservers(binding.root)
         startListeners()
@@ -118,9 +124,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
+        observeAutoFillToInstitution()
         with(transferViewModel) {
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
-            request.observe(viewLifecycleOwner) { it?.let { load(it) } }
+            request.observe(viewLifecycleOwner) {
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+                it?.let { view(it) }
+            }
         }
     }
 
@@ -135,11 +145,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         channelsViewModel.activeChannel.observe(viewLifecycleOwner) { channel ->
             channel?.let {
                 transferViewModel.request.value?.let { request ->
-                    transferViewModel.setRecipientSmartly(request, it)
+                    transferViewModel.setRecipientSmartly(request.requester_number, it)
                 }
                 binding.summaryCard.accountValue.setTitle(it.toString())
             }
-
             recipientInstitutionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
         }
     }
@@ -157,6 +166,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+
+            if (args.transactionUUID == null)
+                accountDropdown.setCurrentAccount()
         }
     }
 
@@ -165,6 +177,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             it?.let {
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             }
+        }
+    }
+
+    private fun observeAutoFillToInstitution() {
+        transferViewModel.completeAutoFilling.observe(viewLifecycleOwner) {
+            if (it != null && args.transactionUUID != null)
+                completeAutoFilling(it)
         }
     }
 
@@ -225,7 +244,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setContact(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(requireActivity()) }
         }
     }
 
@@ -291,7 +310,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+    override fun onContactSelected(contact: StaxContact) {
+//        transferViewModel.setEditing(true)
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
@@ -332,24 +352,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun load(r: Request) {
-        channelsViewModel.activeChannel.value?.let {
-            transferViewModel.setRecipientSmartly(r, it)
-        }
-
-        channelsViewModel.setChannelFromRequest(r)
-        amountInput.setText(r.amount)
-        contactInput.setText(r.requester_number, false)
-
-        transferViewModel.setEditing(r.amount.isNullOrEmpty())
-        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+    private fun completeAutoFilling(data: AutofillData) {
+        channelsViewModel.setChannelFromId(data.channelId, data.accountId)
+        transferViewModel.contact.value?.let { contactInput.setText(it.shortName(), false) }
+        amountInput.setText(transferViewModel.amount.value)
+        transferViewModel.setEditing(data.isEditing)
+        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, data.institutionId.toString()), AbstractStatefulInput.INFO)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
 
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }
 
