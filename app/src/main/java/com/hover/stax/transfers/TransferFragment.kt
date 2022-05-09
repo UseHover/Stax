@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isEmpty
 import androidx.navigation.fragment.findNavController
@@ -37,10 +38,14 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
+        super.onCreate(savedInstanceState)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setTransactionType(args.transactionType)
 
         _binding = FragmentTransferBinding.inflate(inflater, container, false)

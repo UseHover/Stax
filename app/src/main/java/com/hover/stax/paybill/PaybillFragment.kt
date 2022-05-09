@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
@@ -29,10 +30,14 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     private lateinit var viewModel: PaybillViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
         abstractFormViewModel = getSharedViewModel<PaybillViewModel>()
         viewModel = abstractFormViewModel as PaybillViewModel
+        super.onCreate(savedInstanceState)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPaybillBinding.inflate(inflater, container, false)
         accountsViewModel.setType(HoverAction.C2B)
         return binding.root

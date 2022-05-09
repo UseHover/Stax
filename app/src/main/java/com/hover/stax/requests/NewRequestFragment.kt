@@ -9,6 +9,7 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
@@ -17,6 +18,7 @@ import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
@@ -42,10 +44,14 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     private var _binding: FragmentRequestBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
         abstractFormViewModel = getSharedViewModel<NewRequestViewModel>()
         requestViewModel = abstractFormViewModel as NewRequestViewModel
+        super.onCreate(savedInstanceState)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), requireActivity())
 
@@ -57,7 +63,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requestViewModel.reset()
         startObservers(binding.root)
         startListeners()
         setDefaultHelperText()
