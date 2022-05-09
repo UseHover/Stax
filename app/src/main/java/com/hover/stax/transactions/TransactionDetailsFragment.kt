@@ -40,7 +40,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class TransactionDetailsFragment : Fragment(), Target {
+class TransactionDetailsFragment : Fragment() {
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
     private var _binding: FragmentTransactionBinding? = null
@@ -246,7 +246,9 @@ class TransactionDetailsFragment : Fragment(), Target {
                     text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     movementMethod = LinkMovementMethod.getInstance()
                 }
-                if (transaction.isFailed) action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + it.from_institution_logo, this) }
+                if (transaction.isFailed) action?.let {
+                    UIHelper.loadImage(this@TransactionDetailsFragment, getString(R.string.root_url).plus(it.from_institution_logo), binding.secondaryStatus.statusIcon)
+                }
                 else binding.secondaryStatus.statusIcon.visibility = GONE
             }
         }
@@ -261,23 +263,5 @@ class TransactionDetailsFragment : Fragment(), Target {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-        try {
-            val d = RoundedBitmapDrawableFactory.create(requireContext().resources, bitmap)
-            d.isCircular = true
-            binding.secondaryStatus.statusIcon.setImageDrawable(d)
-        } catch (e: IllegalStateException) {
-            Timber.e(e)
-        }
-    }
-
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-        Timber.i("On bitmap failed")
-    }
-
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-        Timber.i("On prepare load")
     }
 }

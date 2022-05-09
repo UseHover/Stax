@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
@@ -74,6 +75,12 @@ object UIHelper {
             Timber.e(e)
         }
     }
+
+    fun loadImage(fragment: Fragment, url: String, imageView: ImageView) = GlideApp.with(fragment)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .into(imageView)
 
     fun loadImage(context: Context, url: String, imageView: ImageView) = GlideApp.with(context)
         .load(url)

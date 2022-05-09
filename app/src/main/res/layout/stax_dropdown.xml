@@ -21,7 +21,6 @@
             android:autofillHints="phone"
             android:textCursorDrawable="@null"
             android:textSize="@dimen/text_19"
-            android:drawablePadding="@dimen/margin_8"
             app:errorTextColor="@color/stax_state_red" />
 
 </com.google.android.material.textfield.TextInputLayout>
