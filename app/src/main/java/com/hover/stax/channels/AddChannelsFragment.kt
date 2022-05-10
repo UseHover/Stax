@@ -125,8 +125,9 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     private fun onSelectedLoaded(channels: List<Channel>) {
         binding.channelsListCard.hideProgressIndicator()
 
-        showSelected(!channels.isNullOrEmpty())
-        if (!channels.isNullOrEmpty())
+        showSelected(channels.isNotEmpty())
+
+        if (channels.isNotEmpty())
             binding.selectedList.adapter = ChannelsAdapter(channels, this)
     }
 
@@ -138,7 +139,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     private fun loadFilteredChannels(channels: List<Channel>) {
         binding.channelsListCard.hideProgressIndicator()
 
-        if (!channels.isNullOrEmpty()) {
+        if (channels.isNotEmpty()) {
             updateAdapter(Channel.sort(channels, false))
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE

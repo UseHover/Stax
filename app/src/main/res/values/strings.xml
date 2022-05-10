@@ -424,7 +424,7 @@
 
     <!-- INFO SYSTEM -->
     <string name="transaction_status_info_title">About transaction status</string>
-    <string name="transaction_status_info_content">Stax works by sending USSD messages in the background. Transaction status depends on mobile and bank availability. We do not hold money.</string>
+    <string name="transaction_status_info_content">Stax works by sending USSD messages in the background. Transaction status depends on your mobile money provider and bank availability. We do not hold money.</string>
 
 
     <!-- Canceling -->
