@@ -25,6 +25,10 @@
                 layout="@layout/settings_card_bounties" />
 
         <include
+            android:id="@+id/permission_card"
+            layout="@layout/settings_card_permissions" />
+
+        <include
                 android:id="@+id/stax_learn"
                 layout="@layout/settings_card_learn" />
 

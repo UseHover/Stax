@@ -65,7 +65,7 @@ class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     private fun setupSignInWithGoogle() = binding.continueWithGoogle.setOnClickListener {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_google_sign_in), requireActivity())
-        (requireActivity() as OnBoardingActivity).signIn(optInMarketing = true)
+        (requireActivity() as OnBoardingActivity).signIn()
     }
 
     private fun setupContinueNoSignIn() = binding.continueNoSignIn.setOnClickListener {

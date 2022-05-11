@@ -97,6 +97,9 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         repo.update(activeChannel.value)
         saveContacts()
 
+
+
+
         val request = Request(amount.value, note.value, requesterNumber.value, activeChannel.value!!.institutionId)
         formulatedRequest.value = request
     }

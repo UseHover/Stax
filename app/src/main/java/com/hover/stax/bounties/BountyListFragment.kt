@@ -120,8 +120,17 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     private fun startObservers() = with(bountyViewModel) {
-        val actionsObserver = Observer<List<HoverAction>> { t -> Timber.v("Actions update: ${t?.size}") }
-        val txnObserver = Observer<List<StaxTransaction>> { Timber.v("Transactions update ${it?.size}") }
+        val actionsObserver = object: Observer<List<HoverAction>> {
+            override fun onChanged(t: List<HoverAction>?) {
+                Timber.v("Actions update: ${t?.size}")
+            }
+
+        }
+        val txnObserver = object: Observer<List<StaxTransaction>> {
+            override fun onChanged(t: List<StaxTransaction>?) {
+                Timber.v("Transactions update ${t?.size}")
+            }
+        }
 
         actions.observe(viewLifecycleOwner, actionsObserver)
         transactions.observe(viewLifecycleOwner, txnObserver)
@@ -150,7 +159,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     override fun viewTransactionDetail(uuid: String?) {
-        NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
+        uuid?.let { NavUtil.showTransactionDetailsFragment(findNavController(), uuid) }
     }
 
     override fun viewBountyDetail(b: Bounty) {

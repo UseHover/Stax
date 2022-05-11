@@ -5,8 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.text.TextUtils
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
@@ -21,9 +19,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -65,8 +61,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             addSource(simHniList, this@ChannelsViewModel::onSimUpdate)
         }
 
-        filteredChannels.addSource(allChannels, this@ChannelsViewModel::filterSimChannels)
-        filteredChannels.addSource(simChannels, this@ChannelsViewModel::filterSimChannels)
+        filteredChannels.addSource(allChannels, this@ChannelsViewModel::filterChannels)
+        filteredChannels.addSource(simChannels, this@ChannelsViewModel::filterChannels)
 
         activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull)
 
@@ -89,27 +85,23 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    private fun filterSimChannels(channels: List<Channel>) {
+    private fun filterChannels(channels: List<Channel>) {
         if(!channels.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                val filteredList = channels.filter { toMatchingString(it.toFilterableString()).contains(toMatchingString(filterQuery.value!!)) }
-                Timber.i("accounts matched size is: ${filteredList.size}")
+                val filteredList = channels.filter { it.toString().toFilteringStandard()
+                    .contains(filterQuery.value!!.toFilteringStandard()) }
                 filteredChannels.postValue(filteredList)
             }
         }
     }
 
-    private fun toMatchingString(value: String) : String {
-        return value.lowercase().replace(" ", "");
-    }
-
-    fun filterSimChannels(value: String) {
+    fun runChannelFilter(value: String) {
         filterQuery.value = value
         val listToFilter : List<Channel>? = if(!simChannels.value.isNullOrEmpty()) simChannels.value else allChannels.value
-        filterSimChannels(listToFilter!!)
+        filterChannels(listToFilter!!)
     }
     fun isInSearchMode() : Boolean {
-        return toMatchingString(filterQuery.value!!).isNotEmpty()
+        return !filterQuery.value!!.isAbsolutelyEmpty()
     }
 
     fun setType(t: String) {
@@ -189,7 +181,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 val hniArr = channels[i].hniList.split(",")
 
                 for (s in hniArr) {
-                    if (hniList.contains(Utils.stripHniString(s))) {
+                    if (hniList.contains(s.toHni())) {
                         if (!simChannelList.contains(channels[i]))
                             simChannelList.add(channels[i])
                     }
@@ -210,16 +202,17 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setActiveAccount(account: Account?) {
+        Timber.e("Active account at the moment is $account")
         activeAccount.postValue(account!!)
     }
 
-    private fun setActiveChannel(actions: List<HoverAction>) {
-        if (actions.isNullOrEmpty()) return
-
-        val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
+    private fun setActiveChannel(channelId: Int, accountId: Int) {
+        val channelAccounts = repo.getChannelAndAccounts(channelId)
         channelAccounts?.let {
+            Timber.e("Active channel ${it.channel}")
             activeChannel.postValue(it.channel)
-            setActiveAccount(it.accounts.firstOrNull())
+
+            setActiveAccount(it.accounts.firstOrNull { account -> account.id == accountId })
         }
     }
 
@@ -248,7 +241,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             else repo.getActions(channel.id, t))
     }
 
-    fun loadAccounts() = viewModelScope.launch {
+    private fun loadAccounts() = viewModelScope.launch {
         repo.getAccounts().collect { accounts.postValue(it) }
     }
 
@@ -300,18 +293,18 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
 
-    fun setChannelFromRequest(r: Request?) {
-        if (r != null && !selectedChannels.value.isNullOrEmpty()) {
+    fun setChannelFromId(channelId: Int, accountId: Int) {
+        if (!selectedChannels.value.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                var actions = repo.getActions(getChannelIds(selectedChannels.value!!), r.requester_institution_id)
+                var actions = repo.getActions(getChannelIds(selectedChannels.value!!), channelId)
 
                 if (actions.isEmpty() && !simChannels.value.isNullOrEmpty())
-                    actions = repo.getActions(getChannelIds(simChannels.value!!), r.requester_institution_id)
+                    actions = repo.getActions(getChannelIds(simChannels.value!!), channelId)
 
                 if (actions.isNotEmpty())
                     channelActions.postValue(actions)
 
-                setActiveChannel(actions)
+                setActiveChannel(channelId, accountId)
             }
         }
     }

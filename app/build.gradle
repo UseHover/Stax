@@ -45,8 +45,8 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 128
-        versionName "1.9.1.3"
+        versionCode 133
+        versionName "1.10.1"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -71,7 +71,6 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "SELF_DESTRUCT", "\"1622450539\""
             FirebasePerformance {
                 instrumentationEnabled false
             }
@@ -80,7 +79,6 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            buildConfigField "String", "SELF_DESTRUCT", "\"1625097599\"" // June 30, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             file(keystorePath).with { propertiesFile ->
@@ -126,11 +124,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.biometric:biometric:1.1.0"
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
@@ -163,7 +161,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
     //auth
-    implementation 'com.google.android.gms:play-services-auth:20.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation 'com.amplitude:android-sdk:2.23.2'
@@ -173,6 +171,9 @@ dependencies {
     implementation "com.github.YarikSOffice:lingver:1.3.0"
     implementation 'com.appsflyer:af-android-sdk:6.2.3'
     implementation 'com.android.installreferrer:installreferrer:2.2'
+
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    kapt 'com.github.bumptech.glide:compiler:4.13.0'
 
     def roomVersion = "2.4.2"
     implementation "androidx.room:room-ktx:$roomVersion"

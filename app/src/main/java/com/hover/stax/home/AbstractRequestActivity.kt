@@ -28,7 +28,8 @@ abstract class AbstractRequestActivity : AbstractSDKCaller(), RequestSenderInter
                 AnalyticsUtil.logAnalyticsEvent(getString(com.hover.stax.R.string.clicked_schedule_notification), this@AbstractRequestActivity)
             } else {
                 action.observe(this@AbstractRequestActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
-                schedule.observe(this@AbstractRequestActivity) { it?.let { transferViewModel.view(it) } }
+                schedule.observe(this@AbstractRequestActivity) { it?.let { transferViewModel.
+                view(it) } }
             }
 
             setSchedule(scheduleId)

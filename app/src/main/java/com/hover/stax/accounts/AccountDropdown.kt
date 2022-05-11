@@ -1,33 +1,31 @@
 package com.hover.stax.accounts
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import timber.log.Timber
 
 
-class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet), Target {
+class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
     private var showSelected: Boolean = true
     private var helperText: String? = null
     private var highlightListener: HighlightListener? = null
     private var accountFetchListener: AccountFetchListener? = null
+
+    private var accountList: List<Account> = ArrayList()
 
     var highlightedAccount: Account? = null
 
@@ -51,7 +49,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun accountUpdate(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty() /*&& !hasExistingContent()*/) {
+        if (!accounts.isNullOrEmpty()) {
             updateChoices(accounts)
         } else if (!hasExistingContent()) {
             setState(context.getString(R.string.accounts_error_no_accounts), NONE)
@@ -61,7 +59,18 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private fun setDropdownValue(account: Account?) {
         account?.let {
             autoCompleteTextView.setText(it.alias, false)
-            UIHelper.loadPicasso(it.logoUrl, size55, this)
+
+            val target = object : CustomTarget<Drawable>() {
+                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                    autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
+                }
+            }
+
+            UIHelper.loadImage(context, account.logoUrl, target)
 
             if (account.name == Constants.PLACEHOLDER) {
                 accountFetchListener?.fetchAccounts(account)
@@ -73,15 +82,15 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun updateChoices(accounts: List<Account>) {
         if (highlightedAccount == null) setDropdownValue(null)
-
+        accountList = accounts
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
-
-        onSelect(accounts.firstOrNull { it.isDefault })
     }
+
+    fun setCurrentAccount() = onSelect(accountList.firstOrNull { it.isDefault })
 
     private fun onSelect(account: Account?) {
         setDropdownValue(account)
@@ -92,33 +101,35 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            val simsObserver = object : Observer<List<SimInfo>> {
+            val simsObserver = object: Observer<List<SimInfo>> {
                 override fun onChanged(t: List<SimInfo>?) {
                     Timber.i("Got sims ${t?.size}")
                 }
             }
-
             val hniListObserver = object : Observer<List<String>> {
                 override fun onChanged(t: List<String>?) {
                     Timber.i("Got new sim hni list $t")
                 }
             }
-
             val selectedObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
                     Timber.e("Got new selected channels ${t?.size}")
+                }
+            }
+            val accountObserver = object: Observer<Account> {
+                override fun onChanged(t: Account?) {
+                    setDropdownValue(t)
                 }
             }
 
             sims.observe(lifecycleOwner, simsObserver)
             simHniList.observe(lifecycleOwner, hniListObserver)
             accounts.observe(lifecycleOwner) { accountUpdate(it) }
+            activeAccount.observe(lifecycleOwner, accountObserver)
 
             selectedChannels.observe(lifecycleOwner, selectedObserver)
             activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
-            channelActions.observe(lifecycleOwner) {
-                setState(it, viewModel)
-            }
+            channelActions.observe(lifecycleOwner) { setState(it, viewModel) }
         }
     }
 
@@ -141,20 +152,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
             viewModel.activeChannel.value != null && showSelected -> setState(helperText, SUCCESS)
         }
-    }
-
-    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-        val d: RoundedBitmapDrawable = RoundedBitmapDrawableFactory.create(context.resources, bitmap)
-        d.isCircular = true
-        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null)
-    }
-
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-        Timber.e(e)
-    }
-
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
     }
 
     fun setFetchAccountListener(listener: AccountFetchListener) {

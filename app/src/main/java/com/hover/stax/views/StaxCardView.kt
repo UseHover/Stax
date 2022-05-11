@@ -11,6 +11,8 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxCardViewBinding
+import com.hover.stax.utils.Constants
+import com.hover.stax.utils.UIHelper
 
 open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
@@ -84,6 +86,10 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         }
     }
 
+    fun setIcon(iconUrl: String) {
+        UIHelper.loadImage(context, iconUrl, binding.backButton)
+    }
+
     fun setOnClickIcon(listener: OnClickListener?) {
         if (listener != null) {
             binding.backButton.setOnClickListener(listener)
@@ -93,7 +99,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     private fun fillFromAttrs() {
         if (title != null) binding.title.text = title else binding.header.visibility = GONE
         if (subtitle != null) {
-            binding.subtitle.text = title
+            binding.subtitle.text = subtitle
             binding.subtitle.visibility = VISIBLE
         }
 

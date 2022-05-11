@@ -53,7 +53,12 @@ class BalancesFragment : Fragment() {
     private fun setUpBalances() {
         initBalanceCard()
 
-        val observer = Observer<List<Account>> { t -> updateServices(ArrayList(t)) }
+        val observer = object : Observer<List<Account>> {
+            override fun onChanged(t: List<Account>) {
+                    updateServices(ArrayList(t))
+            }
+        }
+
         with(balancesViewModel) {
             accounts.observe(viewLifecycleOwner, observer)
             shouldShowBalances.observe(viewLifecycleOwner) {
@@ -89,7 +94,6 @@ class BalancesFragment : Fragment() {
     }
 
     private fun showBalanceCards(status: Boolean) {
-
         toggleLink(status)
         Utils.saveBoolean(BALANCE_LABEL, status, requireContext())
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(

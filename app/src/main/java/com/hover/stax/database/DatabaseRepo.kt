@@ -10,6 +10,7 @@ import com.hover.sdk.actions.HoverActionDao
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
+import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
@@ -79,9 +80,9 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return channelDao.getChannels(countryCode.uppercase())
     }
 
-    fun update(channel: Channel?) = AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
+    fun update(channel: Channel?) = channelDao.update(channel)
 
-    fun insert(channel: Channel) = AppDatabase.databaseWriteExecutor.execute { channelDao.insert(channel) }
+    fun insert(channel: Channel) = channelDao.insert(channel)
 
     // SIMs
     val presentSims: List<SimInfo>
@@ -259,7 +260,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val requests: List<Request>
         get() = requestDao.unmatched
 
-    fun getRequest(id: Int): Request {
+    fun getRequest(id: Int): Request? {
         return requestDao[id]
     }
 
@@ -280,7 +281,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     private fun decryptRequestForOldVersions(param: String) {
         var params = param
         try {
-            val e = Request.getEncryptionSettings().build()
+            val e = Request.encryptionSettings.build()
             if (Request.isShortLink(params)) {
                 params = Shortlink(params).expand()
             }
