@@ -27,6 +27,8 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
+    private val libraryAdapter = LibraryChannelsAdapter()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLibraryBinding.inflate(inflater, container, false)
 
@@ -39,7 +41,11 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
 
         binding.countryCard.showProgressIndicator()
         binding.countryDropdown.setListener(this)
-        binding.shortcodes.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+
+        binding.shortcodes.apply {
+            layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+            adapter = libraryAdapter
+        }
 
         setupEmptyState()
         setSearchInputWatcher()
@@ -76,13 +82,13 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     private fun updateList(channels: List<Channel>) {
         binding.countryCard.hideProgressIndicator()
 
-        if (!channels.isNullOrEmpty()) showList(channels)
+        if (channels.isNotEmpty()) showList(channels)
         else if (viewModel.isInSearchMode()) showEmptyState()
         else showLoading()
     }
 
     private fun showList(channels: List<Channel>) {
-        binding.shortcodes.adapter = LibraryChannelsAdapter(channels)
+        libraryAdapter.submitList(channels)
         binding.emptyState.root.visibility = View.GONE
         binding.shortcodesParent.visibility = VISIBLE
     }
