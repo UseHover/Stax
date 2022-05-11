@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionMessagesItemsBinding
 
@@ -74,7 +75,7 @@ class MessagesAdapter internal constructor(private val messagesList: List<UssdCa
 	}
 
 	private fun styleAsLink(tv: TextView, shortcode: String) {
-		tv.setTextColor(tv.context.resources.getColor(R.color.brightBlue))
+		tv.setTextColor(ContextCompat.getColor(tv.context, R.color.brightBlue))
 		tv.paintFlags = Paint.UNDERLINE_TEXT_FLAG
 		tv.setOnClickListener { v: View -> dial(shortcode, v.context) }
 	}

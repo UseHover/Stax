@@ -54,7 +54,7 @@ class TransactionStatus(val transaction: StaxTransaction) {
             HoverAction.C2B -> c.getString(R.string.display_bill_payment)
             HoverAction.RECEIVE -> c.getString(R.string.display_money_received)
             else -> "Other"
-        }.capitalize()
+        }.replaceFirstChar { it.uppercase() }
     }
 
 
