@@ -4,6 +4,7 @@ import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
+import com.hover.stax.channels.Channel
 import com.hover.stax.transactions.StaxTransaction
 import com.yariksoffice.lingver.Lingver
 import java.util.*
@@ -47,3 +48,5 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
         return Locale(Lingver.getInstance().getLanguage(), country_alpha2).displayCountry
     }
 }
+
+data class ChannelBounties (val channel: Channel, val bounties: List<Bounty>)
