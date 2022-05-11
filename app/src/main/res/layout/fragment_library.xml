@@ -21,23 +21,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
                     android:hint="@string/select_country"
+                    android:editable="false"
                     android:text="@string/country" />
 
             <com.hover.stax.views.StaxTextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search"
-                android:inputType="textFilter"
-                android:imeOptions="actionDone"
-                android:id="@+id/searchInput"/>
+                    android:id="@+id/searchInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search"
+                    android:imeOptions="actionDone"
+                    android:inputType="textFilter" />
         </com.hover.stax.views.StaxCardView>
 
-        <include layout="@layout/no_account_empty_state" android:id="@+id/emptyState"/>
+        <include
+                android:id="@+id/emptyState"
+                layout="@layout/no_account_empty_state" />
 
         <com.hover.stax.views.StaxCardView
+                android:id="@+id/shortcodesParent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-            android:id="@+id/shortcodesParent">
+                android:layout_height="wrap_content">
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/shortcodes"
