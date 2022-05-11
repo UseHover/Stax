@@ -11,12 +11,12 @@
     app:behavior_peekHeight="@dimen/margin_55"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <pl.droidsonroids.gif.GifImageView
+    <ImageView
         android:id="@+id/emoticon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:contentDescription="@string/share_desc"
-        android:src="@drawable/smileface_giphy"
+        android:src="@drawable/party"
         />
 
     <TextView
