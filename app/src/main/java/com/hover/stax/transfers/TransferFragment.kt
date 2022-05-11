@@ -24,6 +24,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
+import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
@@ -76,8 +77,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.transfers_screen))
+
         transferViewModel.reset() //TODO remove if values are removed
         init(binding.root)
+
         startObservers(binding.root)
         startListeners()
     }

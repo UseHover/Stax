@@ -15,6 +15,7 @@ import com.hover.stax.onboarding.welcome.WelcomeFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
+import com.uxcam.UXCam
 
 
 internal class NonInteractiveTutorialFragment : Fragment() {
@@ -31,6 +32,8 @@ internal class NonInteractiveTutorialFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.onboarding_non_interactive_tutorial_screen))
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_non_interactive_tutorial)), requireActivity())
 
         setTopBarClicks()

@@ -17,6 +17,7 @@ import com.hover.stax.utils.UIHelper.flashMessage
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
+import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,6 +46,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.payment_request_detail_screen))
 
         binding.shareCard.requestLinkCardView.setTitle(getString(R.string.share_again_cardhead))
 

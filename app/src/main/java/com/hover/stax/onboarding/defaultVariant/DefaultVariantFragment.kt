@@ -9,6 +9,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentDefaultVariantBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.AnalyticsUtil
+import com.uxcam.UXCam
 
 class DefaultVariantFragment : Fragment() {
 
@@ -26,6 +27,8 @@ class DefaultVariantFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.onboarding_default_variant))
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), requireActivity())
         initContinueButton()
     }

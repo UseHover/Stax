@@ -17,6 +17,7 @@ import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
+import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class BountyEmailFragment : Fragment(), View.OnClickListener {
@@ -35,6 +36,7 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.bounty_email_screen))
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.movementMethod = LinkMovementMethod.getInstance()

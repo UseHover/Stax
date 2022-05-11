@@ -27,6 +27,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
+import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -51,6 +52,8 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         networkMonitor = NetworkMonitor(requireActivity())
+
+        UXCam.tagScreenName(getString(R.string.bounty_list_screen))
 
         initRecyclerView()
         startObservers()

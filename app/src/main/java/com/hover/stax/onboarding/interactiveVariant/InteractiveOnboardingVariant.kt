@@ -14,6 +14,7 @@ import com.hover.stax.databinding.FragmentInteractiveOnboardingBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
+import com.uxcam.UXCam
 import org.json.JSONObject
 import timber.log.Timber
 
@@ -32,6 +33,8 @@ internal class InteractiveOnboardingVariant : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.onboarding_interactive_variant))
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_interactive)), requireActivity())
 
         setQuestionsClick()

@@ -13,6 +13,7 @@ import com.hover.stax.database.appModule
 import com.hover.stax.database.dataModule
 import com.hover.stax.database.networkModule
 import com.hover.stax.utils.network.NetworkMonitor
+import com.uxcam.UXCam
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -32,6 +33,7 @@ class ApplicationInstance : Application() {
         initFirebase()
 
         initAppsFlyer()
+
     }
 
     private fun initFirebase() {
@@ -82,6 +84,7 @@ class ApplicationInstance : Application() {
             start(this@ApplicationInstance)
         }
     }
+
 
     companion object {
         val txnDetailsRetryCounter: MutableMap<String, Int> by Delegates.observable(HashMap()) { _, _, _ -> }

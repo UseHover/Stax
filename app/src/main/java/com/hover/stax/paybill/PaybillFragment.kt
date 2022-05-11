@@ -26,6 +26,7 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
+import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -48,6 +49,8 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.paybill_screen))
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill)), requireActivity())
 
         channelsViewModel.setType(HoverAction.C2B)

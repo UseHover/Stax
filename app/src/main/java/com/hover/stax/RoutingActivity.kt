@@ -32,6 +32,7 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.uxcam.UXCam
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -65,6 +66,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
+            initUXCam()
             initAmplitude()
             logPushNotificationIfRequired()
             initHover()
@@ -226,4 +228,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
 
+    private fun initUXCam() {
+        UXCam.startWithKey(getString(R.string.uxcam_key))
+    }
 }

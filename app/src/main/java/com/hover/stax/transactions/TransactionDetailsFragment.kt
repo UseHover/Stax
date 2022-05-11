@@ -34,6 +34,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -72,6 +73,7 @@ class TransactionDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startObservers()
+        UXCam.tagScreenName(getString(R.string.transaction_details_screen))
 
         binding.transactionDetailsCard.setOnClickIcon { NavUtil.navigate(findNavController(), TransactionDetailsFragmentDirections.actionTxnDetailsFragmentToNavigationHome()) }
         binding.primaryStatus.viewLogText.setOnClickListener { showUSSDLog() }

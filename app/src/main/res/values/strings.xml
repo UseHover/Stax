@@ -1,6 +1,7 @@
 <resources>
     <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
     <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
+    <string name="uxcam_key" public="false" translatable="false">obijrn00q2aip9z</string>
     <string name="app_name" translatable="false">Stax</string>
     <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
     <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
@@ -710,5 +711,30 @@
     <string name="login_dialog_desc">Please sign in to Stax with Google to be able to receive marketing updates.</string>
     <string name="update_downloaded">An update has just been downloaded.</string>
     <string name="restart">Restart</string>
+    <string name="paybill_screen">Paybill Screen</string>
+    <string name="transfers_screen">Transfers Screen</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="balances_screen">Balances Screen</string>
+    <string name="bounty_email_screen">Bounty Email Screen</string>
+    <string name="bounty_list_screen">Bounty List Screen</string>
+    <string name="add_channels_screen">Add Channels Screen</string>
+    <string name="faq_screen">FAQ Screen</string>
+    <string name="financial_tips_screen">Financial Tips Screen</string>
+    <string name="language_select_screen">Language Select Screen</string>
+    <string name="onboarding_default_variant">Onboarding - Default Variant Screen</string>
+    <string name="onboarding_interactive_variant">Onboarding: Interactive variant Screen</string>
+    <string name="onboarding_interactive_tutorial_screen">Onboarding: Interactive Tutorial Screen</string>
+    <string name="onboarding_non_interactive_tutorial_screen">Onboarding: Non-Interactive Tutorial Screen</string>
+    <string name="onboarding_signin_variant_screen">Onboarding: SignIn Variant Screen</string>
+    <string name="paybill_list_screen">Paybill List Fragment</string>
+    <string name="manage_permissions_screen">Manage Permissions Screen</string>
+    <string name="payment_request_screen">Payment Request Screen</string>
+    <string name="payment_request_detail_screen">Payment Request Detail Screen</string>
+    <string name="schedule_screen">Schedule Screen</string>
+    <string name="settings_screen">Settings Screen</string>
+    <string name="transaction_details_screen">Transaction Details Screen</string>
+    <string name="ussd_log_fragment">USSD Log Fragment</string>
+    <string name="accounts_screen">Accounts Screen</string>
+    <string name="account_detail_screen">Account Detail Screen</string>
 
 </resources>

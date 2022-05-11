@@ -15,6 +15,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
+import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FaqFragment : Fragment(), FAQAdapter.SelectListener {
@@ -32,6 +33,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.faq_screen))
 
         observeFAQRecycler()
     }

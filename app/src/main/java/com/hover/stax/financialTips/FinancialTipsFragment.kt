@@ -14,6 +14,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import com.uxcam.UXCam
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -33,6 +34,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.financial_tips_screen))
 
         binding.title.text = getString(R.string.financial_wellness_tips)
         binding.backButton.setOnClickListener { findNavController().popBackStack() }

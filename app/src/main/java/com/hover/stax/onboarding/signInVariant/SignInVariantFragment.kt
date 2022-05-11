@@ -22,6 +22,7 @@ import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.onboarding.welcome.WelcomeFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
+import com.uxcam.UXCam
 import timber.log.Timber
 
 
@@ -47,6 +48,8 @@ class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.onboarding_signin_variant_screen))
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_sign_in)), requireActivity())
 
         initProgressBarView()

@@ -24,6 +24,7 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.*
+import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
@@ -57,6 +58,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        UXCam.tagScreenName(getString(R.string.payment_request_screen))
 
         requestViewModel.reset()
         startObservers(binding.root)

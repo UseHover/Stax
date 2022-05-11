@@ -18,6 +18,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.ManagePermissionsLayoutBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
+import com.uxcam.UXCam
 import timber.log.Timber
 
 class ManagePermissionsFragment : Fragment() {
@@ -49,6 +50,7 @@ class ManagePermissionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.manage_permissions_screen))
         ph = PermissionHelper(requireActivity())
     }
 

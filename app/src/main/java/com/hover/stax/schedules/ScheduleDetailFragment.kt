@@ -19,6 +19,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
+import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,6 +44,8 @@ class ScheduleDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        UXCam.tagScreenName(getString(R.string.schedule_screen))
 
         with(viewModel) {
             schedule.observe(viewLifecycleOwner) {

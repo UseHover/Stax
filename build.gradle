@@ -40,6 +40,9 @@ allprojects {
             authentication { basic(BasicAuthentication) }
             content { includeGroup "com.hover" }
         }
+        maven{
+            url 'https://sdk.uxcam.com/android/'
+        }
 
     }
 }

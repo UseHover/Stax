@@ -14,6 +14,7 @@ import com.hover.stax.databinding.FragmentLanguageBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
+import com.uxcam.UXCam
 import com.yariksoffice.lingver.Lingver
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,6 +34,8 @@ class LanguageSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        UXCam.tagScreenName(getString(R.string.language_select_screen))
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_language)), requireActivity())
 
         selectedCode = Lingver.getInstance().getLanguage()
