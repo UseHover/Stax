@@ -2,7 +2,6 @@ package com.hover.stax
 
 import android.app.Application
 import android.content.ComponentCallbacks
-import androidx.annotation.RequiresApi
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.AppsFlyerProperties
@@ -32,6 +31,7 @@ class ApplicationInstance : Application() {
         initFirebase()
 
         initAppsFlyer()
+
     }
 
     private fun initFirebase() {
@@ -82,6 +82,7 @@ class ApplicationInstance : Application() {
             start(this@ApplicationInstance)
         }
     }
+
 
     companion object {
         val txnDetailsRetryCounter: MutableMap<String, Int> by Delegates.observable(HashMap()) { _, _, _ -> }
