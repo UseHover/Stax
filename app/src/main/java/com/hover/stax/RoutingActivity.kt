@@ -66,7 +66,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            initUXCam()
             initAmplitude()
             logPushNotificationIfRequired()
             initHover()
@@ -228,7 +227,4 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
 
-    private fun initUXCam() {
-        UXCam.startWithKey(getString(R.string.uxcam_key))
-    }
 }
