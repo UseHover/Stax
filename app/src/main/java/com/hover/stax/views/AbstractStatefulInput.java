@@ -27,7 +27,7 @@ public abstract class AbstractStatefulInput extends FrameLayout {
     public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4;
 
     private TextInputLayout inputLayout;
-    protected String helperText;
+    public String helperText;
 
     public AbstractStatefulInput(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);

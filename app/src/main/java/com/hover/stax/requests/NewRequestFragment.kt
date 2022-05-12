@@ -171,8 +171,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
             addTextChangedListener(recipientWatcher)
             setChooseContactListener { startContactPicker(requireActivity()) }
         }
-
-        fab.setOnClickListener { fabClicked() }
     }
 
     private fun setClickListeners() = with(binding.shareCard) {
@@ -214,12 +212,12 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         }
     }
 
-    private fun fabClicked() {
-        if (requestViewModel.isEditing.value!! && validates()) {
-            updatePushNotifGroupStatus()
-            requestViewModel.setEditing(false)
-        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+    override fun onFinishForm() {
+        updatePushNotifGroupStatus()
+        requestViewModel.setEditing(false)
     }
+
+    override fun onSubmitForm() { }
 
     private fun updatePushNotifGroupStatus() {
         joinRequestMoneyGroup(requireContext())
@@ -227,7 +225,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         leaveNoRequestMoneyGroup(requireContext())
     }
 
-    private fun validates(): Boolean {
+    override fun validates(): Boolean {
         val accountError = requestViewModel.accountError()
         payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 

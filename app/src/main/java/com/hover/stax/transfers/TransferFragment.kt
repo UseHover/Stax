@@ -128,6 +128,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeActiveAccount() {
         accountsViewModel.activeAccount.observe(viewLifecycleOwner) { account ->
             account?.let { binding.summaryCard.accountValue.setTitle(it.toString()) }
+            val err = accountsViewModel.errorCheck()
+            payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
             binding.editCard.actionSelect.visibility = if (account != null) View.VISIBLE else View.GONE
         }
     }
@@ -197,7 +199,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         setAmountInputListener()
         setContactInputListener()
         binding.editCard.actionSelect.setListener(this)
-        fab.setOnClickListener { fabClicked() }
     }
 
     private fun setAmountInputListener() {
@@ -221,16 +222,14 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun fabClicked() {
-        if (validates()) {
-            if (transferViewModel.isEditing.value == true) {
-                transferViewModel.saveContact()
-                transferViewModel.setEditing(false)
-            } else {
-                callHover(0)
-                findNavController().popBackStack()
-            }
-        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+    override fun onFinishForm() {
+        transferViewModel.saveContact()
+        transferViewModel.setEditing(false)
+    }
+
+    override fun onSubmitForm() {
+        callHover(0)
+        findNavController().popBackStack()
     }
 
     private fun callHover(requestCode: Int) {
@@ -260,12 +259,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun validates(): Boolean {
+    override fun validates(): Boolean {
+        val accountError = accountsViewModel.errorCheck()
+        payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
         val amountError = transferViewModel.amountErrors()
         binding.editCard.amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-
-        val channelError = accountsViewModel.errorCheck()
-        payWithDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val actionError = actionSelectViewModel.errorCheck()
         binding.editCard.actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -275,14 +274,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
 
-        accountsViewModel.activeAccount.value?.let {
-            if (!accountsViewModel.isValidAccount()) {
-                payWithDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-                return false
-            }
-        }
-
-        return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
+        return accountError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }
 
     override fun onContactSelected(contact: StaxContact) {

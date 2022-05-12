@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.utils.Utils
 
@@ -30,6 +31,8 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : 
 
     private fun startBalanceActionFor(account: Account?): LiveData<HoverAction?> {
         val channelId = account?.channelId ?: -1
-        return actionRepo.getFirstLiveAction(channelId, HoverAction.BALANCE)
+        return actionRepo.getFirstLiveAction(channelId,
+                if (account?.name == PLACEHOLDER) HoverAction.BALANCE
+                else HoverAction.FETCH_ACCOUNTS)
     }
 }

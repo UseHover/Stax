@@ -130,8 +130,8 @@
     <string name="bal_cardhead">Balances</string>
     <string name="channels_error_nodata">Please turn on data to load services.</string>
     <string name="channels_error_nosim">Please insert a supported SIM to filter choices.</string>
-    <string name="paybill_error_nosupport">This account does not support bill payments</string>
     <string name="channels_error_noselect">You must select a service.</string>
+    <string name="channels_error_newaccount">You must finish importing this account.</string>
     <string name="accounts_error_no_accounts">No accounts added</string>
     <string name="link_account">Link account</string>
     <string name="link_account_error">Choose an account to link.</string>
@@ -148,8 +148,10 @@
 
     <string name="check_balance_title">Check balance</string>
     <string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
-    <string name="check_balance_alt">Nice! Account added successfully. Now you can check your balance on Stax.</string>
-    <string name="check_balance_alt_plural">Nice! Accounts added successfully. Now you can check your balance on Stax.</string>
+
+    <string name="finish_adding_title">Finish importing account</string>
+    <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This wont take long.</string>
+    <string name="connect_cta">Connect now</string>
 
     <string name="later">Later</string>
     <string name="no_connecion">No connection</string>

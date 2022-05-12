@@ -67,6 +67,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
                 R.string.no_actions_fielderror,
                 HoverAction.getHumanFriendlyType(getApplication(), type.value)
             )
+            !isValidAccount() -> (getApplication() as Context).getString(R.string.channels_error_newaccount)
             else -> null
         }
     }
@@ -79,6 +80,10 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     override fun highlightAccount(account: Account) {
         activeAccount.postValue(account)
+    }
+
+    fun reset() {
+        activeAccount.value = accounts.value?.firstOrNull { it.isDefault }
     }
 
     fun setDefaultAccount(account: Account) {

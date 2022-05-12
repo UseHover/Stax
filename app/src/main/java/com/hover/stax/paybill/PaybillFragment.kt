@@ -64,7 +64,6 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private fun initListeners() {
         setInputListeners()
         setBusinessNoTouchListener()
-        setContinueBtnClickListener()
     }
 
     private fun setInputListeners() = with(binding.saveCard) {
@@ -90,13 +89,6 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             findNavController().navigate(R.id.paybillListFragment)
         }
 
-    private fun setContinueBtnClickListener() = binding.fab.setOnClickListener {
-        if (validates())
-            performFabAction()
-        else
-            UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
-    }
-
     private fun setUpIcons() = with(binding.paybillIconsLayout) {
         iconList.adapter = PaybillIconsAdapter(this@PaybillFragment)
         root.setOnClickIcon { toggleIconChooser(false) }
@@ -116,12 +108,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         binding.fab.visibility = View.VISIBLE
     }
 
-    private fun performFabAction() {
-        if (viewModel.isEditing.value == true) goToConfirm()
-        else startSession()
-    }
-
-    private fun goToConfirm() {
+    override fun onFinishForm() {
         if (viewModel.saveBill.value!!) savePaybill()
         else viewModel.setEditing(false)
     }
@@ -157,10 +144,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     private fun observeActions() {
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
-            if (accountsViewModel.errorCheck() != null)
-                payWithDropdown.setState(accountsViewModel.errorCheck(), AbstractStatefulInput.ERROR)
-            else
-                payWithDropdown.setState(null, AbstractStatefulInput.SUCCESS)
+            val err = accountsViewModel.errorCheck()
+            payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         }
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { it?.let {
             binding.summaryCard.recipient.setTitle(it.to_institution_name) }}
@@ -229,12 +214,15 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         binding.saveCard.root.visibility = if (isEditing) View.VISIBLE else View.GONE
     }
 
-    private fun validates(): Boolean {
+    override fun validates(): Boolean {
         viewModel.setAccountNumber(binding.editCard.accountNoInput.text)
         viewModel.setAmount(binding.editCard.amountInput.text)
         viewModel.setNickname(binding.saveCard.billNameInput.text)
 
         val payWithError = accountsViewModel.errorCheck()
+        binding.editCard.payWithDropdown.setState(payWithError,
+            if (payWithError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
         val businessNoError = viewModel.businessNoError()
         val accountNoError = viewModel.accountNoError()
         val amountError = viewModel.amountError()
@@ -254,7 +242,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         return payWithError == null && businessNoError == null && accountNoError == null && amountError == null && nickNameError == null
     }
 
-    private fun startSession() = with(accountsViewModel) {
+    override fun onSubmitForm() = with(accountsViewModel) {
         val actions = channelActions.value
         val account = activeAccount.value
         val actionToRun = actionSelectViewModel.activeAction.value

@@ -18,12 +18,15 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.accounts.PLACEHOLDER
+import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
@@ -39,6 +42,7 @@ import timber.log.Timber
 abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
+    val balancesViewModel: BalancesViewModel by sharedViewModel()
     val accountsViewModel: AccountsViewModel by sharedViewModel()
     val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
 
@@ -54,7 +58,7 @@ abstract class AbstractFormFragment : Fragment() {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        abstractFormViewModel.reset()
+        resetVMs()
     }
 
     @CallSuper
@@ -63,21 +67,30 @@ abstract class AbstractFormFragment : Fragment() {
         noWorryText = root.findViewById(R.id.noWorryText)
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
+        fab.setOnClickListener { fabClicked() }
         payWithDropdown = root.findViewById(R.id.payWithDropdown)
+        payWithDropdown.setListener(accountsViewModel)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
     @CallSuper
     open fun startObservers(root: View) {
         summaryCard?.setOnClickIcon { abstractFormViewModel.setEditing(true) }
-        payWithDropdown.setListener(accountsViewModel)
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
-        setupActionDropdownObservers()
+        setupEmptyObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
+        balancesViewModel.balanceAction.observe(viewLifecycleOwner) { it?.let {
+            callHover(accountsViewModel.activeAccount.value, it)
+        } }
     }
 
-    private fun setupActionDropdownObservers() {
-        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { Timber.v("Got new active account ${this.javaClass.simpleName}: $it") }
+    private fun callHover(account: Account?, action: HoverAction) {
+        account?.let {
+            (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
+        }
+    }
+
+    private fun setupEmptyObservers() {
         accountsViewModel.channelActions.observe(viewLifecycleOwner) { Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
     }
@@ -90,6 +103,38 @@ abstract class AbstractFormFragment : Fragment() {
         fab.text = chooseFabText(isEditing)
     }
 
+    private fun fabClicked() {
+        if (accountsViewModel.activeAccount.value != null && !accountsViewModel.isValidAccount())
+            askToCheckBalance(accountsViewModel.activeAccount.value!!)
+        else if (validates()) {
+            if (abstractFormViewModel.isEditing.value == true) {
+                onFinishForm()
+            } else {
+                onSubmitForm()
+            }
+        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+    }
+
+    abstract fun validates(): Boolean
+
+    abstract fun onFinishForm()
+
+    abstract fun onSubmitForm()
+
+    private fun askToCheckBalance(account: Account) {
+        val dialog = StaxDialog(layoutInflater)
+            .setDialogTitle(R.string.finish_adding_title)
+            .setDialogMessage(getString(R.string.finish_adding_desc, account.alias))
+            .setNegButton(R.string.btn_cancel, null)
+            .setPosButton(R.string.connect_cta) { onboard(account) }
+        dialog.showIt()
+    }
+
+    private fun onboard(account: Account?) {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
+        balancesViewModel.requestBalance(account)
+    }
+
     fun setInputState(hasFocus: Boolean, input: StaxTextInput, errors: String?) {
         if (!hasFocus)
             input.setState(errors, if (errors == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -100,7 +145,7 @@ abstract class AbstractFormFragment : Fragment() {
     private fun chooseFabText(isEditing: Boolean): String {
         return if (isEditing) getString(R.string.btn_continue)
             else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
-            else if (type == HoverAction.C2B) getString(R.string.fab_airtimenow)
+            else if (type == HoverAction.C2B) getString(R.string.fab_transfernow)
             else getString(R.string.fab_transfernow)
     }
 
@@ -159,9 +204,14 @@ abstract class AbstractFormFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
+    private fun resetVMs() {
         abstractFormViewModel.reset()
+        accountsViewModel.reset()
         actionSelectViewModel.activeAction.value = null
+    }
+
+    override fun onDestroy() {
+        resetVMs()
         super.onDestroy()
     }
 

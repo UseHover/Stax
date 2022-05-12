@@ -22,6 +22,7 @@ import com.hover.stax.home.HomeFragmentDirections
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -59,6 +60,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
         balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
         val observer = Observer<List<Account>> { t -> updateAccounts(ArrayList(t)) }
         accountsViewModel.accounts.observe(viewLifecycleOwner, observer)
+        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { it?.let { askToCheckBalance(it) } }
         balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
@@ -135,6 +137,17 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
         val balancesAdapter = BalanceAdapter(accounts, this)
         balancesRecyclerView.adapter = balancesAdapter
         showBalanceCards(balancesViewModel.showBalances.value!!)
+    }
+
+    private fun askToCheckBalance(account: Account) {
+        if (account.latestBalance.isNullOrEmpty()) {
+            val dialog = StaxDialog(requireActivity())
+                .setDialogTitle(R.string.check_balance_title)
+                .setDialogMessage(R.string.check_balance_desc)
+                .setNegButton(R.string.later, null)
+                .setPosButton(R.string.check_balance_title) { onTapRefresh(account) }
+            dialog.showIt()
+        }
     }
 
     private fun updateBalanceCardStackHeight(numOfItems: Int) {
