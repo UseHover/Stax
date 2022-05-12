@@ -140,7 +140,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     private fun askToCheckBalance(account: Account) {
-        if (account.latestBalance.isNullOrEmpty()) {
+        if (account.isDefault && account.latestBalance.isNullOrEmpty()) {
             val dialog = StaxDialog(requireActivity())
                 .setDialogTitle(R.string.check_balance_title)
                 .setDialogMessage(R.string.check_balance_desc)
