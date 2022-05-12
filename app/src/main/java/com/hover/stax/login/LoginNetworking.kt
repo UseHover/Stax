@@ -1,7 +1,6 @@
 package com.hover.stax.login
 
 import android.content.Context
-import com.google.gson.JsonObject
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -10,7 +9,6 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-
 import org.json.JSONObject
 import timber.log.Timber
 

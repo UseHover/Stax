@@ -18,9 +18,6 @@ package com.hover.stax.utils.paymentLinkCryptography;
 
 import android.os.Build;
 
-import androidx.annotation.RequiresApi;
-
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 public class Base64 {

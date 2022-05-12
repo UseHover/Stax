@@ -1,7 +1,6 @@
 package com.hover.stax.accounts
 
 import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
