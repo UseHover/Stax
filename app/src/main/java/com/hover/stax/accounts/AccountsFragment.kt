@@ -34,7 +34,7 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectAdapter = ChannelsAdapter(ArrayList(), this)
+        val selectAdapter = ChannelsAdapter(this)
 
         binding.accountsRV.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())
@@ -44,8 +44,8 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
         binding.accountListCard.setOnClickIcon { findNavController().popBackStack() }
 
         with(viewModel) {
-            allChannels.observe(viewLifecycleOwner) { selectAdapter.updateList(it) }
-            simChannels.observe(viewLifecycleOwner) { selectAdapter.updateList(it) }
+            allChannels.observe(viewLifecycleOwner) { selectAdapter.submitList(it) }
+            simChannels.observe(viewLifecycleOwner) { selectAdapter.submitList(it) }
             accounts.observe(viewLifecycleOwner) {
                 if (it.isNotEmpty())
                     showAccountsList(it)

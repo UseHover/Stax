@@ -93,7 +93,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
     }
 
     private fun filter(stagedChannels: List<Channel>) {
-        if(!stagedChannels.isNullOrEmpty()) {
+        if(stagedChannels.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
                 val filteredList = stagedChannels.filter { it.toString().toFilteringStandard()
                     .contains(filterQuery.value!!.toFilteringStandard()) }
