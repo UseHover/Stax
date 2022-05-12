@@ -29,17 +29,15 @@ object AnalyticsUtil {
 		logAmplitude(event, null, context)
 		logFirebase(event, null, context)
 		logAppsFlyer(event, null, context)
+		logUXCam(event)
 
-		val firstWord = event.split(" ").first()
-		if(firstWord == "Visited") {
-			UXCam.tagScreenName(event)
-		}
 	}
 
 	@JvmStatic
 	fun logAnalyticsEvent(event: String, context: Context, excludeAmplitude: Boolean) {
 		logFirebase(event, null, context)
 		logAppsFlyer(event, null, context)
+		logUXCam(event)
 	}
 
 	@JvmStatic
@@ -47,6 +45,14 @@ object AnalyticsUtil {
 		logAmplitude(event, args, context)
 		logFirebase(event, args, context)
 		logAppsFlyer(event, args, context)
+		logUXCam(event)
+	}
+
+	private fun logUXCam(event: String) {
+		val firstWord = event.split(" ").first()
+		if(firstWord == "Visited") {
+			UXCam.tagScreenName(event)
+		}
 	}
 
 	private fun logAmplitude(event: String, args: JSONObject?, context: Context) {
