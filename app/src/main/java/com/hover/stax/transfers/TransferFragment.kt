@@ -18,13 +18,11 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
-import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber

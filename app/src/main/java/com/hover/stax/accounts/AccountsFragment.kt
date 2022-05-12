@@ -16,7 +16,6 @@ import com.hover.stax.databinding.FragmentAccountsBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.utils.UIHelper
-import com.uxcam.UXCam
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

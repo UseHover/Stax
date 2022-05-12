@@ -26,7 +26,6 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
-import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 

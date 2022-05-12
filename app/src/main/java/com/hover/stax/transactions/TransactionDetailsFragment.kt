@@ -1,8 +1,6 @@
 package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
@@ -11,8 +9,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -32,13 +28,9 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
-import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class TransactionDetailsFragment : Fragment() {

@@ -26,7 +26,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
 
 import com.hover.stax.views.StaxDialog
-import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber

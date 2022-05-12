@@ -26,7 +26,6 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
-import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 

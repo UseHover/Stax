@@ -12,7 +12,6 @@ import com.hover.stax.databinding.FragmentInteractiveOnboardingBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
-import com.uxcam.UXCam
 import org.json.JSONObject
 import timber.log.Timber
 

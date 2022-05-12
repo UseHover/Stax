@@ -19,7 +19,6 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
-import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel

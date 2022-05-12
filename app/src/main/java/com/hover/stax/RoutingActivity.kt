@@ -32,7 +32,6 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.uxcam.UXCam
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

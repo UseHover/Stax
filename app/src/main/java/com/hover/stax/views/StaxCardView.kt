@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxCardViewBinding
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 
 open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {

@@ -21,10 +21,8 @@ import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
-import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class SettingsFragment : Fragment() {

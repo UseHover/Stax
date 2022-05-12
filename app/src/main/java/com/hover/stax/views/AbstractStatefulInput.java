@@ -2,7 +2,6 @@ package com.hover.stax.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 

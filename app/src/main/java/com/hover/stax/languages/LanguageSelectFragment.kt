@@ -14,7 +14,6 @@ import com.hover.stax.databinding.FragmentLanguageBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
-import com.uxcam.UXCam
 import com.yariksoffice.lingver.Lingver
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

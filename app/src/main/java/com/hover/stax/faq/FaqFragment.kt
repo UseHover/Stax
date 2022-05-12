@@ -1,7 +1,6 @@
 package com.hover.stax.faq
 
 import android.os.Bundle
-import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +12,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentFaqBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
-import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FaqFragment : Fragment(), FAQAdapter.SelectListener {

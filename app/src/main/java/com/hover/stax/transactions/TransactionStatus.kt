@@ -1,7 +1,6 @@
 package com.hover.stax.transactions
 
 import android.content.Context
-import androidx.compose.ui.text.capitalize
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R

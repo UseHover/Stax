@@ -2,7 +2,6 @@ package com.hover.stax
 
 import android.app.Application
 import android.content.ComponentCallbacks
-import androidx.annotation.RequiresApi
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.AppsFlyerProperties
@@ -13,7 +12,6 @@ import com.hover.stax.database.appModule
 import com.hover.stax.database.dataModule
 import com.hover.stax.database.networkModule
 import com.hover.stax.utils.network.NetworkMonitor
-import com.uxcam.UXCam
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin

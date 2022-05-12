@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -29,7 +28,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
-import com.uxcam.UXCam
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber

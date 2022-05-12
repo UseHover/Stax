@@ -9,7 +9,6 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentDefaultVariantBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.AnalyticsUtil
-import com.uxcam.UXCam
 
 class DefaultVariantFragment : Fragment() {
 

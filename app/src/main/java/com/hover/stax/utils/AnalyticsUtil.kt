@@ -9,7 +9,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
-import com.hover.stax.R
 import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject

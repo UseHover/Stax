@@ -14,7 +14,6 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
-import com.uxcam.UXCam
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
