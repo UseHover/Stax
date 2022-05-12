@@ -6,6 +6,8 @@ class BonusRepo(val db: AppDatabase) {
 
     private val dao = db.bonusDao()
 
+    val bonuses = dao.bonuses
+
     fun save(bonus: Bonus) = dao.insert(bonus)
 
     fun save(bonuses: List<Bonus>) = dao.insertAll(bonuses)

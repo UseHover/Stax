@@ -14,6 +14,7 @@ import com.hover.stax.accounts.DUMMY
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.login.LoginViewModel
@@ -37,6 +38,8 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     private val transferViewModel: TransferViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val loginViewModel: LoginViewModel by viewModel()
+    private val bonusViewModel: BonusViewModel by viewModel()
+
     private val bountyRequest = 3000
 
     private lateinit var binding: ActivityMainBinding
@@ -58,6 +61,8 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         checkForFragmentDirection(intent)
         observeForAppReview()
         setGoogleLoginInterface(this)
+
+        bonusViewModel.getBonuses()
     }
 
     override fun onNewIntent(intent: Intent?) {

@@ -15,7 +15,7 @@ interface BonusDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(bonus: Bonus)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(bonuses: List<Bonus>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
