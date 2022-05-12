@@ -14,7 +14,7 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private var selectListener: CountryAdapter.SelectListener? = null
 
     fun updateChoices(channels: List<Channel>, currentCountry: String?) {
-        if (channels.isNullOrEmpty()) {
+        if (channels.isEmpty()) {
             setEmptyState()
             return
         }

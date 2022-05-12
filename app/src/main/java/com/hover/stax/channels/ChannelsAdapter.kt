@@ -3,10 +3,12 @@ package com.hover.stax.channels
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 
-class ChannelsAdapter(var channels: List<Channel>, var selectListener: SelectListener?) : RecyclerView.Adapter<ChannelViewHolder>() {
+class ChannelsAdapter(var selectListener: SelectListener?) : ListAdapter<Channel, ChannelViewHolder>(diffUtil) {
 
     private var selectionTracker: SelectionTracker<Long>? = null
 
@@ -20,20 +22,13 @@ class ChannelsAdapter(var channels: List<Channel>, var selectListener: SelectLis
     }
 
     override fun onBindViewHolder(holder: ChannelViewHolder, position: Int) {
-        val channel = channels[holder.adapterPosition]
+        val channel = getItem(holder.adapterPosition)
         holder.bind(channel, selectionTracker != null, selectionTracker?.isSelected(channel.id.toLong()))
         holder.itemView.setOnClickListener { selectListener?.clickedChannel(channel) }
     }
 
-    override fun getItemCount(): Int = channels.size
-
     override fun getItemId(position: Int): Long {
-        return channels[position].id.toLong()
-    }
-
-    fun updateList(list: List<Channel>) {
-        channels = list
-        notifyDataSetChanged()
+        return getItem(position).id.toLong()
     }
 
     fun setTracker(tracker: SelectionTracker<Long>) {
@@ -42,5 +37,18 @@ class ChannelsAdapter(var channels: List<Channel>, var selectListener: SelectLis
 
     interface SelectListener {
         fun clickedChannel(channel: Channel)
+    }
+
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<Channel>() {
+            override fun areItemsTheSame(oldItem: Channel, newItem: Channel): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Channel, newItem: Channel): Boolean {
+                return oldItem == newItem
+            }
+
+        }
     }
 }

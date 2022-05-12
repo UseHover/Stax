@@ -9,9 +9,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/margin_13"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -60,22 +60,22 @@
                 <include layout="@layout/no_account_empty_state" android:id="@+id/emptyState"/>
 
                 <TextView
-                    android:id="@+id/error_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_13"
-                    android:layout_marginTop="@dimen/margin_13"
-                    android:drawablePadding="@dimen/margin_5"
-                    android:layout_marginBottom="@dimen/margin_8"
-                    app:fontFamily="@font/brutalista_medium"
-                    android:gravity="center_vertical"
-                    android:text="@string/loading"
-                    android:textColor="@color/stax_state_blue"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="visible"
-                    app:drawableStartCompat="@drawable/ic_info" />
+                        android:id="@+id/error_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_13"
+                        android:layout_marginTop="@dimen/margin_13"
+                        android:layout_marginBottom="@dimen/margin_8"
+                        android:drawablePadding="@dimen/margin_5"
+                        android:gravity="center_vertical"
+                        android:text="@string/loading"
+                        android:textColor="@color/stax_state_blue"
+                        android:visibility="visible"
+                        app:drawableStartCompat="@drawable/ic_info"
+                        app:fontFamily="@font/brutalista_medium"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/channelsList"
@@ -95,9 +95,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/margin_21"
             android:layout_marginTop="@dimen/margin_13"
             android:layout_marginEnd="@dimen/margin_13"
+            android:layout_marginBottom="@dimen/margin_21"
             android:text="@string/btn_continue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

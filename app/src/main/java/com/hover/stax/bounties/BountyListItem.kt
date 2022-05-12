@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.view.View.OnClickListener
+import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.hover.stax.R
 import com.hover.stax.databinding.BountyListItemBinding

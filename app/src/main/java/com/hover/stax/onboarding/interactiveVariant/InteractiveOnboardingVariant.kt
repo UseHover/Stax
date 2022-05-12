@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.appsflyer.internal.ac
-import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentInteractiveOnboardingBinding
 import com.hover.stax.onboarding.OnBoardingActivity

@@ -41,7 +41,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
@@ -66,7 +66,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.channelsListCard.showProgressIndicator()
+        binding.channelsListCard.apply{
+            showProgressIndicator()
+            setTitle(getString(R.string.add_accounts_to_stax))
+        }
 
         binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
         fillUpChannelLists()
@@ -94,7 +97,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
             adapter = selectAdapter
         }
     }
@@ -156,7 +158,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private fun loadFilteredChannels(channels: List<Channel>) {
         binding.channelsListCard.hideProgressIndicator()
 
-        if (!channels.isNullOrEmpty()) {
+        if (channels.isNotEmpty()) {
+            Timber.e("Here to add ${channels.size}")
             updateAdapter(Channel.sort(channels, false))
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
@@ -176,9 +179,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.errorText.visibility = GONE
     }
 
-
     private fun updateAdapter(channels: List<Channel>) {
-        selectAdapter.updateList(channels)
+        selectAdapter.submitList(channels)
     }
 
     private fun setError(message: Int) {

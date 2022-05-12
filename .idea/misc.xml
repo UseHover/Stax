@@ -10,10 +10,12 @@
       <map>
         <entry key="../../../../layout/compose-model-1647504975633.xml" value="0.2673141891891892" />
         <entry key="../../../../layout/compose-model-1648556434513.xml" value="0.24957770270270271" />
+        <entry key="app/src/main/res/drawable/blue_cornered_background.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/bright_blue_rounded_bg.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/drawable/ic_baseline_open_in_new_16.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_copy.xml" value="0.182" />
         <entry key="app/src/main/res/drawable/ic_edit.xml" value="0.244" />
