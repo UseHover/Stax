@@ -34,13 +34,13 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
         setLoginObserver()
 
         updateManager = AppUpdateManagerFactory.create(this)
-       // checkForUpdates()
+       checkForUpdates()
     }
 
     //checks that the update has not stalled
     override fun onResume() {
         super.onResume()
-      /*  if(!BuildConfig.DEBUG) {
+        if(!BuildConfig.DEBUG) {
             updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
                 //if the update is downloaded but not installed, notify user to complete the update
                 if (updateInfo.installStatus() == InstallStatus.DOWNLOADED)
@@ -51,7 +51,7 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
                     updateManager.startUpdateFlowForResult(updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE)
                 }
             }
-        } */
+        }
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
