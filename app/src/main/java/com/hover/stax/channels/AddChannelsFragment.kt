@@ -40,7 +40,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
@@ -66,18 +66,18 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         super.onViewCreated(view, savedInstanceState)
         UXCam.tagScreenName(getString(R.string.add_channels_screen))
 
-        binding.channelsListCard.showProgressIndicator()
+        binding.channelsListCard.apply{
+            showProgressIndicator()
+            setTitle(getString(R.string.add_accounts_to_stax))
+        }
 
-        binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
         binding.selectedList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
             isNestedScrollingEnabled = false
         }
 
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
             adapter = selectAdapter
             isNestedScrollingEnabled = false
         }
@@ -85,7 +85,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
         setUpMultiselect()
         setSearchInputWatcher()
-
 
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
@@ -129,8 +128,11 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
         showSelected(channels.isNotEmpty())
 
-        if (channels.isNotEmpty())
-            binding.selectedList.adapter = ChannelsAdapter(channels, this)
+        if (channels.isNotEmpty()) {
+            val adapter = ChannelsAdapter(this)
+            binding.selectedList.adapter = adapter
+            adapter.submitList(channels)
+        }
     }
 
     private fun showSelected(visible: Boolean) {
@@ -142,6 +144,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
+            Timber.e("Here to add ${channels.size}")
             updateAdapter(Channel.sort(channels, false))
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
@@ -163,9 +166,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.errorText.visibility = GONE
     }
 
-
     private fun updateAdapter(channels: List<Channel>) {
-        selectAdapter.updateList(channels)
+        selectAdapter.submitList(channels)
     }
 
     private fun setError(message: Int) {
@@ -183,7 +185,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
             val selectedChannels = mutableListOf<Channel>()
             tracker.selection.forEach { selection ->
-                selectedChannels.addAll(selectAdapter.channelList.filter { it.id.toLong() == selection })
+                selectedChannels.addAll(selectAdapter.currentList.filter { it.id.toLong() == selection })
             }
 
             channelsViewModel.setChannelsSelected(selectedChannels)

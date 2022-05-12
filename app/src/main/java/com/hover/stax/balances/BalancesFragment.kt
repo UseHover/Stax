@@ -115,7 +115,7 @@ class BalancesFragment : Fragment() {
     }
 
     private fun updateServices(accounts: ArrayList<Account>) {
-        SHOW_ADD_ANOTHER_ACCOUNT = !accounts.isNullOrEmpty() && accounts.none { it.id == DUMMY } && accounts.size > 1
+        SHOW_ADD_ANOTHER_ACCOUNT = accounts.isNotEmpty() && accounts.none { it.id == DUMMY } && accounts.size > 1
         addDummyAccountsIfRequired(accounts)
 
         val balancesAdapter = BalanceAdapter(accounts, activity as MainActivity)

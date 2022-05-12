@@ -9,9 +9,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/margin_13"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/selectedList"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
 
             </com.hover.stax.views.StaxCardView>
 
@@ -42,38 +42,40 @@
                     app:title="@string/add_an_account">
 
                 <com.hover.stax.views.StaxTextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/search"
-                    android:inputType="textFilter"
-                    android:imeOptions="actionDone"
-                    android:id="@+id/searchInput"/>
+                        android:id="@+id/searchInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/search"
+                        android:imeOptions="actionDone"
+                        android:inputType="textFilter" />
 
-                <include layout="@layout/no_account_empty_state" android:id="@+id/emptyState"/>
+                <include
+                        android:id="@+id/emptyState"
+                        layout="@layout/no_account_empty_state" />
 
                 <TextView
-                    android:id="@+id/error_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_13"
-                    android:layout_marginTop="@dimen/margin_13"
-                    android:drawablePadding="@dimen/margin_5"
-                    android:layout_marginBottom="@dimen/margin_8"
-                    app:fontFamily="@font/brutalista_medium"
-                    android:gravity="center_vertical"
-                    android:text="@string/loading"
-                    android:textColor="@color/stax_state_blue"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="visible"
-                    app:drawableStartCompat="@drawable/ic_info" />
+                        android:id="@+id/error_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_13"
+                        android:layout_marginTop="@dimen/margin_13"
+                        android:layout_marginBottom="@dimen/margin_8"
+                        android:drawablePadding="@dimen/margin_5"
+                        android:gravity="center_vertical"
+                        android:text="@string/loading"
+                        android:textColor="@color/stax_state_blue"
+                        android:visibility="visible"
+                        app:drawableStartCompat="@drawable/ic_info"
+                        app:fontFamily="@font/brutalista_medium"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/channelsList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintTop_toBottomOf="@id/error_text" />
+                        android:id="@+id/channelsList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintTop_toBottomOf="@id/error_text" />
 
             </com.hover.stax.views.StaxCardView>
 
@@ -86,9 +88,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/margin_21"
             android:layout_marginTop="@dimen/margin_13"
             android:layout_marginEnd="@dimen/margin_13"
+            android:layout_marginBottom="@dimen/margin_21"
             android:text="@string/btn_continue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
