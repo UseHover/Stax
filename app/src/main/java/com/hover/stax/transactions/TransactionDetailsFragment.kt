@@ -73,7 +73,6 @@ class TransactionDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startObservers()
-        UXCam.tagScreenName(getString(R.string.transaction_details_screen))
 
         binding.transactionDetailsCard.setOnClickIcon { NavUtil.navigate(findNavController(), TransactionDetailsFragmentDirections.actionTxnDetailsFragmentToNavigationHome()) }
         binding.primaryStatus.viewLogText.setOnClickListener { showUSSDLog() }

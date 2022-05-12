@@ -50,7 +50,6 @@ class ManagePermissionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.manage_permissions_screen))
         ph = PermissionHelper(requireActivity())
     }
 

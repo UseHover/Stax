@@ -58,9 +58,6 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         super.onViewCreated(view, savedInstanceState)
         networkMonitor = NetworkMonitor(requireActivity())
 
-
-        UXCam.tagScreenName(getString(R.string.bounty_list_screen))
-
         initRecyclerView()
 
         startObservers()
@@ -124,6 +121,10 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         setListener(this@BountyListFragment)
         updateChoices(channels, bountyViewModel.currentCountryFilter.value)
         isEnabled = true
+    }
+
+    private fun initRecyclerView() {
+        binding.bountiesRecyclerView.layoutManager = UIHelper.setMainLinearManagers(context)
     }
 
     private fun startObservers() = with(bountyViewModel) {

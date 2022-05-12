@@ -45,7 +45,6 @@ class BalancesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.balances_screen))
 
         balanceStack = binding.stackBalanceCards
         setUpBalances()

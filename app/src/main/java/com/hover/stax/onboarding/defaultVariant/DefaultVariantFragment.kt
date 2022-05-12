@@ -27,7 +27,6 @@ class DefaultVariantFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.onboarding_default_variant))
 
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), requireActivity())
         initContinueButton()

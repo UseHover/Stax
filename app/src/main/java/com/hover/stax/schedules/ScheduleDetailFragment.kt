@@ -45,8 +45,6 @@ class ScheduleDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        UXCam.tagScreenName(getString(R.string.schedule_screen))
-
         with(viewModel) {
             schedule.observe(viewLifecycleOwner) {
                 it?.let {

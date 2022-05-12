@@ -33,7 +33,6 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.faq_screen))
 
         observeFAQRecycler()
     }

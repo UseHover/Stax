@@ -64,7 +64,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.add_channels_screen))
 
         binding.channelsListCard.apply{
             showProgressIndicator()

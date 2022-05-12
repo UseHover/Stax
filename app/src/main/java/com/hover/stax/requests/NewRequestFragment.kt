@@ -59,8 +59,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        UXCam.tagScreenName(getString(R.string.payment_request_screen))
-
         requestViewModel.reset()
         startObservers(binding.root)
         startListeners()

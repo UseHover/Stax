@@ -77,7 +77,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.transfers_screen))
 
         transferViewModel.reset() //TODO remove if values are removed
         init(binding.root)

@@ -54,8 +54,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.account_detail_screen))
-
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity())
 
         initRecyclerViews()

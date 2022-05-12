@@ -48,8 +48,6 @@ class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.onboarding_signin_variant_screen))
-
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_sign_in)), requireActivity())
 
         initProgressBarView()

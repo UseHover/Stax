@@ -49,8 +49,6 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.paybill_screen))
-
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill)), requireActivity())
 
         channelsViewModel.setType(HoverAction.C2B)

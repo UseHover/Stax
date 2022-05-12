@@ -46,7 +46,6 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.payment_request_detail_screen))
 
         binding.shareCard.requestLinkCardView.setTitle(getString(R.string.share_again_cardhead))
 

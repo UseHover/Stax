@@ -9,6 +9,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
+import com.hover.stax.R
+import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -28,6 +30,11 @@ object AnalyticsUtil {
 		logAmplitude(event, null, context)
 		logFirebase(event, null, context)
 		logAppsFlyer(event, null, context)
+
+		val firstWord = event.split(" ").first()
+		if(firstWord == "Visited") {
+			UXCam.tagScreenName(event)
+		}
 	}
 
 	@JvmStatic

@@ -32,7 +32,6 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		UXCam.tagScreenName(getString(R.string.ussd_log_fragment))
 
 		binding.closeButton.setOnClickListener { this.dismiss() }
 		setCardTitle()

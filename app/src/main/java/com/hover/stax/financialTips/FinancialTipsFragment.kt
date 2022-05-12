@@ -34,7 +34,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.financial_tips_screen))
 
         binding.title.text = getString(R.string.financial_wellness_tips)
         binding.backButton.setOnClickListener { findNavController().popBackStack() }

@@ -34,7 +34,6 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        UXCam.tagScreenName(getString(R.string.accounts_screen))
 
         val selectAdapter = ChannelsAdapter(this)
 
