@@ -16,7 +16,7 @@ import androidx.core.text.HtmlCompat
 import com.hover.stax.R
 import com.hover.stax.databinding.BountyListItemBinding
 
-internal class BountyListItem(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
+class BountyListItem(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 	private val binding: BountyListItemBinding
 
 	private var bounty: Bounty? = null

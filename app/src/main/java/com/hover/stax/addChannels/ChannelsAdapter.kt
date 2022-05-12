@@ -1,4 +1,4 @@
-package com.hover.stax.channels
+package com.hover.stax.addChannels
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,9 +6,11 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelViewHolder
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 
-class ChannelsAdapter(var selectListener: SelectListener?) : ListAdapter<Channel, ChannelViewHolder>(diffUtil) {
+class ChannelsAdapter(var channels: List<Channel>, var selectListener: SelectListener?) : ListAdapter<Channel, ChannelViewHolder>(diffUtil) {
 
     private var selectionTracker: SelectionTracker<Long>? = null
 

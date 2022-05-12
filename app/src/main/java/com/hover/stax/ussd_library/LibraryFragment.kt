@@ -85,8 +85,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
         binding.countryCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) showList(channels)
-        else if (viewModel.isInSearchMode()) showEmptyState()
-        else showLoading()
+        else showEmptyState()
     }
 
     private fun showList(channels: List<Channel>) {

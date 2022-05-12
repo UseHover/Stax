@@ -41,7 +41,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null

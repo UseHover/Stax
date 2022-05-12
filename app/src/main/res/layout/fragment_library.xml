@@ -24,7 +24,7 @@
                     android:editable="false"
                     android:text="@string/country" />
 
-            <com.hover.stax.views.StaxTextInputLayout
+            <com.hover.stax.views.StaxTextInput
                 android:id="@+id/searchInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
