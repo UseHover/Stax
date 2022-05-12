@@ -40,11 +40,6 @@ class PermissionsFragment : DialogFragment() {
         return dialog!!.createIt()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
-
     private fun requestOverlay() {
         hasLeft = true
         logAnalyticsEvent(getString(R.string.perms_overlay_requested), requireContext())
