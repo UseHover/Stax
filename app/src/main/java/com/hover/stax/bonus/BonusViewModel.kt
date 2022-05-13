@@ -6,30 +6,31 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
+import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class BonusViewModel(val repo: BonusRepo) : ViewModel() {
+class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : ViewModel() {
 
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
+    var isEligible = MutableLiveData<Boolean>()
+    val bonuses = MutableLiveData<List<Bonus>>()
 
     init {
         db.firestoreSettings = settings
         fetchBonuses()
     }
 
-    private val bonuses = MutableLiveData<List<Bonus>>()
-
     private fun fetchBonuses() {
-        db.collection("bonus")
+        db.collection("bonuses")
             .get()
             .addOnSuccessListener { snapshot ->
                 val results = snapshot.map { document ->
                     Bonus(
-                        document.data["recipient_channel"].toString().toInt(), document.data["purchase_channel"].toString().toInt(),
+                        document.data["user_channel"].toString().toInt(), document.data["purchase_channel"].toString().toInt(),
                         document.data["bonus_percent"].toString().toDouble(), document.data["message"].toString()
                     )
                 }
@@ -41,11 +42,17 @@ class BonusViewModel(val repo: BonusRepo) : ViewModel() {
             }
     }
 
-    private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
-        repo.save(bonuses)
+    private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) { repo.updateBonuses(bonuses) }
+
+    fun getBonuses() = viewModelScope.launch(Dispatchers.IO) {
+        repo.bonuses.collect {
+            checkIfEligible(it)
+            bonuses.postValue(it);
+        }
     }
 
-    fun getBonuses() = viewModelScope.launch {
-        repo.bonuses.collect { bonuses.postValue(it) }
+    private fun checkIfEligible(bonuses: List<Bonus>) {
+        val ids = bonuses.map { it.userChannel }
+        isEligible.postValue(dbRepo.getChannelsByIds(ids).isNotEmpty())
     }
 }

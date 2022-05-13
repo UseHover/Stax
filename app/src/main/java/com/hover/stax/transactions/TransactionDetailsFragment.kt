@@ -31,6 +31,7 @@ import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.UIHelper.loadImage
 import com.hover.stax.utils.Utils
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -247,7 +248,7 @@ class TransactionDetailsFragment : Fragment() {
                     movementMethod = LinkMovementMethod.getInstance()
                 }
                 if (transaction.isFailed) action?.let {
-                    UIHelper.loadImage(this@TransactionDetailsFragment, getString(R.string.root_url).plus(it.from_institution_logo), binding.secondaryStatus.statusIcon)
+                    binding.secondaryStatus.statusIcon.loadImage(this@TransactionDetailsFragment, getString(R.string.root_url).plus(it.from_institution_logo))
                 }
                 else binding.secondaryStatus.statusIcon.visibility = GONE
             }

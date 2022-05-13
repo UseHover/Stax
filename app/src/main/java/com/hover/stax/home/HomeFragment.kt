@@ -9,15 +9,16 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
 import com.hover.stax.financialTips.FinancialTipsViewModel
-import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -27,8 +28,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val bannerViewModel: BannerViewModel by viewModel()
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -51,24 +52,27 @@ class HomeFragment : Fragment() {
         setUpWellnessTips()
     }
 
-    private fun getTransferDirection(type: String) : NavDirections {
+    private fun getTransferDirection(type: String): NavDirections {
         return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type)
     }
-    private fun setupBanner() {
-        with(bannerViewModel) {
-            qualifiedBanner.observe(viewLifecycleOwner) { banner ->
-                if (banner != null) {
-                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.displaying_in_app_banner, banner.id), requireContext())
-                    binding.homeBanner.visibility = View.VISIBLE
-                    binding.homeBanner.display(banner)
 
-                    binding.homeBanner.setOnClickListener {
-                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_on_banner), requireContext())
-                        Utils.openUrl(banner.url, requireActivity())
-                        closeCampaign(banner.id)
-                    }
-                } else binding.homeBanner.visibility = View.GONE
+    private fun setupBanner() = with(bonusViewModel) {
+        bonuses.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                with(binding.bonusCard) {
+                    message.text = it.first().message
+                }
             }
+        }
+
+        isEligible.observe(viewLifecycleOwner) { isEligible ->
+            if (isEligible) {
+                binding.bonusCard.apply {
+                    cardBonus.visibility = View.VISIBLE
+                    cta.setOnClickListener { }
+                }
+            } else
+                binding.bonusCard.cardBonus.visibility = View.GONE
         }
     }
 

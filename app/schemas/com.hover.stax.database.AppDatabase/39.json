@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 39,
-    "identityHash": "9044e8626978f78df3fd571c13848fb4",
+    "identityHash": "20d754ea921bd26d6f1996cb90a140d9",
     "entities": [
       {
         "tableName": "channels",
@@ -799,11 +799,11 @@
       },
       {
         "tableName": "bonuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipient_channel` INTEGER NOT NULL, `purchase_channel` INTEGER NOT NULL, `bonus_percent` REAL NOT NULL, `message` TEXT NOT NULL, PRIMARY KEY(`recipient_channel`, `purchase_channel`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_channel` INTEGER NOT NULL, `purchase_channel` INTEGER NOT NULL, `bonus_percent` REAL NOT NULL, `message` TEXT NOT NULL, PRIMARY KEY(`user_channel`, `purchase_channel`))",
         "fields": [
           {
-            "fieldPath": "recipientChannel",
-            "columnName": "recipient_channel",
+            "fieldPath": "userChannel",
+            "columnName": "user_channel",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -828,7 +828,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "recipient_channel",
+            "user_channel",
             "purchase_channel"
           ],
           "autoGenerate": false
@@ -840,7 +840,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9044e8626978f78df3fd571c13848fb4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '20d754ea921bd26d6f1996cb90a140d9')"
     ]
   }
 }

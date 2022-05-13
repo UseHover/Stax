@@ -13,6 +13,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.UIHelper.loadImage
 
 class ActionDropdownAdapter<T>(val actions: List<T>, context: Context) : ArrayAdapter<T>(context, 0, actions) {
 
@@ -65,7 +66,7 @@ class ActionDropdownAdapter<T>(val actions: List<T>, context: Context) : ArrayAd
                 logoUrl = baseUrl.plus(action.logoUrl)
             }
 
-            UIHelper.loadImage(binding.root.context, logoUrl!!, logo!!)
+            logo!!.loadImage(binding.root.context, logoUrl!!)
         }
     }
 

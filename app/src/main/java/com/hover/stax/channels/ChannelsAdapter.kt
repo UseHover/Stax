@@ -31,11 +31,6 @@ class ChannelsAdapter(var selectListener: SelectListener?) : ListAdapter<Channel
         return getItem(position).id.toLong()
     }
 
-//    fun updateList(list: List<Channel>) {
-//        channelList = list
-//        notifyDataSetChanged()
-//    }
-
     fun setTracker(tracker: SelectionTracker<Long>) {
         selectionTracker = tracker
     }

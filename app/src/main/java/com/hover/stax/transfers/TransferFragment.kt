@@ -13,12 +13,13 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.bonus.BonusViewModel
+import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
@@ -26,12 +27,12 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
 
     private val args by navArgs<TransferFragmentArgs>()
@@ -54,7 +55,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         setTransactionType(args.transactionType)
 
         args.transactionUUID?.let {
-            Timber.e("TxnUUID is $it. Setting autofill")
             transferViewModel.autoFill(it)
         }
 
@@ -125,6 +125,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeRecentContacts()
         observeNonStandardVariables()
         observeAutoFillToInstitution()
+
         with(transferViewModel) {
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
             request.observe(viewLifecycleOwner) {
@@ -148,6 +149,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                     transferViewModel.setRecipientSmartly(request.requester_number, it)
                 }
                 binding.summaryCard.accountValue.setTitle(it.toString())
+
+                checkForBonus(it)
             }
             recipientInstitutionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
         }
@@ -311,7 +314,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun onContactSelected(contact: StaxContact) {
-//        transferViewModel.setEditing(true)
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
@@ -358,6 +360,23 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         amountInput.setText(transferViewModel.amount.value)
         transferViewModel.setEditing(data.isEditing)
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, data.institutionId.toString()), AbstractStatefulInput.INFO)
+    }
+
+    private fun checkForBonus(channel: Channel) {
+        if (args.transactionType == HoverAction.AIRTIME)
+            bonusViewModel.bonuses.observe(viewLifecycleOwner) { bonuses ->
+                if (bonuses.isNotEmpty()) {
+                    with(binding.bonusLayout) {
+                        message.text = bonuses.first().message
+                    }
+                    showBonusBanner(bonuses.any { it.userChannel == channel.id })
+                }
+            }
+    }
+
+    private fun showBonusBanner(show: Boolean) = with(binding.bonusLayout) {
+        cardBonus.visibility = if (show) View.VISIBLE else View.GONE
+        cta.setOnClickListener { }
     }
 
     override fun onDestroyView() {

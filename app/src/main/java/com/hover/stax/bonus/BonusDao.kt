@@ -9,8 +9,8 @@ interface BonusDao {
     @get:Query("SELECT * FROM bonuses")
     val bonuses: Flow<List<Bonus>>
 
-    @Query("SELECT * FROM bonuses WHERE recipient_channel = :recipientChannel")
-    fun getBonuses(recipientChannel: Int): Flow<List<Bonus>>
+    @Query("SELECT * FROM bonuses WHERE user_channel = :userChannelId")
+    fun getBonuses(userChannelId: Int): Flow<List<Bonus>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(bonus: Bonus)
@@ -29,4 +29,10 @@ interface BonusDao {
 
     @Query("DELETE FROM bonuses")
     fun deleteAll()
+
+    @Transaction
+    fun deleteAndSave(bonuses: List<Bonus>) {
+        deleteAll()
+        insertAll(bonuses)
+    }
 }

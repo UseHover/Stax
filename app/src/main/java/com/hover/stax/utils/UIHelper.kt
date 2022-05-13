@@ -9,6 +9,7 @@ import android.os.Build
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -76,17 +77,24 @@ object UIHelper {
         }
     }
 
-    fun loadImage(fragment: Fragment, url: String, imageView: ImageView) = GlideApp.with(fragment)
+    fun ImageView.loadImage(fragment: Fragment, url: String) = GlideApp.with(fragment)
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
-        .into(imageView)
+        .into(this)
 
-    fun loadImage(context: Context, url: String, imageView: ImageView) = GlideApp.with(context)
+    fun ImageView.loadImage(context: Context, url: String) = GlideApp.with(context)
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
-        .into(imageView)
+        .override(100)
+        .into(this)
+
+    fun ImageButton.loadImage(context: Context, url: String) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .into(this)
 
     fun loadImage(context: Context, url: String, target: CustomTarget<Drawable>) = GlideApp.with(context)
         .load(url)

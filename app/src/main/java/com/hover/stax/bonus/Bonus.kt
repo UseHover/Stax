@@ -5,12 +5,12 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "bonuses",
-    primaryKeys = ["recipient_channel", "purchase_channel"]
+    primaryKeys = ["user_channel", "purchase_channel"]
 )
 data class Bonus(
 
-    @ColumnInfo(name = "recipient_channel")
-    val recipientChannel: Int,
+    @ColumnInfo(name = "user_channel")
+    val userChannel: Int,
 
     @ColumnInfo(name = "purchase_channel")
     val purchaseChannel: Int,
