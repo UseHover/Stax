@@ -81,6 +81,7 @@ object UIHelper {
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
+        .override(100)
         .into(this)
 
     fun ImageView.loadImage(context: Context, url: String) = GlideApp.with(context)

@@ -712,4 +712,8 @@
     <string name="restart">Restart</string>
     <string name="get_rewarded">Get Rewarded</string>
 
+    <!-- Bonus airtime -->
+    <string name="bonus_airtime_applied">Bonus airtime will be applied.</string>
+    <string name="top_up">Top Up</string>
+
 </resources>

@@ -41,8 +41,8 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     }
 
     fun updateActions(filteredActions: List<HoverAction>) {
-        visibility = if (filteredActions.isNullOrEmpty()) GONE else VISIBLE
-        if (filteredActions.isNullOrEmpty()) return
+        visibility = if (filteredActions.isEmpty()) GONE else VISIBLE
+        if (filteredActions.isEmpty()) return
 
         allActions = filteredActions
         if (!filteredActions.contains(highlightedAction))
@@ -85,15 +85,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     }
 
     private fun getWhoMeOptions(recipientInstId: Int): List<HoverAction> {
-        val options = ArrayList<HoverAction>()
-        if (allActions == null) return options
-
-        for (action in allActions!!) {
-            if (action.to_institution_id == recipientInstId && !options.contains(action))
-                options.add(action)
-        }
-
-        return options
+        return allActions?.filter { it.to_institution_id == recipientInstId } ?: emptyList()
     }
 
     private fun selectOnlyOption(option: HoverAction) {

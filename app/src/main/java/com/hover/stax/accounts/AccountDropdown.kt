@@ -49,7 +49,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun accountUpdate(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty()) {
+        if (accounts.isNotEmpty()) {
             updateChoices(accounts)
         } else if (!hasExistingContent()) {
             setState(context.getString(R.string.accounts_error_no_accounts), NONE)
@@ -135,14 +135,14 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun setState(actions: List<HoverAction>, viewModel: ChannelsViewModel) {
         when {
-            viewModel.activeChannel.value != null && (actions.isNullOrEmpty()) -> setState(
+            viewModel.activeChannel.value != null && (actions.isEmpty()) -> setState(
                 context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
                 ), ERROR
             )
 
-            !actions.isNullOrEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
+            actions.isNotEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
                 setState(
                     context.getString(
                         if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning

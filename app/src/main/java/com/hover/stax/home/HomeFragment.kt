@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.bonus.BonusViewModel
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
 import com.hover.stax.financialTips.FinancialTipsViewModel

@@ -7,14 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.bonus.BonusViewModel
-import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
@@ -149,11 +151,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                     transferViewModel.setRecipientSmartly(request.requester_number, it)
                 }
                 binding.summaryCard.accountValue.setTitle(it.toString())
-
-                checkForBonus(it)
             }
             recipientInstitutionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
         }
+
+        checkForBonus()
     }
 
     private fun observeActions() {
@@ -362,21 +364,32 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, data.institutionId.toString()), AbstractStatefulInput.INFO)
     }
 
-    private fun checkForBonus(channel: Channel) {
-        if (args.transactionType == HoverAction.AIRTIME)
-            bonusViewModel.bonuses.observe(viewLifecycleOwner) { bonuses ->
-                if (bonuses.isNotEmpty()) {
-                    with(binding.bonusLayout) {
-                        message.text = bonuses.first().message
+    private fun checkForBonus() {
+        if (args.transactionType == HoverAction.AIRTIME) {
+            val observer = object : Observer<Account> {
+                override fun onChanged(t: Account?) {
+                    t?.let { account ->
+                        val bonuses = bonusViewModel.bonuses.value
+
+                        if (!bonuses.isNullOrEmpty()) {
+                            with(binding.bonusLayout) {
+                                message.text = bonuses.first().message
+                            }
+                            showBonusBanner(bonuses.any { it.userChannel == account.channelId }, bonuses.first().message)
+                        }
                     }
-                    showBonusBanner(bonuses.any { it.userChannel == channel.id })
                 }
             }
+            channelsViewModel.activeAccount.observe(viewLifecycleOwner, observer)
+        }
     }
 
-    private fun showBonusBanner(show: Boolean) = with(binding.bonusLayout) {
+    private fun showBonusBanner(show: Boolean, message: String?) = with(binding.bonusLayout) {
         cardBonus.visibility = if (show) View.VISIBLE else View.GONE
-        cta.setOnClickListener { }
+        cta.setOnClickListener {
+            accountDropdown.setState(message ?: "", AbstractStatefulInput.SUCCESS)
+            Snackbar.make(binding.mainLayout, getString(R.string.bonus_airtime_applied), Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {

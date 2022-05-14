@@ -86,7 +86,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun filterChannels(channels: List<Channel>) {
-        if(!channels.isNullOrEmpty()) {
+        if(channels.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
                 val filteredList = channels.filter { it.toString().toFilteringStandard()
                     .contains(filterQuery.value!!.toFilteringStandard()) }
@@ -193,7 +193,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun setActiveChannelIfNull(channels: List<Channel>) {
-        if (!channels.isNullOrEmpty() && activeChannel.value == null)
+        if (channels.isNotEmpty() && activeChannel.value == null)
             activeChannel.value = channels.firstOrNull { it.defaultAccount }
     }
 
@@ -229,7 +229,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(channels: List<Channel>) {
-        if (channels.isNullOrEmpty()) return
+        if (channels.isEmpty()) return
 
         if (type.value == HoverAction.BALANCE)
             loadActions(channels, type.value!!)
@@ -346,7 +346,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     private fun updateAccounts() = viewModelScope.launch(Dispatchers.IO) {
         val savedAccounts = repo.getAllAccounts()
-        if (savedAccounts.isNullOrEmpty()) return@launch
+        if (savedAccounts.isEmpty()) return@launch
 
         if (savedAccounts.none { it.isDefault }) {
             val defaultChannel: Channel? = selectedChannels.value?.firstOrNull { it.defaultAccount }
