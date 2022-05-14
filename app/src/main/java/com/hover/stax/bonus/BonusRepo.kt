@@ -12,7 +12,9 @@ class BonusRepo(val db: AppDatabase) {
 
     fun save(bonuses: List<Bonus>) = dao.insertAll(bonuses)
 
-    fun getBonus(userChannelId: Int) = dao.getBonuses(userChannelId)
+    fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus? = dao.getBonusByPurchaseChannel(purchaseChannelId)
+
+    fun getBonuses(purchaseChannelIds: List<Int>, userChannelIds: List<Int>): List<Bonus> = dao.getBonuses(purchaseChannelIds, userChannelIds)
 
     fun delete(bonus: Bonus) = dao.delete(bonus)
 

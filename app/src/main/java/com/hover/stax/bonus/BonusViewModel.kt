@@ -17,7 +17,7 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
 
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
-    var isEligible = MutableLiveData<Boolean>()
+    val bonus = MutableLiveData<Bonus?>()
     val bonuses = MutableLiveData<List<Bonus>>()
     val accounts = MutableLiveData<List<Account>>()
 
@@ -44,23 +44,31 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
             }
     }
 
-    private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) { repo.updateBonuses(bonuses) }
+    private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
+        repo.updateBonuses(bonuses.filter { dbRepo.getChannel(it.purchaseChannel) != null })
+    }
 
     fun getBonuses() = viewModelScope.launch(Dispatchers.IO) {
         repo.bonuses.collect {
-            bonuses.postValue(it)
             checkIfEligible(it)
         }
     }
 
-    //TODO use flow to check selected accounts
     private fun checkIfEligible(bonuses: List<Bonus>) = viewModelScope.launch {
-        val ids = bonuses.map { it.userChannel }
+        dbRepo.getAccounts().collect { setActiveBonus(bonuses, it) }
+    }
 
-        dbRepo.getAccounts().collect { accounts ->
-            val accountIds = accounts.map { it.channelId }.toSet()
-            isEligible.postValue(ids.intersect(accountIds).isNotEmpty())
-        }
-        isEligible.postValue(dbRepo.getChannelsByIds(ids).any { it.selected })
+    private fun setActiveBonus(bonusList: List<Bonus>, accounts: List<Account>) = viewModelScope.launch(Dispatchers.IO) {
+        val bonusChannelIds = bonusList.map { it.userChannel }.toSet()
+        val accountChannelIds = accounts.map { it.channelId }
+
+        val userChannelIds = accountChannelIds.intersect(bonusChannelIds)
+        if (userChannelIds.isNotEmpty()) {
+            val result = repo.getBonuses(bonusList.map { it.purchaseChannel }, userChannelIds.toList())
+
+            bonuses.postValue(result)
+            bonus.postValue(result.firstOrNull())
+        } else
+            bonus.postValue(null)
     }
 }

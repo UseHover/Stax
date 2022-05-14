@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.bonus.BonusViewModel
-import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
 import com.hover.stax.financialTips.FinancialTipsViewModel
@@ -58,22 +57,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupBanner() = with(bonusViewModel) {
-        bonuses.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
+        bonus.observe(viewLifecycleOwner) {
+            it?.let {
                 with(binding.bonusCard) {
-                    message.text = it.first().message
+                    message.text = it.message
                 }
-            }
-        }
-
-        isEligible.observe(viewLifecycleOwner) { isEligible ->
-            if (isEligible) {
                 binding.bonusCard.apply {
                     cardBonus.visibility = View.VISIBLE
                     cta.setOnClickListener { }
                 }
-            } else
-                binding.bonusCard.cardBonus.visibility = View.GONE
+            } ?: run { binding.bonusCard.cardBonus.visibility = View.GONE }
         }
     }
 

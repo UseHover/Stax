@@ -16,6 +16,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
@@ -372,10 +373,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                         val bonuses = bonusViewModel.bonuses.value
 
                         if (!bonuses.isNullOrEmpty()) {
-                            with(binding.bonusLayout) {
-                                message.text = bonuses.first().message
-                            }
-                            showBonusBanner(bonuses.any { it.userChannel == account.channelId }, bonuses.first().message)
+                            showBonusBanner(bonuses, account)
                         }
                     }
                 }
@@ -384,10 +382,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun showBonusBanner(show: Boolean, message: String?) = with(binding.bonusLayout) {
-        cardBonus.visibility = if (show) View.VISIBLE else View.GONE
+    private fun showBonusBanner(bonuses: List<Bonus>, account: Account) = with(binding.bonusLayout) {
+        cardBonus.visibility = if (bonuses.any { it.userChannel == account.channelId }) View.VISIBLE else View.GONE
+
+        val activeBonus = bonuses.first { it.userChannel == account.channelId }
+        message.text = activeBonus.message
         cta.setOnClickListener {
-            accountDropdown.setState(message ?: "", AbstractStatefulInput.SUCCESS)
+            accountDropdown.setState(activeBonus.message, AbstractStatefulInput.SUCCESS)
+
+            channelsViewModel.setActiveChannel(activeBonus.purchaseChannel)
             Snackbar.make(binding.mainLayout, getString(R.string.bonus_airtime_applied), Snackbar.LENGTH_SHORT).show()
         }
     }

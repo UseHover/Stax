@@ -19,6 +19,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
+import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -214,6 +215,16 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
             setActiveAccount(it.accounts.firstOrNull { account -> account.id == accountId })
         }
+    }
+
+    fun setActiveChannel(channelId: Int)  = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("Setting active channel for bonus airtime")
+        val channel = repo.getChannel(channelId)
+
+        channel?.let {
+            Timber.e("Bonus airtime channel is ${it.name} - ${it.id}")
+            activeChannel.postValue(it)
+        } ?: kotlin.run { Timber.e("Airtime channel with id $channelId not found") }
     }
 
     private fun loadActions(t: String?) {
