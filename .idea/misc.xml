@@ -10,11 +10,18 @@
       <map>
         <entry key="../../../../layout/compose-model-1647504975633.xml" value="0.2673141891891892" />
         <entry key="../../../../layout/compose-model-1648556434513.xml" value="0.24957770270270271" />
+        <entry key="app/src/main/res/drawable/banner_gist.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/banner_permission.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/banner_roundupnews.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/banner_upvote.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/blue_cornered_background.xml" value="0.258" />
+        <entry key="app/src/main/res/drawable/border_entry.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/bright_blue_rounded_bg.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/bubble_left.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/drawable/dialog_bg.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/ic_baseline_open_in_new_16.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_copy.xml" value="0.182" />
@@ -30,7 +37,18 @@
         <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
         <entry key="app/src/main/res/drawable/icon_bg_circle.xml" value="0.2295" />
+        <entry key="app/src/main/res/drawable/img_check.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/img_copy.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/img_sms.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/img_whatsapp.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/info_offwhite.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/processing_background.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/processing_card_background.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/selector_icon_tint.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/spinner_state_selector.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/splash_window_background.xml" value="0.2395" />
+        <entry key="app/src/main/res/drawable/text_btn_selector.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/transparent_bg.xml" value="0.2535" />
         <entry key="app/src/main/res/font/brutalista_font.xml" value="0.47265625" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.30572916666666666" />
@@ -49,7 +67,7 @@
         <entry key="app/src/main/res/layout/bounty_card_channel.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/bounty_list_item.xml" value="0.48828125" />
         <entry key="app/src/main/res/layout/bounty_retry_submit_btn_layout.xml" value="0.30510752688172044" />
-        <entry key="app/src/main/res/layout/card_bonuses.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/card_bonuses.xml" value="0.20969202898550723" />
         <entry key="app/src/main/res/layout/card_wellness_tips.xml" value="0.31657608695652173" />
         <entry key="app/src/main/res/layout/contact_input.xml" value="0.15678824721377912" />
         <entry key="app/src/main/res/layout/contact_stax_layout.xml" value="0.30510752688172044" />

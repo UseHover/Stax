@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_16"
-            android:layout_marginVertical="@dimen/margin_13">
+            android:layout_marginTop="@dimen/margin_13">
 
         <TextView
                 android:id="@+id/title"
@@ -44,7 +44,11 @@
                 android:id="@+id/cta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginHorizontal="@dimen/margin_5"
+                android:paddingVertical="@dimen/margin_13"
+                android:paddingEnd="@dimen/margin_8"
+                android:background="@drawable/text_btn_selector"
+                android:paddingStart="0dp"
                 android:text="@string/top_up"
                 android:textColor="@color/brightBlue"
                 android:textSize="@dimen/text_16"

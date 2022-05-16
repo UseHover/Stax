@@ -388,9 +388,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val activeBonus = bonuses.first { it.userChannel == account.channelId }
         message.text = activeBonus.message
         cta.setOnClickListener {
-            accountDropdown.setState(activeBonus.message, AbstractStatefulInput.SUCCESS)
-
             channelsViewModel.setActiveChannel(activeBonus.purchaseChannel)
+            accountDropdown.setState(activeBonus.message, AbstractStatefulInput.SUCCESS)
             Snackbar.make(binding.mainLayout, getString(R.string.bonus_airtime_applied), Snackbar.LENGTH_SHORT).show()
         }
     }
