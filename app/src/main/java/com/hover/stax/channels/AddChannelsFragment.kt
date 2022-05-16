@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -18,6 +19,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -26,6 +28,9 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
 
 import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -35,6 +40,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
@@ -142,11 +148,27 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            Timber.e("Here to add ${channels.size}")
-            updateAdapter(Channel.sort(channels, false))
-            binding.emptyState.root.visibility = GONE
-            binding.channelsList.visibility = VISIBLE
-            binding.errorText.visibility = GONE
+            lifecycleScope.launch {
+                val bonusChannelIds = bonusViewModel.bonuses.value?.map { it.purchaseChannel }
+                Timber.e("To remove ${bonusChannelIds?.size ?: 0}")
+
+                val list = if(!bonusChannelIds.isNullOrEmpty())
+                    channels.filterNot { bonusChannelIds.contains(it.id) }
+                else
+                    channels
+
+                list.forEach {
+                    Timber.e(it.name)
+                }
+
+                updateAdapter(list.filterNot { it.selected })
+
+                withContext(Dispatchers.Main) {
+                    binding.emptyState.root.visibility = GONE
+                    binding.channelsList.visibility = VISIBLE
+                    binding.errorText.visibility = GONE
+                }
+            }
         }
         else if(channelsViewModel.isInSearchMode()) showEmptyState()
         else setError(R.string.channels_error_nodata)

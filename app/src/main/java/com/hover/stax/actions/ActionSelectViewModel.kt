@@ -39,9 +39,9 @@ import java.util.LinkedHashMap
     private fun initNonStandardVariables(action: HoverAction) {
         val variableMap = LinkedHashMap<String, String>()
         action.requiredParams.forEach {
-            Timber.e("Required param - $it")
             if (!isStandardVariable(it)) variableMap[it] = ""
         }
+
         nonStandardVariables.postValue(variableMap)
     }
 

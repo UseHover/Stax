@@ -16,7 +16,6 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -37,6 +36,10 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
             val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())
         }
+    }
+
+    fun updatePhoneNumber(phone: String) {
+        contact.value = StaxContact(phone)
     }
 
     fun autoFill(transactionUUID: String) = viewModelScope.launch(Dispatchers.IO) {

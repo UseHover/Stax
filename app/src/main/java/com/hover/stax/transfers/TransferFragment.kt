@@ -1,7 +1,6 @@
 package com.hover.stax.transfers
 
 import android.os.Bundle
-import android.telephony.PhoneNumberUtils
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.snackbar.Snackbar
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
@@ -47,6 +45,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private lateinit var recipientInstitutionSelect: ActionSelect
     private lateinit var contactInput: ContactInput
     private lateinit var recipientValue: Stax2LineItem
+
+    private var activeBonus: Bonus? = null
 
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
@@ -214,9 +214,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeNonStandardVariables() {
         actionSelectViewModel.nonStandardVariables.observe(viewLifecycleOwner) { variables ->
             if (variables != null) {
-                for ((key, value) in variables)
-                    Timber.e("$key -- $value")
-
                 updateNonStandardForEntryList(variables)
                 updateNonStandardForSummaryCard(variables)
             }
@@ -265,6 +262,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else {
+                updateContactNumber()
+
                 (requireActivity() as MainActivity).submit(
                     accountDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!
                 )
@@ -392,11 +391,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun showBonusBanner(bonuses: List<Bonus>, account: Account) = with(binding.bonusLayout) {
         cardBonus.visibility = if (bonuses.any { it.userChannel == account.channelId }) View.VISIBLE else View.GONE
 
-        val activeBonus = bonuses.first { it.userChannel == account.channelId }
-        message.text = activeBonus.message
+        val bonus = bonuses.first { it.userChannel == account.channelId }
+        message.text = bonus.message
         cta.setOnClickListener {
-            channelsViewModel.setActiveChannel(activeBonus.purchaseChannel)
-            accountDropdown.setState(activeBonus.message, AbstractStatefulInput.SUCCESS)
+            activeBonus = bonus
+            channelsViewModel.setActiveChannel(activeBonus!!.purchaseChannel)
+            accountDropdown.setState(activeBonus!!.message, AbstractStatefulInput.SUCCESS)
 
             UIHelper.flashMessage(requireActivity(), getString(R.string.bonus_airtime_applied))
         }
@@ -405,10 +405,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
 
-        if(!isEditing)
+        if (!isEditing)
             binding.bonusLayout.cardBonus.visibility = View.GONE
         else
             checkForBonus()
+    }
+
+    /* Update number to normal KE phone string since
+        Stax airtime does not work with internationalised numbers
+    */
+    private fun updateContactNumber() {
+        val contactNumber: String? = transferViewModel.contact.value?.accountNumber
+        if(activeBonus != null && contactNumber != null){
+            val phone = PhoneHelper.normalizeNumberByCountry(contactNumber, channelsViewModel.activeChannel.value!!.countryAlpha2, channelsViewModel.activeChannel.value!!.countryAlpha2)
+            transferViewModel.updatePhoneNumber(phone)
+        }
     }
 
     override fun onDestroyView() {
