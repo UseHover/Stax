@@ -58,7 +58,6 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     }
 
     fun setContact(sc: StaxContact?) = sc?.let {
-        Timber.i("contact is not null when posted")
         contact.postValue(it)
     }
 
@@ -74,10 +73,10 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     }
 
     fun setRecipientSmartly(contactNum: String?, channel: Channel) {
-        contactNum.let {
+        contactNum?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, contactNum)
+                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, it)
                     val sc = repo.getContactByPhone(formattedPhone)
                     sc?.let { contact.postValue(it) }
                 } catch (e: NumberFormatException) {

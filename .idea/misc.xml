@@ -67,7 +67,7 @@
         <entry key="app/src/main/res/layout/bounty_card_channel.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/bounty_list_item.xml" value="0.48828125" />
         <entry key="app/src/main/res/layout/bounty_retry_submit_btn_layout.xml" value="0.30510752688172044" />
-        <entry key="app/src/main/res/layout/card_bonuses.xml" value="0.20969202898550723" />
+        <entry key="app/src/main/res/layout/card_bonuses.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/card_wellness_tips.xml" value="0.31657608695652173" />
         <entry key="app/src/main/res/layout/contact_input.xml" value="0.15678824721377912" />
         <entry key="app/src/main/res/layout/contact_stax_layout.xml" value="0.30510752688172044" />
@@ -171,7 +171,7 @@
         <entry key="app/src/main/res/layout/stax_spinner_2line.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/stax_spinner_item.xml" value="0.30625" />
         <entry key="app/src/main/res/layout/stax_spinner_item_with_logo.xml" value="0.13134057971014493" />
-        <entry key="app/src/main/res/layout/summarycard_nontemplate_items.xml" value="0.42734375" />
+        <entry key="app/src/main/res/layout/summarycard_nontemplate_items.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/support_stax_layout.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/transaction_card_history.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.22" />

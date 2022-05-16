@@ -7,6 +7,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
 import com.hover.stax.R
 import com.hover.stax.utils.Constants
+import timber.log.Timber
 import java.util.LinkedHashMap
 
  class ActionSelectViewModel(private val application: Application) : ViewModel() {
@@ -21,7 +22,7 @@ import java.util.LinkedHashMap
     }
 
     private fun setActiveActionIfOutOfDate(actions: List<HoverAction>) {
-        if (!actions.isNullOrEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
+        if (actions.isNotEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
             val action = actions.first()
             activeAction.postValue(action)
         }
@@ -38,6 +39,7 @@ import java.util.LinkedHashMap
     private fun initNonStandardVariables(action: HoverAction) {
         val variableMap = LinkedHashMap<String, String>()
         action.requiredParams.forEach {
+            Timber.e("Required param - $it")
             if (!isStandardVariable(it)) variableMap[it] = ""
         }
         nonStandardVariables.postValue(variableMap)
@@ -48,9 +50,8 @@ import java.util.LinkedHashMap
     }
 
     fun updateNonStandardVariables(key: String, value: String) {
-        var map = nonStandardVariables.value
-        if (map == null) map = linkedMapOf()
+        val map = nonStandardVariables.value ?: linkedMapOf()
         map[key] = value
-        nonStandardVariables.postValue(map!!)
+        nonStandardVariables.postValue(map)
     }
 }

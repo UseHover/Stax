@@ -1,6 +1,7 @@
 package com.hover.stax.transfers
 
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.ContactInput
+import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
@@ -30,6 +32,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -48,7 +51,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -212,6 +214,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeNonStandardVariables() {
         actionSelectViewModel.nonStandardVariables.observe(viewLifecycleOwner) { variables ->
             if (variables != null) {
+                for ((key, value) in variables)
+                    Timber.e("$key -- $value")
+
                 updateNonStandardForEntryList(variables)
                 updateNonStandardForSummaryCard(variables)
             }
@@ -317,6 +322,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun onContactSelected(contact: StaxContact) {
+        Timber.e(PhoneHelper.getNationalSignificantNumber(contact.accountNumber, "ke"))
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
@@ -326,17 +332,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun updateNonStandardForEntryList(variables: LinkedHashMap<String, String>) {
-        val recyclerView = binding.editCard.nonStandardVariableRecyclerView
-        nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, recyclerView)
-        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        recyclerView.adapter = nonStandardVariableAdapter
+        binding.editCard.nonStandardVariableRecyclerView.also {
+            nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this@TransferFragment, it)
+            it.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            it.adapter = nonStandardVariableAdapter
+        }
     }
 
     private fun updateNonStandardForSummaryCard(variables: LinkedHashMap<String, String>) {
-        val recyclerView = binding.summaryCard.nonStandardSummaryRecycler
-        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        nonStandardSummaryAdapter = NonStandardSummaryAdapter(variables)
-        recyclerView.adapter = nonStandardSummaryAdapter
+        binding.summaryCard.nonStandardSummaryRecycler.apply {
+            layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            adapter = NonStandardSummaryAdapter(variables)
+        }
     }
 
     private fun setRecipientHint(action: HoverAction) {
@@ -390,8 +397,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         cta.setOnClickListener {
             channelsViewModel.setActiveChannel(activeBonus.purchaseChannel)
             accountDropdown.setState(activeBonus.message, AbstractStatefulInput.SUCCESS)
-            Snackbar.make(binding.mainLayout, getString(R.string.bonus_airtime_applied), Snackbar.LENGTH_SHORT).show()
+
+            UIHelper.flashMessage(requireActivity(), getString(R.string.bonus_airtime_applied))
         }
+    }
+
+    override fun showEdit(isEditing: Boolean) {
+        super.showEdit(isEditing)
+
+        if(!isEditing)
+            binding.bonusLayout.cardBonus.visibility = View.GONE
+        else
+            checkForBonus()
     }
 
     override fun onDestroyView() {
