@@ -55,7 +55,12 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
     }
 
     private fun checkIfEligible(bonusList: List<Bonus>) = viewModelScope.launch {
-        dbRepo.getAccounts().collect { if (it.isEmpty()) bonuses.postValue(bonusList) else setActiveBonus(bonusList, it) }
+        dbRepo.getAccounts().collect {
+            if (it.isEmpty()) {
+                bonus.postValue(null)
+                bonuses.postValue(bonusList)
+            } else setActiveBonus(bonusList, it)
+        }
     }
 
     private fun setActiveBonus(bonusList: List<Bonus>, accounts: List<Account>) = viewModelScope.launch(Dispatchers.IO) {

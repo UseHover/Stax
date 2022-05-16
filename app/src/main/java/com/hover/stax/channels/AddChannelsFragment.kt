@@ -31,6 +31,7 @@ import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.internal.filterList
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -203,10 +204,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         else {
             binding.errorText.visibility = GONE
 
-            val selectedChannels = mutableListOf<Channel>()
-            tracker.selection.forEach { selection ->
-                selectedChannels.addAll(selectAdapter.currentList.filter { it.id.toLong() == selection })
-            }
+            val ids = tracker.selection
+            val selectedChannels = selectAdapter.currentList.filter { ids.contains(it.id.toLong()) }
 
             channelsViewModel.setChannelsSelected(selectedChannels)
             channelsViewModel.createAccounts(selectedChannels)
