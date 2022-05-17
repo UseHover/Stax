@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.bonus.BonusViewModel
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
 import com.hover.stax.financialTips.FinancialTipsViewModel
@@ -30,6 +31,7 @@ class HomeFragment : Fragment() {
 
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
+    private val channelViewModel: ChannelsViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -52,19 +54,21 @@ class HomeFragment : Fragment() {
         setUpWellnessTips()
     }
 
-    private fun getTransferDirection(type: String): NavDirections {
-        return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type)
+    private fun getTransferDirection(type: String, channelId: Int = 0): NavDirections {
+        return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type).setChannelId(channelId)
     }
 
     private fun setupBanner() = with(bonusViewModel) {
-        bonus.observe(viewLifecycleOwner) {
-            it?.let {
+        bonus.observe(viewLifecycleOwner) { b ->
+            b?.let {
                 with(binding.bonusCard) {
-                    message.text = it.message
+                    message.text = b.message
                 }
                 binding.bonusCard.apply {
                     cardBonus.visibility = View.VISIBLE
-                    cta.setOnClickListener { }
+                    cta.setOnClickListener {
+                        navigateTo(getTransferDirection(HoverAction.AIRTIME, b.purchaseChannel))
+                    }
                 }
             } ?: run { binding.bonusCard.cardBonus.visibility = View.GONE }
         }

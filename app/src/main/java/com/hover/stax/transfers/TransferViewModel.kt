@@ -16,6 +16,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -39,6 +40,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     }
 
     fun updatePhoneNumber(phone: String) {
+        Timber.e("Phone $phone")
         contact.value = StaxContact(phone)
     }
 

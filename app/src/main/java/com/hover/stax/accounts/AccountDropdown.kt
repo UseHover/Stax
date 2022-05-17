@@ -90,11 +90,11 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
-    fun setCurrentAccount() = onSelect(accountList.firstOrNull { it.isDefault })
+    fun setCurrentAccount(channelId: Int = 0) = onSelect(accountList.firstOrNull { it.isDefault }, channelId)
 
-    private fun onSelect(account: Account?) {
+    private fun onSelect(account: Account?, channelOverride: Int = 0) {
         setDropdownValue(account)
-        account?.let { highlightListener?.highlightAccount(it) }
+        account?.let { highlightListener?.highlightAccount(it, channelOverride) }
     }
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
@@ -159,7 +159,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     interface HighlightListener {
-        fun highlightAccount(account: Account)
+        fun highlightAccount(account: Account, channelOverride: Int = 0)
     }
 
     interface AccountFetchListener {

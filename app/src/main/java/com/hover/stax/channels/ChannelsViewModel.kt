@@ -203,28 +203,28 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setActiveAccount(account: Account?) {
-        Timber.e("Active account at the moment is $account")
         activeAccount.postValue(account!!)
     }
 
     private fun setActiveChannel(channelId: Int, accountId: Int) {
-        val channelAccounts = repo.getChannelAndAccounts(channelId)
-        channelAccounts?.let {
-            Timber.e("Active channel ${it.channel}")
-            activeChannel.postValue(it.channel)
+        val txnChannelAccounts = repo.getChannelAndAccounts(channelId)
 
+        val c = if(txnChannelAccounts != null && txnChannelAccounts.accounts.isEmpty()){
+            val a = repo.getAccount(accountId)
+            repo.getChannelAndAccounts(a!!.channelId)
+        } else
+            txnChannelAccounts
+
+        c?.let {
+            activeChannel.postValue(txnChannelAccounts?.channel ?: it.channel)
             setActiveAccount(it.accounts.firstOrNull { account -> account.id == accountId })
         }
     }
 
     fun setActiveChannel(channelId: Int)  = viewModelScope.launch(Dispatchers.IO) {
-        Timber.e("Setting active channel for bonus airtime")
         val channel = repo.getChannel(channelId)
 
-        channel?.let {
-            Timber.e("Bonus airtime channel is ${it.name} - ${it.id}")
-            activeChannel.postValue(it)
-        } ?: kotlin.run { Timber.e("Airtime channel with id $channelId not found") }
+        channel?.let { activeChannel.postValue(it) } ?: run { Timber.e("Airtime channel with id $channelId not found") }
     }
 
     private fun loadActions(t: String?) {
@@ -371,9 +371,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    override fun highlightAccount(account: Account) {
+    override fun highlightAccount(account: Account, channelOverride: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val channel = repo.getChannel(account.channelId)
+            val channel = repo.getChannel(if(channelOverride != 0) channelOverride else account.channelId)
             setActiveChannel(channel!!)
             activeAccount.postValue(account)
         }
@@ -383,8 +383,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         if (!accounts.value.isNullOrEmpty()) {
             val accts = accounts.value!!
             //remove current default account
-            val current: Account? = accts.firstOrNull { it.isDefault }
-            current?.isDefault = false
+            val current: Account? = accts.firstOrNull { it.isDefault }.also {
+                it?.isDefault =false
+            }
             repo.update(current)
 
             val a = accts.first { it.id == account.id }

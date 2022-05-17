@@ -30,7 +30,6 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -175,7 +174,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
 
-            if (args.transactionUUID == null)
+            if (args.channelId != 0)
+                accountDropdown.setCurrentAccount(args.channelId)
+            else if (args.transactionUUID == null)
                 accountDropdown.setCurrentAccount()
         }
     }
@@ -321,7 +322,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun onContactSelected(contact: StaxContact) {
-        Timber.e(PhoneHelper.getNationalSignificantNumber(contact.accountNumber, "ke"))
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
@@ -416,9 +416,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     */
     private fun updateContactNumber() {
         val contactNumber: String? = transferViewModel.contact.value?.accountNumber
-        if(activeBonus != null && contactNumber != null){
-            val phone = PhoneHelper.normalizeNumberByCountry(contactNumber, channelsViewModel.activeChannel.value!!.countryAlpha2, channelsViewModel.activeChannel.value!!.countryAlpha2)
-            transferViewModel.updatePhoneNumber(phone)
+        if (activeBonus != null && contactNumber != null) {
+            val countryAlpha = channelsViewModel.activeChannel.value!!.countryAlpha2
+            val phone = PhoneHelper.getNationalSignificantNumber(contactNumber, countryAlpha)
+            transferViewModel.updatePhoneNumber("0$phone")
         }
     }
 
