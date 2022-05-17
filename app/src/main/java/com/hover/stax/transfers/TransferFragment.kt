@@ -30,6 +30,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -391,7 +392,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun showBonusBanner(bonuses: List<Bonus>, account: Account) = with(binding.bonusLayout) {
-        cardBonus.visibility = if (bonuses.any { it.userChannel == account.channelId }) View.VISIBLE else View.GONE
+        val show = bonuses.any { it.userChannel == account.channelId }
+        cardBonus.visibility = if (show) View.VISIBLE else View.GONE
+
+        if(!show)
+            return
 
         val bonus = bonuses.first { it.userChannel == account.channelId }
         message.text = bonus.message

@@ -155,7 +155,7 @@ class TransactionDetailsFragment : Fragment() {
         val title = when (transaction.transaction_type) {
             HoverAction.P2P -> getString(R.string.send_money)
             HoverAction.AIRTIME -> getString(R.string.buy_airtime)
-            else -> transaction.transaction_type
+            else -> transaction.transaction_type.replace("_", " ")
         }
         binding.transactionDetailsCard.setTitle(title)
 
