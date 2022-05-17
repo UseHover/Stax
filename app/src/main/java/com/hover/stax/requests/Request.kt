@@ -5,6 +5,7 @@ import android.content.Context
 import android.text.TextUtils
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -50,6 +51,8 @@ class Request {
     var date_sent: Long = 0
 
     constructor()
+
+    @Ignore
     constructor(amount: String?, note: String?, requester_number: String? ,  requester_institution_id:Int ) {
         this.amount = amount
         this.note = note
@@ -58,6 +61,7 @@ class Request {
         date_sent = now()
     }
 
+    @Ignore
     constructor(r: Request, requestee: StaxContact?, c: Context) {
         amount = r.amount
         note = r.note
@@ -68,6 +72,7 @@ class Request {
         description = getDescription(requestee, c)
     }
 
+    @Ignore
     constructor(paymentLink: String) {
         Timber.v("Creating request from link: %s", paymentLink)
         val splitString = paymentLink.split(PAYMENT_LINK_SEPERATOR).toTypedArray()
