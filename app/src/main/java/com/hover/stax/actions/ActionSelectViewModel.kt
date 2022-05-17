@@ -7,10 +7,9 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
 import com.hover.stax.R
 import com.hover.stax.utils.Constants
-import timber.log.Timber
 import java.util.LinkedHashMap
 
- class ActionSelectViewModel(private val application: Application) : ViewModel() {
+class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
     val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()

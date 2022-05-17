@@ -33,6 +33,7 @@ class LanguageSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_language)), requireActivity())
 
         selectedCode = Lingver.getInstance().getLanguage()

@@ -7,7 +7,6 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import androidx.work.impl.utils.futures.SettableFuture
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.database.AppDatabase

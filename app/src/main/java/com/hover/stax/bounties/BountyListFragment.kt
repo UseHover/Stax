@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -56,6 +55,8 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         networkMonitor = NetworkMonitor(requireActivity())
+
+        initRecyclerView()
 
         startObservers()
 
@@ -118,6 +119,10 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         setListener(this@BountyListFragment)
         updateChoices(channels, bountyViewModel.currentCountryFilter.value)
         isEnabled = true
+    }
+
+    private fun initRecyclerView() {
+        binding.bountiesRecyclerView.layoutManager = UIHelper.setMainLinearManagers(context)
     }
 
     private fun startObservers() = with(bountyViewModel) {

@@ -80,8 +80,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         transferViewModel.reset() //TODO remove if values are removed
         init(binding.root)
+
         startObservers(binding.root)
         startListeners()
     }

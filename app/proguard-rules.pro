@@ -34,3 +34,6 @@
   public *;
 }
 -dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
+
+-keep class com.uxcam.** { *; }
+-dontwarn com.uxcam.**

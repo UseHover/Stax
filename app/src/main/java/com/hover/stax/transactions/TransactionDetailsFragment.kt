@@ -13,7 +13,6 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -30,7 +29,6 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper.loadImage
 import com.hover.stax.utils.Utils
-import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel

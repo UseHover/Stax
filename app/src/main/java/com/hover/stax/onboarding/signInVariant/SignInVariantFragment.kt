@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -19,7 +18,6 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentSigninVariantBinding
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.onboarding.welcome.WelcomeFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import timber.log.Timber

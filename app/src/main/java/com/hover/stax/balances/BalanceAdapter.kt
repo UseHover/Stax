@@ -13,7 +13,6 @@ import com.hover.stax.databinding.BalanceItemBinding
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import timber.log.Timber
 
 
 class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceListener?) : RecyclerView.Adapter<BalanceAdapter.BalancesViewHolder>() {

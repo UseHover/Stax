@@ -1,17 +1,16 @@
 package com.hover.stax.transactions
 
 import android.graphics.Paint
-import com.hover.stax.utils.Utils.dial
-import com.hover.stax.transactions.UssdCallResponse
-import androidx.recyclerview.widget.RecyclerView
-import com.hover.stax.transactions.MessagesAdapter.TransactionMessageViewHolder
-import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionMessagesItemsBinding
+import com.hover.stax.transactions.MessagesAdapter.TransactionMessageViewHolder
+import com.hover.stax.utils.Utils.dial
 
 class MessagesAdapter internal constructor(private val messagesList: List<UssdCallResponse>?,
                                            private val timeStarted: String,

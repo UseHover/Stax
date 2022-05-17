@@ -45,8 +45,8 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 134
-        versionName "1.10.2"
+        versionCode 136
+        versionName "1.10.3"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -196,6 +196,9 @@ dependencies {
     // Hover SDK
     debugImplementation project(":hover.sdk")
     def sdk_version = "2.0.0-stax-1.10.1-pro"
+
+    // UXCam
+    implementation 'com.uxcam:uxcam:3.3.7@aar'
 
     releaseImplementation "com.hover:android-sdk:$sdk_version"
 
