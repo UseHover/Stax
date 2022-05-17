@@ -84,7 +84,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    private fun filterChannels(channels: List<Channel>) {
+    private fun filterChannels(channels: List<Channel>?) {
         if(!channels.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
                 val filteredList = channels.filter { it.toString().toFilteringStandard()
@@ -96,9 +96,10 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun runChannelFilter(value: String) {
         filterQuery.value = value
-        val listToFilter : List<Channel>? = if(!simChannels.value.isNullOrEmpty()) simChannels.value else allChannels.value
-        filterChannels(listToFilter!!)
+        val listToFilter = if(!simChannels.value.isNullOrEmpty()) simChannels.value!! else allChannels.value
+        filterChannels(listToFilter)
     }
+
     fun isInSearchMode() : Boolean {
         return !filterQuery.value!!.isAbsolutelyEmpty()
     }
@@ -202,7 +203,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun setActiveAccount(account: Account?) {
         Timber.e("Active account at the moment is $account")
-        activeAccount.postValue(account!!)
+        account?.let { activeAccount.postValue(it) }
     }
 
     private fun setActiveChannel(channelId: Int, accountId: Int) {
