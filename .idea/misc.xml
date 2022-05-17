@@ -104,7 +104,7 @@
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.2056159420289855" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/fragment_signin_variant.xml" value="0.30510752688172044" />
-        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.22916666666666666" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.21" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
         <entry key="app/src/main/res/layout/fragment_wellness_detail.xml" value="0.165" />

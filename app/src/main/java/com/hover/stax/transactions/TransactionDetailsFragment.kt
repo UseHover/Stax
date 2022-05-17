@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -29,6 +30,7 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper.loadImage
 import com.hover.stax.utils.Utils
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -79,6 +81,7 @@ class TransactionDetailsFragment : Fragment() {
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { showActionDetails(it) } }
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
+        bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
     }
 
     private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) = contactSupportTextView.apply {
@@ -113,7 +116,9 @@ class TransactionDetailsFragment : Fragment() {
                 else
                     retryTransactionClicked(transaction, button)
             } else binding.secondaryStatus.btnRetryTransaction.visibility = GONE
+
             updateDetails(transaction)
+
         }
     }
 
@@ -247,6 +252,17 @@ class TransactionDetailsFragment : Fragment() {
         if (contact != null) {
             binding.infoCard.detailsRecipient.setContact(contact)
         } else binding.infoCard.detailsRecipient.setTitle(getString(R.string.self_choice))
+    }
+
+    private fun showBonusAmount(amount: Int) = with(binding.infoCard) {
+        val txn = viewModel.transaction.value
+        
+        if(amount > 0 && (txn != null && txn.isSuccessful)){
+            bonusRow.visibility = VISIBLE
+            bonusAmount.text = amount.toString()
+        } else {
+            bonusRow.visibility = GONE
+        }
     }
 
     override fun onDestroyView() {
