@@ -209,6 +209,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun setActiveChannel(channelId: Int, accountId: Int) {
         val txnChannelAccounts = repo.getChannelAndAccounts(channelId)
 
+        /* Handles instances where a channel without accounts e.g Stax Airtime was used.
+        ** Fetches the channel from the account instead. Active channel remains as was in transaction.
+        */
         val c = if(txnChannelAccounts != null && txnChannelAccounts.accounts.isEmpty()){
             val a = repo.getAccount(accountId)
             repo.getChannelAndAccounts(a!!.channelId)
@@ -223,7 +226,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun setActiveChannel(channelId: Int)  = viewModelScope.launch(Dispatchers.IO) {
         val channel = repo.getChannel(channelId)
-
         channel?.let { activeChannel.postValue(it) } ?: run { Timber.e("Airtime channel with id $channelId not found") }
     }
 
