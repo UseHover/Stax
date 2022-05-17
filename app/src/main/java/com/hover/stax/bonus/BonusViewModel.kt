@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
-import com.hover.stax.accounts.Account
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -17,9 +17,7 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
 
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
-    val bonus = MutableLiveData<Bonus?>()
     val bonuses = MutableLiveData<List<Bonus>>()
-    val accounts = MutableLiveData<List<Account>>()
 
     init {
         db.firestoreSettings = settings
@@ -54,26 +52,18 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
         }
     }
 
-    private fun checkIfEligible(bonusList: List<Bonus>) = viewModelScope.launch {
-        dbRepo.getAccounts().collect {
-            if (it.isEmpty()) {
-                bonus.postValue(null)
-                bonuses.postValue(bonusList)
-            } else setActiveBonus(bonusList, it)
+    private fun checkIfEligible(bonusList: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
+        val simHnis = dbRepo.presentSims.map { it.osReportedHni }
+        val bonusChannels = dbRepo.getChannelsByIds(bonusList.map { it.purchaseChannel })
+
+        val hniList = mutableSetOf<String>()
+        bonusChannels.forEach { channel ->
+            channel.hniList.split(",").forEach {
+                if (simHnis.contains(it.toHni()))
+                    hniList.add(it.toHni())
+            }
         }
-    }
 
-    private fun setActiveBonus(bonusList: List<Bonus>, accounts: List<Account>) = viewModelScope.launch(Dispatchers.IO) {
-        val bonusChannelIds = bonusList.map { it.userChannel }.toSet()
-        val accountChannelIds = accounts.map { it.channelId }
-
-        val userChannelIds = accountChannelIds.intersect(bonusChannelIds)
-        if (userChannelIds.isNotEmpty()) {
-            val result = repo.getBonuses(bonusList.map { it.purchaseChannel }, userChannelIds.toList())
-
-            bonuses.postValue(result)
-            bonus.postValue(result.firstOrNull())
-        } else
-            bonus.postValue(null)
+        bonuses.postValue(if (hniList.isNotEmpty()) bonusList else emptyList())
     }
 }
