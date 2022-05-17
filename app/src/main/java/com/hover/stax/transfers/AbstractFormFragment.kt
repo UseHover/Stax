@@ -32,6 +32,7 @@ import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -155,8 +156,9 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
 
             if (action != null)
                 (activity as? MainActivity)?.makeCall(action, channel)
-            else
+            else withContext(Dispatchers.Main) {
                 UIHelper.flashMessage(requireActivity(), getString(R.string.action_run_error))
+            }
         }
     }
 

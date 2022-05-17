@@ -53,7 +53,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
         navHelper.setUpNav()
 
-        initUXCam()
         initFromIntent()
         startObservers()
         checkForRequest(intent)
@@ -245,10 +244,5 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun googleLoginFailed() {
         UIHelper.flashMessage(this, R.string.login_google_err)
-    }
-
-
-    private fun initUXCam() {
-        UXCam.startWithKey(getString(R.string.uxcam_key))
     }
 }

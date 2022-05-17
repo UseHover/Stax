@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
@@ -53,8 +54,14 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     }
 
     private fun setObservers() {
+        val observer = object: Observer<List<Channel>> {
+            override fun onChanged(t: List<Channel>?) {
+                Timber.i("Staged channels loaded ${t?.size}")
+            }
+        }
+
         with(viewModel) {
-            stagedChannels.observe(viewLifecycleOwner) { Timber.i("staged channels loaded")}
+            stagedChannels.observe(viewLifecycleOwner, observer)
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
             country.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
             allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, viewModel.country.value) } }

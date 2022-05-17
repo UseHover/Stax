@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -87,8 +88,15 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
         channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner, allChannelsObserver)
     }
+
+    private val allChannelsObserver = object: Observer<List<Channel>> {
+        override fun onChanged(t: List<Channel>?) {
+            Timber.e("Loaded all channels ${t?.size}")
+        }
+    }
+
     private fun setupEmptyState() {
         binding.emptyState.root.visibility = GONE
         binding.emptyState.informUs.setOnClickListener {
@@ -207,8 +215,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     }
 
     private fun runActions(channels: List<Channel>, checkBalance: Boolean) {
-        if (activity != null && isAdded)
+        if (activity != null && isAdded) {
             requireActivity().onBackPressed()
+            return
+        }
 
         if (checkBalance)
             balancesViewModel.actions.observe(viewLifecycleOwner) {
