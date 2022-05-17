@@ -8,6 +8,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
@@ -72,10 +73,7 @@ class TransactionDetailsFragment : Fragment() {
         with(binding.infoCard.detailsServiceId.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
     }
 
-    private fun showUSSDLog() {
-        val log = USSDLogBottomSheetFragment.newInstance(args.uuid)
-        log.show(childFragManager, USSDLogBottomSheetFragment::class.java.simpleName)
-    }
+    private fun showUSSDLog() = USSDLogBottomSheetFragment.newInstance(args.uuid).show(childFragManager, USSDLogBottomSheetFragment::class.java.simpleName)
 
     private fun startObservers() = with(viewModel) {
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
@@ -83,9 +81,9 @@ class TransactionDetailsFragment : Fragment() {
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
     }
 
-    private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {
-        contactSupportTextView.setText(R.string.email_support)
-        contactSupportTextView.setOnClickListener {
+    private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) = contactSupportTextView.apply {
+        text = getString(R.string.email_support)
+        setOnClickListener {
             resetRetryCounter(id)
             val deviceId = Hover.getDeviceId(requireContext())
             val subject = "Stax Transaction failure - support id- {${deviceId}}"
@@ -114,23 +112,16 @@ class TransactionDetailsFragment : Fragment() {
                     setupContactSupportButton(transaction.action_id, button)
                 else
                     retryTransactionClicked(transaction, button)
-            } else binding.secondaryStatus.transactionRetryButtonLayoutId.visibility = GONE
+            } else binding.secondaryStatus.btnRetryTransaction.visibility = GONE
             updateDetails(transaction)
         }
     }
 
-    private fun showButtonToClick(): TextView {
-        val transactionButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
-        val retryButton = binding.secondaryStatus.btnRetryTransaction
-        transactionButtonsLayout.visibility = VISIBLE
-        return retryButton
-    }
+    private fun showButtonToClick(): Button = binding.secondaryStatus.btnRetryTransaction.also { it.visibility = VISIBLE }
 
     private fun setupRetryBountyButton() {
-        val bountyButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
-        val retryButton = binding.secondaryStatus.btnRetryTransaction
-        bountyButtonsLayout.visibility = VISIBLE
-        retryButton.setOnClickListener { retryBountyClicked() }
+        val retryBtn = showButtonToClick()
+        retryBtn.setOnClickListener { retryBountyClicked() }
     }
 
     private fun retryBountyClicked() {

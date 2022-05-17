@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/cardBonus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_marginHorizontal="@dimen/margin_13"
-        android:id="@+id/cardBonus"
         app:cardBackgroundColor="@color/cardViewColor"
         app:cardCornerRadius="@dimen/radius"
         app:cardElevation="8dp">
@@ -13,7 +13,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_16"
             android:layout_marginTop="@dimen/margin_13">
 
         <TextView
@@ -21,6 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/get_rewarded"
+                android:layout_marginHorizontal="@dimen/margin_16"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_19"
                 app:fontFamily="@font/brutalista_bold"
@@ -31,27 +31,25 @@
                 android:id="@+id/message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_16"
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_marginEnd="@dimen/margin_16"
-                tools:text="Get 8% bonus when you buy airtime with Stax."
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16"
                 app:layout_constraintEnd_toStartOf="@id/icon"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                app:layout_constraintTop_toBottomOf="@id/title"
+                tools:text="Get 8% bonus when you buy airtime with Stax." />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/cta"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_5"
-                android:paddingVertical="@dimen/margin_13"
-                android:paddingEnd="@dimen/margin_8"
-                android:background="@drawable/text_btn_selector"
-                android:paddingStart="0dp"
                 android:text="@string/top_up"
-                android:textColor="@color/brightBlue"
                 android:textSize="@dimen/text_16"
+                android:layout_marginStart="-2dp"
+                android:textAllCaps="false"
                 app:fontFamily="@font/brutalista_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/message" />
@@ -60,6 +58,7 @@
                 android:id="@+id/icon"
                 android:layout_width="70dp"
                 android:layout_height="0dp"
+                android:layout_marginEnd="@dimen/margin_16"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
