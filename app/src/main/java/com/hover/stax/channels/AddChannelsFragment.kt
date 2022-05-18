@@ -151,16 +151,11 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         if (channels.isNotEmpty()) {
             lifecycleScope.launch {
                 val bonusChannelIds = bonusViewModel.bonuses.value?.map { it.purchaseChannel }
-                Timber.e("To remove ${bonusChannelIds?.size ?: 0}")
 
                 val list = if(!bonusChannelIds.isNullOrEmpty())
                     channels.filterNot { bonusChannelIds.contains(it.id) }
                 else
                     channels
-
-                list.forEach {
-                    Timber.e(it.name)
-                }
 
                 updateAdapter(list.filterNot { it.selected })
 
