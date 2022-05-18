@@ -60,8 +60,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         account?.let {
             autoCompleteTextView.setText(it.alias, false)
 
-            Timber.e("Set dropdown value to ${it.alias}")
-
             val target = object : CustomTarget<Drawable>() {
                 override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                     autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
@@ -95,8 +93,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     fun setCurrentAccount(account: Account? = null, channelId: Int = 0) = onSelect(account ?: accountList.firstOrNull { it.isDefault }, channelId)
 
     private fun onSelect(account: Account?, channelOverride: Int = 0) {
-        Timber.e("Setting current account as ${account?.name}")
-
         setDropdownValue(account)
         account?.let { highlightListener?.highlightAccount(it, channelOverride) }
     }

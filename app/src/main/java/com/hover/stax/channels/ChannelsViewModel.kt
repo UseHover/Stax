@@ -232,7 +232,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         val accounts = repo.getAccounts(accountChannelId)
         if (accounts.isNotEmpty()) {
-            Timber.e("Setting new account as ${accounts.firstOrNull()?.alias}")
             setActiveAccount(accounts.firstOrNull())
         } else {
             repo.getChannel(accountChannelId)?.let {
@@ -240,7 +239,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 createAccounts(listOf(it))
             }
 
-            Timber.e("Here as last resort")
             setActiveAccount(repo.getAccounts(accountChannelId).firstOrNull())
         }
     }
@@ -287,8 +285,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         if (channels.isNullOrEmpty()) return@launch
 
         channels.forEachIndexed { index, channel ->
-            Timber.e("Setting ${channel.name} as selected")
-
             logChoice(channel)
             channel.selected = true
             channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
@@ -359,8 +355,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             with(it) {
                 val accountName: String = if (getFetchAccountAction(it.id) == null) name else Constants.PLACEHOLDER //placeholder alias for easier identification later
                 val account = Account(accountName, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
-
-                Timber.e("Creating ${account.name}")
 
                 repo.insert(account)
             }

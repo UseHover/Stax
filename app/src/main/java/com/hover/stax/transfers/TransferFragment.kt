@@ -16,7 +16,6 @@ import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
-import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
@@ -29,7 +28,6 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
@@ -386,10 +384,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun showBonusBanner(bonuses: List<Bonus>) = with(binding.bonusLayout) {
-        Timber.e("Current channel is ${channelsViewModel.activeChannel.value?.name}")
-
         val channelId = bonuses.first().userChannel
-        Timber.e("Channel id here is $channelId")
 
         cardBonus.visibility = View.VISIBLE
         val bonus = bonuses.first()
@@ -426,15 +421,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
      * ChannelId is fetched from the bonus object's user channel field.
      * Channel and respective accounts are fetched before being passed to account dropdown
      */
-    private fun updateAccountDropdown(channelId: Int? = 0) = lifecycleScope.launch(Dispatchers.IO) {
-        val bonus = bonusViewModel.getBonusByChannelId(channelId ?: args.channelId) ?: return@launch
-        val accountToUse = channelsViewModel.getChannelAndAccounts(bonus.userChannel)?.accounts?.firstOrNull()
+    private fun updateAccountDropdown() = lifecycleScope.launch(Dispatchers.IO) {
+        val bonus = bonusViewModel.getBonusByChannelId(args.channelId)
 
-        channelsViewModel.setActiveAccount(accountToUse)
-
-        withContext(Dispatchers.Main) {
-            accountDropdown.setCurrentAccount(accountToUse, args.channelId)
-        }
+        bonus?.let {
+            val channel = channelsViewModel.getChannel(bonus.userChannel)
+            channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channel!!.id)
+        } ?: run { Timber.e("Bonus cannot be found") }
     }
 
     override fun onDestroyView() {

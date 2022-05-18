@@ -39,11 +39,6 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun updatePhoneNumber(phone: String) {
-        Timber.e("Phone $phone")
-        contact.value = StaxContact(phone)
-    }
-
     fun autoFill(transactionUUID: String) = viewModelScope.launch(Dispatchers.IO) {
         val transaction = repo.getTransaction(transactionUUID)
         if (transaction != null) {
@@ -51,7 +46,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
 
             action?.let {
                 val contact = repo.getContactAsync(transaction.counterparty_id)
-                autoFill(transaction.amount.toString(), contact, AutofillData(action.to_institution_id, transaction.channel_id, transaction.accountId, true))
+                autoFill(transaction.amount.toInt().toString(), contact, AutofillData(action.to_institution_id, transaction.channel_id, transaction.accountId, true))
             }
         }
     }
