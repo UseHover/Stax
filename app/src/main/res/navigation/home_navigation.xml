@@ -107,10 +107,10 @@
 
 
     <fragment
-        android:id="@+id/navigation_manage_permission"
-        android:name="com.hover.stax.permissions.ManagePermissionsFragment"
-        android:label="@string/manage_permissions_title"
-        tools:layout="@layout/manage_permissions_layout"/>
+            android:id="@+id/navigation_manage_permission"
+            android:name="com.hover.stax.permissions.ManagePermissionsFragment"
+            android:label="@string/manage_permissions_title"
+            tools:layout="@layout/manage_permissions_layout" />
 
     <fragment
             android:id="@+id/navigation_settings"
@@ -136,8 +136,9 @@
                 android:id="@+id/action_navigation_settings_to_wellnessFragment"
                 app:destination="@id/tipsFragment" />
 
-        <action android:id="@+id/action_navigation_settings_to_managePermissionFragment"
-            app:destination="@+id/navigation_manage_permission"/>
+        <action
+                android:id="@+id/action_navigation_settings_to_managePermissionFragment"
+                app:destination="@+id/navigation_manage_permission" />
 
         <deepLink
                 android:id="@+id/settingsDL"
@@ -164,10 +165,13 @@
                 android:id="@+id/action_transactionDetailsFragment_to_bountyListFragment"
                 app:destination="@id/bountyListFragment" />
         <action
+                android:id="@+id/action_transactionDetailsFragment_to_navigation_transfer"
+                app:destination="@id/navigation_transfer" />
+        <action
                 android:id="@+id/action_txnDetailsFragment_to_navigationHome"
                 app:destination="@id/navigation_home"
                 app:popUpTo="@id/transactionDetailsFragment"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -266,6 +270,10 @@
                 android:defaultValue="@null"
                 app:argType="string"
                 app:nullable="true" />
+        <argument
+                android:name="channelId"
+                android:defaultValue="0"
+                app:argType="integer" />
 
         <deepLink
                 android:id="@+id/transferDL"

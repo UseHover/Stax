@@ -110,7 +110,8 @@ abstract class AbstractSDKCaller : AbstractGoogleAuthActivity(), PushNotificatio
             }
 
             selectedAccount?.run { hsb.setAccountId(id.toString()) }
-            transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
+            transferViewModel.contact.value?.let {
+                addRecipientInfo(hsb) }
         }
 
         runAction(hsb)

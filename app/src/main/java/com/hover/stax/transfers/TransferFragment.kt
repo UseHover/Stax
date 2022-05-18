@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.bonus.Bonus
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
@@ -23,6 +26,8 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
@@ -31,6 +36,7 @@ import timber.log.Timber
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
 
     private val args by navArgs<TransferFragmentArgs>()
@@ -43,7 +49,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -53,7 +58,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         setTransactionType(args.transactionType)
 
         args.transactionUUID?.let {
-            Timber.e("TxnUUID is $it. Setting autofill")
             transferViewModel.autoFill(it)
         }
 
@@ -76,7 +80,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        transferViewModel.reset() //TODO remove if values are removed
+        transferViewModel.reset()
         init(binding.root)
 
         startObservers(binding.root)
@@ -126,6 +130,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeRecentContacts()
         observeNonStandardVariables()
         observeAutoFillToInstitution()
+
         with(transferViewModel) {
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
             request.observe(viewLifecycleOwner) {
@@ -151,6 +156,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 binding.summaryCard.accountValue.setTitle(it.toString())
             }
             recipientInstitutionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
+
+            checkForBonus()
         }
     }
 
@@ -168,8 +175,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
 
-            if (args.transactionUUID == null)
+            if (args.channelId != 0) { //to be used with bonus flow. Other uses will require a slight change in this
+                updateAccountDropdown()
+                return@observe
+            }
+
+            if (args.transactionUUID == null) {
                 accountDropdown.setCurrentAccount()
+                return@observe
+            }
         }
     }
 
@@ -312,7 +326,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun onContactSelected(contact: StaxContact) {
-//        transferViewModel.setEditing(true)
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
@@ -322,17 +335,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun updateNonStandardForEntryList(variables: LinkedHashMap<String, String>) {
-        val recyclerView = binding.editCard.nonStandardVariableRecyclerView
-        nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, recyclerView)
-        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        recyclerView.adapter = nonStandardVariableAdapter
+        binding.editCard.nonStandardVariableRecyclerView.also {
+            nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this@TransferFragment, it)
+            it.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            it.adapter = nonStandardVariableAdapter
+        }
     }
 
     private fun updateNonStandardForSummaryCard(variables: LinkedHashMap<String, String>) {
-        val recyclerView = binding.summaryCard.nonStandardSummaryRecycler
-        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        nonStandardSummaryAdapter = NonStandardSummaryAdapter(variables)
-        recyclerView.adapter = nonStandardSummaryAdapter
+        binding.summaryCard.nonStandardSummaryRecycler.apply {
+            layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            adapter = NonStandardSummaryAdapter(variables)
+        }
     }
 
     private fun setRecipientHint(action: HoverAction) {
@@ -359,6 +373,62 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         amountInput.setText(transferViewModel.amount.value)
         transferViewModel.setEditing(data.isEditing)
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, data.institutionId.toString()), AbstractStatefulInput.INFO)
+    }
+
+    private fun checkForBonus() {
+        if (args.transactionType == HoverAction.AIRTIME) {
+            val bonuses = bonusViewModel.bonuses.value
+            if (!bonuses.isNullOrEmpty())
+                showBonusBanner(bonuses)
+        }
+    }
+
+    private fun showBonusBanner(bonuses: List<Bonus>) = with(binding.bonusLayout) {
+        val channelId = bonuses.first().userChannel
+
+        cardBonus.visibility = View.VISIBLE
+        val bonus = bonuses.first()
+        val usingBonusChannel = channelsViewModel.activeChannel.value?.id == bonus.purchaseChannel
+
+        if (usingBonusChannel) {
+            title.text = getString(R.string.congratulations)
+            message.text = getString(R.string.valid_account_bonus_msg)
+            cta.visibility = View.GONE
+        } else {
+            title.text = getString(R.string.get_extra_airtime)
+            message.text = getString(R.string.invalid_account_bonus_msg)
+            cta.apply {
+                visibility = View.VISIBLE
+                text = getString(R.string.top_up_with_mpesa)
+                setOnClickListener {
+                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                    channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channelId)
+                }
+            }
+        }
+    }
+
+    override fun showEdit(isEditing: Boolean) {
+        super.showEdit(isEditing)
+
+        if (!isEditing)
+            binding.bonusLayout.cardBonus.visibility = View.GONE
+        else
+            checkForBonus()
+    }
+
+    /**
+     * Handles instances where the active account is different from the bonus account to be used.
+     * ChannelId is fetched from the bonus object's user channel field.
+     * Channel and respective accounts are fetched before being passed to account dropdown
+     */
+    private fun updateAccountDropdown() = lifecycleScope.launch(Dispatchers.IO) {
+        val bonus = bonusViewModel.getBonusByChannelId(args.channelId)
+
+        bonus?.let {
+            val channel = channelsViewModel.getChannel(bonus.userChannel)
+            channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channel!!.id)
+        } ?: run { Timber.e("Bonus cannot be found") }
     }
 
     override fun onDestroyView() {

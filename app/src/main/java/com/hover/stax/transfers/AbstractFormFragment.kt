@@ -141,12 +141,14 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     }
 
     override fun fetchAccounts(account: Account) {
-        dialog = StaxDialog(requireActivity())
-            .setDialogTitle(getString(R.string.incomplete_account_setup_header))
-            .setDialogMessage(getString(R.string.incomplete_account_setup_desc, account.alias))
-            .setPosButton(R.string.check_balance_title) { runBalanceCheck(account.channelId) }
-            .setNegButton(R.string.btn_cancel, null)
-        dialog!!.showIt()
+        if(dialog == null) {
+            dialog = StaxDialog(requireActivity())
+                .setDialogTitle(getString(R.string.incomplete_account_setup_header))
+                .setDialogMessage(getString(R.string.incomplete_account_setup_desc, account.alias))
+                .setPosButton(R.string.check_balance_title) { runBalanceCheck(account.channelId) }
+                .setNegButton(R.string.btn_cancel, null)
+            dialog!!.showIt()
+        }
     }
 
     private fun runBalanceCheck(channelId: Int) = lifecycleScope.launch(Dispatchers.IO) {

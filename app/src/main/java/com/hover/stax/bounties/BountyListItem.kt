@@ -43,10 +43,10 @@ class BountyListItem(context: Context, attrs: AttributeSet?) : LinearLayout(cont
                 setState(R.color.muted_green, R.string.done, R.drawable.ic_check, false, null)
             }
             bounty!!.isLastTransactionFailed() && !bounty!!.action.bounty_is_open -> {
-                setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_info_red, false, navTransactionDetail())
+                setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_error, false, navTransactionDetail())
             }
             bounty!!.isLastTransactionFailed() && bounty!!.action.bounty_is_open -> {
-                setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_info_red, true, showBountyDetail())
+                setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_error, true, showBountyDetail())
             }
             !bounty!!.action.bounty_is_open -> { // This bounty is closed and done by another user
                 setState(R.color.lighter_grey, 0, 0, false, null)

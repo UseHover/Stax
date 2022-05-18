@@ -1,53 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@drawable/grey_background">
 
-    <LinearLayout
+    <ImageView
+            android:id="@+id/status_icon"
+            android:layout_width="@dimen/margin_43"
+            android:layout_height="@dimen/margin_43"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_stax"
+            tools:ignore="ContentDescription" />
+
+    <TextView
+            android:id="@+id/status_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginBottom="@dimen/margin_16"
+            app:layout_constraintBottom_toTopOf="@id/btnRetryTransaction"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/status_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/incomplete_account_setup_desc" />
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetryTransaction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/grey_background"
-            android:orientation="horizontal"
-            android:paddingVertical="@dimen/margin_16">
+            android:fontFamily="@font/brutalista_regular"
+            android:gravity="center"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/try_again"
+            android:textAllCaps="false"
+            android:textColor="@color/offWhite"
+            app:backgroundTint="@color/stax_state_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-                android:id="@+id/status_icon"
-                android:layout_width="@dimen/margin_43"
-                android:layout_height="@dimen/margin_43"
-                android:layout_marginStart="@dimen/margin_16" />
-
-        <TextView
-                android:id="@+id/status_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_16"
-                android:background="@drawable/grey_background"
-                android:fontFamily="@font/brutalista_regular" />
-    </LinearLayout>
-
-    <RelativeLayout
-            android:id="@+id/transactionRetryButtonLayoutId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="-2dp"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-        <TextView
-                android:id="@+id/btnRetryTransaction"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/stax_state_blue"
-                android:fontFamily="@font/brutalista_regular"
-                android:gravity="center"
-                android:padding="@dimen/margin_16"
-                android:text="@string/try_again"
-                android:textAlignment="center"
-                android:textColor="@color/offWhite" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
