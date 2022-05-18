@@ -58,14 +58,6 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     fun sort(actions: List<HoverAction>): List<HoverAction> = actions.distinctBy { it.to_institution_id }.toList()
 
     private fun showRecipientNetwork(actions: List<HoverAction>): Boolean {
-        actions.forEach {
-            Timber.e("Is on network ${actions.first().isOnNetwork}")
-            Timber.e("${it.from_institution_id} - ${it.to_institution_id}")
-            Timber.e("To country alpha is ${it.to_country_alpha2}")
-            Timber.e("Is cross border - ${it.isCrossBorder} - ${it.to_country_alpha2.length}")
-        }
-
-
         return actions.size > 1 || (actions.size == 1 && !actions.first().isOnNetwork)
     }
 

@@ -12,13 +12,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
+import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
-import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
@@ -28,6 +27,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
+import com.uxcam.internals.an.t
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
@@ -156,9 +156,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 binding.summaryCard.accountValue.setTitle(it.toString())
             }
             recipientInstitutionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
-        }
 
-        checkForBonus()
+            checkForBonus()
+        }
     }
 
     private fun observeActions() {
@@ -372,26 +372,22 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun checkForBonus() {
         if (args.transactionType == HoverAction.AIRTIME) {
-            val observer = object : Observer<Account> {
-                override fun onChanged(t: Account?) {
-                    t?.let { account ->
-                        val bonuses = bonusViewModel.bonuses.value
-
-                        if (!bonuses.isNullOrEmpty())
-                            showBonusBanner(bonuses, account)
-                    }
-                }
-            }
-
-            channelsViewModel.activeAccount.observe(viewLifecycleOwner, observer)
+            val bonuses = bonusViewModel.bonuses.value
+            if (!bonuses.isNullOrEmpty())
+                showBonusBanner(bonuses, channelsViewModel.activeChannel.value)
         }
     }
 
-    private fun showBonusBanner(bonuses: List<Bonus>, account: Account) = with(binding.bonusLayout) {
-        cardBonus.visibility = View.VISIBLE
-        val usingValidAccount = bonuses.any { it.userChannel == account.channelId }
+    private fun showBonusBanner(bonuses: List<Bonus>, channel: Channel?) = with(binding.bonusLayout) {
+        Timber.e("Current channel is ${channel?.name}")
 
-        if(usingValidAccount) {
+        val channelId = channel?.id ?: bonuses.first().userChannel
+
+        cardBonus.visibility = View.VISIBLE
+        val bonus = bonuses.first()
+        val usingBonusChannel = channelId == bonus.purchaseChannel
+
+        if (usingBonusChannel) {
             title.text = getString(R.string.congratulations)
             message.text = getString(R.string.valid_account_bonus_msg)
             cta.visibility = View.GONE
@@ -402,9 +398,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 visibility = View.VISIBLE
                 text = getString(R.string.top_up_with_mpesa)
                 setOnClickListener {
-                    val bonus = bonuses.first()
-                    channelsViewModel.setActiveChannel(bonus.purchaseChannel)
-                    accountDropdown.setState(bonus.message, AbstractStatefulInput.SUCCESS)
+                    channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channelId)
                 }
             }
         }

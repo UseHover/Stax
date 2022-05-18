@@ -15,10 +15,10 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
+import com.hover.stax.accounts.ChannelWithAccounts
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
-import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -86,10 +86,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun filterChannels(channels: List<Channel>) {
-        if(channels.isNotEmpty()) {
+        if (channels.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                val filteredList = channels.filter { it.toString().toFilteringStandard()
-                    .contains(filterQuery.value!!.toFilteringStandard()) }
+                val filteredList = channels.filter {
+                    it.toString().toFilteringStandard()
+                        .contains(filterQuery.value!!.toFilteringStandard())
+                }
                 filteredChannels.postValue(filteredList)
             }
         }
@@ -97,11 +99,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun runChannelFilter(value: String) {
         filterQuery.value = value
-        val listToFilter : List<Channel>? = if(!simChannels.value.isNullOrEmpty()) simChannels.value else allChannels.value
+        val listToFilter: List<Channel>? = if (!simChannels.value.isNullOrEmpty()) simChannels.value else allChannels.value
         filterChannels(listToFilter!!)
     }
 
-    fun isInSearchMode() : Boolean {
+    fun isInSearchMode(): Boolean {
         return !filterQuery.value!!.isAbsolutelyEmpty()
     }
 
@@ -203,7 +205,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setActiveAccount(account: Account?) {
-        activeAccount.postValue(account!!)
+        account?.let { activeAccount.postValue(it) }
     }
 
     private fun setActiveChannel(channelId: Int, accountId: Int) {
@@ -212,7 +214,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         /* Handles instances where a channel without accounts e.g Stax Airtime was used.
         ** Fetches the channel from the account instead. Active channel remains as was in transaction.
         */
-        val c = if(txnChannelAccounts != null && txnChannelAccounts.accounts.isEmpty()){
+        val c = if (txnChannelAccounts != null && txnChannelAccounts.accounts.isEmpty()) {
             val a = repo.getAccount(accountId)
             repo.getChannelAndAccounts(a!!.channelId)
         } else
@@ -224,9 +226,18 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    fun setActiveChannel(channelId: Int)  = viewModelScope.launch(Dispatchers.IO) {
+    fun setActiveChannelAndAccount(channelId: Int, accountChannelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val channel = repo.getChannel(channelId)
         channel?.let { activeChannel.postValue(it) } ?: run { Timber.e("Airtime channel with id $channelId not found") }
+
+        val accounts = repo.getAccounts(accountChannelId)
+        if (accounts.isNotEmpty())
+            setActiveAccount(accounts.firstOrNull())
+        else
+            repo.getChannel(accountChannelId)?.let {
+                setChannelsSelected(listOf(it))
+                createAccounts(listOf(it))
+            }
     }
 
     private fun loadActions(t: String?) {
@@ -251,7 +262,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun loadActions(channel: Channel, t: String) = viewModelScope.launch(Dispatchers.IO) {
         channelActions.postValue(
             if (t == HoverAction.P2P) repo.getTransferActions(channel.id)
-            else repo.getActions(channel.id, t))
+            else repo.getActions(channel.id, t)
+        )
     }
 
     private fun loadAccounts() = viewModelScope.launch {
@@ -333,6 +345,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun getChannel(channelId: Int): Channel? = repo.getChannel(channelId)
 
+    fun getChannelAndAccounts(channelId: Int): ChannelWithAccounts? = repo.getChannelAndAccounts(channelId)
+
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = repo.getDefaultAccount()
 
@@ -375,7 +389,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     override fun highlightAccount(account: Account, channelOverride: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val channel = repo.getChannel(if(channelOverride != 0) channelOverride else account.channelId)
+            val channel = repo.getChannel(if (channelOverride != 0) channelOverride else account.channelId)
             setActiveChannel(channel!!)
             activeAccount.postValue(account)
         }
@@ -386,7 +400,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             val accts = accounts.value!!
             //remove current default account
             val current: Account? = accts.firstOrNull { it.isDefault }.also {
-                it?.isDefault =false
+                it?.isDefault = false
             }
             repo.update(current)
 

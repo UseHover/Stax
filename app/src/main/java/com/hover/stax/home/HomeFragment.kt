@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
 import com.hover.stax.financialTips.FinancialTipsViewModel
@@ -18,6 +21,9 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -30,6 +36,7 @@ class HomeFragment : Fragment() {
 
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -66,7 +73,8 @@ class HomeFragment : Fragment() {
                 binding.bonusCard.apply {
                     cardBonus.visibility = View.VISIBLE
                     cta.setOnClickListener {
-                        navigateTo(getTransferDirection(HoverAction.AIRTIME, b.first().purchaseChannel))
+                        channelsViewModel // viewmodel must be instantiated in the main thread before it can be accessible on other threads
+                        validateTransferAction(b.first())
                     }
                 }
             } else binding.bonusCard.cardBonus.visibility = View.GONE
@@ -126,6 +134,22 @@ class HomeFragment : Fragment() {
                 }
             } else
                 Timber.i("No tips available today")
+        }
+    }
+
+    private fun validateTransferAction(bonus: Bonus) = lifecycleScope.launch(Dispatchers.IO) {
+        val channelAccounts = channelsViewModel.getChannelAndAccounts(bonus.userChannel)
+
+        if(channelAccounts != null && channelAccounts.accounts.isEmpty()) {
+            val channels = listOf(channelAccounts.channel)
+            channelsViewModel.apply {
+                setChannelsSelected(channels)
+                createAccounts(channels)
+            }
+        }
+
+        withContext(Dispatchers.Main) {
+            navigateTo(getTransferDirection(HoverAction.AIRTIME, bonus.purchaseChannel))
         }
     }
 

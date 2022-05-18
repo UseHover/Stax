@@ -17,7 +17,7 @@ import timber.log.Timber
 
 class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : ViewModel() {
 
-    private val bonusList = MutableLiveData<List<Bonus>>()
+    private val bonusList = MutableLiveData<List<Bonus>>(emptyList())
     private val db = Firebase.firestore
     private val settings = firestoreSettings { isPersistenceEnabled = true }
 
