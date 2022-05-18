@@ -717,6 +717,7 @@
     <string name="bonus_airtime_applied">Bonus airtime will be applied.</string>
     <string name="top_up">Top Up</string>
     <string name="bonus_amount_label">Bonus Amount</string>
+    <string name="bonus_placeholder">Get 8% bonus when you buy airtime with Stax.</string>
 
 
 </resources>

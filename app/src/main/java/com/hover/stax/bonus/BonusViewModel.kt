@@ -1,11 +1,13 @@
 package com.hover.stax.bonus
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
+import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +19,8 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
 
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
-    val bonuses = MutableLiveData<List<Bonus>>()
+    private val bonusList = MutableLiveData<List<Bonus>>()
+    val bonuses: LiveData<List<Bonus>> get() = bonusList
 
     init {
         db.firestoreSettings = settings
@@ -52,10 +55,19 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
         }
     }
 
-    private fun checkIfEligible(bonusList: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
+    private fun checkIfEligible(bonusItems: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
         val simHnis = dbRepo.presentSims.map { it.osReportedHni }
-        val bonusChannels = dbRepo.getChannelsByIds(bonusList.map { it.purchaseChannel })
+        val bonusChannels = dbRepo.getChannelsByIds(bonusItems.map { it.purchaseChannel })
 
+        val showBonuses = hasValidSim(simHnis, bonusChannels)
+        bonusList.postValue(if (showBonuses) bonusItems else emptyList())
+    }
+
+    /**
+     * Extract the hnis from the bonus channels and compare with current sim hnis.
+     * Return true if user has a valid sim
+     */
+    private fun hasValidSim(simHnis: List<String>, bonusChannels: List<Channel>) : Boolean {
         val hniList = mutableSetOf<String>()
         bonusChannels.forEach { channel ->
             channel.hniList.split(",").forEach {
@@ -64,6 +76,6 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
             }
         }
 
-        bonuses.postValue(if (hniList.isNotEmpty()) bonusList else emptyList())
+        return hniList.isNotEmpty()
     }
 }

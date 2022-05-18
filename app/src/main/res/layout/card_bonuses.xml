@@ -39,7 +39,7 @@
                 app:layout_constraintEnd_toStartOf="@id/icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
-                tools:text="Get 8% bonus when you buy airtime with Stax." />
+                tools:text="@string/bonus_placeholder" />
 
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/cta"
