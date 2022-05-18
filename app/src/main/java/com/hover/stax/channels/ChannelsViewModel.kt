@@ -231,13 +231,18 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         channel?.let { activeChannel.postValue(it) } ?: run { Timber.e("Airtime channel with id $channelId not found") }
 
         val accounts = repo.getAccounts(accountChannelId)
-        if (accounts.isNotEmpty())
+        if (accounts.isNotEmpty()) {
+            Timber.e("Setting new account as ${accounts.firstOrNull()?.alias}")
             setActiveAccount(accounts.firstOrNull())
-        else
+        } else {
             repo.getChannel(accountChannelId)?.let {
                 setChannelsSelected(listOf(it))
                 createAccounts(listOf(it))
             }
+
+            Timber.e("Here as last resort")
+            setActiveAccount(repo.getAccounts(accountChannelId).firstOrNull())
+        }
     }
 
     private fun loadActions(t: String?) {
@@ -278,18 +283,18 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    fun setChannelsSelected(channels: List<Channel>?) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (channels.isNullOrEmpty()) return@launch
+    fun setChannelsSelected(channels: List<Channel>?) = viewModelScope.launch(Dispatchers.IO) {
+        if (channels.isNullOrEmpty()) return@launch
 
-            channels.forEachIndexed { index, channel ->
-                logChoice(channel)
-                channel.selected = true
-                channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
-                repo.update(channel)
+        channels.forEachIndexed { index, channel ->
+            Timber.e("Setting ${channel.name} as selected")
 
-                ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, application)
-            }
+            logChoice(channel)
+            channel.selected = true
+            channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
+            repo.update(channel)
+
+            ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, application)
         }
     }
 
@@ -354,15 +359,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             with(it) {
                 val accountName: String = if (getFetchAccountAction(it.id) == null) name else Constants.PLACEHOLDER //placeholder alias for easier identification later
                 val account = Account(accountName, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+
+                Timber.e("Creating ${account.name}")
+
                 repo.insert(account)
             }
-        }
-    }
-
-    @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
-    fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
-        if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
-            createAccounts(selectedChannels.value!!)
         }
     }
 

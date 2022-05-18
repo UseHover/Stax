@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -27,7 +27,9 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
-import com.uxcam.internals.an.t
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
@@ -80,7 +82,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        transferViewModel.reset() //TODO remove if values are removed
+        transferViewModel.reset()
         init(binding.root)
 
         startObservers(binding.root)
@@ -175,10 +177,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
 
-            if (args.channelId != 0)
-                accountDropdown.setCurrentAccount(args.channelId)
-            else if (args.transactionUUID == null)
+            if (args.channelId != 0) { //to be used with bonus flow. Other uses will require a slight change in this
+                updateAccountDropdown()
+                return@observe
+            }
+
+            if (args.transactionUUID == null) {
                 accountDropdown.setCurrentAccount()
+                return@observe
+            }
         }
     }
 
@@ -374,18 +381,19 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if (args.transactionType == HoverAction.AIRTIME) {
             val bonuses = bonusViewModel.bonuses.value
             if (!bonuses.isNullOrEmpty())
-                showBonusBanner(bonuses, channelsViewModel.activeChannel.value)
+                showBonusBanner(bonuses)
         }
     }
 
-    private fun showBonusBanner(bonuses: List<Bonus>, channel: Channel?) = with(binding.bonusLayout) {
-        Timber.e("Current channel is ${channel?.name}")
+    private fun showBonusBanner(bonuses: List<Bonus>) = with(binding.bonusLayout) {
+        Timber.e("Current channel is ${channelsViewModel.activeChannel.value?.name}")
 
-        val channelId = channel?.id ?: bonuses.first().userChannel
+        val channelId = bonuses.first().userChannel
+        Timber.e("Channel id here is $channelId")
 
         cardBonus.visibility = View.VISIBLE
         val bonus = bonuses.first()
-        val usingBonusChannel = channelId == bonus.purchaseChannel
+        val usingBonusChannel = channelsViewModel.activeChannel.value?.id == bonus.purchaseChannel
 
         if (usingBonusChannel) {
             title.text = getString(R.string.congratulations)
@@ -411,6 +419,22 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             binding.bonusLayout.cardBonus.visibility = View.GONE
         else
             checkForBonus()
+    }
+
+    /**
+     * Handles instances where the active account is different from the bonus account to be used.
+     * ChannelId is fetched from the bonus object's user channel field.
+     * Channel and respective accounts are fetched before being passed to account dropdown
+     */
+    private fun updateAccountDropdown(channelId: Int? = 0) = lifecycleScope.launch(Dispatchers.IO) {
+        val bonus = bonusViewModel.getBonusByChannelId(channelId ?: args.channelId) ?: return@launch
+        val accountToUse = channelsViewModel.getChannelAndAccounts(bonus.userChannel)?.accounts?.firstOrNull()
+
+        channelsViewModel.setActiveAccount(accountToUse)
+
+        withContext(Dispatchers.Main) {
+            accountDropdown.setCurrentAccount(accountToUse, args.channelId)
+        }
     }
 
     override fun onDestroyView() {

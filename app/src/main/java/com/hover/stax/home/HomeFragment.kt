@@ -141,6 +141,7 @@ class HomeFragment : Fragment() {
         val channelAccounts = channelsViewModel.getChannelAndAccounts(bonus.userChannel)
 
         if(channelAccounts != null && channelAccounts.accounts.isEmpty()) {
+            Timber.e("${channelAccounts.channel.name} has no accounts. Creating....")
             val channels = listOf(channelAccounts.channel)
             channelsViewModel.apply {
                 setChannelsSelected(channels)

@@ -57,6 +57,8 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
         }
     }
 
+    fun getBonusByChannelId(channelId: Int): Bonus? = repo.getBonusByPurchaseChannel(channelId)
+
     private fun checkIfEligible(bonusItems: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
         val simHnis = dbRepo.presentSims.map { it.osReportedHni }
         val bonusChannels = dbRepo.getChannelsByIds(bonusItems.map { it.purchaseChannel })
