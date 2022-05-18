@@ -266,8 +266,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else {
-                updateContactNumber()
-
                 (requireActivity() as MainActivity).submit(
                     accountDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!
                 )
@@ -416,18 +414,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             binding.bonusLayout.cardBonus.visibility = View.GONE
         else
             checkForBonus()
-    }
-
-    /* Update number to normal KE phone string since
-        Stax airtime does not work with internationalised numbers
-    */
-    private fun updateContactNumber() {
-        val contactNumber: String? = transferViewModel.contact.value?.accountNumber
-        if (activeBonus != null && contactNumber != null) {
-            val countryAlpha = channelsViewModel.activeChannel.value!!.countryAlpha2
-            val phone = PhoneHelper.getNationalSignificantNumber(contactNumber, countryAlpha)
-            transferViewModel.updatePhoneNumber("0$phone")
-        }
     }
 
     override fun onDestroyView() {
