@@ -718,6 +718,11 @@
     <string name="top_up">Top Up</string>
     <string name="bonus_amount_label">Bonus Amount</string>
     <string name="bonus_placeholder">Get 8% bonus when you buy airtime with Stax.</string>
+    <string name="valid_account_bonus_msg">You\'ll get credited 5% bonus airtime immediately your airtime purchase is successful.</string>
+    <string name="invalid_account_bonus_msg">Use your MPESA to buy airtime now and get instant 5% bonus.</string>
+    <string name="top_up_with_mpesa">Top up using Mpesa</string>
+    <string name="congratulations">Congratulations</string>
+    <string name="get_extra_airtime">Get Extra Airtime</string>
 
 
 </resources>

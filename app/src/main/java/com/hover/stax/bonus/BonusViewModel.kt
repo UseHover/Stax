@@ -17,9 +17,10 @@ import timber.log.Timber
 
 class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : ViewModel() {
 
-    val db = Firebase.firestore
-    val settings = firestoreSettings { isPersistenceEnabled = true }
     private val bonusList = MutableLiveData<List<Bonus>>()
+    private val db = Firebase.firestore
+    private val settings = firestoreSettings { isPersistenceEnabled = true }
+
     val bonuses: LiveData<List<Bonus>> get() = bonusList
 
     init {
@@ -42,6 +43,7 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
             }
             .addOnFailureListener {
                 Timber.e("Error fetching bonuses: ${it.localizedMessage}")
+                bonusList.postValue(emptyList())
             }
     }
 

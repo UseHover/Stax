@@ -19,8 +19,8 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/get_rewarded"
                 android:layout_marginHorizontal="@dimen/margin_16"
+                android:text="@string/get_rewarded"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_19"
                 app:fontFamily="@font/brutalista_bold"
@@ -36,23 +36,27 @@
                 android:layout_marginEnd="@dimen/margin_16"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16"
+                app:layout_constraintBottom_toTopOf="@id/cta"
                 app:layout_constraintEnd_toStartOf="@id/icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_goneMarginBottom="@dimen/margin_16"
                 tools:text="@string/bonus_placeholder" />
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
                 android:id="@+id/cta"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_3"
+                android:background="@drawable/text_btn_selector"
+                android:padding="@dimen/margin_13"
                 android:text="@string/top_up"
-                android:textSize="@dimen/text_16"
-                android:layout_marginStart="-2dp"
                 android:textAllCaps="false"
+                android:textColor="@color/brightBlue"
+                android:textSize="@dimen/text_16"
                 app:fontFamily="@font/brutalista_medium"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/message" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
                 android:id="@+id/icon"

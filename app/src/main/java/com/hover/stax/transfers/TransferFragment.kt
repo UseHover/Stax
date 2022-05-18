@@ -46,8 +46,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private lateinit var contactInput: ContactInput
     private lateinit var recipientValue: Stax2LineItem
 
-    private var activeBonus: Bonus? = null
-
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
@@ -379,31 +377,36 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                     t?.let { account ->
                         val bonuses = bonusViewModel.bonuses.value
 
-                        if (!bonuses.isNullOrEmpty()) {
+                        if (!bonuses.isNullOrEmpty())
                             showBonusBanner(bonuses, account)
-                        }
                     }
                 }
             }
+
             channelsViewModel.activeAccount.observe(viewLifecycleOwner, observer)
         }
     }
 
     private fun showBonusBanner(bonuses: List<Bonus>, account: Account) = with(binding.bonusLayout) {
-        val show = bonuses.any { it.userChannel == account.channelId }
-        cardBonus.visibility = if (show) View.VISIBLE else View.GONE
+        cardBonus.visibility = View.VISIBLE
+        val usingValidAccount = bonuses.any { it.userChannel == account.channelId }
 
-        if(!show)
-            return
-
-        val bonus = bonuses.first { it.userChannel == account.channelId }
-        message.text = bonus.message
-        cta.setOnClickListener {
-            activeBonus = bonus
-            channelsViewModel.setActiveChannel(activeBonus!!.purchaseChannel)
-            accountDropdown.setState(activeBonus!!.message, AbstractStatefulInput.SUCCESS)
-
-            UIHelper.flashMessage(requireActivity(), getString(R.string.bonus_airtime_applied))
+        if(usingValidAccount) {
+            title.text = getString(R.string.congratulations)
+            message.text = getString(R.string.valid_account_bonus_msg)
+            cta.visibility = View.GONE
+        } else {
+            title.text = getString(R.string.get_extra_airtime)
+            message.text = getString(R.string.invalid_account_bonus_msg)
+            cta.apply {
+                visibility = View.VISIBLE
+                text = getString(R.string.top_up_with_mpesa)
+                setOnClickListener {
+                    val bonus = bonuses.first()
+                    channelsViewModel.setActiveChannel(bonus.purchaseChannel)
+                    accountDropdown.setState(bonus.message, AbstractStatefulInput.SUCCESS)
+                }
+            }
         }
     }
 
