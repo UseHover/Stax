@@ -401,6 +401,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 visibility = View.VISIBLE
                 text = getString(R.string.top_up_with_mpesa)
                 setOnClickListener {
+                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
                     channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channelId)
                 }
             }

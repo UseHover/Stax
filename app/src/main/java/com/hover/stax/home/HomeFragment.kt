@@ -74,6 +74,7 @@ class HomeFragment : Fragment() {
                     cardBonus.visibility = View.VISIBLE
                     cta.setOnClickListener {
                         channelsViewModel // viewmodel must be instantiated in the main thread before it can be accessible on other threads
+                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
                         validateTransferAction(b.first())
                     }
                 }
@@ -141,7 +142,6 @@ class HomeFragment : Fragment() {
         val channelAccounts = channelsViewModel.getChannelAndAccounts(bonus.userChannel)
 
         if(channelAccounts != null && channelAccounts.accounts.isEmpty()) {
-            Timber.e("${channelAccounts.channel.name} has no accounts. Creating....")
             val channels = listOf(channelAccounts.channel)
             channelsViewModel.apply {
                 setChannelsSelected(channels)

@@ -156,4 +156,6 @@
 	<string name="interacted_with_tutorial" translatable="false">Interacted with tutorial</string>
 	<string name="clicked_continue" translatable="false">Clicked continue button</string>
 
+	<string name="clicked_bonus_airtime_banner" translatable="false">Clicked bonus airtime banner</string>
+
 </resources>
