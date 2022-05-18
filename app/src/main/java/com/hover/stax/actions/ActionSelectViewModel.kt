@@ -7,6 +7,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
 import com.hover.stax.R
 import com.hover.stax.utils.Constants
+import java.util.LinkedHashMap
 
 class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
@@ -20,7 +21,7 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     }
 
     private fun setActiveActionIfOutOfDate(actions: List<HoverAction>) {
-        if (!actions.isNullOrEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
+        if (actions.isNotEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
             val action = actions.first()
             activeAction.postValue(action)
         }
@@ -39,6 +40,7 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
         action.requiredParams.forEach {
             if (!isStandardVariable(it)) variableMap[it] = ""
         }
+
         nonStandardVariables.postValue(variableMap)
     }
 
@@ -47,9 +49,8 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     }
 
     fun updateNonStandardVariables(key: String, value: String) {
-        var map = nonStandardVariables.value
-        if (map == null) map = linkedMapOf()
+        val map = nonStandardVariables.value ?: linkedMapOf()
         map[key] = value
-        nonStandardVariables.postValue(map!!)
+        nonStandardVariables.postValue(map)
     }
 }

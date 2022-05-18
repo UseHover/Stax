@@ -4,6 +4,8 @@ import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bonus.BonusRepo
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.faq.FaqViewModel
@@ -39,13 +41,14 @@ val appModule = module {
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get()) }
     viewModel { LoginViewModel(get(), get(), get(), get()) }
-    viewModel { TransactionDetailsViewModel(get(), get()) }
+    viewModel { TransactionDetailsViewModel(get(), get(), get()) }
     viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get()) }
     viewModel { FinancialTipsViewModel() }
     viewModel { PaybillViewModel(get(), get(), get()) }
     viewModel { RequestDetailViewModel(get()) }
+    viewModel { BonusViewModel(get(), get()) }
 }
 
 val dataModule = module(createdAtStart = true) {
@@ -55,6 +58,7 @@ val dataModule = module(createdAtStart = true) {
     single { DatabaseRepo(get(), get()) }
     single { PaybillRepo(get()) }
     single { UserRepo(get()) }
+    single { BonusRepo(get()) }
 }
 
 val networkModule = module {
