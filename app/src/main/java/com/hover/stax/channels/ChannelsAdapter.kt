@@ -45,7 +45,7 @@ class ChannelsAdapter(var selectListener: SelectListener?) : ListAdapter<Channel
             }
 
             override fun areContentsTheSame(oldItem: Channel, newItem: Channel): Boolean {
-                return oldItem == newItem
+                return oldItem.name == newItem.name
             }
 
         }

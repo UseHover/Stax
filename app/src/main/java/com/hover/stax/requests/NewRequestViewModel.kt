@@ -93,23 +93,22 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         }
     }
 
-    fun createRequest() {
+    fun createRequest() = viewModelScope.launch(Dispatchers.IO) {
         repo.update(activeChannel.value)
         saveContacts()
 
-
-
-
         val request = Request(amount.value, note.value, requesterNumber.value, activeChannel.value!!.institutionId)
-        formulatedRequest.value = request
+        formulatedRequest.postValue(request)
     }
 
     fun saveRequest() {
         if (formulatedRequest.value != null) {
-            val request = Request(formulatedRequest.value!!, requestee.value, application)
-            repo.insert(request)
+            viewModelScope.launch(Dispatchers.IO) {
+                val request = Request(formulatedRequest.value!!, requestee.value, application)
+                repo.insert(request)
 
-            finalRequests.value = listOf(request)
+                finalRequests.postValue(listOf(request))
+            }
         }
     }
 
