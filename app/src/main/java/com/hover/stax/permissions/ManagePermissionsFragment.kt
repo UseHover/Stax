@@ -1,6 +1,7 @@
 package com.hover.stax.permissions
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -104,7 +105,13 @@ class ManagePermissionsFragment : Fragment() {
 
     private val displayPermCheckedChangeListener = CompoundButton.OnCheckedChangeListener { _, _ -> ph.requestOverlayPerm() }
 
-    private val accessPermCheckedChangeListener = CompoundButton.OnCheckedChangeListener { _, _ -> ph.requestAccessPerm() }
+    private val accessPermCheckedChangeListener = CompoundButton.OnCheckedChangeListener { _, _ -> goToAccessibility(requireContext()) }
+
+    private fun goToAccessibility(c: Context) {
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        c.startActivity(intent)
+    }
 
     private fun shouldOpenSettings(permissions: List<String>): Boolean {
         return grantResults.contains(ContextCompat.checkSelfPermission(requireActivity(), permissions[0])) ||
