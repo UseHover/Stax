@@ -54,7 +54,8 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
 
     private fun setExpectingSMS(transaction: StaxTransaction) {
         viewModelScope.launch(Dispatchers.IO) {
-            if(transaction.isPending) isExpectingSMS.postValue(parserRepo.hasSMSParser(transaction.action_id))
+            val hasSMSParser = parserRepo.hasSMSParser(transaction.action_id)
+            if(transaction.isPending) isExpectingSMS.postValue(hasSMSParser)
         }
     }
 
