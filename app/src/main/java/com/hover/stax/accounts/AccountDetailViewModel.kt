@@ -16,8 +16,8 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
     private val id = MutableLiveData<Int>()
     var account: LiveData<Account> = MutableLiveData()
     var channel: LiveData<Channel> = MutableLiveData()
-    var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
-    var actions: LiveData<List<HoverAction>> = MutableLiveData()
+    private var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
+    var listOfTransactionActionPair : MediatorLiveData<List<Pair<StaxTransaction, HoverAction?>>> = MediatorLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
     var feesThisYear: LiveData<Double> = MutableLiveData()
 
@@ -26,10 +26,10 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
     init {
         account = Transformations.switchMap(id, repo::getLiveAccount)
         channel = Transformations.switchMap(account) { it?.let { repo.getLiveChannel(it.channelId) } }
-        transactions = Transformations.switchMap(account) { it?.let { repo.getAccountTransactions(it) } }
-        actions = Transformations.switchMap(id, repo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
+        transactions = Transformations.switchMap(account) { it?.let { repo.getAccountTransactions(it) } }
+        listOfTransactionActionPair.addSource(transactions, this::getTransactionActionPair)
     }
 
     fun setAccount(accountId: Int) = id.postValue(accountId)
@@ -49,6 +49,18 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
         val a = account.value!!
         a.accountNo = newNumber
         repo.update(a)
+    }
+
+    private fun getTransactionActionPair(transactions: List<StaxTransaction>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listOfPair = mutableListOf<Pair<StaxTransaction, HoverAction?>>()
+            transactions.forEach {
+                val action= repo.getAction(it.action_id)
+                val pair = Pair(it, action)
+                listOfPair.add(pair)
+            }
+            listOfTransactionActionPair.postValue(listOfPair)
+        }
     }
 
     fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {

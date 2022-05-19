@@ -155,12 +155,10 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
             }
 
-            transactions.observe(viewLifecycleOwner) {
+            listOfTransactionActionPair.observe(viewLifecycleOwner) {
                 binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                transactionsAdapter!!.updateData(it, viewModel.actions.value)
+                transactionsAdapter!!.updateData(it)
             }
-
-            actions.observe(viewLifecycleOwner) { transactionsAdapter!!.updateData(viewModel.transactions.value, it) }
 
             spentThisMonth.observe(viewLifecycleOwner) {
                 binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0)
@@ -191,7 +189,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun initRecyclerViews() {
         binding.historyCard.transactionsRecycler.apply {
             layoutManager = UIHelper.setMainLinearManagers(context)
-            transactionsAdapter = TransactionHistoryAdapter(null, null, this@AccountDetailFragment)
+            transactionsAdapter = TransactionHistoryAdapter(emptyList(),  this@AccountDetailFragment)
             adapter = transactionsAdapter
         }
 

@@ -7,17 +7,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
+import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.databinding.TransactionCardHistoryBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectListener {
 
 	private var _binding: TransactionCardHistoryBinding? = null
 	private val binding get() = _binding!!
 
+	private val viewModel: TransactionHistoryViewModel by viewModel()
 	private var transactionsAdapter: TransactionHistoryAdapter? = null
+
 	override fun onCreateView(inflater: LayoutInflater,
 	                          container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View {
@@ -29,13 +33,21 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		initRecyclerView()
+		observeTransactionActionPair()
 	}
 
 	private fun initRecyclerView() {
 		binding.transactionsRecycler.apply {
 			layoutManager = UIHelper.setMainLinearManagers(context)
-			transactionsAdapter = TransactionHistoryAdapter(null, null, this@TransactionHistoryFragment)
+			transactionsAdapter = TransactionHistoryAdapter(emptyList(), this@TransactionHistoryFragment)
 			adapter = transactionsAdapter
+		}
+	}
+
+	private fun observeTransactionActionPair() {
+		viewModel.listOfTransactionActionPair.observe(viewLifecycleOwner) {
+			binding.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
+			transactionsAdapter!!.updateData(it)
 		}
 	}
 

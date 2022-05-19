@@ -8,11 +8,30 @@ import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class TransactionHistoryViewModel(val repo: DatabaseRepo) : ViewModel() {
 
+    private val allNonBountyTransaction : LiveData<List<StaxTransaction>> = repo.allNonBountyTransactions
+    var listOfTransactionActionPair : MediatorLiveData<List<Pair<StaxTransaction, HoverAction?>>> = MediatorLiveData()
     private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
+
+    init {
+        listOfTransactionActionPair.addSource(allNonBountyTransaction, this::getTransactionActionPair)
+    }
+
+    private fun getTransactionActionPair(transactions: List<StaxTransaction>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listOfPair = mutableListOf<Pair<StaxTransaction, HoverAction?>>()
+            transactions.forEach {
+                val action= repo.getAction(it.action_id)
+                val pair = Pair(it, action)
+                listOfPair.add(pair)
+            }
+            listOfTransactionActionPair.postValue(listOfPair)
+        }
+    }
 
     fun showAppReviewLiveData(): LiveData<Boolean> {
         return appReviewLiveData

@@ -134,6 +134,9 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val bountyTransactions: LiveData<List<StaxTransaction>>?
         get() = transactionDao.bountyTransactions
 
+    val allNonBountyTransactions : LiveData<List<StaxTransaction>>
+        get() = transactionDao.nonBountyTransactions
+
     @SuppressLint("DefaultLocale")
     suspend fun hasTransactionLastMonth(): Boolean {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0

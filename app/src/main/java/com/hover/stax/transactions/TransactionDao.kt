@@ -23,6 +23,9 @@ interface TransactionDao {
     @get:Query("SELECT * FROM stax_transactions WHERE environment = 3 ORDER BY initiated_at DESC")
     val bountyTransactions: LiveData<List<StaxTransaction>>?
 
+    @get:Query("SELECT * FROM stax_transactions WHERE environment != 3 ORDER BY initiated_at DESC")
+    val nonBountyTransactions: LiveData<List<StaxTransaction>>
+
     @Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
     fun getTransaction(uuid: String?): StaxTransaction?
 
