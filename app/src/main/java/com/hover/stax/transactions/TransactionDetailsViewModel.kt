@@ -8,6 +8,7 @@ import com.hover.sdk.api.Hover.getSMSMessageByUUID
 import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.database.ParserRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -15,18 +16,21 @@ import org.json.JSONArray
 import timber.log.Timber
 import kotlin.math.floor
 
-class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Application, val bonusRepo: BonusRepo) : ViewModel() {
+class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Application, private val bonusRepo: BonusRepo, private val parserRepo: ParserRepo) : ViewModel() {
 
     val transaction = MutableLiveData<StaxTransaction>()
     val messages = MediatorLiveData<List<UssdCallResponse>>()
     var action: LiveData<HoverAction> = MutableLiveData()
     var contact: LiveData<StaxContact> = MutableLiveData()
+    var isExpectingSMS : MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().also { it.value = false }
     var sms: LiveData<List<UssdCallResponse>> = MutableLiveData()
     var bonusAmt = MutableLiveData(0)
 
     init {
         action = Transformations.switchMap(transaction) { getLiveAction(it) }
         contact = Transformations.switchMap(transaction) { getLiveContact(it) }
+
+        isExpectingSMS.addSource(transaction, this::setExpectingSMS)
 
         messages.apply {
             addSource(transaction) { loadMessages(it) }
@@ -46,6 +50,12 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
 
     fun setTransaction(uuid: String) = viewModelScope.launch(Dispatchers.IO) {
         repo.getTransactionAsync(uuid).collect { transaction.postValue(it) }
+    }
+
+    private fun setExpectingSMS(transaction: StaxTransaction) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if(transaction.isPending) isExpectingSMS.postValue(parserRepo.hasSMSParser(transaction.action_id))
+        }
     }
 
     private fun loadMessages(txn: StaxTransaction?) {

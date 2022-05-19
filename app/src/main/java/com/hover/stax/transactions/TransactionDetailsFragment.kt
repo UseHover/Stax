@@ -76,8 +76,13 @@ class TransactionDetailsFragment : Fragment() {
     private fun showUSSDLog() = USSDLogBottomSheetFragment.newInstance(args.uuid).show(childFragManager, USSDLogBottomSheetFragment::class.java.simpleName)
 
     private fun startObservers() = with(viewModel) {
-        transaction.observe(viewLifecycleOwner) { showTransaction(it) }
+        transaction.observe(viewLifecycleOwner) { showTransaction(it,) }
         action.observe(viewLifecycleOwner) { it?.let { showActionDetails(it) } }
+        isExpectingSMS.observe(viewLifecycleOwner) {
+            if(it!=null && action.value!=null && transaction.value!=null) {
+                setSecondaryStatus(action.value!!, transaction.value!!, it)
+            }
+        }
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
         bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
     }
@@ -211,7 +216,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun updateStatus(action: HoverAction?, transaction: StaxTransaction?) {
         if (action != null && transaction != null) {
             setPrimaryStatus(transaction)
-            setSecondaryStatus(action, transaction)
+            setSecondaryStatus(action, transaction, viewModel.isExpectingSMS.value!!)
         }
     }
 
@@ -227,13 +232,13 @@ class TransactionDetailsFragment : Fragment() {
         }
     }
 
-    private fun setSecondaryStatus(action: HoverAction?, transaction: StaxTransaction?) {
+    private fun setSecondaryStatus(action: HoverAction?, transaction: StaxTransaction?, isExpectingSMS: Boolean) {
         transaction?.let {
             if (transaction.isSuccessful) binding.secondaryStatus.root.visibility = GONE
             else {
                 binding.secondaryStatus.root.visibility = VISIBLE
                 binding.secondaryStatus.statusText.apply {
-                    val content = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+                    val content = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, isExpectingSMS, requireContext())
                     text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     movementMethod = LinkMovementMethod.getInstance()
                 }

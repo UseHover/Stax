@@ -204,6 +204,10 @@ public class StaxTransaction {
         return status.equals(Transaction.FAILED);
     }
 
+    public Boolean isPending() {
+        return status.equals(Transaction.PENDING);
+    }
+
     public Boolean isSuccessful() {
         return status.equals(Transaction.SUCCEEDED);
     }
