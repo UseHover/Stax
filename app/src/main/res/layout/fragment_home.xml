@@ -161,7 +161,7 @@
                 android:padding="@dimen/margin_24"
                 android:text="@string/cta_request"
                 android:textSize="@dimen/text_19"
-                app:drawableEndCompat="@drawable/ic_payment" />
+                app:drawableEndCompat="@drawable/ic_baseline_people_24" />
         </androidx.cardview.widget.CardView>
 
         <com.hover.stax.inapp_banner.StaxBannerView

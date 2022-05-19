@@ -32,7 +32,7 @@ class NavHelper(val activity: AppCompatActivity) {
             navController = getNavController()
             NavigationUI.setupWithNavController(nav, navController!!)
             appBarConfiguration = AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_balance, R.id.navigation_request, R.id.libraryFragment, R.id.navigation_settings
+                R.id.navigation_home, R.id.navigation_balance, R.id.navigation_history, R.id.libraryFragment, R.id.navigation_settings
             ).build()
         }
 
@@ -84,6 +84,7 @@ class NavHelper(val activity: AppCompatActivity) {
 
         val exemptRoutes = setOf(
             MainNavigationDirections.actionGlobalNavigationSettings(),
+            MainNavigationDirections.actionGlobalNavigationHistory(),
             MainNavigationDirections.actionGlobalNavigationHome(), MainNavigationDirections.actionGlobalLibraryFragment()
         )
 
@@ -95,6 +96,7 @@ class NavHelper(val activity: AppCompatActivity) {
 
     private fun getNavDirections(destId: Int): NavDirections? = when (destId) {
         R.id.navigation_request, Constants.NAV_REQUEST -> MainNavigationDirections.actionGlobalNavigationRequest()
+        R.id.navigation_history, Constants.NAV_HISTORY -> MainNavigationDirections.actionGlobalNavigationHistory()
         R.id.navigation_settings, Constants.NAV_SETTINGS -> MainNavigationDirections.actionGlobalNavigationSettings()
         R.id.navigation_home, Constants.NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
         R.id.libraryFragment, Constants.NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
