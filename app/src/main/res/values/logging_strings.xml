@@ -54,6 +54,7 @@
 	<string name="visit_language" translatable="false">Language Choice</string>
 	<string name="visit_security" translatable="false">Security</string>
 	<string name="visit_change_pin" translatable="false">Change PIN</string>
+	<string name="visit_transaction_history">Transaction history</string>
 	<string name="visit_transaction" translatable="false">Transaction Detail</string>
 	<string name="visit_schedule" translatable="false">Schedule Detail</string>
 	<string name="visit_channel" translatable="false">Channel Detail</string>

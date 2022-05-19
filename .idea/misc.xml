@@ -52,6 +52,7 @@
         <entry key="app/src/main/res/drawable/text_btn_selector.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/transparent_bg.xml" value="0.2535" />
         <entry key="app/src/main/res/font/brutalista_font.xml" value="0.47265625" />
+        <entry key="app/src/main/res/layout/account_card_details.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/account_card_shortcode.xml" value="0.30572916666666666" />
