@@ -64,21 +64,23 @@ class HomeFragment : Fragment() {
         return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type).setChannelId(channelId)
     }
 
-    private fun setupBanner() = with(bonusViewModel) {
-        bonuses.observe(viewLifecycleOwner) { b ->
-            if (b.isNotEmpty()) {
-                with(binding.bonusCard) {
-                    message.text = b.first().message
-                }
-                binding.bonusCard.apply {
-                    cardBonus.visibility = View.VISIBLE
-                    cta.setOnClickListener {
-                        channelsViewModel // viewmodel must be instantiated in the main thread before it can be accessible on other threads
-                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                        validateTransferAction(b.first())
+    private fun setupBanner() = lifecycleScope.launchWhenResumed {
+        with(bonusViewModel) {
+            bonuses.observe(viewLifecycleOwner) { b ->
+                if (b.isNotEmpty()) {
+                    with(binding.bonusCard) {
+                        message.text = b.first().message
                     }
-                }
-            } else binding.bonusCard.cardBonus.visibility = View.GONE
+                    binding.bonusCard.apply {
+                        cardBonus.visibility = View.VISIBLE
+                        cta.setOnClickListener {
+                            channelsViewModel // viewmodel must be instantiated in the main thread before it can be accessible on other threads
+                            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                            validateTransferAction(b.first())
+                        }
+                    }
+                } else binding.bonusCard.cardBonus.visibility = View.GONE
+            }
         }
     }
 

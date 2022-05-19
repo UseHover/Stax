@@ -116,7 +116,6 @@ class TransactionDetailsFragment : Fragment() {
             } else binding.secondaryStatus.btnRetryTransaction.visibility = GONE
 
             updateDetails(transaction)
-
         }
     }
 
