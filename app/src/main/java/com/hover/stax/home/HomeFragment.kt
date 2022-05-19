@@ -53,6 +53,7 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
+        binding.requestMoney.setOnClickListener{HomeFragmentDirections.actionNavigationHomeToNavigationRequest()}
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
