@@ -76,7 +76,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun showUSSDLog() = USSDLogBottomSheetFragment.newInstance(args.uuid).show(childFragManager, USSDLogBottomSheetFragment::class.java.simpleName)
 
     private fun startObservers() = with(viewModel) {
-        transaction.observe(viewLifecycleOwner) { showTransaction(it,) }
+        transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { showActionDetails(it) } }
         isExpectingSMS.observe(viewLifecycleOwner) {
             if(it!=null && action.value!=null && transaction.value!=null) {
