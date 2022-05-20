@@ -72,11 +72,9 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         runFlag.value = accountId
     }
 
-    fun setRunning(channel: Channel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val accounts = repo.getAccounts(channel.id)
-            runFlag.postValue(accounts.firstOrNull()?.id ?: channel.id)
-        }
+    fun setRunning(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
+        val accounts = repo.getAccounts(channel.id)
+        runFlag.postValue(accounts.firstOrNull()?.id ?: channel.id)
     }
 
     fun setAllRunning(c: Context) {

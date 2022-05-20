@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.bonus.Bonus
@@ -170,8 +172,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeAccountList() {
-        channelsViewModel.accounts.observe(viewLifecycleOwner) {
+    private fun observeAccountList() = with(channelsViewModel) {
+        accounts.observe(viewLifecycleOwner) {
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
 
@@ -184,6 +186,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 accountDropdown.setCurrentAccount()
                 return@observe
             }
+        }
+
+        if(args.transactionType == HoverAction.AIRTIME) {
+            val observer = Observer<Account> { it?.let { setChannel(it) } }
+            activeAccount.observe(viewLifecycleOwner, observer)
         }
     }
 
@@ -423,12 +430,24 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
      * Channel and respective accounts are fetched before being passed to account dropdown
      */
     private fun updateAccountDropdown() = lifecycleScope.launch(Dispatchers.IO) {
-        val bonus = bonusViewModel.getBonusByChannelId(args.channelId)
+        val bonus = bonusViewModel.getBonusByPurchaseChannel(args.channelId)
 
         bonus?.let {
             val channel = channelsViewModel.getChannel(bonus.userChannel)
             channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channel!!.id)
         } ?: run { Timber.e("Bonus cannot be found") }
+    }
+
+    /**
+     * Monitors changes in active account from account dropdown and sets bonus channel
+     */
+    private fun setChannel(account: Account) = lifecycleScope.launch(Dispatchers.IO) {
+        val bonus = bonusViewModel.getBonusByUserChannel(account.channelId)
+
+        if (bonus != null) {
+            val channel = channelsViewModel.getChannel(bonus.purchaseChannel)
+            channelsViewModel.setActiveChannel(channel!!)
+        }
     }
 
     override fun onDestroyView() {

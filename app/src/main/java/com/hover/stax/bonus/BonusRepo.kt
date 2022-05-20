@@ -14,7 +14,7 @@ class BonusRepo(val db: AppDatabase) {
 
     fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus? = dao.getBonusByPurchaseChannel(purchaseChannelId)
 
-    fun getBonuses(purchaseChannelIds: List<Int>, userChannelIds: List<Int>): List<Bonus> = dao.getBonuses(purchaseChannelIds, userChannelIds)
+    fun getBonusByUserChannel(userChannelId: Int): Bonus? = dao.getBonusByUserChannel(userChannelId)
 
     fun delete(bonus: Bonus) = dao.delete(bonus)
 
