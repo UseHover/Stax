@@ -228,7 +228,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun setActiveChannelAndAccount(channelId: Int, accountChannelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val channel = repo.getChannel(channelId)
-        channel?.let { activeChannel.postValue(it) } ?: run { Timber.e("Airtime channel with id $channelId not found") }
+        channel?.let { setActiveChannel(it) } ?: run { Timber.e("Airtime channel with id $channelId not found") }
 
         val accounts = repo.getAccounts(accountChannelId)
         if (accounts.isNotEmpty()) {

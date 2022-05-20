@@ -75,6 +75,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun setRunning(channel: Channel) {
         viewModelScope.launch(Dispatchers.IO) {
             val accounts = repo.getAccounts(channel.id)
+            Timber.e("Here to run this ${channel.name}")
+            
             runFlag.postValue(accounts.firstOrNull()?.id ?: channel.id)
         }
     }

@@ -12,6 +12,9 @@ interface BonusDao {
     @Query("SELECT * FROM bonuses WHERE purchase_channel = :purchaseChannelId")
     fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus?
 
+    @Query("SELECT * FROM bonuses WHERE user_channel = :userChannelId")
+    fun getBonusByUserChannel(userChannelId: Int): Bonus?
+
     @Query("SELECT * FROM bonuses WHERE purchase_channel IN (:purchaseChannelIds) AND user_channel in (:userChannelIds)")
     fun getBonuses(purchaseChannelIds: List<Int>, userChannelIds: List<Int>): List<Bonus>
 
