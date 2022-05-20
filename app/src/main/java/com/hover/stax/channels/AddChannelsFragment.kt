@@ -253,15 +253,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     //channels will be loaded only once after install then deferred to weekly.
     private fun refreshChannelsIfRequired() {
         if (!Utils.getBoolean(Constants.CHANNELS_REFRESHED, requireActivity())) {
-            Timber.i("Reloading channels")
             val wm = WorkManager.getInstance(requireContext())
             wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
 
             Utils.saveBoolean(Constants.CHANNELS_REFRESHED, true, requireActivity())
             return
         }
-
-        Timber.i("Channels already reloaded")
     }
 
     override fun onDestroyView() {

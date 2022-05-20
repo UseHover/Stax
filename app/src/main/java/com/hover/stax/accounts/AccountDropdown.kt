@@ -118,7 +118,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             }
             val accountObserver = object: Observer<Account> {
                 override fun onChanged(t: Account?) {
-                    Timber.e("Active account right now is ${t?.name}")
                     setDropdownValue(t)
                 }
             }
