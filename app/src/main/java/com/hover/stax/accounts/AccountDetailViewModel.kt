@@ -6,6 +6,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.transactions.TransactionHistory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -17,7 +18,7 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
     var account: LiveData<Account> = MutableLiveData()
     var channel: LiveData<Channel> = MutableLiveData()
     private var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
-    var listOfTransactionActionPair : MediatorLiveData<List<Pair<StaxTransaction, HoverAction?>>> = MediatorLiveData()
+    var listOfTransactionHistory : MediatorLiveData<List<TransactionHistory>> = MediatorLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
     var feesThisYear: LiveData<Double> = MutableLiveData()
 
@@ -29,7 +30,7 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
         transactions = Transformations.switchMap(account) { it?.let { repo.getAccountTransactions(it) } }
-        listOfTransactionActionPair.addSource(transactions, this::getTransactionActionPair)
+        listOfTransactionHistory.addSource(transactions, this::getTransactionHistory)
     }
 
     fun setAccount(accountId: Int) = id.postValue(accountId)
@@ -51,15 +52,14 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
         repo.update(a)
     }
 
-    private fun getTransactionActionPair(transactions: List<StaxTransaction>) {
+    private fun getTransactionHistory(transactions: List<StaxTransaction>) {
         viewModelScope.launch(Dispatchers.IO) {
-            val listOfPair = mutableListOf<Pair<StaxTransaction, HoverAction?>>()
+            val listOfHistory = mutableListOf<TransactionHistory>()
             transactions.forEach {
                 val action= repo.getAction(it.action_id)
-                val pair = Pair(it, action)
-                listOfPair.add(pair)
+                listOfHistory.add(TransactionHistory(it, action))
             }
-            listOfTransactionActionPair.postValue(listOfPair)
+            listOfTransactionHistory.postValue(listOfHistory)
         }
     }
 
