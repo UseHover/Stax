@@ -1,6 +1,7 @@
 package com.hover.stax.home
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,6 +71,7 @@ class HomeFragment : Fragment() {
                 if (b.isNotEmpty()) {
                     with(binding.bonusCard) {
                         message.text = b.first().message
+                        learnMore.movementMethod = LinkMovementMethod.getInstance()
                     }
                     binding.bonusCard.apply {
                         cardBonus.visibility = View.VISIBLE

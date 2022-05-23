@@ -36,12 +36,28 @@
                 android:layout_marginEnd="@dimen/margin_16"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16"
-                app:layout_constraintBottom_toTopOf="@id/cta"
+                app:layout_constraintBottom_toTopOf="@id/learnMore"
                 app:layout_constraintEnd_toStartOf="@id/icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_goneMarginBottom="@dimen/margin_16"
                 tools:text="@string/bonus_placeholder" />
+
+        <TextView
+                android:id="@+id/learnMore"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_16"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_16"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_13"
+                app:layout_goneMarginBottom="@dimen/margin_16"
+                android:layout_marginBottom="@dimen/margin_8"
+                app:layout_constraintBottom_toTopOf="@id/cta"
+                app:layout_constraintEnd_toStartOf="@id/icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/message"
+                android:text="@string/learn_more" />
 
         <TextView
                 android:id="@+id/cta"
