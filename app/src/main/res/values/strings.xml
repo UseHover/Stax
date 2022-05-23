@@ -223,6 +223,11 @@
     <string name="perm_cta1">Show settings</string>
     <string name="perm_cta2">Show settings again</string>
 
+    <!-- Share Excitement -->
+    <string name="share_desc">Share Stax with your friends</string>
+    <string name="share">Share</string>
+    <string name="transaction_successful">Transaction successful</string>
+
     <!-- Hover Session -->
     <string name="balance_msg">Checking %1$s balance</string>
     <string name="airtime_msg">Buying airtime</string>

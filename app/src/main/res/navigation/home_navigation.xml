@@ -161,6 +161,11 @@
         <argument
                 android:name="uuid"
                 app:argType="string" />
+        <argument
+            android:name="isNewTransaction"
+            app:argType="boolean"
+            />
+
         <action
                 android:id="@+id/action_transactionDetailsFragment_to_bountyListFragment"
                 app:destination="@id/bountyListFragment" />

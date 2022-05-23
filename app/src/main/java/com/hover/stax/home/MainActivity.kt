@@ -151,7 +151,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
             transferViewModel.reset()
-            navHelper.showTxnDetails(data.extras!!.getString("uuid")!!)
+            navHelper.showTxnDetails(data.extras!!.getString("uuid")!!, true)
         }
 
 //        else {
