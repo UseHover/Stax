@@ -223,6 +223,11 @@
     <string name="perm_cta1">Show settings</string>
     <string name="perm_cta2">Show settings again</string>
 
+    <!-- Share Excitement -->
+    <string name="share_desc">Share Stax with your friends</string>
+    <string name="share">Share</string>
+    <string name="transaction_successful">Transaction successful</string>
+
     <!-- Hover Session -->
     <string name="balance_msg">Checking %1$s balance</string>
     <string name="airtime_msg">Buying airtime</string>
@@ -718,11 +723,12 @@
     <string name="top_up">Top Up</string>
     <string name="bonus_amount_label">Bonus Amount</string>
     <string name="bonus_placeholder">Get 8% bonus when you buy airtime with Stax.</string>
-    <string name="valid_account_bonus_msg">You\'ll get credited 5% bonus airtime after your airtime purchase is successful.</string>
-    <string name="invalid_account_bonus_msg">Use your MPESA to buy airtime now and get instant 5% bonus.</string>
+    <string name="valid_account_bonus_msg">You\’ll get credited at least 3% bonus airtime immediately after a successfully purchase of Ksh 50 or more airtime.</string>
+    <string name="invalid_account_bonus_msg">Use your MPESA to buy airtime now and get instant 3%+ bonus.</string>
     <string name="top_up_with_mpesa">Top up using Mpesa</string>
     <string name="congratulations">Congratulations</string>
     <string name="get_extra_airtime">Get Extra Airtime</string>
+    <string name="learn_more"><a href="https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/">T&amp;Cs apply</a></string>
 
 
 </resources>

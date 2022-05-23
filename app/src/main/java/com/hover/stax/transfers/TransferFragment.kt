@@ -3,6 +3,7 @@ package com.hover.stax.transfers
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -396,6 +397,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         cardBonus.visibility = View.VISIBLE
         val bonus = bonuses.first()
         val usingBonusChannel = channelsViewModel.activeChannel.value?.id == bonus.purchaseChannel
+
+        learnMore.movementMethod = LinkMovementMethod.getInstance()
 
         if (usingBonusChannel) {
             title.text = getString(R.string.congratulations)
