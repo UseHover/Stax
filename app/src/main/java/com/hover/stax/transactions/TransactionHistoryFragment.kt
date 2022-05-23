@@ -45,7 +45,7 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
 	}
 
 	private fun observeTransactionActionPair() {
-		viewModel.listOfTransactionActionPair.observe(viewLifecycleOwner) {
+		viewModel.listOfTransactionHistory.observe(viewLifecycleOwner) {
 			binding.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
 			transactionsAdapter!!.updateData(it)
 		}

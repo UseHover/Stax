@@ -8,16 +8,19 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.text.HtmlCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.hover.sdk.transactions.Transaction
+import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.TransactionListItemBinding
 import java.util.Locale
 
-class TransactionHistoryAdapter(private var listOfTransactionActionPair: List<Pair<StaxTransaction, HoverAction?>>,
-                                private val selectListener: SelectListener) :
-	RecyclerView.Adapter<HistoryViewHolder>() {
+class TransactionHistoryAdapter(private var listOfTransactionHistory: List<TransactionHistory>,
+                                private val selectListener: SelectListener)
+	: ListAdapter<TransactionHistory, HistoryViewHolder>(diffUtil) {
 
-	fun updateData(listOfPair: List<Pair<StaxTransaction, HoverAction?>>) {
-		this.listOfTransactionActionPair = listOfPair
+	fun updateData(listOfHistory:  List<TransactionHistory>) {
+		this.listOfTransactionHistory = listOfHistory
 		notifyDataSetChanged()
 	}
 
@@ -28,9 +31,9 @@ class TransactionHistoryAdapter(private var listOfTransactionActionPair: List<Pa
 	}
 
 	override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-		val pair = listOfTransactionActionPair!![position]
-		val t = pair.first
-		val action = pair.second
+		val history = listOfTransactionHistory[position]
+		val t = history.staxTransaction
+		val action = history.action
 		holder.binding.liDescription.text = String.format("%s%s", t.description.substring(0, 1).uppercase(Locale.getDefault()), t.description.substring(1))
 		holder.binding.liAmount.text = t.displayAmount
 		holder.binding.liHeader.visibility = if (shouldShowDate(t, position)) View.VISIBLE else View.GONE
@@ -49,15 +52,15 @@ class TransactionHistoryAdapter(private var listOfTransactionActionPair: List<Pa
 
 	private fun shouldShowDate(t: StaxTransaction, position: Int): Boolean {
 		if(position > 1) {
-			val pair = listOfTransactionActionPair!![position -1]
-			val transaction = pair.first
+			val history = listOfTransactionHistory[position -1]
+			val transaction = history.staxTransaction
 			return position == 0 || humanFriendlyDate(transaction.initiated_at) != humanFriendlyDate(t.initiated_at)
 		}
 		return true
 	}
 
 	override fun getItemCount(): Int {
-		return listOfTransactionActionPair?.size ?: 0
+		return listOfTransactionHistory.size
 	}
 
 	override fun getItemId(position: Int): Long {
@@ -70,4 +73,17 @@ class TransactionHistoryAdapter(private var listOfTransactionActionPair: List<Pa
 
 	class HistoryViewHolder(var binding: TransactionListItemBinding) :
 		RecyclerView.ViewHolder(binding.root)
+
+	companion object {
+		private val diffUtil = object : DiffUtil.ItemCallback<TransactionHistory>() {
+			override fun areItemsTheSame(oldItem: TransactionHistory, newItem: TransactionHistory): Boolean {
+				return oldItem.staxTransaction.uuid == newItem.staxTransaction.uuid
+			}
+
+			override fun areContentsTheSame(oldItem: TransactionHistory, newItem: TransactionHistory): Boolean {
+				return oldItem.staxTransaction.uuid  == newItem.staxTransaction.uuid
+			}
+
+		}
+	}
 }

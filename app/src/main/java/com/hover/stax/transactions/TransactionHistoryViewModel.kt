@@ -10,26 +10,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+data class TransactionHistory(val staxTransaction: StaxTransaction, val action: HoverAction?)
 class TransactionHistoryViewModel(val repo: DatabaseRepo) : ViewModel() {
 
     private val allNonBountyTransaction : LiveData<List<StaxTransaction>> = repo.allNonBountyTransactions
-    var listOfTransactionActionPair : MediatorLiveData<List<Pair<StaxTransaction, HoverAction?>>> = MediatorLiveData()
+    var listOfTransactionHistory : MediatorLiveData<List<TransactionHistory>> = MediatorLiveData()
     private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
 
     init {
-        listOfTransactionActionPair.addSource(allNonBountyTransaction, this::getTransactionActionPair)
+        listOfTransactionHistory.addSource(allNonBountyTransaction, this::getTransactionHistory)
     }
 
-    private fun getTransactionActionPair(transactions: List<StaxTransaction>) {
+    private fun getTransactionHistory(transactions: List<StaxTransaction>) {
         viewModelScope.launch(Dispatchers.IO) {
-            val listOfPair = mutableListOf<Pair<StaxTransaction, HoverAction?>>()
+            val listOfHistory = mutableListOf<TransactionHistory>()
             transactions.forEach {
                 val action= repo.getAction(it.action_id)
-                val pair = Pair(it, action)
-                listOfPair.add(pair)
+                listOfHistory.add(TransactionHistory(it, action))
             }
-            listOfTransactionActionPair.postValue(listOfPair)
+            listOfTransactionHistory.postValue(listOfHistory)
         }
     }
 
