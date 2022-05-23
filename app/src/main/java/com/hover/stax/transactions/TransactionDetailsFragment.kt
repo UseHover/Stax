@@ -8,13 +8,16 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
@@ -44,6 +47,7 @@ class TransactionDetailsFragment : Fragment() {
     private val args: TransactionDetailsFragmentArgs by navArgs()
 
     private lateinit var childFragManager: FragmentManager
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<RelativeLayout>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewModel.setTransaction(args.uuid)
@@ -116,6 +120,7 @@ class TransactionDetailsFragment : Fragment() {
             } else binding.secondaryStatus.btnRetryTransaction.visibility = GONE
 
             updateDetails(transaction)
+            showShareExcitement(!transaction.isRecorded && transaction.isSuccessful)
         }
     }
 
@@ -147,6 +152,25 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun shouldShowNewBalance(transaction: StaxTransaction): Boolean {
         return !transaction.isBalanceType && !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
+    }
+
+    private fun showShareExcitement(isTransactionSuccessful: Boolean) {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.shareLayout.bottomSheet)
+        val shouldShow = args.isNewTransaction && isTransactionSuccessful
+        setBottomSheetVisibility(shouldShow)
+    }
+
+    private fun setBottomSheetVisibility(isVisible: Boolean) {
+        var updatedState = BottomSheetBehavior.STATE_HIDDEN
+
+        if(isVisible) {
+            updatedState = BottomSheetBehavior.STATE_EXPANDED
+            val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down)
+            binding.shareLayout.bottomSheet.visibility = VISIBLE
+            binding.shareLayout.bottomSheet.animation = animation
+            binding.shareLayout.shareBtn.setOnClickListener { Utils.shareStax(requireActivity()) }
+        }
+        bottomSheetBehavior.state = updatedState
     }
 
     @SuppressLint("SetTextI18n")
