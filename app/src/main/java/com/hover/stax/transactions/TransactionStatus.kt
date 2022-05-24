@@ -66,11 +66,11 @@ class TransactionStatus(val transaction: StaxTransaction) {
         }
     }
 
-    fun getStatusDetail(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, c: Context): String {
+    fun getStatusDetail(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, isExpectingSMS: Boolean, c: Context): String {
         return if (transaction.isRecorded) getRecordedStatusDetail(c)
         else when (transaction.status) {
             Transaction.FAILED -> lookupFailureDescription(action, c)
-            Transaction.PENDING -> c.getString(R.string.pending_cardbody)
+            Transaction.PENDING -> c.getString( if(isExpectingSMS)  R.string.pending_cardbody else R.string.pending_no_sms_expected_cardbody)
             else -> lookupSuccessDescription(messages, sms, c)
         }
     }

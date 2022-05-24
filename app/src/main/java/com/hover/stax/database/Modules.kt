@@ -41,7 +41,7 @@ val appModule = module {
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get()) }
     viewModel { LoginViewModel(get(), get(), get(), get()) }
-    viewModel { TransactionDetailsViewModel(get(), get(), get()) }
+    viewModel { TransactionDetailsViewModel(get(), get(), get(), get()) }
     viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get()) }
@@ -59,6 +59,7 @@ val dataModule = module(createdAtStart = true) {
     single { PaybillRepo(get()) }
     single { UserRepo(get()) }
     single { BonusRepo(get()) }
+    single { ParserRepo(get()) }
 }
 
 val networkModule = module {
