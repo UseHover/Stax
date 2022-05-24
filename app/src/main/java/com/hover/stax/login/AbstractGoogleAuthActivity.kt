@@ -13,6 +13,7 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.bounties.BountyEmailFragmentDirections
 import com.hover.stax.hover.AbstractHoverCallerActivity
@@ -35,22 +36,24 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
         setLoginObserver()
 
         updateManager = AppUpdateManagerFactory.create(this)
-        checkForUpdates()
+        if (!BuildConfig.DEBUG)
+            checkForUpdates()
     }
 
     //checks that the update has not stalled
     override fun onResume() {
         super.onResume()
-        updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
-            //if the update is downloaded but not installed, notify user to complete the update
-            if (updateInfo.installStatus() == InstallStatus.DOWNLOADED)
-                showSnackbarForCompleteUpdate()
+        if (!BuildConfig.DEBUG)
+            updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
+                //if the update is downloaded but not installed, notify user to complete the update
+                if (updateInfo.installStatus() == InstallStatus.DOWNLOADED)
+                    showSnackbarForCompleteUpdate()
 
-            //if an in-app update is already running, resume the update
-            if(updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                updateManager.startUpdateFlowForResult(updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE)
+                //if an in-app update is already running, resume the update
+                if (updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    updateManager.startUpdateFlowForResult(updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE)
+                }
             }
-        }
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
@@ -100,7 +103,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
                     showSnackbarForCompleteUpdate()
             }
             updateManager.registerListener(installListener!!)
-        } 
+        }
 
         updateManager.startUpdateFlowForResult(updateInfo, updateType, this, UPDATE_REQUEST_CODE)
     }

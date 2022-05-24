@@ -21,7 +21,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     val channelActions = MediatorLiveData<List<HoverAction>>()
 
     init {
-        activeAccount.addSource(accounts, this@AccountsViewModel::setActiveAccountIfNull)
+        activeAccount.addSource(accounts, this::setActiveAccountIfNull)
 
         channelActions.apply {
             addSource(type, this@AccountsViewModel::loadActions)
@@ -34,7 +34,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
     private fun setActiveAccountIfNull(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty() && activeAccount.value == null)
+        if (accounts.isNotEmpty() && activeAccount.value == null)
             activeAccount.postValue(accounts.firstOrNull { it.isDefault })
     }
 

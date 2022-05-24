@@ -14,25 +14,20 @@ import com.hover.stax.utils.UIHelper
 
 class ChannelViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    var id: TextView? = null
-    private var channelText: AppCompatTextView? = null
+    var id: TextView = binding.serviceItemId
+    private var channelText: AppCompatTextView = binding.serviceItemNameId
 
-    private var logo: ImageView? = null
-    private var checkBox: MaterialCheckBox? = null
+    private var logo: ImageView = binding.serviceItemImageId
+    private var checkBox: MaterialCheckBox = binding.serviceItemCheckbox
 
     fun bind(channel: Channel, isMultiselect: Boolean = false, isSelected: Boolean? = false) {
-        logo = binding.serviceItemImageId
-        channelText = binding.serviceItemNameId
-        id = binding.serviceItemId
-        checkBox = binding.serviceItemCheckbox
-
         if (isMultiselect) {
-            checkBox!!.visibility = View.VISIBLE
-            checkBox!!.isChecked = isSelected != null && isSelected
-        } else checkBox!!.visibility = View.GONE
+            checkBox.visibility = View.VISIBLE
+            checkBox.isChecked = isSelected != null && isSelected
+        } else checkBox.visibility = View.GONE
 
-        id!!.text = channel.id.toString()
-        channelText!!.text = channel.toString()
+        id.text = channel.id.toString()
+        channelText.text = channel.toString()
 
         UIHelper.loadImage(binding.root.context, channel.logoUrl, logo!!)
     }

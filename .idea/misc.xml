@@ -10,29 +10,47 @@
       <map>
         <entry key="../../../../layout/compose-model-1647504975633.xml" value="0.2673141891891892" />
         <entry key="../../../../layout/compose-model-1648556434513.xml" value="0.24957770270270271" />
+        <entry key="app/src/main/res/drawable/banner_gist.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/banner_permission.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/banner_roundupnews.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/banner_upvote.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/blue_cornered_background.xml" value="0.258" />
+        <entry key="app/src/main/res/drawable/border_entry.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/bright_blue_rounded_bg.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/bubble_left.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/drawable/dialog_bg.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/ic_baseline_open_in_new_16.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_copy.xml" value="0.182" />
-        <entry key="app/src/main/res/drawable/ic_edit.xml" value="0.244" />
+        <entry key="app/src/main/res/drawable/ic_error.xml" value="0.137" />
         <entry key="app/src/main/res/drawable/ic_grey_circle_small.xml" value="0.249" />
+        <entry key="app/src/main/res/drawable/ic_info_red.xml" value="0.137" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
         <entry key="app/src/main/res/drawable/ic_payment.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
-        <entry key="app/src/main/res/drawable/ic_smile.xml" value="0.244" />
         <entry key="app/src/main/res/drawable/ic_stax_dark_white.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_stax_logo.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_stax_new_logo.xml" value="0.249" />
         <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
-        <entry key="app/src/main/res/drawable/icon_bg_circle.xml" value="0.244" />
+        <entry key="app/src/main/res/drawable/icon_bg_circle.xml" value="0.2295" />
+        <entry key="app/src/main/res/drawable/img_check.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/img_copy.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/img_sms.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/img_whatsapp.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/info_offwhite.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/processing_background.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/processing_card_background.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/selector_icon_tint.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/spinner_state_selector.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/splash_window_background.xml" value="0.2395" />
+        <entry key="app/src/main/res/drawable/text_btn_selector.xml" value="0.2535" />
+        <entry key="app/src/main/res/drawable/transparent_bg.xml" value="0.2535" />
         <entry key="app/src/main/res/font/brutalista_font.xml" value="0.47265625" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.30572916666666666" />
@@ -51,6 +69,7 @@
         <entry key="app/src/main/res/layout/bounty_card_channel.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/bounty_list_item.xml" value="0.48828125" />
         <entry key="app/src/main/res/layout/bounty_retry_submit_btn_layout.xml" value="0.30510752688172044" />
+        <entry key="app/src/main/res/layout/card_bonuses.xml" value="0.33" />
         <entry key="app/src/main/res/layout/card_wellness_tips.xml" value="0.31657608695652173" />
         <entry key="app/src/main/res/layout/contact_input.xml" value="0.15678824721377912" />
         <entry key="app/src/main/res/layout/contact_stax_layout.xml" value="0.30510752688172044" />
@@ -87,7 +106,7 @@
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.2056159420289855" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/fragment_signin_variant.xml" value="0.30510752688172044" />
-        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.22916666666666666" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.21" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
         <entry key="app/src/main/res/layout/fragment_wellness_detail.xml" value="0.165" />
@@ -96,7 +115,7 @@
         <entry key="app/src/main/res/layout/home_card_header.xml" value="0.2905982905982906" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/in_app_banner_layout.xml" value="0.15704154002026344" />
-        <entry key="app/src/main/res/layout/info_text_layout.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/info_text_layout.xml" value="0.2905982905982906" />
         <entry key="app/src/main/res/layout/input_item.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/item_icons.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/item_paybill.xml" value="0.19145299145299147" />
@@ -105,16 +124,13 @@
         <entry key="app/src/main/res/layout/item_sigin_viewpager.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/library_list_item.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/manage_permissions_layout.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/no_account_empty_state.xml" value="0.3319746376811594" />
         <entry key="app/src/main/res/layout/non_standard_variable_item.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/paybill_card_edit.xml" value="0.182370820668693" />
         <entry key="app/src/main/res/layout/paybill_card_icons.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/paybill_card_save_bill.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/paybill_card_summary.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/paybill_summary.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/paybill_card_save_bill.xml" value="0.19145299145299147" />
+        <entry key="app/src/main/res/layout/paybill_summary.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/permission_help_accessibility.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/permission_help_overlay.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/privacypolicy.xml" value="0.19145299145299147" />
@@ -139,11 +155,11 @@
         <entry key="app/src/main/res/layout/settings_card_language.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/settings_card_learn.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
-        <entry key="app/src/main/res/layout/settings_card_permissions.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/settings_card_support.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_ussd_library.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_security_card.xml" value="0.19145299145299147" />
+        <entry key="app/src/main/res/layout/share_excitement_layout.xml" value="0.1983695652173913" />
         <entry key="app/src/main/res/layout/splash_screen_layout.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/stack_balance_card.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/stax_2lineitem.xml" value="0.11956521739130435" />
@@ -159,15 +175,12 @@
         <entry key="app/src/main/res/layout/stax_spinner_2line.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/stax_spinner_item.xml" value="0.30625" />
         <entry key="app/src/main/res/layout/stax_spinner_item_with_logo.xml" value="0.13134057971014493" />
-        <entry key="app/src/main/res/layout/stax_text_input.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/summarycard_nontemplate_items.xml" value="0.42734375" />
+        <entry key="app/src/main/res/layout/summarycard_nontemplate_items.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/support_stax_layout.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/transaction_card_history.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/transaction_details_header.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.22" />
         <entry key="app/src/main/res/layout/transaction_details_primarystatus.xml" value="0.20643363728470113" />
-        <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/transaction_details_status.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.22916666666666666" />
         <entry key="app/src/main/res/layout/transaction_details_topstatus_view.xml" value="0.35733695652173914" />
         <entry key="app/src/main/res/layout/transaction_list_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transaction_messages_items.xml" value="0.19145299145299147" />

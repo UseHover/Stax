@@ -59,6 +59,7 @@ class HomeFragment : Fragment() {
     private fun getTransferDirection(type: String) : NavDirections {
         return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type)
     }
+
     private fun setupBanner() {
         with(bannerViewModel) {
             qualifiedBanner.observe(viewLifecycleOwner) { banner ->

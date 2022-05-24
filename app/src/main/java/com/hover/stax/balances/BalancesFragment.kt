@@ -60,7 +60,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
         balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
         val observer = Observer<List<Account>> { t -> updateAccounts(ArrayList(t)) }
         accountsViewModel.accounts.observe(viewLifecycleOwner, observer)
-        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { it?.let { askToCheckBalance(it) } }
+//        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { it?.let { askToCheckBalance(it) } }
         balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }

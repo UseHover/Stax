@@ -41,7 +41,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
@@ -71,7 +71,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
             setTitle(getString(R.string.add_accounts_to_stax))
         }
 
-        binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
         fillUpChannelLists()
         setupEmptyState()
 
@@ -145,8 +144,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private fun onSelectedLoaded(accounts: List<Account>) {
         binding.channelsListCard.hideProgressIndicator()
 
-        showSelected(!accounts.isNullOrEmpty())
-        if (!accounts.isNullOrEmpty())
+        showSelected(accounts.isNotEmpty())
+        if (accounts.isNotEmpty())
             binding.selectedList.adapter = AccountsAdapter(accounts)
     }
 
@@ -159,7 +158,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            Timber.e("Here to add ${channels.size}")
             updateAdapter(Channel.sort(channels, false))
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
@@ -197,14 +195,14 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
             binding.errorText.visibility = GONE
             aggregateSelectedChannels(tracker)
             findNavController().popBackStack()
-            AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
+//            AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
         }
     }
 
     private fun aggregateSelectedChannels(tracker: SelectionTracker<Long>) {
         val selectedChannels = mutableListOf<Channel>()
         tracker.selection.forEach { selection ->
-            selectedChannels.addAll(selectAdapter.channels.filter { it.id.toLong() == selection })
+            selectedChannels.addAll(selectAdapter.currentList.filter { it.id.toLong() == selection })
         }
 
         channelsViewModel.createAccounts(selectedChannels)
