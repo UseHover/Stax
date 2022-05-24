@@ -39,7 +39,7 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
 	private fun initRecyclerView() {
 		binding.transactionsRecycler.apply {
 			layoutManager = UIHelper.setMainLinearManagers(context)
-			transactionsAdapter = TransactionHistoryAdapter(emptyList(), this@TransactionHistoryFragment)
+			transactionsAdapter = TransactionHistoryAdapter(this@TransactionHistoryFragment)
 			adapter = transactionsAdapter
 		}
 	}
@@ -47,7 +47,7 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
 	private fun observeTransactionActionPair() {
 		viewModel.listOfTransactionHistory.observe(viewLifecycleOwner) {
 			binding.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-			transactionsAdapter!!.updateData(it)
+			transactionsAdapter!!.submitList(it)
 		}
 	}
 
@@ -58,6 +58,4 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
 		super.onDestroyView()
 		_binding = null
 	}
-
-
 }

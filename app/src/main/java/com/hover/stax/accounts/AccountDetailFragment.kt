@@ -157,7 +157,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
             listOfTransactionHistory.observe(viewLifecycleOwner) {
                 binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                transactionsAdapter!!.updateData(it)
+                transactionsAdapter!!.submitList(it)
             }
 
             spentThisMonth.observe(viewLifecycleOwner) {
@@ -189,7 +189,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun initRecyclerViews() {
         binding.historyCard.transactionsRecycler.apply {
             layoutManager = UIHelper.setMainLinearManagers(context)
-            transactionsAdapter = TransactionHistoryAdapter(emptyList(),  this@AccountDetailFragment)
+            transactionsAdapter = TransactionHistoryAdapter(this@AccountDetailFragment)
             adapter = transactionsAdapter
         }
 

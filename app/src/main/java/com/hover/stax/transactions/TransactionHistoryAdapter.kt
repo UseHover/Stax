@@ -15,14 +15,8 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.TransactionListItemBinding
 import java.util.Locale
 
-class TransactionHistoryAdapter(private var listOfTransactionHistory: List<TransactionHistory>,
-                                private val selectListener: SelectListener)
+class TransactionHistoryAdapter(private val selectListener: SelectListener)
 	: ListAdapter<TransactionHistory, HistoryViewHolder>(diffUtil) {
-
-	fun updateData(listOfHistory:  List<TransactionHistory>) {
-		this.listOfTransactionHistory = listOfHistory
-		notifyDataSetChanged()
-	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
 		val binding =
@@ -31,7 +25,7 @@ class TransactionHistoryAdapter(private var listOfTransactionHistory: List<Trans
 	}
 
 	override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-		val history = listOfTransactionHistory[position]
+		val history = getItem(holder.adapterPosition)
 		val t = history.staxTransaction
 		val action = history.action
 		holder.binding.liDescription.text = String.format("%s%s", t.description.substring(0, 1).uppercase(Locale.getDefault()), t.description.substring(1))
@@ -52,15 +46,11 @@ class TransactionHistoryAdapter(private var listOfTransactionHistory: List<Trans
 
 	private fun shouldShowDate(t: StaxTransaction, position: Int): Boolean {
 		if(position > 1) {
-			val history = listOfTransactionHistory[position -1]
+			val history = getItem(position -1)
 			val transaction = history.staxTransaction
 			return position == 0 || humanFriendlyDate(transaction.initiated_at) != humanFriendlyDate(t.initiated_at)
 		}
 		return true
-	}
-
-	override fun getItemCount(): Int {
-		return listOfTransactionHistory.size
 	}
 
 	override fun getItemId(position: Int): Long {
