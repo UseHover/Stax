@@ -13,6 +13,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
@@ -37,6 +38,7 @@ class HomeFragment : Fragment() {
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
     private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
+    private val channelsViewModel: ChannelsViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -137,15 +139,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun validateTransferAction(bonus: Bonus) = lifecycleScope.launch(Dispatchers.IO) {
-        val channelAccounts = channelsViewModel.getChannelAndAccounts(bonus.userChannel)
+        val accounts = accountsViewModel.getAccounts(bonus.userChannel)
 
-        if(channelAccounts != null && channelAccounts.accounts.isEmpty()) {
-            val channels = listOf(channelAccounts.channel)
-            channelsViewModel.apply {
-                setChannelsSelected(channels)
-                createAccounts(channels)
-            }
-        }
+        if(accounts.isEmpty())
+            channelsViewModel.createAccount(bonus.userChannel)
 
         withContext(Dispatchers.Main) {
             navigateTo(getTransferDirection(HoverAction.AIRTIME, bonus.purchaseChannel))

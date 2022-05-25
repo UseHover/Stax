@@ -84,14 +84,18 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         setUpCountryChoice()
         setSearchInputWatcher()
 
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, channelsViewModel.countryChoice.value) } }
-        channelsViewModel.sims.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} sims") }
-        channelsViewModel.simCountryList.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} hnis") }
-        channelsViewModel.accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
-        channelsViewModel.countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
+        startObservers()
 
         setFabListener()
+    }
+
+    private fun startObservers() = with(channelsViewModel) {
+        allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
+        sims.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} sims") }
+        simCountryList.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} hnis") }
+        accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
+        filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
+        countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
     }
 
     private fun fillUpChannelLists() {

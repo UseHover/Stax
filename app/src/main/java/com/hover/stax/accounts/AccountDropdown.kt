@@ -11,7 +11,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
-import timber.log.Timber
 
 
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
@@ -83,12 +82,12 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private fun onSelect(account: Account?) {
         setDropdownValue(account)
         if (account != null && account.id != 0)
-            account?.let { highlightListener?.highlightAccount(it, channelOverride) }
+            highlightListener?.highlightAccount(account)
         else
             findNavController().navigate(R.id.navigation_linkAccount)
     }
 
-    fun setCurrentAccount(account: Account? = null, channelId: Int = 0) = onSelect(account, channelId)
+    fun setCurrentAccount(account: Account) = onSelect(account)
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
 
@@ -129,6 +128,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     interface HighlightListener {
-        fun highlightAccount(account: Account, channelOverride: Int = 0)
+        fun highlightAccount(account: Account)
     }
 }

@@ -96,7 +96,9 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         }
     }
 
-    override fun highlightAccount(account: Account, channelOverride: Int) {
+    override fun highlightAccount(account: Account) {
         activeAccount.postValue(account)
     }
+
+    fun getAccounts(channelId: Int) = repo.getAccountsByChannel(channelId)
 }

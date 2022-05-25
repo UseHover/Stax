@@ -9,8 +9,10 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
+import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.database.ParserRepo
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +20,12 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
+import kotlin.math.floor
 
-class TransactionDetailsViewModel(application: Application, val repo: TransactionRepo, val actionRepo: ActionRepo, val contactRepo: ContactRepo, val accountRepo: AccountRepo) : AndroidViewModel(application) {
+class TransactionDetailsViewModel(
+    application: Application, val repo: TransactionRepo, val actionRepo: ActionRepo, val contactRepo: ContactRepo, val accountRepo: AccountRepo,
+    private val bonusRepo: BonusRepo, private val parserRepo: ParserRepo
+) : AndroidViewModel(application) {
 
     val transaction = MutableLiveData<StaxTransaction>()
     var account: LiveData<Account> = MutableLiveData()
@@ -29,11 +35,14 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
     var hoverTransaction = MutableLiveData<Transaction>()
     val messages = MediatorLiveData<List<UssdCallResponse>>()
     var sms: LiveData<List<UssdCallResponse>> = MutableLiveData()
+    val isExpectingSMS: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().also { it.value = false }
+    var bonusAmt: MediatorLiveData<Int> = MediatorLiveData()
 
     init {
         account = Transformations.switchMap(transaction) { getLiveAccount(it) }
         action = Transformations.switchMap(transaction) { getLiveAction(it) }
         contact = Transformations.switchMap(transaction) { getLiveContact(it) }
+        bonusAmt.addSource(transaction, this::getBonusAmount)
 
         messages.apply {
             addSource(transaction) { loadMessages(it) }
@@ -41,6 +50,7 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
         }
 
         sms = Transformations.map(transaction) { it?.let { loadSms(it) } }
+        isExpectingSMS.addSource(transaction, this::setExpectingSMS)
     }
 
     private fun getLiveAccount(txn: StaxTransaction?): LiveData<Account>? = if (txn != null)
@@ -78,7 +88,8 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
         hoverTransaction.value = t
         return generateSmsConvo(
             if (t.smsHits != null && t.smsHits.length() > 0) t.smsHits
-            else t.smsMisses)
+            else t.smsMisses
+        )
     }
 
     private fun generateSmsConvo(smsArr: JSONArray): ArrayList<UssdCallResponse> {
@@ -96,7 +107,7 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
         return smses
     }
 
-    fun wrapExtras(): HashMap<String, String>? {
+    fun wrapExtras(): HashMap<String, String> {
         val extras = HashMap<String, String>()
         if (transaction.value?.amount != null) extras[HoverAction.AMOUNT_KEY] = transaction.value!!.amount.toString()
         if (contact.value?.accountNumber != null) extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
@@ -105,5 +116,20 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
         if (transaction.value?.note != null) extras[HoverAction.NOTE_KEY] = transaction.value!!.note!!
         Timber.e("Extras %s", extras.keys)
         return extras
+    }
+
+    private fun setExpectingSMS(transaction: StaxTransaction) = viewModelScope.launch(Dispatchers.IO) {
+        val hasSMSParser = parserRepo.hasSMSParser(transaction.action_id)
+        if (transaction.isPending) isExpectingSMS.postValue(hasSMSParser)
+    }
+
+    private fun getBonusAmount(staxTransaction: StaxTransaction) = viewModelScope.launch(Dispatchers.IO) {
+        val bonus = bonusRepo.getBonusByPurchaseChannel(staxTransaction.channel_id)
+
+        if (bonus != null && staxTransaction.amount != null) {
+            val bonusAmount = floor(bonus.bonusPercent.times(staxTransaction.amount!!))
+            bonusAmt.postValue(bonusAmount.toInt())
+        } else
+            bonusAmt.postValue(0)
     }
 }

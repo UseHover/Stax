@@ -98,7 +98,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
                 }
             }
         }
-     }
+    }
 
     private fun updateCountryChannels(channels: List<Channel>?, countryCode: String?) {
         countryChannels.value = when {
@@ -140,9 +140,14 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
 
     @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
     fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
-        if (accounts.value.isNullOrEmpty() && !allChannels.value?.filter{ it.selected }.isNullOrEmpty()) {
-            createAccounts(allChannels.value!!.filter{ it.selected })
+        if (accounts.value.isNullOrEmpty() && !allChannels.value?.filter { it.selected }.isNullOrEmpty()) {
+            createAccounts(allChannels.value!!.filter { it.selected })
         }
+    }
+
+    fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val channel = repo.getChannel(channelId)
+        channel?.let { createAccounts(listOf(it)) }
     }
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
@@ -183,7 +188,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         }
     }
 
-    private fun standardizeString(value: String?) : String {
+    private fun standardizeString(value: String?): String {
         // a non null String always contains an empty string
         if (value == null) return ""
         return value.lowercase().replace(" ", "").replace("#", "").replace("-", "");
@@ -194,7 +199,8 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
             simReceiver?.let {
                 LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(it)
             }
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
         super.onCleared()
     }
 

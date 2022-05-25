@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -34,6 +35,7 @@ import com.hover.stax.utils.Utils
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 const val UUID = "uuid"
 
@@ -80,13 +82,20 @@ class TransactionDetailsFragment : Fragment() {
         log.show(childFragManager, USSDLogBottomSheetFragment::class.java.simpleName)
     }
 
-    private fun startObservers() {
-        viewModel.transaction.observe(viewLifecycleOwner) { showTransaction(it) }
-        viewModel.action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
-        viewModel.contact.observe(viewLifecycleOwner) { updateRecipient(it) }
-        viewModel.account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
-        viewModel.hoverTransaction.observe(viewLifecycleOwner) { it?.let { updateTransaction(it) } }
-        viewModel.messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
+    private fun startObservers() = with(viewModel) {
+        transaction.observe(viewLifecycleOwner) { showTransaction(it) }
+        action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
+        contact.observe(viewLifecycleOwner) { updateRecipient(it) }
+        account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
+        hoverTransaction.observe(viewLifecycleOwner) { it?.let { updateTransaction(it) } }
+        messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
+        bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
+
+        val observer = Observer<Boolean> {
+            Timber.i("Expecting sms $it")
+            action.value?.let { a -> updateAction(a) }
+        }
+        isExpectingSMS.observe(viewLifecycleOwner, observer)
     }
 
     private fun showTransaction(transaction: StaxTransaction?) {
@@ -137,7 +146,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun setVisibleFields(transaction: StaxTransaction) {
         binding.transactionHeader.mainMessage.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
         binding.statusInfo.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
-        binding.statusInfo.failureInfo.visibility = if (transaction.isSuccessful) GONE else VISIBLE
+//        binding.statusInfo.failureInfo.visibility = if (transaction.isSuccessful) GONE else VISIBLE //TODO root visibility is gone, test impact of this
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.recipInstitutionRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
@@ -152,7 +161,7 @@ class TransactionDetailsFragment : Fragment() {
         if (action.isOnNetwork) binding.details.recipInstitutionRow.visibility = GONE
         binding.details.institutionValue.setTitle(action.to_institution_name)
         viewModel.transaction.value?.let {
-            binding.statusInfo.longDescription.text = it.longDescription(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+            binding.statusInfo.longDescription.text = it.longDescription(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
             binding.details.typeValue.text = it.humanTransactionType(requireContext(), action.to_institution_name)
             binding.details.categoryValue.text = it.shortDescription(action, requireContext())
             if (action.transaction_type == HoverAction.C2B)
@@ -181,6 +190,7 @@ class TransactionDetailsFragment : Fragment() {
                     it,
                     ussdCallResponses?.last(),
                     viewModel.sms.value,
+                    viewModel.isExpectingSMS.value ?: false,
                     requireContext()
                 )
             }
@@ -268,6 +278,17 @@ class TransactionDetailsFragment : Fragment() {
     private fun retryBountyClicked() {
         viewModel.action.value?.let {
             (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
+        }
+    }
+
+    private fun showBonusAmount(amount: Int) = with(binding.details) {
+        val txn = viewModel.transaction.value
+
+        if(amount > 0 && (txn != null && txn.isSuccessful)){
+            bonusRow.visibility = VISIBLE
+            bonusAmount.text = amount.toString()
+        } else {
+            bonusRow.visibility = GONE
         }
     }
 
