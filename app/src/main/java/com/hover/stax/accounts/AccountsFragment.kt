@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsAdapter
 import com.hover.stax.channels.ChannelsViewModel
@@ -17,6 +18,7 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
@@ -24,7 +26,10 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
     private var _binding: FragmentAccountsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ChannelsViewModel by viewModel()
+    private val selectAdapter = ChannelsAdapter(this)
+
+    private val viewModel: ChannelsViewModel by sharedViewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAccountsBinding.inflate(inflater, container, false)
@@ -34,8 +39,6 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectAdapter = ChannelsAdapter(ArrayList(), this)
-
         binding.accountsRV.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())
             adapter = selectAdapter
@@ -44,13 +47,24 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
         binding.accountListCard.setOnClickIcon { findNavController().popBackStack() }
 
         with(viewModel) {
-            allChannels.observe(viewLifecycleOwner) { selectAdapter.updateList(it) }
-            simChannels.observe(viewLifecycleOwner) { selectAdapter.updateList(it) }
+            allChannels.observe(viewLifecycleOwner) { filterList(it) }
+            simChannels.observe(viewLifecycleOwner) { filterList(it) }
             accounts.observe(viewLifecycleOwner) {
                 if (it.isNotEmpty())
                     showAccountsList(it)
             }
         }
+    }
+
+    private fun filterList(channels:List<Channel>) {
+        val bonusChannelIds = bonusViewModel.bonuses.value?.map { it.purchaseChannel }
+
+        val list = if(!bonusChannelIds.isNullOrEmpty())
+            channels.filterNot { bonusChannelIds.contains(it.id) }
+        else
+            channels
+
+        selectAdapter.submitList(list)
     }
 
     override fun clickedChannel(channel: Channel) {

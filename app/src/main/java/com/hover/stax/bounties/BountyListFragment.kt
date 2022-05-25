@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
@@ -27,6 +29,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -41,6 +44,8 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
     private var dialog: StaxDialog? = null
 
+    private val bountyAdapter = BountyAdapter(this)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
 
@@ -53,8 +58,10 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         networkMonitor = NetworkMonitor(requireActivity())
 
         initRecyclerView()
+
         startObservers()
 
+        binding.bountiesRecyclerView.adapter = bountyAdapter
         binding.bountyCountryDropdown.isEnabled = false
         binding.countryFilter.apply {
             showProgressIndicator()
@@ -109,10 +116,10 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         dialog!!.showIt()
     }
 
-    private fun initCountryDropdown(channels: List<Channel>) {
-        binding.bountyCountryDropdown.setListener(this)
-        binding.bountyCountryDropdown.updateChoices(channels, bountyViewModel.currentCountryFilter.value)
-        binding.bountyCountryDropdown.isEnabled = true
+    private fun initCountryDropdown(channels: List<Channel>) = binding.bountyCountryDropdown.apply {
+        setListener(this@BountyListFragment)
+        updateChoices(channels, bountyViewModel.currentCountryFilter.value)
+        isEnabled = true
     }
 
     private fun initRecyclerView() {
@@ -120,21 +127,27 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     private fun startObservers() = with(bountyViewModel) {
-        val actionsObserver = object: Observer<List<HoverAction>> {
+        val actionsObserver = object : Observer<List<HoverAction>> {
             override fun onChanged(t: List<HoverAction>?) {
                 Timber.v("Actions update: ${t?.size}")
             }
-
         }
-        val txnObserver = object: Observer<List<StaxTransaction>> {
+
+        val txnObserver = object : Observer<List<StaxTransaction>> {
             override fun onChanged(t: List<StaxTransaction>?) {
                 Timber.v("Transactions update ${t?.size}")
             }
         }
 
+        val simsObserver = object: Observer<List<SimInfo>> {
+            override fun onChanged(t: List<SimInfo>?) {
+                Timber.v("Sims update ${t?.size}")
+            }
+        }
+
         actions.observe(viewLifecycleOwner, actionsObserver)
         transactions.observe(viewLifecycleOwner, txnObserver)
-        sims.observe(viewLifecycleOwner) { Timber.v("Sims update ${it.size}") }
+        sims.observe(viewLifecycleOwner, simsObserver)
         bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
         channels.observe(viewLifecycleOwner) {
             initCountryDropdown(it)
@@ -148,14 +161,28 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         if (!channels.isNullOrEmpty() && !bounties.isNullOrEmpty() &&
             bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country
         ) {
-            binding.msgNoBounties.visibility = View.GONE
-
-            val adapter = BountyChannelsAdapter(channels, bounties!!, this)
-            binding.bountiesRecyclerView.adapter = adapter
             hideLoadingState()
+
+            binding.msgNoBounties.visibility = View.GONE
+            binding.bountiesRecyclerView.visibility = View.VISIBLE
+
+            showBounties(channels, bounties!!)
         } else {
             binding.msgNoBounties.visibility = View.VISIBLE
+            binding.bountiesRecyclerView.visibility = View.GONE
         }
+    }
+
+    private fun showBounties(channels: List<Channel>, bounties: List<Bounty>) = lifecycleScope.launch {
+        val openBounties = bounties.filter { it.action.bounty_is_open || it.transactionCount != 0 }
+
+        val channelBounties = channels.filter { c ->
+            openBounties.any { it.action.channel_id == c.id }
+        }.map { channel ->
+            ChannelBounties(channel, openBounties.filter { it.action.channel_id == channel.id })
+        }
+
+        bountyAdapter.submitList(channelBounties)
     }
 
     override fun viewTransactionDetail(uuid: String?) {

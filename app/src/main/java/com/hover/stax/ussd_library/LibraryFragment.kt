@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
@@ -27,6 +28,8 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
+    private val libraryAdapter = LibraryChannelsAdapter()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLibraryBinding.inflate(inflater, container, false)
 
@@ -39,7 +42,11 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
 
         binding.countryCard.showProgressIndicator()
         binding.countryDropdown.setListener(this)
-        binding.shortcodes.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+
+        binding.shortcodes.apply {
+            layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+            adapter = libraryAdapter
+        }
 
         setupEmptyState()
         setSearchInputWatcher()
@@ -47,8 +54,14 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     }
 
     private fun setObservers() {
+        val observer = object: Observer<List<Channel>> {
+            override fun onChanged(t: List<Channel>?) {
+                Timber.i("Staged channels loaded ${t?.size}")
+            }
+        }
+
         with(viewModel) {
-            stagedChannels.observe(viewLifecycleOwner) { Timber.i("staged channels loaded")}
+            stagedChannels.observe(viewLifecycleOwner, observer)
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
             country.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
             allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, viewModel.country.value) } }
@@ -76,13 +89,13 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     private fun updateList(channels: List<Channel>) {
         binding.countryCard.hideProgressIndicator()
 
-        if (!channels.isNullOrEmpty()) showList(channels)
+        if (channels.isNotEmpty()) showList(channels)
         else if (viewModel.isInSearchMode()) showEmptyState()
         else showLoading()
     }
 
     private fun showList(channels: List<Channel>) {
-        binding.shortcodes.adapter = LibraryChannelsAdapter(channels)
+        libraryAdapter.submitList(channels)
         binding.emptyState.root.visibility = View.GONE
         binding.shortcodesParent.visibility = VISIBLE
     }

@@ -1,7 +1,6 @@
 package com.hover.stax.transactions
 
 import android.content.Context
-import androidx.compose.ui.text.capitalize
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
@@ -10,7 +9,7 @@ class TransactionStatus(val transaction: StaxTransaction) {
 
     fun getIcon(): Int {
         return when (transaction.status) {
-            Transaction.FAILED -> R.drawable.ic_info_red
+            Transaction.FAILED -> R.drawable.ic_error
             Transaction.PENDING -> R.drawable.ic_warning
             else -> R.drawable.ic_success
         }
@@ -54,7 +53,7 @@ class TransactionStatus(val transaction: StaxTransaction) {
             HoverAction.C2B -> c.getString(R.string.display_bill_payment)
             HoverAction.RECEIVE -> c.getString(R.string.display_money_received)
             else -> "Other"
-        }.capitalize()
+        }.replaceFirstChar { it.uppercase() }
     }
 
 

@@ -11,6 +11,8 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Observer
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -18,6 +20,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -26,6 +29,10 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
 
 import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.internal.filterList
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -35,11 +42,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
@@ -64,18 +72,18 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.channelsListCard.showProgressIndicator()
+        binding.channelsListCard.apply{
+            showProgressIndicator()
+            setTitle(getString(R.string.add_accounts_to_stax))
+        }
 
-        binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
         binding.selectedList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
             isNestedScrollingEnabled = false
         }
 
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
             adapter = selectAdapter
             isNestedScrollingEnabled = false
         }
@@ -84,12 +92,18 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         setUpMultiselect()
         setSearchInputWatcher()
 
-
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
         channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner, allChannelsObserver)
     }
+
+    private val allChannelsObserver = object: Observer<List<Channel>> {
+        override fun onChanged(t: List<Channel>?) {
+            Timber.e("Loaded all channels ${t?.size}")
+        }
+    }
+
     private fun setupEmptyState() {
         binding.emptyState.root.visibility = GONE
         binding.emptyState.informUs.setOnClickListener {
@@ -127,8 +141,11 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
         showSelected(channels.isNotEmpty())
 
-        if (channels.isNotEmpty())
-            binding.selectedList.adapter = ChannelsAdapter(channels, this)
+        if (channels.isNotEmpty()) {
+            val adapter = ChannelsAdapter(this)
+            binding.selectedList.adapter = adapter
+            adapter.submitList(channels)
+        }
     }
 
     private fun showSelected(visible: Boolean) {
@@ -140,10 +157,22 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            updateAdapter(Channel.sort(channels, false))
-            binding.emptyState.root.visibility = GONE
-            binding.channelsList.visibility = VISIBLE
-            binding.errorText.visibility = GONE
+            lifecycleScope.launch {
+                val bonusChannelIds = bonusViewModel.bonuses.value?.map { it.purchaseChannel }
+
+                val list = if(!bonusChannelIds.isNullOrEmpty())
+                    channels.filterNot { bonusChannelIds.contains(it.id) }
+                else
+                    channels
+
+                updateAdapter(list.filterNot { it.selected })
+
+                withContext(Dispatchers.Main) {
+                    binding.emptyState.root.visibility = GONE
+                    binding.channelsList.visibility = VISIBLE
+                    binding.errorText.visibility = GONE
+                }
+            }
         }
         else if(channelsViewModel.isInSearchMode()) showEmptyState()
         else setError(R.string.channels_error_nodata)
@@ -161,9 +190,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.errorText.visibility = GONE
     }
 
-
     private fun updateAdapter(channels: List<Channel>) {
-        selectAdapter.updateList(channels)
+        selectAdapter.submitList(channels)
     }
 
     private fun setError(message: Int) {
@@ -179,10 +207,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         else {
             binding.errorText.visibility = GONE
 
-            val selectedChannels = mutableListOf<Channel>()
-            tracker.selection.forEach { selection ->
-                selectedChannels.addAll(selectAdapter.channelList.filter { it.id.toLong() == selection })
-            }
+            val ids = tracker.selection
+            val selectedChannels = selectAdapter.currentList.filter { ids.contains(it.id.toLong()) }
 
             channelsViewModel.setChannelsSelected(selectedChannels)
             channelsViewModel.createAccounts(selectedChannels)
@@ -205,8 +231,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     }
 
     private fun runActions(channels: List<Channel>, checkBalance: Boolean) {
-        if (activity != null && isAdded)
+        if (activity != null && isAdded) {
             requireActivity().onBackPressed()
+            return
+        }
 
         if (checkBalance)
             balancesViewModel.actions.observe(viewLifecycleOwner) {
@@ -225,15 +253,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     //channels will be loaded only once after install then deferred to weekly.
     private fun refreshChannelsIfRequired() {
         if (!Utils.getBoolean(Constants.CHANNELS_REFRESHED, requireActivity())) {
-            Timber.i("Reloading channels")
             val wm = WorkManager.getInstance(requireContext())
             wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
 
             Utils.saveBoolean(Constants.CHANNELS_REFRESHED, true, requireActivity())
             return
         }
-
-        Timber.i("Channels already reloaded")
     }
 
     override fun onDestroyView() {

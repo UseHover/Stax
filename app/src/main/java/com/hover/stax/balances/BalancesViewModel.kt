@@ -11,8 +11,6 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -74,11 +72,9 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         runFlag.value = accountId
     }
 
-    fun setRunning(channel: Channel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val accounts = repo.getAccounts(channel.id)
-            runFlag.postValue(accounts.firstOrNull()?.id ?: channel.id)
-        }
+    fun setRunning(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
+        val accounts = repo.getAccounts(channel.id)
+        runFlag.postValue(accounts.firstOrNull()?.id ?: channel.id)
     }
 
     fun setAllRunning(c: Context) {

@@ -14,6 +14,7 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -32,22 +33,25 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
         setLoginObserver()
 
         updateManager = AppUpdateManagerFactory.create(this)
-        checkForUpdates()
+
+        if (!BuildConfig.DEBUG)
+            checkForUpdates()
     }
 
     //checks that the update has not stalled
     override fun onResume() {
         super.onResume()
-        updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
-            //if the update is downloaded but not installed, notify user to complete the update
-            if (updateInfo.installStatus() == InstallStatus.DOWNLOADED)
-                showSnackbarForCompleteUpdate()
+        if (!BuildConfig.DEBUG)
+            updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
+                //if the update is downloaded but not installed, notify user to complete the update
+                if (updateInfo.installStatus() == InstallStatus.DOWNLOADED)
+                    showSnackbarForCompleteUpdate()
 
-            //if an in-app update is already running, resume the update
-            if(updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                updateManager.startUpdateFlowForResult(updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE)
+                //if an in-app update is already running, resume the update
+                if (updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    updateManager.startUpdateFlowForResult(updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE)
+                }
             }
-        }
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
@@ -75,18 +79,21 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
     fun signIn() = startActivityForResult(loginViewModel.signInClient.signInIntent, LOGIN_REQUEST)
 
     private fun checkForUpdates() {
-        val updateInfoTask = updateManager.appUpdateInfo
+        if (BuildConfig.DEBUG) {
+            val updateInfoTask = updateManager.appUpdateInfo
 
-        updateInfoTask.addOnSuccessListener { updateInfo ->
-            val updateType = if ((updateInfo.clientVersionStalenessDays() ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE)
-                AppUpdateType.FLEXIBLE
-            else
-                AppUpdateType.IMMEDIATE
+            updateInfoTask.addOnSuccessListener { updateInfo ->
+                val updateType = if ((updateInfo.clientVersionStalenessDays()
+                        ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE
+                ) AppUpdateType.FLEXIBLE
+                else AppUpdateType.IMMEDIATE
 
-            if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(updateType))
-                requestUpdate(updateInfo, updateType)
-            else
-                Timber.i("No new update available")
+                if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(
+                        updateType
+                    )
+                ) requestUpdate(updateInfo, updateType)
+                else Timber.i("No new update available")
+            }
         }
     }
 
@@ -97,7 +104,7 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
                     showSnackbarForCompleteUpdate()
             }
             updateManager.registerListener(installListener!!)
-        } 
+        }
 
         updateManager.startUpdateFlowForResult(updateInfo, updateType, this, UPDATE_REQUEST_CODE)
     }

@@ -10,11 +10,10 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
-import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.login.AbstractGoogleAuthActivity
-import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransactionType
@@ -23,7 +22,6 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import io.sentry.util.StringUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -112,7 +110,8 @@ abstract class AbstractSDKCaller : AbstractGoogleAuthActivity(), PushNotificatio
             }
 
             selectedAccount?.run { hsb.setAccountId(id.toString()) }
-            transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
+            transferViewModel.contact.value?.let {
+                addRecipientInfo(hsb) }
         }
 
         runAction(hsb)

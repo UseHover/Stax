@@ -9,6 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
+import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -28,12 +29,15 @@ object AnalyticsUtil {
 		logAmplitude(event, null, context)
 		logFirebase(event, null, context)
 		logAppsFlyer(event, null, context)
+		logUXCamIfRequired(event)
+
 	}
 
 	@JvmStatic
 	fun logAnalyticsEvent(event: String, context: Context, excludeAmplitude: Boolean) {
 		logFirebase(event, null, context)
 		logAppsFlyer(event, null, context)
+		logUXCamIfRequired(event)
 	}
 
 	@JvmStatic
@@ -41,6 +45,13 @@ object AnalyticsUtil {
 		logAmplitude(event, args, context)
 		logFirebase(event, args, context)
 		logAppsFlyer(event, args, context)
+		logUXCamIfRequired(event)
+	}
+
+	private fun logUXCamIfRequired(event: String) {
+		if(event.lowercase().contains("visited")) {
+			UXCam.tagScreenName(event)
+		}
 	}
 
 	private fun logAmplitude(event: String, args: JSONObject?, context: Context) {

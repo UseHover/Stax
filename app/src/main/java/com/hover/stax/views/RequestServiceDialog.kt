@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.hover.stax.R
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.UIHelper
 import org.json.JSONObject
 
 open class RequestServiceDialog (private var ctx: Context, private var mView: View) : AlertDialog(ctx) {

@@ -14,6 +14,7 @@ import com.hover.stax.accounts.DUMMY
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.login.LoginViewModel
@@ -26,6 +27,7 @@ import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
+import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -37,6 +39,8 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     private val transferViewModel: TransferViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val loginViewModel: LoginViewModel by viewModel()
+    private val bonusViewModel: BonusViewModel by viewModel()
+
     private val bountyRequest = 3000
 
     private lateinit var binding: ActivityMainBinding
@@ -58,6 +62,8 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         checkForFragmentDirection(intent)
         observeForAppReview()
         setGoogleLoginInterface(this)
+
+        bonusViewModel.getBonuses()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -145,7 +151,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
             transferViewModel.reset()
-            navHelper.showTxnDetails(data.extras!!.getString("uuid")!!)
+            navHelper.showTxnDetails(data.extras!!.getString("uuid")!!, true)
         }
 
 //        else {

@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
+import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
@@ -12,14 +13,16 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
+import kotlin.math.floor
 
-class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
+class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Application, val bonusRepo: BonusRepo) : ViewModel() {
 
     val transaction = MutableLiveData<StaxTransaction>()
     val messages = MediatorLiveData<List<UssdCallResponse>>()
     var action: LiveData<HoverAction> = MutableLiveData()
     var contact: LiveData<StaxContact> = MutableLiveData()
     var sms: LiveData<List<UssdCallResponse>> = MutableLiveData()
+    var bonusAmt = MutableLiveData(0)
 
     init {
         action = Transformations.switchMap(transaction) { getLiveAction(it) }
@@ -57,18 +60,32 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
         messages.value = UssdCallResponse.generateConvo(Hover.getTransaction(txn.uuid, application), a)
     }
 
-    private fun loadSms(txn: StaxTransaction): List<UssdCallResponse>? {
+    private fun loadSms(txn: StaxTransaction): List<UssdCallResponse> {
+        getBonusAmount(txn)
+
         val t = Hover.getTransaction(txn.uuid, application)
         return generateSmsConvo(if (t.smsHits != null && t.smsHits.length() > 0) t.smsHits else t.smsMisses)
     }
 
     private fun generateSmsConvo(smsArr: JSONArray): ArrayList<UssdCallResponse> {
         val smses = ArrayList<UssdCallResponse>()
+
         for (i in 0 until smsArr.length()) {
             val sms = getSMSMessageByUUID(smsArr.optString(i), application)
             Timber.e(sms.uuid)
             smses.add(UssdCallResponse(null, sms.msg))
         }
+
         return smses
+    }
+
+    fun getBonusAmount(staxTransaction: StaxTransaction) = viewModelScope.launch(Dispatchers.IO) {
+        val bonus = bonusRepo.getBonusByPurchaseChannel(staxTransaction.channel_id)
+
+        if (bonus != null) {
+            val bonusAmount = floor(bonus.bonusPercent.times(staxTransaction.amount))
+            bonusAmt.postValue(bonusAmount.toInt())
+        } else
+            bonusAmt.postValue(0)
     }
 }

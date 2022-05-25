@@ -199,9 +199,18 @@ public class StaxTransaction {
     public TransactionStatus getFullStatus() {
         return new TransactionStatus(this);
     }
-    public Boolean  isFailed(){ return status.equals(Transaction.FAILED); }
-    public Boolean isSuccessful() {return status.equals(Transaction.SUCCEEDED);}
-    public Boolean isBalanceType() {return transaction_type.equals(HoverAction.BALANCE);}
+
+    public Boolean isFailed() {
+        return status.equals(Transaction.FAILED);
+    }
+
+    public Boolean isSuccessful() {
+        return status.equals(Transaction.SUCCEEDED);
+    }
+
+    public Boolean isBalanceType() {
+        return transaction_type.equals(HoverAction.BALANCE);
+    }
 
     public boolean isRecorded() {
         return environment == HoverParameters.MANUAL_ENV;
@@ -219,10 +228,9 @@ public class StaxTransaction {
     }
 
     public String getDisplayBalance() {
-        if(!balance.isEmpty()) {
+        if (!balance.isEmpty()) {
             return Utils.formatAmount(balance);
-        }
-        else return balance;
+        } else return balance;
     }
 
     @NotNull

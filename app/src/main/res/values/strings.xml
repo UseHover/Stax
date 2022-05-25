@@ -1,6 +1,7 @@
 <resources>
     <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
     <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
+    <string name="uxcam_key" public="false" translatable="false">obijrn00q2aip9z</string>
     <string name="app_name" translatable="false">Stax</string>
     <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
     <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
@@ -221,6 +222,11 @@
     <string name="perm_progress2">Step 2 of 2: Accessibility permission</string>
     <string name="perm_cta1">Show settings</string>
     <string name="perm_cta2">Show settings again</string>
+
+    <!-- Share Excitement -->
+    <string name="share_desc">Share Stax with your friends</string>
+    <string name="share">Share</string>
+    <string name="transaction_successful">Transaction successful</string>
 
     <!-- Hover Session -->
     <string name="balance_msg">Checking %1$s balance</string>
@@ -710,5 +716,19 @@
     <string name="login_dialog_desc">Please sign in to Stax with Google to be able to receive marketing updates.</string>
     <string name="update_downloaded">An update has just been downloaded.</string>
     <string name="restart">Restart</string>
+    <string name="get_rewarded">Get Rewarded</string>
+
+    <!-- Bonus airtime -->
+    <string name="bonus_airtime_applied">Bonus airtime will be applied.</string>
+    <string name="top_up">Top Up</string>
+    <string name="bonus_amount_label">Bonus Amount</string>
+    <string name="bonus_placeholder">Get 8% bonus when you buy airtime with Stax.</string>
+    <string name="valid_account_bonus_msg">You\’ll get credited at least 3% bonus airtime immediately after a successful purchase of Ksh 50 or more airtime.</string>
+    <string name="invalid_account_bonus_msg">Use your MPESA to buy airtime now and get instant 3%+ bonus.</string>
+    <string name="top_up_with_mpesa">Top up using Mpesa</string>
+    <string name="congratulations">Congratulations</string>
+    <string name="get_extra_airtime">Get Extra Airtime</string>
+    <string name="learn_more"><a href="https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/">T&amp;Cs apply</a></string>
+
 
 </resources>
