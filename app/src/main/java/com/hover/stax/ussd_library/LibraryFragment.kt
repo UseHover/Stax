@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.Channel
@@ -102,11 +103,6 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
         }
         binding.emptyState.root.visibility = VISIBLE
         binding.shortcodesParent.visibility = View.GONE
-    }
-
-    private fun showLoading() {
-        binding.countryCard.showProgressIndicator()
-        binding.emptyState.root.visibility = View.GONE
     }
 
     override fun countrySelect(countryCode: String) {

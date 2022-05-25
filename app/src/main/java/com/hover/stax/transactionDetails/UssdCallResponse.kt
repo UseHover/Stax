@@ -22,8 +22,7 @@ class UssdCallResponse(sent: String?, response: String?) {
 					i
 				) != null
 			) {
-				var tm: UssdCallResponse
-				tm = if (i == 0 && t.myType != HoverAction.RECEIVE) UssdCallResponse(
+				val tm: UssdCallResponse = if (i == 0 && t.myType != HoverAction.RECEIVE) UssdCallResponse(
 					a.root_code,
 					if (t.ussdMessages != null) t.ussdMessages.optString(i) else null,
 					true

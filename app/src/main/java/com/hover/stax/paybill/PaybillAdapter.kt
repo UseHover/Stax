@@ -9,6 +9,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.ItemPaybillSavedBinding
 import com.hover.stax.utils.GlideApp
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.UIHelper.loadImage
 
 class PaybillAdapter(private val paybills: List<Paybill>, private val clickListener: ClickListener) : RecyclerView.Adapter<PaybillAdapter.PaybillViewHolder>() {
 
@@ -38,7 +39,7 @@ class PaybillAdapter(private val paybills: List<Paybill>, private val clickListe
                 binding.iconLayout.visibility = View.GONE
                 binding.billLogo.visibility = View.VISIBLE
 
-                UIHelper.loadImage(binding.root.context, paybill.logoUrl, binding.billLogo)
+                binding.billLogo.loadImage(binding.root.context, paybill.logoUrl)
             }
 
             binding.root.setOnClickListener { clickListener.onSelectPaybill(paybill) }

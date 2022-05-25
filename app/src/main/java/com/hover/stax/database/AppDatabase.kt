@@ -8,6 +8,8 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDao
+import com.hover.stax.bonus.Bonus
+import com.hover.stax.bonus.BonusDao
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
@@ -27,7 +29,7 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [
-        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, StaxUser::class
+        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, StaxUser::class, Bonus::class
     ],
     version = 39,
     autoMigrations = [
@@ -53,6 +55,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun paybillDao(): PaybillDao
 
     abstract fun userDao(): UserDao
+
+    abstract fun bonusDao(): BonusDao
 
     companion object {
 

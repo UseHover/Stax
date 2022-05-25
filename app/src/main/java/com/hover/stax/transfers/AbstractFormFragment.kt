@@ -2,9 +2,7 @@ package com.hover.stax.transfers
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -21,9 +19,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
-import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.accounts.PLACEHOLDER
+import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.hover.AbstractHoverCallerActivity
@@ -42,11 +39,11 @@ import timber.log.Timber
 abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
-    val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private  val balancesViewModel: BalancesViewModel by sharedViewModel()
     val accountsViewModel: AccountsViewModel by sharedViewModel()
     val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
 
-    var editCard: View? = null
+    private var editCard: View? = null
     var summaryCard: StaxCardView? = null
     lateinit var payWithDropdown: AccountDropdown
     lateinit var fab: Button
@@ -79,9 +76,11 @@ abstract class AbstractFormFragment : Fragment() {
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         setupEmptyObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
-        balancesViewModel.balanceAction.observe(viewLifecycleOwner) { it?.let {
-            callHover(accountsViewModel.activeAccount.value, it)
-        } }
+        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
+            it?.let {
+                callHover(accountsViewModel.activeAccount.value, it)
+            }
+        }
     }
 
     private fun callHover(account: Account?, action: HoverAction) {
@@ -144,9 +143,9 @@ abstract class AbstractFormFragment : Fragment() {
 
     private fun chooseFabText(isEditing: Boolean): String {
         return if (isEditing) getString(R.string.btn_continue)
-            else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
-            else if (type == HoverAction.C2B) getString(R.string.fab_transfernow)
-            else getString(R.string.fab_transfernow)
+        else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
+        else if (type == HoverAction.C2B) getString(R.string.fab_transfernow)
+        else getString(R.string.fab_transfernow)
     }
 
     open fun startContactPicker(c: Context) {
@@ -162,7 +161,9 @@ abstract class AbstractFormFragment : Fragment() {
         if (isGranted) {
             log(getString(R.string.contact_perm_success))
             contactPickerLauncher.launch(null)
-        } else { showError(R.string.toast_error_contactperm, R.string.contact_perm_denied) }
+        } else {
+            showError(R.string.toast_error_contactperm, R.string.contact_perm_denied)
+        }
     }
 
     private val contactPickerLauncher = registerForActivityResult(ActivityResultContracts.PickContact()) { data ->

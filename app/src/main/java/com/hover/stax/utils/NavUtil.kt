@@ -10,8 +10,8 @@ object NavUtil {
         currentDestination?.getAction(navDirections.actionId)?.let { navigate(navDirections) }
     }
 
-    fun showTransactionDetailsFragment(navController: NavController, uuid: String) {
-        navigate(navController, MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid))
+    fun showTransactionDetailsFragment(navController: NavController, uuid: String, isNewTransaction: Boolean? = false) {
+        navigate(navController, MainNavigationDirections.actionGlobalTxnDetailsFragment(uuid, isNewTransaction!!))
     }
 
     fun navigateTransfer(navController: NavController, type: String, accountId: String? = null, amount: String? = null, contactId: String? = null) {

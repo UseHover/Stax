@@ -78,10 +78,6 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         setType(s.type)
     }
 
-    override fun highlightAccount(account: Account) {
-        activeAccount.postValue(account)
-    }
-
     fun reset() {
         activeAccount.value = accounts.value?.firstOrNull { it.isDefault }
     }
@@ -98,5 +94,9 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             a.isDefault = true
             repo.update(a)
         }
+    }
+
+    override fun highlightAccount(account: Account, channelOverride: Int) {
+        activeAccount.postValue(account)
     }
 }

@@ -11,7 +11,6 @@ import com.hover.stax.utils.Utils
 class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : AndroidViewModel(application) {
 
     var showBalances = MutableLiveData(true)
-
     var userRequestedBalanceAccount = MutableLiveData<Account?>()
     var balanceAction: LiveData<HoverAction?> = MutableLiveData()
 

@@ -10,9 +10,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
-import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.UIHelper.loadImage
 
 class ActionDropdownAdapter(val actions: List<HoverAction>, context: Context) : ArrayAdapter<HoverAction>(context, 0, actions) {
 
@@ -42,21 +41,15 @@ class ActionDropdownAdapter(val actions: List<HoverAction>, context: Context) : 
 
     class ActionViewHolder(val binding: StaxSpinnerItemWithLogoBinding) {
 
-        private var id: TextView? = null
-        private var logo: ImageView? = null
-        private var channelText: AppCompatTextView? = null
-
-        init {
-            id = binding.serviceItemId
-            logo = binding.serviceItemImageId
-            channelText = binding.serviceItemNameId
-        }
+        private var id: TextView = binding.serviceItemId
+        private var logo: ImageView = binding.serviceItemImageId
+        private var channelText: AppCompatTextView = binding.serviceItemNameId
 
         fun setAction(action: HoverAction, baseUrl: String) {
-            id?.text = action.id.toString()
-            channelText?.text = action.toString()
+            id.text = action.id.toString()
+            channelText.text = action.toString()
             val logoUrl = baseUrl.plus(action.to_institution_logo)
-            UIHelper.loadImage(binding.root.context, logoUrl, logo!!)
+            logo.loadImage(binding.root.context, logoUrl)
         }
     }
 

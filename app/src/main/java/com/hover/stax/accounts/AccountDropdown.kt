@@ -19,7 +19,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private var showSelected: Boolean = true
     private var highlightListener: HighlightListener? = null
 
-    var highlightedAccount: Account? = null
+    private var highlightedAccount: Account? = null
 
     init {
         getAttrs(context, attributeSet)
@@ -42,7 +42,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun accountUpdate(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty()) {
+        if (accounts.isNotEmpty()) {
             updateChoices(accounts.toMutableList())
         } else if (!hasExistingContent()) {
             setState(context.getString(R.string.accounts_error_no_accounts), NONE)
@@ -79,13 +79,16 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         onSelect(accounts.firstOrNull { it.isDefault })
     }
 
+
     private fun onSelect(account: Account?) {
         setDropdownValue(account)
         if (account != null && account.id != 0)
-            account.let { highlightListener?.highlightAccount(it) }
+            account?.let { highlightListener?.highlightAccount(it, channelOverride) }
         else
             findNavController().navigate(R.id.navigation_linkAccount)
     }
+
+    fun setCurrentAccount(account: Account? = null, channelId: Int = 0) = onSelect(account, channelId)
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
 
@@ -106,14 +109,14 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun setState(actions: List<HoverAction>, viewModel: AccountsViewModel) {
         when {
-            viewModel.activeAccount.value != null && (actions.isNullOrEmpty()) -> setState(
+            viewModel.activeAccount.value != null && (actions.isEmpty()) -> setState(
                 context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
                 ), ERROR
             )
 
-            !actions.isNullOrEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
+            actions.isNotEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
                 setState(
                     context.getString(
                         if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
@@ -126,6 +129,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     interface HighlightListener {
-        fun highlightAccount(account: Account)
+        fun highlightAccount(account: Account, channelOverride: Int = 0)
     }
 }

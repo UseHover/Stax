@@ -28,6 +28,7 @@ internal class NonInteractiveTutorialFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_non_interactive_tutorial)), requireActivity())
 
         setTopBarClicks()

@@ -1,17 +1,15 @@
 package com.hover.stax.transactionDetails
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -22,9 +20,8 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
-import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavHelper
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
@@ -32,6 +29,7 @@ import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.UIHelper.loadImage
 import com.hover.stax.utils.Utils
 import org.json.JSONException
 import org.json.JSONObject
@@ -113,14 +111,15 @@ class TransactionDetailsFragment : Fragment() {
         statusIcon.setImageResource(transaction.getIcon())
     }
 
-    private fun shouldShowNewBalance(transaction: StaxTransaction) : Boolean {
+    private fun shouldShowNewBalance(transaction: StaxTransaction): Boolean {
         return !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
     }
 
     private fun updateDetails(transaction: StaxTransaction) = with(binding.details) {
         detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
         viewModel.action.value?.let {
-            categoryValue.text = transaction.shortDescription(viewModel.action.value, requireContext()) }
+            categoryValue.text = transaction.shortDescription(viewModel.action.value, requireContext())
+        }
 
         statusValue.apply {
             text = transaction.humanStatus(requireContext())
@@ -159,7 +158,7 @@ class TransactionDetailsFragment : Fragment() {
             if (action.transaction_type == HoverAction.C2B)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
         }
-        UIHelper.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo, binding.statusInfo.institutionLogo)
+        binding.statusInfo.institutionLogo.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo)
     }
 
     private fun updateAccount(account: Account) {
@@ -206,29 +205,27 @@ class TransactionDetailsFragment : Fragment() {
                 setupContactSupportButton(transaction.action_id, button)
             else if (transaction.isRetryable)
                 createRetryListener(transaction, button)
-        }
-        else binding.statusInfo.transactionRetryButtonLayoutId.visibility = GONE
+        } else binding.statusInfo.btnRetry.visibility = GONE
     }
 
     private fun setupRetryBountyButton() {
-        val bountyButtonsLayout = binding.statusInfo.transactionRetryButtonLayoutId
-        val retryButton = binding.statusInfo.btnRetry
-        bountyButtonsLayout.visibility = VISIBLE
-        retryButton.setOnClickListener { retryBountyClicked() }
+        binding.statusInfo.btnRetry.apply {
+            visibility = VISIBLE
+            setOnClickListener{ retryBountyClicked() }
+        }
     }
 
-    private fun showButtonToClick(): TextView {
-        val transactionButtonsLayout = binding.statusInfo.transactionRetryButtonLayoutId
-        val retryButton = binding.statusInfo.btnRetry
-        transactionButtonsLayout.visibility = VISIBLE
-        return retryButton
+    private fun showButtonToClick(): Button {
+        return binding.statusInfo.btnRetry.also { it.visibility = VISIBLE }
     }
 
     private fun createRetryListener(transaction: StaxTransaction, retryButton: TextView) {
         retryButton.setOnClickListener {
             if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
                 UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
-            else { retry(transaction) }
+            else {
+                retry(transaction)
+            }
         }
     }
 
@@ -237,12 +234,16 @@ class TransactionDetailsFragment : Fragment() {
         if (transaction.transaction_type == HoverAction.BALANCE) {
             (requireActivity() as AbstractHoverCallerActivity)
                 .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
-        } else { navToTransferDetail(transaction) }
+        } else {
+            navToTransferDetail(transaction)
+        }
     }
 
     private fun navToTransferDetail(transaction: StaxTransaction) {
-        NavUtil.navigateTransfer(findNavController(), transaction.transaction_type,
-            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id)
+        NavUtil.navigateTransfer(
+            findNavController(), transaction.transaction_type,
+            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id
+        )
     }
 
     private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {

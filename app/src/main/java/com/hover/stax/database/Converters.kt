@@ -1,8 +1,6 @@
 package com.hover.stax.database
 
 import androidx.room.TypeConverter
-import java.lang.StringBuilder
-import java.util.*
 
 class Converters {
 

@@ -14,6 +14,7 @@ import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -21,7 +22,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     val activeAccount = MutableLiveData<Account?>()
     val amount = MutableLiveData<String?>()
-    val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
+    private val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
     val requestee = MutableLiveData<StaxContact?>()
     var requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String?>()
@@ -93,10 +94,12 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun saveRequest() {
         if (formulatedRequest.value != null) {
-            val request = Request(formulatedRequest.value!!, requestee.value, getApplication())
-            repo.insert(request)
+            viewModelScope.launch(Dispatchers.IO) {
+                val request = Request(formulatedRequest.value!!, requestee.value, getApplication())
+                repo.insert(request)
 
-            finalRequests.value = listOf(request)
+                finalRequests.postValue(listOf(request))
+            }
         }
     }
 

@@ -91,7 +91,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
 
     private fun onSimUpdate(countryCodes: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (!countryCodes.isNullOrEmpty()) {
+            if (countryCodes.isNotEmpty()) {
                 for (code in countryCodes) {
                     if (repo.getChannelsByCountry(code).isNotEmpty())
                         updateCountry(code)
@@ -179,11 +179,11 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     private fun runFilter(channels: List<Channel>, value: String?) {
         viewModelScope.launch {
             filteredChannels.value =
-                channels.filter { standarizeString(it.toString()).contains(standarizeString(value)) }
+                channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) }
         }
     }
 
-    private fun standarizeString(value: String?) : String {
+    private fun standardizeString(value: String?) : String {
         // a non null String always contains an empty string
         if (value == null) return ""
         return value.lowercase().replace(" ", "").replace("#", "").replace("-", "");

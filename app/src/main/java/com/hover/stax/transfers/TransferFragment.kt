@@ -3,19 +3,27 @@ package com.hover.stax.transfers
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
+<<<<<<< HEAD
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isEmpty
+=======
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+>>>>>>> development
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.actions.ActionSelect
+<<<<<<< HEAD
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
@@ -23,12 +31,34 @@ import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
+=======
+import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.bonus.Bonus
+import com.hover.stax.bonus.BonusViewModel
+import com.hover.stax.contacts.ContactInput
+import com.hover.stax.contacts.StaxContact
+import com.hover.stax.databinding.FragmentTransferBinding
+import com.hover.stax.home.MainActivity
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
+import com.hover.stax.views.AbstractStatefulInput
+import com.hover.stax.views.Stax2LineItem
+import com.hover.stax.views.StaxTextInputLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+>>>>>>> development
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
+<<<<<<< HEAD
+=======
+    private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
+>>>>>>> development
     private lateinit var transferViewModel: TransferViewModel
 
     private val args by navArgs<TransferFragmentArgs>()
@@ -36,7 +66,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
 
     @CallSuper
@@ -49,13 +78,26 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setTransactionType(args.transactionType)
 
+<<<<<<< HEAD
+=======
+        args.transactionUUID?.let {
+            transferViewModel.autoFill(it)
+        }
+
+>>>>>>> development
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+<<<<<<< HEAD
+=======
+
+        transferViewModel.reset()
+>>>>>>> development
         init(binding.root)
+
         startObservers(binding.root)
         startListeners()
         fillFromArgs()
@@ -116,12 +158,23 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
+<<<<<<< HEAD
     }
 
     private fun observeAccountList() {
         accountsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+=======
+        observeAutoFillToInstitution()
+
+        with(transferViewModel) {
+            contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
+            request.observe(viewLifecycleOwner) {
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+                it?.let { view(it) }
+            }
+>>>>>>> development
         }
     }
 
@@ -140,6 +193,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
             }
+<<<<<<< HEAD
+=======
+            recipientInstitutionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
+
+            checkForBonus()
+>>>>>>> development
         }
     }
 
@@ -152,10 +211,33 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
+<<<<<<< HEAD
     private fun observeSelectedContact() {
         transferViewModel.contact.observe(viewLifecycleOwner) { it?.let {
             binding.summaryCard.recipientValue.setContact(it)
         } }
+=======
+    private fun observeAccountList() = with(channelsViewModel) {
+        accounts.observe(viewLifecycleOwner) {
+            if (it.isEmpty())
+                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+
+            if (args.channelId != 0) { //to be used with bonus flow. Other uses will require a slight change in this
+                updateAccountDropdown()
+                return@observe
+            }
+
+            if (args.transactionUUID == null) {
+                accountDropdown.setCurrentAccount()
+                return@observe
+            }
+        }
+
+        if(args.transactionType == HoverAction.AIRTIME) {
+            val observer = Observer<Account> { it?.let { setChannel(it) } }
+            activeAccount.observe(viewLifecycleOwner, observer)
+        }
+>>>>>>> development
     }
 
     private fun observeAmount() {
@@ -286,6 +368,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         action?.let { actionSelectViewModel.setActiveAction(it) }
     }
 
+<<<<<<< HEAD
     private fun updateNonStandardInputs(variables: LinkedHashMap<String, String>) {
         val recyclerView = binding.editCard.nonStandardVariableRecyclerView
         nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, recyclerView)
@@ -298,6 +381,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
         nonStandardSummaryAdapter = NonStandardSummaryAdapter(variables)
         recyclerView.adapter = nonStandardSummaryAdapter
+=======
+    private fun updateNonStandardForEntryList(variables: LinkedHashMap<String, String>) {
+        binding.editCard.nonStandardVariableRecyclerView.also {
+            nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this@TransferFragment, it)
+            it.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            it.adapter = nonStandardVariableAdapter
+        }
+    }
+
+    private fun updateNonStandardForSummaryCard(variables: LinkedHashMap<String, String>) {
+        binding.summaryCard.nonStandardSummaryRecycler.apply {
+            layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            adapter = NonStandardSummaryAdapter(variables)
+        }
+>>>>>>> development
     }
 
     private fun setRecipientHint(action: HoverAction) {
@@ -318,6 +416,87 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
+<<<<<<< HEAD
+=======
+    private fun completeAutoFilling(data: AutofillData) {
+        channelsViewModel.setChannelFromId(data.channelId, data.accountId)
+        transferViewModel.contact.value?.let { contactInput.setText(it.shortName(), false) }
+        amountInput.setText(transferViewModel.amount.value)
+        transferViewModel.setEditing(data.isEditing)
+        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, data.institutionId.toString()), AbstractStatefulInput.INFO)
+    }
+
+    private fun checkForBonus() {
+        if (args.transactionType == HoverAction.AIRTIME) {
+            val bonuses = bonusViewModel.bonuses.value
+            if (!bonuses.isNullOrEmpty())
+                showBonusBanner(bonuses)
+        }
+    }
+
+    private fun showBonusBanner(bonuses: List<Bonus>) = with(binding.bonusLayout) {
+        val channelId = bonuses.first().userChannel
+
+        cardBonus.visibility = View.VISIBLE
+        val bonus = bonuses.first()
+        val usingBonusChannel = channelsViewModel.activeChannel.value?.id == bonus.purchaseChannel
+
+        learnMore.movementMethod = LinkMovementMethod.getInstance()
+
+        if (usingBonusChannel) {
+            title.text = getString(R.string.congratulations)
+            message.text = getString(R.string.valid_account_bonus_msg)
+            cta.visibility = View.GONE
+        } else {
+            title.text = getString(R.string.get_extra_airtime)
+            message.text = getString(R.string.invalid_account_bonus_msg)
+            cta.apply {
+                visibility = View.VISIBLE
+                text = getString(R.string.top_up_with_mpesa)
+                setOnClickListener {
+                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                    channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channelId)
+                }
+            }
+        }
+    }
+
+    override fun showEdit(isEditing: Boolean) {
+        super.showEdit(isEditing)
+
+        if (!isEditing)
+            binding.bonusLayout.cardBonus.visibility = View.GONE
+        else
+            checkForBonus()
+    }
+
+    /**
+     * Handles instances where the active account is different from the bonus account to be used.
+     * ChannelId is fetched from the bonus object's user channel field.
+     * Channel and respective accounts are fetched before being passed to account dropdown
+     */
+    private fun updateAccountDropdown() = lifecycleScope.launch(Dispatchers.IO) {
+        val bonus = bonusViewModel.getBonusByPurchaseChannel(args.channelId)
+
+        bonus?.let {
+            val channel = channelsViewModel.getChannel(bonus.userChannel)
+            channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channel!!.id)
+        } ?: run { Timber.e("Bonus cannot be found") }
+    }
+
+    /**
+     * Monitors changes in active account from account dropdown and sets bonus channel
+     */
+    private fun setChannel(account: Account) = lifecycleScope.launch(Dispatchers.IO) {
+        val bonus = bonusViewModel.getBonusByUserChannel(account.channelId)
+
+        if (bonus != null) {
+            val channel = channelsViewModel.getChannel(bonus.purchaseChannel)
+            channelsViewModel.setActiveChannel(channel!!)
+        }
+    }
+
+>>>>>>> development
     override fun onDestroyView() {
         super.onDestroyView()
 

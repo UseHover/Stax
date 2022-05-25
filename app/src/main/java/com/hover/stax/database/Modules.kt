@@ -7,6 +7,8 @@ import com.hover.stax.actions.ActionRepo
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bonus.BonusRepo
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.accounts.AccountsViewModel
@@ -53,6 +55,8 @@ val appModule = module {
     viewModel { FinancialTipsViewModel() }
     viewModel { PaybillViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { RequestDetailViewModel(get(), get(), get()) }
+    viewModel { BonusViewModel(get(), get()) }
+
 }
 
 val dataModule = module(createdAtStart = true) {
@@ -68,6 +72,8 @@ val dataModule = module(createdAtStart = true) {
     single { ScheduleRepo(get()) }
     single { PaybillRepo(get()) }
     single { UserRepo(get()) }
+    single { BonusRepo(get()) }
+    single { ParserRepo(get()) }
 }
 
 val networkModule = module {

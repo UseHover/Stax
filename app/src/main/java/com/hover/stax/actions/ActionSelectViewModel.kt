@@ -24,7 +24,7 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun setActiveActionIfOutOfDate(actions: List<HoverAction>) {
-        if (!actions.isNullOrEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
+        if (actions.isNotEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
             val action = actions.first()
             activeAction.postValue(action)
         }
@@ -55,10 +55,9 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun updateNonStandardVariables(key: String, value: String) {
-        var map = nonStandardVariables.value
-        if (map == null) map = linkedMapOf()
+        val map = nonStandardVariables.value ?: linkedMapOf()
         map[key] = value
-        nonStandardVariables.postValue(map!!)
+        nonStandardVariables.postValue(map)
     }
 
      fun wrapExtras(): HashMap<String, String> {
