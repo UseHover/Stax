@@ -8,13 +8,14 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : ViewModel() {
+class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) : ViewModel() {
 
     private val bonusList = MutableLiveData<List<Bonus>>(emptyList())
     private val db = Firebase.firestore
@@ -47,7 +48,7 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
     }
 
     private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
-        repo.updateBonuses(bonuses.filter { dbRepo.getChannel(it.purchaseChannel) != null })
+        repo.updateBonuses(bonuses.filter { channelRepo.getChannel(it.purchaseChannel) != null })
     }
 
     fun getBonuses() = viewModelScope.launch(Dispatchers.IO) {
@@ -61,8 +62,8 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
     fun getBonusByUserChannel(channelId: Int): Bonus? = repo.getBonusByUserChannel(channelId)
 
     private fun checkIfEligible(bonusItems: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
-        val simHnis = dbRepo.presentSims.map { it.osReportedHni }
-        val bonusChannels = dbRepo.getChannelsByIds(bonusItems.map { it.purchaseChannel })
+        val simHnis = channelRepo.presentSims.map { it.osReportedHni }
+        val bonusChannels = channelRepo.getChannelsByIds(bonusItems.map { it.purchaseChannel })
 
         val showBonuses = hasValidSim(simHnis, bonusChannels)
         bonusList.postValue(if (showBonuses) bonusItems else emptyList())

@@ -11,7 +11,7 @@ import com.hover.stax.schedules.ScheduleRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RequestDetailViewModel(val repo: AccountRepo, val requestRepo: RequestRepo, val contactRepo: ContactRepo) : ViewModel() {
+class RequestDetailViewModel(val repo: AccountRepo, private val requestRepo: RequestRepo, val contactRepo: ContactRepo) : ViewModel() {
 
     val request: MutableLiveData<Request> = MutableLiveData()
     var account: LiveData<Account> = MutableLiveData()
@@ -22,8 +22,8 @@ class RequestDetailViewModel(val repo: AccountRepo, val requestRepo: RequestRepo
         recipients = Transformations.switchMap(request) { r -> r?.let { loadRecipients(r) } }
     }
 
-    fun loadAccount(r: Request): LiveData<Account> {
-        return repo.getLiveAccount(r.requester_account_id)
+    private fun loadAccount(r: Request): LiveData<Account> {
+        return repo.getLiveAccount(r.requester_account_id!!)
     }
 
     fun setRequest(id: Int) = viewModelScope.launch(Dispatchers.IO) {

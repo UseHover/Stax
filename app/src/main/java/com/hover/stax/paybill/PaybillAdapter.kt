@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.ItemPaybillSavedBinding
 import com.hover.stax.utils.GlideApp
-import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.UIHelper.loadImage
 
 class PaybillAdapter(private val paybills: List<Paybill>, private val clickListener: ClickListener) : RecyclerView.Adapter<PaybillAdapter.PaybillViewHolder>() {

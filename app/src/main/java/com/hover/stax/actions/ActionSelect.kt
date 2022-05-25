@@ -61,7 +61,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         return actions.size > 1 || (actions.size == 1 && !actions.first().isOnNetwork)
     }
 
-    private fun selectRecipientNetwork(action: HoverAction) {
+   fun selectRecipientNetwork(action: HoverAction) {
         if (action == highlightedAction) return
 
         setState(null, AbstractStatefulInput.SUCCESS)

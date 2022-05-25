@@ -43,7 +43,7 @@ abstract class AbstractFormFragment : Fragment() {
     val accountsViewModel: AccountsViewModel by sharedViewModel()
     val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
 
-    private var editCard: View? = null
+    var editCard: View? = null
     var summaryCard: StaxCardView? = null
     lateinit var payWithDropdown: AccountDropdown
     lateinit var fab: Button

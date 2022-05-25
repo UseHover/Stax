@@ -8,6 +8,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
@@ -49,6 +50,9 @@ class Request {
 
     @ColumnInfo(name = "matched_transaction_uuid")
     var matched_transaction_uuid: String? = null
+
+    @ColumnInfo(name = "requester_account_id")
+    var requester_account_id: Int? = null
 
     @ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
     var date_sent: Long = 0
@@ -93,24 +97,24 @@ class Request {
         return c.getString(R.string.descrip_request, contact!!.shortName() ?: "")
     }
 
-    fun generateRecipientString(contacts: List<StaxContact?>): String {
+    fun generateRecipientString(contacts: List<StaxContact>): String {
         val phones = StringBuilder()
         for (r in contacts.indices) {
             if (phones.isNotEmpty()) phones.append(",")
-            contacts[r]?.let { phones.append(it.accountNumber) }
+            contacts[r].let { phones.append(it.accountNumber) }
         }
         return phones.toString()
     }
 
-    fun generateWhatsappRecipientString(contacts: List<StaxContact?>?, c: Channel?): String {
+    fun generateWhatsappRecipientString(contacts: List<StaxContact>, account: Account?): String {
         val phones = StringBuilder()
-        if(contacts !=null) {
+        if(contacts.isNotEmpty()) {
             for (r in contacts.indices) {
                 if (phones.isNotEmpty()) phones.append(",")
-                contacts[r]?.let{
+                contacts[r].let{
                     phones.append(
                         PhoneHelper.getInternationalNumberNoPlus(it.accountNumber,
-                        c?.countryAlpha2 ?: Lingver.getInstance().getLocale().country))
+                        account?.countryAlpha2 ?: Lingver.getInstance().getLocale().country))
                 }
             }
         }
@@ -130,7 +134,7 @@ class Request {
     }
 
     private fun generateStaxLink(c: Context): String {
-        val amountNoFormat = if (amount != null && !amount!!.isEmpty()) amount!! else "0.00"
+        val amountNoFormat = if (!amount.isNullOrEmpty()) amount else "0.00"
         val requesterNumber = requester_number!!.replace("+", "")
         val params = c.getString(R.string.payment_url_end,
             amountNoFormat,

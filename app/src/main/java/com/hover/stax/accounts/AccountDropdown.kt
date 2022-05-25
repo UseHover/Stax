@@ -127,6 +127,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
+    fun getHighlightedAccount() = highlightedAccount
+
     interface HighlightListener {
         fun highlightAccount(account: Account)
     }

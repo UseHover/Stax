@@ -160,12 +160,6 @@ object Utils {
         return false
     }
 
-    fun isInternetConnected(c: Context): Boolean {
-        val cm = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = cm.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
-    }
-
     fun setFirebaseMessagingTopic(topic: String?) {
         FirebaseMessaging.getInstance().subscribeToTopic(topic!!)
     }

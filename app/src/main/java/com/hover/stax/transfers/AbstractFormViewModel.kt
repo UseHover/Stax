@@ -30,7 +30,7 @@ abstract class AbstractFormViewModel(application: Application, val contactRepo: 
         isEditing.postValue(editing)
     }
 
-    private fun setTransactionType(transaction_type: String) {
+    fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
     }
 

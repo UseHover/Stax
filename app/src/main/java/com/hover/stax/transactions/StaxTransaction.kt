@@ -79,11 +79,11 @@ data class StaxTransaction(
 	var note: String? = null
 
 //	// FIXME: DO not use! Below is covered by contact and account models. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
-//	@ColumnInfo(name = "counterparty")
-//	var counterparty: String? = null
-//
-//	@ColumnInfo(name = "account_name")
-//	var accountName: String? = null
+	@ColumnInfo(name = "counterparty")
+	var counterparty: String? = null
+
+	@ColumnInfo(name = "account_name")
+	var accountName: String? = null
 
 	constructor(data: Intent, action: HoverAction, contact: StaxContact?, c: Context) : this(
 		data.getStringExtra(TransactionContract.COLUMN_UUID)!!,

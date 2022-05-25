@@ -53,16 +53,16 @@ open class StaxDropdownLayout(context: Context, attrs: AttributeSet): AbstractSt
 
     private fun fillAttrs() {
         if (hint != null) (findViewById<View>(R.id.inputLayout) as TextInputLayout).hint = hint
-        autoCompleteTextView!!.inputType =
+        autoCompleteTextView.inputType =
             if (editable) InputType.TYPE_TEXT_VARIATION_FILTER else InputType.TYPE_NULL
-        if (defaultText != null && !defaultText!!.isEmpty()) autoCompleteTextView!!.setText(
+        if (!defaultText.isNullOrEmpty()) autoCompleteTextView.setText(
             defaultText
         )
-        if (imeOptions > 0) autoCompleteTextView!!.imeOptions = imeOptions
+        if (imeOptions > 0) autoCompleteTextView.imeOptions = imeOptions
     }
 
     override fun setOnFocusChangeListener(l: OnFocusChangeListener) {
-        autoCompleteTextView!!.onFocusChangeListener = l
+        autoCompleteTextView.onFocusChangeListener = l
     }
 
     init {
