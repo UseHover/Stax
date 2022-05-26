@@ -46,6 +46,10 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
             }
     }
 
+    fun getBonusList() = viewModelScope.launch(Dispatchers.IO) {
+        repo.bonuses.collect { _bonusList.value = it }
+    }
+
     private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
         val simHnis = channelRepo.presentSims.map { it.osReportedHni }
         val bonusChannels = channelRepo.getChannelsByIds(bonuses.map { it.purchaseChannel })
@@ -56,7 +60,7 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
         repo.updateBonuses(toSave)
 
         val showBonuses = hasValidSim(simHnis, bonusChannels)
-        _bonusList.value = if(showBonuses) toSave else emptyList()
+        _bonusList.value = if (showBonuses) toSave else emptyList()
     }
 
     fun getBonusByPurchaseChannel(channelId: Int): Bonus? = repo.getBonusByPurchaseChannel(channelId)

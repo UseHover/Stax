@@ -84,6 +84,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         setUpCountryChoice()
         setSearchInputWatcher()
 
+        bonusViewModel.getBonusList()
         startObservers()
 
         setFabListener()
@@ -168,22 +169,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            lifecycleScope.launch {
-                val bonusChannelIds = bonusViewModel.bonuses.value?.map { it.purchaseChannel }
-
-                val list = if (!bonusChannelIds.isNullOrEmpty())
-                    channels.filterNot { bonusChannelIds.contains(it.id) }
-                else
-                    channels
-
-                updateAdapter(list.filterNot { it.selected })
-
-                withContext(Dispatchers.Main) {
-                    binding.emptyState.root.visibility = GONE
-                    binding.channelsList.visibility = VISIBLE
-                    binding.errorText.visibility = GONE
-                }
-            }
+            updateAdapter(channels.filterNot { it.selected })
+            binding.emptyState.root.visibility = GONE
+            binding.channelsList.visibility = VISIBLE
+            binding.errorText.visibility = GONE
         } else showEmptyState()
     }
 

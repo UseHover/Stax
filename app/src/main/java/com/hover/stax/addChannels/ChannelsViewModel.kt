@@ -17,6 +17,7 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
+import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
@@ -24,11 +25,12 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
+class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo, val bonusRepo: BonusRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -182,9 +184,16 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     }
 
     private fun runFilter(channels: List<Channel>, value: String?) {
-        viewModelScope.launch {
-            filteredChannels.value =
-                channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) }
+        filterBonusChannels(channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) })
+    }
+
+    private fun filterBonusChannels(channels: List<Channel>) = viewModelScope.launch {
+        bonusRepo.bonuses.collect { list ->
+            val ids = list.map { it.purchaseChannel }
+            filteredChannels.value = if(ids.isEmpty())
+                 channels
+            else
+                channels.filterNot { ids.contains(it.id) }
         }
     }
 
