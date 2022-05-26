@@ -91,9 +91,9 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
             channelActions.observe(this@MainActivity) {
                 Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size)
             }
-            accounts.observe(this@MainActivity) {
-                Timber.v("Observing accounts ${this.javaClass.simpleName}: %s", it?.size)
-            }
+//            accounts.observe(this@MainActivity) {
+//                Timber.v("Observing accounts ${this.javaClass.simpleName}: %s", it?.size)
+//            }
         }
     }
 

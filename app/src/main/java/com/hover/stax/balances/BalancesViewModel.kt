@@ -13,14 +13,14 @@ import kotlinx.coroutines.launch
 
 class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : AndroidViewModel(application) {
 
-    private var _showBalances = MutableLiveData<Boolean>()
+    private var _showBalances = MutableLiveData(false)
     val showBalances: LiveData<Boolean> = _showBalances
 
     var userRequestedBalanceAccount = MutableLiveData<Account?>()
     var balanceAction: LiveData<HoverAction?> = MutableLiveData()
 
     init {
-            _showBalances.postValue(Utils.getBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, getApplication(), true))
+        _showBalances.value = Utils.getBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, getApplication(), true)
         balanceAction = Transformations.switchMap(userRequestedBalanceAccount) { startBalanceActionFor(it) }
     }
 

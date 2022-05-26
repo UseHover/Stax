@@ -61,7 +61,11 @@ class HomeFragment : Fragment() {
         }
 
         setUpWellnessTips()
-        accountsViewModel.accounts.observe(viewLifecycleOwner, this::setPaybillVisibility)
+
+        collectLatestLifecycleFlow(accountsViewModel.accounts) {
+            setPaybillVisibility(it)
+        }
+//        accountsViewModel.accounts.observe(viewLifecycleOwner, this::setPaybillVisibility)
     }
 
     private fun getTransferDirection(type: String, channelId: Int = 0): NavDirections {

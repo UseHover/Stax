@@ -9,19 +9,30 @@ import com.hover.stax.actions.ActionRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
-    val accounts: LiveData<List<Account>> = repo.getAllLiveAccounts()
+    private val _accounts = MutableStateFlow<List<Account>>(emptyList())
+    val accounts: StateFlow<List<Account>> = _accounts
     val activeAccount: MediatorLiveData<Account> = MediatorLiveData()
 
     private var type = MutableLiveData<String>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
 
     init {
-        activeAccount.addSource(accounts, this::setActiveAccountIfNull)
+        viewModelScope.launch {
+            repo.getAccounts().collect {
+                _accounts.value = it
+
+                setActiveAccountIfNull(it)
+            }
+        }
 
         channelActions.apply {
             addSource(type, this@AccountsViewModel::loadActions)
@@ -35,17 +46,17 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     private fun setActiveAccountIfNull(accounts: List<Account>) {
         if (accounts.isNotEmpty() && activeAccount.value == null)
-            activeAccount.postValue(accounts.firstOrNull { it.isDefault })
+            activeAccount.value = accounts.firstOrNull { it.isDefault }
     }
 
-    fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value?.find { it.id == accountId }) }
+    fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value.find { it.id == accountId }) }
 
     fun getActionType(): String = type.value!!
 
     private fun loadActions(type: String?) {
         if (type == null || activeAccount.value == null) return
 
-        if (accounts.value.isNullOrEmpty()) return
+        if (accounts.value.isEmpty()) return
         loadActions(activeAccount.value!!, type)
     }
 
@@ -79,12 +90,12 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
     fun reset() {
-        activeAccount.value = accounts.value?.firstOrNull { it.isDefault }
+        activeAccount.value = accounts.value.firstOrNull { it.isDefault }
     }
 
     fun setDefaultAccount(account: Account) {
-        if (!accounts.value.isNullOrEmpty()) {
-            val accts = accounts.value!!
+        if (accounts.value.isNotEmpty()) {
+            val accts = accounts.value
             //remove current default account
             val current: Account? = accts.firstOrNull { it.isDefault }
             current?.isDefault = false

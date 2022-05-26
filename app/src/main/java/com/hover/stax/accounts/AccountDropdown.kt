@@ -3,7 +3,10 @@ package com.hover.stax.accounts
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -11,6 +14,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
@@ -93,7 +98,13 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setObservers(viewModel: AccountsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            accounts.observe(lifecycleOwner) { accountUpdate(it) }
+            lifecycleOwner.lifecycleScope.launch {
+                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                    accounts.collect {
+                        accountUpdate(it)
+                    }
+                }
+            }
 
             activeAccount.observe(lifecycleOwner) {
                 if (it != null && showSelected)

@@ -21,6 +21,7 @@ import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -59,6 +60,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         init(binding.root)
 
+        bonusViewModel.getBonusList()
+
         startObservers(binding.root)
         startListeners()
         fillFromArgs()
@@ -88,7 +91,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun setUpFee() {
-        binding.summaryCard.feeValue.text = "check fee"
+        binding.summaryCard.feeValue.text = getString(R.string.check_fee)
         binding.summaryCard.feeValue.textSize = 13.0F
         binding.summaryCard.feeValue.setTextColor(getColor(requireContext(), R.color.stax_state_blue))
         binding.summaryCard.feeValue.setOnClickListener { checkFee() }
@@ -158,22 +161,27 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeAccountList() = with(accountsViewModel) {
-        accounts.observe(viewLifecycleOwner) {
-            if (it.isEmpty())
-                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+    private fun observeAccountList() = collectLatestLifecycleFlow(accountsViewModel.accounts) {
+        if (it.isEmpty())
+            setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+    }
 
-            if (args.channelId != 0) { //to be used with bonus flow. Other uses will require a slight change in this
-//                updateAccountDropdown()
-                return@observe
-            }
-
-//            if (args.transactionUUID == null) {
-////                payWithDropdown.setCurrentAccount()
+//        with(accountsViewModel) {
+//        accounts.observe(viewLifecycleOwner) {
+//            if (it.isEmpty())
+//                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+//
+//            if (args.channelId != 0) { //to be used with bonus flow. Other uses will require a slight change in this
+////                updateAccountDropdown()
 //                return@observe
 //            }
-        }
-    }
+//
+////            if (args.transactionUUID == null) {
+//////                payWithDropdown.setCurrentAccount()
+////                return@observe
+////            }
+//        }
+//    }
 
 //        if (args.transactionType == HoverAction.AIRTIME) {
 //            val observer = Observer<Account> { it?.let { setChannel(it) } }

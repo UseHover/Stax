@@ -53,10 +53,8 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
     private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
         val simHnis = channelRepo.presentSims.map { it.osReportedHni }
         val bonusChannels = channelRepo.getChannelsByIds(bonuses.map { it.purchaseChannel })
-        Timber.e("We only found ${bonusChannels.size} applicable channels")
 
         val toSave = bonuses.filter { bonusChannels.map { channel -> channel.id }.contains(it.purchaseChannel) }
-        Timber.e("Found ${toSave.size} bonus channels to save")
         repo.updateBonuses(toSave)
 
         val showBonuses = hasValidSim(simHnis, bonusChannels)
