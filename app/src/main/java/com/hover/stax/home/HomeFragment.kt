@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -23,6 +25,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -67,12 +70,12 @@ class HomeFragment : Fragment() {
         return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type).setChannelId(channelId)
     }
 
-    private fun setupBanner() = lifecycleScope.launchWhenResumed {
-        with(bonusViewModel) {
-            bonuses.observe(viewLifecycleOwner) { b ->
-                if (b.isNotEmpty()) {
+    private fun setupBanner() = lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            bonusViewModel.bonuses.collect { bonusList ->
+                if (bonusList.isNotEmpty()) {
                     with(binding.bonusCard) {
-                        message.text = b.first().message
+                        message.text = bonusList.first().message
                         learnMore.movementMethod = LinkMovementMethod.getInstance()
                     }
                     binding.bonusCard.apply {
@@ -80,7 +83,7 @@ class HomeFragment : Fragment() {
                         cta.setOnClickListener {
                             channelsViewModel // viewmodel must be instantiated in the main thread before it can be accessible on other threads
                             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                            validateTransferAction(b.first())
+                            validateTransferAction(bonusList.first())
                         }
                     }
                 } else binding.bonusCard.cardBonus.visibility = View.GONE
@@ -141,7 +144,7 @@ class HomeFragment : Fragment() {
     private fun validateTransferAction(bonus: Bonus) = lifecycleScope.launch(Dispatchers.IO) {
         val accounts = accountsViewModel.getAccounts(bonus.userChannel)
 
-        if(accounts.isEmpty())
+        if (accounts.isEmpty())
             channelsViewModel.createAccount(bonus.userChannel)
 
         withContext(Dispatchers.Main) {

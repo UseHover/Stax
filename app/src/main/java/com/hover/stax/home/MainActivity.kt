@@ -55,7 +55,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         observeForAppReview()
         setGoogleLoginInterface(this)
 
-        bonusViewModel.getBonuses()
+        bonusViewModel.fetchBonuses()
     }
 
     override fun onNewIntent(intent: Intent?) {
