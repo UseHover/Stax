@@ -23,9 +23,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.utils.network.NetworkMonitor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -65,7 +63,12 @@ class HomeFragment : Fragment() {
         collectLatestLifecycleFlow(accountsViewModel.accounts) {
             setPaybillVisibility(it)
         }
-//        accountsViewModel.accounts.observe(viewLifecycleOwner, this::setPaybillVisibility)
+
+        lifecycleScope.launchWhenStarted {
+            channelsViewModel.accountEventFlow.collect {
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().purchaseChannel))
+            }
+        }
     }
 
     private fun getTransferDirection(type: String, channelId: Int = 0): NavDirections {
@@ -76,7 +79,6 @@ class HomeFragment : Fragment() {
         bonusViewModel.getBonusList()
 
         collectLatestLifecycleFlow(bonusViewModel.bonuses) { bonusList ->
-            Timber.e("Here ${bonusList.size}")
             if (bonusList.isNotEmpty()) {
                 with(binding.bonusCard) {
                     message.text = bonusList.first().message
@@ -87,7 +89,7 @@ class HomeFragment : Fragment() {
                     cta.setOnClickListener {
                         channelsViewModel // viewmodel must be instantiated in the main thread before it can be accessible on other threads
                         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                        validateTransferAction(bonusList.first())
+                        validateAccounts(bonusList.first())
                     }
                 }
             } else binding.bonusCard.cardBonus.visibility = View.GONE
@@ -142,15 +144,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun validateTransferAction(bonus: Bonus) = lifecycleScope.launch(Dispatchers.IO) {
-        val accounts = accountsViewModel.getAccounts(bonus.userChannel)
-
-        if (accounts.isEmpty())
-            channelsViewModel.createAccount(bonus.userChannel)
-
-        withContext(Dispatchers.Main) {
-            navigateTo(getTransferDirection(HoverAction.AIRTIME, bonus.purchaseChannel))
-        }
+    private fun validateAccounts(bonus: Bonus) {
+        channelsViewModel.validateAccounts(bonus.userChannel)
     }
 
     override fun onDestroyView() {

@@ -26,11 +26,13 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
+import kotlinx.coroutines.channels.Channel as KChannel //import alias to differentiate between Stax Channels and Coroutine Channels
 
-class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo, val bonusRepo: BonusRepo) : AndroidViewModel(application),
+class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -42,8 +44,10 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     var countryChoice: MediatorLiveData<String> = MediatorLiveData()
     val filterQuery = MutableLiveData<String?>()
     private var countryChannels = MediatorLiveData<List<Channel>>()
-
     val filteredChannels = MediatorLiveData<List<Channel>>()
+
+    private val accountCreatedEvent = KChannel<Boolean>()
+    val accountEventFlow = accountCreatedEvent.receiveAsFlow()
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -147,9 +151,20 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         }
     }
 
-    fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun validateAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val accounts = accountRepo.getAccountsByChannel(channelId)
+
+        if(accounts.isEmpty())
+            createAccount(channelId)
+        else
+            accountCreatedEvent.send(true)
+    }
+
+    private fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val channel = repo.getChannel(channelId)
         channel?.let { createAccounts(listOf(it)) }
+
+        accountCreatedEvent.send(true)
     }
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
