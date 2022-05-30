@@ -286,8 +286,9 @@
                 app:nullable="true" />
         <argument
                 android:name="channelId"
-                android:defaultValue="0"
-                app:argType="integer" />
+                android:defaultValue="@null"
+                app:nullable="true"
+                app:argType="string" />
 
         <deepLink
                 android:id="@+id/transferDL"

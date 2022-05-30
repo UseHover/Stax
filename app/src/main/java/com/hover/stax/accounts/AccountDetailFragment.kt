@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -29,6 +30,7 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -179,12 +181,18 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun observeBalanceCheck() {
-        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
-            attemptCallHover(viewModel.account.value, it)
+        lifecycleScope.launchWhenStarted {
+            balancesViewModel.balanceAction.collect {
+                attemptCallHover(viewModel.account.value, it)
+            }
         }
-        viewModel.account.observe(viewLifecycleOwner) {
-            attemptCallHover(it, balancesViewModel.balanceAction.value)
-        }
+//        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
+//            attemptCallHover(viewModel.account.value, it)
+//        }
+
+//        viewModel.account.observe(viewLifecycleOwner) {
+//            attemptCallHover(it, balancesViewModel.balanceAction.value)
+//        }
     }
 
     override fun onTapRefresh(account: Account?) {
@@ -201,7 +209,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun callHover(account: Account, action: HoverAction) {
-        balancesViewModel.requestBalance(null)
         (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 

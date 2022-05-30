@@ -66,13 +66,16 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launchWhenStarted {
             channelsViewModel.accountEventFlow.collect {
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().purchaseChannel))
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().userChannel.toString()))
             }
         }
     }
 
-    private fun getTransferDirection(type: String, channelId: Int = 0): NavDirections {
-        return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type).setChannelId(channelId)
+    private fun getTransferDirection(type: String, channelId: String? = null): NavDirections {
+        return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type).also {
+            if (channelId != null)
+                it.channelId = channelId
+        }
     }
 
     private fun setupBanner() {

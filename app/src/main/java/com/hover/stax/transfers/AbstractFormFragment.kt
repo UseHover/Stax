@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -33,6 +34,7 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -76,11 +78,17 @@ abstract class AbstractFormFragment : Fragment() {
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         setupEmptyObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
-        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
-            it?.let {
+
+        lifecycleScope.launchWhenStarted {
+            balancesViewModel.balanceAction.collect {
                 callHover(accountsViewModel.activeAccount.value, it)
             }
         }
+//        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
+//            it?.let {
+//                callHover(accountsViewModel.activeAccount.value, it)
+//            }
+//        }
     }
 
     private fun callHover(account: Account?, action: HoverAction) {
@@ -129,7 +137,7 @@ abstract class AbstractFormFragment : Fragment() {
         dialog.showIt()
     }
 
-    private fun onboard(account: Account?) {
+    private fun onboard(account: Account) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
         balancesViewModel.requestBalance(account)
     }

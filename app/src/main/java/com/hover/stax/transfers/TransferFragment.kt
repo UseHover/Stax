@@ -10,11 +10,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
@@ -25,9 +27,10 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -35,6 +38,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
+    private val channelsViewModel: ChannelsViewModel by viewModel()
 
     private val args by navArgs<TransferFragmentArgs>()
 
@@ -74,6 +78,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         args.accountId?.let { accountsViewModel.setActiveAccount(Integer.parseInt(it)) }
         args.amount?.let { binding.editCard.amountInput.setText(it) }
         args.contactId?.let { transferViewModel.setContact(it) }
+        args.channelId?.let { channelsViewModel.validateAccounts(Integer.parseInt(it)) }
     }
 
     override fun init(root: View) {
@@ -125,6 +130,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
+        observeAccountsEvent()
     }
 
     private fun observeActiveAccount() {
@@ -203,6 +209,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             if (variables != null) {
                 updateNonStandardInputs(variables)
                 updateNonStandardSummary(variables)
+            }
+        }
+    }
+
+    private fun observeAccountsEvent() {
+        lifecycleScope.launchWhenStarted {
+            channelsViewModel.accountEventFlow.collect {
+                val bonus = bonusViewModel.bonuses.value.firstOrNull() ?: return@collect
+                accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
             }
         }
     }
@@ -353,7 +368,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
                         setOnClickListener {
                             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                            accountsViewModel.setActiveAccount(bonus.userChannel)
+                            channelsViewModel.validateAccounts(bonus.userChannel)
                         }
                     }
                 }
@@ -363,34 +378,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
-        showBonusBanner(actionSelectViewModel.activeAction.value)
-    }
 
-    /**
-     * Handles instances where the active account is different from the bonus account to be used.
-     * ChannelId is fetched from the bonus object's user channel field.
-     * Channel and respective accounts are fetched before being passed to account dropdown
-     */
-//        private fun updateAccountDropdown() = lifecycleScope.launch(Dispatchers.IO) {
-//            val bonus = bonusViewModel.getBonusByPurchaseChannel(args.channelId)
-//
-//            bonus?.let {
-//                val channel = channelsViewModel.getChannel(bonus.userChannel)
-//                channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channel!!.id)
-//            } ?: run { Timber.e("Bonus cannot be found") }
-//        }
-//
-//        /**
-//         * Monitors changes in active account from account dropdown and sets bonus channel
-//         */
-//        private fun setChannel(account: Account) = lifecycleScope.launch(Dispatchers.IO) {
-//            val bonus = bonusViewModel.getBonusByUserChannel(account.channelId)
-//
-//            if (bonus != null) {
-//                val channel = channelsViewModel.getChannel(bonus.purchaseChannel)
-//                channelsViewModel.setActiveChannel(channel!!)
-//            }
-//        }
+        if (!isEditing)
+            binding.bonusLayout.cardBonus.visibility = View.GONE
+        else
+            showBonusBanner(actionSelectViewModel.activeAction.value)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -101,7 +101,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         with(viewModel) {
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                    accounts.collectLatest {
+                    accounts.collect {
                         accountUpdate(it)
                     }
                 }

@@ -15,9 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, val bonusRepo: BonusRepo) : AndroidViewModel(application),
+class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
@@ -28,17 +30,19 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     val channelActions = MediatorLiveData<List<HoverAction>>()
 
     init {
-        viewModelScope.launch {
-            repo.getAccounts().collect {
-                _accounts.value = it
-
-                setActiveAccountIfNull(it)
-            }
-        }
+        fetchAccounts()
 
         channelActions.apply {
             addSource(type, this@AccountsViewModel::loadActions)
             addSource(activeAccount, this@AccountsViewModel::loadActions)
+        }
+    }
+
+    private fun fetchAccounts() = viewModelScope.launch {
+        repo.getAccounts().collect {
+            _accounts.value = it
+
+            setActiveAccountIfNull(it)
         }
     }
 
@@ -77,6 +81,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
     private fun loadActions(channelId: Int, t: String = HoverAction.AIRTIME) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("----- Here loading actions -----")
         channelActions.postValue(actionRepo.getActions(channelId, t))
     }
 
@@ -89,9 +94,14 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             loadActions(account, type.value!!)
     }
 
-    fun setActiveAccount(userChannelId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        val account = accounts.value.first { it.channelId == userChannelId }
-        activeAccount.postValue(account)
+    fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value.find { it.id == accountId }) }
+
+    fun setActiveAccountFromChannel(userChannelId: Int) = viewModelScope.launch {
+        Timber.e("Fetching for channel id : $userChannelId")
+
+        repo.getAccounts().collect { accounts ->
+            activeAccount.postValue(accounts.firstOrNull { it.channelId == userChannelId })
+        }
     }
 
     fun errorCheck(): String? {

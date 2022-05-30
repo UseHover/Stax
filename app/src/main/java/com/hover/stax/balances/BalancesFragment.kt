@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
@@ -24,6 +25,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.staxcardstack.StaxCardStackView
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -58,19 +60,16 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
         setUpHiddenStack()
 
         balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
-//        val observer = Observer<List<Account>> { t -> updateAccounts(ArrayList(t)) }
 
         collectLatestLifecycleFlow(accountsViewModel.accounts) {
             updateAccounts(ArrayList(it))
         }
-//        accountsViewModel.accounts.observe(viewLifecycleOwner, observer)
 //        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { it?.let { askToCheckBalance(it) } }
-        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
-            attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
-        }
 
-        balancesViewModel.userRequestedBalanceAccount.observe(viewLifecycleOwner) {
-            attemptCallHover(it, balancesViewModel.balanceAction.value)
+        lifecycleScope.launchWhenStarted {
+            balancesViewModel.balanceAction.collect {
+                attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
+            }
         }
     }
 
@@ -79,7 +78,6 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     private fun callHover(account: Account, action: HoverAction) {
-        balancesViewModel.requestBalance(null)
         (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 
@@ -103,10 +101,10 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     private fun setUpBalanceList() {
-        balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView.also {
-            it.layoutManager = UIHelper.setMainLinearManagers(context)
-            it.setHasFixedSize(true)
-            it.visibility = View.GONE
+        balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView.apply {
+            layoutManager = UIHelper.setMainLinearManagers(context)
+            setHasFixedSize(true)
+            visibility = View.GONE
         }
     }
 
