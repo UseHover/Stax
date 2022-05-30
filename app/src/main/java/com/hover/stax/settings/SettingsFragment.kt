@@ -81,7 +81,7 @@ class SettingsFragment : Fragment() {
         }
 
         collectLatestLifecycleFlow(accountsViewModel.accounts) {
-            if (it.isNotEmpty()) {
+            if (it.isEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE
                 binding.settingsCard.connectAccounts.visibility = VISIBLE
             } else
