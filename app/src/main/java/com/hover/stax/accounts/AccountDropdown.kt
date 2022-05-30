@@ -12,10 +12,13 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.actions.ActionSelect
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
@@ -92,23 +95,23 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             findNavController().navigate(R.id.navigation_linkAccount)
     }
 
-    fun setCurrentAccount(account: Account) = onSelect(account)
-
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
 
     fun setObservers(viewModel: AccountsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                    accounts.collect {
+                    accounts.collectLatest {
                         accountUpdate(it)
                     }
                 }
             }
 
             activeAccount.observe(lifecycleOwner) {
-                if (it != null && showSelected)
+                if (it != null && showSelected) {
+                    setDropdownValue(it)
                     setState(helperText, NONE)
+                }
             }
 
             channelActions.observe(lifecycleOwner) {
@@ -134,7 +137,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                     ), INFO
                 )
 
-            viewModel.activeAccount.value != null && showSelected -> setState(helperText, SUCCESS)
+            viewModel.activeAccount.value != null && showSelected -> setState(null, SUCCESS)
         }
     }
 

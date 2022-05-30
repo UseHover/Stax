@@ -3,6 +3,7 @@ package com.hover.stax.transfers
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +20,14 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.hover.FEE_REQUEST
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -130,8 +133,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             val err = accountsViewModel.errorCheck()
             payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
             binding.editCard.actionSelect.visibility = if (account != null) View.VISIBLE else View.GONE
-
-            checkForBonus()
         }
     }
 
@@ -141,6 +142,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
             }
+
+            showBonusBanner(it)
         }
     }
 
@@ -148,6 +151,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
         }
+
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
             binding.editCard.actionSelect.updateActions(it)
         }
@@ -165,28 +169,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if (it.isEmpty())
             setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
     }
-
-//        with(accountsViewModel) {
-//        accounts.observe(viewLifecycleOwner) {
-//            if (it.isEmpty())
-//                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
-//
-//            if (args.channelId != 0) { //to be used with bonus flow. Other uses will require a slight change in this
-////                updateAccountDropdown()
-//                return@observe
-//            }
-//
-////            if (args.transactionUUID == null) {
-//////                payWithDropdown.setCurrentAccount()
-////                return@observe
-////            }
-//        }
-//    }
-
-//        if (args.transactionType == HoverAction.AIRTIME) {
-//            val observer = Observer<Account> { it?.let { setChannel(it) } }
-//            activeAccount.observe(viewLifecycleOwner, observer)
-//        }
 
     private fun observeAmount() {
         transferViewModel.amount.observe(viewLifecycleOwner) {
@@ -350,48 +332,38 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun checkForBonus() {
-//            if (args.transactionType == HoverAction.AIRTIME) {
-//                val bonuses = bonusViewModel.bonuses.value
-//                if (!bonuses.isNullOrEmpty())
-//                    showBonusBanner(bonuses)
-//            }
-    }
+    private fun showBonusBanner(activeAction: HoverAction?) {
+        if (args.transactionType == HoverAction.AIRTIME) {
+            val bonus = bonusViewModel.bonuses.value.firstOrNull() ?: return
 
-//        private fun showBonusBanner(bonuses: List<Bonus>) = with(binding.bonusLayout) {
-//            val channelId = bonuses.first().userChannel
-//
-//            cardBonus.visibility = View.VISIBLE
-//            val bonus = bonuses.first()
-//            val usingBonusChannel = channelsViewModel.activeChannel.value?.id == bonus.purchaseChannel
-//
-//            learnMore.movementMethod = LinkMovementMethod.getInstance()
-//
-//            if (usingBonusChannel) {
-//                title.text = getString(R.string.congratulations)
-//                message.text = getString(R.string.valid_account_bonus_msg)
-//                cta.visibility = View.GONE
-//            } else {
-//                title.text = getString(R.string.get_extra_airtime)
-//                message.text = getString(R.string.invalid_account_bonus_msg)
-//                cta.apply {
-//                    visibility = View.VISIBLE
-//                    text = getString(R.string.top_up_with_mpesa)
-//                    setOnClickListener {
-//                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-//                        channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channelId)
-//                    }
-//                }
-//            }
-//        }
+            with(binding.bonusLayout) {
+                cardBonus.visibility = View.VISIBLE
+                learnMore.movementMethod = LinkMovementMethod.getInstance()
+
+                if (activeAction?.channel_id == bonus.purchaseChannel) {
+                    title.text = getString(R.string.congratulations)
+                    message.text = getString(R.string.valid_account_bonus_msg)
+                    cta.visibility = View.GONE
+                } else {
+                    title.text = getString(R.string.get_extra_airtime)
+                    message.text = getString(R.string.invalid_account_bonus_msg)
+                    cta.apply {
+                        visibility = View.VISIBLE
+                        text = getString(R.string.top_up_with_mpesa)
+
+                        setOnClickListener {
+                            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                            accountsViewModel.setActiveAccount(bonus.userChannel)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
-
-        if (!isEditing)
-            binding.bonusLayout.cardBonus.visibility = View.GONE
-        else
-            checkForBonus()
+        showBonusBanner(actionSelectViewModel.activeAction.value)
     }
 
     /**

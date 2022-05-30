@@ -39,7 +39,7 @@ val appModule = module {
     viewModel { FaqViewModel() }
     viewModel { ActionSelectViewModel(get()) }
     viewModel { ChannelsViewModel(get(), get(), get(), get(), get()) }
-    viewModel { AccountsViewModel(get(), get(), get()) }
+    viewModel { AccountsViewModel(get(), get(), get(), get()) }
     viewModel { AccountDetailViewModel(get(), get(), get(), get(), get()) }
     viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
     viewModel { TransferViewModel(get(), get(), get(), get()) }

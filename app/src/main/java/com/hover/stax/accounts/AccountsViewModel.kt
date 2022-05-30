@@ -2,20 +2,22 @@ package com.hover.stax.accounts
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionRepo
+import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.schedules.Schedule
-import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
-class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
+class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, val bonusRepo: BonusRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
@@ -49,8 +51,6 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             activeAccount.value = accounts.firstOrNull { it.isDefault }
     }
 
-    fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value.find { it.id == accountId }) }
-
     fun getActionType(): String = type.value!!
 
     private fun loadActions(type: String?) {
@@ -62,13 +62,36 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     private fun loadActions(account: Account?) {
         if (account == null || type.value.isNullOrEmpty()) return
-        loadActions(account, type.value!!)
+
+        if (type.value == HoverAction.AIRTIME)
+            checkForBonus(account)
+        else
+            loadActions(account, type.value!!)
     }
 
     private fun loadActions(account: Account, t: String) = viewModelScope.launch(Dispatchers.IO) {
         channelActions.postValue(
             if (t == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
-            else actionRepo.getActions(account.channelId, t))
+            else actionRepo.getActions(account.channelId, t)
+        )
+    }
+
+    private fun loadActions(channelId: Int, t: String = HoverAction.AIRTIME) = viewModelScope.launch(Dispatchers.IO) {
+        channelActions.postValue(actionRepo.getActions(channelId, t))
+    }
+
+    private fun checkForBonus(account: Account) = viewModelScope.launch(Dispatchers.IO) {
+        val bonus = bonusRepo.getBonusByUserChannel(account.channelId)
+
+        if (bonus != null)
+            loadActions(bonus.purchaseChannel)
+        else
+            loadActions(account, type.value!!)
+    }
+
+    fun setActiveAccount(userChannelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val account = accounts.value.first { it.channelId == userChannelId }
+        activeAccount.postValue(account)
     }
 
     fun errorCheck(): String? {

@@ -68,9 +68,9 @@ data class Paybill(
 
     companion object {
         fun extractBizNumber(action: HoverAction): String {
-            if (action.getVarValue(BUSINESS_NO) != null)
-                return action.getVarValue(BUSINESS_NO)
-            else return ""
+            return if (action.getVarValue(BUSINESS_NO) != null)
+                action.getVarValue(BUSINESS_NO)
+            else ""
         }
     }
 }
