@@ -9,6 +9,8 @@ import com.hover.stax.actions.ActionRepo
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -19,8 +21,8 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : 
 
     var userRequestedBalanceAccount = MutableLiveData<Account?>()
 
-    private var _balanceAction = Channel<HoverAction>()
-    val balanceAction = _balanceAction.receiveAsFlow()
+    private var _balanceAction = MutableSharedFlow<HoverAction>()
+    val balanceAction = _balanceAction.asSharedFlow()
 
     init {
         _showBalances.value = Utils.getBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, getApplication(), true)
@@ -39,6 +41,6 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : 
     private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
         val channelId = account?.channelId ?: -1
         val action = actionRepo.getActions(channelId, if (account?.name == PLACEHOLDER) HoverAction.FETCH_ACCOUNTS else HoverAction.BALANCE).first()
-        _balanceAction.send(action)
+        _balanceAction.emit(action)
     }
 }

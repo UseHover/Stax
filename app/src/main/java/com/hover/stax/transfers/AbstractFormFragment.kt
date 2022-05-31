@@ -30,6 +30,7 @@ import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
@@ -79,11 +80,15 @@ abstract class AbstractFormFragment : Fragment() {
         setupEmptyObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
-        lifecycleScope.launchWhenStarted {
-            balancesViewModel.balanceAction.collect {
-                callHover(accountsViewModel.activeAccount.value, it)
-            }
+        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+            callHover(accountsViewModel.activeAccount.value, it)
         }
+
+//        lifecycleScope.launchWhenStarted {
+//            balancesViewModel.balanceAction.collect {
+//                callHover(accountsViewModel.activeAccount.value, it)
+//            }
+//        }
 //        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
 //            it?.let {
 //                callHover(accountsViewModel.activeAccount.value, it)

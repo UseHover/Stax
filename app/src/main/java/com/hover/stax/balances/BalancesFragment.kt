@@ -66,10 +66,8 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
         }
 //        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { it?.let { askToCheckBalance(it) } }
 
-        lifecycleScope.launchWhenStarted {
-            balancesViewModel.balanceAction.collect {
-                attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
-            }
+        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+            attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
     }
 

@@ -181,11 +181,14 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun observeBalanceCheck() {
-        lifecycleScope.launchWhenStarted {
-            balancesViewModel.balanceAction.collect {
-                attemptCallHover(viewModel.account.value, it)
-            }
+        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+            attemptCallHover(viewModel.account.value, it)
         }
+//        lifecycleScope.launchWhenStarted {
+//            balancesViewModel.balanceAction.collect {
+//
+//            }
+//        }
 //        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
 //            attemptCallHover(viewModel.account.value, it)
 //        }
