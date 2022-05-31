@@ -33,7 +33,7 @@ class Request {
     @ColumnInfo(name = "amount")
     var amount: String? = null
 
-    @ColumnInfo(name = "requester_institution_id")
+    @ColumnInfo(name = "requester_institution_id", defaultValue = "0")
     var requester_institution_id = 0
 
     @ColumnInfo(name = "requester_number")
