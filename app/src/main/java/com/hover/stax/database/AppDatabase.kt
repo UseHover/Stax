@@ -31,12 +31,11 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, StaxUser::class, Bonus::class
     ],
-    version = 39,
+    version = 40,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
         AutoMigration(from = 38, to = 39)
-//        AutoMigration(from = 39, to = 40)
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -131,11 +130,61 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_accountId ON paybills (accountId)")
         }
 
+        private val M39_40 = Migration(39, 40) { database ->
+            //accounts table changes
+            database.execSQL("ALTER TABLE accounts ADD COLUMN institutionId INTEGER")
+            database.execSQL("ALTER TABLE accounts ADD COLUMN countryAlpha2 TEXT")
+
+            //paybill table changes
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS `paybills_new` (`name` TEXT NOT NULL, `business_name` TEXT, `business_no` TEXT, `account_no` TEXT, `action_id` TEXT DEFAULT ''," +
+                        " `accountId` INTEGER NOT NULL, `logo_url` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, " +
+                        "`channelId` INTEGER NOT NULL, `logo` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, " +
+                        "FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , " +
+                        "FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )"
+            )
+
+            database.execSQL(
+                "INSERT INTO paybills_new (name, business_no, account_no, logo, logo_url, channelId, accountId, id, recurring_amount, isSaved)" +
+                        " SELECT name, business_no, account_no, logo, logo_url, channelId, accountId, id, recurring_amount, isSaved FROM paybills"
+            )
+
+            database.execSQL("DROP TABLE paybills")
+            database.execSQL("ALTER TABLE paybills_new RENAME TO paybills")
+
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_paybills_business_no_account_no ON paybills(business_no, account_no)")
+            database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_channelId ON paybills (channelId)")
+            database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_accountId ON paybills (accountId)")
+
+            //request table changes
+            database.execSQL("ALTER TABLE requests ADD COLUMN requester_country_alpha2 TEXT")
+            database.execSQL("ALTER TABLE requests ADD COLUMN requester_account_id INTEGER")
+
+            //stax transaction table changes
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS `stax_transactions_new` (`uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0," +
+                        " `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT NOT NULL DEFAULT 'started', " +
+                        "`initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                        " `description` TEXT NOT NULL, `account_id` INTEGER, `recipient_id` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `balance` TEXT, `note` TEXT, `account_name` TEXT)",
+            )
+
+            database.execSQL(
+                "INSERT INTO stax_transactions_new (uuid, action_id, environment, transaction_type, channel_id, status, category, initiated_at, updated_at, id, description, account_id, " +
+                        "recipient_id, amount, fee, confirm_code, balance) SELECT uuid, action_id, environment, transaction_type, channel_id, status, category, initiated_at, updated_at," +
+                        "id, description, account_id, recipient_id, amount, fee, confirm_code, balance FROM stax_transactions"
+            )
+
+            database.execSQL("DROP TABLE stax_transactions")
+            database.execSQL("ALTER TABLE stax_transactions_new RENAME TO stax_transactions")
+
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_stax_transactions_uuid` ON `stax_transactions` (`uuid`)")
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "stax.db")
                     .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36)
+                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40)
                     .build()
                 INSTANCE = instance
 
