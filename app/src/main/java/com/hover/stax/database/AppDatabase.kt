@@ -130,6 +130,11 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_accountId ON paybills (accountId)")
         }
 
+        /**
+         * These migrations recreate the paybills, requests and stax_transactions tables since room has no way of
+         * changing the type of variable e.g from a nullable to non-nullable and vice versa.
+         * Additional sanitization queries are included to initialize empty columns in old tables before copying into new tables
+         */
         private val M39_40 = Migration(39, 40) { database ->
             //accounts table changes
             database.execSQL("ALTER TABLE accounts ADD COLUMN institutionId INTEGER")
@@ -157,8 +162,21 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_accountId ON paybills (accountId)")
 
             //request table changes
-            database.execSQL("ALTER TABLE requests ADD COLUMN requester_country_alpha2 TEXT")
-            database.execSQL("ALTER TABLE requests ADD COLUMN requester_account_id INTEGER")
+            database.execSQL("UPDATE requests SET requester_institution_id = 0 WHERE requester_institution_id IS NULL")
+
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS `requests_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `requestee_ids` TEXT NOT NULL, `amount` TEXT, " +
+                        "`requester_institution_id` INTEGER NOT NULL DEFAULT 0, `requester_number` TEXT, `requester_country_alpha2` TEXT, `note` TEXT, `message` TEXT, " +
+                        "`matched_transaction_uuid` TEXT, `requester_account_id` INTEGER, `date_sent` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+            )
+
+            database.execSQL(
+                "INSERT INTO requests_new (id, description, requestee_ids, amount, requester_institution_id, requester_number, note, message, matched_transaction_uuid, date_sent)" +
+                        " SELECT id, description, requestee_ids, amount, requester_institution_id, requester_number, note, message, matched_transaction_uuid, date_sent FROM requests"
+            )
+
+            database.execSQL("DROP TABLE requests")
+            database.execSQL("ALTER TABLE requests_new RENAME TO requests")
 
             //stax transaction table changes
             database.execSQL(
