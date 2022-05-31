@@ -162,6 +162,10 @@ abstract class AppDatabase : RoomDatabase() {
 
             //stax transaction table changes
             database.execSQL(
+                "UPDATE stax_transactions SET category = 'started' WHERE category IS NULL"
+            )
+
+            database.execSQL(
                 "CREATE TABLE IF NOT EXISTS `stax_transactions_new` (`uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0," +
                         " `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT NOT NULL DEFAULT 'started', " +
                         "`initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
