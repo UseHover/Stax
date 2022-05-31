@@ -120,7 +120,7 @@ class TransactionDetailsFragment : Fragment() {
             } else binding.secondaryStatus.btnRetryTransaction.visibility = GONE
 
             updateDetails(transaction)
-            showShareExcitement(!transaction.isRecorded && transaction.isSuccessful)
+            showShareExcitement(transaction)
         }
     }
 
@@ -154,22 +154,33 @@ class TransactionDetailsFragment : Fragment() {
         return !transaction.isBalanceType && !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
     }
 
-    private fun showShareExcitement(isTransactionSuccessful: Boolean) {
+    private fun showShareExcitement(transaction: StaxTransaction) {
+        val isTransactionSuccessful = !transaction.isRecorded && transaction.isSuccessful
+
+        val shareMessage = when(transaction.transaction_type) {
+            HoverAction.AIRTIME -> getString(R.string.airtime_purchase_message, getString(R.string.share_link))
+            HoverAction.BALANCE -> getString(R.string.check_balance_message, getString(R.string.share_link))
+            HoverAction.P2P -> getString(R.string.send_money_message, getString(R.string.share_link))
+            else -> getString(R.string.share_msg)
+        }
+
         bottomSheetBehavior = BottomSheetBehavior.from(binding.shareLayout.bottomSheet)
         val shouldShow = args.isNewTransaction && isTransactionSuccessful
-        setBottomSheetVisibility(shouldShow)
+        setBottomSheetVisibility(shouldShow, shareMessage)
     }
 
-    private fun setBottomSheetVisibility(isVisible: Boolean) {
+    private fun setBottomSheetVisibility(isVisible: Boolean, shareMessage: String) {
         var updatedState = BottomSheetBehavior.STATE_HIDDEN
 
         if(isVisible) {
             updatedState = BottomSheetBehavior.STATE_EXPANDED
             val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down)
+
             binding.shareLayout.bottomSheet.visibility = VISIBLE
             binding.shareLayout.bottomSheet.animation = animation
-            binding.shareLayout.shareBtn.setOnClickListener { Utils.shareStax(requireActivity()) }
+            binding.shareLayout.shareBtn.setOnClickListener { Utils.shareStax(requireActivity(), shareMessage) }
         }
+
         bottomSheetBehavior.state = updatedState
     }
 
