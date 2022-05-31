@@ -205,13 +205,13 @@ object Utils {
         }
     }
 
-    fun shareStax(activity: Activity) {
+    fun shareStax(activity: Activity, shareMessage: String? = null) {
         AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
 
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.share_msg))
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareMessage ?: activity.getString(R.string.share_msg))
         activity.startActivity(Intent.createChooser(sharingIntent, activity.getString(R.string.share_explain)))
     }
 
