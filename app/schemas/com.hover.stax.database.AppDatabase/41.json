@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 40,
-    "identityHash": "23dcee4f6c17f90bbed5af20d2c8881d",
+    "version": 41,
+    "identityHash": "fb61055a75df85549eb194d19d3ed42a",
     "entities": [
       {
         "tableName": "channels",
@@ -350,7 +350,7 @@
       },
       {
         "tableName": "requests",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `requestee_ids` TEXT NOT NULL, `amount` TEXT, `requester_institution_id` INTEGER NOT NULL DEFAULT 0, `requester_number` TEXT, `requester_country_alpha2` TEXT, `note` TEXT, `message` TEXT, `matched_transaction_uuid` TEXT, `date_sent` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `requester_account_id` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `requestee_ids` TEXT NOT NULL, `amount` TEXT, `requester_institution_id` INTEGER NOT NULL DEFAULT 0, `requester_number` TEXT, `requester_country_alpha2` TEXT, `note` TEXT, `message` TEXT, `matched_transaction_uuid` TEXT, `requester_account_id` INTEGER, `date_sent` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP)",
         "fields": [
           {
             "fieldPath": "id",
@@ -414,17 +414,17 @@
             "notNull": false
           },
           {
+            "fieldPath": "requester_account_id",
+            "columnName": "requester_account_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "date_sent",
             "columnName": "date_sent",
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "CURRENT_TIMESTAMP"
-          },
-          {
-            "fieldPath": "requester_account_id",
-            "columnName": "requester_account_id",
-            "affinity": "INTEGER",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -846,15 +846,6 @@
         },
         "indices": [
           {
-            "name": "index_merchants_business_no",
-            "unique": true,
-            "columnNames": [
-              "business_no"
-            ],
-            "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_merchants_business_no` ON `${TABLE_NAME}` (`business_no`)"
-          },
-          {
             "name": "index_merchants_accountId",
             "unique": false,
             "columnNames": [
@@ -944,12 +935,51 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "bonuses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_channel` INTEGER NOT NULL, `purchase_channel` INTEGER NOT NULL, `bonus_percent` REAL NOT NULL, `message` TEXT NOT NULL, PRIMARY KEY(`user_channel`, `purchase_channel`))",
+        "fields": [
+          {
+            "fieldPath": "userChannel",
+            "columnName": "user_channel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "purchaseChannel",
+            "columnName": "purchase_channel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bonusPercent",
+            "columnName": "bonus_percent",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "user_channel",
+            "purchase_channel"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '23dcee4f6c17f90bbed5af20d2c8881d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fb61055a75df85549eb194d19d3ed42a')"
     ]
   }
 }
