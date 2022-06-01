@@ -6,9 +6,11 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -19,8 +21,8 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
-import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
@@ -28,10 +30,12 @@ import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.UIHelper.loadImage
 import com.hover.stax.utils.Utils
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 const val UUID = "uuid"
 
@@ -78,13 +82,20 @@ class TransactionDetailsFragment : Fragment() {
         log.show(childFragManager, USSDLogBottomSheetFragment::class.java.simpleName)
     }
 
-    private fun startObservers() {
-        viewModel.transaction.observe(viewLifecycleOwner) { showTransaction(it) }
-        viewModel.action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
-        viewModel.contact.observe(viewLifecycleOwner) { updateRecipient(it) }
-        viewModel.account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
-        viewModel.hoverTransaction.observe(viewLifecycleOwner) { it?.let { updateTransaction(it) } }
-        viewModel.messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
+    private fun startObservers() = with(viewModel) {
+        transaction.observe(viewLifecycleOwner) { showTransaction(it) }
+        action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
+        contact.observe(viewLifecycleOwner) { updateRecipient(it) }
+        account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
+        hoverTransaction.observe(viewLifecycleOwner) { it?.let { updateTransaction(it) } }
+        messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
+        bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
+
+        val observer = Observer<Boolean> {
+            Timber.i("Expecting sms $it")
+            action.value?.let { a -> updateAction(a) }
+        }
+        isExpectingSMS.observe(viewLifecycleOwner, observer)
     }
 
     private fun showTransaction(transaction: StaxTransaction?) {
@@ -109,7 +120,7 @@ class TransactionDetailsFragment : Fragment() {
         statusIcon.setImageResource(transaction.getIcon())
     }
 
-    private fun shouldShowNewBalance(transaction: StaxTransaction) : Boolean {
+    private fun shouldShowNewBalance(transaction: StaxTransaction): Boolean {
         return !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
     }
 
@@ -136,7 +147,7 @@ class TransactionDetailsFragment : Fragment() {
         transaction.transaction_type
         binding.transactionHeader.mainMessage.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
         binding.statusInfo.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
-        binding.statusInfo.failureInfo.visibility = if (transaction.isSuccessful) GONE else VISIBLE
+//        binding.statusInfo.failureInfo.visibility = if (transaction.isSuccessful) GONE else VISIBLE //TODO root visibility is gone, test impact of this
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.paidWithRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
@@ -152,12 +163,12 @@ class TransactionDetailsFragment : Fragment() {
         if (action.isOnNetwork) binding.details.recipInstitutionRow.visibility = GONE
         binding.details.institutionValue.setTitle(action.to_institution_name)
         viewModel.transaction.value?.let {
-            binding.statusInfo.longDescription.text = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+            binding.statusInfo.longDescription.text = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
             binding.details.categoryValue.text = it.shortStatusExplain(action, requireContext())
             if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
         }
-        UIHelper.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo, binding.statusInfo.institutionLogo)
+        binding.statusInfo.institutionLogo.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo)
     }
 
     private fun updateAccount(account: Account) {
@@ -180,6 +191,7 @@ class TransactionDetailsFragment : Fragment() {
                     it,
                     ussdCallResponses?.last(),
                     viewModel.sms.value,
+                    viewModel.isExpectingSMS.value ?: false,
                     requireContext()
                 )
             }
@@ -204,29 +216,27 @@ class TransactionDetailsFragment : Fragment() {
                 setupContactSupportButton(transaction.action_id, button)
             else if (transaction.isRetryable)
                 createRetryListener(transaction, button)
-        }
-        else binding.statusInfo.transactionRetryButtonLayoutId.visibility = GONE
+        } else binding.statusInfo.btnRetry.visibility = GONE
     }
 
     private fun setupRetryBountyButton() {
-        val bountyButtonsLayout = binding.statusInfo.transactionRetryButtonLayoutId
-        val retryButton = binding.statusInfo.btnRetry
-        bountyButtonsLayout.visibility = VISIBLE
-        retryButton.setOnClickListener { retryBountyClicked() }
+        binding.statusInfo.btnRetry.apply {
+            visibility = VISIBLE
+            setOnClickListener{ retryBountyClicked() }
+        }
     }
 
-    private fun showButtonToClick(): TextView {
-        val transactionButtonsLayout = binding.statusInfo.transactionRetryButtonLayoutId
-        val retryButton = binding.statusInfo.btnRetry
-        transactionButtonsLayout.visibility = VISIBLE
-        return retryButton
+    private fun showButtonToClick(): Button {
+        return binding.statusInfo.btnRetry.also { it.visibility = VISIBLE }
     }
 
     private fun createRetryListener(transaction: StaxTransaction, retryButton: TextView) {
         retryButton.setOnClickListener {
             if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
                 UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
-            else { retry(transaction) }
+            else {
+                retry(transaction)
+            }
         }
     }
 
@@ -235,12 +245,16 @@ class TransactionDetailsFragment : Fragment() {
         if (transaction.transaction_type == HoverAction.BALANCE) {
             (requireActivity() as AbstractHoverCallerActivity)
                 .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
-        } else { navToTransferDetail(transaction) }
+        } else {
+            navToTransferDetail(transaction)
+        }
     }
 
     private fun navToTransferDetail(transaction: StaxTransaction) {
-        NavUtil.navigateTransfer(findNavController(), transaction.transaction_type,
-            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id)
+        NavUtil.navigateTransfer(
+            findNavController(), transaction.transaction_type,
+            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id
+        )
     }
 
     private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {
@@ -265,6 +279,17 @@ class TransactionDetailsFragment : Fragment() {
     private fun retryBountyClicked() {
         viewModel.action.value?.let {
             (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
+        }
+    }
+
+    private fun showBonusAmount(amount: Int) = with(binding.details) {
+        val txn = viewModel.transaction.value
+
+        if(amount > 0 && (txn != null && txn.isSuccessful)){
+            bonusRow.visibility = VISIBLE
+            bonusAmount.text = amount.toString()
+        } else {
+            bonusRow.visibility = GONE
         }
     }
 

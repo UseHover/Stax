@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/status_icon"
-        android:layout_width="@dimen/margin_55"
-        android:layout_height="@dimen/margin_55"
-        android:contentDescription="@string/successful_content_descrip" />
+            android:id="@+id/statusIcon"
+            android:layout_width="@dimen/margin_55"
+            android:layout_height="@dimen/margin_55"
+            android:contentDescription="@string/successful_content_descrip"
+            tools:src="@drawable/ic_success" />
 
     <TextView
             android:id="@+id/status_text"
@@ -18,7 +20,8 @@
             android:layout_marginTop="@dimen/margin_16"
             android:fontFamily="@font/brutalista_medium"
             android:gravity="center"
-            android:textSize="@dimen/text_21" />
+            android:textSize="@dimen/text_21"
+            tools:text="KES 15" />
 
     <TextView
             android:id="@+id/main_message"

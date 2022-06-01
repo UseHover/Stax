@@ -180,7 +180,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private fun observeAccountNo() {
         viewModel.accountNumber.observe(viewLifecycleOwner) {
             binding.editCard.accountNoInput.setText(it)
-            binding.summaryCard.accountNo.setText(it)
+            binding.summaryCard.accountNo.text = it
         }
     }
 

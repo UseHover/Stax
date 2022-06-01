@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-class AccountDetailViewModel(val application: Application, val repo: AccountRepo, val transactionRepo: TransactionRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo) : ViewModel() {
+class AccountDetailViewModel(val application: Application, val repo: AccountRepo, private val transactionRepo: TransactionRepo,
+                             private val channelRepo: ChannelRepo, val actionRepo: ActionRepo) : ViewModel() {
 
     private val id = MutableLiveData<Int>()
     var account: LiveData<Account> = MutableLiveData()
@@ -66,7 +67,7 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
 
         repo.delete(account)
 
-        if (!accounts.isNullOrEmpty() && changeDefault)
+        if (accounts.isNotEmpty() && changeDefault)
             accounts.firstOrNull()?.let {
                 it.isDefault = true
                 repo.update(it)

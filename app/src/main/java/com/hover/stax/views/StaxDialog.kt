@@ -3,6 +3,7 @@ package com.hover.stax.views
 import android.app.Activity
 import android.content.Context
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -81,15 +82,13 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
 
     val isDestructive: StaxDialog
         get() {
-            mView.findViewById<View>(R.id.pos_btn).background
-                    .setColorFilter(context.resources.getColor(R.color.stax_state_red), PorterDuff.Mode.SRC)
+            mView.findViewById<View>(R.id.pos_btn).background.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(context, R.color.stax_state_red), PorterDuff.Mode.SRC)
             return this
         }
 
     fun highlightPos(): StaxDialog {
         (mView.findViewById<View>(R.id.pos_btn) as Button).setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
-        mView.findViewById<View>(R.id.pos_btn).background
-                .setColorFilter(context.resources.getColor(R.color.brightBlue), PorterDuff.Mode.SRC)
+        mView.findViewById<View>(R.id.pos_btn).background.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(context, R.color.brightBlue), PorterDuff.Mode.SRC)
         return this
     }
 

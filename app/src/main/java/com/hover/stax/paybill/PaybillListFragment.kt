@@ -35,6 +35,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill_list)), requireActivity())
         updatePaybills(paybillViewModel.savedPaybills.value)
         updateActions(accountsViewModel.channelActions.value)

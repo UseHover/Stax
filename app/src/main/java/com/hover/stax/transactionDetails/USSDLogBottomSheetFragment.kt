@@ -32,6 +32,7 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+
 		binding.closeButton.setOnClickListener { this.dismiss() }
 		setCardTitle()
 		createUSSDMessagesRecyclerView()

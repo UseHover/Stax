@@ -9,15 +9,24 @@ import android.os.Build
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.hover.stax.R
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 object UIHelper {
@@ -76,17 +85,25 @@ object UIHelper {
         }
     }
 
-    fun loadImage(fragment: Fragment, url: String, imageView: ImageView) = GlideApp.with(fragment)
+    fun ImageView.loadImage(fragment: Fragment, url: String) = GlideApp.with(fragment)
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
-        .into(imageView)
+        .override(100)
+        .into(this)
 
-    fun loadImage(context: Context, url: String, imageView: ImageView) = GlideApp.with(context)
+    fun ImageView.loadImage(context: Context, url: String) = GlideApp.with(context)
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
-        .into(imageView)
+        .override(100)
+        .into(this)
+
+    fun ImageButton.loadImage(context: Context, url: String) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .into(this)
 
     fun loadImage(context: Context, url: String, target: CustomTarget<Drawable>) = GlideApp.with(context)
         .load(url)
@@ -94,4 +111,13 @@ object UIHelper {
         .circleCrop()
         .override(context.resources.getDimensionPixelSize(R.dimen.logoDiam))
         .into(target)
+
+}
+
+fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend(T) -> Unit) {
+    viewLifecycleOwner.lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED){
+            flow.collect(collect)
+        }
+    }
 }

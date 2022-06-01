@@ -7,6 +7,8 @@ import com.hover.stax.actions.ActionRepo
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bonus.BonusRepo
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.accounts.AccountsViewModel
@@ -38,8 +40,8 @@ import org.koin.dsl.module
 val appModule = module {
     viewModel { FaqViewModel() }
     viewModel { ActionSelectViewModel(get()) }
-    viewModel { ChannelsViewModel(get(), get(), get(), get()) }
-    viewModel { AccountsViewModel(get(), get(), get()) }
+    viewModel { ChannelsViewModel(get(), get(), get(), get(), get()) }
+    viewModel { AccountsViewModel(get(), get(), get(), get()) }
     viewModel { AccountDetailViewModel(get(), get(), get(), get(), get()) }
     viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
     viewModel { TransferViewModel(get(), get(), get(), get()) }
@@ -49,13 +51,15 @@ val appModule = module {
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get())}
-    viewModel { TransactionDetailsViewModel(get(), get(), get(), get(), get()) }
+    viewModel { TransactionDetailsViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get(), get(), get()) }
     viewModel { FinancialTipsViewModel() }
     viewModel { PaybillViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { MerchantViewModel(get(), get(), get(), get()) }
     viewModel { RequestDetailViewModel(get(), get(), get()) }
+    viewModel { BonusViewModel(get(), get()) }
+
 }
 
 val dataModule = module(createdAtStart = true) {
@@ -72,6 +76,8 @@ val dataModule = module(createdAtStart = true) {
     single { PaybillRepo(get()) }
     single { MerchantRepo(get()) }
     single { UserRepo(get()) }
+    single { BonusRepo(get()) }
+    single { ParserRepo(get()) }
 }
 
 val networkModule = module {

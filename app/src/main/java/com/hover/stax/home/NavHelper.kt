@@ -38,7 +38,7 @@ class NavHelper(val activity: AppCompatActivity) {
     fun setUpNav() {
         val nav = activity.findViewById<BottomNavigationView>(R.id.nav_view)
         val navHostFragment = activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navHostFragment?.let { navController = it.navController }
+        navHostFragment.let { navController = it.navController }
 
         navController?.let {
             NavigationUI.setupWithNavController(nav, navController!!)
@@ -50,6 +50,8 @@ class NavHelper(val activity: AppCompatActivity) {
         setNavClickListener(nav)
         setDestinationChangeListener(nav)
     }
+
+    fun showTxnDetails(uuid: String, isNewTransaction: Boolean? = false) = navController?.let{NavUtil.showTransactionDetailsFragment(it, uuid, isNewTransaction!!)}
 
     fun navigateWellness(tipId: String?) = navController?.let {
         NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment(tipId)) }
@@ -113,7 +115,7 @@ class NavHelper(val activity: AppCompatActivity) {
         else -> null //invalid or unmapped route, return nothing
     }
 
-    fun requestBasicPerms(){
+    private fun requestBasicPerms(){
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
             { PermissionUtils.requestPerms(PERMS_REQ_CODE, activity) },

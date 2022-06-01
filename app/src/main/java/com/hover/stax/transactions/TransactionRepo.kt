@@ -47,7 +47,7 @@ class TransactionRepo(db: AppDatabase) {
         return transactionDao.getTotalFees(accountId, year.toString())
     }
 
-    fun getTransaction(uuid: String?): StaxTransaction? {
+    private fun getTransaction(uuid: String?): StaxTransaction? {
         return transactionDao.getTransaction(uuid)
     }
 

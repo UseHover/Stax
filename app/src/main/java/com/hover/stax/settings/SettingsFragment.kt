@@ -23,7 +23,6 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 const val TEST_MODE = "test_mode"
 
@@ -49,6 +48,7 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireActivity())
 
         setUpShare()
@@ -80,8 +80,8 @@ class SettingsFragment : Fragment() {
             NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount())
         }
 
-        accountsViewModel.accounts.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty()) {
+        collectLatestLifecycleFlow(accountsViewModel.accounts) {
+            if (it.isEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE
                 binding.settingsCard.connectAccounts.visibility = VISIBLE
             } else

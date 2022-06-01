@@ -21,6 +21,7 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.*
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
@@ -101,11 +102,15 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         }
 
         with(accountsViewModel) {
-            accounts.observe(viewLifecycleOwner) {
-                //no channels selected. navigate user to accounts fragment
-                if (it.isNullOrEmpty())
+            collectLatestLifecycleFlow(accounts){
+                if (it.isEmpty())
                     setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
             }
+
+//            accounts.observe(viewLifecycleOwner) {
+//                //no channels selected. navigate user to accounts fragment
+//
+//            }
             activeAccount.observe(viewLifecycleOwner, accountsObserver)
         }
 

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
@@ -17,13 +17,15 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.FragmentBalanceBinding
-import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.home.HomeFragmentDirections
 import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.staxcardstack.StaxCardStackView
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -58,14 +60,14 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
         setUpHiddenStack()
 
         balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
-        val observer = Observer<List<Account>> { t -> updateAccounts(ArrayList(t)) }
-        accountsViewModel.accounts.observe(viewLifecycleOwner, observer)
-        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { it?.let { askToCheckBalance(it) } }
-        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
-            attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
+
+        collectLatestLifecycleFlow(accountsViewModel.accounts) {
+            updateAccounts(ArrayList(it))
         }
-        balancesViewModel.userRequestedBalanceAccount.observe(viewLifecycleOwner) {
-            attemptCallHover(it, balancesViewModel.balanceAction.value)
+//        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { it?.let { askToCheckBalance(it) } }
+
+        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+            attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
     }
 
@@ -74,7 +76,6 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     private fun callHover(account: Account, action: HoverAction) {
-        balancesViewModel.requestBalance(null)
         (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 
@@ -98,10 +99,10 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     private fun setUpBalanceList() {
-        balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView.also {
-            it.layoutManager = UIHelper.setMainLinearManagers(context)
-            it.setHasFixedSize(true)
-            it.visibility = View.GONE
+        balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView.apply {
+            layoutManager = UIHelper.setMainLinearManagers(context)
+            setHasFixedSize(true)
+            visibility = View.GONE
         }
     }
 
@@ -157,7 +158,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     private fun showAddAccount(accounts: List<Account>?, show: Boolean) {
-        addAccountBtn.visibility = if (accounts != null && accounts.size > 1 && show) View.VISIBLE else View.GONE
+        addAccountBtn.visibility = if (!accounts.isNullOrEmpty() && accounts.size > 1 && show) View.VISIBLE else View.GONE
     }
 
     private fun addDummyAccountsIfRequired(accounts: ArrayList<Account>?) {

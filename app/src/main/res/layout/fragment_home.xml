@@ -10,11 +10,11 @@
             android:layout_height="match_parent">
 
         <RelativeLayout
-                android:id="@+id/transaction_header"
+                android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="@dimen/margin_5"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -39,12 +39,23 @@
                     app:layout_goneMarginTop="@dimen/margin_5" />
         </RelativeLayout>
 
+        <include
+                android:id="@+id/bonusCard"
+                layout="@layout/card_bonuses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/margin_13"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/header" />
+
         <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/balance_fragment"
                 android:name="com.hover.stax.balances.BalancesFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/transaction_header" />
+                app:layout_constraintTop_toBottomOf="@id/bonusCard" />
 
         <include
                 android:id="@+id/wellnessCard"
@@ -153,14 +164,14 @@
                     app:drawableEndCompat="@drawable/ic_utility" />
         </androidx.cardview.widget.CardView>
 
-        <com.hover.stax.inapp_banner.StaxBannerView
-                android:id="@+id/homeBanner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_16"
-                android:background="?selectableItemBackground"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/paybill" />
+<!--        <com.hover.stax.inapp_banner.StaxBannerView-->
+<!--                android:id="@+id/homeBanner"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/margin_16"-->
+<!--                android:background="?selectableItemBackground"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/paybill" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

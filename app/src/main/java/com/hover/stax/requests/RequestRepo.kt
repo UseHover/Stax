@@ -45,7 +45,7 @@ class RequestRepo(db: AppDatabase) {
     private fun decryptRequestForOldVersions(param: String): Request? {
         var params = param
         try {
-            val e = Request.getEncryptionSettings().build()
+            val e = Request.encryptionSettings.build()
             if (Request.isShortLink(params)) {
                 params = Shortlink(params).expand()
             }

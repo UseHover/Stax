@@ -3,41 +3,50 @@ package com.hover.stax.transfers
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
-import androidx.core.view.isEmpty
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
+import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.hover.FEE_REQUEST
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
-import timber.log.Timber
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
+
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
+    private val channelsViewModel: ChannelsViewModel by viewModel()
 
     private val args by navArgs<TransferFragmentArgs>()
 
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
+    private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +64,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         init(binding.root)
+
+        bonusViewModel.getBonusList()
+
         startObservers(binding.root)
         startListeners()
         fillFromArgs()
@@ -65,6 +78,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         args.accountId?.let { accountsViewModel.setActiveAccount(Integer.parseInt(it)) }
         args.amount?.let { binding.editCard.amountInput.setText(it) }
         args.contactId?.let { transferViewModel.setContact(it) }
+        args.channelId?.let { channelsViewModel.validateAccounts(Integer.parseInt(it)) }
     }
 
     override fun init(root: View) {
@@ -85,7 +99,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun setUpFee() {
-        binding.summaryCard.feeValue.text = "check fee"
+        binding.summaryCard.feeValue.text = getString(R.string.check_fee)
         binding.summaryCard.feeValue.textSize = 13.0F
         binding.summaryCard.feeValue.setTextColor(getColor(requireContext(), R.color.stax_state_blue))
         binding.summaryCard.feeValue.setOnClickListener { checkFee() }
@@ -116,13 +130,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
-    }
-
-    private fun observeAccountList() {
-        accountsViewModel.accounts.observe(viewLifecycleOwner) {
-            if (it.isEmpty())
-                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
-        }
+        observeAccountsEvent()
     }
 
     private fun observeActiveAccount() {
@@ -138,6 +146,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
         }
+
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
             binding.editCard.actionSelect.updateActions(it)
         }
@@ -149,13 +158,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
             }
+            showBonusBanner(it)
         }
     }
 
     private fun observeSelectedContact() {
-        transferViewModel.contact.observe(viewLifecycleOwner) { it?.let {
-            binding.summaryCard.recipientValue.setContact(it)
-        } }
+        transferViewModel.contact.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.summaryCard.recipientValue.setContact(it)
+            }
+        }
+    }
+
+    private fun observeAccountList() = collectLatestLifecycleFlow(accountsViewModel.accounts) {
+        if (it.isEmpty())
+            setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
     }
 
     private fun observeAmount() {
@@ -180,7 +197,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             if (!it.isNullOrEmpty()) {
                 binding.editCard.contactSelect.setRecent(it, requireActivity())
                 transferViewModel.contact.value?.let { ct ->
-                    if (ct.id != null) binding.editCard.contactSelect.setSelected(ct)
+                    binding.editCard.contactSelect.setSelected(ct)
                 }
             }
         }
@@ -191,6 +208,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             if (variables != null) {
                 updateNonStandardInputs(variables)
                 updateNonStandardSummary(variables)
+            }
+        }
+    }
+
+    private fun observeAccountsEvent() {
+        lifecycleScope.launchWhenStarted {
+            channelsViewModel.accountEventFlow.collect {
+                val bonus = bonusViewModel.bonuses.value.firstOrNull() ?: return@collect
+                accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
             }
         }
     }
@@ -233,8 +259,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun callHover(requestCode: Int) {
-        (requireActivity() as AbstractHoverCallerActivity).runSession(payWithDropdown.highlightedAccount ?: accountsViewModel.activeAccount.value!!,
-            actionSelectViewModel.activeAction.value!!, getExtras(), requestCode)
+        (requireActivity() as AbstractHoverCallerActivity).runSession(
+            payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
+            actionSelectViewModel.activeAction.value!!, getExtras(), requestCode
+        )
     }
 
     private fun getExtras(): HashMap<String, String> {
@@ -316,6 +344,44 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                     getString(R.string.recipientphone_label)
             )
         }
+    }
+
+    private fun showBonusBanner(activeAction: HoverAction?) {
+        if (args.transactionType == HoverAction.AIRTIME) {
+            val bonus = bonusViewModel.bonuses.value.firstOrNull() ?: return
+
+            with(binding.bonusLayout) {
+                cardBonus.visibility = View.VISIBLE
+                learnMore.movementMethod = LinkMovementMethod.getInstance()
+
+                if (activeAction?.channel_id == bonus.purchaseChannel) {
+                    title.text = getString(R.string.congratulations)
+                    message.text = getString(R.string.valid_account_bonus_msg)
+                    cta.visibility = View.GONE
+                } else {
+                    title.text = getString(R.string.get_extra_airtime)
+                    message.text = getString(R.string.invalid_account_bonus_msg)
+                    cta.apply {
+                        visibility = View.VISIBLE
+                        text = getString(R.string.top_up_with_mpesa)
+
+                        setOnClickListener {
+                            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                            channelsViewModel.validateAccounts(bonus.userChannel)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun showEdit(isEditing: Boolean) {
+        super.showEdit(isEditing)
+
+        if (!isEditing)
+            binding.bonusLayout.cardBonus.visibility = View.GONE
+        else
+            showBonusBanner(actionSelectViewModel.activeAction.value)
     }
 
     override fun onDestroyView() {
