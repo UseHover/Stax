@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 41,
-    "identityHash": "fb61055a75df85549eb194d19d3ed42a",
+    "identityHash": "7315ea5f2826ca294345cd75966978f4",
     "entities": [
       {
         "tableName": "channels",
@@ -126,7 +126,7 @@
       },
       {
         "tableName": "stax_transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT NOT NULL DEFAULT 'started', `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT NOT NULL, `account_id` INTEGER, `recipient_id` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `balance` TEXT, `note` TEXT, `counterparty` TEXT, `account_name` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT NOT NULL DEFAULT 'started', `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT NOT NULL, `account_id` INTEGER, `recipient_id` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `balance` TEXT, `note` TEXT, `account_name` TEXT)",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -238,12 +238,6 @@
           {
             "fieldPath": "note",
             "columnName": "note",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "counterparty",
-            "columnName": "counterparty",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -792,7 +786,7 @@
       },
       {
         "tableName": "merchants",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`business_name` TEXT, `till_no` TEXT NOT NULL, `action_id` TEXT DEFAULT '', `accountId` INTEGER NOT NULL, `channelId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `last_used_timestamp` INTEGER, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`business_name` TEXT, `business_no` TEXT NOT NULL, `action_id` TEXT DEFAULT '', `accountId` INTEGER NOT NULL, `channelId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `last_used_timestamp` INTEGER, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "businessName",
@@ -801,8 +795,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "tillNo",
-            "columnName": "till_no",
+            "fieldPath": "businessNo",
+            "columnName": "business_no",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -845,6 +839,15 @@
           "autoGenerate": true
         },
         "indices": [
+          {
+            "name": "index_merchants_business_no",
+            "unique": true,
+            "columnNames": [
+              "business_no"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_merchants_business_no` ON `${TABLE_NAME}` (`business_no`)"
+          },
           {
             "name": "index_merchants_accountId",
             "unique": false,
@@ -979,7 +982,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fb61055a75df85549eb194d19d3ed42a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7315ea5f2826ca294345cd75966978f4')"
     ]
   }
 }
