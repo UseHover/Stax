@@ -17,6 +17,7 @@ import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.transfers.TransferFragmentDirections
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
@@ -60,7 +61,7 @@ class MerchantFragment : AbstractFormFragment() {
 	}
 
 	private fun observeAccountList() {
-		accountsViewModel.accounts.observe(viewLifecycleOwner) {
+		collectLatestLifecycleFlow(accountsViewModel.accounts) {
 			if (it.isEmpty())
 				setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
 		}
@@ -102,7 +103,7 @@ class MerchantFragment : AbstractFormFragment() {
 
 	private fun observeSelectedMerchant() {
 		viewModel.merchant.observe(viewLifecycleOwner) { it?.let {
-			binding.summaryCard.recipientValue.setContent(it.businessName, it.businessNo)
+			binding.summaryCard.recipientValue.setContent(it.businessName, it.tillNo)
 		} }
 	}
 
@@ -156,7 +157,7 @@ class MerchantFragment : AbstractFormFragment() {
 	}
 
 	private fun callHover(requestCode: Int) {
-		(requireActivity() as AbstractHoverCallerActivity).runSession(payWithDropdown.highlightedAccount ?: accountsViewModel.activeAccount.value!!,
+		(requireActivity() as AbstractHoverCallerActivity).runSession(payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
 			actionSelectViewModel.activeAction.value!!, getExtras(), requestCode)
 	}
 
@@ -176,7 +177,7 @@ class MerchantFragment : AbstractFormFragment() {
 		override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 		override fun afterTextChanged(editable: Editable) {}
 		override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, afterCount: Int) {
-			viewModel.setMerchant(charSequence.toString(), payWithDropdown.highlightedAccount, actionSelectViewModel.activeAction.value)
+			viewModel.setMerchant(charSequence.toString(), payWithDropdown.getHighlightedAccount(), actionSelectViewModel.activeAction.value)
 		}
 	}
 

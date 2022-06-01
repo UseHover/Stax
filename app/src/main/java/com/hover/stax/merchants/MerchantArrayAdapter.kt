@@ -27,7 +27,7 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 		}
 		val m = filteredMerchants!![position]
 		holder.title.text = m.shortName()
-		holder.subtitle.text = m.businessNo
+		holder.subtitle.text = m.tillNo
 		holder.subtitle.visibility = if (m.hasName()) View.VISIBLE else View.GONE
 		return v
 	}

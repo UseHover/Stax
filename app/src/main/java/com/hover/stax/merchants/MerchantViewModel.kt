@@ -47,7 +47,7 @@ class MerchantViewModel(application: Application, contactRepo: ContactRepo, val 
 
 	fun recipientErrors(): String? {
 		return when {
-			(merchant.value == null || merchant.value?.businessNo == null) -> getString(R.string.paybill_error_business_number)
+			(merchant.value == null || merchant.value?.tillNo == null) -> getString(R.string.paybill_error_business_number)
 			else -> null
 		}
 	}
@@ -56,7 +56,7 @@ class MerchantViewModel(application: Application, contactRepo: ContactRepo, val 
 		val extras: HashMap<String, String> = hashMapOf()
 		if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
 		if (merchant.value != null) {
-			extras[BUSINESS_NO] = merchant.value!!.businessNo
+			extras[BUSINESS_NO] = merchant.value!!.tillNo
 		}
 		return extras
 	}

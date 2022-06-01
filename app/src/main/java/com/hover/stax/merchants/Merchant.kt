@@ -6,16 +6,15 @@ import com.hover.stax.channels.Channel
 import javax.annotation.Nullable
 
 @Entity(tableName = "merchants",
-	foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])],
-	indices = [Index(value = ["business_no"], unique = true)]
+	foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])]
 )
 data class Merchant(
 
 	@ColumnInfo(name = "business_name")
 	var businessName: String?,
 
-	@ColumnInfo(name = "business_no")
-	var businessNo: String,
+	@ColumnInfo(name = "till_no")
+	var tillNo: String,
 
 	@Nullable
 	@ColumnInfo(name = "action_id", defaultValue = "")
@@ -38,7 +37,7 @@ data class Merchant(
 	override fun toString() = buildString {
 		append(businessName)
 		append(" (")
-		append(businessNo)
+		append(tillNo)
 		append(")")
 	}
 
@@ -47,10 +46,10 @@ data class Merchant(
 		return id == other.id || other.name == other.name
 	}
 
-	override fun compareTo(other: Merchant): Int = businessNo.compareTo(other.businessNo)
+	override fun compareTo(other: Merchant): Int = tillNo.compareTo(other.tillNo)
 
 	fun shortName(): String? {
-		return if (hasName()) businessName else businessNo
+		return if (hasName()) businessName else tillNo
 	}
 
 	fun hasName(): Boolean {

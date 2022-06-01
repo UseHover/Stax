@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MerchantDao {
-	@get:Query("SELECT * FROM merchants ORDER BY business_no ASC")
+	@get:Query("SELECT * FROM merchants ORDER BY till_no ASC")
 	val all: LiveData<List<Merchant>>
 
-	@Query("SELECT * FROM merchants WHERE business_no LIKE :businessNo ORDER BY business_no ASC")
-	fun getMerchantsByNo(businessNo: String): Flow<List<Merchant>>
+	@Query("SELECT * FROM merchants WHERE till_no LIKE :tillNo ORDER BY till_no ASC")
+	fun getMerchantsByNo(tillNo: String): Flow<List<Merchant>>
 
-	@Query("SELECT * FROM merchants WHERE id = :id ORDER BY business_no ASC")
+	@Query("SELECT * FROM merchants WHERE id = :id ORDER BY till_no ASC")
 	fun getMerchant(id: Int): Merchant?
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
