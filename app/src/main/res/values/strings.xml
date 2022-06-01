@@ -33,6 +33,7 @@
     <string name="nav_link_account">Link an account</string>
     <string name="nav_airtime">Buy Airtime</string>
     <string name="nav_transfer">Transfer</string>
+    <string name="nav_merchant">Buy Goods</string>
     <string name="nav_new_request">New Request</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_account_detail">Account Details</string>
@@ -125,6 +126,7 @@
     <string name="cta_airtime">Buy airtime</string>
     <string name="cta_request">Request money</string>
     <string name="cta_paybill">Pay a bill</string>
+    <string name="cta_merchant">Buy goods</string>
 
     <!-- Balances -->
     <string name="bal_cardhead">Balances</string>
@@ -286,6 +288,7 @@
     <string name="paid_with_label">Paid with</string>
     <string name="transfer_amount_label">Amount</string>
     <string name="account_label">Account number</string>
+    <string name="merchant_label">Till number</string>
     <string name="paybill_name_label">Name</string>
     <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
     <string name="recipientphone_label">Contact phone number</string>
@@ -327,7 +330,8 @@
     <string name="descrip_transfer_sent">Send %1$s to %2$s</string>
     <string name="descrip_transfer_received">received money from %1$s</string>
     <string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
-    <string name="descrip_bill_paid">Paid %1$s to %2$s</string>
+    <string name="descrip_bill_paid">Paid %1$s to account %2$d at %3$s</string>
+    <string name="descrip_merchant_paid">Paid %1$s to %2$d</string>
     <string name="descrip_recorded">Recorded USSD session on %1$s</string>
     <string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
@@ -576,10 +580,13 @@
     <string name="descrip_bounty_cross_country">in %1$s on %2$s</string>
     <string name="descrip_bounty_me2me">Move money to your %1$s account</string>
     <string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
-    <string name="descrip_bounty_c2b">Pay a bill%1$s</string>
+    <string name="descrip_bounty_bill">Pay a bill%1$s</string>
+    <string name="descrip_bounty_merchant">Buy goods from %1$s</string>
     <string name="descrip_bounty_c2b_b"> from %1$s</string>
-    <string name="bounty_c2b_explain">Send any amount to %1$s</string>
-    <string name="bounty_c2b_any">any business</string>
+    <string name="bounty_bill_explain">Send any amount to %1$s</string>
+    <string name="bounty_merchant_explain">Send any amount to %1$s with buy goods</string>
+    <string name="bounty_bill_any">any business</string>
+    <string name="bounty_merchant_any">any shop</string>
 
     <string name="descrip_bounty_balance">Check balance</string>
     <string name="bounty_balance_explain">Check your balance</string>
@@ -619,7 +626,7 @@
     <string name="bounty">Bounty</string>
     <string name="bounty_error_none">No bounties available. Please check again later.</string>
 
-    <string name="library_cardhead">USSD Library</string>
+    <string name="library_cardhead">USSD Services</string>
     <string name="visit_library">Find USSD shortcodes</string>
     <string name="shortcode">Shortcode</string>
     <string name="dial_btn">Dial %1$s</string>

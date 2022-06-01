@@ -41,7 +41,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
@@ -97,6 +97,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            setHasFixedSize(true)
             adapter = selectAdapter
         }
     }
@@ -204,7 +205,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private fun aggregateSelectedChannels(tracker: SelectionTracker<Long>) {
         val selectedChannels = mutableListOf<Channel>()
         tracker.selection.forEach { selection ->
-            selectedChannels.addAll(selectAdapter.channels.filter { it.id.toLong() == selection })
+            selectedChannels.addAll(selectAdapter.currentList.filter { it.id.toLong() == selection })
         }
 
         channelsViewModel.createAccounts(selectedChannels)

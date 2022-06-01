@@ -58,7 +58,7 @@
     </TableRow>
 
 
-    <TableRow android:layout_marginTop="@dimen/margin_18">
+    <TableRow android:layout_marginTop="@dimen/margin_18" android:id="@+id/paid_with_row">
 
         <TextView
             android:text="@string/paid_with_label"

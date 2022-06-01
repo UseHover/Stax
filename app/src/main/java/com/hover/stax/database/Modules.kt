@@ -18,6 +18,8 @@ import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginNetworking
 import com.hover.stax.login.LoginViewModel
+import com.hover.stax.merchants.MerchantRepo
+import com.hover.stax.merchants.MerchantViewModel
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.requests.NewRequestViewModel
@@ -52,6 +54,7 @@ val appModule = module {
     viewModel { BountyViewModel(get(), get(), get(), get()) }
     viewModel { FinancialTipsViewModel() }
     viewModel { PaybillViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { MerchantViewModel(get(), get(), get(), get()) }
     viewModel { RequestDetailViewModel(get(), get(), get()) }
 }
 
@@ -67,6 +70,7 @@ val dataModule = module(createdAtStart = true) {
     single { RequestRepo(get()) }
     single { ScheduleRepo(get()) }
     single { PaybillRepo(get()) }
+    single { MerchantRepo(get()) }
     single { UserRepo(get()) }
 }
 

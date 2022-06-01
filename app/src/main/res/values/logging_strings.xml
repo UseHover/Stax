@@ -65,6 +65,7 @@
 	<string name="visit_balance_and_history" translatable="false">Balance and history</string>
 	<string name="visit_link_account" translatable="false">Link an account</string>
 	<string name="visit_paybill" translatable="false">Paybill</string>
+	<string name="visit_merchant" translatable="false">Pay merchant</string>
 	<string name="visit_paybill_list" translatable="false">Paybill List</string>
 
 	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>

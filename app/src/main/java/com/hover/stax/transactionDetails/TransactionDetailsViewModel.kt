@@ -44,7 +44,7 @@ class TransactionDetailsViewModel(application: Application, val repo: Transactio
     }
 
     private fun getLiveAccount(txn: StaxTransaction?): LiveData<Account>? = if (txn != null)
-        accountRepo.getLiveAccount(txn.accountId!!)
+        accountRepo.getLiveAccount(txn.accountId)
     else null
 
     private fun getLiveAction(txn: StaxTransaction?): LiveData<HoverAction>? = if (txn != null)

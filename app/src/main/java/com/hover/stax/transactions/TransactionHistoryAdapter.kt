@@ -1,14 +1,12 @@
 package com.hover.stax.transactions
 
 import com.hover.stax.utils.DateUtils.humanFriendlyDate
-import com.hover.stax.transactions.StaxTransaction
 import com.hover.sdk.actions.HoverAction
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.transactions.TransactionHistoryAdapter.HistoryViewHolder
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
-import androidx.core.text.HtmlCompat
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.databinding.TransactionListItemBinding
 
@@ -53,7 +51,7 @@ class TransactionHistoryAdapter(
 				t.getBackgroundColor()
 			)
 		)
-		holder.binding.liDetail.text = t.shortDescription(a, holder.itemView.context)
+		holder.binding.liDetail.text = t.shortStatusExplain(a, holder.itemView.context)
 		holder.binding.liDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(
 			t.getIcon(),
 			0,

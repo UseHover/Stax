@@ -134,21 +134,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeActionSelection() {
-        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
-            it?.let {
-                binding.editCard.actionSelect.selectRecipientNetwork(it)
-                setRecipientHint(it)
-            }
-        }
-    }
-
     private fun observeActions() {
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
         }
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
             binding.editCard.actionSelect.updateActions(it)
+        }
+    }
+
+    private fun observeActionSelection() {
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.editCard.actionSelect.selectRecipientNetwork(it)
+                setRecipientHint(it)
+            }
         }
     }
 

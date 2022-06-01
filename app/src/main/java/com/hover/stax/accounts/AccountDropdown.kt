@@ -105,24 +105,31 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun setState(actions: List<HoverAction>, viewModel: AccountsViewModel) {
-        when {
-            viewModel.activeAccount.value != null && (actions.isNullOrEmpty()) -> setState(
+        if (viewModel.activeAccount.value != null && actions.isNullOrEmpty()) {
+            this.setState(
                 context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
                 ), ERROR
             )
+        } else if (!actions.isNullOrEmpty() && actions.size == 1)
+            addInfoMessage(actions.first())
+        else if (viewModel.activeAccount.value != null && showSelected)
+            setState(helperText, SUCCESS)
+    }
 
-            !actions.isNullOrEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
-                setState(
-                    context.getString(
-                        if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
-                        else R.string.self_only_money_warning
-                    ), INFO
-                )
+    private fun addInfoMessage(action: HoverAction) {
+        if (!action.requiresRecipient() && isSelf(action))
+            setState(
+            context.getString(
+                if (action.transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
+                else R.string.self_only_money_warning
+            ), INFO
+        )
+    }
 
-            viewModel.activeAccount.value != null && showSelected -> setState(helperText, SUCCESS)
-        }
+    private fun isSelf(action: HoverAction): Boolean {
+        return action.transaction_type == HoverAction.P2P || action.transaction_type == HoverAction.AIRTIME
     }
 
     interface HighlightListener {

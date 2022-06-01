@@ -1,6 +1,5 @@
 package com.hover.stax.transactionDetails
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +7,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -24,7 +21,6 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavHelper
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
@@ -119,8 +115,9 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun updateDetails(transaction: StaxTransaction) = with(binding.details) {
         detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
+        typeValue.text = HoverAction.getHumanFriendlyType(requireContext(), transaction.transaction_type)
         viewModel.action.value?.let {
-            categoryValue.text = transaction.shortDescription(viewModel.action.value, requireContext()) }
+            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, requireContext()) }
 
         statusValue.apply {
             text = transaction.humanStatus(requireContext())
@@ -136,11 +133,13 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun setVisibleFields(transaction: StaxTransaction) {
+        transaction.transaction_type
         binding.transactionHeader.mainMessage.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
         binding.statusInfo.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
         binding.statusInfo.failureInfo.visibility = if (transaction.isSuccessful) GONE else VISIBLE
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
+        binding.details.paidWithRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
         binding.details.recipInstitutionRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
         binding.details.amountRow.visibility = if (transaction.amount != null) VISIBLE else GONE
         binding.details.feeRow.visibility = if (transaction.fee == null) GONE else VISIBLE
@@ -153,10 +152,9 @@ class TransactionDetailsFragment : Fragment() {
         if (action.isOnNetwork) binding.details.recipInstitutionRow.visibility = GONE
         binding.details.institutionValue.setTitle(action.to_institution_name)
         viewModel.transaction.value?.let {
-            binding.statusInfo.longDescription.text = it.longDescription(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
-            binding.details.typeValue.text = it.humanTransactionType(requireContext(), action.to_institution_name)
-            binding.details.categoryValue.text = it.shortDescription(action, requireContext())
-            if (action.transaction_type == HoverAction.C2B)
+            binding.statusInfo.longDescription.text = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+            binding.details.categoryValue.text = it.shortStatusExplain(action, requireContext())
+            if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
         }
         UIHelper.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo, binding.statusInfo.institutionLogo)
@@ -169,7 +167,7 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun updateTransaction(t: Transaction) {
         viewModel.action.value?.let {
-            if (it.transaction_type == HoverAction.C2B && t.input_extras.has(HoverAction.ACCOUNT_KEY)) {
+            if (it.transaction_type == HoverAction.BILL && t.input_extras.has(HoverAction.ACCOUNT_KEY)) {
                 binding.details.recipientValue.setTitle(t.input_extras.getString(HoverAction.ACCOUNT_KEY))
             }
         }
@@ -178,7 +176,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun updateMessages(ussdCallResponses: List<UssdCallResponse>?) {
         viewModel.action.value?.let {
             viewModel.transaction.value?.let { t ->
-                binding.statusInfo.longDescription.text = t.longDescription(
+                binding.statusInfo.longDescription.text = t.longStatus(
                     it,
                     ussdCallResponses?.last(),
                     viewModel.sms.value,

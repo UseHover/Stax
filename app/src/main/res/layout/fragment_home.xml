@@ -104,6 +104,31 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/merchant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_13"
+            android:layout_marginTop="@dimen/margin_13"
+            android:layout_marginBottom="@dimen/margin_34"
+            android:animateLayoutChanges="false"
+            android:clipToPadding="true"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/cardViewColor"
+            app:cardCornerRadius="@dimen/radius"
+            app:cardElevation="8dp"
+            app:layout_constraintTop_toBottomOf="@id/airtime">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg_grey"
+                android:padding="@dimen/margin_24"
+                android:text="@string/cta_merchant"
+                android:textSize="@dimen/text_19"
+                app:drawableEndCompat="@drawable/ic_card" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
                 android:id="@+id/paybill"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,7 +141,7 @@
                 app:cardBackgroundColor="@color/cardViewColor"
                 app:cardCornerRadius="@dimen/radius"
                 app:cardElevation="8dp"
-                app:layout_constraintTop_toBottomOf="@id/airtime">
+                app:layout_constraintTop_toBottomOf="@id/merchant">
 
             <TextView
                     android:layout_width="match_parent"
@@ -125,7 +150,7 @@
                     android:padding="@dimen/margin_24"
                     android:text="@string/cta_paybill"
                     android:textSize="@dimen/text_19"
-                    app:drawableEndCompat="@drawable/ic_payment" />
+                    app:drawableEndCompat="@drawable/ic_utility" />
         </androidx.cardview.widget.CardView>
 
         <com.hover.stax.inapp_banner.StaxBannerView

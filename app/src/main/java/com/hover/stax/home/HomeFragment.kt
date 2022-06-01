@@ -47,13 +47,15 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
+        binding.merchant.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
+        binding.paybill.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
         }
 
         setUpWellnessTips()
-        accountsViewModel.accounts.observe(viewLifecycleOwner, this::setPaybillVisibility)
+        accountsViewModel.accounts.observe(viewLifecycleOwner, this::setKeVisibility)
     }
 
     private fun getTransferDirection(type: String) : NavDirections {
@@ -77,17 +79,12 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setPaybillVisibility(accounts: List<Account>?) {
-        binding.paybill.apply {
-            if (accounts?.any { it.countryAlpha2.contentEquals("KE", ignoreCase = true) } == true) {
-                visibility = View.VISIBLE
-                setOnClickListener {
-                    navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
-                }
-            } else
-                visibility = View.GONE
-        }
+    private fun setKeVisibility(accounts: List<Account>?) {
+        binding.merchant.visibility = if (showMpesaActions(accounts)) View.VISIBLE else View.GONE
+        binding.paybill.visibility = if (showMpesaActions(accounts)) View.VISIBLE else View.GONE
     }
+
+    private fun showMpesaActions(accounts: List<Account>?): Boolean = accounts?.any { it.countryAlpha2.contentEquals("KE", ignoreCase = true) } == true
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 

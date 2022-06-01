@@ -145,7 +145,6 @@ abstract class AbstractFormFragment : Fragment() {
     private fun chooseFabText(isEditing: Boolean): String {
         return if (isEditing) getString(R.string.btn_continue)
             else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
-            else if (type == HoverAction.C2B) getString(R.string.fab_transfernow)
             else getString(R.string.fab_transfernow)
     }
 

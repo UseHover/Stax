@@ -135,7 +135,8 @@ data class StaxTransaction(
 				if (contact == null) c.getString(R.string.self_choice) else contact.shortName())
 			HoverAction.P2P -> c.getString(R.string.descrip_transfer_sent, amountStr, contact!!.shortName())
 			HoverAction.ME2ME -> c.getString(R.string.descrip_transfer_sent, amountStr, action.to_institution_name)
-			HoverAction.C2B -> c.getString(R.string.descrip_bill_paid, amountStr, action.to_institution_name)
+			HoverAction.BILL -> c.getString(R.string.descrip_bill_paid, amountStr, accountId, action.to_institution_name)
+			HoverAction.MERCHANT -> c.getString(R.string.descrip_merchant_paid, amountStr, accountId)
 			else -> "Other"
 		}
 	}
