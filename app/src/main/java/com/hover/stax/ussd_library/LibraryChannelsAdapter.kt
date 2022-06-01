@@ -39,8 +39,7 @@ class LibraryChannelsAdapter(private val favoriteClickInterface: FavoriteClickIn
     private fun setFavoriteIcon(favoriteImage: ImageView, channel: Channel ) {
         setFavColorIcon(favoriteImage, channel)
         favoriteImage.setOnClickListener {
-            val newFavoriteStatus = !channel.isFavorite
-            channel.isFavorite = newFavoriteStatus
+            channel.isFavorite = !channel.isFavorite
             setFavColorIcon(favoriteImage, channel)
             favoriteClickInterface.onFavoriteIconClicked(channel)
         }
