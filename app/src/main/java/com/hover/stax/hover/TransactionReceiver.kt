@@ -17,7 +17,6 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
-import com.hover.stax.paybill.Paybill
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.transactions.TransactionRepo

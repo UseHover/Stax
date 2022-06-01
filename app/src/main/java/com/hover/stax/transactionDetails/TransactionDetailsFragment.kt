@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -24,7 +23,6 @@ import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.merchants.Merchant
-import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
@@ -213,57 +211,18 @@ class TransactionDetailsFragment : Fragment() {
         } else visibility = GONE
     }
 
-    private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
-
     private fun addRetryOrSupportButton(transaction: StaxTransaction) {
         if (transaction.isRecorded)
-            setupRetryBountyButton()
+            binding.statusInfo.btnRetry.setOnClickListener{ retryBounty() }
         else if (transaction.status == Transaction.FAILED) {
-            val button = showButtonToClick()
             if (shouldContactSupport(transaction.action_id))
-                setupContactSupportButton(transaction.action_id, button)
-            else if (transaction.isRetryable)
-                createRetryListener(transaction, button)
-        } else binding.statusInfo.btnRetry.visibility = GONE
-    }
-
-    private fun setupRetryBountyButton() {
-        binding.statusInfo.btnRetry.apply {
-            visibility = VISIBLE
-            setOnClickListener{ retryBountyClicked() }
+                setupContactSupportButton(transaction.action_id, binding.statusInfo.btnRetry)
+            else binding.statusInfo.btnRetry.setOnClickListener{ maybeRetry(transaction) }
         }
+        binding.statusInfo.btnRetry.visibility = if (transaction.isRetryable) VISIBLE else GONE
     }
 
-    private fun showButtonToClick(): Button {
-        return binding.statusInfo.btnRetry.also { it.visibility = VISIBLE }
-    }
-
-    private fun createRetryListener(transaction: StaxTransaction, retryButton: TextView) {
-        retryButton.setOnClickListener {
-            if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
-                UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
-            else {
-                retry(transaction)
-            }
-        }
-    }
-
-    private fun retry(transaction: StaxTransaction) {
-        updateRetryCounter(transaction.action_id)
-        if (transaction.transaction_type == HoverAction.BALANCE) {
-            (requireActivity() as AbstractHoverCallerActivity)
-                .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
-        } else {
-            navToTransferDetail(transaction)
-        }
-    }
-
-    private fun navToTransferDetail(transaction: StaxTransaction) {
-        NavUtil.navigateTransfer(
-            findNavController(), transaction.transaction_type,
-            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id
-        )
-    }
+    private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
 
     private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {
         contactSupportTextView.setText(R.string.email_support)
@@ -275,6 +234,34 @@ class TransactionDetailsFragment : Fragment() {
         }
     }
 
+    private fun maybeRetry(transaction: StaxTransaction) {
+        if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
+            UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
+        else {
+            retry(transaction)
+        }
+    }
+
+    private fun retry(transaction: StaxTransaction) {
+        updateRetryCounter(transaction.action_id)
+        if (transaction.transaction_type == HoverAction.BALANCE) {
+            (requireActivity() as AbstractHoverCallerActivity)
+                .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
+        } else if (transaction.transaction_type == HoverAction.P2P || transaction.transaction_type == HoverAction.AIRTIME)
+            navToTransferDetail(transaction)
+//        else if (transaction.transaction_type == HoverAction.BILL)
+//            navToPaybill()
+//        else if (transaction.transaction_type == HoverAction.MERCHANT)
+//            navToMerchant()
+    }
+
+    private fun navToTransferDetail(transaction: StaxTransaction) {
+        NavUtil.navigateTransfer(
+            findNavController(), transaction.transaction_type,
+            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id
+        )
+    }
+
     private fun updateRetryCounter(id: String) {
         val currentCount: Int = if (retryCounter[id] != null) retryCounter[id]!! else 0
         retryCounter[id] = currentCount + 1
@@ -284,7 +271,7 @@ class TransactionDetailsFragment : Fragment() {
         retryCounter[id] = 0
     }
 
-    private fun retryBountyClicked() {
+    private fun retryBounty() {
         viewModel.action.value?.let {
             (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
         }
