@@ -33,7 +33,7 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class
     ],
-    version = 40,
+    version = 41,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
