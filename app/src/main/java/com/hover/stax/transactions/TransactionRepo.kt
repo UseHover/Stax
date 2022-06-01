@@ -57,7 +57,7 @@ class TransactionRepo(db: AppDatabase) {
         AppDatabase.databaseWriteExecutor.execute {
             try {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
-
+                Timber.e("Found t uuid: ${t?.uuid}")
                 if (t == null) {
                     AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true)
                     t = StaxTransaction(intent, action, contact, c)

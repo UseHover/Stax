@@ -16,6 +16,7 @@ import com.hover.stax.R
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.accounts.ACCOUNT_ID
+import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.utils.Utils
 import java.util.HashMap
 
@@ -78,14 +79,14 @@ data class StaxTransaction(
 	@ColumnInfo(name = "note")
 	var note: String? = null
 
-////	// FIXME: DO not use! Below is covered by contact and account models. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
 	@ColumnInfo(name = "counterparty")
-	var counterparty: String? = null
+	var counterpartyNo: String? = null
 
+	// Unused, remove.
 	@ColumnInfo(name = "account_name")
 	var accountName: String? = null
 
-	constructor(data: Intent, action: HoverAction, contact: StaxContact?, c: Context) : this(
+	constructor(data: Intent, action: HoverAction, contact: StaxContact?, context: Context) : this(
 		data.getStringExtra(TransactionContract.COLUMN_UUID)!!,
 		data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)!!,
 		data.getIntExtra(TransactionContract.COLUMN_ENVIRONMENT, 0),
@@ -97,19 +98,29 @@ data class StaxTransaction(
 		data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, now()),
 	) {
 		counterparty_id = contact?.id
+		counterpartyNo = getCounterPartyNo(data, contact)
 		parseExtras(data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as HashMap<String, String>?)
 		parseExtras(data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>?)
-		description = generateDescription(action, contact, c)
+		description = generateDescription(action, contact, context)
 		Timber.v("creating transaction with uuid: %s", uuid)
 	}
 
-	fun update(data: Intent, action: HoverAction, contact: StaxContact, c: Context) {
+	private fun getCounterPartyNo(intent: Intent, contact: StaxContact?): String? {
+		if (contact != null)
+			return contact.accountNumber
+		else if (intent.hasExtra(HoverAction.ACCOUNT_KEY))
+			return intent.getStringExtra(HoverAction.ACCOUNT_KEY)
+		else if (intent.hasExtra(BUSINESS_NO))
+			return intent.getStringExtra(BUSINESS_NO)
+		else return null
+	}
+
+	fun update(data: Intent, action: HoverAction, contact: StaxContact, context: Context) {
 		status = data.getStringExtra(TransactionContract.COLUMN_STATUS)!!
 		if (hasExtra(data, TransactionContract.COLUMN_CATEGORY))
 			category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY)!!
 		parseExtras(data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>?)
 		if (counterparty_id == null) counterparty_id = contact.id
-		description = generateDescription(action, contact, c)
 		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at)
 	}
 
@@ -122,6 +133,8 @@ data class StaxTransaction(
 		if (extras.containsKey(HoverAction.BALANCE)) balance = extras[HoverAction.BALANCE]
 		if (extras.containsKey(ACCOUNT_ID)) accountId = extras[ACCOUNT_ID]!!.toInt()
 		if (extras.containsKey(HoverAction.NOTE_KEY)) note = extras[HoverAction.NOTE_KEY]
+		if (extras.containsKey(HoverAction.ACCOUNT_KEY)) counterpartyNo = extras[HoverAction.ACCOUNT_KEY]
+		else if (extras.containsKey(BUSINESS_NO)) counterpartyNo = extras[BUSINESS_NO]
 	}
 
 	private fun generateDescription(action: HoverAction, contact: StaxContact?, c: Context): String {
@@ -132,11 +145,11 @@ data class StaxTransaction(
 			HoverAction.FETCH_ACCOUNTS -> c.getString(R.string.descrip_fetch_accounts, action.from_institution_name)
 			HoverAction.BALANCE -> c.getString(R.string.descrip_balance, action.from_institution_name)
 			HoverAction.AIRTIME -> c.getString(R.string.descrip_airtime_sent, amountStr,
-				if (contact == null) c.getString(R.string.self_choice) else contact.shortName())
+			if (contact == null) c.getString(R.string.self_choice) else contact.shortName())
 			HoverAction.P2P -> c.getString(R.string.descrip_transfer_sent, amountStr, contact!!.shortName())
 			HoverAction.ME2ME -> c.getString(R.string.descrip_transfer_sent, amountStr, action.to_institution_name)
-			HoverAction.BILL -> c.getString(R.string.descrip_bill_paid, amountStr, accountId, action.to_institution_name)
-			HoverAction.MERCHANT -> c.getString(R.string.descrip_merchant_paid, amountStr, accountId)
+			HoverAction.BILL -> c.getString(R.string.descrip_bill_paid, amountStr, counterpartyNo, action.to_institution_name)
+			HoverAction.MERCHANT -> c.getString(R.string.descrip_merchant_paid, amountStr, counterpartyNo)
 			else -> "Other"
 		}
 	}
@@ -162,8 +175,10 @@ data class StaxTransaction(
 
 	override val transaction: StaxTransaction get() = this
 
-	override fun toString(): String {
-		return description
+	fun toString(context: Context): String {
+		var str = HoverAction.getHumanFriendlyType(context, transaction_type)
+		str = String.format("%s%s", str.substring(0, 1).uppercase(), str.substring(1))
+		return str
 	}
 
 	companion object {

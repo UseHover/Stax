@@ -1,5 +1,6 @@
 package com.hover.stax.transactions
 
+import android.content.Context
 import com.hover.stax.utils.DateUtils.humanFriendlyDate
 import com.hover.sdk.actions.HoverAction
 import androidx.recyclerview.widget.RecyclerView
@@ -30,11 +31,7 @@ class TransactionHistoryAdapter(
 
 	override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
 		val t = transactions!![position]
-		holder.binding.liTitle.text = String.format(
-			"%s%s",
-			t.description.substring(0, 1).uppercase(),
-			t.description.substring(1)
-		)
+		holder.binding.liTitle.text = t.toString(holder.itemView.context)
 		holder.binding.liAmount.text = t.getSignedAmount(t.amount)
 		holder.binding.liHeader.visibility =
 			if (shouldShowDate(t, position)) View.VISIBLE else View.GONE

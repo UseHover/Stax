@@ -23,6 +23,8 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.merchants.Merchant
+import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
@@ -86,8 +88,9 @@ class TransactionDetailsFragment : Fragment() {
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
+        merchant.observe(viewLifecycleOwner) { updateRecipient(it) }
         account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
-        hoverTransaction.observe(viewLifecycleOwner) { it?.let { updateTransaction(it) } }
+        hoverTransaction.observe(viewLifecycleOwner) { it?.let { Timber.e("Updating transaction messages ${it.uuid}") } }
         messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
         bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
 
@@ -112,7 +115,7 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun updateHeader(transaction: StaxTransaction) = with(binding.transactionHeader) {
-        binding.transactionDetailsCard.setTitle(transaction.description)
+        binding.transactionDetailsCard.setTitle(HoverAction.getHumanFriendlyType(requireContext(), transaction.transaction_type))
         if (shouldShowNewBalance(transaction)) {
             mainMessage.text = getString(R.string.new_balance, transaction.displayBalance)
         }
@@ -126,7 +129,7 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun updateDetails(transaction: StaxTransaction) = with(binding.details) {
         detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
-        typeValue.text = HoverAction.getHumanFriendlyType(requireContext(), transaction.transaction_type)
+        typeValue.text = transaction.toString(requireContext())
         viewModel.action.value?.let {
             categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, requireContext()) }
 
@@ -135,6 +138,7 @@ class TransactionDetailsFragment : Fragment() {
             setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.getIcon(), 0)
         }
 
+        recipientValue.setTitle(transaction.counterpartyNo)
         amountValue.text = transaction.getSignedAmount(transaction.amount)
         transaction.fee?.let { binding.details.feeValue.text = Utils.formatAmount(it.toString()) }
         newBalanceValue.text = Utils.formatAmount(transaction.balance.toString())
@@ -151,7 +155,7 @@ class TransactionDetailsFragment : Fragment() {
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.paidWithRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
-        binding.details.recipInstitutionRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
+        if (transaction.isRecorded) binding.details.recipInstitutionRow.visibility = GONE
         binding.details.amountRow.visibility = if (transaction.amount != null) VISIBLE else GONE
         binding.details.feeRow.visibility = if (transaction.fee == null) GONE else VISIBLE
         binding.details.balanceRow.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
@@ -160,8 +164,9 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun updateAction(action: HoverAction) {
+        Timber.e("action ${action.public_id} update. to country is: ${action.to_country_alpha2.isEmpty()}")
         if (action.isOnNetwork) binding.details.recipInstitutionRow.visibility = GONE
-        binding.details.institutionValue.setTitle(action.to_institution_name)
+        else binding.details.institutionValue.setTitle(action.to_institution_name)
         viewModel.transaction.value?.let {
             binding.statusInfo.longDescription.text = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
             binding.details.categoryValue.text = it.shortStatusExplain(action, requireContext())
@@ -174,14 +179,6 @@ class TransactionDetailsFragment : Fragment() {
     private fun updateAccount(account: Account) {
         binding.details.paidWithValue.text = account.name
         binding.details.feeLabel.text = getString(R.string.transaction_fee, account.name)
-    }
-
-    private fun updateTransaction(t: Transaction) {
-        viewModel.action.value?.let {
-            if (it.transaction_type == HoverAction.BILL && t.input_extras.has(HoverAction.ACCOUNT_KEY)) {
-                binding.details.recipientValue.setTitle(t.input_extras.getString(HoverAction.ACCOUNT_KEY))
-            }
-        }
     }
 
     private fun updateMessages(ussdCallResponses: List<UssdCallResponse>?) {
@@ -202,6 +199,17 @@ class TransactionDetailsFragment : Fragment() {
         if (contact != null) {
             visibility = VISIBLE
             setContact(contact)
+        } else visibility = GONE
+    }
+
+    private fun updateRecipient(merchant: Merchant?) {
+        updateRecipient(merchant?.businessName, merchant?.tillNo)
+    }
+
+    private fun updateRecipient(title: String?, sub: String?) = with(binding.details.recipientValue) {
+        if (!title.isNullOrEmpty() || !sub.isNullOrEmpty()) {
+            visibility = VISIBLE
+            setContent(title, sub)
         } else visibility = GONE
     }
 

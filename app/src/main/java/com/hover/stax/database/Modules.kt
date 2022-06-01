@@ -51,7 +51,7 @@ val appModule = module {
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get())}
-    viewModel { TransactionDetailsViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { TransactionDetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get(), get(), get()) }
     viewModel { FinancialTipsViewModel() }

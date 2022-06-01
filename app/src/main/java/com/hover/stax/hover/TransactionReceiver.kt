@@ -3,10 +3,9 @@ package com.hover.stax.hover
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-
-import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
+import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.accounts.PLACEHOLDER
@@ -15,6 +14,11 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.merchants.MerchantRepo
+import com.hover.stax.paybill.BUSINESS_NAME
+import com.hover.stax.paybill.BUSINESS_NO
+import com.hover.stax.paybill.Paybill
+import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.Utils
@@ -33,6 +37,8 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private val channelRepo: ChannelRepo by inject()
     private val accountRepo: AccountRepo by inject()
     private val contactRepo: ContactRepo by inject()
+    private val billRepo: PaybillRepo by inject()
+    private val merchantRepo: MerchantRepo by inject()
     private val requestRepo: RequestRepo by inject()
 
     private var channel: Channel? = null
@@ -56,6 +62,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                         updateBalance(intent)
                         updateContacts(intent)
                         updateTransaction(intent, context.applicationContext)
+                        updateBusinesses(intent)
                         updateRequests(intent)
                     }
                 }
@@ -92,6 +99,36 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             it.updateNames(intent)
             contactRepo.save(it)
         }
+    }
+
+    private fun updateBusinesses(intent: Intent) {
+        if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.BILL && getBizNo(intent) != null) {
+            val bill = billRepo.getMatching(getBizNo(intent)!!, channel!!.id)
+            if (bill != null && bill.businessName.isNullOrEmpty() && getBizName(intent) != null) {
+                bill.businessName = getBizName(intent)
+                billRepo.save(bill)
+            }
+        } else if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.MERCHANT && getBizNo(intent) != null) {
+            val merchant = merchantRepo.getMatching(getBizNo(intent)!!, channel!!.id)
+            if (merchant != null && merchant.businessName.isNullOrEmpty() && getBizName(intent) != null) {
+                merchant.businessName = getBizName(intent)
+                merchantRepo.save(merchant)
+            }
+        }
+    }
+
+    private fun getBizNo(intent: Intent): String? {
+        val inExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as java.util.HashMap<String, String>?
+        if (inExtras != null && inExtras.containsKey(BUSINESS_NO))
+            return inExtras[BUSINESS_NO]
+        else return null
+    }
+
+    private fun getBizName(intent: Intent): String? {
+        val outExtras = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as java.util.HashMap<String, String>?
+        if (outExtras != null && outExtras.containsKey(BUSINESS_NAME))
+            return outExtras[BUSINESS_NAME]?.replace(".", "") // MPESA adds a gramatically incorrect period which isn't easily fixable with a regex
+        else return null
     }
 
     private fun updateTransaction(intent: Intent, c: Context) {
