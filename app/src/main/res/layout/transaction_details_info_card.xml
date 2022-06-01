@@ -91,21 +91,6 @@
     </TableRow>
 
     <TableRow
-            android:id="@+id/recipInstitutionRow"
-            android:layout_marginTop="@dimen/margin_18">
-
-        <TextView
-                android:text="@string/institution_label"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-        <com.hover.stax.views.Stax2LineItem
-                android:id="@+id/institutionValue"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd" />
-    </TableRow>
-
-    <TableRow
             android:id="@+id/recipientRow"
             android:layout_marginTop="@dimen/margin_18">
 
@@ -120,6 +105,21 @@
                 android:layout_weight="1"
                 android:textAlignment="viewEnd" />
 
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/recipInstitutionRow"
+        android:layout_marginTop="@dimen/margin_18">
+
+        <TextView
+            android:text="@string/institution_label"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
+
+        <com.hover.stax.views.Stax2LineItem
+            android:id="@+id/institutionValue"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd" />
     </TableRow>
 
     <TableRow

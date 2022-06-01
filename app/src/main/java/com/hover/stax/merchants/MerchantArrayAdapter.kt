@@ -34,7 +34,7 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 
 	override fun getFilter(): Filter {
 		return object : Filter() {
-			override fun performFiltering(constraint: CharSequence): FilterResults {
+			override fun performFiltering(constraint: CharSequence?): FilterResults {
 				val filterResults = FilterResults()
 				val filtered: MutableList<Merchant> = ArrayList()
 				if (constraint != null) {
@@ -51,17 +51,16 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 				return filterResults
 			}
 
-			override fun publishResults(constraint: CharSequence, results: FilterResults) {
+			override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
 				filteredMerchants!!.clear()
 				if (results != null && results.count > 0) {
-					// avoids unchecked cast warning when using filteredContacts.addAll((ArrayList<StaxContact>) results.values);
 					for (o in results.values as List<*>) {
 						if (o is Merchant) {
 							filteredMerchants!!.add(o)
 						}
 					}
 					notifyDataSetChanged()
-				} else if (constraint == null) {
+				} else if (constraint.isNullOrEmpty()) {
 					// no filter, add entire original list back in
 					filteredMerchants!!.addAll(allMerchants!!)
 					notifyDataSetInvalidated()

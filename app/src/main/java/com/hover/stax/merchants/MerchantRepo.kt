@@ -12,7 +12,9 @@ class MerchantRepo(db: AppDatabase) {
 
 	fun get(id: Int): Merchant? = merchantDao.getMerchant(id)
 
-	fun getMatching(tillNo: String): Flow<List<Merchant>> = merchantDao.getMerchantsByNo("%$tillNo%")
+	fun getMatching(tillNo: String, channelId: Int): Merchant? = merchantDao.getMerchantsByNo(tillNo, channelId)
+
+	fun getLiveMatching(tillNo: String, channelId: Int): LiveData<Merchant?> = merchantDao.getLiveMerchantsByNo(tillNo, channelId)
 
 	fun save(merchant: Merchant) = merchantDao.insert(merchant)
 

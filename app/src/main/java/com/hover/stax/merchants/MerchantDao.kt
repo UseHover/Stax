@@ -9,8 +9,11 @@ interface MerchantDao {
 	@get:Query("SELECT * FROM merchants ORDER BY till_no ASC")
 	val all: LiveData<List<Merchant>>
 
-	@Query("SELECT * FROM merchants WHERE till_no LIKE :tillNo ORDER BY till_no ASC")
-	fun getMerchantsByNo(tillNo: String): Flow<List<Merchant>>
+	@Query("SELECT * FROM merchants WHERE till_no = :till AND channelId = :channelId ORDER BY till_no ASC")
+	fun getMerchantsByNo(till: String, channelId: Int): Merchant?
+
+	@Query("SELECT * FROM merchants WHERE till_no = :till AND channelId = :channelId ORDER BY till_no ASC")
+	fun getLiveMerchantsByNo(till: String, channelId: Int): LiveData<Merchant?>
 
 	@Query("SELECT * FROM merchants WHERE id = :id ORDER BY till_no ASC")
 	fun getMerchant(id: Int): Merchant?

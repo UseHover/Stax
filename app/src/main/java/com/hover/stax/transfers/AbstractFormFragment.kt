@@ -26,7 +26,6 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
@@ -35,7 +34,6 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
-import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -156,7 +154,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     private fun chooseFabText(isEditing: Boolean): String {
         return if (isEditing) getString(R.string.btn_continue)
-            else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
+            else if (accountsViewModel.getActionType() == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
             else getString(R.string.fab_transfernow)
     }
 

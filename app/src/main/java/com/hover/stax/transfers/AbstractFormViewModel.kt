@@ -30,13 +30,8 @@ abstract class AbstractFormViewModel(application: Application, val contactRepo: 
         isEditing.postValue(editing)
     }
 
-    fun setTransactionType(transaction_type: String) {
-        TransactionType.type = transaction_type
-    }
-
     fun load(s: Schedule) {
         schedule.postValue(s)
-        setTransactionType(s.type)
     }
 
     fun saveSchedule(s: Schedule) {

@@ -35,7 +35,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     val saveAmount = MutableLiveData(false)
 
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
-        billRepo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
+        billRepo.getPaybills(accountId).collect { savedPaybills.postValue(it) }
     }
 
     fun selectPaybill(paybill: Paybill) {

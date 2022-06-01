@@ -35,10 +35,13 @@ data class Merchant(
 	var lastUsedTimestamp: Long? = null
 
 	override fun toString() = buildString {
-		append(businessName)
-		append(" (")
+		if (!businessName.isNullOrEmpty()) {
+			append(businessName)
+			append(" (")
+		}
 		append(tillNo)
-		append(")")
+		if (!businessName.isNullOrEmpty())
+			append(")")
 	}
 
 	override fun equals(other: Any?): Boolean {
