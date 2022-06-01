@@ -212,6 +212,12 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         }
     }
 
+    fun updateChannel(channel: Channel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.update(channel)
+        }
+    }
+
     private fun standardizeString(value: String?): String {
         // a non null String always contains an empty string
         if (value == null) return ""
