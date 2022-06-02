@@ -26,6 +26,7 @@ import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
+import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 

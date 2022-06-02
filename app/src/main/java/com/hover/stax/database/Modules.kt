@@ -56,7 +56,6 @@ val appModule = module {
     viewModel { PaybillViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { RequestDetailViewModel(get(), get(), get()) }
     viewModel { BonusViewModel(get(), get()) }
-
 }
 
 val dataModule = module(createdAtStart = true) {

@@ -25,37 +25,13 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
 
-    val isLoading = MutableLiveData<Boolean>(false)
+    val isLoading = MutableLiveData(false)
 
     fun setAmount(a: String?) = amount.postValue(a)
 
     fun setContact(contactId: String) = viewModelScope.launch(Dispatchers.IO) {
         contact.postValue(contactRepo.getContact(contactId))
     }
-//    private fun setContact(contactIds: String?) = contactIds?.let {
-//        viewModelScope.launch {
-//            val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
-//            if (contacts.isNotEmpty()) contact.postValue(contacts.first())
-//        }
-//    }
-
-//    fun autoFill(transactionUUID: String) = viewModelScope.launch(Dispatchers.IO) {
-//        val transaction = repo.getTransaction(transactionUUID)
-//        if (transaction != null) {
-//            val action = repo.getAction(transaction.action_id)
-//
-//            action?.let {
-//                val contact = repo.getContactAsync(transaction.counterparty_id)
-//                autoFill(transaction.amount.toInt().toString(), contact, AutofillData(action.to_institution_id, transaction.channel_id, transaction.accountId, true))
-//            }
-//        }
-//    }
-//
-//    private fun autoFill(amount: String, contact: StaxContact?, autofillData: AutofillData) {
-//        setContact(contact)
-//        setAmount(amount)
-//        autofillData.institutionId?.let { completeAutoFilling.postValue(autofillData) }
-//    }
 
     fun setContact(sc: StaxContact?) = sc?.let {
         contact.postValue(it)
