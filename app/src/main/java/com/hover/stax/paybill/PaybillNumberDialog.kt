@@ -39,19 +39,10 @@ class PaybillNumberDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.businessNoInput.addTextChangedListener(businessNoWatcher)
         binding.doneBtn.setOnClickListener {
+            viewModel.setBusinessNumber(binding.businessNoInput.text)
             if (validates())
-                NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment(true))
-        }
-    }
-
-    private val businessNoWatcher: TextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-        override fun afterTextChanged(editable: Editable) {}
-        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            viewModel.setBusinessNumber(charSequence.toString())
+                NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment())
         }
     }
 

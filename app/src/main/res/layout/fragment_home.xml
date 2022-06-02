@@ -139,14 +139,14 @@
                     app:drawableEndCompat="@drawable/ic_payment" />
         </androidx.cardview.widget.CardView>
 
-        <com.hover.stax.inapp_banner.StaxBannerView
-                android:id="@+id/homeBanner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_16"
-                android:background="?selectableItemBackground"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/paybill" />
+<!--        <com.hover.stax.inapp_banner.StaxBannerView-->
+<!--                android:id="@+id/homeBanner"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/margin_16"-->
+<!--                android:background="?selectableItemBackground"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/paybill" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

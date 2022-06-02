@@ -39,7 +39,7 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:id="@+id/li_description"
+                    android:id="@+id/li_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/brutalista_regular"
@@ -48,13 +48,12 @@
                     android:textSize="@dimen/text_16" />
 
             <TextView
-                    android:id="@+id/li_status"
+                    android:id="@+id/li_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_5"
                     android:drawablePadding="@dimen/margin_5"
                     android:fontFamily="@font/brutalista_regular"
-                    android:gravity="center_vertical"
                     android:text="@string/pending_callout"
                     android:textColor="@color/offWhite"
                     android:textSize="@dimen/text_13"

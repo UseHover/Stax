@@ -20,8 +20,8 @@ open class RequestServiceDialog (private var ctx: Context, private var mView: Vi
 	private var institutionValue: String = ""
 	private var shortCodeValue: String = ""
 
-	private lateinit var institutionInput: StaxTextInputLayout
-	private lateinit var shortCodeInput: StaxTextInputLayout
+	private lateinit var institutionInput: StaxTextInput
+	private lateinit var shortCodeInput: StaxTextInput
 	private lateinit var activity: Activity
 
 	constructor(a: Activity) : this(a, a.layoutInflater, R.layout.request_for_service) {
@@ -49,7 +49,7 @@ open class RequestServiceDialog (private var ctx: Context, private var mView: Vi
 	}
 
 	private fun setTitle() {
-		mView.findViewById<LinearLayout>(R.id.header)?.let { it.visibility = View.VISIBLE }
+		mView.findViewById<LinearLayout>(R.id.transaction_header)?.let { it.visibility = View.VISIBLE }
 		mView.findViewById<View?>(R.id.title)
 			?.let { (it as TextView).text = ctx.getString(R.string.inform_stax_desc) }
 	}

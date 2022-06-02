@@ -2,11 +2,12 @@ package com.hover.stax.schedules
 
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
+import com.hover.stax.actions.ActionRepo
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.launch
 
-class ScheduleDetailViewModel(val repo: DatabaseRepo) : ViewModel() {
+class ScheduleDetailViewModel(val repo: ScheduleRepo, val actionRepo: ActionRepo, val contactRepo: ContactRepo) : ViewModel() {
 
     val schedule = MutableLiveData<Schedule>()
     var action: LiveData<HoverAction> = MutableLiveData()
@@ -19,10 +20,10 @@ class ScheduleDetailViewModel(val repo: DatabaseRepo) : ViewModel() {
 
     fun setSchedule(id: Int) = viewModelScope.launch { schedule.postValue(repo.getSchedule(id)) }
 
-    private fun loadAction(s: Schedule?): LiveData<HoverAction> = if (s != null) repo.getLiveAction(s.action_id) else MutableLiveData()
+    private fun loadAction(s: Schedule?): LiveData<HoverAction> = if (s != null) actionRepo.getLiveAction(s.action_id) else MutableLiveData()
 
     private fun loadContacts(s: Schedule?): LiveData<List<StaxContact>> = if (s != null)
-        repo.getLiveContacts(s.recipient_ids.split(",").toTypedArray())
+        contactRepo.getLiveContacts(s.recipient_ids.split(",").toTypedArray())
     else
         MutableLiveData()
 

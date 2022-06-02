@@ -20,27 +20,20 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Corouti
     private val client = OkHttpClient()
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-            Timber.v("Downloading channels")
             try {
                 val channelsJson = downloadChannels(url)
                 channelsJson?.let {
                     val data: JSONArray = it.getJSONArray("data")
                     ChannelUtil.updateChannels(data, applicationContext)
-
-                    Timber.i("Successfully downloaded and saved channels.")
                     Result.success()
                 }
 
-                Timber.e("Error parsing channel data")
                 Result.failure()
             } catch (e: JSONException) {
-                Timber.e(e, "Error parsing channel data")
                 Result.failure()
             } catch (e: NullPointerException) {
-                Timber.e(e, "Error parsing channel data")
                 Result.failure()
             } catch (e: IOException) {
-                Timber.e(e, "Timeout downloading channel data, will try again.")
                 Result.retry()
             }
     }

@@ -48,21 +48,21 @@
                 android:layout_marginBottom="@dimen/margin_21"
                 android:background="@color/grey" />
 
-        <com.hover.stax.views.StaxTextInputLayout
+        <com.hover.stax.views.StaxTextInput
                 android:id="@+id/referee_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/referral_label"
                 android:inputType="text" />
 
-        <com.hover.stax.views.StaxTextInputLayout
+        <com.hover.stax.views.StaxTextInput
                 android:id="@+id/name_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name_label"
                 android:inputType="text" />
 
-        <com.hover.stax.views.StaxTextInputLayout
+        <com.hover.stax.views.StaxTextInput
                 android:id="@+id/phone_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

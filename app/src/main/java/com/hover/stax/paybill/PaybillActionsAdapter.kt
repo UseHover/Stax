@@ -27,7 +27,7 @@ class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, priva
             binding.billNumber.text = buildString {
                 append(action.to_institution_name)
                 append(" (")
-                append(action.to_institution_id)
+                append(action.getVarValue(BUSINESS_NO))
                 append(")")
             }
 

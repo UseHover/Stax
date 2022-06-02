@@ -51,7 +51,9 @@ class ApplicationInstance : Application() {
         }
     }
 
-    private fun initUxCam() = UXCam.startWithKey(getString(R.string.uxcam_key))
+    private fun initUxCam() {
+        if(!BuildConfig.DEBUG) UXCam.startWithKey(getString(R.string.uxcam_key))
+    }
 
     private fun setLogger() {
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree()) else Timber.uprootAll()
