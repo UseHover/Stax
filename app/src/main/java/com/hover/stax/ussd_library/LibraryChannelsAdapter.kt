@@ -38,20 +38,21 @@ class LibraryChannelsAdapter(private val favoriteClickInterface: FavoriteClickIn
 
     private fun setFavoriteIcon(favoriteImage: ImageView, channel: Channel ) {
         setFavColorIcon(favoriteImage, channel)
+
         favoriteImage.setOnClickListener {
             channel.isFavorite = !channel.isFavorite
             setFavColorIcon(favoriteImage, channel)
             favoriteClickInterface.onFavoriteIconClicked(channel)
         }
     }
+
     private fun setFavColorIcon(favoriteImage: ImageView, channel: Channel) {
         if(channel.isFavorite) favoriteImage.setImageResource(R.drawable.favorite_filled)
-        else favoriteImage.setImageResource(R.drawable.favorite_empty);
+        else favoriteImage.setImageResource(R.drawable.favorite_empty)
     }
 
-
     interface FavoriteClickInterface {
-        fun onFavoriteIconClicked(channel: Channel);
+        fun onFavoriteIconClicked(channel: Channel)
     }
 
     companion object {
