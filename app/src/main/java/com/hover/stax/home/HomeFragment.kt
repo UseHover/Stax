@@ -11,7 +11,6 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.Bonus
@@ -53,7 +52,7 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
-        binding.requestMoney.setOnClickListener{ navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())}
+        binding.requestMoney.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
@@ -61,9 +60,9 @@ class HomeFragment : Fragment() {
 
         setUpWellnessTips()
 
-        collectLatestLifecycleFlow(accountsViewModel.accounts) {
-            setPaybillVisibility(it)
-        }
+//        collectLatestLifecycleFlow(accountsViewModel.accounts) {
+        setPaybillVisibility()
+//        }
 
         lifecycleScope.launchWhenStarted {
             channelsViewModel.accountEventFlow.collect {
@@ -91,7 +90,6 @@ class HomeFragment : Fragment() {
                 binding.bonusCard.apply {
                     cardBonus.visibility = View.VISIBLE
                     cta.setOnClickListener {
-                        channelsViewModel // viewmodel must be instantiated in the main thread before it can be accessible on other threads
                         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
                         validateAccounts(bonusList.first())
                     }
@@ -100,15 +98,15 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setPaybillVisibility(accounts: List<Account>?) {
-        binding.paybill.apply {
-            if (accounts?.any { it.countryAlpha2.contentEquals("KE", ignoreCase = true) } == true) {
-                visibility = View.VISIBLE
-                setOnClickListener {
-                    navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
+    private fun setPaybillVisibility() {
+        channelsViewModel.simCountryList.observe(viewLifecycleOwner) { countryIsos ->
+            if (countryIsos.any { it.contentEquals("KE", ignoreCase = true) }) {
+                binding.paybill.apply {
+                    visibility = View.VISIBLE
+                    setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
                 }
             } else
-                visibility = View.GONE
+                binding.paybill.visibility = View.GONE
         }
     }
 
