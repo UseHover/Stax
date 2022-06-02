@@ -4,10 +4,10 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.actions.ActionRepo
-import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.transactions.TransactionHistory
 import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +20,8 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
     private val id = MutableLiveData<Int>()
     var account: LiveData<Account> = MutableLiveData()
     var channel: LiveData<Channel> = MutableLiveData()
-    var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
+    private var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
+    var transactionHistory : MediatorLiveData<List<TransactionHistory>> = MediatorLiveData()
     var actions: LiveData<List<HoverAction>> = MutableLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
     var feesThisYear: LiveData<Double> = MutableLiveData()
@@ -34,6 +35,7 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         actions = Transformations.switchMap(id, actionRepo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
+        transactionHistory.addSource(transactions, this::getTransactionHistory)
     }
 
     fun setAccount(accountId: Int) = id.postValue(accountId)
@@ -53,6 +55,16 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         val a = account.value!!
         a.accountNo = newNumber
         repo.update(a)
+    }
+
+    private fun getTransactionHistory(transactions: List<StaxTransaction>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val history = transactions.asSequence().map {
+                val action = actionRepo.getAction(it.action_id)
+                TransactionHistory(it, action)
+            }.toList()
+            transactionHistory.postValue(history)
+        }
     }
 
     fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {

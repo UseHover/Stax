@@ -45,7 +45,7 @@ val appModule = module {
     viewModel { TransferViewModel(get(), get(), get(), get()) }
     viewModel { ScheduleDetailViewModel(get(), get(), get()) }
     viewModel { BalancesViewModel(get(), get()) }
-    viewModel { TransactionHistoryViewModel(get()) }
+    viewModel { TransactionHistoryViewModel(get(), get()) }
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get(), get())}

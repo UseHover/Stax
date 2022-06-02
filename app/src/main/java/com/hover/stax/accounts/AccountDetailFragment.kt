@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -30,7 +29,6 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
-import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -163,12 +161,10 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
             }
 
-            transactions.observe(viewLifecycleOwner) {
+            transactionHistory.observe(viewLifecycleOwner) {
                 binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                transactionsAdapter!!.updateData(it, viewModel.actions.value)
+                transactionsAdapter!!.submitList(it)
             }
-
-            actions.observe(viewLifecycleOwner) { transactionsAdapter!!.updateData(viewModel.transactions.value, it) }
 
             spentThisMonth.observe(viewLifecycleOwner) {
                 binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0)
@@ -234,7 +230,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun initRecyclerViews() {
         binding.historyCard.transactionsRecycler.apply {
             layoutManager = UIHelper.setMainLinearManagers(context)
-            transactionsAdapter = TransactionHistoryAdapter(null, null, this@AccountDetailFragment)
+            transactionsAdapter = TransactionHistoryAdapter(this@AccountDetailFragment)
             adapter = transactionsAdapter
         }
 

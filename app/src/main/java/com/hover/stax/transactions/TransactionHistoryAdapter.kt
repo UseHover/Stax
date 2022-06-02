@@ -1,93 +1,76 @@
 package com.hover.stax.transactions
 
-import com.hover.stax.utils.DateUtils.humanFriendlyDate
-import com.hover.stax.transactions.StaxTransaction
-import com.hover.sdk.actions.HoverAction
-import androidx.recyclerview.widget.RecyclerView
-import com.hover.stax.transactions.TransactionHistoryAdapter.HistoryViewHolder
-import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.databinding.TransactionListItemBinding
+import com.hover.stax.transactions.TransactionHistoryAdapter.HistoryViewHolder
+import com.hover.stax.utils.DateUtils.humanFriendlyDate
+import java.util.*
 
-class TransactionHistoryAdapter(
-	private var transactions: List<StaxTransaction>?, private var actions: List<HoverAction>?, private val selectListener: SelectListener
-		) : RecyclerView.Adapter<HistoryViewHolder>() {
+class TransactionHistoryAdapter(private val selectListener: SelectListener) : ListAdapter<TransactionHistory, HistoryViewHolder>(diffUtil) {
 
-	fun updateData(ts: List<StaxTransaction>?, `as`: List<HoverAction>?) {
-		if (ts == null || `as` == null) return
-		transactions = ts
-		actions = `as`
-		notifyDataSetChanged()
-	}
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
+        val binding =
+            TransactionListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return HistoryViewHolder(binding)
+    }
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
-		val binding =
-			TransactionListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-		return HistoryViewHolder(binding)
-	}
+    override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
+        val history = getItem(holder.adapterPosition)
+        val t = history.staxTransaction
+        val action = history.action
+        holder.binding.liTitle.text = String.format("%s%s", t.description.substring(0, 1).uppercase(Locale.getDefault()), t.description.substring(1))
+        holder.binding.liAmount.text = t.getSignedAmount(t.amount)
+        holder.binding.liHeader.visibility = if (shouldShowDate(t, position)) View.VISIBLE else View.GONE
+        holder.binding.liHeader.text = humanFriendlyDate(t.initiated_at)
+        holder.itemView.setOnClickListener { selectListener.viewTransactionDetail(t.uuid) }
+        setStatus(t, action, holder)
+    }
 
-	override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-		val t = transactions!![position]
-		holder.binding.liTitle.text = String.format(
-			"%s%s",
-			t.description.substring(0, 1).uppercase(),
-			t.description.substring(1)
-		)
-		holder.binding.liAmount.text = t.getSignedAmount(t.amount)
-		holder.binding.liHeader.visibility =
-			if (shouldShowDate(t, position)) View.VISIBLE else View.GONE
-		holder.binding.liHeader.text = humanFriendlyDate(t.initiated_at)
-		holder.itemView.setOnClickListener { selectListener.viewTransactionDetail(t.uuid) }
-		setStatus(t, holder)
-	}
+    private fun setStatus(t: StaxTransaction, a: HoverAction?, holder: HistoryViewHolder) {
+        holder.binding.liAmount.alpha = (if (t.status == Transaction.FAILED) 0.54 else 1.0).toFloat()
+        holder.binding.transactionItemLayout.setBackgroundColor(ContextCompat.getColor(holder.binding.root.context, t.getBackgroundColor()))
+        holder.binding.liDetail.text = t.shortDescription(a, holder.itemView.context)
+        holder.binding.liDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(t.getIcon(), 0, 0, 0)
+    }
 
-	private fun setStatus(t: StaxTransaction, holder: HistoryViewHolder) {
-		val a = findAction(t.action_id)
-		holder.binding.liAmount.alpha =
-			(if (t.status == Transaction.FAILED) 0.54 else 1.0).toFloat()
-		holder.binding.transactionItemLayout.setBackgroundColor(ContextCompat.getColor(holder.binding.root.context, t.getBackgroundColor()))
-		holder.binding.liDetail.text = t.shortDescription(a, holder.itemView.context)
-		holder.binding.liDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(
-			t.getIcon(),
-			0,
-			0,
-			0
-		)
-	}
+    private fun shouldShowDate(t: StaxTransaction, position: Int): Boolean {
+        if (position > 1) {
+            val history = getItem(position - 1)
+            val transaction = history.staxTransaction
+            return position == 0 || humanFriendlyDate(transaction.initiated_at) != humanFriendlyDate(t.initiated_at)
+        }
+        return true
+    }
 
-	private fun findAction(public_id: String): HoverAction? {
-		if (actions != null) {
-			for (a in actions!!) {
-				if (a.public_id == public_id) return a
-			}
-		}
-		return null
-	}
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
 
-	private fun shouldShowDate(t: StaxTransaction, position: Int): Boolean {
-		return position == 0 ||
-				humanFriendlyDate(transactions!![position - 1].initiated_at) != humanFriendlyDate(
-			t.initiated_at
-		)
-	}
+    interface SelectListener {
+        fun viewTransactionDetail(uuid: String?)
+    }
 
-	override fun getItemCount(): Int {
-		return if (transactions != null) transactions!!.size else 0
-	}
+    class HistoryViewHolder(var binding: TransactionListItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
-	override fun getItemId(position: Int): Long {
-		return position.toLong()
-	}
+    companion object {
+        private val diffUtil = object : DiffUtil.ItemCallback<TransactionHistory>() {
+            override fun areItemsTheSame(oldItem: TransactionHistory, newItem: TransactionHistory): Boolean {
+                return oldItem.staxTransaction.uuid == newItem.staxTransaction.uuid
+            }
 
-	interface SelectListener {
-		fun viewTransactionDetail(uuid: String?)
-	}
+            override fun areContentsTheSame(oldItem: TransactionHistory, newItem: TransactionHistory): Boolean {
+                return oldItem.staxTransaction.uuid == newItem.staxTransaction.uuid
+            }
 
-	class HistoryViewHolder(var binding: TransactionListItemBinding) : RecyclerView.ViewHolder(
-		binding.root
-	)
+        }
+    }
 }

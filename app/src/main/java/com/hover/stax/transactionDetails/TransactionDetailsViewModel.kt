@@ -54,7 +54,7 @@ class TransactionDetailsViewModel(
     }
 
     private fun getLiveAccount(txn: StaxTransaction?): LiveData<Account>? = if (txn != null)
-        accountRepo.getLiveAccount(txn.accountId!!)
+        txn.accountId?.let { accountRepo.getLiveAccount(it) }
     else null
 
     private fun getLiveAction(txn: StaxTransaction?): LiveData<HoverAction>? = if (txn != null)
@@ -83,7 +83,7 @@ class TransactionDetailsViewModel(
         messages.value = UssdCallResponse.generateConvo(t, a)
     }
 
-    private fun loadSms(txn: StaxTransaction): List<UssdCallResponse>? {
+    private fun loadSms(txn: StaxTransaction): List<UssdCallResponse> {
         val t = Hover.getTransaction(txn.uuid, getApplication())
         hoverTransaction.value = t
         return generateSmsConvo(

@@ -29,6 +29,7 @@
     <string name="nav_balance_and_history">Balance and history</string>
     <string name="nav_balances">Balances</string>
 
+    <string name="nav_history">History</string>
     <string name="nav_get_paid">Get Paid</string>
 
     <string name="nav_link_account">Link an account</string>

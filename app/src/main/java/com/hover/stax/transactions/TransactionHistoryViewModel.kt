@@ -2,11 +2,30 @@ package com.hover.stax.transactions
 
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
+import com.hover.stax.actions.ActionRepo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class TransactionHistoryViewModel(val repo: TransactionRepo) : ViewModel() {
+class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: ActionRepo) : ViewModel() {
 
+    private val allNonBountyTransaction : LiveData<List<StaxTransaction>> = repo.allNonBountyTransactions
+    var transactionHistory : MediatorLiveData<List<TransactionHistory>> = MediatorLiveData()
     private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
+
+    init {
+        transactionHistory.addSource(allNonBountyTransaction, this::getTransactionHistory)
+    }
+
+    private fun getTransactionHistory(transactions: List<StaxTransaction>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val history = transactions.asSequence().map {
+                val action = actionRepo.getAction(it.action_id)
+                TransactionHistory(it, action)
+            }.toList()
+            transactionHistory.postValue(history)
+        }
+    }
 
     fun showAppReviewLiveData(): LiveData<Boolean> {
         return appReviewLiveData
@@ -27,3 +46,5 @@ class TransactionHistoryViewModel(val repo: TransactionRepo) : ViewModel() {
         appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
     }
 }
+
+    data class TransactionHistory(val staxTransaction: StaxTransaction, val action: HoverAction?)
