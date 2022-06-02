@@ -1,14 +1,14 @@
 package com.hover.stax.futureTransactions
 
-import com.hover.stax.utils.Utils.formatAmount
-import com.hover.stax.utils.DateUtils.humanFriendlyDate
-import androidx.recyclerview.widget.RecyclerView
-import com.hover.stax.futureTransactions.RequestsAdapter.RequestsViewHolder
-import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.TransactionListItemBinding
+import com.hover.stax.futureTransactions.RequestsAdapter.RequestsViewHolder
 import com.hover.stax.requests.Request
+import com.hover.stax.utils.DateUtils.humanFriendlyDate
+import com.hover.stax.utils.Utils.formatAmount
 
 class RequestsAdapter(private var requestList: List<Request>?,
                       private val selectListener: SelectListener) :

@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Handler
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.StaxContact
@@ -49,7 +50,7 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
 
         val sendIntent = Intent().apply {
             action = Intent.ACTION_VIEW
-            data = Uri.parse("smsto:" + r.generateRecipientString(requestees))
+            data = Uri.parse("smsto:" + r.generateRecipientString(requestees.filterNotNull()))
             putExtra(Intent.EXTRA_TEXT, r.generateMessage(a))
             putExtra("sms_body", r.generateMessage(a))
         }
@@ -64,10 +65,10 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
             return
         }
         logAnalyticsEvent(a.getString(R.string.clicked_send_whatsapp_request), a)
-        if (requestees.size == 1) sendWhatsAppToSingleContact(r, requestees, account, a) else sendWhatsAppToMultipleContacts(r.generateMessage(a), a)
+        if (requestees.size == 1) sendWhatsAppToSingleContact(r, requestees.filterNotNull(), account, a) else sendWhatsAppToMultipleContacts(r.generateMessage(a), a)
     }
 
-    fun sendWhatsAppToSingleContact(r: Request, requestees: List<StaxContact?>?, account: Account?, a: Activity) {
+    fun sendWhatsAppToSingleContact(r: Request, requestees: List<StaxContact>, account: Account?, a: Activity) {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_VIEW
         val whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, account) + "&text=" + r.generateMessage(a)
@@ -99,12 +100,12 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
             copyToClipboard(r.generateMessage(c), c) -> {
                 logAnalyticsEvent(c.getString(R.string.clicked_copylink_request), c)
                 copyBtn.isActivated = true
-                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, c.resources.getDrawable(R.drawable.img_check), null, null)
+                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(c, R.drawable.img_check), null, null)
                 copyBtn.text = c.getString(R.string.link_copied_label)
             }
             else -> {
                 copyBtn.isActivated = false
-                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, c.resources.getDrawable(R.drawable.img_copy), null, null)
+                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(c, R.drawable.img_copy), null, null)
                 copyBtn.text = c.getString(R.string.copyLink_label)
             }
         }

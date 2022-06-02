@@ -51,6 +51,8 @@ class NavHelper(val activity: AppCompatActivity) {
         setDestinationChangeListener(nav)
     }
 
+    fun showTxnDetails(uuid: String, isNewTransaction: Boolean? = false) = navController?.let{NavUtil.showTransactionDetailsFragment(it, uuid, isNewTransaction!!)}
+
     fun navigateWellness(tipId: String?) = navController?.let {
         NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment(tipId)) }
 

@@ -8,6 +8,7 @@ import com.hover.stax.transactions.TransactionHistoryAdapter.HistoryViewHolder
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.databinding.TransactionListItemBinding
@@ -48,11 +49,7 @@ class TransactionHistoryAdapter(
 		val a = findAction(t.action_id)
 		holder.binding.liAmount.alpha =
 			(if (t.status == Transaction.FAILED) 0.54 else 1.0).toFloat()
-		holder.binding.transactionItemLayout.setBackgroundColor(
-			holder.binding.root.context.resources.getColor(
-				t.getBackgroundColor()
-			)
-		)
+		holder.binding.transactionItemLayout.setBackgroundColor(ContextCompat.getColor(holder.binding.root.context, t.getBackgroundColor()))
 		holder.binding.liDetail.text = t.shortDescription(a, holder.itemView.context)
 		holder.binding.liDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(
 			t.getIcon(),

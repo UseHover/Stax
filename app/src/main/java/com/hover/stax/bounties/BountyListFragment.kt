@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +13,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
@@ -55,6 +55,8 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         networkMonitor = NetworkMonitor(requireActivity())
+
+        initRecyclerView()
 
         startObservers()
 
@@ -119,22 +121,32 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         isEnabled = true
     }
 
+    private fun initRecyclerView() {
+        binding.bountiesRecyclerView.layoutManager = UIHelper.setMainLinearManagers(context)
+    }
+
     private fun startObservers() = with(bountyViewModel) {
         val actionsObserver = object : Observer<List<HoverAction>> {
             override fun onChanged(t: List<HoverAction>?) {
                 Timber.v("Actions update: ${t?.size}")
             }
-
         }
+
         val txnObserver = object : Observer<List<StaxTransaction>> {
             override fun onChanged(t: List<StaxTransaction>?) {
                 Timber.v("Transactions update ${t?.size}")
             }
         }
 
+        val simsObserver = object: Observer<List<SimInfo>> {
+            override fun onChanged(t: List<SimInfo>?) {
+                Timber.v("Sims update ${t?.size}")
+            }
+        }
+
         actions.observe(viewLifecycleOwner, actionsObserver)
         transactions.observe(viewLifecycleOwner, txnObserver)
-        sims.observe(viewLifecycleOwner) { Timber.v("Sims update ${it.size}") }
+        sims.observe(viewLifecycleOwner, simsObserver)
         bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
         channels.observe(viewLifecycleOwner) {
             initCountryDropdown(it)

@@ -15,7 +15,7 @@ const val RECIPIENT_INSTITUTION = "recipientInstitution"
 class ActionSelectViewModel(application: Application) : AndroidViewModel(application) {
 
     val filteredActions = MediatorLiveData<List<HoverAction>>()
-    val activeAction = MediatorLiveData<HoverAction>()
+    val activeAction = MediatorLiveData<HoverAction?>()
     val nonStandardVariables = MediatorLiveData<LinkedHashMap<String, String>>()
 
     init {
@@ -24,10 +24,11 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun setActiveActionIfOutOfDate(actions: List<HoverAction>) {
-        if (!actions.isNullOrEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
+        if (actions.isNotEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
             val action = actions.first()
             activeAction.postValue(action)
-        }
+        } else
+            activeAction.postValue(null)
     }
 
     fun setActions(actions: List<HoverAction>) = filteredActions.postValue(actions)
@@ -55,10 +56,9 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun updateNonStandardVariables(key: String, value: String) {
-        var map = nonStandardVariables.value
-        if (map == null) map = linkedMapOf()
+        val map = nonStandardVariables.value ?: linkedMapOf()
         map[key] = value
-        nonStandardVariables.postValue(map!!)
+        nonStandardVariables.postValue(map)
     }
 
      fun wrapExtras(): HashMap<String, String> {

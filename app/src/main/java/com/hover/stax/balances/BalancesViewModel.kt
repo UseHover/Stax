@@ -7,32 +7,40 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.utils.Utils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : AndroidViewModel(application) {
 
-    var showBalances = MutableLiveData(true)
+    private var _showBalances = MutableLiveData(false)
+    val showBalances: LiveData<Boolean> = _showBalances
 
     var userRequestedBalanceAccount = MutableLiveData<Account?>()
-    var balanceAction: LiveData<HoverAction?> = MutableLiveData()
+
+    private var _balanceAction = MutableSharedFlow<HoverAction>()
+    val balanceAction = _balanceAction.asSharedFlow()
 
     init {
-        showBalances.value = Utils.getBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, getApplication(), true)
-        balanceAction = Transformations.switchMap(userRequestedBalanceAccount) { startBalanceActionFor(it) }
+        _showBalances.value = Utils.getBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, getApplication(), true)
     }
 
-    fun setBalanceState(show: Boolean) {
+    fun setBalanceState(show: Boolean) = viewModelScope.launch {
         Utils.saveBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, show, getApplication())
-        showBalances.value = show
+        _showBalances.postValue(show)
     }
 
-    fun requestBalance(account: Account?) {
-        userRequestedBalanceAccount.postValue(account)
+    fun requestBalance(account: Account) {
+        userRequestedBalanceAccount.value = account
+        startBalanceActionFor(userRequestedBalanceAccount.value)
     }
 
-    private fun startBalanceActionFor(account: Account?): LiveData<HoverAction?> {
+    private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
         val channelId = account?.channelId ?: -1
-        return actionRepo.getFirstLiveAction(channelId,
-                if (account?.name == PLACEHOLDER) HoverAction.BALANCE
-                else HoverAction.FETCH_ACCOUNTS)
+        val action = actionRepo.getActions(channelId, if (account?.name == PLACEHOLDER) HoverAction.FETCH_ACCOUNTS else HoverAction.BALANCE).first()
+        _balanceAction.emit(action)
     }
 }

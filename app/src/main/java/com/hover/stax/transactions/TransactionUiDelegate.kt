@@ -1,7 +1,6 @@
 package com.hover.stax.transactions
 
 import android.content.Context
-import androidx.compose.ui.text.capitalize
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
@@ -13,7 +12,7 @@ interface TransactionUiDelegate {
 
     fun getIcon(): Int {
         return when (transaction.status) {
-            Transaction.FAILED -> R.drawable.ic_info_red
+            Transaction.FAILED -> R.drawable.ic_error
             Transaction.PENDING -> R.drawable.ic_warning
             else -> R.drawable.ic_success
         }
@@ -36,7 +35,7 @@ interface TransactionUiDelegate {
             HoverAction.C2B -> c.getString(R.string.display_bill_payment)
             HoverAction.RECEIVE -> c.getString(R.string.display_money_received)
             else -> "Other"
-        }.capitalize()
+        }.replaceFirstChar { it.uppercaseChar() }
     }
 
     fun humanStatus(c: Context): String {
@@ -48,7 +47,7 @@ interface TransactionUiDelegate {
     }
 
     fun humanCategory(c: Context) : String {
-        return if (transaction.isFailed) transaction.category.replace("-", " ") .capitalize()
+        return if (transaction.isFailed) transaction.category.replace("-", " ") .replaceFirstChar { it.uppercaseChar() }
         else ""
     }
 
@@ -73,11 +72,11 @@ interface TransactionUiDelegate {
         }
     }
 
-    fun longDescription(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, c: Context): String {
+    fun longDescription(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, isExpectingSMS: Boolean, c: Context): String {
         return if (transaction.isRecorded) getRecordedStatusDetail(c)
         else when (transaction.status) {
             Transaction.FAILED -> longFailureMessage(action, c)
-            Transaction.PENDING -> c.getString(R.string.pending_cardbody)
+            Transaction.PENDING -> c.getString( if(isExpectingSMS)  R.string.pending_cardbody else R.string.pending_no_sms_expected_cardbody)
             else -> lookupSuccessDescription(messages, sms, c)
         }
     }

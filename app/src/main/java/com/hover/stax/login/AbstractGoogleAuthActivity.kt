@@ -36,6 +36,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
         setLoginObserver()
 
         updateManager = AppUpdateManagerFactory.create(this)
+
         if (!BuildConfig.DEBUG)
             checkForUpdates()
     }
@@ -81,18 +82,21 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
     fun signIn() = startActivityForResult(loginViewModel.signInClient.signInIntent, LOGIN_REQUEST)
 
     private fun checkForUpdates() {
-        val updateInfoTask = updateManager.appUpdateInfo
+        if (BuildConfig.DEBUG) {
+            val updateInfoTask = updateManager.appUpdateInfo
 
-        updateInfoTask.addOnSuccessListener { updateInfo ->
-            val updateType = if ((updateInfo.clientVersionStalenessDays() ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE)
-                AppUpdateType.FLEXIBLE
-            else
-                AppUpdateType.IMMEDIATE
+            updateInfoTask.addOnSuccessListener { updateInfo ->
+                val updateType = if ((updateInfo.clientVersionStalenessDays()
+                        ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE
+                ) AppUpdateType.FLEXIBLE
+                else AppUpdateType.IMMEDIATE
 
-            if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(updateType))
-                requestUpdate(updateInfo, updateType)
-            else
-                Timber.i("No new update available")
+                if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(
+                        updateType
+                    )
+                ) requestUpdate(updateInfo, updateType)
+                else Timber.i("No new update available")
+            }
         }
     }
 

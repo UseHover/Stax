@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 39,
-    "identityHash": "bb7b14f6646936c690876435e3fc71af",
+    "identityHash": "20d754ea921bd26d6f1996cb90a140d9",
     "entities": [
       {
         "tableName": "channels",
@@ -126,8 +126,14 @@
       },
       {
         "tableName": "stax_transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT NOT NULL DEFAULT 'started', `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT NOT NULL, `account_id` INTEGER, `recipient_id` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `balance` TEXT, `note` TEXT, `counterparty` TEXT, `account_name` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT, `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `balance` TEXT, `account_id` INTEGER, `counterparty` TEXT)",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "uuid",
             "columnName": "uuid",
@@ -170,8 +176,7 @@
             "fieldPath": "category",
             "columnName": "category",
             "affinity": "TEXT",
-            "notNull": true,
-            "defaultValue": "'started'"
+            "notNull": false
           },
           {
             "fieldPath": "initiated_at",
@@ -188,26 +193,8 @@
             "defaultValue": "CURRENT_TIMESTAMP"
           },
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "description",
             "columnName": "description",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "accountId",
-            "columnName": "account_id",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "counterparty_id",
-            "columnName": "recipient_id",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -230,26 +217,26 @@
             "notNull": false
           },
           {
+            "fieldPath": "counterparty_id",
+            "columnName": "recipient_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "balance",
             "columnName": "balance",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "note",
-            "columnName": "note",
-            "affinity": "TEXT",
+            "fieldPath": "accountId",
+            "columnName": "account_id",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
             "fieldPath": "counterparty",
             "columnName": "counterparty",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "accountName",
-            "columnName": "account_name",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -350,7 +337,7 @@
       },
       {
         "tableName": "requests",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `requestee_ids` TEXT NOT NULL, `amount` TEXT, `requester_institution_id` INTEGER NOT NULL DEFAULT 0, `requester_number` TEXT, `requester_country_alpha2` TEXT, `note` TEXT, `message` TEXT, `matched_transaction_uuid` TEXT, `date_sent` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `requester_account_id` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `description` TEXT, `requestee_ids` TEXT NOT NULL, `amount` TEXT, `requester_institution_id` INTEGER NOT NULL, `requester_number` TEXT, `note` TEXT, `message` TEXT, `matched_transaction_uuid` TEXT, `date_sent` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP)",
         "fields": [
           {
             "fieldPath": "id",
@@ -380,18 +367,11 @@
             "fieldPath": "requester_institution_id",
             "columnName": "requester_institution_id",
             "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
+            "notNull": true
           },
           {
             "fieldPath": "requester_number",
             "columnName": "requester_number",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "requester_country_alpha2",
-            "columnName": "requester_country_alpha2",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -419,12 +399,6 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "CURRENT_TIMESTAMP"
-          },
-          {
-            "fieldPath": "requester_account_id",
-            "columnName": "requester_account_id",
-            "affinity": "INTEGER",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -527,7 +501,7 @@
       },
       {
         "tableName": "accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `institutionId` INTEGER, `countryAlpha2` TEXT, `channelId` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "name",
@@ -550,18 +524,6 @@
           {
             "fieldPath": "accountNo",
             "columnName": "account_no",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "institutionId",
-            "columnName": "institutionId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "countryAlpha2",
-            "columnName": "countryAlpha2",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -652,7 +614,7 @@
       },
       {
         "tableName": "paybills",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `business_name` TEXT, `business_no` TEXT, `account_no` TEXT, `action_id` TEXT DEFAULT '', `accountId` INTEGER NOT NULL, `logo_url` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, `channelId` INTEGER NOT NULL, `logo` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `business_no` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `accountId` INTEGER NOT NULL, `logo_url` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, `logo` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "name",
@@ -661,16 +623,10 @@
             "notNull": true
           },
           {
-            "fieldPath": "businessName",
-            "columnName": "business_name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "businessNo",
             "columnName": "business_no",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "accountNo",
@@ -679,11 +635,10 @@
             "notNull": false
           },
           {
-            "fieldPath": "actionId",
-            "columnName": "action_id",
-            "affinity": "TEXT",
-            "notNull": false,
-            "defaultValue": "''"
+            "fieldPath": "channelId",
+            "columnName": "channelId",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "accountId",
@@ -706,12 +661,6 @@
           {
             "fieldPath": "recurringAmount",
             "columnName": "recurring_amount",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "channelId",
-            "columnName": "channelId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -747,15 +696,6 @@
             "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_paybills_business_no_account_no` ON `${TABLE_NAME}` (`business_no`, `account_no`)"
           },
           {
-            "name": "index_paybills_accountId",
-            "unique": false,
-            "columnNames": [
-              "accountId"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_paybills_accountId` ON `${TABLE_NAME}` (`accountId`)"
-          },
-          {
             "name": "index_paybills_channelId",
             "unique": false,
             "columnNames": [
@@ -763,6 +703,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_paybills_channelId` ON `${TABLE_NAME}` (`channelId`)"
+          },
+          {
+            "name": "index_paybills_accountId",
+            "unique": false,
+            "columnNames": [
+              "accountId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_paybills_accountId` ON `${TABLE_NAME}` (`accountId`)"
           }
         ],
         "foreignKeys": [
@@ -847,12 +796,51 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "bonuses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_channel` INTEGER NOT NULL, `purchase_channel` INTEGER NOT NULL, `bonus_percent` REAL NOT NULL, `message` TEXT NOT NULL, PRIMARY KEY(`user_channel`, `purchase_channel`))",
+        "fields": [
+          {
+            "fieldPath": "userChannel",
+            "columnName": "user_channel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "purchaseChannel",
+            "columnName": "purchase_channel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bonusPercent",
+            "columnName": "bonus_percent",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "user_channel",
+            "purchase_channel"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bb7b14f6646936c690876435e3fc71af')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '20d754ea921bd26d6f1996cb90a140d9')"
     ]
   }
 }

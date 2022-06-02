@@ -1,11 +1,7 @@
 package com.hover.stax.home
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
-import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
@@ -13,10 +9,10 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.login.AbstractGoogleAuthActivity
@@ -36,11 +32,11 @@ import timber.log.Timber
 class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface {
 
     private val accountsViewModel: AccountsViewModel by viewModel()
-    private val balancesViewModel: BalancesViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
+    private val bonusViewModel: BonusViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -58,8 +54,9 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         checkForFragmentDirection(intent)
         observeForAppReview()
         setGoogleLoginInterface(this)
-    }
 
+        bonusViewModel.fetchBonuses()
+    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -84,15 +81,19 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         // The class name is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         // https://stackoverflow.com/a/54939860/2371515
         actionSelectViewModel.activeAction.observe(this) {
-            Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
+            Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}")
+        }
 
         with(accountsViewModel) {
             activeAccount.observe(this@MainActivity) {
-                Timber.v("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}") }
+                Timber.v("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}")
+            }
             channelActions.observe(this@MainActivity) {
-                Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
-            accounts.observe(this@MainActivity) {
-                Timber.v("Observing accounts ${this.javaClass.simpleName}: %s", it?.size) }
+                Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size)
+            }
+//            accounts.observe(this@MainActivity) {
+//                Timber.v("Observing accounts ${this.javaClass.simpleName}: %s", it?.size)
+//            }
         }
     }
 

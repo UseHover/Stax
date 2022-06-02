@@ -3,14 +3,21 @@ package com.hover.stax.accounts
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.actions.ActionSelect
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
@@ -19,7 +26,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private var showSelected: Boolean = true
     private var highlightListener: HighlightListener? = null
 
-    var highlightedAccount: Account? = null
+    private var highlightedAccount: Account? = null
 
     init {
         getAttrs(context, attributeSet)
@@ -42,7 +49,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun accountUpdate(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty()) {
+        if (accounts.isNotEmpty()) {
             updateChoices(accounts.toMutableList())
         } else if (!hasExistingContent()) {
             setState(context.getString(R.string.accounts_error_no_accounts), NONE)
@@ -79,10 +86,11 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         onSelect(accounts.firstOrNull { it.isDefault })
     }
 
+
     private fun onSelect(account: Account?) {
         setDropdownValue(account)
         if (account != null && account.id != 0)
-            account.let { highlightListener?.highlightAccount(it) }
+            highlightListener?.highlightAccount(account)
         else
             findNavController().navigate(R.id.navigation_linkAccount)
     }
@@ -91,11 +99,19 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setObservers(viewModel: AccountsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            accounts.observe(lifecycleOwner) { accountUpdate(it) }
+            lifecycleOwner.lifecycleScope.launch {
+                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                    accounts.collect {
+                        accountUpdate(it)
+                    }
+                }
+            }
 
             activeAccount.observe(lifecycleOwner) {
-                if (it != null && showSelected)
+                if (it != null && showSelected) {
+                    setDropdownValue(it)
                     setState(helperText, NONE)
+                }
             }
 
             channelActions.observe(lifecycleOwner) {
@@ -106,14 +122,14 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun setState(actions: List<HoverAction>, viewModel: AccountsViewModel) {
         when {
-            viewModel.activeAccount.value != null && (actions.isNullOrEmpty()) -> setState(
+            viewModel.activeAccount.value != null && (actions.isEmpty()) -> setState(
                 context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
                 ), ERROR
             )
 
-            !actions.isNullOrEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
+            actions.isNotEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
                 setState(
                     context.getString(
                         if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
@@ -121,9 +137,11 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                     ), INFO
                 )
 
-            viewModel.activeAccount.value != null && showSelected -> setState(helperText, SUCCESS)
+            viewModel.activeAccount.value != null && showSelected -> setState(null, SUCCESS)
         }
     }
+
+    fun getHighlightedAccount() = highlightedAccount
 
     interface HighlightListener {
         fun highlightAccount(account: Account)

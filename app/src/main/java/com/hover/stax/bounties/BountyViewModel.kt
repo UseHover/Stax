@@ -21,7 +21,7 @@ import kotlinx.coroutines.*
 
 private const val MAX_LOOKUP_COUNT = 40
 
-class BountyViewModel(application: Application, val repo: ChannelRepo, val actionrepo: ActionRepo, val transactionRepo: TransactionRepo) : AndroidViewModel(application) {
+class BountyViewModel(application: Application, val repo: ChannelRepo, val actionRepo: ActionRepo, transactionRepo: TransactionRepo) : AndroidViewModel(application) {
 
     @JvmField
     var country: String = CountryAdapter.CODE_ALL_COUNTRIES
@@ -49,7 +49,7 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
         currentCountryFilter.value = CountryAdapter.CODE_ALL_COUNTRIES
 
         loadSims()
-        actions = actionrepo.bountyActions
+        actions = actionRepo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
         transactions = transactionRepo.bountyTransactions!!
         bountyList.addSource(actions, this::makeBounties)
@@ -103,7 +103,7 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
 
     fun filterChannels(countryCode: String): LiveData<List<Channel>> {
         country = countryCode
-        val actions = actions.value ?: return MutableLiveData(ArrayList<Channel>())
+        val actions = actions.value ?: return MutableLiveData(ArrayList())
 
         return if (countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
             loadChannels(actions)

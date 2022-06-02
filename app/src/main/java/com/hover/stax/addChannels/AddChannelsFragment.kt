@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -20,6 +21,7 @@ import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsAdapter
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.channels.*
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
@@ -27,8 +29,11 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
-
 import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -37,6 +42,7 @@ const val CHANNELS_REFRESHED = "has_refreshed_channels"
 class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
@@ -66,7 +72,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.channelsListCard.apply{
+        binding.channelsListCard.apply {
             showProgressIndicator()
             setTitle(getString(R.string.add_accounts_to_stax))
         }
@@ -78,14 +84,19 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         setUpCountryChoice()
         setSearchInputWatcher()
 
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, channelsViewModel.countryChoice.value) } }
-        channelsViewModel.sims.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} sims") }
-        channelsViewModel.simCountryList.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} hnis") }
-        channelsViewModel.accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
-        channelsViewModel.countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
+        bonusViewModel.getBonusList()
+        startObservers()
 
         setFabListener()
+    }
+
+    private fun startObservers() = with(channelsViewModel) {
+        allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
+        sims.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} sims") }
+        simCountryList.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} hnis") }
+        accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
+        filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
+        countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
     }
 
     private fun fillUpChannelLists() {
@@ -120,7 +131,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-               channelsViewModel.updateSearch(charSequence.toString())
+                channelsViewModel.updateSearch(charSequence.toString())
             }
         }
         binding.searchInput.addTextChangedListener(searchInputWatcher)
@@ -158,7 +169,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            updateAdapter(Channel.sort(channels, false))
+            updateAdapter(channels.filterNot { it.selected })
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
             binding.errorText.visibility = GONE
@@ -166,7 +177,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun showEmptyState() {
-        val content = resources.getString(R.string.no_accounts_found_desc,  channelsViewModel.filterQuery.value!!)
+        val content = resources.getString(R.string.no_accounts_found_desc, channelsViewModel.filterQuery.value!!)
         binding.emptyState.noAccountFoundDesc.apply {
             text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
             movementMethod = LinkMovementMethod.getInstance()
@@ -183,8 +194,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     private fun setError(message: Int) {
         binding.errorText.apply {
-                visibility = VISIBLE
-                text = getString(message)
+            visibility = VISIBLE
+            text = getString(message)
         }
     }
 
@@ -225,8 +236,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
             Utils.saveBoolean(CHANNELS_REFRESHED, true, requireActivity())
             return
         }
-
-        Timber.i("Channels already reloaded")
     }
 
     override fun onDestroyView() {

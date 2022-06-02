@@ -17,6 +17,7 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
+import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
@@ -24,11 +25,14 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
+import kotlinx.coroutines.channels.Channel as KChannel //import alias to differentiate between Stax Channels and Coroutine Channels
 
-class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
+class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -40,8 +44,10 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     var countryChoice: MediatorLiveData<String> = MediatorLiveData()
     val filterQuery = MutableLiveData<String?>()
     private var countryChannels = MediatorLiveData<List<Channel>>()
-
     val filteredChannels = MediatorLiveData<List<Channel>>()
+
+    private val accountCreatedEvent = KChannel<Boolean>()
+    val accountEventFlow = accountCreatedEvent.receiveAsFlow()
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -91,14 +97,14 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
 
     private fun onSimUpdate(countryCodes: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (!countryCodes.isNullOrEmpty()) {
+            if (countryCodes.isNotEmpty()) {
                 for (code in countryCodes) {
                     if (repo.getChannelsByCountry(code).isNotEmpty())
                         updateCountry(code)
                 }
             }
         }
-     }
+    }
 
     private fun updateCountryChannels(channels: List<Channel>?, countryCode: String?) {
         countryChannels.value = when {
@@ -140,9 +146,25 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
 
     @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
     fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
-        if (accounts.value.isNullOrEmpty() && !allChannels.value?.filter{ it.selected }.isNullOrEmpty()) {
-            createAccounts(allChannels.value!!.filter{ it.selected })
+        if (accounts.value.isNullOrEmpty() && !allChannels.value?.filter { it.selected }.isNullOrEmpty()) {
+            createAccounts(allChannels.value!!.filter { it.selected })
         }
+    }
+
+    fun validateAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val accounts = accountRepo.getAccountsByChannel(channelId)
+
+        if(accounts.isEmpty())
+            createAccount(channelId)
+        else
+            accountCreatedEvent.send(true)
+    }
+
+    private fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val channel = repo.getChannel(channelId)
+        channel?.let { createAccounts(listOf(it)) }
+
+        accountCreatedEvent.send(true)
     }
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
@@ -177,13 +199,20 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     }
 
     private fun runFilter(channels: List<Channel>, value: String?) {
-        viewModelScope.launch {
-            filteredChannels.value =
-                channels.filter { standarizeString(it.toString()).contains(standarizeString(value)) }
+        filterBonusChannels(channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) })
+    }
+
+    private fun filterBonusChannels(channels: List<Channel>) = viewModelScope.launch {
+        bonusRepo.bonuses.collect { list ->
+            val ids = list.map { it.purchaseChannel }
+            filteredChannels.value = if(ids.isEmpty())
+                 channels
+            else
+                channels.filterNot { ids.contains(it.id) }
         }
     }
 
-    private fun standarizeString(value: String?) : String {
+    private fun standardizeString(value: String?): String {
         // a non null String always contains an empty string
         if (value == null) return ""
         return value.lowercase().replace(" ", "").replace("#", "").replace("-", "");
@@ -194,7 +223,8 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
             simReceiver?.let {
                 LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(it)
             }
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
         super.onCleared()
     }
 
