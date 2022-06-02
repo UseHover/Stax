@@ -172,8 +172,16 @@
         <entry key="app/src/main/res/layout/transaction_details_header.xml" value="0.375" />
         <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transaction_details_primarystatus.xml" value="0.20643363728470113" />
+<<<<<<< HEAD
         <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.1" />
         <entry key="app/src/main/res/layout/transaction_details_status.xml" value="0.375" />
+=======
+        <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.22916666666666666" />
+<<<<<<< HEAD
+        <entry key="app/src/main/res/layout/transaction_details_status.xml" value="0.2905982905982906" />
+=======
+>>>>>>> development
+>>>>>>> development
         <entry key="app/src/main/res/layout/transaction_details_topstatus_view.xml" value="0.35733695652173914" />
         <entry key="app/src/main/res/layout/transaction_list_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transaction_messages_items.xml" value="0.19145299145299147" />
@@ -204,7 +212,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

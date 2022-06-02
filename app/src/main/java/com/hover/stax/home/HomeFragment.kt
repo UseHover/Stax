@@ -55,6 +55,7 @@ class HomeFragment : Fragment() {
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
         binding.merchant.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
         binding.paybill.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
+        binding.requestMoney.setOnClickListener{ navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())}
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)

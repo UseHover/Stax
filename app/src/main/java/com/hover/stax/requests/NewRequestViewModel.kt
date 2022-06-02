@@ -95,10 +95,10 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
     fun saveRequest() {
         if (formulatedRequest.value != null) {
             viewModelScope.launch(Dispatchers.IO) {
-                val request = Request(formulatedRequest.value!!, requestee.value, getApplication())
-                repo.insert(request)
+                val r = Request(formulatedRequest.value!!, requestee.value, getApplication())
+                repo.insert(r)
 
-                finalRequests.postValue(listOf(request))
+                finalRequests.postValue(listOf(r))
             }
         }
     }

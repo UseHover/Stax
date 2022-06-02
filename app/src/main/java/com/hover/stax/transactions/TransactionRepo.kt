@@ -28,6 +28,9 @@ class TransactionRepo(db: AppDatabase) {
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?
         get() = transactionDao.transactionsForAppReview
 
+    val allNonBountyTransactions : LiveData<List<StaxTransaction>>
+        get() = transactionDao.nonBountyTransactions
+
     @SuppressLint("DefaultLocale")
     suspend fun hasTransactionLastMonth(): Boolean {
         return transactionDao.getTransactionCount(String.format("%02d", DateUtils.lastMonth().first), DateUtils.lastMonth().second.toString())!! > 0

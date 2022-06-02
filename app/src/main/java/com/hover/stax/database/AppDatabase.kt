@@ -33,13 +33,13 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class
     ],
-    version = 41,
+    version = 42,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
         AutoMigration(from = 38, to = 39),
-        AutoMigration(from = 39, to = 40),
-        AutoMigration(from = 40, to = 41)
+        AutoMigration(from = 40, to = 41),
+        AutoMigration(from = 41, to = 42)
     ]
 )
 abstract class AppDatabase : RoomDatabase() {

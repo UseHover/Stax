@@ -66,6 +66,11 @@ public class Channel implements Comparable<Channel> {
     @NonNull
     @ColumnInfo(name = "defaultAccount", defaultValue = "0")
     public boolean defaultAccount;
+
+    @NonNull
+    @ColumnInfo(name = "isFavorite", defaultValue = "0")
+    public boolean isFavorite;
+
     @ColumnInfo(name = "pin")
     public String pin;
     @ColumnInfo(name = "latestBalance")

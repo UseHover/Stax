@@ -52,5 +52,4 @@ class ActionDropdownAdapter(val actions: List<HoverAction>, context: Context) : 
             logo.loadImage(binding.root.context, logoUrl)
         }
     }
-
 }

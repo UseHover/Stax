@@ -13,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -40,7 +39,7 @@ import timber.log.Timber
 abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
-    private  val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val balancesViewModel: BalancesViewModel by sharedViewModel()
     val accountsViewModel: AccountsViewModel by sharedViewModel()
     val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
 
@@ -81,17 +80,6 @@ abstract class AbstractFormFragment : Fragment() {
         collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
             callHover(accountsViewModel.activeAccount.value, it)
         }
-
-//        lifecycleScope.launchWhenStarted {
-//            balancesViewModel.balanceAction.collect {
-//                callHover(accountsViewModel.activeAccount.value, it)
-//            }
-//        }
-//        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
-//            it?.let {
-//                callHover(accountsViewModel.activeAccount.value, it)
-//            }
-//        }
     }
 
     private fun callHover(account: Account?, action: HoverAction) {
@@ -212,19 +200,20 @@ abstract class AbstractFormFragment : Fragment() {
                 abstractFormViewModel.setEditing(true)
             else
                 findNavController().popBackStack()
+                }
+            }
+
+            private fun resetVMs() {
+                abstractFormViewModel.reset()
+                accountsViewModel.reset()
+                actionSelectViewModel.activeAction.value = null
+            }
+
+
+            override fun onDestroy() {
+                resetVMs()
+                super.onDestroy()
         }
-    }
 
-    private fun resetVMs() {
-        abstractFormViewModel.reset()
-        accountsViewModel.reset()
-        actionSelectViewModel.activeAction.value = null
+        private fun log(event: String) = AnalyticsUtil.logAnalyticsEvent(event, requireContext())
     }
-
-    override fun onDestroy() {
-        resetVMs()
-        super.onDestroy()
-    }
-
-    private fun log(event: String) = AnalyticsUtil.logAnalyticsEvent(event, requireContext())
-}

@@ -10,26 +10,24 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
-
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.RequestServiceDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
+class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChannelsAdapter.FavoriteClickInterface {
 
     private val viewModel: ChannelsViewModel by viewModel()
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
-    private val libraryAdapter = LibraryChannelsAdapter()
+    private val libraryAdapter = LibraryChannelsAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLibraryBinding.inflate(inflater, container, false)
@@ -96,7 +94,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     }
 
     private fun showEmptyState() {
-        val content = resources.getString(R.string.no_accounts_found_desc,  viewModel.filterQuery.value!!)
+        val content = resources.getString(R.string.no_accounts_found_desc, viewModel.filterQuery.value!!)
         binding.emptyState.noAccountFoundDesc.apply {
             text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
             movementMethod = LinkMovementMethod.getInstance()
@@ -107,5 +105,9 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
 
     override fun countrySelect(countryCode: String) {
         viewModel.updateCountry(countryCode)
+    }
+
+    override fun onFavoriteIconClicked(channel: Channel) {
+        viewModel.updateChannel(channel)
     }
 }
