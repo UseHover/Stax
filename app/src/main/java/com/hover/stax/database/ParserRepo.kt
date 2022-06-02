@@ -6,7 +6,5 @@ import com.hover.sdk.parsers.ParserDao
 class ParserRepo(sdkDb: HoverRoomDatabase) {
 	private val parserDao: ParserDao = sdkDb.parserDao()
 
-	suspend fun hasSMSParser(actionId: String) : Boolean {
-		 return parserDao.getSMSActionParsers(actionId).isNotEmpty()
-	}
+	fun hasSMSParser(actionId: String) : Boolean = parserDao.getSMSActionParsers(actionId).isNotEmpty()
 }

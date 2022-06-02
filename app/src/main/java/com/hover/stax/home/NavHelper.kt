@@ -12,24 +12,34 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.bounties.BountyEmailFragmentDirections
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
+
+const val NAV_HOME = 600
+const val NAV_TRANSFER = 601
+const val NAV_AIRTIME = 602
+const val NAV_REQUEST = 603
+const val NAV_BALANCE = 604
+const val NAV_SETTINGS = 605
+const val NAV_LINK_ACCOUNT = 606
+const val NAV_PAYBILL = 608
+const val NAV_EMAIL_CLIENT = 609
+const val NAV_USSD_LIB = 610
+const val NAV_HISTORY = 611
+const val PERMS_REQ_CODE = 700
 
 class NavHelper(val activity: AppCompatActivity) {
 
     private var navController: NavController? = null
     private var appBarConfiguration: AppBarConfiguration? = null
-    private var navHostFragment: NavHostFragment? = null
 
     fun setUpNav() {
         val nav = activity.findViewById<BottomNavigationView>(R.id.nav_view)
-        navHostFragment = activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFragment.let { navController = it.navController }
 
-        navHostFragment?.let {
-            navController = getNavController()
+        navController?.let {
             NavigationUI.setupWithNavController(nav, navController!!)
             appBarConfiguration = AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_balance, R.id.navigation_history, R.id.libraryFragment, R.id.navigation_settings
@@ -40,21 +50,19 @@ class NavHelper(val activity: AppCompatActivity) {
         setDestinationChangeListener(nav)
     }
 
-    fun navigateAccountDetails(accountId: Int) = NavUtil.navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
+    fun showTxnDetails(uuid: String, isNewTransaction: Boolean? = false) = navController?.let { NavUtil.showTransactionDetailsFragment(it, uuid, isNewTransaction!!) }
 
-    fun navigateWellness(tipId: String?) = NavUtil.navigate(getNavController(), MainNavigationDirections.actionGlobalWellnessFragment(tipId))
-
-    fun navigateToBountyList() = NavUtil.navigate(getNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
-
-    fun showTxnDetails(uuid: String, isNewTransaction: Boolean? = false) = NavUtil.showTransactionDetailsFragment(getNavController(), uuid, isNewTransaction!!)
-
-    fun navigateTransfer(type: String, txnUUID: String? = null) {
-        val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
-        txnUUID?.let { transferDirection.transactionUUID = it }
-        checkPermissionsAndNavigate(transferDirection)
+    fun navigateWellness(tipId: String?) = navController?.let {
+        NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment(tipId))
     }
 
-    private fun getNavController(): NavController = navHostFragment!!.navController
+    fun navigateTransfer(type: String, accountId: String? = null, amount: String? = null, contactId: String? = null) {
+        val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
+        accountId?.let { transferDirection.accountId = it }
+        amount?.let { transferDirection.amount = it }
+        contactId?.let { transferDirection.contactId = it }
+        checkPermissionsAndNavigate(transferDirection)
+    }
 
     private fun setNavClickListener(nav: BottomNavigationView) {
         nav.setOnItemSelectedListener {
@@ -62,7 +70,7 @@ class NavHelper(val activity: AppCompatActivity) {
             true
         }
         nav.setOnItemReselectedListener {
-            if (getNavController().currentDestination?.id != it.itemId) {
+            if (navController?.currentDestination?.id != it.itemId) {
                 checkPermissionsAndNavigate(getNavDirections(it.itemId))
             }
         }
@@ -89,29 +97,32 @@ class NavHelper(val activity: AppCompatActivity) {
         )
 
         when {
-            exemptRoutes.contains(it) || permissionHelper.hasBasicPerms() -> NavUtil.navigate(getNavController(), it)
+            exemptRoutes.contains(it) || permissionHelper.hasBasicPerms() -> {
+                navController?.let { NavUtil.navigate(navController!!, navDirections) }
+            }
             else -> requestBasicPerms()
         }
     }
 
     private fun getNavDirections(destId: Int): NavDirections? = when (destId) {
-        R.id.navigation_request, Constants.NAV_REQUEST -> MainNavigationDirections.actionGlobalNavigationRequest()
-        R.id.navigation_history, Constants.NAV_HISTORY -> MainNavigationDirections.actionGlobalNavigationHistory()
-        R.id.navigation_settings, Constants.NAV_SETTINGS -> MainNavigationDirections.actionGlobalNavigationSettings()
-        R.id.navigation_home, Constants.NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
-        R.id.libraryFragment, Constants.NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
-        R.id.navigation_balance, Constants.NAV_BALANCE -> MainNavigationDirections.actionGlobalNavigationBalance()
-        Constants.NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
-        Constants.NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
-        Constants.NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
-        Constants.NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment(false)
+        R.id.navigation_request, NAV_REQUEST -> MainNavigationDirections.actionGlobalNavigationRequest()
+        R.id.navigation_history, NAV_HISTORY -> MainNavigationDirections.actionGlobalNavigationHistory()
+        R.id.navigation_settings, NAV_SETTINGS -> MainNavigationDirections.actionGlobalNavigationSettings()
+        R.id.navigation_home, NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
+        R.id.libraryFragment, NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
+        R.id.navigation_balance, NAV_BALANCE -> MainNavigationDirections.actionGlobalNavigationBalance()
+        NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
+        NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
+        NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
+        NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment()
         else -> null //invalid or unmapped route, return nothing
     }
 
-    fun requestBasicPerms(){
+    private fun requestBasicPerms() {
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
-            { PermissionUtils.requestPerms(Constants.PERMS_REQ_CODE, activity) },
-            { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity)
+            { PermissionUtils.requestPerms(PERMS_REQ_CODE, activity) },
+            { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
+        )
     }
 }

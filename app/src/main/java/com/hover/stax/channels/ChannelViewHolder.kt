@@ -11,12 +11,13 @@ import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 import com.hover.stax.utils.UIHelper.loadImage
 
-class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root) {
+class ChannelViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    val id: TextView = binding.serviceItemId
-    private val channelText: AppCompatTextView = binding.serviceItemNameId
-    private val logo: ImageView = binding.serviceItemImageId
-    private val checkBox: MaterialCheckBox = binding.serviceItemCheckbox
+    var id: TextView = binding.serviceItemId
+    private var channelText: AppCompatTextView = binding.serviceItemNameId
+
+    private var logo: ImageView = binding.serviceItemImageId
+    private var checkBox: MaterialCheckBox = binding.serviceItemCheckbox
 
     fun bind(channel: Channel, isMultiselect: Boolean = false, isSelected: Boolean? = false) {
         if (isMultiselect) {

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.databinding.TransactionCardHistoryBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
@@ -45,7 +44,7 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
 	}
 
 	private fun observeTransactionActionPair() {
-		viewModel.listOfTransactionHistory.observe(viewLifecycleOwner) {
+		viewModel.transactionHistory.observe(viewLifecycleOwner) {
 			binding.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
 			transactionsAdapter!!.submitList(it)
 		}

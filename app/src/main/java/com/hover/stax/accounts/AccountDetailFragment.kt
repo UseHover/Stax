@@ -13,26 +13,31 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.balances.BalanceAdapter
+import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
-import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
 import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
-import com.hover.stax.views.StaxTextInputLayout
+import com.hover.stax.views.StaxTextInput
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
-    RequestsAdapter.SelectListener {
+    RequestsAdapter.SelectListener, BalanceAdapter.BalanceListener {
 
-    private val viewModel: AccountDetailViewModel by viewModel()
+    private val viewModel: AccountDetailViewModel by sharedViewModel()
+    private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val futureViewModel: FutureViewModel by viewModel()
 
     private var transactionsAdapter: TransactionHistoryAdapter? = null
@@ -63,19 +68,18 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         viewModel.setAccount(args.accountId)
     }
 
-    private fun setUpBalance() = with(binding.balanceCard) {
-        root.cardElevation = 0F
-        balanceAmount.text = " - "
-        balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        balanceRefreshIcon.setOnClickListener { onRefresh() }
+    private fun setUpBalance() {
+        binding.balanceCard.root.cardElevation = 0F
+        binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
+        binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
+        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onTapRefresh(viewModel.account.value) }
     }
 
-    private fun setUpManage() = with(binding.manageCard) {
-        nicknameSaveBtn.setOnClickListener { updateNickname() }
-        accountSaveBtn.setOnClickListener { updateAccountNumber() }
-        nicknameInput.addTextChangedListener(nicknameWatcher)
-        accountNumberInput.addTextChangedListener(accountWatcher)
+    private fun setUpManage() {
+        binding.manageCard.nicknameSaveBtn.setOnClickListener { updateNickname() }
+        binding.manageCard.accountSaveBtn.setOnClickListener { updateAccountNumber() }
+        binding.manageCard.nicknameInput.addTextChangedListener(nicknameWatcher)
+        binding.manageCard.accountNumberInput.addTextChangedListener(accountWatcher)
     }
 
     private val nicknameWatcher: TextWatcher = object : TextWatcher {
@@ -94,7 +98,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         }
     }
 
-    private fun toggleButtonHighlight(v: StaxTextInputLayout, btn: AppCompatButton, newText: String, comparator: String?) {
+    private fun toggleButtonHighlight(v: StaxTextInput, btn: AppCompatButton, newText: String, comparator: String?) {
         if (newText.isNotEmpty() && comparator != null && newText != comparator)
             v.setState(null, AbstractStatefulInput.NONE)
         btn.backgroundTintList = ColorStateList.valueOf(
@@ -112,7 +116,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         validateInput(binding.manageCard.accountNumberInput, viewModel.account.value?.accountNo, R.string.account_number_error, viewModel::updateAccountNumber)
     }
 
-    private fun validateInput(v: StaxTextInputLayout, comparison: String?, errorMsg: Int, successFun: (text: String) -> Unit) {
+    private fun validateInput(v: StaxTextInput, comparison: String?, errorMsg: Int, successFun: (text: String) -> Unit) {
         val msg = validates(v, comparison, errorMsg)
         if (msg == null)
             successFun(v.text)
@@ -122,12 +126,14 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         )
     }
 
-    private fun validates(v: StaxTextInputLayout, comparison: String?, errorMsg: Int): String? {
+    private fun validates(v: StaxTextInput, comparison: String?, errorMsg: Int): String? {
         return if (v.text.isEmpty() || v.text == comparison) getString(errorMsg)
         else null
     }
 
     private fun setupObservers() {
+        observeBalanceCheck()
+
         with(viewModel) {
             account.observe(viewLifecycleOwner) {
                 it?.let { acct ->
@@ -138,7 +144,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
                     binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.detailsCard.officialName.text = if(acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
+                    binding.detailsCard.officialName.text = if(acct.name == PLACEHOLDER) acct.alias else acct.name
 
                     binding.manageCard.nicknameInput.setText(acct.alias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
@@ -155,7 +161,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
             }
 
-            listOfTransactionHistory.observe(viewLifecycleOwner) {
+            transactionHistory.observe(viewLifecycleOwner) {
                 binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
                 transactionsAdapter!!.submitList(it)
             }
@@ -168,6 +174,41 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 binding.detailsFees.text = Utils.formatAmount(it ?: 0.0)
             }
         }
+    }
+
+    private fun observeBalanceCheck() {
+        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+            attemptCallHover(viewModel.account.value, it)
+        }
+//        lifecycleScope.launchWhenStarted {
+//            balancesViewModel.balanceAction.collect {
+//
+//            }
+//        }
+//        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
+//            attemptCallHover(viewModel.account.value, it)
+//        }
+
+//        viewModel.account.observe(viewLifecycleOwner) {
+//            attemptCallHover(it, balancesViewModel.balanceAction.value)
+//        }
+    }
+
+    override fun onTapRefresh(account: Account?) {
+        account?.let {
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
+            balancesViewModel.requestBalance(account)
+        }
+    }
+
+    override fun onTapDetail(accountId: Int) { }
+
+    private fun attemptCallHover(account: Account?, action: HoverAction?) {
+        action?.let { account?.let { callHover(account, action) } }
+    }
+
+    private fun callHover(account: Account, action: HoverAction) {
+        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 
     private fun setUpRemoveAccount(account: Account) {
@@ -224,8 +265,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         val visible = !schedules.isNullOrEmpty() || !requests.isNullOrEmpty()
         binding.scheduledCard.root.visibility = if (visible) View.VISIBLE else View.GONE
     }
-
-    private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it.id) }
 
     override fun viewRequestDetail(id: Int) {
         NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToRequestDetailsFragment(id))

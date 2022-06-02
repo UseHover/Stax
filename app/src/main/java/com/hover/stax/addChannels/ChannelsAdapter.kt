@@ -1,13 +1,15 @@
-package com.hover.stax.channels
+package com.hover.stax.addChannels
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelViewHolder
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 
-class ChannelsAdapter(var selectListener: SelectListener?) : ListAdapter<Channel, ChannelsViewHolder>(diffUtil) {
+class ChannelsAdapter(var selectListener: SelectListener?) : ListAdapter<Channel, ChannelViewHolder>(diffUtil) {
 
     private var selectionTracker: SelectionTracker<Long>? = null
 
@@ -15,12 +17,12 @@ class ChannelsAdapter(var selectListener: SelectListener?) : ListAdapter<Channel
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelViewHolder {
         val binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ChannelsViewHolder(binding)
+        return ChannelViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ChannelsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChannelViewHolder, position: Int) {
         val channel = getItem(holder.adapterPosition)
         holder.bind(channel, selectionTracker != null, selectionTracker?.isSelected(channel.id.toLong()))
         holder.itemView.setOnClickListener { selectListener?.clickedChannel(channel) }

@@ -1,4 +1,4 @@
-package com.hover.stax.transactions
+package com.hover.stax.bounties
 
 import android.content.Context
 import androidx.work.*
@@ -7,6 +7,7 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.database.AppDatabase
+import com.hover.stax.transactions.StaxTransaction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

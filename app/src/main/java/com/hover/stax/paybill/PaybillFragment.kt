@@ -1,427 +1,270 @@
 package com.hover.stax.paybill
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
+import com.google.android.material.textfield.TextInputEditText
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
-import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import com.hover.stax.views.StaxTextInput
+import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
-class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
+class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectListener {
 
     private var _binding: FragmentPaybillBinding? = null
     private val binding get() = _binding!!
 
-    private var dialog: StaxDialog? = null
+    private lateinit var viewModel: PaybillViewModel
 
-    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
-    private val paybillViewModel: PaybillViewModel by sharedViewModel()
-
-    private val args: PaybillFragmentArgs by navArgs()
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
+        abstractFormViewModel = getSharedViewModel<PaybillViewModel>()
+        viewModel = abstractFormViewModel as PaybillViewModel
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPaybillBinding.inflate(inflater, container, false)
+        accountsViewModel.setType(HoverAction.C2B)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill)), requireActivity())
+        init(binding.root)
+    }
 
-        channelsViewModel.setType(HoverAction.C2B)
+    override fun init(root: View) {
+        super.init(root)
+        initView()
+        startObservers(root)
+    }
 
-        if (args.updateBusiness)
-            binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.businessNumber.value)
-
+    private fun initView() {
         initListeners()
-        startObservers()
-        setTextWatchers()
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+        setUpIcons()
+        binding.editCard.businessNoInput.binding?.root?.setEndIconDrawable(R.drawable.ic_chevron_right)
     }
 
     private fun initListeners() {
-        setSaveBillCheckedChangeListener()
+        setInputListeners()
         setBusinessNoTouchListener()
-        setContinueBtnClickListener()
     }
 
-    private fun setSaveBillCheckedChangeListener() = with(binding.saveBillLayout) {
-        saveBill.setOnCheckedChangeListener { _, isChecked ->
-            binding.saveBillLayout.saveBillCard.visibility =
-                if (isChecked) View.VISIBLE else View.GONE
+    private fun setInputListeners() = with(binding.saveCard) {
+        setInputListener(binding.editCard.accountNoInput, { s -> viewModel.setAccountNumber(s) }, { viewModel.accountNoError() })
+        setInputListener(binding.editCard.amountInput, { s -> viewModel.setAmount(s) }, { viewModel.amountError() })
+        setInputListener(billNameInput, { s -> viewModel.setNickname(s) }, { viewModel.nameError() })
+        saveBill.setOnCheckedChangeListener { _, isChecked -> viewModel.setSave(isChecked) }
+        saveAmount.setOnCheckedChangeListener { _, isChecked -> viewModel.setSaveAmount(isChecked) }
+        billIcon.setOnClickListener { toggleIconChooser(true) }
+    }
+
+    private fun setInputListener(input: StaxTextInput, setFun: (String) -> Unit, errorMsg: () -> String?) {
+        input.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) setFun((v as TextInputEditText).text.toString())
+            setInputState(hasFocus, input, errorMsg())
         }
-
-        billIconLayout.iconLayout.setOnClickListener { showIconsChooser() }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    override fun onContactSelected(contact: StaxContact) {}
+
     private fun setBusinessNoTouchListener() =
-        binding.billDetailsLayout.businessNoInput.editText.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                resetViews()
-                paybillViewModel.reset()
-
-                channelsViewModel.activeAccount.value?.id?.let {
-                    NavUtil.navigate(findNavController(), PaybillFragmentDirections.actionPaybillFragmentToPaybillListFragment(it))
-                } ?: Timber.e("Active account not set")
-                true
-            } else false
+        binding.editCard.businessNoInput.setOnClickListener {
+            findNavController().navigate(R.id.paybillListFragment)
         }
 
-    private fun setContinueBtnClickListener() = binding.continueBtn.setOnClickListener {
-        if (validates()) {
-            if (paybillViewModel.isEditing.value == true) {
-                if (binding.saveBillLayout.saveBill.isChecked)
-                    savePaybill()
-                else
-                    paybillViewModel.setEditing(false)
-            } else submitRequest()
-        } else {
-            Timber.e("Not validated")
-        }
+    private fun setUpIcons() = with(binding.paybillIconsLayout) {
+        iconList.adapter = PaybillIconsAdapter(this@PaybillFragment)
+        root.setOnClickIcon { toggleIconChooser(false) }
+        cardPaybillIcons.visibility = View.GONE
     }
 
-    private fun savePaybill() {
-        val selected = paybillViewModel.selectedPaybill.value
-        val hasChanges = when {
-            selected == null -> false
-            selected.name != binding.saveBillLayout.billNameInput.text -> true
-            selected.logo != paybillViewModel.iconDrawable.value -> true
-            selected.recurringAmount == 0 && binding.saveBillLayout.amountCheckBox.isChecked -> true
-            selected.recurringAmount != 0 && !binding.saveBillLayout.amountCheckBox.isChecked -> true
-            else -> false
-        }
-
-        when {
-            selected != null && selected.isSaved && hasChanges -> showUpdatePaybillConfirmation()
-            selected != null && selected.isSaved && !hasChanges -> paybillViewModel.setEditing(false)
-            else -> {
-                paybillViewModel.savePaybill(
-                    channelsViewModel.activeAccount.value,
-                    binding.saveBillLayout.amountCheckBox.isChecked
-                )
-                UIHelper.flashMessage(requireActivity(), R.string.paybill_save_success) //TODO add to other language strings
-                paybillViewModel.setEditing(false)
-            }
-        }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun startObservers() {
-        with(paybillViewModel) {
-            selectedPaybill.observe(viewLifecycleOwner) {
-                it?.let {
-                    with(binding.billDetailsLayout) {
-                        businessNoInput.setText(it.businessNo)
-                        accountNoInput.setText(it.accountNo ?: "")
-
-                        if (it.recurringAmount != 0)
-                            amountInput.setText(it.recurringAmount.toString())
-                        else
-                            amountInput.setText("")
-                    }
-
-                    updateSavePaybillState(it)
-                }
-            }
-
-            isEditing.observe(viewLifecycleOwner) { if (it == false) showSummary() else showContent() }
-
-            iconDrawable.observe(viewLifecycleOwner) {
-                if (it != 0) {
-                    binding.saveBillLayout.billIconLayout.billIcon.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            it
-                        )
-                    )
-                }
-            }
-        }
-
-        with(channelsViewModel) {
-            binding.billDetailsLayout.accountDropdown.apply {
-                setListener(this@with)
-                setObservers(this@with, viewLifecycleOwner)
-            }
-
-            setupActionDropdownObservers(this, viewLifecycleOwner)
-
-            accounts.observe(viewLifecycleOwner) {
-                if (it.isEmpty())
-                    binding.billDetailsLayout.accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
-                        if (event.action == MotionEvent.ACTION_DOWN)
-                            NavUtil.navigate(findNavController(), PaybillFragmentDirections.actionPaybillFragmentToAccountsFragment())
-                        true
-                    }
-                else
-                    binding.billDetailsLayout.accountDropdown.setCurrentAccount()
-            }
-        }
-    }
-
-    private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        val activeChannelObserver = object: Observer<Channel?> {
-            override fun onChanged(t: Channel?) {
-                Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
-            }
-        }
-
-        val actionsObserver = object : Observer<List<HoverAction>> {
-            override fun onChanged(t: List<HoverAction>?) {
-                Timber.i("Got new actions: %s", t?.size)
-            }
-        }
-
-        viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
-        viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
-    }
-
-    private fun showContent() {
-        with(binding) {
-            paybillSummary.paybillSummaryCard.visibility = View.GONE
-            toggleMainContent(true)
-
-            continueBtn.text = getString(R.string.btn_continue)
-        }
-    }
-
-    private fun showSummary() {
-        toggleMainContent(false)
-
-        with(binding.paybillSummary) {
-            paybillSummaryCard.visibility = View.VISIBLE
-
-            with(paybillViewModel) {
-                paybillSummaryCard.setOnClickIcon { setEditing(true) }
-                payFromAcct.text = channelsViewModel.activeAccount.value?.name
-                recipient.text = if (!nickname.value.isNullOrEmpty()) buildString {
-                    append(nickname.value)
-                    append(" (")
-                    append(businessNumber.value)
-                    append(")")
-                } else businessNumber.value
-                accountNo.text = accountNumber.value
-                amountValue.text = amount.value
-            }
-        }
-
-        binding.continueBtn.text = getString(R.string.pay_now)
-    }
-
-    private fun toggleMainContent(show: Boolean) {
-        binding.billDetailsLayout.cardPaybillDetails.visibility =
-            if (show) View.VISIBLE else View.GONE
-        binding.saveBillLayout.cardSavePaybill.visibility = if (show) View.VISIBLE else View.GONE
-
-        if (show) binding.continueBtn.visibility = View.VISIBLE
-    }
-
-    private fun setTextWatchers() {
-        with(binding.billDetailsLayout) {
-            businessNoInput.addTextChangedListener(businessNoWatcher)
-            accountNoInput.addTextChangedListener(accountNoWatcher)
-            amountInput.addTextChangedListener(amountWatcher)
-        }
-
-        binding.saveBillLayout.billNameInput.addTextChangedListener(nicknameWatcher)
-    }
-
-    private val amountWatcher: TextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-        override fun afterTextChanged(editable: Editable) {}
-        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            paybillViewModel.setAmount(charSequence.toString().replace(",".toRegex(), ""))
-        }
-    }
-
-    private val businessNoWatcher: TextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-        override fun afterTextChanged(editable: Editable) {}
-        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            paybillViewModel.setBusinessNumber(charSequence.toString())
-        }
-    }
-
-    private val accountNoWatcher: TextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-        override fun afterTextChanged(editable: Editable) {}
-        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            paybillViewModel.setAccountNumber(charSequence.toString().replace(",".toRegex(), ""))
-        }
-    }
-
-    private val nicknameWatcher: TextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-        override fun afterTextChanged(editable: Editable) {}
-        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            paybillViewModel.setNickname(charSequence.toString())
-        }
-    }
-
-    private fun validates(): Boolean {
-        val businessNoError = paybillViewModel.businessNoError()
-        val accountNoError = paybillViewModel.accountNoError()
-        val amountError = paybillViewModel.amountError()
-        val nickNameError = paybillViewModel.nameError()
-        val saveBill = binding.saveBillLayout.saveBill.isChecked
-
-        with(binding.billDetailsLayout) {
-            businessNoInput.setState(
-                businessNoError,
-                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-            )
-            accountNoInput.setState(
-                accountNoError,
-                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-            )
-            amountInput.setState(
-                amountError,
-                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-            )
-        }
-
-        if (saveBill)
-            binding.saveBillLayout.billNameInput.setState(
-                nickNameError,
-                if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-            )
-
-        return businessNoError == null && accountNoError == null && amountError == null && (if (saveBill) nickNameError == null else true)
-    }
-
-    private fun showIconsChooser() = with(binding) {
-        toggleMainContent(false)
-        binding.continueBtn.visibility = View.GONE
-
-        with(paybillIconsLayout) {
-            cardPaybillIcons.visibility = View.VISIBLE
-
-            iconList.adapter = PaybillIconsAdapter(this@PaybillFragment)
-
-            cardPaybillIcons.setOnClickIcon {
-                cardPaybillIcons.visibility = View.GONE
-                toggleMainContent(true)
-            }
-        }
-    }
-
-    private fun submitRequest() = with(channelsViewModel) {
-        val actions = channelActions.value
-        val channel = activeChannel.value
-        val account = activeAccount.value
-
-        val actionToRun = paybillViewModel.selectedAction.value
-
-        if (!actions.isNullOrEmpty() && channel != null && account != null)
-            (requireActivity() as MainActivity).submitPaymentRequest(
-                actionToRun
-                    ?: actions.first(), channel, account
-            )
-        else
-            Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        paybillViewModel.reset()
-        resetViews()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //sometimes when navigating back from another fragment, the labels get all messed up
-        resetViews()
-    }
-
-    private fun resetViews() {
-        binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
-        binding.saveBillLayout.billNameInput.setHint(getString(R.string.nickname))
-
-
-        with(binding.billDetailsLayout) {
-            accountDropdown.setHint(getString(R.string.account_label))
-            businessNoInput.setHint(getString(R.string.business_number_label))
-            accountNoInput.setHint(getString(R.string.account_number_label))
-            amountInput.setHint(getString(R.string.transfer_amount_label))
-
-            businessNoInput.binding.inputLayout.setEndIconDrawable(R.drawable.ic_chevron_right)
-        }
+    private fun toggleIconChooser(show: Boolean) = with(binding) {
+        binding.saveCard.root.visibility = if (show) View.GONE else View.VISIBLE
+        binding.fab.visibility = if (show) View.GONE else View.VISIBLE
+        binding.paybillIconsLayout.cardPaybillIcons.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun onSelectIcon(id: Int) {
-        paybillViewModel.setIconDrawable(id)
-
+        viewModel.setIconDrawable(id)
         binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
-        toggleMainContent(true)
+        binding.saveCard.root.visibility = View.VISIBLE
+        binding.fab.visibility = View.VISIBLE
     }
 
-    private fun updateSavePaybillState(paybill: Paybill) = with(binding.saveBillLayout) {
-        if (paybill.isSaved) {
-            saveBill.isChecked = true
-            billNameInput.setText(paybill.name)
-            amountCheckBox.isChecked = paybill.recurringAmount != 0
-            if (amountCheckBox.isChecked) paybillViewModel.setAmount(paybill.recurringAmount.toString())
+    override fun onFinishForm() {
+        if (viewModel.saveBill.value!!) savePaybill()
+        else viewModel.setEditing(false)
+    }
 
-            if (paybill.logo != 0) {
-                billIconLayout.billIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), paybill.logo))
-                paybillViewModel.setIconDrawable(paybill.logo)
+    private fun savePaybill() {
+        when {
+            viewModel.hasEditedSaved() -> showUpdatePaybillConfirmation()
+            viewModel.selectedPaybill.value?.isSaved == true -> viewModel.setEditing(false)
+            else -> {
+                viewModel.savePaybill(accountsViewModel.activeAccount.value, actionSelectViewModel.activeAction.value)
+                UIHelper.flashMessage(requireActivity(), R.string.paybill_save_success)
             }
-        } else {
-            //helps maintain the correct state when checking if the saved paybill has changed
-            saveBill.isChecked = false
-            billNameInput.setText("")
-            amountCheckBox.isChecked = false
-            binding.saveBillLayout.cardSavePaybill.visibility = View.GONE
-            paybillViewModel.setIconDrawable(0)
         }
     }
 
-    private fun showUpdatePaybillConfirmation() = paybillViewModel.selectedPaybill.value?.let {
+    override fun startObservers(root: View) {
+        super.startObservers(root)
+
+        observePayWith()
+        observeActions()
+        observeBill()
+        observeAccountNo()
+        observeAmount()
+        observeSave()
+    }
+
+    private fun observePayWith() {
+        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { account ->
+            account?.let { binding.summaryCard.accountValue.setTitle(it.toString()) }
+            viewModel.getSavedPaybills(account.id)
+        }
+    }
+
+    private fun observeActions() {
+        accountsViewModel.channelActions.observe(viewLifecycleOwner) {
+            val err = accountsViewModel.errorCheck()
+            payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        }
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { it?.let {
+            binding.summaryCard.recipient.setTitle(it.to_institution_name) }}
+    }
+
+    private fun observeBill() {
+        viewModel.selectedPaybill.observe(viewLifecycleOwner) {
+            actionSelectViewModel.setActiveAction(it?.actionId)
+            binding.saveCard.saveBill.isChecked = it?.isSaved == true
+            binding.saveCard.saveAmount.isChecked = it?.recurringAmount != 0
+        }
+
+        viewModel.businessNumber.observe(viewLifecycleOwner) {
+            updateBiz(viewModel.businessName.value, it) }
+
+        viewModel.businessName.observe(viewLifecycleOwner) {
+            updateBiz(it, viewModel.businessNumber.value) }
+    }
+
+    private fun updateBiz(name: String?, no: String?) {
+        binding.editCard.businessNoInput.setMutlipartText(name, no)
+        binding.summaryCard.recipient.setContent(name, no)
+    }
+
+    private fun observeAmount() {
+        viewModel.amount.observe(viewLifecycleOwner) {
+            binding.editCard.amountInput.setText(it)
+            binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+        }
+    }
+
+    private fun observeAccountNo() {
+        viewModel.accountNumber.observe(viewLifecycleOwner) {
+            binding.editCard.accountNoInput.setText(it)
+            binding.summaryCard.accountNo.text = it
+        }
+    }
+
+    private fun observeSave() {
+        viewModel.saveBill.observe(viewLifecycleOwner) {
+            binding.saveCard.saveDetails.visibility = if (it == true) View.VISIBLE else View.GONE
+        }
+        observeIcon()
+        observeName()
+    }
+
+    private fun observeName() {
+        viewModel.nickname.observe(viewLifecycleOwner) {
+            binding.saveCard.billNameInput.setText(it)
+            if (!it.isNullOrEmpty()) binding.summaryCard.nameValue.text = it
+            binding.summaryCard.nameLabel.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+            binding.summaryCard.nameValue.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+        }
+    }
+
+    private fun observeIcon() {
+        viewModel.iconDrawable.observe(viewLifecycleOwner) {
+            if (it != 0)
+                binding.saveCard.billIcon.setImageDrawable(
+                    ContextCompat.getDrawable(requireContext(), it))
+        }
+    }
+
+    override fun showEdit(isEditing: Boolean) {
+        super.showEdit(isEditing)
+        binding.saveCard.root.visibility = if (isEditing) View.VISIBLE else View.GONE
+    }
+
+    override fun validates(): Boolean {
+        viewModel.setAccountNumber(binding.editCard.accountNoInput.text)
+        viewModel.setAmount(binding.editCard.amountInput.text)
+        viewModel.setNickname(binding.saveCard.billNameInput.text)
+
+        val payWithError = accountsViewModel.errorCheck()
+        binding.editCard.payWithDropdown.setState(payWithError,
+            if (payWithError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
+        val businessNoError = viewModel.businessNoError()
+        val accountNoError = viewModel.accountNoError()
+        val amountError = viewModel.amountError()
+        val nickNameError = viewModel.nameError()
+
+        with(binding.editCard) {
+            businessNoInput.setState(businessNoError,
+                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            accountNoInput.setState(accountNoError,
+                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            amountInput.setState(amountError,
+                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        }
+        binding.saveCard.billNameInput.setState(nickNameError,
+            if (nickNameError == null && viewModel.saveBill.value!!) AbstractStatefulInput.SUCCESS else if (nickNameError != null) AbstractStatefulInput.ERROR else AbstractStatefulInput.NONE)
+
+        return payWithError == null && businessNoError == null && accountNoError == null && amountError == null && nickNameError == null
+    }
+
+    override fun onSubmitForm() = with(accountsViewModel) {
+        val actions = channelActions.value
+        val account = activeAccount.value
+        val actionToRun = actionSelectViewModel.activeAction.value
+
+        if (!actions.isNullOrEmpty() && account != null)
+            (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun?: actions.first(), viewModel.wrapExtras(), 0)
+        else
+            Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $account")
+    }
+
+    private fun showUpdatePaybillConfirmation() = viewModel.selectedPaybill.value?.let {
         dialog = StaxDialog(requireActivity())
             .setDialogTitle(getString(R.string.paybill_update_header))
             .setDialogMessage(getString(R.string.paybill_update_msg, it.name))
             .setNegButton(R.string.btn_cancel, null)
             .setPosButton(R.string.btn_update) { _ ->
                 if (activity != null) {
-                    paybillViewModel.updatePaybill(it, binding.saveBillLayout.amountCheckBox.isChecked)
+                    viewModel.updatePaybill(it)
                     UIHelper.flashMessage(requireActivity(), R.string.paybill_update_success)
-                    paybillViewModel.setEditing(false)
+                    viewModel.setEditing(false)
                 }
             }
         dialog!!.showIt()
-    }
-
-    private val backPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (paybillViewModel.isEditing.value == false)
-                paybillViewModel.setEditing(true)
-            else
-                findNavController().popBackStack()
-        }
-
     }
 }

@@ -9,30 +9,33 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
+import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
-import com.hover.stax.home.MainActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.*
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
 
-class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface {
+class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface, RequestSenderInterface {
 
     private lateinit var requestViewModel: NewRequestViewModel
-    private lateinit var amountInput: StaxTextInputLayout
-    private lateinit var requesterNumberInput: StaxTextInputLayout
-    private lateinit var noteInput: StaxTextInputLayout
+
+    private lateinit var amountInput: StaxTextInput
+    private lateinit var requesterNumberInput: StaxTextInput
+    private lateinit var noteInput: StaxTextInput
     private lateinit var requesteeInput: ContactInput
     private lateinit var accountValue: Stax2LineItem
     private lateinit var shareCard: StaxCardView
@@ -42,10 +45,14 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     private var _binding: FragmentRequestBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
         abstractFormViewModel = getSharedViewModel<NewRequestViewModel>()
         requestViewModel = abstractFormViewModel as NewRequestViewModel
+        super.onCreate(savedInstanceState)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), requireActivity())
 
@@ -57,7 +64,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requestViewModel.reset()
         startObservers(binding.root)
         startListeners()
         setDefaultHelperText()
@@ -73,18 +79,16 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     )
 
     override fun init(root: View) {
-        amountInput = binding.editRequestCard.cardAmount.amountInput
-        requesteeInput = binding.editRequestCard.cardRequestee.contactSelect
-        requesterNumberInput = binding.editRequestCard.cardRequester.accountNumberInput
-        noteInput = binding.editRequestCard.transferNote.noteInput
+        amountInput = binding.editCard.cardAmount.amountInput
+        requesteeInput = binding.editCard.cardRequestee.contactSelect
+        requesterNumberInput = binding.editCard.cardRequester.accountNumberInput
+        noteInput = binding.editCard.transferNote.noteInput
 
         recipientValue = binding.summaryCard.recipientValue
         accountValue = binding.summaryCard.accountValue
         shareCard = binding.shareCard.root
 
         super.init(root)
-
-        accountDropdown.setFetchAccountListener(this)
     }
 
     override fun startObservers(root: View) {
@@ -92,23 +96,24 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         //https://stackoverflow.com/a/54939860/2371515
-        val channelsObserver = object: Observer<Channel?> {
-            override fun onChanged(c: Channel?) {
-                c?.let {
-                    requestViewModel.setActiveChannel(it)
-                    accountValue.setTitle(it.toString())
-                }
+        val accountsObserver = Observer<Account?> { a ->
+            a?.let {
+                requestViewModel.setActiveAccount(it)
+                accountValue.setTitle(it.toString())
             }
         }
 
-        with(channelsViewModel) {
-            accounts.observe(viewLifecycleOwner) {
-                //no channels selected. navigate user to accounts fragment
-                if (it.isNullOrEmpty())
+        with(accountsViewModel) {
+            collectLatestLifecycleFlow(accounts){
+                if (it.isEmpty())
                     setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
-                accountDropdown.setCurrentAccount()
             }
-            activeChannel.observe(viewLifecycleOwner, channelsObserver)
+
+//            accounts.observe(viewLifecycleOwner) {
+//                //no channels selected. navigate user to accounts fragment
+//
+//            }
+            activeAccount.observe(viewLifecycleOwner, accountsObserver)
         }
 
         with(requestViewModel) {
@@ -169,17 +174,14 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 requestViewModel.addRecipient(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(requireActivity()) }
+            setChooseContactListener { startContactPicker(requireActivity()) }
         }
-
-        fab.setOnClickListener { fabClicked() }
     }
 
-    private fun setClickListeners() {
-        val activity = activity as MainActivity
-        binding.shareCard.smsShareSelection.setOnClickListener { activity.sendSms() }
-        binding.shareCard.whatsappShareSelection.setOnClickListener { activity.sendWhatsapp() }
-        binding.shareCard.copylinkShareSelection.setOnClickListener { activity.copyShareLink(it) }
+    private fun setClickListeners() = with(binding.shareCard) {
+        smsShareSelection.setOnClickListener { sendSms(requestViewModel) }
+        whatsappShareSelection.setOnClickListener { sendWhatsapp(requestViewModel) }
+        copylinkShareSelection.setOnClickListener { copyShareLink(it, requestViewModel) }
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -215,12 +217,12 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         }
     }
 
-    private fun fabClicked() {
-        if (requestViewModel.isEditing.value!! && validates()) {
-            updatePushNotifGroupStatus()
-            requestViewModel.setEditing(false)
-        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+    override fun onFinishForm() {
+        updatePushNotifGroupStatus()
+        requestViewModel.setEditing(false)
     }
+
+    override fun onSubmitForm() { }
 
     private fun updatePushNotifGroupStatus() {
         joinRequestMoneyGroup(requireContext())
@@ -228,9 +230,9 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         leaveNoRequestMoneyGroup(requireContext())
     }
 
-    private fun validates(): Boolean {
+    override fun validates(): Boolean {
         val accountError = requestViewModel.accountError()
-        accountDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val requesterAcctNoError = requestViewModel.requesterAcctNoError()
         requesterNumberInput.setState(requesterAcctNoError, if (requesterAcctNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -240,8 +242,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         requestViewModel.activeAccount.value?.let {
             if (!requestViewModel.isValidAccount()) {
-                accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-                fetchAccounts(it)
+                payWithDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
                 return false
             }
         }
@@ -259,22 +260,12 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         }
     })
 
-    /**
-     * Since the fragment is only created after first launch, amount, requestee and note fields will be repopulated with viewmodel values.
-     * To manage this, whenever summary card is shown and the fragment is paused, edit mode is enabled to allow for correct state management
-     * when fragment is resumed.
-     */
-    override fun onPause() {
-        super.onPause()
-        requestViewModel.setEditing(true)
-    }
-
     private fun askAreYouSure() {
         requestDialog = StaxDialog(requireActivity())
             .setDialogTitle(R.string.reqsave_head)
             .setDialogMessage(R.string.reqsave_msg)
             .setPosButton(R.string.btn_save) { saveUnsent() }
-            .setNegButton(R.string.btn_dontsave) { (activity as MainActivity).cancel() }
+            .setNegButton(R.string.btn_dontsave) { findNavController().popBackStack() }
         requestDialog!!.showIt()
     }
 

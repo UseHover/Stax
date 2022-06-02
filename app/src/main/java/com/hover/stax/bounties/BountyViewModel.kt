@@ -10,16 +10,18 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
+import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
 
 private const val MAX_LOOKUP_COUNT = 40
 
-class BountyViewModel(application: Application, val repo: DatabaseRepo) : AndroidViewModel(application) {
+class BountyViewModel(application: Application, val repo: ChannelRepo, val actionRepo: ActionRepo, transactionRepo: TransactionRepo) : AndroidViewModel(application) {
 
     @JvmField
     var country: String = CountryAdapter.CODE_ALL_COUNTRIES
@@ -47,9 +49,9 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
         currentCountryFilter.value = CountryAdapter.CODE_ALL_COUNTRIES
 
         loadSims()
-        actions = repo.bountyActions
+        actions = actionRepo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
-        transactions = repo.bountyTransactions!!
+        transactions = transactionRepo.bountyTransactions!!
         bountyList.addSource(actions, this::makeBounties)
         bountyList.addSource(transactions, this::makeBountiesIfActions)
     }
@@ -101,7 +103,7 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
 
     fun filterChannels(countryCode: String): LiveData<List<Channel>> {
         country = countryCode
-        val actions = actions.value ?: return MutableLiveData(ArrayList<Channel>())
+        val actions = actions.value ?: return MutableLiveData(ArrayList())
 
         return if (countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
             loadChannels(actions)

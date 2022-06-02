@@ -1,12 +1,15 @@
 package com.hover.stax.financialTips
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
@@ -17,14 +20,14 @@ class FinancialTipsViewModel : ViewModel() {
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
 
+    private val _tips = MutableStateFlow<List<FinancialTip>>(emptyList())
+    val tips: StateFlow<List<FinancialTip>> = _tips
+
     init {
         db.firestoreSettings = settings
-        getTips()
     }
 
-    val tips = MutableLiveData<List<FinancialTip>>()
-
-    private fun getTips() {
+    fun getTips() = viewModelScope.launch {
         val timestamp = Timestamp.now()
 
         db.collection("wellness_tips")
@@ -41,11 +44,10 @@ class FinancialTipsViewModel : ViewModel() {
                     )
                 }
 
-                tips.postValue(financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time })
+                _tips.value = financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time }
             }
             .addOnFailureListener {
                 Timber.e("Error fetching wellness tips: ${it.localizedMessage}")
-                tips.postValue(emptyList())
             }
     }
 }

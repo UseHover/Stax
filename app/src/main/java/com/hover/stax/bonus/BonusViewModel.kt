@@ -1,34 +1,33 @@
 package com.hover.stax.bonus
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.channels.Channel
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : ViewModel() {
+class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) : ViewModel() {
 
-    private val bonusList = MutableLiveData<List<Bonus>>(emptyList())
+    private val _bonusList = MutableStateFlow<List<Bonus>>(emptyList())
+    val bonuses: StateFlow<List<Bonus>> = _bonusList
+
     private val db = Firebase.firestore
     private val settings = firestoreSettings { isPersistenceEnabled = true }
 
-    val bonuses: LiveData<List<Bonus>> get() = bonusList
-
     init {
         db.firestoreSettings = settings
-        fetchBonuses()
     }
 
-    private fun fetchBonuses() {
+    fun fetchBonuses() = viewModelScope.launch(Dispatchers.IO) {
         db.collection("bonuses")
             .get()
             .addOnSuccessListener { snapshot ->
@@ -43,37 +42,34 @@ class BonusViewModel(val repo: BonusRepo, private val dbRepo: DatabaseRepo) : Vi
             }
             .addOnFailureListener {
                 Timber.e("Error fetching bonuses: ${it.localizedMessage}")
-                bonusList.postValue(emptyList())
+                _bonusList.value = emptyList()
             }
     }
 
-    private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
-        repo.updateBonuses(bonuses.filter { dbRepo.getChannel(it.purchaseChannel) != null })
+    fun getBonusList() = viewModelScope.launch(Dispatchers.IO) {
+        repo.bonuses.collect { _bonusList.value = it }
     }
 
-    fun getBonuses() = viewModelScope.launch(Dispatchers.IO) {
-        repo.bonuses.collect {
-            checkIfEligible(it)
-        }
+    private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
+        val simHnis = channelRepo.presentSims.map { it.osReportedHni }
+        val bonusChannels = channelRepo.getChannelsByIds(bonuses.map { it.purchaseChannel })
+
+        val toSave = bonuses.filter { bonusChannels.map { channel -> channel.id }.contains(it.purchaseChannel) }
+        repo.updateBonuses(toSave)
+
+        val showBonuses = hasValidSim(simHnis, bonusChannels)
+        _bonusList.value = if (showBonuses) toSave else emptyList()
     }
 
     fun getBonusByPurchaseChannel(channelId: Int): Bonus? = repo.getBonusByPurchaseChannel(channelId)
 
     fun getBonusByUserChannel(channelId: Int): Bonus? = repo.getBonusByUserChannel(channelId)
 
-    private fun checkIfEligible(bonusItems: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
-        val simHnis = dbRepo.presentSims.map { it.osReportedHni }
-        val bonusChannels = dbRepo.getChannelsByIds(bonusItems.map { it.purchaseChannel })
-
-        val showBonuses = hasValidSim(simHnis, bonusChannels)
-        bonusList.postValue(if (showBonuses) bonusItems else emptyList())
-    }
-
     /**
      * Extract the hnis from the bonus channels and compare with current sim hnis.
      * Return true if user has a valid sim
      */
-    private fun hasValidSim(simHnis: List<String>, bonusChannels: List<Channel>) : Boolean {
+    private fun hasValidSim(simHnis: List<String>, bonusChannels: List<Channel>): Boolean {
         val hniList = mutableSetOf<String>()
         bonusChannels.forEach { channel ->
             channel.hniList.split(",").forEach {

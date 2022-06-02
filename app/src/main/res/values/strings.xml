@@ -133,6 +133,7 @@
     <string name="channels_error_nodata">Please turn on data to load services.</string>
     <string name="channels_error_nosim">Please insert a supported SIM to filter choices.</string>
     <string name="channels_error_noselect">You must select a service.</string>
+    <string name="channels_error_newaccount">You must finish importing this account.</string>
     <string name="accounts_error_no_accounts">No accounts added</string>
     <string name="link_account">Link account</string>
     <string name="link_account_error">Choose an account to link.</string>
@@ -149,8 +150,10 @@
 
     <string name="check_balance_title">Check balance</string>
     <string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
-    <string name="check_balance_alt">Nice! Account added successfully. Now you can check your balance on Stax.</string>
-    <string name="check_balance_alt_plural">Nice! Accounts added successfully. Now you can check your balance on Stax.</string>
+
+    <string name="finish_adding_title">Finish importing account</string>
+    <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This wont take long.</string>
+    <string name="connect_cta">Connect now</string>
 
     <string name="later">Later</string>
     <string name="no_connecion">No connection</string>
@@ -242,20 +245,24 @@
     <string name="pending_cardHead">Pending</string>
     <string name="failed_cardHead">Unsuccessful</string>
     <string name="null_service_name_text">this USSD service</string>
-    <string name="no_response_error">No response from %1$s.</string>
-    <string name="incomplete_error">It appears that %1$s stopped responding part way through.</string>
+
+    <string name="no_response_error_short">No response from %1$s.</string>
+    <string name="incomplete_error_short">%1$s problem, please try again</string>
+    <string name="balance_error_short">Balance too low</string>
+    <string name="pin_error_short">Invalid PIN</string>
+    <string name="unregistered_error_short">No account found</string>
+    <string name="invalid_entry_short">Invalid details</string>
+    <string name="mmi_error_short">%1$s problem, please try again</string>
+    <string name="unspecified_error_short">Unknown error, please try again</string>
+
+    <string name="balance_error">Low %1$s balance</string>
     <string name="pin_error">PIN error. %1$s asks you to please check your PIN and retry.</string>
-    <string name="balance_error">%1$s says your balance is too low to complete this transaction.</string>
-    <string name="unregistered_error">%1$s says you are not registered for this service.</string>
-    <string name="invalid_entry">One of your inputs was invalid, view details to see what went wrong.</string>
-    <string name="mmi_error">Your network returned an error, please try again.</string>
-    <string name="unspecified_error">Unknown error.</string>
+    <string name="unregistered_error">No %1$s account found. Make sure you are using the right SIM and have registered for USSD banking service.</string>
     <string name="no_response_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
     <string name="incomplete_desc">We received only a partial response from %1$s. We don\’t think this transaction worked. Please try again.</string>
     <string name="invalid_entry_desc">One of your inputs was invalid, see session details below to see what went wrong. Make sure any amounts, phone numbers, or account numbers are correct. See session details below.</string>
     <string name="mmi_error_desc">Your network returned an error, please try again. If this happens a lot please contact your network provider or money service to complain.</string>
-    <string name="unspecified_error_desc">Unknown error, see details below to find out what went wrong. Please try again.</string>
-    <string name="action_run_error">Error running action. Please try again.</string>
+    <string name="unspecified_error_desc">Unknown error, see ussd log to find out what went wrong. Please try again.</string>
 
     <!-- SDK Overrides -->
     <string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
@@ -282,8 +289,11 @@
 
     <!-- Transfer -->
     <string name="loading_link_dialoghead">Loading, one moment</string>
+    <string name="pay_with_label">Pay with</string>
+    <string name="paid_with_label">Paid with</string>
     <string name="transfer_amount_label">Amount</string>
-    <string name="account_label">Account</string>
+    <string name="account_label">Account number</string>
+    <string name="paybill_name_label">Name</string>
     <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
     <string name="recipientphone_label">Contact phone number</string>
     <string name="recipientacct_label">Contact account number</string>
@@ -305,6 +315,8 @@
     <string name="note_cardhead">Description</string>
     <string name="request_note_label">What is your request for?</string>
     <string name="recipient_label">To</string>
+    <string name="business_label">Business</string>
+    <string name="transfer_fee_label">Fee</string>
     <string name="sender_label">From</string>
     <string name="send_who_header">Send money to</string>
     <string name="airtime_who_header">Buy airtime for</string>
@@ -319,7 +331,7 @@
 
     <string name="descrip_balance">%1$s balance</string>
     <string name="descrip_airtime_sent">Sent %1$s airtime to %2$s</string>
-    <string name="descrip_transfer_sent">Send %1$s money to %2$s</string>
+    <string name="descrip_transfer_sent">Send %1$s to %2$s</string>
     <string name="descrip_transfer_received">received money from %1$s</string>
     <string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
     <string name="descrip_bill_paid">Paid %1$s to %2$s</string>
@@ -404,13 +416,15 @@
     <!-- Details -->
     <string name="pending_cardhead">Waiting for confirmation</string>
     <string name="pending_cardbody">The USSD session is complete, but we have not received a confirmation SMS yet.</string>
+    <string name="new_balance_label">New balance</string>
     <string name="pending_no_sms_expected_cardbody">We did not detect a confirmation message, please view the USSD log to see what happened.</string>
     <string name="balance_label">Balance</string>
     <string name="moneyout_label">Money out this month</string>
     <string name="moneyin_label">Money in this month</string>
     <string name="fees_label">Fees paid to %1$s this year</string>
     <string name="transactions_cardhead">Transactions</string>
-    <string name="network_label">Recipient account</string>
+    <string name="institution_label">Recipient institution</string>
+    <string name="network_label">Recipient network</string>
     <string name="id_label">Transaction ID</string>
     <string name="stax_id_label">Stax ID</string>
     <string name="session_cardhead">USSD log</string>
@@ -421,9 +435,10 @@
     <string name="new_balance">New balance %1$s</string>
     <string name="failed_label">Failed</string>
     <string name="successful_label">Successful</string>
+    <string name="successful_content_descrip">Success icon</string>
     <string name="viewUSSDLog">View USSD Log</string>
     <string name="status_label">Status</string>
-    <string name="reason_label">Reason</string>
+    <string name="category_label">Reason</string>
     <string name="type_label">Type</string>
     <string name="display_transfer_money">Transfer money to %1$s</string>
     <string name="display_bill_payment">Bill payment</string>
@@ -680,6 +695,7 @@
     <string name="ussd_lib">Dial USSD</string>
 
     <string name="error_running_action">Sorry, this service integration is broken.</string>
+    <string name="error_still_loading">Please wait a moment and try again.</string>
 
     <!-- Financial Tips -->
     <string name="financial_wellness_tips">Financial Wellness Tips</string>
@@ -696,7 +712,7 @@
     <string name="business_number_prompt">Enter business number</string>
     <string name="btn_delete">Delete</string>
     <string name="choose_icon_title">Choose Logo</string>
-    <string name="account_no_label">Account no: %1$s</string>
+    <string name="account_no_detail">Account no: %1$s</string>
     <string name="paybill_delete_success">Paybill deleted successfully</string>
     <string name="paybill_delete_header">Delete Paybill</string>
     <string name="paybill_delete_msg">Are you sure you want to delete %1$s?</string>
@@ -732,5 +748,9 @@
     <string name="get_extra_airtime">Get Extra Airtime</string>
     <string name="learn_more"><a href="https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/">T&amp;Cs apply</a></string>
 
+    <!-- Fees -->
+    <string name="fee_fetched_header">Business number</string>
+    <string name="got_it">Got it</string>
+    <string name="check_fee">check fee</string>
 
 </resources>

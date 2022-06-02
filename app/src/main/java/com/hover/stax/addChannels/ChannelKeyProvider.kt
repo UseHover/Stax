@@ -1,4 +1,4 @@
-package com.hover.stax.channels
+package com.hover.stax.addChannels
 
 import androidx.recyclerview.selection.ItemKeyProvider
 
