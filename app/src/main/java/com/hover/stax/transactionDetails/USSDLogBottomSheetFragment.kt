@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.UssdLogBottomsheetBinding
 import com.hover.stax.utils.DateUtils
@@ -41,9 +42,9 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 	private fun setCardTitle() {
 		viewModel.action.observe(viewLifecycleOwner){
 			if (it != null) {
-				val type = viewModel.transaction.value!!.humanTransactionType(requireContext(), it.to_institution_name)
+				val type = HoverAction.getHumanFriendlyType(context, viewModel.transaction.value!!.transaction_type)
 				binding.messagesCard.apply{
-					setTitle(getString(R.string.session_fullDesc_cardhead, it.from_institution_name, type ))
+					setTitle(getString(R.string.session_fullDesc_cardhead, it.from_institution_name, type))
 					setIcon(getString(R.string.root_url) + it.from_institution_logo)
 				}
 			}

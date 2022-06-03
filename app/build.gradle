@@ -194,7 +194,7 @@ dependencies {
 
     // Hover SDK
     debugImplementation project(":hover.sdk")
-    def sdk_version = "2.0.0-stax-1.10.15-pro"
+    def sdk_version = "2.0.0-stax-1.11.0-pro"
 
     // UXCam
     implementation 'com.uxcam:uxcam:3.3.7@aar'

@@ -4,17 +4,14 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.contacts.ContactRepo
-import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -38,7 +35,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     val saveAmount = MutableLiveData(false)
 
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
-        billRepo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
+        billRepo.getPaybills(accountId).collect { savedPaybills.postValue(it) }
     }
 
     fun selectPaybill(paybill: Paybill) {

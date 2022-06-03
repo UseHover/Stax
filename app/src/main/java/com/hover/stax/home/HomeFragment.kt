@@ -11,7 +11,6 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
@@ -34,7 +33,6 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
-    private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by viewModel()
 
@@ -52,6 +50,8 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
+        binding.merchant.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
+        binding.paybill.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
         binding.requestMoney.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
@@ -59,10 +59,7 @@ class HomeFragment : Fragment() {
         }
 
         setUpWellnessTips()
-
-//        collectLatestLifecycleFlow(accountsViewModel.accounts) {
-        setPaybillVisibility()
-//        }
+        setKeVisibility()
 
         lifecycleScope.launchWhenStarted {
             channelsViewModel.accountEventFlow.collect {
@@ -98,17 +95,14 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setPaybillVisibility() {
-        channelsViewModel.simCountryList.observe(viewLifecycleOwner) { countryIsos ->
-            if (countryIsos.any { it.contentEquals("KE", ignoreCase = true) }) {
-                binding.paybill.apply {
-                    visibility = View.VISIBLE
-                    setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
-                }
-            } else
-                binding.paybill.visibility = View.GONE
+    private fun setKeVisibility() {
+        channelsViewModel.simCountryList.observe(viewLifecycleOwner) {
+            binding.merchant.visibility = if (showMpesaActions(it)) View.VISIBLE else View.GONE
+            binding.paybill.visibility = if (showMpesaActions(it)) View.VISIBLE else View.GONE
         }
     }
+
+    private fun showMpesaActions(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 

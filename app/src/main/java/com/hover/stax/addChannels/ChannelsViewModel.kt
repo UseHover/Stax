@@ -54,6 +54,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     init {
         setSimBroadcastReceiver()
         loadSims()
+
         simCountryList = Transformations.map(sims, this::getCountriesAndFirebaseSubscriptions)
         countryChoice.addSource(simCountryList, this@ChannelsViewModel::onSimUpdate)
 

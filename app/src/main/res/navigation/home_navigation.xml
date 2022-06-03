@@ -46,6 +46,10 @@
             app:destination="@id/paybillFragment" />
 
     <action
+        android:id="@+id/action_global_MerchantFragment"
+        app:destination="@id/merchantFragment" />
+
+    <action
             android:id="@+id/action_global_TxnDetailsFragment"
             app:destination="@id/transactionDetailsFragment" />
 
@@ -70,6 +74,9 @@
         <action
                 android:id="@+id/action_navigation_home_to_paybillFragment"
                 app:destination="@id/paybillFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_merchantFragment"
+            app:destination="@id/merchantFragment" />
         <action
                 android:id="@+id/action_navigation_home_to_wellnessFragment"
                 app:destination="@id/tipsFragment" />
@@ -388,6 +395,15 @@
         <action
                 android:id="@+id/action_paybillFragment_to_accountsFragment"
                 app:destination="@id/navigation_linkAccount" />
+    </fragment>
+    <fragment
+        android:id="@+id/merchantFragment"
+        android:name="com.hover.stax.merchants.MerchantFragment"
+        android:label="@string/cta_merchant"
+        tools:layout="@layout/fragment_merchant">
+        <action
+            android:id="@+id/action_merchantFragment_to_accountsFragment"
+            app:destination="@id/navigation_linkAccount" />
     </fragment>
     <fragment
             android:id="@+id/paybillListFragment"

@@ -9,7 +9,7 @@ class PaybillRepo(db: AppDatabase) {
 
     val allBills: Flow<List<Paybill>> = paybillDao.allBills
 
-    fun getSavedPaybills(accountId: Int): Flow<List<Paybill>> = paybillDao.getSavedPaybills(accountId)
+    fun getMatching(bizNo: String, channelId: Int): Paybill? = paybillDao.getPaybill(bizNo, channelId)
 
     fun getPaybills(accountId: Int): Flow<List<Paybill>> = paybillDao.getPaybillsByAccount(accountId)
 
