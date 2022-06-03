@@ -81,21 +81,21 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     private fun startObservers() {
         // The class name is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         // https://stackoverflow.com/a/54939860/2371515
-        actionSelectViewModel.activeAction.observe(this) {
-            Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}")
-        }
-
-        with(accountsViewModel) {
-            activeAccount.observe(this@MainActivity) {
-                Timber.v("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}")
-            }
-            channelActions.observe(this@MainActivity) {
-                Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size)
-            }
-//            accounts.observe(this@MainActivity) {
-//                Timber.v("Observing accounts ${this.javaClass.simpleName}: %s", it?.size)
+//        actionSelectViewModel.activeAction.observe(this) {
+//            Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}")
+//        }
+//
+//        with(accountsViewModel) {
+//            activeAccount.observe(this@MainActivity) {
+//                Timber.v("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}")
 //            }
-        }
+//            channelActions.observe(this@MainActivity) {
+//                Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size)
+//            }
+////            accounts.observe(this@MainActivity) {
+////                Timber.v("Observing accounts ${this.javaClass.simpleName}: %s", it?.size)
+////            }
+//        }
     }
 
     private fun checkForRequest(intent: Intent) {
