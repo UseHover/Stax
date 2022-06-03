@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -141,23 +142,26 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeActions() {
-        accountsViewModel.channelActions.observe(viewLifecycleOwner) {
-            actionSelectViewModel.setActions(it)
-        }
-
-        actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
-            binding.editCard.actionSelect.updateActions(it)
-        }
-    }
-
     private fun observeActionSelection() {
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
             it?.let {
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
             }
+
+            Timber.e("Found active action ${it?.from_institution_name} to ${it?.to_institution_name}")
             showBonusBanner(it)
+        }
+    }
+
+    private fun observeActions() {
+        accountsViewModel.channelActions.observe(viewLifecycleOwner) {
+            Timber.e("Observed new actions ${it.size} for ${it.first()}")
+            actionSelectViewModel.setActions(it)
+        }
+
+        actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
+            binding.editCard.actionSelect.updateActions(it)
         }
     }
 

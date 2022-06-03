@@ -95,7 +95,7 @@ class MerchantFragment : AbstractFormFragment() {
 			if (!it.isNullOrEmpty()) {
 				binding.editCard.merchantSelect.setRecent(it, requireActivity())
 				viewModel.merchant.value?.let { m ->
-					if (m.id != null) binding.editCard.merchantSelect.setSelected(m)
+					binding.editCard.merchantSelect.setSelected(m)
 				}
 			}
 		}

@@ -11,8 +11,6 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
@@ -35,7 +33,6 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
-    private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by viewModel()
 
@@ -55,17 +52,14 @@ class HomeFragment : Fragment() {
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
         binding.merchant.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
         binding.paybill.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
-        binding.requestMoney.setOnClickListener{ navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())}
+        binding.requestMoney.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
         }
 
         setUpWellnessTips()
-
-        collectLatestLifecycleFlow(accountsViewModel.accounts) {
-            setKeVisibility(it)
-        }
+        setKeVisibility()
 
         lifecycleScope.launchWhenStarted {
             channelsViewModel.accountEventFlow.collect {
@@ -93,7 +87,6 @@ class HomeFragment : Fragment() {
                 binding.bonusCard.apply {
                     cardBonus.visibility = View.VISIBLE
                     cta.setOnClickListener {
-                        channelsViewModel // viewmodel must be instantiated in the main thread before it can be accessible on other threads
                         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
                         validateAccounts(bonusList.first())
                     }
@@ -102,12 +95,14 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setKeVisibility(accounts: List<Account>?) {
-        binding.merchant.visibility = if (showMpesaActions(accounts)) View.VISIBLE else View.GONE
-        binding.paybill.visibility = if (showMpesaActions(accounts)) View.VISIBLE else View.GONE
+    private fun setKeVisibility() {
+        channelsViewModel.simCountryList.observe(viewLifecycleOwner) {
+            binding.merchant.visibility = if (showMpesaActions(it)) View.VISIBLE else View.GONE
+            binding.paybill.visibility = if (showMpesaActions(it)) View.VISIBLE else View.GONE
+        }
     }
 
-    private fun showMpesaActions(accounts: List<Account>?): Boolean = accounts?.any { it.countryAlpha2.contentEquals("KE", ignoreCase = true) } == true
+    private fun showMpesaActions(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 

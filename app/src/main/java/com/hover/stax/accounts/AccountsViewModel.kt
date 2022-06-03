@@ -23,7 +23,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
     val accounts: StateFlow<List<Account>> = _accounts
-    val activeAccount: MediatorLiveData<Account> = MediatorLiveData()
+    val activeAccount = MutableLiveData<Account>()
 
     private var type = MutableLiveData<String>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
@@ -80,17 +80,22 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
     private fun loadActions(channelId: Int, t: String = HoverAction.AIRTIME) = viewModelScope.launch(Dispatchers.IO) {
-        Timber.e("----- Here loading actions -----")
-        channelActions.postValue(actionRepo.getActions(channelId, t))
+        val actions = actionRepo.getActions(channelId, t)
+        Timber.e("Found ${actions.size}")
+        channelActions.postValue(actions)
     }
 
     private fun checkForBonus(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         val bonus = bonusRepo.getBonusByUserChannel(account.channelId)
+        Timber.e("Bonus is ${bonus?.purchaseChannel} - ${bonus?.message}")
 
-        if (bonus != null)
+        if (bonus != null) {
+            Timber.e("Loading actions for bonus channel")
             loadActions(bonus.purchaseChannel)
-        else
+        } else {
+            Timber.e("Loading normal actions for ${account.name} of type ${type.value}")
             loadActions(account, type.value!!)
+        }
     }
 
     fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value.find { it.id == accountId }) }

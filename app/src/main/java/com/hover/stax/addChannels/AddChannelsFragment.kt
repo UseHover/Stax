@@ -98,12 +98,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private fun fillUpChannelLists() {
         binding.selectedList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
         }
 
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
             adapter = selectAdapter
         }
     }
@@ -166,6 +164,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
+            Timber.e("Found ${channels.size} channels ")
             updateAdapter(channels.filterNot { it.selected })
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE

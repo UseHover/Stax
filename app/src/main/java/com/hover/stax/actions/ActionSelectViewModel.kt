@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.hover.stax.accounts.ACCOUNT_NAME
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
@@ -14,7 +15,7 @@ const val RECIPIENT_INSTITUTION = "recipientInstitution"
 
 class ActionSelectViewModel(application: Application) : AndroidViewModel(application) {
 
-    val filteredActions = MediatorLiveData<List<HoverAction>>()
+    val filteredActions = MutableLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction?>()
     val nonStandardVariables = MediatorLiveData<LinkedHashMap<String, String>>()
 
