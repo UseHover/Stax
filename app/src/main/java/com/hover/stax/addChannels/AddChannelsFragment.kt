@@ -103,6 +103,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            setHasFixedSize(true)
             adapter = selectAdapter
         }
     }

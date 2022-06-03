@@ -7,6 +7,7 @@ import com.hover.stax.channels.Channel
 import javax.annotation.Nullable
 
 const val BUSINESS_NO = "businessNo"
+const val BUSINESS_NAME = "businessName"
 
 @Entity(
         tableName = "paybills",

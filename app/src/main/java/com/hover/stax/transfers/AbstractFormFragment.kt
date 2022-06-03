@@ -25,7 +25,6 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
@@ -143,9 +142,8 @@ abstract class AbstractFormFragment : Fragment() {
 
     private fun chooseFabText(isEditing: Boolean): String {
         return if (isEditing) getString(R.string.btn_continue)
-        else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
-        else if (type == HoverAction.C2B) getString(R.string.fab_transfernow)
-        else getString(R.string.fab_transfernow)
+            else if (accountsViewModel.getActionType() == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
+            else getString(R.string.fab_transfernow)
     }
 
     open fun startContactPicker(c: Context) {

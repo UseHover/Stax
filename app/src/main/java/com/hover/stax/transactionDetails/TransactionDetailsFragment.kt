@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -23,6 +22,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.merchants.Merchant
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
@@ -86,8 +86,9 @@ class TransactionDetailsFragment : Fragment() {
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
+        merchant.observe(viewLifecycleOwner) { updateRecipient(it) }
         account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
-        hoverTransaction.observe(viewLifecycleOwner) { it?.let { updateTransaction(it) } }
+        hoverTransaction.observe(viewLifecycleOwner) { it?.let { Timber.e("Updating transaction messages ${it.uuid}") } }
         messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
         bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
 
@@ -112,7 +113,7 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun updateHeader(transaction: StaxTransaction) = with(binding.transactionHeader) {
-        binding.transactionDetailsCard.setTitle(transaction.description)
+        binding.transactionDetailsCard.setTitle(HoverAction.getHumanFriendlyType(requireContext(), transaction.transaction_type))
         if (shouldShowNewBalance(transaction)) {
             mainMessage.text = getString(R.string.new_balance, transaction.displayBalance)
         }
@@ -126,15 +127,16 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun updateDetails(transaction: StaxTransaction) = with(binding.details) {
         detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
+        typeValue.text = transaction.toString(requireContext())
         viewModel.action.value?.let {
-            categoryValue.text = transaction.shortDescription(viewModel.action.value, requireContext())
-        }
+            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, requireContext()) }
 
         statusValue.apply {
             text = transaction.humanStatus(requireContext())
             setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.getIcon(), 0)
         }
 
+        recipientValue.setTitle(transaction.counterpartyNo)
         amountValue.text = transaction.getSignedAmount(transaction.amount)
         transaction.fee?.let { binding.details.feeValue.text = Utils.formatAmount(it.toString()) }
         newBalanceValue.text = Utils.formatAmount(transaction.balance.toString())
@@ -144,12 +146,14 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun setVisibleFields(transaction: StaxTransaction) {
+        transaction.transaction_type
         binding.transactionHeader.mainMessage.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
         binding.statusInfo.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
 //        binding.statusInfo.failureInfo.visibility = if (transaction.isSuccessful) GONE else VISIBLE //TODO root visibility is gone, test impact of this
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
-        binding.details.recipInstitutionRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
+        binding.details.paidWithRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
+        if (transaction.isRecorded) binding.details.recipInstitutionRow.visibility = GONE
         binding.details.amountRow.visibility = if (transaction.amount != null) VISIBLE else GONE
         binding.details.feeRow.visibility = if (transaction.fee == null) GONE else VISIBLE
         binding.details.balanceRow.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
@@ -158,13 +162,13 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun updateAction(action: HoverAction) {
+        Timber.e("action ${action.public_id} update. to country is: ${action.to_country_alpha2.isEmpty()}")
         if (action.isOnNetwork) binding.details.recipInstitutionRow.visibility = GONE
-        binding.details.institutionValue.setTitle(action.to_institution_name)
+        else binding.details.institutionValue.setTitle(action.to_institution_name)
         viewModel.transaction.value?.let {
-            binding.statusInfo.longDescription.text = it.longDescription(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
-            binding.details.typeValue.text = it.humanTransactionType(requireContext(), action.to_institution_name)
-            binding.details.categoryValue.text = it.shortDescription(action, requireContext())
-            if (action.transaction_type == HoverAction.C2B)
+            binding.statusInfo.longDescription.text = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
+            binding.details.categoryValue.text = it.shortStatusExplain(action, requireContext())
+            if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
         }
         binding.statusInfo.institutionLogo.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo)
@@ -175,18 +179,10 @@ class TransactionDetailsFragment : Fragment() {
         binding.details.feeLabel.text = getString(R.string.transaction_fee, account.name)
     }
 
-    private fun updateTransaction(t: Transaction) {
-        viewModel.action.value?.let {
-            if (it.transaction_type == HoverAction.C2B && t.input_extras.has(HoverAction.ACCOUNT_KEY)) {
-                binding.details.recipientValue.setTitle(t.input_extras.getString(HoverAction.ACCOUNT_KEY))
-            }
-        }
-    }
-
     private fun updateMessages(ussdCallResponses: List<UssdCallResponse>?) {
         viewModel.action.value?.let {
             viewModel.transaction.value?.let { t ->
-                binding.statusInfo.longDescription.text = t.longDescription(
+                binding.statusInfo.longDescription.text = t.longStatus(
                     it,
                     ussdCallResponses?.last(),
                     viewModel.sms.value,
@@ -204,57 +200,29 @@ class TransactionDetailsFragment : Fragment() {
         } else visibility = GONE
     }
 
-    private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
+    private fun updateRecipient(merchant: Merchant?) {
+        updateRecipient(merchant?.businessName, merchant?.tillNo)
+    }
+
+    private fun updateRecipient(title: String?, sub: String?) = with(binding.details.recipientValue) {
+        if (!title.isNullOrEmpty() || !sub.isNullOrEmpty()) {
+            visibility = VISIBLE
+            setContent(title, sub)
+        } else visibility = GONE
+    }
 
     private fun addRetryOrSupportButton(transaction: StaxTransaction) {
         if (transaction.isRecorded)
-            setupRetryBountyButton()
+            binding.statusInfo.btnRetry.setOnClickListener{ retryBounty() }
         else if (transaction.status == Transaction.FAILED) {
-            val button = showButtonToClick()
             if (shouldContactSupport(transaction.action_id))
-                setupContactSupportButton(transaction.action_id, button)
-            else if (transaction.isRetryable)
-                createRetryListener(transaction, button)
-        } else binding.statusInfo.btnRetry.visibility = GONE
-    }
-
-    private fun setupRetryBountyButton() {
-        binding.statusInfo.btnRetry.apply {
-            visibility = VISIBLE
-            setOnClickListener{ retryBountyClicked() }
+                setupContactSupportButton(transaction.action_id, binding.statusInfo.btnRetry)
+            else binding.statusInfo.btnRetry.setOnClickListener{ maybeRetry(transaction) }
         }
+        binding.statusInfo.btnRetry.visibility = if (transaction.isRetryable) VISIBLE else GONE
     }
 
-    private fun showButtonToClick(): Button {
-        return binding.statusInfo.btnRetry.also { it.visibility = VISIBLE }
-    }
-
-    private fun createRetryListener(transaction: StaxTransaction, retryButton: TextView) {
-        retryButton.setOnClickListener {
-            if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
-                UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
-            else {
-                retry(transaction)
-            }
-        }
-    }
-
-    private fun retry(transaction: StaxTransaction) {
-        updateRetryCounter(transaction.action_id)
-        if (transaction.transaction_type == HoverAction.BALANCE) {
-            (requireActivity() as AbstractHoverCallerActivity)
-                .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
-        } else {
-            navToTransferDetail(transaction)
-        }
-    }
-
-    private fun navToTransferDetail(transaction: StaxTransaction) {
-        NavUtil.navigateTransfer(
-            findNavController(), transaction.transaction_type,
-            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id
-        )
-    }
+    private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
 
     private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {
         contactSupportTextView.setText(R.string.email_support)
@@ -266,6 +234,34 @@ class TransactionDetailsFragment : Fragment() {
         }
     }
 
+    private fun maybeRetry(transaction: StaxTransaction) {
+        if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
+            UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
+        else {
+            retry(transaction)
+        }
+    }
+
+    private fun retry(transaction: StaxTransaction) {
+        updateRetryCounter(transaction.action_id)
+        if (transaction.transaction_type == HoverAction.BALANCE) {
+            (requireActivity() as AbstractHoverCallerActivity)
+                .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
+        } else if (transaction.transaction_type == HoverAction.P2P || transaction.transaction_type == HoverAction.AIRTIME)
+            navToTransferDetail(transaction)
+//        else if (transaction.transaction_type == HoverAction.BILL)
+//            navToPaybill()
+//        else if (transaction.transaction_type == HoverAction.MERCHANT)
+//            navToMerchant()
+    }
+
+    private fun navToTransferDetail(transaction: StaxTransaction) {
+        NavUtil.navigateTransfer(
+            findNavController(), transaction.transaction_type,
+            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id
+        )
+    }
+
     private fun updateRetryCounter(id: String) {
         val currentCount: Int = if (retryCounter[id] != null) retryCounter[id]!! else 0
         retryCounter[id] = currentCount + 1
@@ -275,7 +271,7 @@ class TransactionDetailsFragment : Fragment() {
         retryCounter[id] = 0
     }
 
-    private fun retryBountyClicked() {
+    private fun retryBounty() {
         viewModel.action.value?.let {
             (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
         }

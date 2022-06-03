@@ -39,7 +39,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPaybillBinding.inflate(inflater, container, false)
-        accountsViewModel.setType(HoverAction.C2B)
+        accountsViewModel.setType(HoverAction.BILL)
         return binding.root
     }
 

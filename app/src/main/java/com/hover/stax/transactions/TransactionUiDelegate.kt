@@ -26,18 +26,6 @@ interface TransactionUiDelegate {
         }
     }
 
-    fun humanTransactionType(c: Context, to_institution_name: String): String {
-        return when (transaction.transaction_type) {
-            HoverAction.BALANCE -> c.getString(R.string.check_balance)
-            HoverAction.AIRTIME -> c.getString(R.string.buy_airtime)
-            HoverAction.P2P -> c.getString(R.string.display_transfer_money, to_institution_name)
-            HoverAction.ME2ME -> c.getString(R.string.display_transfer_money, to_institution_name)
-            HoverAction.C2B -> c.getString(R.string.display_bill_payment)
-            HoverAction.RECEIVE -> c.getString(R.string.display_money_received)
-            else -> "Other"
-        }.replaceFirstChar { it.uppercaseChar() }
-    }
-
     fun humanStatus(c: Context): String {
         return when (transaction.status) {
             Transaction.FAILED -> c.getString(R.string.failed_label)
@@ -52,8 +40,7 @@ interface TransactionUiDelegate {
     }
 
     fun title(c: Context): String {
-        if (transaction.isRecorded) return getRecordedStatusDetail(c)
-        var str = if (transaction.isBalanceType && transaction.isSuccessful)
+        var str = if (transaction.isBalanceType && transaction.isSuccessful && !transaction.isRecorded)
             transaction.displayBalance
         else transaction.humanStatus(c)
 
@@ -62,7 +49,7 @@ interface TransactionUiDelegate {
         return str
     }
 
-    fun shortDescription(action: HoverAction?, c: Context): String {
+    fun shortStatusExplain(action: HoverAction?, c: Context): String {
         if (transaction.isRecorded) return getRecordedStatusDetail(c)
         return when {
             transaction.status == Transaction.FAILED -> shortFailureMessage(action, c)
@@ -72,7 +59,7 @@ interface TransactionUiDelegate {
         }
     }
 
-    fun longDescription(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, isExpectingSMS: Boolean, c: Context): String {
+    fun longStatus(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, isExpectingSMS: Boolean, c: Context): String {
         return if (transaction.isRecorded) getRecordedStatusDetail(c)
         else when (transaction.status) {
             Transaction.FAILED -> longFailureMessage(action, c)
@@ -126,7 +113,7 @@ interface TransactionUiDelegate {
 
     fun getRecipientLabel(): Int {
         return when (transaction.transaction_type) {
-            HoverAction.C2B -> R.string.account_label
+            HoverAction.BILL -> R.string.account_label
             HoverAction.RECEIVE -> R.string.sender_label
             else -> R.string.recipient_label
         }

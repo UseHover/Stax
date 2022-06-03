@@ -22,7 +22,7 @@ class AccountRepo(db: AppDatabase) {
 
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
-    fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
+    fun getLiveAccount(id: Int?): LiveData<Account> = accountDao.getLiveAccount(id)
 
     fun getAccountsByInstitution(institutionId: Int): LiveData<List<Account>> = accountDao.getAccountsByInstitution(institutionId)
 

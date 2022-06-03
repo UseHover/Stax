@@ -93,7 +93,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun setTitle() {
-        val titleRes = if (TransactionType.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
+        val titleRes = if (accountsViewModel.getActionType() == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
         binding.editCard.root.setTitle(getString(titleRes))
         binding.summaryCard.root.setTitle(getString(titleRes))
     }
@@ -115,7 +115,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun setTransactionType(txnType: String) {
-        transferViewModel.setTransactionType(txnType)
         accountsViewModel.setType(txnType)
     }
 
@@ -142,17 +141,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeActionSelection() {
-        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
-            it?.let {
-                binding.editCard.actionSelect.selectRecipientNetwork(it)
-                setRecipientHint(it)
-            }
-
-            showBonusBanner(it)
-        }
-    }
-
     private fun observeActions() {
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
@@ -160,6 +148,16 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
             binding.editCard.actionSelect.updateActions(it)
+        }
+    }
+
+    private fun observeActionSelection() {
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.editCard.actionSelect.selectRecipientNetwork(it)
+                setRecipientHint(it)
+            }
+            showBonusBanner(it)
         }
     }
 

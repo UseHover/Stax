@@ -18,10 +18,8 @@ import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
 import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.*
