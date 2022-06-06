@@ -23,6 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
 class MerchantFragment : AbstractFormFragment() {
+
 	private var _binding: FragmentMerchantBinding? = null
 	private val binding get() = _binding!!
 
@@ -63,7 +64,7 @@ class MerchantFragment : AbstractFormFragment() {
 	private fun observeAccountList() {
 		collectLatestLifecycleFlow(accountsViewModel.accounts) {
 			if (it.isEmpty())
-				setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+				setDropdownTouchListener(MerchantFragmentDirections.actionMerchantFragmentToAccountsFragment())
 		}
 	}
 

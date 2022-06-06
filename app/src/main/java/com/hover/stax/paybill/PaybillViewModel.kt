@@ -18,7 +18,9 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class PaybillViewModel(application: Application, contactRepo: ContactRepo, val actionRepo: ActionRepo, val billRepo: PaybillRepo, val accountRepo: AccountRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+class PaybillViewModel(application: Application, contactRepo: ContactRepo, val actionRepo: ActionRepo,
+                       private val billRepo: PaybillRepo, val accountRepo: AccountRepo, scheduleRepo: ScheduleRepo)
+    : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val savedPaybills = MutableLiveData<List<Paybill>>()
 
@@ -32,7 +34,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     val iconDrawable = MutableLiveData(R.drawable.ic_smile)
 
     val saveBill = MutableLiveData(false)
-    val saveAmount = MutableLiveData(false)
+    private val saveAmount = MutableLiveData(false)
 
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
         billRepo.getPaybills(accountId).collect { savedPaybills.postValue(it) }

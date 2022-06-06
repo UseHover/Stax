@@ -17,6 +17,7 @@ import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
@@ -137,8 +138,15 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     private fun observePayWith() {
         accountsViewModel.activeAccount.observe(viewLifecycleOwner) { account ->
-            account?.let { binding.summaryCard.accountValue.setTitle(it.toString()) }
-            viewModel.getSavedPaybills(account.id)
+            account?.let {
+                binding.summaryCard.accountValue.setTitle(it.toString())
+                viewModel.getSavedPaybills(account.id)
+            }
+        }
+
+        collectLatestLifecycleFlow(accountsViewModel.accounts) {
+            if(it.isEmpty())
+                setDropdownTouchListener(PaybillFragmentDirections.actionGlobalAddChannelsFragment())
         }
     }
 
@@ -147,8 +155,12 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             val err = accountsViewModel.errorCheck()
             payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         }
-        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { it?.let {
-            binding.summaryCard.recipient.setTitle(it.to_institution_name) }}
+
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.summaryCard.recipient.setTitle(it.to_institution_name)
+            }
+        }
     }
 
     private fun observeBill() {
@@ -159,10 +171,12 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         }
 
         viewModel.businessNumber.observe(viewLifecycleOwner) {
-            updateBiz(viewModel.businessName.value, it) }
+            updateBiz(viewModel.businessName.value, it)
+        }
 
         viewModel.businessName.observe(viewLifecycleOwner) {
-            updateBiz(it, viewModel.businessNumber.value) }
+            updateBiz(it, viewModel.businessNumber.value)
+        }
     }
 
     private fun updateBiz(name: String?, no: String?) {
@@ -205,7 +219,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         viewModel.iconDrawable.observe(viewLifecycleOwner) {
             if (it != 0)
                 binding.saveCard.billIcon.setImageDrawable(
-                    ContextCompat.getDrawable(requireContext(), it))
+                    ContextCompat.getDrawable(requireContext(), it)
+                )
         }
     }
 
@@ -220,8 +235,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         viewModel.setNickname(binding.saveCard.billNameInput.text)
 
         val payWithError = accountsViewModel.errorCheck()
-        binding.editCard.payWithDropdown.setState(payWithError,
-            if (payWithError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        binding.editCard.payWithDropdown.setState(
+            payWithError,
+            if (payWithError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         val businessNoError = viewModel.businessNoError()
         val accountNoError = viewModel.accountNoError()
@@ -229,15 +246,23 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         val nickNameError = viewModel.nameError()
 
         with(binding.editCard) {
-            businessNoInput.setState(businessNoError,
-                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-            accountNoInput.setState(accountNoError,
-                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-            amountInput.setState(amountError,
-                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            businessNoInput.setState(
+                businessNoError,
+                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+            )
+            accountNoInput.setState(
+                accountNoError,
+                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+            )
+            amountInput.setState(
+                amountError,
+                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+            )
         }
-        binding.saveCard.billNameInput.setState(nickNameError,
-            if (nickNameError == null && viewModel.saveBill.value!!) AbstractStatefulInput.SUCCESS else if (nickNameError != null) AbstractStatefulInput.ERROR else AbstractStatefulInput.NONE)
+        binding.saveCard.billNameInput.setState(
+            nickNameError,
+            if (nickNameError == null && viewModel.saveBill.value!!) AbstractStatefulInput.SUCCESS else if (nickNameError != null) AbstractStatefulInput.ERROR else AbstractStatefulInput.NONE
+        )
 
         return payWithError == null && businessNoError == null && accountNoError == null && amountError == null && nickNameError == null
     }
@@ -248,7 +273,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         val actionToRun = actionSelectViewModel.activeAction.value
 
         if (!actions.isNullOrEmpty() && account != null)
-            (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun?: actions.first(), viewModel.wrapExtras(), 0)
+            (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun ?: actions.first(), viewModel.wrapExtras(), 0)
         else
             Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $account")
     }
