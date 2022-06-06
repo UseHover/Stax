@@ -45,7 +45,7 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 143
+        versionCode 144
         versionName "1.11.6"
 
         vectorDrawables.useSupportLibrary = true
@@ -155,6 +155,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-core'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
     implementation 'com.google.firebase:firebase-config'
     implementation 'com.google.android.play:core:1.10.3'

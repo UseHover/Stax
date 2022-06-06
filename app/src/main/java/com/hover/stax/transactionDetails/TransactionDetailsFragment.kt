@@ -6,12 +6,15 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
@@ -51,6 +54,7 @@ class TransactionDetailsFragment : Fragment() {
     private val args: TransactionDetailsFragmentArgs by navArgs()
 
     private lateinit var childFragManager: FragmentManager
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<RelativeLayout>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val uuid = requireArguments().getString(UUID)
@@ -110,6 +114,7 @@ class TransactionDetailsFragment : Fragment() {
         updateHeader(transaction)
         updateDetails(transaction)
         setVisibleFields(transaction)
+        showShareExcitement(transaction)
     }
 
     private fun updateHeader(transaction: StaxTransaction) = with(binding.transactionHeader) {
@@ -276,6 +281,37 @@ class TransactionDetailsFragment : Fragment() {
             (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
         }
     }
+
+    private fun showShareExcitement(transaction: StaxTransaction) {
+        val isTransactionSuccessful = !transaction.isRecorded && transaction.isSuccessful
+
+        val shareMessage = when(transaction.transaction_type) {
+            HoverAction.AIRTIME -> getString(R.string.airtime_purchase_message, getString(R.string.share_link))
+            HoverAction.BALANCE -> getString(R.string.check_balance_message, getString(R.string.share_link))
+            HoverAction.P2P -> getString(R.string.send_money_message, getString(R.string.share_link))
+            else -> getString(R.string.share_msg)
+        }
+
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.shareLayout.bottomSheet)
+        val shouldShow = args.isNewTransaction && isTransactionSuccessful
+        setBottomSheetVisibility(shouldShow, shareMessage)
+    }
+
+    private fun setBottomSheetVisibility(isVisible: Boolean, shareMessage: String) {
+        var updatedState = BottomSheetBehavior.STATE_HIDDEN
+
+        if(isVisible) {
+            updatedState = BottomSheetBehavior.STATE_EXPANDED
+            val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down)
+
+            binding.shareLayout.bottomSheet.visibility = VISIBLE
+            binding.shareLayout.bottomSheet.animation = animation
+            binding.shareLayout.shareBtn.setOnClickListener { Utils.shareStax(requireActivity(), shareMessage) }
+        }
+
+        bottomSheetBehavior.state = updatedState
+    }
+
 
     private fun showBonusAmount(amount: Int) = with(binding.details) {
         val txn = viewModel.transaction.value
