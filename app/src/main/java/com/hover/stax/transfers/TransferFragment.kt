@@ -150,7 +150,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             }
 
             Timber.e("Found active action ${it?.from_institution_name} to ${it?.to_institution_name}")
-            showBonusBanner(it)
         }
     }
 
@@ -158,6 +157,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             Timber.e("Observed new actions ${it.size} for ${it.first()}")
             actionSelectViewModel.setActions(it)
+
+            showBonusBanner(it.firstOrNull())
         }
 
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
