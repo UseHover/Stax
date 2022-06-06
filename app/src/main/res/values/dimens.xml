@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<dimen name="text_16">16sp</dimen>
 	<dimen name="text_21">21sp</dimen>
 	<dimen name="text_19">19sp</dimen>
@@ -7,9 +7,15 @@
 	<dimen name="text_15">15sp</dimen>
 	<dimen name="text_34">34sp</dimen>
 	<dimen name="text_spacing_8">8sp</dimen>
+
 	<dimen name="stroke">2dp</dimen>
 	<dimen name="radius">5dp</dimen>
 	<dimen name="elevation">10dp</dimen>
+
+	<dimen name="chooserDiam" tools:ignore="PxUsage">89px</dimen>
+	<dimen name="logoDiam" tools:ignore="PxUsage">55px</dimen>
+	<dimen name="iconDiam" tools:ignore="PxUsage">24px</dimen>
+
 	<dimen name="margin_3">3dp</dimen>
 	<dimen name="margin_10">10dp</dimen>
 	<dimen name="margin_5">5dp</dimen>
@@ -24,9 +30,8 @@
 	<dimen name="margin_43">43dp</dimen>
 	<dimen name="margin_55">55dp</dimen>
 	<dimen name="margin_65">65dp</dimen>
-	<dimen name="margin_89">89dp</dimen>
-
 	<dimen name="margin_68">68dp</dimen>
+	<dimen name="margin_89">89dp</dimen>
 	<dimen name="margin_136">136dp</dimen>
 	<dimen name="margin_150">150dp</dimen>
 	<dimen name="margin_176">176dp</dimen>

@@ -6,6 +6,9 @@ import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
 
 const val DUMMY = -1
+const val PLACEHOLDER = "placeholder"
+const val ACCOUNT_NAME: String = "account_name"
+const val ACCOUNT_ID: String = "account_id"
 
 @Entity(
         tableName = "accounts",
@@ -23,8 +26,15 @@ data class Account(
         @ColumnInfo(name = "account_no")
         var accountNo: String?,
 
+        @ColumnInfo
+        var institutionId: Int?,
+
+        @JvmField
+        @ColumnInfo
+        var countryAlpha2: String?,
+
         @ColumnInfo(index = true)
-        val channelId: Int,
+        var channelId: Int,
 
         @ColumnInfo(name = "primary_color_hex")
         val primaryColorHex: String,
@@ -37,11 +47,13 @@ data class Account(
 ) : Comparable<Account> {
 
     constructor(name: String, channel: Channel) : this(
-            name, name, channel.logoUrl, "", channel.id, channel.primaryColorHex, channel.secondaryColorHex
+            name, name, channel.logoUrl, "", channel.institutionId, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex
     )
 
+    constructor(name: String) : this(name, primaryColor = "#292E35")
+
     constructor(name: String, primaryColor: String) : this(
-            name, alias = name, logoUrl = "", accountNo = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
+            name, alias = name, logoUrl = "", accountNo = "", institutionId = -1, countryAlpha2 = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
     )
 
     @PrimaryKey(autoGenerate = true)
@@ -51,6 +63,7 @@ data class Account(
 
     @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
     var latestBalanceTimestamp: Long = System.currentTimeMillis()
+
 
     fun updateBalance(parsed_variables: HashMap<String, String>) {
         if (parsed_variables.containsKey("balance")) latestBalance = parsed_variables["balance"]

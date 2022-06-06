@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/transferCard"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	app:showBack="true"
+	app:title="@string/nav_merchant">
+
+	<com.hover.stax.accounts.AccountDropdown
+		android:id="@+id/payWithDropdown"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:editable="false"
+		android:hint="@string/pay_with_label" />
+
+	<com.hover.stax.merchants.MerchantInput
+		android:id="@+id/merchant_select"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:editable="true" />
+
+	<com.hover.stax.views.StaxTextInput
+		android:id="@+id/amountInput"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/transfer_amount_label"
+		android:imeOptions="actionNext"
+		android:inputType="numberDecimal" />
+
+</com.hover.stax.views.StaxCardView>

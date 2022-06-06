@@ -9,7 +9,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <com.hover.stax.views.StaxTextInputLayout
+        <com.hover.stax.views.StaxTextInput
                 android:id="@+id/account_number_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <com.hover.stax.views.StaxTextInputLayout
+        <com.hover.stax.views.StaxTextInput
                 android:id="@+id/nickname_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

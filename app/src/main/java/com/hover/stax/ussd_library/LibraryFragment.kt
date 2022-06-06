@@ -10,25 +10,24 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.hover.stax.R
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
-
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.RequestServiceDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
+class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChannelsAdapter.FavoriteClickInterface {
 
-    private val viewModel: LibraryViewModel by viewModel()
+    private val viewModel: ChannelsViewModel by viewModel()
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
-    private val libraryAdapter = LibraryChannelsAdapter()
+    private val libraryAdapter = LibraryChannelsAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLibraryBinding.inflate(inflater, container, false)
@@ -54,17 +53,12 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     }
 
     private fun setObservers() {
-        val observer = object: Observer<List<Channel>> {
-            override fun onChanged(t: List<Channel>?) {
-                Timber.i("Staged channels loaded ${t?.size}")
-            }
-        }
-
         with(viewModel) {
-            stagedChannels.observe(viewLifecycleOwner, observer)
+            allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
+            sims.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} sims") }
+            simCountryList.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} hnis") }
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
-            country.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
-            allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, viewModel.country.value) } }
+            countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
         }
     }
 
@@ -80,7 +74,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                viewModel.runChannelFilter(charSequence.toString())
+                viewModel.updateSearch(charSequence.toString())
             }
         }
         binding.searchInput.addTextChangedListener(searchInputWatcher)
@@ -90,8 +84,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
         binding.countryCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) showList(channels)
-        else if (viewModel.isInSearchMode()) showEmptyState()
-        else showLoading()
+        else showEmptyState()
     }
 
     private fun showList(channels: List<Channel>) {
@@ -101,7 +94,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     }
 
     private fun showEmptyState() {
-        val content = resources.getString(R.string.no_accounts_found_desc,  viewModel.filterQuery.value!!)
+        val content = resources.getString(R.string.no_accounts_found_desc, viewModel.filterQuery.value!!)
         binding.emptyState.noAccountFoundDesc.apply {
             text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
             movementMethod = LinkMovementMethod.getInstance()
@@ -110,12 +103,11 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
         binding.shortcodesParent.visibility = View.GONE
     }
 
-    private fun showLoading() {
-        binding.countryCard.showProgressIndicator()
-        binding.emptyState.root.visibility = View.GONE
+    override fun countrySelect(countryCode: String) {
+        viewModel.updateCountry(countryCode)
     }
 
-    override fun countrySelect(countryCode: String) {
-        viewModel.setCountry(countryCode)
+    override fun onFavoriteIconClicked(channel: Channel) {
+        viewModel.updateChannel(channel)
     }
 }

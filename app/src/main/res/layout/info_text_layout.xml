@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textId"
+        android:textSize="@dimen/text_16"
         android:textColor="@color/offWhite"
         android:gravity="center_vertical"
         android:drawablePadding="@dimen/margin_3"

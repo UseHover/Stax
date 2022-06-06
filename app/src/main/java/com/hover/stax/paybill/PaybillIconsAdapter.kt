@@ -24,9 +24,9 @@ class PaybillIconsAdapter(private val iconListener: IconSelectListener) : Recycl
 
     inner class IconsViewHolder(val binding: ItemIconsBinding, private val iconListener: IconSelectListener) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindItems(iconId: Int) {
-            binding.billIcon.setImageDrawable(ContextCompat.getDrawable(binding.billIcon.context, iconId))
-            binding.iconLayout.setOnClickListener { iconListener.onSelectIcon(iconId) }
+        fun bindItems(iconId: Int) = with(binding.billIcon) {
+            setImageDrawable(ContextCompat.getDrawable(context, iconId))
+            setOnClickListener { iconListener.onSelectIcon(iconId) }
         }
     }
 

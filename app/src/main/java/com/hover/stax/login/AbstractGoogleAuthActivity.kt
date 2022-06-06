@@ -2,7 +2,6 @@ package com.hover.stax.login
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -16,10 +15,14 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.bounties.BountyEmailFragmentDirections
+import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.settings.SettingsFragment
+import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
+abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxGoogleLoginInterface {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
@@ -126,6 +129,15 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
                 checkForUpdates()
             }
         }
+    }
+
+    override fun googleLoginSuccessful() {
+        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST)
+            BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment()
+    }
+
+    override fun googleLoginFailed() {
+        UIHelper.flashMessage(this, R.string.login_google_err)
     }
 
     companion object {

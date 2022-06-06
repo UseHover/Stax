@@ -13,7 +13,7 @@
                 android:id="@+id/countryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/filter_by_country">
+                app:title="@string/library_cardhead">
 
             <com.hover.stax.countries.CountryDropdown
                     android:id="@+id/country_dropdown"
@@ -24,13 +24,13 @@
                     android:editable="false"
                     android:text="@string/country" />
 
-            <com.hover.stax.views.StaxTextInputLayout
-                    android:id="@+id/searchInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/search"
-                    android:imeOptions="actionDone"
-                    android:inputType="textFilter" />
+            <com.hover.stax.views.StaxTextInput
+                android:id="@+id/searchInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search"
+                android:imeOptions="actionDone"
+                android:inputType="textFilter" />
         </com.hover.stax.views.StaxCardView>
 
         <include

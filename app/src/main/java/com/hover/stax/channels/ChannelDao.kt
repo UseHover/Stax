@@ -7,7 +7,7 @@ import com.hover.stax.accounts.ChannelWithAccounts
 @Dao
 interface ChannelDao {
 
-    @get:Query("SELECT * FROM channels WHERE published = 1 ORDER BY name ASC")
+    @get:Query("SELECT * FROM channels WHERE published = 1 ORDER BY isFavorite DESC, name ASC")
     val publishedChannels: LiveData<List<Channel>>
 
     @get:Query("SELECT * FROM channels ORDER BY name ASC")

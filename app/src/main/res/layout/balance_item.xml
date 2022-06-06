@@ -66,6 +66,7 @@
                 android:id="@+id/balance_refresh_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_8"
                 android:background="?selectableItemBackground"
                 android:padding="@dimen/margin_13"
                 app:layout_constraintBottom_toBottomOf="parent"
