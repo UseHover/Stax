@@ -41,7 +41,7 @@ object DateUtils {
         return str
     }
 
-    fun humanFriendlyTime(context: Context, diffMillis: Long): String {
+    private fun humanFriendlyTime(context: Context, diffMillis: Long): String {
         val seconds = (abs(diffMillis) / 1000).toDouble()
         val minutes = seconds / 60
         val hours = minutes / 60

@@ -1,5 +1,6 @@
 package com.hover.stax.transactions
 
+import android.text.format.DateUtils
 import com.hover.stax.utils.DateUtils.humanFriendlyDate
 import com.hover.sdk.actions.HoverAction
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +27,7 @@ class TransactionHistoryAdapter(private val selectListener: SelectListener) : Li
 		val t = history.staxTransaction
 		holder.binding.liTitle.text = t.toString(holder.itemView.context)
 		holder.binding.liAmount.text = t.getSignedAmount(t.amount)
-		holder.binding.liHeader.visibility =
-			if (shouldShowDate(t, position)) View.VISIBLE else View.GONE
+		holder.binding.liHeader.visibility = if (shouldShowDate(t, position)) View.VISIBLE else View.GONE
 		holder.binding.liHeader.text = humanFriendlyDate(t.initiated_at)
 		holder.itemView.setOnClickListener { selectListener.viewTransactionDetail(t.uuid) }
 		setStatus(t, history.action, holder)
@@ -41,12 +41,11 @@ class TransactionHistoryAdapter(private val selectListener: SelectListener) : Li
     }
 
     private fun shouldShowDate(t: StaxTransaction, position: Int): Boolean {
-        if (position > 1) {
-            val history = getItem(position - 1)
-            val transaction = history.staxTransaction
-            return position == 0 || humanFriendlyDate(transaction.initiated_at) != humanFriendlyDate(t.initiated_at)
-        }
-        return true
+        if(position == 0) return true
+
+        val history = getItem(position - 1)
+        val transaction = history.staxTransaction
+        return humanFriendlyDate(transaction.initiated_at) != humanFriendlyDate(t.initiated_at)
     }
 
     override fun getItemId(position: Int): Long {
