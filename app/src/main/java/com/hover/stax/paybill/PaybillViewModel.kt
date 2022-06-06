@@ -32,7 +32,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     val iconDrawable = MutableLiveData(R.drawable.ic_smile)
 
     val saveBill = MutableLiveData(false)
-    val saveAmount = MutableLiveData(false)
+    private val saveAmount = MutableLiveData(false)
 
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
         billRepo.getPaybills(accountId).collect { savedPaybills.postValue(it) }
