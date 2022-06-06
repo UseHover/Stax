@@ -63,7 +63,7 @@ class MerchantFragment : AbstractFormFragment() {
 	private fun observeAccountList() {
 		collectLatestLifecycleFlow(accountsViewModel.accounts) {
 			if (it.isEmpty())
-				setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+				setDropdownTouchListener(MerchantFragmentDirections.actionMerchantFragmentToAccountsFragment())
 		}
 	}
 
