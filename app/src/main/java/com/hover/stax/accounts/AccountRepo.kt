@@ -1,9 +1,7 @@
 package com.hover.stax.accounts
 
 import androidx.lifecycle.LiveData
-import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.Flow
 
@@ -24,8 +22,6 @@ class AccountRepo(db: AppDatabase) {
 
     fun getLiveAccount(id: Int?): LiveData<Account> = accountDao.getLiveAccount(id)
 
-    fun getAccountsByInstitution(institutionId: Int): LiveData<List<Account>> = accountDao.getAccountsByInstitution(institutionId)
-
     fun getAccounts(): Flow<List<Account>> = accountDao.getAccounts()
 
     private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
@@ -35,12 +31,10 @@ class AccountRepo(db: AppDatabase) {
             val acct = getAccount(account.name, account.channelId)
 
             try {
-                AppDatabase.databaseWriteExecutor.execute {
-                    if (acct == null) {
-                        accountDao.insert(account)
-                    } else {
-                        accountDao.update(account)
-                    }
+                if (acct == null) {
+                    accountDao.insert(account)
+                } else {
+                    accountDao.update(account)
                 }
             } catch (e: Exception) {
                 AnalyticsUtil.logErrorAndReportToFirebase(TAG, "failed to insert/update account", e)
@@ -48,13 +42,17 @@ class AccountRepo(db: AppDatabase) {
         }
     }
 
-    fun insert(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
+    fun insert(account: Account) = accountDao.insert(account)
 
-    fun update(account: Account?) = account?.let { AppDatabase.databaseWriteExecutor.execute { accountDao.update(it) } }
+    fun insert(accounts: List<Account>): List<Long> = accountDao.insertAll(accounts)
 
-    fun delete(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
+    fun update(account: Account?) = account?.let { accountDao.update(it) }
 
-    fun deleteAccount(channelId: Int, name: String) { accountDao.delete(channelId, name) }
+    fun delete(account: Account) = accountDao.delete(account)
+
+    fun deleteAccount(channelId: Int, name: String) {
+        accountDao.delete(channelId, name)
+    }
 
     companion object {
         private val TAG = AccountRepo::class.java.simpleName

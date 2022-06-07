@@ -55,13 +55,13 @@ interface ChannelDao {
     fun insert(channel: Channel?)
 
     @Update
-    fun update(channel: Channel?)
+    fun update(channel: Channel)
 
     @Update
-    fun updateAll(channel: List<Channel?>?)
+    fun updateAll(channel: List<Channel>)
 
     @Delete
-    fun delete(channel: Channel?)
+    fun delete(channel: Channel)
 
     @Query("DELETE FROM channels")
     fun deleteAll()
