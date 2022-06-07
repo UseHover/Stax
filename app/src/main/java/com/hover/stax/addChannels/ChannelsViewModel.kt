@@ -25,12 +25,14 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel as KChannel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
-import kotlinx.coroutines.channels.Channel as KChannel //import alias to differentiate between Stax Channels and Coroutine Channels
 
 class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
@@ -46,8 +48,11 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     private var countryChannels = MediatorLiveData<List<Channel>>()
     val filteredChannels = MediatorLiveData<List<Channel>>()
 
-    private val accountCreatedEvent = KChannel<Boolean>()
-    val accountEventFlow = accountCreatedEvent.receiveAsFlow()
+    private val accountCreatedEvent = MutableSharedFlow<Boolean>()
+    val accountEventFlow = accountCreatedEvent.asSharedFlow()
+
+    private val accountChannel = KChannel<Account>()
+    val accountCallback = accountChannel.receiveAsFlow()
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -133,50 +138,59 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         }
     }
 
-    private fun logChoice(channel: Channel) {
-        joinChannelGroup(channel.id, getApplication() as Context)
+    private fun logChoice(account: Account) {
+        joinChannelGroup(account.channelId, getApplication() as Context)
         val args = JSONObject()
 
         try {
-            args.put((getApplication() as Context).getString(R.string.added_channel_id), channel.id)
+            args.put((getApplication() as Context).getString(R.string.added_channel_id), account.channelId)
         } catch (ignored: Exception) {
         }
 
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
-    @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
-    fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
-        if (accounts.value.isNullOrEmpty() && !allChannels.value?.filter { it.selected }.isNullOrEmpty()) {
-            createAccounts(allChannels.value!!.filter { it.selected })
-        }
-    }
-
     fun validateAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val accounts = accountRepo.getAccountsByChannel(channelId)
 
-        if(accounts.isEmpty())
+        if (accounts.isEmpty())
             createAccount(channelId)
         else
-            accountCreatedEvent.send(true)
+            accountCreatedEvent.emit(true)
     }
 
     private fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val channel = repo.getChannel(channelId)
         channel?.let { createAccounts(listOf(it)) }
 
-        accountCreatedEvent.send(true)
+        accountCreatedEvent.emit(true)
     }
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = accountRepo.getDefaultAccount()
 
-        channels.forEachIndexed { i, it ->
+        val accounts = channels.mapIndexed { index, channel ->
+            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
+            Account(
+                accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.countryAlpha2,
+                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0
+            )
+        }.onEach {
             logChoice(it)
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
-            val accountName: String = if (getFetchAccountAction(it.id) == null) it.name else PLACEHOLDER //placeholder alias for easier identification later
-            val account = Account(accountName, it.name, it.logoUrl, it.accountNo, it.id, it.countryAlpha2, it.id, it.primaryColorHex, it.secondaryColorHex, defaultAccount == null && i == 0)
-            accountRepo.insert(account)
+        }
+
+        channels.onEach { it.selected = true }.also { repo.update(it) }
+        val accountIds = accountRepo.insert(accounts)
+
+        promptBalanceCheck(accountIds.first().toInt())
+    }
+
+    private fun promptBalanceCheck(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val account = accountRepo.getAccount(accountId)
+
+        account?.let {
+            accountChannel.send(it)
         }
     }
 
@@ -206,8 +220,8 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     private fun filterBonusChannels(channels: List<Channel>) = viewModelScope.launch {
         bonusRepo.bonuses.collect { list ->
             val ids = list.map { it.purchaseChannel }
-            filteredChannels.value = if(ids.isEmpty())
-                 channels
+            filteredChannels.value = if (ids.isEmpty())
+                channels
             else
                 channels.filterNot { ids.contains(it.id) }
         }

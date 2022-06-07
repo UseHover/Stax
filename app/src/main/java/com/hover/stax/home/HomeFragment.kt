@@ -5,6 +5,7 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
@@ -34,7 +35,7 @@ class HomeFragment : Fragment() {
 
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
