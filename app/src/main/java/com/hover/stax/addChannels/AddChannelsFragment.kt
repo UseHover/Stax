@@ -164,7 +164,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            Timber.e("Found ${channels.size} channels ")
             updateAdapter(channels.filterNot { it.selected })
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
@@ -202,7 +201,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
             binding.errorText.visibility = GONE
             aggregateSelectedChannels(tracker)
             findNavController().popBackStack()
-//            AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
         }
     }
 

@@ -20,6 +20,7 @@ import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.collectLatestLifecycleFlow
+import com.hover.stax.utils.collectLatestSharedFlow
 import com.hover.stax.utils.network.NetworkMonitor
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -61,10 +62,8 @@ class HomeFragment : Fragment() {
         setUpWellnessTips()
         setKeVisibility()
 
-        lifecycleScope.launchWhenStarted {
-            channelsViewModel.accountEventFlow.collect {
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().userChannel.toString()))
-            }
+        collectLatestSharedFlow(channelsViewModel.accountEventFlow) {
+            navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().userChannel.toString()))
         }
     }
 

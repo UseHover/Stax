@@ -9,6 +9,7 @@ import com.hover.stax.accounts.ChannelWithAccounts
 import com.hover.stax.database.AppDatabase
 
 class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
+
     private val simDao: SimInfoDao = sdkDb.simDao()
     private val channelDao: ChannelDao = db.channelDao()
 
@@ -16,21 +17,9 @@ class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val presentSims: List<SimInfo>
         get() = simDao.present
 
-    val presentSimsLive: LiveData<List<SimInfo>>
-        get() = simDao.presentLive
-
-    fun getSims(hnis: Array<String?>?): List<SimInfo> {
-        return simDao.getPresentByHnis(hnis)
-    }
-
     val publishedChannels: LiveData<List<Channel>> = channelDao.publishedChannels
-    val allChannels = channelDao.allChannels
 
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
-
-    fun getChannelsAndAccounts(): List<ChannelWithAccounts> = channelDao.getChannelsAndAccounts()
-
-    fun getChannelAndAccounts(id: Int): ChannelWithAccounts? = channelDao.getChannelAndAccounts(id)
 
     fun getChannel(id: Int): Channel? {
         return channelDao.getChannel(id)
@@ -38,10 +27,6 @@ class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getLiveChannel(id: Int): LiveData<Channel> {
         return channelDao.getLiveChannel(id)
-    }
-
-    fun getChannels(ids: IntArray): LiveData<List<Channel>> {
-        return channelDao.getChannels(ids)
     }
 
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
@@ -54,7 +39,9 @@ class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return channelDao.getChannels(countryCode.uppercase())
     }
 
-    fun update(channel: Channel?) = AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
+    fun update(channel: Channel) = channelDao.update(channel)
 
-    fun insert(channel: Channel) = AppDatabase.databaseWriteExecutor.execute { channelDao.insert(channel) }
+    fun insert(channel: Channel) = channelDao.insert(channel)
+
+    fun update(channels: List<Channel>) = channelDao.updateAll(channels)
 }
