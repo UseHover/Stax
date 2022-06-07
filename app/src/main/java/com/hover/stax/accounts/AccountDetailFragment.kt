@@ -180,18 +180,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
             attemptCallHover(viewModel.account.value, it)
         }
-//        lifecycleScope.launchWhenStarted {
-//            balancesViewModel.balanceAction.collect {
-//
-//            }
-//        }
-//        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
-//            attemptCallHover(viewModel.account.value, it)
-//        }
-
-//        viewModel.account.observe(viewLifecycleOwner) {
-//            attemptCallHover(it, balancesViewModel.balanceAction.value)
-//        }
     }
 
     override fun onTapRefresh(account: Account?) {

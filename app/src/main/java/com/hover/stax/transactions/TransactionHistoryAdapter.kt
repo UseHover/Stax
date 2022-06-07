@@ -1,18 +1,17 @@
 package com.hover.stax.transactions
 
-import android.text.format.DateUtils
-import com.hover.stax.utils.DateUtils.humanFriendlyDate
-import com.hover.sdk.actions.HoverAction
-import androidx.recyclerview.widget.RecyclerView
-import com.hover.stax.transactions.TransactionHistoryAdapter.HistoryViewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.databinding.TransactionListItemBinding
+import com.hover.stax.transactions.TransactionHistoryAdapter.HistoryViewHolder
+import com.hover.stax.utils.DateUtils.humanFriendlyDate
 
 class TransactionHistoryAdapter(private val selectListener: SelectListener) : ListAdapter<TransactionHistory, HistoryViewHolder>(diffUtil) {
 
@@ -22,16 +21,16 @@ class TransactionHistoryAdapter(private val selectListener: SelectListener) : Li
         return HistoryViewHolder(binding)
     }
 
-	override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-		val history = getItem(holder.adapterPosition)
-		val t = history.staxTransaction
-		holder.binding.liTitle.text = t.toString(holder.itemView.context)
-		holder.binding.liAmount.text = t.getSignedAmount(t.amount)
-		holder.binding.liHeader.visibility = if (shouldShowDate(t, position)) View.VISIBLE else View.GONE
-		holder.binding.liHeader.text = humanFriendlyDate(t.initiated_at)
-		holder.itemView.setOnClickListener { selectListener.viewTransactionDetail(t.uuid) }
-		setStatus(t, history.action, holder)
-	}
+    override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
+        val history = getItem(holder.adapterPosition)
+        val t = history.staxTransaction
+        holder.binding.liTitle.text = t.toString(holder.itemView.context)
+        holder.binding.liAmount.text = t.getSignedAmount(t.amount)
+        holder.binding.liHeader.visibility = if (shouldShowDate(t, position)) View.VISIBLE else View.GONE
+        holder.binding.liHeader.text = humanFriendlyDate(t.initiated_at)
+        holder.itemView.setOnClickListener { selectListener.viewTransactionDetail(t.uuid) }
+        setStatus(t, history.action, holder)
+    }
 
     private fun setStatus(t: StaxTransaction, a: HoverAction?, holder: HistoryViewHolder) {
         holder.binding.liAmount.alpha = (if (t.status == Transaction.FAILED) 0.54 else 1.0).toFloat()
@@ -41,7 +40,7 @@ class TransactionHistoryAdapter(private val selectListener: SelectListener) : Li
     }
 
     private fun shouldShowDate(t: StaxTransaction, position: Int): Boolean {
-        if(position == 0) return true
+        if (position == 0) return true
 
         val history = getItem(position - 1)
         val transaction = history.staxTransaction

@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
@@ -16,6 +20,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.accounts.DUMMY
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentBalanceBinding
 import com.hover.stax.home.HomeFragmentDirections
 import com.hover.stax.home.MainActivity
@@ -26,7 +31,10 @@ import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
@@ -41,6 +49,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
 
     private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private lateinit var cardStackAdapter: BalanceCardStackAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -64,10 +73,16 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
         collectLatestLifecycleFlow(accountsViewModel.accounts) {
             updateAccounts(ArrayList(it))
         }
-//        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { it?.let { askToCheckBalance(it) } }
 
         collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
+        }
+
+        lifecycleScope.launchWhenStarted {
+            channelsViewModel.accountCallback.collect {
+                Toast.makeText(requireActivity(), "Account ${it.name} event has been received", Toast.LENGTH_SHORT).show()
+                askToCheckBalance(it)
+            }
         }
     }
 
@@ -141,14 +156,12 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     private fun askToCheckBalance(account: Account) {
-        if (account.isDefault && account.latestBalance.isNullOrEmpty()) {
-            val dialog = StaxDialog(requireActivity())
-                .setDialogTitle(R.string.check_balance_title)
-                .setDialogMessage(R.string.check_balance_desc)
-                .setNegButton(R.string.later, null)
-                .setPosButton(R.string.check_balance_title) { onTapRefresh(account) }
-            dialog.showIt()
-        }
+        val dialog = StaxDialog(requireActivity())
+            .setDialogTitle(R.string.check_balance_title)
+            .setDialogMessage(R.string.check_balance_desc)
+            .setNegButton(R.string.later, null)
+            .setPosButton(R.string.check_balance_title) { onTapRefresh(account) }
+        dialog.showIt()
     }
 
     private fun updateBalanceCardStackHeight(numOfItems: Int) {
@@ -173,7 +186,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     override fun onTapRefresh(account: Account?) {
-        if (account == null)
+        if (account == null || account.id == DUMMY)
             (requireActivity() as MainActivity).checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
         else {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())

@@ -41,7 +41,7 @@ interface AccountDao {
     fun getDataCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(vararg accounts: Account)
+    fun insertAll(accounts: List<Account>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(account: Account)
