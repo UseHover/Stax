@@ -25,9 +25,11 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel as KChannel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
@@ -49,8 +51,8 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     private val accountCreatedEvent = MutableSharedFlow<Boolean>()
     val accountEventFlow = accountCreatedEvent.asSharedFlow()
 
-    private val accountSharedFlow = MutableSharedFlow<Account>()
-    val accountCallback = accountSharedFlow.asSharedFlow()
+    private val accountChannel = KChannel<Account>()
+    val accountCallback = accountChannel.receiveAsFlow()
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -148,13 +150,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
-    @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
-    fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
-        if (accounts.value.isNullOrEmpty() && !allChannels.value?.filter { it.selected }.isNullOrEmpty()) {
-            createAccounts(allChannels.value!!.filter { it.selected })
-        }
-    }
-
     fun validateAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val accounts = accountRepo.getAccountsByChannel(channelId)
 
@@ -188,8 +183,15 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         channels.onEach { it.selected = true }.also { repo.update(it) }
         val accountIds = accountRepo.insert(accounts)
 
-        //notify home to show check balance dialog for first account added
-        accountRepo.getAccount(accountIds.first().toInt())?.let { accountSharedFlow.emit(it) }
+        promptBalanceCheck(accountIds.first().toInt())
+    }
+
+    private fun promptBalanceCheck(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val account = accountRepo.getAccount(accountId)
+
+        account?.let {
+            accountChannel.send(it)
+        }
     }
 
     private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()

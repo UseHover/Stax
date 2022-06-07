@@ -5,8 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
@@ -23,9 +27,11 @@ import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLatestLifecycleFlow
-import com.hover.stax.utils.collectLatestSharedFlow
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.staxcardstack.StaxCardStackView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -42,7 +48,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
 
     private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private lateinit var cardStackAdapter: BalanceCardStackAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -71,8 +77,11 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
 
-        collectLatestSharedFlow(channelsViewModel.accountCallback) {
-            askToCheckBalance(it)
+        lifecycleScope.launchWhenStarted {
+            channelsViewModel.accountCallback.collect {
+                Toast.makeText(requireActivity(), "Account ${it.name} event has been received", Toast.LENGTH_SHORT).show()
+                askToCheckBalance(it)
+            }
         }
     }
 
@@ -146,14 +155,12 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     private fun askToCheckBalance(account: Account) {
-        if (account.isDefault && account.latestBalance.isNullOrEmpty()) {
-            val dialog = StaxDialog(requireActivity())
-                .setDialogTitle(R.string.check_balance_title)
-                .setDialogMessage(R.string.check_balance_desc)
-                .setNegButton(R.string.later, null)
-                .setPosButton(R.string.check_balance_title) { onTapRefresh(account) }
-            dialog.showIt()
-        }
+        val dialog = StaxDialog(requireActivity())
+            .setDialogTitle(R.string.check_balance_title)
+            .setDialogMessage(R.string.check_balance_desc)
+            .setNegButton(R.string.later, null)
+            .setPosButton(R.string.check_balance_title) { onTapRefresh(account) }
+        dialog.showIt()
     }
 
     private fun updateBalanceCardStackHeight(numOfItems: Int) {

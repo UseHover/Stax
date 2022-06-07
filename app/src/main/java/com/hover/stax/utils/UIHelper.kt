@@ -9,6 +9,7 @@ import android.os.Build
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.view.WindowInsetsController
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,7 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -120,8 +123,8 @@ fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) 
     }
 }
 
-fun <T> Fragment.collectLatestSharedFlow(flow: Flow<T>, collect: suspend (T) -> Unit) {
-    lifecycleScope.launchWhenStarted {
-        flow.collect(collect)
-    }
-}
+//fun <T> Fragment.collectLatestSharedFlow(flow: SharedFlow<Account>, collect: suspend (T) -> Unit) {
+//    lifecycleScope.launchWhenStarted {
+//        flow.collect { collect }
+//    }
+//}
