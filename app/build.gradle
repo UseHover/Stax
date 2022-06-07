@@ -122,14 +122,14 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Google
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.biometric:biometric:1.1.0"
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
@@ -167,7 +167,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation 'com.amplitude:android-sdk:2.23.2'
-    implementation "com.squareup.okhttp3:okhttp:4.8.1"
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
     implementation "com.googlecode.libphonenumber:libphonenumber:8.12.9"
     implementation "com.github.YarikSOffice:lingver:1.3.0"
     implementation 'com.appsflyer:af-android-sdk:6.2.3'
@@ -182,7 +182,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
 
-    implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.core:core-ktx:1.8.0"
 
     //di
     def koin_version= "3.1.5"
