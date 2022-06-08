@@ -28,8 +28,7 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
         if (actions.isNotEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
             val action = actions.first()
             activeAction.postValue(action)
-        } else
-            activeAction.postValue(null)
+        }
     }
 
     fun setActions(actions: List<HoverAction>) = filteredActions.postValue(actions)

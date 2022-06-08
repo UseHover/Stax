@@ -48,6 +48,9 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     private var countryChannels = MediatorLiveData<List<Channel>>()
     val filteredChannels = MediatorLiveData<List<Channel>>()
 
+    private val _channelCountryList = MediatorLiveData<List<String>>()
+    val channelCountryList: LiveData<List<String>> = _channelCountryList
+
     private val accountCreatedEvent = MutableSharedFlow<Boolean>()
     val accountEventFlow = accountCreatedEvent.asSharedFlow()
 
@@ -67,6 +70,8 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
             addSource(allChannels, this@ChannelsViewModel::onAllChannelsUpdate)
             addSource(countryChoice, this@ChannelsViewModel::onChoiceUpdate)
         }
+
+        _channelCountryList.addSource(allChannels, this::loadChannelCountryList)
 
         filteredChannels.addSource(filterQuery, this@ChannelsViewModel::search)
         filteredChannels.addSource(countryChannels, this@ChannelsViewModel::updateCountryChannels)
@@ -99,6 +104,13 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
 
     private fun onChoiceUpdate(countryCode: String?) {
         updateCountryChannels(allChannels.value, countryCode)
+    }
+
+    private fun loadChannelCountryList(channels: List<Channel>) = viewModelScope.launch {
+        val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
+        countryCodes.addAll(channels.map { it.countryAlpha2 }.distinct().sorted())
+
+        _channelCountryList.postValue(countryCodes)
     }
 
     private fun onSimUpdate(countryCodes: List<String>) {

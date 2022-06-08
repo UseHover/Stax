@@ -50,17 +50,21 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initUI(staxUser: StaxUser?) = with(binding) {
-        if (staxUser != null && !staxUser.isMapper) {
-            btnSignIn.visibility = View.GONE
-            joinMappers.apply {
-                visibility = View.VISIBLE
-                setOnClickListener(this@BountyEmailFragment)
+        when {
+            staxUser != null && !staxUser.isMapper -> {
+                btnSignIn.visibility = View.GONE
+                joinMappers.apply {
+                    visibility = View.VISIBLE
+                    setOnClickListener(this@BountyEmailFragment)
+                }
             }
-        } else {
-            joinMappers.visibility = View.GONE
-            btnSignIn.apply {
-                visibility = View.VISIBLE
-                setOnClickListener(this@BountyEmailFragment)
+            staxUser != null && staxUser.isMapper -> NavUtil.navigate(findNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
+            else -> {
+                joinMappers.visibility = View.GONE
+                btnSignIn.apply {
+                    visibility = View.VISIBLE
+                    setOnClickListener(this@BountyEmailFragment)
+                }
             }
         }
     }

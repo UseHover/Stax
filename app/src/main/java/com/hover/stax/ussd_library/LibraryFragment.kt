@@ -54,7 +54,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
 
     private fun setObservers() {
         with(viewModel) {
-            allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
+            channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
             sims.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} sims") }
             simCountryList.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} hnis") }
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
