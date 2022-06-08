@@ -3,41 +3,26 @@ package com.hover.stax.countries
 import android.content.Context
 import android.util.AttributeSet
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
 import com.hover.stax.views.StaxDropdownLayout
-import kotlinx.coroutines.*
-import timber.log.Timber
 
 class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
     private var countryAdapter: CountryAdapter? = null
     private var selectListener: CountryAdapter.SelectListener? = null
 
-    fun updateChoices(channels: List<Channel>, currentCountry: String?) {
-        if (channels.isEmpty()) {
+    fun updateChoices(countryList: List<String>, currentCountry: String?) {
+        if (countryList.isEmpty()) {
             setEmptyState()
             return
         }
 
-        countryAdapter = CountryAdapter(getCountryCodes(channels), context)
+        countryAdapter = CountryAdapter(countryList.toTypedArray(), context)
         autoCompleteTextView.apply {
             setAdapter(countryAdapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as String) }
         }
 
         setDropdownValue(currentCountry)
-    }
-
-    private fun getCountryCodes(channelList: List<Channel>): Array<String> {
-        val codes: Deferred<Array<String>> = CoroutineScope(Dispatchers.Default).async {
-            val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
-            countryCodes.addAll(channelList.map { it.countryAlpha2 }.distinct().sorted())
-            return@async countryCodes.toTypedArray()
-        }
-
-        return runBlocking {
-            codes.await()
-        }
     }
 
     private fun setEmptyState() {
@@ -54,8 +39,6 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     fun setDropdownValue(countryCode: String?) {
-        countryAdapter?.let {
-            autoCompleteTextView.setText(it.getCountryString(countryCode))
-        }
+        autoCompleteTextView.setText(countryAdapter?.getCountryString(countryCode) ?: "")
     }
 }

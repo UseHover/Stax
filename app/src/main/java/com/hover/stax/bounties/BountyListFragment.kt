@@ -115,9 +115,9 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         dialog!!.showIt()
     }
 
-    private fun initCountryDropdown(channels: List<Channel>) = binding.bountyCountryDropdown.apply {
+    private fun initCountryDropdown(countryCodes: List<String>) = binding.bountyCountryDropdown.apply {
         setListener(this@BountyListFragment)
-        updateChoices(channels, bountyViewModel.currentCountryFilter.value)
+        updateChoices(countryCodes, bountyViewModel.country)
         isEnabled = true
     }
 
@@ -148,10 +148,8 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         transactions.observe(viewLifecycleOwner, txnObserver)
         sims.observe(viewLifecycleOwner, simsObserver)
         bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
-        channels.observe(viewLifecycleOwner) {
-            initCountryDropdown(it)
-            updateChannelList(it, bounties.value)
-        }
+        channels.observe(viewLifecycleOwner) { updateChannelList(it, bounties.value)}
+        channelCountryList.observe(viewLifecycleOwner) { initCountryDropdown(it) }
     }
 
     private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {

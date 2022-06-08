@@ -20,17 +20,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
-                    android:hint="@string/select_country"
                     android:editable="false"
-                    android:text="@string/country" />
+                    android:hint="@string/select_country" />
 
             <com.hover.stax.views.StaxTextInput
-                android:id="@+id/searchInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search"
-                android:imeOptions="actionDone"
-                android:inputType="textFilter" />
+                    android:id="@+id/searchInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search"
+                    android:imeOptions="actionDone"
+                    android:inputType="textFilter" />
         </com.hover.stax.views.StaxCardView>
 
         <include

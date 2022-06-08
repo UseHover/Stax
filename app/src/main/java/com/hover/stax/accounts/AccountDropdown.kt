@@ -118,12 +118,12 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun setState(actions: List<HoverAction>, viewModel: AccountsViewModel) {
-        if (viewModel.activeAccount.value != null && actions.isNullOrEmpty())
+        if (viewModel.activeAccount.value != null && actions.isEmpty())
             this.setState(context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
                 ), ERROR)
-        else if (!actions.isNullOrEmpty() && actions.size == 1)
+        else if (actions.isNotEmpty() && actions.size == 1)
             addInfoMessage(actions.first())
         else if (viewModel.activeAccount.value != null && showSelected)
             setState(helperText, SUCCESS)
