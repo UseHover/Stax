@@ -148,16 +148,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
             }
-
-            Timber.e("Found active action ${it?.from_institution_name} to ${it?.to_institution_name}")
         }
     }
 
     private fun observeActions() {
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
-            Timber.e("Observed new actions ${it.size} for ${it.first()}")
             actionSelectViewModel.setActions(it)
-
             showBonusBanner(it.firstOrNull())
         }
 
@@ -340,7 +336,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if (!action.requiresRecipient()) {
             binding.summaryCard.recipientValue.setContent(getString(R.string.self_choice), "")
         } else {
-//            transferViewModel.forceUpdateContactUI()
             binding.editCard.contactSelect.setHint(
                 if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
                     getString(R.string.recipientacct_label)

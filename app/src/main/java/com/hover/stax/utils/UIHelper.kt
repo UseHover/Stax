@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -97,6 +98,11 @@ object UIHelper {
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
+        .override(100)
+        .into(this)
+
+    fun ImageView.loadImage(context: Context, @DrawableRes iconId: Int) = GlideApp.with(context)
+        .load(iconId)
         .override(100)
         .into(this)
 
