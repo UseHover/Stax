@@ -19,6 +19,7 @@ import timber.log.Timber
 
 
 class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), RadioGroup.OnCheckedChangeListener {
+
     private var allActions: List<HoverAction>? = null
     private var uniqueInstitutions: List<HoverAction>? = null
     private var highlightedAction: HoverAction? = null
@@ -70,7 +71,6 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         val target = object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
-                binding.actionDropdown.autoCompleteTextView.invalidate()
             }
 
             override fun onLoadCleared(placeholder: Drawable?) {

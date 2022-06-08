@@ -202,7 +202,6 @@
     <string name="permissions_accessibility_desc">In order to provide you with the ability to check your balance, transfer money or buy airtime, Stax needs your display and accessibility permission</string>
     <string name="app_permissions">App permissions</string>
     <string name="manage_permissions_title">Manage permissions</string>
-    <string name="manage_permission_desc">Grant Stax all the permissions required. This gives you full access to supported features</string>
     <string name="perm_calls_title">Calls</string>
     <string name="perm_calls_desc">Stax needs this permission to be able to detect services available to you.</string>
     <string name="perm_sms_title">SMS</string>

@@ -64,7 +64,6 @@ data class Account(
     @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
     var latestBalanceTimestamp: Long = System.currentTimeMillis()
 
-
     fun updateBalance(parsed_variables: HashMap<String, String>) {
         if (parsed_variables.containsKey("balance")) latestBalance = parsed_variables["balance"]
 

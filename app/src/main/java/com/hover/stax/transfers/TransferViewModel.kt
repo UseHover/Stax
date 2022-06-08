@@ -68,7 +68,7 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
 
     fun recipientErrors(a: HoverAction?): String? {
         return when {
-            (a != null && a.requiresRecipient() && (contact.value == null || contact.value?.accountNumber == null)) -> getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
+            (a != null && a.requiresRecipient() && (contact.value == null || contact.value?.accountNumber.isNullOrEmpty())) -> getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
             else -> null
         }
     }

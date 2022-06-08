@@ -87,7 +87,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun startObservers() = with(channelsViewModel) {
-        allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
+        channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
         sims.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} sims") }
         simCountryList.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} hnis") }
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }

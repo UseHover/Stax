@@ -29,8 +29,10 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
     val actions: LiveData<List<HoverAction>>
     val channels: LiveData<List<Channel>>
     val transactions: LiveData<List<StaxTransaction>>
-    var currentCountryFilter = MutableLiveData<String>()
     private val bountyList = MediatorLiveData<List<Bounty>>()
+
+    private var _channelCountryList = MediatorLiveData<List<String>>()
+    val channelCountryList: LiveData<List<String>> = _channelCountryList
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     private lateinit var bountyListAsync: Deferred<MutableList<Bounty>>
@@ -46,14 +48,15 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
             }
         }
 
-        currentCountryFilter.value = CountryAdapter.CODE_ALL_COUNTRIES
-
         loadSims()
         actions = actionRepo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
+        _channelCountryList.addSource(channels, this::loadCountryList)
         transactions = transactionRepo.bountyTransactions!!
-        bountyList.addSource(actions, this::makeBounties)
-        bountyList.addSource(transactions, this::makeBountiesIfActions)
+        bountyList.apply {
+            addSource(actions, this@BountyViewModel::makeBounties)
+            addSource(transactions, this@BountyViewModel::makeBountiesIfActions)
+        }
     }
 
     private fun loadSims() {
@@ -85,6 +88,12 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
         }
 
         return MutableLiveData(channelList)
+    }
+
+    private fun loadCountryList(channels: List<Channel>) = viewModelScope.launch {
+        val countryCodes = mutableListOf(country)
+        countryCodes.addAll(channels.map { it.countryAlpha2 }.distinct())
+        _channelCountryList.postValue(countryCodes)
     }
 
     private fun getChannelsAsync(ids: List<Int>): Deferred<List<Channel>> = viewModelScope.async(Dispatchers.IO) {

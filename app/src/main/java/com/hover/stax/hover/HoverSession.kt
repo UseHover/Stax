@@ -3,24 +3,21 @@ package com.hover.stax.hover
 import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.hover.stax.accounts.ACCOUNT_NAME
-import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.HoverParameters
-import com.hover.sdk.utils.TimerSingleton
 import com.hover.stax.R
+import com.hover.stax.accounts.ACCOUNT_ID
+import com.hover.stax.accounts.ACCOUNT_NAME
 import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.PhoneHelper
-import com.hover.stax.settings.TEST_MODE
-
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Utils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 
 const val PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity"
+private const val TIMER_LENGTH = 35000
 
 class HoverSession private constructor(b: Builder) {
 
@@ -31,19 +28,20 @@ class HoverSession private constructor(b: Builder) {
     private val finalScreenTime: Int
 
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
-            .apply {
-                setEnvironment(if (Utils.getBoolean(TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
-                extra(ACCOUNT_NAME, account.name)
-                private_extra(ACCOUNT_ID, account.id.toString())
-                request(b.action.public_id)
-                setHeader(getMessage(b.action, b.activity))
-                initialProcessingMessage("")
-                showUserStepDescriptions(true)
-                timeout(TimerSingleton.TIMER_LENGTH)
-                finalMsgDisplayTime(finalScreenTime)
-                style(R.style.StaxHoverTheme)
-                sessionOverlayLayout(R.layout.stax_transacting_in_progress)
-            }
+        .apply {
+            //setEnvironment(if (Utils.getBoolean(TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
+            setEnvironment(HoverParameters.DEBUG_ENV)
+            extra(ACCOUNT_NAME, account.name)
+            private_extra(ACCOUNT_ID, account.id.toString())
+            request(b.action.public_id)
+            setHeader(getMessage(b.action, b.activity))
+            initialProcessingMessage("")
+            showUserStepDescriptions(true)
+            timeout(TIMER_LENGTH)
+            finalMsgDisplayTime(finalScreenTime)
+            style(R.style.StaxHoverTheme)
+            sessionOverlayLayout(R.layout.stax_transacting_in_progress)
+        }
 
     private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject) {
         val keys: Iterator<*> = extras.keys()

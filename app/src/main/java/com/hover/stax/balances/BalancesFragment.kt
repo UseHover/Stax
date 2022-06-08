@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -185,7 +186,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     override fun onTapRefresh(account: Account?) {
-        if (account == null)
+        if (account == null || account.id == DUMMY)
             (requireActivity() as MainActivity).checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
         else {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
