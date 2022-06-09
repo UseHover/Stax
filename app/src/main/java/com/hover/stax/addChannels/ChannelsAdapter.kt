@@ -23,9 +23,10 @@ class ChannelsAdapter(var selectListener: SelectListener?) : ListAdapter<Channel
     }
 
     override fun onBindViewHolder(holder: ChannelViewHolder, position: Int) {
-        val channel = getItem(holder.adapterPosition)
-        holder.bind(channel, selectionTracker != null, selectionTracker?.isSelected(channel.id.toLong()))
-        holder.itemView.setOnClickListener { selectListener?.clickedChannel(channel) }
+        getItem(holder.adapterPosition)?.let { channel ->
+            holder.bind(channel, selectionTracker != null, selectionTracker?.isSelected(channel.id.toLong()))
+            holder.itemView.setOnClickListener { selectListener?.clickedChannel(channel) }
+        } ?: run { holder.clear() }
     }
 
     override fun getItemId(position: Int): Long {

@@ -194,7 +194,6 @@ class MerchantFragment : AbstractFormFragment() {
 		val recipientError = viewModel.recipientErrors()
 		binding.editCard.merchantSelect.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-
 		return accountError == null && actionError == null && amountError == null && recipientError == null
 	}
 

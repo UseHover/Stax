@@ -32,8 +32,8 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         fetchAccounts()
 
         channelActions.apply {
-            addSource(type, this@AccountsViewModel::loadActions)
             addSource(activeAccount, this@AccountsViewModel::loadActions)
+            addSource(type, this@AccountsViewModel::loadActions)
         }
     }
 
@@ -81,28 +81,21 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     private fun loadActions(channelId: Int, t: String = HoverAction.AIRTIME) = viewModelScope.launch(Dispatchers.IO) {
         val actions = actionRepo.getActions(channelId, t)
-        Timber.e("Found ${actions.size}")
         channelActions.postValue(actions)
     }
 
     private fun checkForBonus(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         val bonus = bonusRepo.getBonusByUserChannel(account.channelId)
-        Timber.e("Bonus is ${bonus?.purchaseChannel} - ${bonus?.message}")
 
-        if (bonus != null) {
-            Timber.e("Loading actions for bonus channel")
+        if (bonus != null)
             loadActions(bonus.purchaseChannel)
-        } else {
-            Timber.e("Loading normal actions for ${account.name} of type ${type.value}")
+        else
             loadActions(account, type.value!!)
-        }
     }
 
     fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value.find { it.id == accountId }) }
 
     fun setActiveAccountFromChannel(userChannelId: Int) = viewModelScope.launch {
-        Timber.e("Fetching for channel id : $userChannelId")
-
         repo.getAccounts().collect { accounts ->
             activeAccount.postValue(accounts.firstOrNull { it.channelId == userChannelId })
         }
