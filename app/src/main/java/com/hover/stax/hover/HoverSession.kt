@@ -11,7 +11,9 @@ import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.stax.accounts.ACCOUNT_NAME
 import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.PhoneHelper
+import com.hover.stax.settings.TEST_MODE
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Utils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -29,8 +31,7 @@ class HoverSession private constructor(b: Builder) {
 
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
         .apply {
-            //setEnvironment(if (Utils.getBoolean(TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
-            setEnvironment(HoverParameters.DEBUG_ENV)
+            setEnvironment(if (Utils.getBoolean(TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
             extra(ACCOUNT_NAME, account.name)
             private_extra(ACCOUNT_ID, account.id.toString())
             request(b.action.public_id)
@@ -103,11 +104,6 @@ class HoverSession private constructor(b: Builder) {
             } catch (e: JSONException) {
                 Timber.e("Failed to add extra")
             }
-            return this
-        }
-
-        fun finalScreenTime(ms: Int): Builder {
-            finalScreenTime = ms
             return this
         }
 

@@ -1,5 +1,6 @@
 package com.hover.stax.financialTips
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
@@ -7,6 +8,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
+import com.hover.stax.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +17,7 @@ import java.util.*
 
 data class FinancialTip(val id: String, val title: String, val content: String, val snippet: String, val date: Date?, val shareCopy: String?, val deepLink: String?)
 
-class FinancialTipsViewModel : ViewModel() {
+class FinancialTipsViewModel(val application: Application) : ViewModel() {
 
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
@@ -30,7 +32,7 @@ class FinancialTipsViewModel : ViewModel() {
     fun getTips() = viewModelScope.launch {
         val timestamp = Timestamp.now()
 
-        db.collection("wellness_tips")
+        db.collection(application.getString(R.string.tips_table))
             .orderBy("date", Query.Direction.DESCENDING)
             .whereLessThanOrEqualTo("date", timestamp.toDate())
             .limit(20)
