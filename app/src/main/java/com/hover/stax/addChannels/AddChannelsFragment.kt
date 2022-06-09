@@ -9,8 +9,10 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -21,7 +23,8 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsAdapter
 import com.hover.stax.bonus.BonusViewModel
-import com.hover.stax.channels.*
+import com.hover.stax.channels.Channel
+import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
@@ -29,6 +32,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
 import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -37,7 +41,7 @@ const val CHANNELS_REFRESHED = "has_refreshed_channels"
 
 class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryAdapter.SelectListener {
 
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null

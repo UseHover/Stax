@@ -9,8 +9,6 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
