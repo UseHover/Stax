@@ -7,11 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
@@ -31,8 +28,6 @@ import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -80,7 +75,6 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
 
         lifecycleScope.launchWhenStarted {
             channelsViewModel.accountCallback.collect {
-                Toast.makeText(requireActivity(), "Account ${it.name} event has been received", Toast.LENGTH_SHORT).show()
                 askToCheckBalance(it)
             }
         }

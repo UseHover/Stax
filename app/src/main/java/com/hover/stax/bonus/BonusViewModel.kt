@@ -38,6 +38,7 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
                     )
                 }
 
+                Timber.e("Saved ${results.size} bonuses")
                 saveBonuses(results)
             }
             .addOnFailureListener {

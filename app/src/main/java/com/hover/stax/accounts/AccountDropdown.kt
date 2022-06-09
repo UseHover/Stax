@@ -12,10 +12,12 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.actions.ActionSelect
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
@@ -118,13 +120,14 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun setState(actions: List<HoverAction>, viewModel: AccountsViewModel) {
-//        if (viewModel.activeAccount.value != null && actions.isEmpty())
-        if (viewModel.activeAccount.value == null && actions.isEmpty())
-            this.setState(context.getString(
+        if (viewModel.activeAccount.value == null && actions.isEmpty()) {
+            setState(
+                context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
-                ), ERROR)
-        else if (actions.isNotEmpty() && actions.size == 1)
+                ), ERROR
+            )
+        } else if (actions.isNotEmpty() && actions.size == 1)
             addInfoMessage(actions.first())
         else if (viewModel.activeAccount.value != null && showSelected)
             setState(helperText, SUCCESS)
@@ -133,11 +136,13 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private fun addInfoMessage(action: HoverAction) {
         if (!action.requiresRecipient() && isSelf(action))
             setState(
-            context.getString(
-                if (action.transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
-                else R.string.self_only_money_warning
-            ), INFO
-        )
+                context.getString(
+                    if (action.transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
+                    else R.string.self_only_money_warning
+                ), INFO
+            )
+        else
+            setState(null, SUCCESS)
     }
 
     private fun isSelf(action: HoverAction): Boolean {

@@ -217,7 +217,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     }
 
     fun updateCountry(code: String) {
-        Timber.e("setting country to %s", code)
         countryChoice.postValue(code.uppercase())
     }
 
@@ -260,5 +259,4 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         }
         super.onCleared()
     }
-
 }

@@ -54,7 +54,7 @@ val appModule = module {
     viewModel { TransactionDetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get(), get(), get()) }
-    viewModel { FinancialTipsViewModel() }
+    viewModel { FinancialTipsViewModel(get()) }
     viewModel { PaybillViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { MerchantViewModel(get(), get(), get(), get()) }
     viewModel { RequestDetailViewModel(get(), get(), get()) }

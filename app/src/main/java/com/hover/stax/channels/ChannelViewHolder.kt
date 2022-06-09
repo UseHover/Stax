@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 import com.hover.stax.utils.UIHelper.loadImage
@@ -29,6 +30,10 @@ class ChannelViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerV
         channelText.text = channel.toString()
 
         logo.loadImage(binding.root.context, channel.logoUrl)
+    }
+
+    fun clear() {
+        Glide.with(binding.root.context).clear(logo)
     }
 
     fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> = object : ItemDetailsLookup.ItemDetails<Long>() {
