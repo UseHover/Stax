@@ -78,10 +78,12 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
 
-        lifecycleScope.launchWhenStarted {
-            channelsViewModel.accountCallback.collect {
-                Toast.makeText(requireActivity(), "Account ${it.name} event has been received", Toast.LENGTH_SHORT).show()
-                askToCheckBalance(it)
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                channelsViewModel.accountCallback.collect {
+                    Toast.makeText(requireActivity(), "Account ${it.name} event has been received", Toast.LENGTH_SHORT).show()
+                    askToCheckBalance(it)
+                }
             }
         }
     }
