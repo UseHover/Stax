@@ -79,7 +79,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     }
 
     fun setBusinessNumber(number: String) {
-        deSelectPaybill()
+//        deSelectPaybill()
         businessNumber.value = number
         businessName.value = null
     }

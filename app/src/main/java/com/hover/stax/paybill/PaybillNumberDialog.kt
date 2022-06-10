@@ -40,7 +40,7 @@ class PaybillNumberDialog : DialogFragment() {
         binding.doneBtn.setOnClickListener {
             viewModel.setBusinessNumber(binding.businessNoInput.text)
             if (validates())
-                NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment())
+               findNavController().popBackStack()
         }
     }
 
