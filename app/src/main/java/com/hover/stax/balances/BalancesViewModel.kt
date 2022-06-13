@@ -7,15 +7,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : AndroidViewModel(application) {
+class BalancesViewModel(application: Application, val actionRepo: ActionRepo, val accountRepo: AccountRepo) : AndroidViewModel(application) {
 
     private var _showBalances = MutableLiveData(false)
     val showBalances: LiveData<Boolean> = _showBalances
@@ -25,8 +27,13 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : 
     private var _balanceAction = MutableSharedFlow<HoverAction>()
     val balanceAction = _balanceAction.asSharedFlow()
 
+    private val _accounts = MutableLiveData<List<Account>>()
+    val accounts: LiveData<List<Account>> = _accounts
+
     init {
         _showBalances.value = Utils.getBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, getApplication(), true)
+
+        getAccounts()
     }
 
     fun setBalanceState(show: Boolean) = viewModelScope.launch {
@@ -43,5 +50,9 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo) : 
         val channelId = account?.channelId ?: -1
         val action = actionRepo.getActions(channelId, if (account?.name == PLACEHOLDER) HoverAction.FETCH_ACCOUNTS else HoverAction.BALANCE).first()
         _balanceAction.emit(action)
+    }
+
+    private fun getAccounts() = viewModelScope.launch {
+        accountRepo.getAccounts().collect { _accounts.postValue(it) }
     }
 }
