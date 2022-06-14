@@ -91,7 +91,7 @@
 
     <!-- ONBOARDING VARIANT_2 -->
     <string name="welcome_to_stax">Hello, welcome to Stax.</string>
-    <string name="welcome_to_stax_fullContent">If you\’re new to Stax you may have some questions about how the app works. We'll help clarify some of these. Select the most relevant option to you.</string>
+    <string name="welcome_to_stax_fullContent">If you\’re new to Stax you may have some questions about how the app works. We\'ll help clarify some of these. Select the most relevant option to you.</string>
     <string name="onboarding_variant_2_question1">Is Stax for me?</string>
     <string name="skip_prefix">Already know about stax?</string>
     <string name="skip">Skip</string>
@@ -259,7 +259,6 @@
     <string name="mmi_error_short">%1$s problem, please try again</string>
     <string name="unspecified_error_short">Unknown error, please try again</string>
 
-    <string name="balance_error">Low %1$s balance</string>
     <string name="pin_error">PIN error. %1$s asks you to please check your PIN and retry.</string>
     <string name="balance_error">%1$s says your balance is too low to complete this transaction. Top up and try again.</string>
     <string name="unregistered_error">%1$s says you are not registered for this service.</string>
