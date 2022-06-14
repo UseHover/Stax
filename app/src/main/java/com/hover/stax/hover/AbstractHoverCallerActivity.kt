@@ -1,8 +1,7 @@
 package com.hover.stax.hover
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-import androidx.core.os.bundleOf
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
@@ -13,7 +12,10 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.home.NavHelper
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
-import com.hover.stax.utils.*
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.NavUtil
+import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException
 import org.json.JSONObject
@@ -134,8 +136,10 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     private fun navToTransactionDetail(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            NavUtil.showTransactionDetailsFragment(findNavController(R.id.nav_host_fragment),
-                data.extras!!.getString("uuid")!!)
+            NavUtil.showTransactionDetailsFragment(
+                findNavController(R.id.nav_host_fragment),
+                data.extras!!.getString("uuid")!!
+            )
         }
     }
 
