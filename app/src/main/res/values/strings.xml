@@ -91,7 +91,7 @@
 
     <!-- ONBOARDING VARIANT_2 -->
     <string name="welcome_to_stax">Hello, welcome to Stax.</string>
-    <string name="welcome_to_stax_fullContent">If you\’re new to Stax you may have some questions, lets help clarify some. Select the most relevant option to you.</string>
+    <string name="welcome_to_stax_fullContent">If you\’re new to Stax you may have some questions about how the app works. We'll help clarify some of these. Select the most relevant option to you.</string>
     <string name="onboarding_variant_2_question1">Is Stax for me?</string>
     <string name="skip_prefix">Already know about stax?</string>
     <string name="skip">Skip</string>
@@ -114,12 +114,12 @@
     <string name="what_does_stax_do">What does Stax do?</string>
 
     <string name="is_stax_for_you">To figure out if Stax is for you select as many as best describes you</string>
-    <string name="variant_V2_checkbox_option1">I have used USSD in the past?</string>
-    <string name="variant_V2_checkbox_option2">I have more than one bank or Mobile Money account?</string>
-    <string name="variant_V2_checkbox_option3">I turn off my mobile data frequently?</string>
-    <string name="none_apply">None of these apply</string>
+    <string name="variant_V2_checkbox_option1">I have used USSD in the past.</string>
+    <string name="variant_V2_checkbox_option2">I have more than one bank or Mobile Money account.</string>
+    <string name="variant_V2_checkbox_option3">I turn off my mobile data frequently.</string>
+    <string name="none_apply">None of these apply to me.</string>
     <string name="variant_v2_nocheckbox_desc1">Stax does not charge you extra fees. Sometimes your bank or mobile money provider will charge you fees for performing a transaction.\n\nStax keeps track of how much money they charge you.</string>
-    <string name="variant_v2_nocheckbox_desc2">Stax uses USSD technology to make it possible for you to transact offline. With Stax, you can check your account balances, send money, buy airtime,  transfer money within own accounts, control multiple financial (banks and mobile money) accounts  from one app.\n\nYou can also create links that other people with Stax can use to send you money.</string>
+    <string name="variant_v2_nocheckbox_desc2">Stax uses USSD technology to make it possible for you to transact offline. With Stax, you can check your account balances, send money, buy airtime, transfer money between your accounts, pay bills, control multiple financial (banks and mobile money) accounts from one app.\n\nYou can also create links that other people with Stax can use to send you money.</string>
 
     <string name="skip_tutorial">Skip tutorial</string>
 
@@ -152,7 +152,9 @@
     <string name="refresh_balance_error">Add an account to check your balance.</string>
 
     <string name="check_balance_title">Check balance</string>
-    <string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
+    <string name="check_balance_desc">Nice! You added your first account. You can now check your balance on Stax.</string>
+    <string name="check_balance_alt">Nice! Account added successfully. You can now check your balance on Stax.</string>
+    <string name="check_balance_alt_plural">Nice! Accounts added successfully. You can now check your balances on Stax.</string>
 
     <string name="finish_adding_title">Finish importing account</string>
     <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This wont take long.</string>
@@ -259,7 +261,11 @@
 
     <string name="balance_error">Low %1$s balance</string>
     <string name="pin_error">PIN error. %1$s asks you to please check your PIN and retry.</string>
-    <string name="unregistered_error">No %1$s account found. Make sure you are using the right SIM and have registered for USSD banking service.</string>
+    <string name="balance_error">%1$s says your balance is too low to complete this transaction. Top up and try again.</string>
+    <string name="unregistered_error">%1$s says you are not registered for this service.</string>
+    <string name="invalid_entry">One of your inputs was invalid, view details to see what went wrong.</string>
+    <string name="mmi_error">Your network returned an error, please try again.</string>
+    <string name="unspecified_error">Unknown error.</string>
     <string name="no_response_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
     <string name="incomplete_desc">We received only a partial response from %1$s. We don\’t think this transaction worked. Please try again.</string>
     <string name="invalid_entry_desc">One of your inputs was invalid, see session details below to see what went wrong. Make sure any amounts, phone numbers, or account numbers are correct. See session details below.</string>
@@ -279,7 +285,7 @@
     <string name="hsdk_enable_accessibility">Enable Accessibility</string>
     <string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
     <string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
-    <string name="hsdk_manual_env">Manual environment active. This session will be recorded.</string>
+    <string name="hsdk_manual_env">Manual environment active. The USSD menu text will be recorded.</string>
     <string name="hsdk_overlay_header">Transacting</string>
     <string name="hsdk_complete">Transaction complete</string>
 
@@ -474,7 +480,7 @@
     <string name="copied">Copied</string>
     <string name="share_sub">Stax app</string>
     <string name="share_explain">Share app via</string>
-    <string name="share_msg">Check out this app https://play.google.com/store/apps/details?id=com.hover.stax</string>
+    <string name="share_msg">Check out Stax, an app that automates USSD. https://play.google.com/store/apps/details?id=com.hover.stax</string>
     <string name="connect_accounts">Connect your accounts</string>
 
     <string name="login_google_err">An error occurred while signing in to Google. Please try again.</string>
@@ -487,7 +493,7 @@
 
     <string name="name_label">Enter your full name</string>
     <string name="phone_label">Enter your phone number</string>
-    <string name="referral_help">Enter the referral code of the Stax agent who onboarded you.</string>
+    <string name="referral_help">Enter the referral code of the person who referred you.</string>
     <string name="referral_error_blank">Please enter a referral code.</string>
     <string name="referral_error_invalid">Please enter a valid referral code.</string>
     <string name="referral_error_name">Please enter a valid name.</string>
@@ -518,7 +524,7 @@
 
     <string name="learn_stax_cardhead">Learn</string>
     <string name="stax_features">Features And More on Stax</string>
-    <string name="stax_medium_url">http://joinstax.medium.com/</string>
+    <string name="stax_medium_url">https://stax.me/blog/</string>
 
     <string name="contact_stax_cardhead">Get in touch</string>
     <string name="twitter" translatable="false">Twitter</string>
@@ -574,12 +580,12 @@
 
     <!-- BOUNTY -->
     <string name="nav_bounty">Bounty</string>
-    <string name="bounty_title">💸  GET PAID! MAP USSD FLOWS</string>
-    <string name="bounty_msg">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
+    <string name="bounty_title">💸 Money Mapper</string>
+    <string name="bounty_msg">Stax will pay you USD $1 - $5 to go through a USSD flow.</string>
     <string name="get_started">Get started</string>
-    <string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
-    <string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Join Stax as a Money Mapper and earn $5 - $20 USD for every USSD transaction you successfully map. USSD menus we still need (bounties) are listed on the next page. We add new bounties often!</string>
-    <string name="bounty_email_stage_desc2"><b>1.</b>   Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Stax will review your submissions, which may take 7-10 days. \n<b>6.</b> You get paid at the end of each week </string>
+    <string name="bounty_email_stage_title">🗺️ MAP USSD FLOWS</string>
+    <string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. As a Money Mapper, you have the opportunity to earn USD $1 - $5 for every USSD transaction you successfully complete. We have listed all of the USSD requests (bounties) we currently need on the next page. We add new bounties often!</string>
+    <string name="bounty_email_stage_desc2"><b>1.</b> Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the USSD transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Sit tight and wait for feedback on the status of your bounty submission. Please note that payments for successful bounties are made every 2nd and 4th week of the month.</string>
     <string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
     <string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
     <string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
