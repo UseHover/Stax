@@ -80,6 +80,7 @@ class MerchantFragment : AbstractFormFragment() {
 		accountsViewModel.channelActions.observe(viewLifecycleOwner) {
 			actionSelectViewModel.setActions(it)
 		}
+
 		actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
 			it?.let { if (it.isNotEmpty()) actionSelectViewModel.setActiveAction(it.first()) }
 		}
