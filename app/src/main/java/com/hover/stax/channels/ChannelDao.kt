@@ -7,7 +7,7 @@ import com.hover.stax.accounts.ChannelWithAccounts
 @Dao
 interface ChannelDao {
 
-    @get:Query("SELECT * FROM channels WHERE published = 1 ORDER BY name ASC")
+    @get:Query("SELECT * FROM channels WHERE published = 1 ORDER BY isFavorite DESC, name ASC")
     val publishedChannels: LiveData<List<Channel>>
 
     @get:Query("SELECT * FROM channels ORDER BY name ASC")
@@ -55,13 +55,13 @@ interface ChannelDao {
     fun insert(channel: Channel?)
 
     @Update
-    fun update(channel: Channel?)
+    fun update(channel: Channel)
 
     @Update
-    fun updateAll(channel: List<Channel?>?)
+    fun updateAll(channel: List<Channel>)
 
     @Delete
-    fun delete(channel: Channel?)
+    fun delete(channel: Channel)
 
     @Query("DELETE FROM channels")
     fun deleteAll()

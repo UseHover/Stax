@@ -1,33 +1,38 @@
 package com.hover.stax.financialTips
 
-import androidx.lifecycle.MutableLiveData
+import android.app.Application
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
+import com.hover.stax.R
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
 data class FinancialTip(val id: String, val title: String, val content: String, val snippet: String, val date: Date?, val shareCopy: String?, val deepLink: String?)
 
-class FinancialTipsViewModel : ViewModel() {
+class FinancialTipsViewModel(val application: Application) : ViewModel() {
 
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
 
+    private val _tips = MutableStateFlow<List<FinancialTip>>(emptyList())
+    val tips: StateFlow<List<FinancialTip>> = _tips
+
     init {
         db.firestoreSettings = settings
-        getTips()
     }
 
-    val tips = MutableLiveData<List<FinancialTip>>()
-
-    private fun getTips() {
+    fun getTips() = viewModelScope.launch {
         val timestamp = Timestamp.now()
 
-        db.collection("wellness_tips")
+        db.collection(application.getString(R.string.tips_table))
             .orderBy("date", Query.Direction.DESCENDING)
             .whereLessThanOrEqualTo("date", timestamp.toDate())
             .limit(20)
@@ -41,11 +46,10 @@ class FinancialTipsViewModel : ViewModel() {
                     )
                 }
 
-                tips.postValue(financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time })
+                _tips.value = financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time }
             }
             .addOnFailureListener {
                 Timber.e("Error fetching wellness tips: ${it.localizedMessage}")
-                tips.postValue(emptyList())
             }
     }
 }

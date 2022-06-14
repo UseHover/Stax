@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/cta_paybill"
+        android:id="@+id/cardPaybillDetails"
+        app:showBack="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_13">
+
+        <com.hover.stax.accounts.AccountDropdown
+                android:id="@+id/payWithDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/pay_with_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <com.hover.stax.views.StaxTextInput
+                android:id="@+id/businessNoInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/business_number_label"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/payWithDropdown" />
+
+        <com.hover.stax.views.StaxTextInput
+                android:id="@+id/accountNoInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/account_number_label"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/businessNoInput" />
+
+        <com.hover.stax.views.StaxTextInput
+                android:id="@+id/amountInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/transfer_amount_label"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accountNoInput" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.hover.stax.views.StaxCardView>

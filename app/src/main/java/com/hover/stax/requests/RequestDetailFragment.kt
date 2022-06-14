@@ -54,7 +54,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
             }
         }
 
-        viewModel.channel.observe(viewLifecycleOwner) {
+        viewModel.account.observe(viewLifecycleOwner) {
             binding.summaryCard.requesterAccountRow.visibility = if (it != null) View.VISIBLE else View.GONE
             it?.let { (view.findViewById(R.id.requesterValue) as Stax2LineItem).setTitle(it.name)  }
         }
@@ -110,7 +110,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
     private fun initShareButtons() {
         if (activity != null) {
             binding.shareCard.smsShareSelection.setOnClickListener { sendSms(viewModel.request.value, viewModel.recipients.value, requireActivity()) }
-            binding.shareCard.whatsappShareSelection.setOnClickListener { sendWhatsapp(viewModel.request.value, viewModel.recipients.value, viewModel.channel.value, requireActivity()) }
+            binding.shareCard.whatsappShareSelection.setOnClickListener { sendWhatsapp(viewModel.request.value, viewModel.recipients.value, viewModel.account.value, requireActivity()) }
             binding.shareCard.copylinkShareSelection.setOnClickListener { copyShareLink(viewModel.request.value, binding.shareCard.copylinkShareSelection, requireActivity()) }
         }
     }

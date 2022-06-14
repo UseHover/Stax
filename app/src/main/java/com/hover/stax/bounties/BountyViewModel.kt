@@ -10,16 +10,18 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
+import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
 
 private const val MAX_LOOKUP_COUNT = 40
 
-class BountyViewModel(application: Application, val repo: DatabaseRepo) : AndroidViewModel(application) {
+class BountyViewModel(application: Application, val repo: ChannelRepo, val actionRepo: ActionRepo, transactionRepo: TransactionRepo) : AndroidViewModel(application) {
 
     @JvmField
     var country: String = CountryAdapter.CODE_ALL_COUNTRIES
@@ -27,8 +29,10 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
     val actions: LiveData<List<HoverAction>>
     val channels: LiveData<List<Channel>>
     val transactions: LiveData<List<StaxTransaction>>
-    var currentCountryFilter = MutableLiveData<String>()
     private val bountyList = MediatorLiveData<List<Bounty>>()
+
+    private var _channelCountryList = MediatorLiveData<List<String>>()
+    val channelCountryList: LiveData<List<String>> = _channelCountryList
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     private lateinit var bountyListAsync: Deferred<MutableList<Bounty>>
@@ -44,14 +48,15 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
             }
         }
 
-        currentCountryFilter.value = CountryAdapter.CODE_ALL_COUNTRIES
-
         loadSims()
-        actions = repo.bountyActions
+        actions = actionRepo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
-        transactions = repo.bountyTransactions!!
-        bountyList.addSource(actions, this::makeBounties)
-        bountyList.addSource(transactions, this::makeBountiesIfActions)
+        _channelCountryList.addSource(channels, this::loadCountryList)
+        transactions = transactionRepo.bountyTransactions!!
+        bountyList.apply {
+            addSource(actions, this@BountyViewModel::makeBounties)
+            addSource(transactions, this@BountyViewModel::makeBountiesIfActions)
+        }
     }
 
     private fun loadSims() {
@@ -85,6 +90,12 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
         return MutableLiveData(channelList)
     }
 
+    private fun loadCountryList(channels: List<Channel>) = viewModelScope.launch {
+        val countryCodes = mutableListOf(country)
+        countryCodes.addAll(channels.map { it.countryAlpha2 }.distinct())
+        _channelCountryList.postValue(countryCodes)
+    }
+
     private fun getChannelsAsync(ids: List<Int>): Deferred<List<Channel>> = viewModelScope.async(Dispatchers.IO) {
         val channels = ArrayList<Channel>()
 
@@ -101,7 +112,7 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
 
     fun filterChannels(countryCode: String): LiveData<List<Channel>> {
         country = countryCode
-        val actions = actions.value ?: return MutableLiveData(ArrayList<Channel>())
+        val actions = actions.value ?: return MutableLiveData(ArrayList())
 
         return if (countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
             loadChannels(actions)

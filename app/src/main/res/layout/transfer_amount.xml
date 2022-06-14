@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hover.stax.views.StaxTextInputLayout
+<com.hover.stax.views.StaxTextInput
 	xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/amountInput"
     android:layout_width="match_parent"

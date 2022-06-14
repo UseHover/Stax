@@ -105,16 +105,20 @@ object Utils {
     }
 
     @JvmStatic
-    fun formatAmount(number: String): String {
-        return if (number == "0") "0,000" else try {
-            formatAmount(getAmount(number))
-        } catch (e: Exception) {
-            number
+    fun formatAmount(number: String?): String {
+        return when {
+            number == "0" -> "0,000"
+            number == null -> "--"
+            else -> try {
+                formatAmount(getAmount(number))
+            } catch (e: Exception) {
+                number
+            }
         }
     }
 
     @JvmStatic
-    fun formatAmount(number: Double): String {
+    fun formatAmount(number: Double?): String {
         return try {
             val formatter = DecimalFormat("#,##0.00")
             formatter.maximumFractionDigits = 0
@@ -154,12 +158,6 @@ object Utils {
             return true
         }
         return false
-    }
-
-    fun isInternetConnected(c: Context): Boolean {
-        val cm = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = cm.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
     }
 
     fun setFirebaseMessagingTopic(topic: String?) {
@@ -205,13 +203,13 @@ object Utils {
         }
     }
 
-    fun shareStax(activity: Activity) {
+    fun shareStax(activity: Activity, shareMessage: String? = null) {
         AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
 
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.share_msg))
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareMessage ?: activity.getString(R.string.share_msg))
         activity.startActivity(Intent.createChooser(sharingIntent, activity.getString(R.string.share_explain)))
     }
 

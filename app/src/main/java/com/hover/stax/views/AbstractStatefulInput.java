@@ -2,7 +2,10 @@ package com.hover.stax.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -23,6 +26,7 @@ public abstract class AbstractStatefulInput extends FrameLayout {
     public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4;
 
     private TextInputLayout inputLayout;
+    public String helperText;
 
     public AbstractStatefulInput(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -32,16 +36,17 @@ public abstract class AbstractStatefulInput extends FrameLayout {
         inputLayout = findViewById(R.id.inputLayout);
     }
 
+    protected void setHelperText(String message) {
+        helperText = message;
+        inputLayout.setHelperText(message);
+    }
+
     public void setError(@Nullable CharSequence errorText) {
         setState(errorText == null ? null : errorText.toString(), errorText == null ? NONE : ERROR);
     }
 
-    public void setHint(@Nullable CharSequence helperText) {
-        inputLayout.setHint(helperText);
-    }
-
     public void setState(String message, int state) {
-        inputLayout.setHelperText(message);
+        setHelperText(message);
         switch (state) {
             case INFO:
                 setColorAndIcon(R.color.blue_state_color, R.drawable.ic_info);
@@ -81,5 +86,73 @@ public abstract class AbstractStatefulInput extends FrameLayout {
         } catch (IOException | XmlPullParserException | NullPointerException e) {
             Timber.e(e, "Failed to load color state list");
         }
+    }
+
+//  The below is from http://web.archive.org/web/20180625034135/http://trickyandroid.com/saving-android-view-state-correctly/
+//  it prevents views with non-unique ids from overwriting each other
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.childrenStates = new SparseArray();
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).saveHierarchyState(ss.childrenStates);
+        }
+        return ss;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).restoreHierarchyState(ss.childrenStates);
+        }
+    }
+
+    @Override
+    protected void dispatchSaveInstanceState(SparseArray<Parcelable> container) {
+        dispatchFreezeSelfOnly(container);
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
+        dispatchThawSelfOnly(container);
+    }
+
+    static class SavedState extends BaseSavedState {
+        SparseArray childrenStates;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in, ClassLoader classLoader) {
+            super(in);
+            childrenStates = in.readSparseArray(classLoader);
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeSparseArray(childrenStates);
+        }
+
+        public static final ClassLoaderCreator<SavedState> CREATOR
+            = new ClassLoaderCreator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel source, ClassLoader loader) {
+                return new SavedState(source, loader);
+            }
+
+            @Override
+            public SavedState createFromParcel(Parcel source) {
+                return createFromParcel(source, null);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

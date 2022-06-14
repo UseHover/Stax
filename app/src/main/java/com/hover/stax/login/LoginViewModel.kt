@@ -1,17 +1,15 @@
 package com.hover.stax.login
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
-import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.user.StaxUser
 import com.hover.stax.user.UserRepo
 import com.hover.stax.utils.AnalyticsUtil
@@ -22,7 +20,7 @@ import org.json.JSONObject
 import timber.log.Timber
 import java.io.IOException
 
-class LoginViewModel(val repo: DatabaseRepo, val application: Application, private val loginNetworking: LoginNetworking, val userRepo: UserRepo) : ViewModel() {
+class LoginViewModel(application: Application, private val userRepo: UserRepo, private val loginNetworking: LoginNetworking) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient
 
@@ -50,7 +48,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
             setUser(account, account.idToken!!)
         } catch (e: ApiException) {
             Timber.e(e, "Google sign in failed")
-            onError(application.getString(R.string.login_google_err))
+            onError((getApplication() as Context).getString(R.string.login_google_err))
         }
     }
 
@@ -64,7 +62,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
                         .apply {
                             put("email", email)
                             put("username", username)
-                            put("device_id", Hover.getDeviceId(application))
+                            put("device_id", Hover.getDeviceId(getApplication()))
                             put("token", token)
                         }
 
@@ -76,16 +74,16 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
                         onSuccess(
                             JSONObject(result.body!!.string())
                         )
-                    } else onError(application.getString(R.string.upload_user_error))
+                    } else onError(getString(R.string.upload_user_error))
                 } catch (e: IOException) {
-                    onError(application.getString(R.string.upload_user_error))
+                    onError((getApplication() as Context).getString(R.string.upload_user_error))
                 }
             }
         }
     }
 
     fun uploadLastUser() {
-        val account = GoogleSignIn.getLastSignedInAccount(application)
+        val account = GoogleSignIn.getLastSignedInAccount(getApplication())
         if (account != null) uploadUserToStax(account.email, account.displayName!!, account.idToken)
         else Timber.e("No account found")
     }
@@ -115,9 +113,9 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
                     Timber.e(response)
                     onSuccess(JSONObject(response))
                     progress.postValue(100)
-                } else onError(application.getString(R.string.upload_user_error), true)
+                } else onError(getString(R.string.upload_user_error), true)
             } catch (e: IOException) {
-                onError(application.getString(R.string.upload_user_error), true)
+                onError(getString(R.string.upload_user_error), true)
             }
         }
     }
@@ -159,13 +157,13 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
     //Sign out user if any step of the login process fails. Have user restart the flow, except for updates
     private fun onError(message: String, isUpdate: Boolean = false) {
         Timber.e(message)
-        if(isUpdate){
+        if (isUpdate) {
             progress.postValue(-1)
             error.postValue(message)
         } else {
             signInClient.signOut().addOnCompleteListener {
                 AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
-                AnalyticsUtil.logAnalyticsEvent(message, application)
+                AnalyticsUtil.logAnalyticsEvent(message, getApplication())
 
                 removeUser()
 
@@ -176,7 +174,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
     }
 
     fun silentSignOut() = signInClient.signOut().addOnCompleteListener {
-        AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.logout), application)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.logout), getApplication())
         removeUser()
 
         progress.postValue(-1)
@@ -184,6 +182,10 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
 
     private fun removeUser() = viewModelScope.launch(Dispatchers.IO) {
         staxUser.value?.let { userRepo.deleteUser(it) }
+    }
+
+    private fun getString(id: Int): String {
+        return (getApplication() as Context).getString(id)
     }
 
 }

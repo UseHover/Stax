@@ -23,38 +23,54 @@ public class Channel implements Comparable<Channel> {
     @NonNull
     @ColumnInfo(name = "name")
     public String name;
+
     @NonNull
     @ColumnInfo(name = "country_alpha2")
     public String countryAlpha2;
+
     @ColumnInfo(name = "root_code")
     public String rootCode;
+
     @NonNull
     @ColumnInfo(name = "currency")
     public String currency;
+
     @NonNull
     @ColumnInfo(name = "hni_list")
     public String hniList;
+
     @NonNull
     @ColumnInfo(name = "logo_url")
     public String logoUrl;
+
     @NonNull
     @ColumnInfo(name = "institution_id")
     public int institutionId;
+
     @NonNull
     @ColumnInfo(name = "primary_color_hex")
     public String primaryColorHex;
+
     @NonNull
     @ColumnInfo(name = "published", defaultValue = "0")
     public Boolean published;
+
     @NonNull
     @ColumnInfo(name = "secondary_color_hex")
     public String secondaryColorHex;
+
+    // Dont use the below, it needs to be removed
     @NonNull
     @ColumnInfo(name = "selected", defaultValue = "0")
     public boolean selected;
     @NonNull
     @ColumnInfo(name = "defaultAccount", defaultValue = "0")
     public boolean defaultAccount;
+
+    @NonNull
+    @ColumnInfo(name = "isFavorite", defaultValue = "0")
+    public boolean isFavorite;
+
     @ColumnInfo(name = "pin")
     public String pin;
     @ColumnInfo(name = "latestBalance")

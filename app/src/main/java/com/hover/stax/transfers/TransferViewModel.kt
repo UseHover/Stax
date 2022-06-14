@@ -6,124 +6,94 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.requests.Request
-import com.hover.stax.schedules.Schedule
+import com.hover.stax.requests.RequestRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
+import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
+class TransferViewModel(application: Application, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
-    var request: LiveData<Request> = MutableLiveData()
-    var completeAutoFilling: MutableLiveData<AutofillData> = MutableLiveData()
 
-    fun setTransactionType(transaction_type: String) {
-        TransactionType.type = transaction_type
-    }
+    val isLoading = MutableLiveData(false)
 
     fun setAmount(a: String?) = amount.postValue(a)
 
-    private fun setContact(contactIds: String?) = contactIds?.let {
-        viewModelScope.launch {
-            val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
-            if (contacts.isNotEmpty()) contact.postValue(contacts.first())
-        }
-    }
-
-    fun autoFill(transactionUUID: String) = viewModelScope.launch(Dispatchers.IO) {
-        val transaction = repo.getTransaction(transactionUUID)
-        if (transaction != null) {
-            val action = repo.getAction(transaction.action_id)
-
-            action?.let {
-                val contact = repo.getContactAsync(transaction.counterparty_id)
-                autoFill(transaction.amount.toInt().toString(), contact, AutofillData(action.to_institution_id, transaction.channel_id, transaction.accountId, true))
-            }
-        }
-    }
-
-    private fun autoFill(amount: String, contact: StaxContact?, autofillData: AutofillData) {
-        setContact(contact)
-        setAmount(amount)
-        autofillData.institutionId?.let { completeAutoFilling.postValue(autofillData) }
+    fun setContact(contactId: String) = viewModelScope.launch(Dispatchers.IO) {
+        contact.postValue(contactRepo.getContact(contactId))
     }
 
     fun setContact(sc: StaxContact?) = sc?.let {
         contact.postValue(it)
     }
 
-    fun forceUpdateContactUI() = contact.postValue(contact.value)
-
-    fun setRecipient(r: String) {
-        if (contact.value != null && contact.value.toString() == r) return
-        contact.value = StaxContact(r)
+    fun setRecipientNumber(str: String) {
+        if (contact.value != null && contact.value.toString() == str) return
+        contact.value = if (str.isEmpty()) StaxContact() else StaxContact(str)
     }
 
-    fun resetRecipient() {
-        contact.value = StaxContact()
-    }
-
-    fun setRecipientSmartly(contactNum: String?, channel: Channel) {
-        contactNum?.let {
-            viewModelScope.launch(Dispatchers.IO) {
+    private fun setRecipientSmartly(r: Request?, countryAlpha2: String?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            r?.let {
                 try {
-                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, it)
-                    val sc = repo.getContactByPhone(formattedPhone)
-                    sc?.let { contact.postValue(it) }
+                    val formattedPhone = PhoneHelper.getNationalSignificantNumber(
+                        it.requester_number!!,
+                        countryAlpha2 ?: Lingver.getInstance().getLocale().country)
+                    val sc = contactRepo.getContactByPhone(formattedPhone)
+                    contact.postValue( sc ?: StaxContact(r.requester_number))
+                    isLoading.postValue(false)
                 } catch (e: NumberFormatException) {
-                    AnalyticsUtil.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
+                    AnalyticsUtil.logErrorAndReportToFirebase(
+                        TransferViewModel::class.java.simpleName, e.message!!, e)
                 }
             }
-        }
     }
 
     private fun setNote(n: String?) = note.postValue(n)
 
     fun amountErrors(): String? {
         return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
-        else application.getString(R.string.amount_fielderror)
+        else getString(R.string.amount_fielderror)
     }
 
     fun recipientErrors(a: HoverAction?): String? {
         return when {
-            (a != null && a.requiresRecipient() && (contact.value == null || contact.value?.accountNumber == null)) -> application.getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
+            (a != null && a.requiresRecipient() && (contact.value == null || contact.value?.accountNumber.isNullOrEmpty())) -> getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
             else -> null
         }
     }
 
-    fun decrypt(encryptedString: String): LiveData<Request> {
-        request = repo.decrypt(encryptedString, application)
-        return request
+    fun wrapExtras(): HashMap<String, String> {
+        val extras: HashMap<String, String> = hashMapOf()
+        if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
+        if (contact.value != null) {
+            extras[StaxContact.ID_KEY] = contact.value!!.id
+            extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
+            extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
+        }
+        if (note.value != null) extras[HoverAction.NOTE_KEY] = note.value!!
+        return extras
     }
 
-    fun view(s: Schedule) {
-        schedule.postValue(s)
-        setTransactionType(s.type)
-        setAmount(s.amount)
-        setContact(s.recipient_ids)
-        setNote(s.note)
-    }
-
-    fun view(r: Request) {
-        autoFill(r.amount!!, StaxContact(r.requester_number), AutofillData(r.requester_institution_id, -1, -1, r.amount.isNullOrEmpty()))
-        setNote(r.note)
-    }
-
-    fun checkSchedule() {
-        schedule.value?.let {
-            if (it.end_date <= DateUtils.today()) {
-                it.complete = true
-                repo.update(it)
-            }
+    fun load(encryptedString: String) = viewModelScope.launch {
+        isLoading.postValue(true)
+        val r: Request? = requestRepo.decrypt(encryptedString, getApplication())
+        Timber.v("Loaded request %s", r)
+        r?.let {
+            setRecipientSmartly(r, r.requester_country_alpha2)
+            setAmount(r.amount)
+            setNote(r.note)
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), getApplication())
         }
     }
 
@@ -131,16 +101,15 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         contact.value?.let { sc ->
             viewModelScope.launch {
                 sc.lastUsedTimestamp = DateUtils.now()
-                repo.save(sc)
+                contactRepo.save(sc)
             }
         }
     }
 
-    fun reset() {
+    override fun reset() {
+        super.reset()
         amount.value = null
         contact.value = null
-        completeAutoFilling.value = null
+        note.value = null
     }
 }
-
-data class AutofillData(val institutionId: Int?, val channelId: Int, val accountId: Int, val isEditing: Boolean)
