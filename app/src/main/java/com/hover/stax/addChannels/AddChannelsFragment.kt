@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
@@ -91,11 +92,17 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun startObservers() = with(channelsViewModel) {
+        val channelsObserver = object: Observer<List<Channel>> {
+            override fun onChanged(t: List<Channel>?) {
+                t?.let { loadFilteredChannels(it) }
+            }
+        }
+
         channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
         sims.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} sims") }
         simCountryList.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} hnis") }
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
+        filteredChannels.observe(viewLifecycleOwner, channelsObserver)
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
     }
 

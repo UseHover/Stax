@@ -45,8 +45,8 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 149
-        versionName "1.11.10"
+        versionCode 150
+        versionName "1.11.11"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -183,6 +183,7 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
 
     implementation "androidx.core:core-ktx:1.8.0"
+    implementation "io.grpc:grpc-okhttp:1.44.1"
 
     //di
     def koin_version= "3.1.5"
