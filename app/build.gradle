@@ -183,6 +183,7 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
 
     implementation "androidx.core:core-ktx:1.8.0"
+    implementation "io.grpc:grpc-okhttp:1.44.1"
 
     //di
     def koin_version= "3.1.5"
