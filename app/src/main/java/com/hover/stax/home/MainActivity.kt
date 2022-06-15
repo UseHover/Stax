@@ -114,7 +114,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
-            sendSms(requestViewModel)
+            sendSms(requestViewModel, this)
         } else if (requestCode == SMS) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))

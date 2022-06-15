@@ -76,6 +76,12 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
                 askToCheckBalance(it)
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            balancesViewModel.actionRunError.collect {
+                UIHelper.flashMessage(requireActivity(), it)
+            }
+        }
     }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {

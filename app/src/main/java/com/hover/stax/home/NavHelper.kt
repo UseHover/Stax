@@ -93,7 +93,8 @@ class NavHelper(val activity: AppCompatActivity) {
         val exemptRoutes = setOf(
             MainNavigationDirections.actionGlobalNavigationSettings(),
             MainNavigationDirections.actionGlobalNavigationHistory(),
-            MainNavigationDirections.actionGlobalNavigationHome(), MainNavigationDirections.actionGlobalLibraryFragment()
+            MainNavigationDirections.actionGlobalNavigationHome(),
+            MainNavigationDirections.actionGlobalLibraryFragment()
         )
 
         when {
