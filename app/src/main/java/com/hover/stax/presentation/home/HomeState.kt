@@ -1,6 +1,6 @@
 package com.hover.stax.presentation.home
 
-import com.hover.stax.bonus.Bonus
+import com.hover.stax.domain.model.Bonus
 
 sealed class HomeState {
     object Loading : HomeState()

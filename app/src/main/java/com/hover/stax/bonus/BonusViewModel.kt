@@ -7,6 +7,8 @@ import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.BonusRepo
+import com.hover.stax.domain.model.Bonus
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,10 +63,6 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
         val showBonuses = hasValidSim(simHnis, bonusChannels)
         _bonusList.value = if (showBonuses) toSave else emptyList()
     }
-
-    fun getBonusByPurchaseChannel(channelId: Int): Bonus? = repo.getBonusByPurchaseChannel(channelId)
-
-    fun getBonusByUserChannel(channelId: Int): Bonus? = repo.getBonusByUserChannel(channelId)
 
     /**
      * Extract the hnis from the bonus channels and compare with current sim hnis.

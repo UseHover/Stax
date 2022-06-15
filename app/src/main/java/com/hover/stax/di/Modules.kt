@@ -8,7 +8,7 @@ import com.hover.stax.actions.ActionRepo
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.balances.BalancesViewModel
-import com.hover.stax.bonus.BonusRepo
+import com.hover.stax.data.local.BonusRepo
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelRepo
@@ -17,8 +17,8 @@ import com.hover.stax.data.repository.BonusRepositoryImpl
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.ParserRepo
 import com.hover.stax.domain.repository.BonusRepository
-import com.hover.stax.domain.use_case.FetchBonusUseCase
-import com.hover.stax.domain.use_case.GetBonusesUseCase
+import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
+import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -101,7 +101,7 @@ val repositories = module {
         Dispatchers.IO
     }
 
-    single<BonusRepository> { BonusRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
+    single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(named("CoroutineDispatcher"))) }
 }
 
 val useCases = module {

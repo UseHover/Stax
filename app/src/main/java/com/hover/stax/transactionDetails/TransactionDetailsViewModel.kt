@@ -9,7 +9,7 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
-import com.hover.stax.bonus.BonusRepo
+import com.hover.stax.data.local.BonusRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.ParserRepo

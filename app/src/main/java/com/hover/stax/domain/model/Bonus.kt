@@ -1,4 +1,4 @@
-package com.hover.stax.bonus
+package com.hover.stax.domain.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -1,17 +1,17 @@
-package com.hover.stax.domain.use_case
+package com.hover.stax.domain.use_case.bonus
 
-import com.hover.stax.bonus.Bonus
+import com.hover.stax.domain.model.Bonus
 import com.hover.stax.data.Resource
 import com.hover.stax.domain.repository.BonusRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 
 class GetBonusesUseCase(private val repository: BonusRepository) {
 
     fun getBonusList(): Flow<Resource<List<Bonus>>> = flow {
         emit(Resource.Loading())
+
         repository.getBonusList().collect {
             emit(Resource.Success(it))
         }

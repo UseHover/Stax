@@ -3,8 +3,8 @@ package com.hover.stax.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.data.Resource
-import com.hover.stax.domain.use_case.FetchBonusUseCase
-import com.hover.stax.domain.use_case.GetBonusesUseCase
+import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
+import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn

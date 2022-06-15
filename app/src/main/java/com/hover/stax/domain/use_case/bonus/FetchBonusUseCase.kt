@@ -1,4 +1,4 @@
-package com.hover.stax.domain.use_case
+package com.hover.stax.domain.use_case.bonus
 
 import com.hover.stax.domain.repository.BonusRepository
 

@@ -17,7 +17,7 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
-import com.hover.stax.bonus.BonusRepo
+import com.hover.stax.data.local.BonusRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import timber.log.Timber
 
 class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
