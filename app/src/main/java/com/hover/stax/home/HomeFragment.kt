@@ -1,23 +1,29 @@
 package com.hover.stax.home
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.bonus.Bonus
+import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
 import com.hover.stax.financialTips.FinancialTipsViewModel
-import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.utils.network.NetworkMonitor
+import kotlinx.coroutines.flow.collect
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -27,8 +33,9 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val bannerViewModel: BannerViewModel by viewModel()
     private val wellnessViewModel: FinancialTipsViewModel by viewModel()
+    private val bonusViewModel: BonusViewModel by sharedViewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -39,56 +46,65 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bonusViewModel.fetchBonuses()
         setupBanner()
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
+        binding.merchant.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
+        binding.paybill.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
+        binding.requestMoney.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
         }
 
         setUpWellnessTips()
-    }
+        setKeVisibility()
 
-    private fun getTransferDirection(type: String) : NavDirections {
-        return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type)
-    }
-    private fun setupBanner() {
-        with(bannerViewModel) {
-            qualifiedBanner.observe(viewLifecycleOwner) { banner ->
-                if (banner != null) {
-                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.displaying_in_app_banner, banner.id), requireContext())
-                    binding.homeBanner.visibility = View.VISIBLE
-                    binding.homeBanner.display(banner)
-
-                    binding.homeBanner.setOnClickListener {
-                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_on_banner), requireContext())
-                        Utils.openUrl(banner.url, requireActivity())
-                        closeCampaign(banner.id)
-                    }
-                } else binding.homeBanner.visibility = View.GONE
+        lifecycleScope.launchWhenStarted {
+            channelsViewModel.accountEventFlow.collect {
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().userChannel.toString()))
             }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        setPaybillVisibility()
-    }
-
-    private fun setPaybillVisibility() {
-        val countries = Utils.getStringSet(Constants.COUNTRIES, requireActivity())
-        binding.paybill.apply {
-            if (!countries.isNullOrEmpty() && countries.any { it.contentEquals("KE", ignoreCase = true) }) {
-                visibility = View.VISIBLE
-                setOnClickListener {
-                    navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment(false))
-                }
-            } else
-                visibility = View.GONE
+    private fun getTransferDirection(type: String, channelId: String? = null): NavDirections {
+        return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type).also {
+            if (channelId != null)
+                it.channelId = channelId
         }
     }
+
+    private fun setupBanner() {
+        bonusViewModel.getBonusList()
+
+        collectLatestLifecycleFlow(bonusViewModel.bonuses) { bonusList ->
+            if (bonusList.isNotEmpty()) {
+                with(binding.bonusCard) {
+                    message.text = bonusList.first().message
+                    learnMore.movementMethod = LinkMovementMethod.getInstance()
+                }
+                binding.bonusCard.apply {
+                    cardBonus.visibility = View.VISIBLE
+                    cta.setOnClickListener {
+                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                        validateAccounts(bonusList.first())
+                    }
+                }
+            } else binding.bonusCard.cardBonus.visibility = View.GONE
+        }
+    }
+
+    private fun setKeVisibility() {
+        channelsViewModel.simCountryList.observe(viewLifecycleOwner) {
+            binding.merchant.visibility = if (showMpesaActions(it)) View.VISIBLE else View.GONE
+            binding.paybill.visibility = if (showMpesaActions(it)) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun showMpesaActions(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 
@@ -97,13 +113,11 @@ class HomeFragment : Fragment() {
         binding.offlineBadge.visibility = if (isConnected) View.GONE else View.VISIBLE
     }
 
-    private fun setUpWellnessTips() {
-        wellnessViewModel.tips.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty())
-                showTip(it.first())
-            else
-                binding.wellnessCard.tipsCard.visibility = View.GONE
-        }
+    private fun setUpWellnessTips() = collectLatestLifecycleFlow(wellnessViewModel.tips) {
+        if (it.isNotEmpty())
+            showTip(it.first())
+        else
+            binding.wellnessCard.tipsCard.visibility = View.GONE
     }
 
     private fun showTip(tip: FinancialTip) {
@@ -126,6 +140,10 @@ class HomeFragment : Fragment() {
             } else
                 Timber.i("No tips available today")
         }
+    }
+
+    private fun validateAccounts(bonus: Bonus) {
+        channelsViewModel.validateAccounts(bonus.userChannel)
     }
 
     override fun onDestroyView() {

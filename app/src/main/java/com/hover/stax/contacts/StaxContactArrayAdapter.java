@@ -58,15 +58,15 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
-                List<StaxContact> filteredContacts = new ArrayList<>();
+                List<StaxContact> filtered = new ArrayList<>();
                 if (constraint != null) {
                     for (StaxContact contact : allContacts) {
                         if (contact.toString().replaceAll(" ", "").toLowerCase().contains(constraint.toString().toLowerCase())) {
-                            filteredContacts.add(contact);
+                            filtered.add(contact);
                         }
                     }
-                    filterResults.values = filteredContacts;
-                    filterResults.count = filteredContacts.size();
+                    filterResults.values = filtered;
+                    filterResults.count = filtered.size();
                 }
                 return filterResults;
             }

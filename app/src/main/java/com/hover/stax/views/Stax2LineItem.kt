@@ -14,8 +14,13 @@ class Stax2LineItem(context: Context, attrs: AttributeSet?) : RelativeLayout(con
     private val binding: Stax2lineitemBinding = Stax2lineitemBinding.inflate(LayoutInflater.from(context), this, true)
 
     fun setContent(title: String?, sub: String?) {
-        setTitle(title)
-        setSubtitle(sub)
+        if (title == null) {
+            setTitle(sub)
+            setSubtitle("")
+        } else {
+            setTitle(title)
+            setSubtitle(sub)
+        }
     }
 
     fun setTitle(title: String?) {
@@ -30,9 +35,13 @@ class Stax2LineItem(context: Context, attrs: AttributeSet?) : RelativeLayout(con
     }
 
     fun setContact(contact: StaxContact?) {
-        if (contact == null) return
+        if (contact == null) {
+            setContent("", "")
+            return
+        }
         setTitle(contact.shortName())
         if (contact.shortName() != null && contact.shortName() != contact.accountNumber) setSubtitle(contact.accountNumber)
+        else setSubtitle("")
     }
 
     init {

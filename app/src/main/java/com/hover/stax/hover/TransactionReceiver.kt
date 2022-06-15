@@ -5,11 +5,21 @@ import android.content.Context
 import android.content.Intent
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
+import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.accounts.PLACEHOLDER
+import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
-import com.hover.stax.utils.Constants
+import com.hover.stax.merchants.MerchantRepo
+import com.hover.stax.paybill.BUSINESS_NAME
+import com.hover.stax.paybill.BUSINESS_NO
+import com.hover.stax.paybill.PaybillRepo
+import com.hover.stax.requests.RequestRepo
+import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +31,14 @@ import java.util.regex.Pattern
 
 class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val repo: DatabaseRepo by inject()
+    private val repo: TransactionRepo by inject()
+    private val actionRepo: ActionRepo by inject()
+    private val channelRepo: ChannelRepo by inject()
+    private val accountRepo: AccountRepo by inject()
+    private val contactRepo: ContactRepo by inject()
+    private val billRepo: PaybillRepo by inject()
+    private val merchantRepo: MerchantRepo by inject()
+    private val requestRepo: RequestRepo by inject()
 
     private var channel: Channel? = null
     private var account: Account? = null
@@ -34,16 +51,17 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
 
                 actionId?.let {
-                    action = repo.getAction(it)
+                    action = actionRepo.getAction(it)
 
                     //added null check to prevent npe whenever action is null
                     action?.let { a ->
-                        channel = repo.getChannel(a.channel_id)
+                        channel = channelRepo.getChannel(a.channel_id)
 
                         createAccounts(intent)
                         updateBalance(intent)
                         updateContacts(intent)
                         updateTransaction(intent, context.applicationContext)
+                        updateBusinesses(intent)
                         updateRequests(intent)
                     }
                 }
@@ -55,10 +73,10 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         if (intent.hasExtra(TransactionContract.COLUMN_INPUT_EXTRAS)) {
             val inputExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as HashMap<String, String>
 
-            if (inputExtras.containsKey(Constants.ACCOUNT_ID)) {
-                val accountId = inputExtras[Constants.ACCOUNT_ID]
+            if (inputExtras.containsKey(ACCOUNT_ID)) {
+                val accountId = inputExtras[ACCOUNT_ID]
                 accountId?.let {
-                    account = repo.getAccount(accountId.toInt())
+                    account = accountRepo.getAccount(accountId.toInt())
                     Timber.e("$account")
                 }
             }
@@ -69,17 +87,47 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
             if (account != null && parsedVariables.containsKey("balance")) {
                 account!!.updateBalance(parsedVariables)
-                repo.update(account!!)
+                accountRepo.update(account!!)
             }
         }
     }
 
     private fun updateContacts(intent: Intent) {
-        contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, repo)
+        contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, contactRepo)
         contact?.let {
             it.updateNames(intent)
-            repo.save(it)
+            contactRepo.save(it)
         }
+    }
+
+    private fun updateBusinesses(intent: Intent) {
+        if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.BILL && getBizNo(intent) != null) {
+            val bill = billRepo.getMatching(getBizNo(intent)!!, channel!!.id)
+            if (bill != null && bill.businessName.isNullOrEmpty() && getBizName(intent) != null) {
+                bill.businessName = getBizName(intent)
+                billRepo.save(bill)
+            }
+        } else if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.MERCHANT && getBizNo(intent) != null) {
+            val merchant = merchantRepo.getMatching(getBizNo(intent)!!, channel!!.id)
+            if (merchant != null && merchant.businessName.isNullOrEmpty() && getBizName(intent) != null) {
+                merchant.businessName = getBizName(intent)
+                merchantRepo.save(merchant)
+            }
+        }
+    }
+
+    private fun getBizNo(intent: Intent): String? {
+        val inExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as java.util.HashMap<String, String>?
+        if (inExtras != null && inExtras.containsKey(BUSINESS_NO))
+            return inExtras[BUSINESS_NO]
+        else return null
+    }
+
+    private fun getBizName(intent: Intent): String? {
+        val outExtras = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as java.util.HashMap<String, String>?
+        if (outExtras != null && outExtras.containsKey(BUSINESS_NAME))
+            return outExtras[BUSINESS_NAME]?.replace(".", "") // MPESA adds a gramatically incorrect period which isn't easily fixable with a regex
+        else return null
     }
 
     private fun updateTransaction(intent: Intent, c: Context) {
@@ -88,14 +136,14 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
     private fun updateRequests(intent: Intent) {
         if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.RECEIVE) {
-            repo.requests.forEach {
+            requestRepo.requests.forEach {
                 if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(
                         it.amount
                             ?: "00"
                     ) == Utils.getAmount(getAmount(intent)!!)
                 ) {
                     it.matched_transaction_uuid = intent.getStringExtra(TransactionContract.COLUMN_UUID)
-                    repo.update(it)
+                    requestRepo.update(it)
                 }
             }
         }
@@ -118,12 +166,12 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
             if (parsedVariables.containsKey("userAccountList")) {
-                val accounts = repo.getAllAccounts().toMutableList()
+                val accounts = accountRepo.getAllAccounts().toMutableList()
                 val parsedAccounts = parseAccounts(parsedVariables["userAccountList"]!!)
 
                 removePlaceholders(parsedAccounts, accounts.map { it.channelId }.toIntArray())
 
-                repo.saveAccounts(parseAccounts(parsedVariables["userAccountList"]!!))
+                accountRepo.saveAccounts(parseAccounts(parsedVariables["userAccountList"]!!))
             }
         }
     }
@@ -138,7 +186,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             accounts.add(newAccount)
         }
 
-        if (repo.getDefaultAccount() == null && accounts.isNotEmpty())
+        if (accountRepo.getDefaultAccount() == null && accounts.isNotEmpty())
             accounts.first().isDefault = true
 
         return accounts
@@ -148,7 +196,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         parsedAccounts.forEach {
             if (savedAccounts.contains(it.channelId)) {
                 Timber.e("Removing ${it.channelId} from ${it.name}")
-                repo.deleteAccount(it.channelId, Constants.PLACEHOLDER)
+                accountRepo.deleteAccount(it.channelId, PLACEHOLDER)
             }
         }
     }

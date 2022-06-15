@@ -6,52 +6,45 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.channels.Channel
+import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.accounts.PLACEHOLDER
+import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
+class NewRequestViewModel(application: Application, val repo: RequestRepo, val accountRepo: AccountRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val activeAccount = MutableLiveData<Account?>()
-    val activeChannel = MutableLiveData<Channel>()
     val amount = MutableLiveData<String?>()
-    val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
-    val requestee = MutableLiveData<StaxContact?>()
-    val requesterNumber = MediatorLiveData<String>()
+    private val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
+    val requestee = MutableLiveData<StaxContact>()
+    var requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String?>()
 
     val formulatedRequest = MutableLiveData<Request>()
     private val finalRequests = MutableLiveData<List<Request>>()
 
     init {
-        requesterNumber.addSource(activeChannel, this::setRequesterNumber)
+        requesterNumber.addSource(activeAccount) { setRequesterNumber(it) }
     }
 
     fun setAmount(a: String?) = amount.postValue(a)
 
-    fun setActiveChannel(c: Channel) {
-        activeChannel.postValue(c)
+    fun setActiveAccount(account: Account) = activeAccount.postValue(account)
 
-        viewModelScope.launch(Dispatchers.IO) {
-            val account = repo.getAccounts(c.id).firstOrNull()
-            setActiveAccount(account)
-        }
+    private fun setRequesterNumber(a: Account?) {
+        requesterNumber.postValue(a?.accountNo ?: "")
     }
 
-    private fun setActiveAccount(account: Account?) = activeAccount.postValue(account)
-
-    private fun setRequesterNumber(c: Channel) = requesterNumber.postValue(c.accountNo)
-
     fun setRequesterNumber(number: String) {
+        activeAccount.value?.let { it.accountNo = number }
         requesterNumber.postValue(number)
-        activeChannel.value?.let { it.accountNo = number }
     }
 
     fun setRecipient(recipient: String) {
@@ -71,14 +64,14 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         return if (!requestee.value?.accountNumber.isNullOrEmpty())
             null
         else
-            application.getString(R.string.request_error_recipient)
+            getString(R.string.request_error_recipient)
     }
 
-    fun accountError(): String? = if (activeAccount.value != null) null else application.getString(R.string.accounts_error_noselect)
+    fun accountError(): String? = if (activeAccount.value != null) null else getString(R.string.accounts_error_noselect)
 
-    fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
+    fun isValidAccount(): Boolean = activeAccount.value!!.name != PLACEHOLDER
 
-    fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else application.getString(R.string.requester_number_fielderror)
+    fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else getString(R.string.requester_number_fielderror)
 
     fun validNote(): Boolean = !note.value.isNullOrEmpty()
 
@@ -88,28 +81,25 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         setAmount(s.amount)
 
         viewModelScope.launch {
-            val contacts = repo.getContacts(s.recipient_ids.split(",").toTypedArray())
+            val contacts = contactRepo.getContacts(s.recipient_ids.split(",").toTypedArray())
             requestees.postValue(contacts)
         }
     }
 
     fun createRequest() {
-        repo.update(activeChannel.value)
         saveContacts()
-
-
-
-
-        val request = Request(amount.value, note.value, requesterNumber.value, activeChannel.value!!.institutionId)
+        val request = Request(amount.value, note.value, requesterNumber.value, activeAccount.value!!.institutionId!!)
         formulatedRequest.value = request
     }
 
     fun saveRequest() {
         if (formulatedRequest.value != null) {
-            val request = Request(formulatedRequest.value!!, requestee.value, application)
-            repo.insert(request)
+            viewModelScope.launch(Dispatchers.IO) {
+                val r = Request(formulatedRequest.value!!, requestee.value, getApplication())
+                repo.insert(r)
 
-            finalRequests.value = listOf(request)
+                finalRequests.postValue(listOf(r))
+            }
         }
     }
 
@@ -118,13 +108,14 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
             viewModelScope.launch {
                 if (!contact.accountNumber.isNullOrEmpty()) {
                     contact.lastUsedTimestamp = DateUtils.now()
-                    repo.save(contact)
+                    contactRepo.save(contact)
                 }
             }
         }
     }
 
-    fun reset() {
+    override fun reset() {
+        super.reset()
         setAmount(null)
         setNote(null)
         requestee.value = null

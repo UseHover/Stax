@@ -12,8 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import com.hover.sdk.api.Hover
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
+import com.hover.stax.hover.PERM_ACTIVITY
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
-import com.hover.stax.utils.Constants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -49,7 +49,7 @@ class PermissionsFragment : DialogFragment() {
     private fun requestAccessibility() {
         hasLeft = true
         logAnalyticsEvent(getString(R.string.perms_accessibility_requested), requireContext())
-        Hover.setPermissionActivity(Constants.PERM_ACTIVITY, context)
+        Hover.setPermissionActivity(PERM_ACTIVITY, context)
         helper.requestAccessPerm()
     }
 

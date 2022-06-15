@@ -1,12 +1,10 @@
 package com.hover.stax.permissions
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.hover.stax.R
-import com.hover.sdk.permissions.PermissionHelper
-import android.app.Activity
-import com.hover.stax.permissions.PermissionsFragment
+import androidx.appcompat.app.AppCompatActivity
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.permissions.PermissionHelper
+import com.hover.stax.R
 import timber.log.Timber
 
 class PermissionsActivity : AppCompatActivity() {

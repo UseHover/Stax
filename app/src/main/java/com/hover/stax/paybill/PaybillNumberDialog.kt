@@ -2,12 +2,9 @@ package com.hover.stax.paybill
 
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
@@ -40,19 +37,10 @@ class PaybillNumberDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.businessNoInput.addTextChangedListener(businessNoWatcher)
         binding.doneBtn.setOnClickListener {
+            viewModel.setBusinessNumber(binding.businessNoInput.text)
             if (validates())
-                NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment(true))
-        }
-    }
-
-    private val businessNoWatcher: TextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-        override fun afterTextChanged(editable: Editable) {}
-        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            viewModel.setBusinessNumber(charSequence.toString())
+               findNavController().popBackStack()
         }
     }
 

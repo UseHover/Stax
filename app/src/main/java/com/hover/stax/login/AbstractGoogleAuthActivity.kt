@@ -2,7 +2,6 @@ package com.hover.stax.login
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -14,11 +13,16 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.bounties.BountyEmailFragmentDirections
+import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.settings.SettingsFragment
+import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
+abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxGoogleLoginInterface {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
@@ -32,22 +36,25 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
         setLoginObserver()
 
         updateManager = AppUpdateManagerFactory.create(this)
-        checkForUpdates()
+
+        if (!BuildConfig.DEBUG)
+            checkForUpdates()
     }
 
     //checks that the update has not stalled
     override fun onResume() {
         super.onResume()
-        updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
-            //if the update is downloaded but not installed, notify user to complete the update
-            if (updateInfo.installStatus() == InstallStatus.DOWNLOADED)
-                showSnackbarForCompleteUpdate()
+        if (!BuildConfig.DEBUG)
+            updateManager.appUpdateInfo.addOnSuccessListener { updateInfo ->
+                //if the update is downloaded but not installed, notify user to complete the update
+                if (updateInfo.installStatus() == InstallStatus.DOWNLOADED)
+                    showSnackbarForCompleteUpdate()
 
-            //if an in-app update is already running, resume the update
-            if(updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                updateManager.startUpdateFlowForResult(updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE)
+                //if an in-app update is already running, resume the update
+                if (updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    updateManager.startUpdateFlowForResult(updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE)
+                }
             }
-        }
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
@@ -75,18 +82,21 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
     fun signIn() = startActivityForResult(loginViewModel.signInClient.signInIntent, LOGIN_REQUEST)
 
     private fun checkForUpdates() {
-        val updateInfoTask = updateManager.appUpdateInfo
+        if (BuildConfig.DEBUG) {
+            val updateInfoTask = updateManager.appUpdateInfo
 
-        updateInfoTask.addOnSuccessListener { updateInfo ->
-            val updateType = if ((updateInfo.clientVersionStalenessDays() ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE)
-                AppUpdateType.FLEXIBLE
-            else
-                AppUpdateType.IMMEDIATE
+            updateInfoTask.addOnSuccessListener { updateInfo ->
+                val updateType = if ((updateInfo.clientVersionStalenessDays()
+                        ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE
+                ) AppUpdateType.FLEXIBLE
+                else AppUpdateType.IMMEDIATE
 
-            if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(updateType))
-                requestUpdate(updateInfo, updateType)
-            else
-                Timber.i("No new update available")
+                if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(
+                        updateType
+                    )
+                ) requestUpdate(updateInfo, updateType)
+                else Timber.i("No new update available")
+            }
         }
     }
 
@@ -97,7 +107,7 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
                     showSnackbarForCompleteUpdate()
             }
             updateManager.registerListener(installListener!!)
-        } 
+        }
 
         updateManager.startUpdateFlowForResult(updateInfo, updateType, this, UPDATE_REQUEST_CODE)
     }
@@ -119,6 +129,15 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
                 checkForUpdates()
             }
         }
+    }
+
+    override fun googleLoginSuccessful() {
+        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST)
+            BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment()
+    }
+
+    override fun googleLoginFailed() {
+        UIHelper.flashMessage(this, R.string.login_google_err)
     }
 
     companion object {

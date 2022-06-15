@@ -10,8 +10,14 @@ interface AccountDao {
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
     fun getAllAccounts(): List<Account>
 
+    @Query("SELECT * FROM accounts ORDER BY alias ASC")
+    fun getLiveAccounts(): LiveData<List<Account>>
+
     @Query("SELECT * FROM accounts WHERE channelId = :channelId ORDER BY alias ASC")
-    fun getAccounts(channelId: Int): List<Account>
+    fun getAccountsByChannel(channelId: Int): List<Account>
+
+    @Query("SELECT * FROM accounts WHERE institutionId = :institutionId ORDER BY alias ASC")
+    fun getAccountsByInstitution(institutionId: Int): LiveData<List<Account>>
 
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
     fun getAccounts(): Flow<List<Account>>
@@ -26,7 +32,7 @@ interface AccountDao {
     fun getAccount(name: String): Account?
 
     @Query("SELECT * FROM accounts where id = :id")
-    fun getLiveAccount(id: Int): LiveData<Account>
+    fun getLiveAccount(id: Int?): LiveData<Account>
 
     @Query("SELECT * FROM accounts where isDefault = 1")
     fun getDefaultAccount(): Account?
@@ -35,7 +41,7 @@ interface AccountDao {
     fun getDataCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(vararg accounts: Account)
+    fun insertAll(accounts: List<Account>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(account: Account)

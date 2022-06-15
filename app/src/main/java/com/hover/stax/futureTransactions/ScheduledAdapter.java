@@ -38,7 +38,7 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
     @Override
     public void onBindViewHolder(@NonNull ScheduledAdapter.ScheduledViewHolder holder, int position) {
         Schedule s = scheduleList.get(position);
-        holder.binding.liDescription.setText(String.format("%s%s", s.description.substring(0, 1).toUpperCase(), s.description.substring(1)));
+        holder.binding.liTitle.setText(String.format("%s%s", s.description.substring(0, 1).toUpperCase(), s.description.substring(1)));
         holder.binding.liAmount.setText(s.amount != null ? Utils.formatAmount(s.amount) : "none");
         holder.binding.liHeader.setVisibility(shouldShowDate(s, position, holder.itemView.getContext()) ? View.VISIBLE : View.GONE);
         holder.binding.liHeader.setText(s.humanFrequency(holder.itemView.getContext()));

@@ -14,17 +14,17 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
-import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
+import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
+const val TEST_MODE = "test_mode"
 
 class SettingsFragment : Fragment() {
 
@@ -34,7 +34,7 @@ class SettingsFragment : Fragment() {
     private var accountAdapter: ArrayAdapter<Account>? = null
     private var clickCounter = 0
 
-    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
+    private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val loginViewModel: LoginViewModel by sharedViewModel()
 
     private var dialog: StaxDialog? = null
@@ -48,6 +48,7 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireActivity())
 
         setUpShare()
@@ -79,8 +80,8 @@ class SettingsFragment : Fragment() {
             NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount())
         }
 
-        channelsViewModel.accounts.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty()) {
+        collectLatestLifecycleFlow(accountsViewModel.accounts) {
+            if (it.isEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE
                 binding.settingsCard.connectAccounts.visibility = VISIBLE
             } else
@@ -164,20 +165,20 @@ class SettingsFragment : Fragment() {
             account
         else {
             val a = accounts.minByOrNull { it.id }
-            a?.let { channelsViewModel.setDefaultAccount(it) }
+            a?.let { accountsViewModel.setDefaultAccount(it) }
             a
         }
 
         spinner.setText(defaultAccount?.alias, false)
-        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) channelsViewModel.setDefaultAccount(accounts[pos]) }
+        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) accountsViewModel.setDefaultAccount(accounts[pos]) }
     }
 
     private fun setUpEnableTestMode() {
         binding.settingsCard.testMode.setOnCheckedChangeListener { _, isChecked ->
-            Utils.saveBoolean(Constants.TEST_MODE, isChecked, requireContext())
+            Utils.saveBoolean(TEST_MODE, isChecked, requireContext())
             UIHelper.flashMessage(requireContext(), if (isChecked) R.string.test_mode_toast else R.string.test_mode_disabled)
         }
-        binding.settingsCard.testMode.visibility = if (Utils.getBoolean(Constants.TEST_MODE, requireContext())) VISIBLE else GONE
+        binding.settingsCard.testMode.visibility = if (Utils.getBoolean(TEST_MODE, requireContext())) VISIBLE else GONE
         binding.disclaimer.setOnClickListener {
             clickCounter++
             if (clickCounter == 5) UIHelper.flashMessage(requireContext(), R.string.test_mode_almost_toast) else if (clickCounter == 7) enableTestMode()
@@ -185,7 +186,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun enableTestMode() {
-        Utils.saveBoolean(Constants.TEST_MODE, true, requireActivity())
+        Utils.saveBoolean(TEST_MODE, true, requireActivity())
         binding.settingsCard.testMode.visibility = VISIBLE
         UIHelper.flashMessage(requireContext(), R.string.test_mode_toast)
     }
@@ -229,7 +230,7 @@ class SettingsFragment : Fragment() {
     private fun startGoogleLogin() {
         binding.staxSupport.contactCard.showProgressIndicator()
         optInMarketing = true
-        (requireActivity() as MainActivity).signIn()
+        (requireActivity() as AbstractGoogleAuthActivity).signIn()
     }
 
     private fun marketingOptIn(optedIn: Boolean) {

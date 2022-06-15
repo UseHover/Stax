@@ -18,8 +18,6 @@ import timber.log.Timber
 
 class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceListener?) : RecyclerView.Adapter<BalanceAdapter.BalancesViewHolder>() {
 
-    private var showBalance: Boolean = false
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BalancesViewHolder {
         val binding = BalanceItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BalancesViewHolder(binding)
@@ -31,11 +29,6 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
     }
 
     override fun getItemCount(): Int = accounts.size
-
-    fun showBalanceAmounts(show: Boolean) {
-        showBalance = show
-        notifyDataSetChanged()
-    }
 
     private fun setColors(holder: BalancesViewHolder, primary: Int, secondary: Int) {
         holder.binding.root.setCardBackgroundColor(primary)
@@ -60,15 +53,15 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
         fun bindItems(account: Account, holder: BalancesViewHolder) {
             UIHelper.setTextUnderline(binding.balanceChannelName, account.alias)
 
-            if (!showBalance) binding.balanceSubtitle.visibility = View.GONE
+            binding.balanceSubtitle.visibility = View.GONE
 
             when {
-                account.latestBalance != null && showBalance -> {
+                account.latestBalance != null -> {
                     binding.balanceSubtitle.visibility = View.VISIBLE
                     binding.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)
                     binding.balanceAmount.text = Utils.formatAmount(account.latestBalance!!)
                 }
-                account.latestBalance == null && showBalance -> {
+                account.latestBalance == null -> {
                     binding.balanceAmount.text = "-"
                     binding.balanceSubtitle.visibility = View.VISIBLE
                     binding.balanceSubtitle.text = itemView.context.getString(R.string.refresh_balance_desc)
@@ -94,13 +87,13 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
             }
 
             binding.balanceRefreshIcon.setOnClickListener {
-                balanceListener?.onTapRefresh(account.id.toString().toInt())
+                balanceListener?.onTapRefresh(account)
             }
         }
     }
 
     interface BalanceListener {
-        fun onTapRefresh(accountId: Int)
+        fun onTapRefresh(account: Account?)
 
         fun onTapDetail(accountId: Int)
     }

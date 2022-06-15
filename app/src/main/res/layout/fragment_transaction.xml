@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ft_mainBg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_13">
+        android:descendantFocusability="afterDescendants"
+        android:orientation="vertical">
 
-    <com.hover.stax.views.StaxCardView
-            android:id="@+id/transactionDetailsCard"
+    <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:showBack="true"
-            app:title="@string/nav_transaction">
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_13">
 
-        <LinearLayout
+        <com.hover.stax.views.StaxCardView
+                android:id="@+id/transactionDetailsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:showBack="true"
+                app:title="@string/nav_transaction">
 
             <include
-                    android:id="@+id/primaryStatus"
-                    layout="@layout/transaction_details_primarystatus" />
+                    android:id="@+id/transaction_header"
+                    layout="@layout/transaction_details_header" />
 
             <include
-                    android:id="@+id/secondaryStatus"
-                    layout="@layout/transaction_details_secondary_status" />
+                    android:id="@+id/statusInfo"
+                    layout="@layout/transaction_details_status" />
 
             <include
-                    android:id="@+id/info_card"
+                    android:id="@+id/details"
                     layout="@layout/transaction_details_info_card" />
 
-        </LinearLayout>
+        </com.hover.stax.views.StaxCardView>
 
-    </com.hover.stax.views.StaxCardView>
+    </androidx.core.widget.NestedScrollView>
 
-</androidx.core.widget.NestedScrollView>
+    <include
+            android:id="@+id/share_layout"
+            layout="@layout/share_excitement_layout" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

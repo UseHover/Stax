@@ -1,17 +1,16 @@
 package com.hover.stax.inapp_banner
 
 import android.app.Application
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class BannerViewModel(application: Application, repo: DatabaseRepo) : ViewModel() {
+class BannerViewModel(application: Application, repo: TransactionRepo) : AndroidViewModel(application) {
 
-    val qualifiedBanner = MutableLiveData<Banner?>()
+    private val qualifiedBanner = MutableLiveData<Banner?>()
     private val bannerUtils = BannerUtils(application)
 
     init {

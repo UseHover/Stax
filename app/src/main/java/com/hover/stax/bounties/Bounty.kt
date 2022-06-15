@@ -4,6 +4,7 @@ import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
+import com.hover.stax.channels.Channel
 import com.hover.stax.transactions.StaxTransaction
 import com.yariksoffice.lingver.Lingver
 import java.util.*
@@ -22,7 +23,8 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
                 if (action.isOnNetwork) c.getString(R.string.onnet_choice) else c.getString(R.string.descrip_bounty_offnet, action.to_institution_name))
         HoverAction.P2P -> c.getString(R.string.descrip_bounty_p2p, getP2pRecipientString(c))
         HoverAction.ME2ME -> c.getString(R.string.descrip_bounty_me2me, action.to_institution_name)
-        HoverAction.C2B -> c.getString(R.string.descrip_bounty_c2b, if (action.isOnNetwork) "" else c.getString(R.string.descrip_bounty_c2b_b, action.to_institution_name))
+        HoverAction.BILL -> c.getString(R.string.descrip_bounty_bill, if (action.isOnNetwork) "" else c.getString(R.string.descrip_bounty_c2b_b, action.to_institution_name))
+        HoverAction.MERCHANT -> c.getString(R.string.descrip_bounty_merchant, c.getString(R.string.bounty_merchant_any))
         else -> c.getString(R.string.check_balance)
     }
 
@@ -31,7 +33,8 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
                 if (action.isOnNetwork) c.getString(R.string.onnet_choice) else c.getString(R.string.descrip_bounty_offnet, action.to_institution_name))
         HoverAction.P2P -> c.getString(R.string.bounty_p2p_explain, getP2pRecipientString(c))
         HoverAction.ME2ME -> c.getString(R.string.bounty_me2me_explain, action.to_institution_name)
-        HoverAction.C2B -> c.getString(R.string.bounty_c2b_explain, if (action.isOnNetwork) c.getString(R.string.bounty_c2b_any) else action.to_institution_name)
+        HoverAction.BILL -> c.getString(R.string.bounty_bill_explain, if (action.isOnNetwork) c.getString(R.string.bounty_bill_any) else action.to_institution_name)
+        HoverAction.MERCHANT -> c.getString(R.string.bounty_merchant_explain, c.getString(R.string.bounty_merchant_any))
         else -> c.getString(R.string.bounty_balance_explain)
     }
 
@@ -47,3 +50,5 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
         return Locale(Lingver.getInstance().getLanguage(), country_alpha2).displayCountry
     }
 }
+
+data class ChannelBounties (val channel: Channel, val bounties: List<Bounty>)

@@ -7,6 +7,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.ItemPaybillActionBinding
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.UIHelper.loadImage
 
 class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, private val clickListener: PaybillActionsClickListener)
     : RecyclerView.Adapter<PaybillActionsAdapter.ActionsViewHolder>() {
@@ -26,13 +27,13 @@ class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, priva
             binding.billNumber.text = buildString {
                 append(action.to_institution_name)
                 append(" (")
-                append(action.to_institution_id)
+                append(action.getVarValue(BUSINESS_NO))
                 append(")")
             }
 
             binding.root.setOnClickListener { clickListener.onSelectPaybill(action) }
 
-            UIHelper.loadImage(binding.root.context, binding.billIcon.context.getString(R.string.root_url).plus(action.to_institution_logo), binding.billIcon)
+            binding.billIcon.loadImage(binding.root.context, binding.billIcon.context.getString(R.string.root_url).plus(action.to_institution_logo))
         }
     }
 

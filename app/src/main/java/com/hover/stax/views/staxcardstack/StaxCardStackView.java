@@ -16,6 +16,7 @@ public class StaxCardStackView extends ViewGroup {
     public static final int INVALID_TYPE = -1;
     static final int DEFAULT_SELECT_POSITION = -1;
     private static final String TAG = "CardStackView";
+
     private final ViewDataObserver mObserver = new ViewDataObserver();
     private int mTotalLength;
     private int mOverlapGaps;
@@ -169,10 +170,6 @@ public class StaxCardStackView extends ViewGroup {
 
     public void setOverlapGaps(int overlapGaps) {
         mOverlapGaps = overlapGaps;
-    }
-
-    public int getShowHeight() {
-        return mShowHeight;
     }
 
     public static class LayoutParams extends MarginLayoutParams {

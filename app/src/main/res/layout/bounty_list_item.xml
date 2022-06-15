@@ -27,7 +27,7 @@
 		android:layout_gravity="center_vertical"
 		android:gravity="center_vertical">
 
-		<TextView android:id="@+id/li_description"
+		<TextView android:id="@+id/li_title"
 		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 			android:layout_weight="1"
@@ -45,7 +45,7 @@
 
 	</LinearLayout>
 
-	<TextView android:id="@+id/li_status"
+	<TextView android:id="@+id/li_detail"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 		android:paddingHorizontal="@dimen/margin_10"
