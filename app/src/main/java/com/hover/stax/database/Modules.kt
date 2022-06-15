@@ -35,50 +35,52 @@ import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.user.UserRepo
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModel { FaqViewModel() }
-    viewModel { ActionSelectViewModel(get()) }
-    viewModel { ChannelsViewModel(get(), get(), get(), get(), get()) }
-    viewModel { AccountsViewModel(get(), get(), get(), get()) }
-    viewModel { AccountDetailViewModel(get(), get(), get(), get(), get()) }
-    viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
-    viewModel { TransferViewModel(get(), get(), get(), get()) }
-    viewModel { ScheduleDetailViewModel(get(), get(), get()) }
-    viewModel { BalancesViewModel(get(), get(), get()) }
-    viewModel { TransactionHistoryViewModel(get(), get()) }
-    viewModel { BannerViewModel(get(), get()) }
-    viewModel { FutureViewModel(get(), get(), get()) }
-    viewModel { LoginViewModel(get(), get(), get())}
-    viewModel { TransactionDetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { LanguageViewModel(get()) }
-    viewModel { BountyViewModel(get(), get(), get(), get()) }
-    viewModel { FinancialTipsViewModel(get()) }
-    viewModel { PaybillViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModel { MerchantViewModel(get(), get(), get(), get()) }
-    viewModel { RequestDetailViewModel(get(), get(), get()) }
-    viewModel { BonusViewModel(get(), get()) }
+    viewModelOf(::FaqViewModel)
+    viewModelOf(::ActionSelectViewModel)
+    viewModelOf(::ChannelsViewModel)
+    viewModelOf(::AccountsViewModel)
+    viewModelOf(::AccountDetailViewModel)
+    viewModelOf(::NewRequestViewModel)
+    viewModelOf(::TransferViewModel)
+    viewModelOf(::ScheduleDetailViewModel)
+    viewModelOf(::BalancesViewModel)
+    viewModelOf(::TransactionHistoryViewModel)
+    viewModelOf(::BannerViewModel)
+    viewModelOf(::FutureViewModel)
+    viewModelOf(::LoginViewModel)
+    viewModelOf(::TransactionDetailsViewModel)
+    viewModelOf(::LanguageViewModel)
+    viewModelOf(::BountyViewModel)
+    viewModelOf(::FinancialTipsViewModel)
+    viewModelOf(::PaybillViewModel)
+    viewModelOf(::MerchantViewModel)
+    viewModelOf(::RequestDetailViewModel)
+    viewModelOf(::BonusViewModel)
 }
 
 val dataModule = module(createdAtStart = true) {
     single { AppDatabase.getInstance(get()) }
     single { HoverRoomDatabase.getInstance(get()) }
 
-    single { TransactionRepo(get()) }
-    single { ChannelRepo(get(), get()) }
-    single { ActionRepo(get()) }
-    single { ContactRepo(get()) }
-    single { AccountRepo(get()) }
-    single { RequestRepo(get()) }
-    single { ScheduleRepo(get()) }
-    single { PaybillRepo(get()) }
-    single { MerchantRepo(get()) }
-    single { UserRepo(get()) }
-    single { BonusRepo(get()) }
-    single { ParserRepo(get()) }
+    singleOf(::TransactionRepo)
+    singleOf(::ChannelRepo)
+    singleOf(::ActionRepo)
+    singleOf(::ContactRepo)
+    singleOf(::AccountRepo)
+    singleOf(::RequestRepo)
+    singleOf(::ScheduleRepo)
+    singleOf(::PaybillRepo)
+    singleOf(::MerchantRepo)
+    singleOf(::UserRepo)
+    singleOf(::BonusRepo)
+    singleOf(::ParserRepo)
 }
 
 val networkModule = module {
-    single { LoginNetworking(get()) }
+    singleOf(::LoginNetworking)
 }
