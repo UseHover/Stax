@@ -15,9 +15,12 @@ import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
+import com.hover.stax.data.Resource
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
 import com.hover.stax.financialTips.FinancialTipsViewModel
+import com.hover.stax.presentation.home.HomeState
+import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.collectLatestLifecycleFlow
@@ -37,6 +40,8 @@ class HomeFragment : Fragment() {
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
+    private val homeViewModel: HomeViewModel by viewModel()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -47,7 +52,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bonusViewModel.fetchBonuses()
+        homeViewModel.getBonusList()
+        collectLatestLifecycleFlow(homeViewModel.bonusList) {
+            when(it){
+                is HomeState.Loading -> Timber.e("Loading bonuses")
+                is HomeState.BonusList -> Timber.e("Found ${it.bonuses.size} bonuses")
+                is HomeState.Error -> Timber.e(it.message)
+            }
+        }
+
         setupBanner()
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }

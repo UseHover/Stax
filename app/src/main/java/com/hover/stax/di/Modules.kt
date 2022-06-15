@@ -1,8 +1,9 @@
-package com.hover.stax.database
+package com.hover.stax.di
 
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
@@ -11,8 +12,13 @@ import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelRepo
-import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.contacts.ContactRepo
+import com.hover.stax.data.repository.BonusRepositoryImpl
+import com.hover.stax.database.AppDatabase
+import com.hover.stax.database.ParserRepo
+import com.hover.stax.domain.repository.BonusRepository
+import com.hover.stax.domain.use_case.FetchBonusUseCase
+import com.hover.stax.domain.use_case.GetBonusesUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -24,6 +30,7 @@ import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.merchants.MerchantViewModel
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.paybill.PaybillViewModel
+import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestDetailViewModel
 import com.hover.stax.requests.RequestRepo
@@ -34,9 +41,11 @@ import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.user.UserRepo
-import org.koin.androidx.viewmodel.dsl.viewModel
+import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val appModule = module {
@@ -61,6 +70,8 @@ val appModule = module {
     viewModelOf(::MerchantViewModel)
     viewModelOf(::RequestDetailViewModel)
     viewModelOf(::BonusViewModel)
+
+    viewModelOf(::HomeViewModel)
 }
 
 val dataModule = module(createdAtStart = true) {
@@ -83,4 +94,17 @@ val dataModule = module(createdAtStart = true) {
 
 val networkModule = module {
     singleOf(::LoginNetworking)
+}
+
+val repositories = module {
+    single(named("CoroutineDispatcher")) {
+        Dispatchers.IO
+    }
+
+    single<BonusRepository> { BonusRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
+}
+
+val useCases = module {
+    factoryOf(::GetBonusesUseCase)
+    factoryOf(::FetchBonusUseCase)
 }
