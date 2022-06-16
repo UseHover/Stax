@@ -6,7 +6,7 @@ import com.google.firebase.ktx.Firebase
 import com.hover.stax.domain.model.Bonus
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
-import com.hover.stax.data.local.BonusRepo
+import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.domain.repository.BonusRepository
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.CoroutineDispatcher

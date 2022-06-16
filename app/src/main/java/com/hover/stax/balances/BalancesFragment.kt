@@ -21,6 +21,7 @@ import com.hover.stax.databinding.FragmentBalanceBinding
 import com.hover.stax.home.HomeFragmentDirections
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLatestLifecycleFlow
@@ -43,6 +44,9 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
+
+    private val homeViewModel: HomeViewModel by sharedViewModel()
+
     private lateinit var cardStackAdapter: BalanceCardStackAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -63,9 +67,14 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
 
         balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
 
-        balancesViewModel.accounts.observe(viewLifecycleOwner) {
-            updateAccounts(ArrayList(it))
+        collectLatestLifecycleFlow(homeViewModel.homeState) {
+            if (it.accounts.isNotEmpty())
+                updateAccounts(ArrayList(it.accounts))
         }
+
+//        balancesViewModel.accounts.observe(viewLifecycleOwner) {
+//            updateAccounts(ArrayList(it))
+//        }
 
         collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)

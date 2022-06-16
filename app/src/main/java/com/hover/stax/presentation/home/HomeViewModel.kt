@@ -2,33 +2,41 @@ package com.hover.stax.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hover.stax.data.Resource
+import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class HomeViewModel(private val getBonusesUseCase: GetBonusesUseCase, private val fetchBonusUseCase: FetchBonusUseCase) : ViewModel() {
+class HomeViewModel(
+    private val getBonusesUseCase: GetBonusesUseCase,
+    private val fetchBonusUseCase: FetchBonusUseCase,
+    private val getAccountsUseCase: GetAccountsUseCase
+) : ViewModel() {
 
-    private val _bonusList = MutableStateFlow<HomeState>(HomeState.BonusList(emptyList()))
-    val bonusList = _bonusList.asStateFlow()
+    private val _homeState = MutableStateFlow(HomeState())
+    val homeState = _homeState.asStateFlow()
 
     init {
         fetchBonuses()
     }
 
     private fun fetchBonuses() = viewModelScope.launch {
-        fetchBonusUseCase.invoke()
+        fetchBonusUseCase()
     }
 
-    fun getBonusList() = getBonusesUseCase.getBonusList().onEach { result ->
-        when (result) {
-            is Resource.Loading -> _bonusList.value = HomeState.Loading
-            is Resource.Success -> _bonusList.value = HomeState.BonusList(result.data!!)
-            is Resource.Error -> _bonusList.value = HomeState.Error("No bonuses found")
+    fun getBonusList() = viewModelScope.launch {
+        getBonusesUseCase.getBonusList().collect {
+            _homeState.value = _homeState.value.copy(bonuses = it)
         }
-    }.launchIn(viewModelScope)
+    }
+
+    fun getAccounts() = viewModelScope.launch {
+        getAccountsUseCase().collect {
+            _homeState.value = _homeState.value.copy(accounts = it)
+        }
+    }
 }

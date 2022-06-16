@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact

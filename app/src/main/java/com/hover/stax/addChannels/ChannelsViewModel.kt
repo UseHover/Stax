@@ -14,10 +14,10 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountRepo
+import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
-import com.hover.stax.data.local.BonusRepo
+import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter

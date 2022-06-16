@@ -14,6 +14,7 @@ import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.requests.RequestSenderInterface
@@ -34,6 +35,8 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by viewModel()
+
+    private val homeViewModel: HomeViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
 

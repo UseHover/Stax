@@ -1,4 +1,4 @@
-package com.hover.stax.data.local
+package com.hover.stax.data.local.bonus
 
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.model.Bonus

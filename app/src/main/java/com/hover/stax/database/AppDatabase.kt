@@ -7,9 +7,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountDao
+import com.hover.stax.data.local.accounts.AccountDao
 import com.hover.stax.domain.model.Bonus
-import com.hover.stax.data.local.BonusDao
+import com.hover.stax.data.local.bonus.BonusDao
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao

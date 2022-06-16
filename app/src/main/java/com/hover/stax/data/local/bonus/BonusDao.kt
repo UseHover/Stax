@@ -1,4 +1,4 @@
-package com.hover.stax.data.local
+package com.hover.stax.data.local.bonus
 
 import androidx.room.*
 import com.hover.stax.domain.model.Bonus

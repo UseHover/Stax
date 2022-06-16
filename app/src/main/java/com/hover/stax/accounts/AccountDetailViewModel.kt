@@ -6,6 +6,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistory
 import com.hover.stax.transactions.TransactionRepo

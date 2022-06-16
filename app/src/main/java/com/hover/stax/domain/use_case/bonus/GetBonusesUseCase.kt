@@ -9,12 +9,8 @@ import kotlinx.coroutines.flow.flow
 
 class GetBonusesUseCase(private val repository: BonusRepository) {
 
-    fun getBonusList(): Flow<Resource<List<Bonus>>> = flow {
-        emit(Resource.Loading())
-
-        repository.getBonusList().collect {
-            emit(Resource.Success(it))
-        }
+    suspend fun getBonusList(): Flow<List<Bonus>> {
+        return repository.getBonusList()
     }
 
     fun getBonusByPurchaseChannel(channelId: Int): Flow<Resource<Bonus>> = flow {

@@ -9,7 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionRepo
-import com.hover.stax.data.local.BonusRepo
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.schedules.Schedule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

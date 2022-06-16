@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
-    private val homeViewModel: HomeViewModel by viewModel()
+    private val homeViewModel: HomeViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -51,15 +51,12 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         homeViewModel.getBonusList()
-        collectLatestLifecycleFlow(homeViewModel.bonusList) {
-            when(it){
-                is HomeState.Loading -> Timber.e("Loading bonuses")
-                is HomeState.BonusList -> Timber.e("Found ${it.bonuses.size} bonuses")
-                is HomeState.Error -> Timber.e(it.message)
-            }
-        }
+        homeViewModel.getAccounts()
 
-        setupBanner()
+        collectLatestLifecycleFlow(homeViewModel.homeState) {
+            if(it.bonuses.isNotEmpty())
+                showBonuses(it.bonuses)
+        }
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
@@ -88,24 +85,20 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupBanner() {
-        bonusViewModel.getBonusList()
-
-        collectLatestLifecycleFlow(bonusViewModel.bonuses) { bonusList ->
-            if (bonusList.isNotEmpty()) {
-                with(binding.bonusCard) {
-                    message.text = bonusList.first().message
-                    learnMore.movementMethod = LinkMovementMethod.getInstance()
+    private fun showBonuses(bonusList: List<Bonus>){
+        if (bonusList.isNotEmpty()) {
+            with(binding.bonusCard) {
+                message.text = bonusList.first().message
+                learnMore.movementMethod = LinkMovementMethod.getInstance()
+            }
+            binding.bonusCard.apply {
+                cardBonus.visibility = View.VISIBLE
+                cta.setOnClickListener {
+                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                    validateAccounts(bonusList.first())
                 }
-                binding.bonusCard.apply {
-                    cardBonus.visibility = View.VISIBLE
-                    cta.setOnClickListener {
-                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                        validateAccounts(bonusList.first())
-                    }
-                }
-            } else binding.bonusCard.cardBonus.visibility = View.GONE
-        }
+            }
+        } else binding.bonusCard.cardBonus.visibility = View.GONE
     }
 
     private fun setKeVisibility() {
