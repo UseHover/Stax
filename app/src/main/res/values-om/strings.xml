@@ -367,7 +367,7 @@
         <item>Guyyaa hunda</item>
         <item>Torban torbaniin</item>
         <item>Torban 2tti tokko</item>
-        <item>Ji'a ji'aan</item>
+        <item>Ji\'a ji\'aan</item>
     </string-array>
     <string-array name="frequency_choices_values" translatable="false">
         <item>0daily</item>
