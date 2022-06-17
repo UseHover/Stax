@@ -238,9 +238,9 @@
     <string name="unspecified_error">Dogoggora hin beekamne.</string>
     <string name="no_response_desc">%1$s irraa deebii hin arganne. Daldalli kun waan hojjete hin fakkaatu. Mee irra deebi\'ii yaali.</string>
     <string name="incomplete_desc">%1$s irraa deebii gartokkee qofa arganne. Daldalli kun waan hojjete hin fakkaatu. Mee irra deebi\'ii yaali.</string>
-    <string name="invalid_entry_desc">Galtee kee keessaa tokko sirrii hin turre, maaltu akka dogoggora ta\'e ilaaluuf ibsa turtii armaan gadii ilaali. Maallaqni, lakkoofsi bilbilaa ykn lakkoofsi herregaa kamiyyuu sirrii ta’uu isaa mirkaneessi. Bal'ina walgahii armaan gadii ilaali.</string>
+    <string name="invalid_entry_desc">Galtee kee keessaa tokko sirrii hin turre, maaltu akka dogoggora ta\'e ilaaluuf ibsa turtii armaan gadii ilaali. Maallaqni, lakkoofsi bilbilaa ykn lakkoofsi herregaa kamiyyuu sirrii ta\'uu isaa mirkaneessi. Bal\'ina walgahii armaan gadii ilaali.</string>
     <string name="mmi_error_desc">Neetworkiin kee dogongora deebise, maaloo irra deebi\'ii yaali. Yoo kun baay\'ee ta\'e maaloo dhiyeessaa networkii ykn tajaajila maallaqaa keessan qunnamuun komii dhiheessaa.</string>
-    <string name="unspecified_error_desc">Dogoggora hin beekamne, maaltu akka dogoggora ta\'e baruuf bal\'inaan armaan gadii ilaali. Mee irra deebi'ii yaali.</string>
+    <string name="unspecified_error_desc">Dogoggora hin beekamne, maaltu akka dogoggora ta\'e baruuf bal\'inaan armaan gadii ilaali. Mee irra deebi\'ii yaali.</string>
     <string name="action_run_error">Dogoggora tarkaanfii fiigicha. Mee irra deebi\'ii yaali.</string>
 
     <!-- SDK Overrides -->
@@ -391,7 +391,7 @@
     <string name="pending_cardhead">Mirkaneessa eegaa jira</string>
     <string name="pending_cardbody">Kutaan USSD xumurameera, garuu hanga ammaatti ergaa gabaabaa mirkaneessaa hin arganne.</string>
     <string name="balance_label">Madaallii</string>
-    <string name="moneyout_label">Maallaqni ji\'a kana keessa ba'e</string>
+    <string name="moneyout_label">Maallaqni ji\'a kana keessa ba\'e</string>
     <string name="moneyin_label">Maallaqa baatii kana keessa</string>
     <string name="fees_label">Kaffaltii bara kana %1$s kaffalame</string>
     <string name="transactions_cardhead">Daldala</string>
@@ -431,7 +431,7 @@
     <string name="privacy_policy_label">Stax App fayyadamuun, imaammata dhuunfaa keenya dubbistee haala tajaajilaa irratti walii galteetta. Dubbisuuf cuqaasaa</string>
     <string name="dialog_confirm_logout_header">Ba\'uu Mirkaneessi</string>
     <string name="logout_out_success">Logout milkaa\'eera</string>
-    <string name="dialog_confirm_logout_desc">"Ba'uu akka barbaaddu mirkaneeffatteettaa?"</string>
+    <string name="dialog_confirm_logout_desc">"Ba\'uu akka barbaaddu mirkaneeffatteettaa?"</string>
 
     <string name="name_label">Maqaa keessan guutuu galchaa</string>
     <string name="phone_label">Lakkoofsa bilbilaa keessan galchaa</string>
@@ -504,11 +504,11 @@
     <string name="timeago_secondes">daqiiqaa tokkoo gadi</string>
     <string name="timeago_minute">gara daqiiqaa tokkootti</string>
     <string name="timeago_minutes">%1$d daqiiqaa</string>
-    <string name="timeago_hour">gara sa’aatii tokkootti</string>
+    <string name="timeago_hour">gara sa\'aatii tokkootti</string>
     <string name="timeago_hours">gara %1$d sa\'aatii</string>
     <string name="timeago_day">guyyaa tokkotti</string>
     <string name="timeago_days">%1$d guyyoota</string>
-    <string name="timeago_month">gara ji’a tokkootti</string>
+    <string name="timeago_month">gara ji\'a tokkootti</string>
     <string name="timeago_months">Ji\'oota %1$d</string>
     <string name="timeago_year">gara waggaa tokkootti</string>
     <string name="timeago_years">%1$d waggaa</string>
@@ -522,12 +522,12 @@
 
     <!-- BOUNTY -->
     <string name="nav_bounty">Badhaasa</string>
-    <string name="bounty_title">&#128184;  KAFFALTII ARGADHAA! KAARTAA DHANGALA'AA USSD</string>
+    <string name="bounty_title">&#128184;  KAFFALTII ARGADHAA! KAARTAA DHANGALA\'AA USSD</string>
     <string name="bounty_msg">Stax dhangala\'aa USSD keessa darbuuf USD $5 - $50 siif kaffala.</string>
     <string name="get_started">Jalqabi</string>
     <string name="bounty_email_stage_title">&#128506; KAARTAA DHANGALA\'AA USSD</string>
     <string name="bounty_email_stage_desc1"><b>Gara Money Mapper baga nagaan dhuftan.</b> Stax USSD nama hundaaf salphisuu barbaada. Stax biyyoota hedduu keessatti namoota hedduutti fiduuf, menu USSD hunda akka addunyaatti kaartaan kaa\'uu qabna. Stax akka Money Mapper tti makamaa fi daldala USSD milkaa\'inaan kaartaa gootan hundaaf $5 - $20 USD argadhaa. Menuuwwan USSD ammallee nu barbaachisan (bounties) fuula itti aanu irratti tarreeffamaniiru. Yeroo baayyee badhaasa haaraa itti daballa!</string>
-    <string name="bounty_email_stage_desc2"><b>1.</b> Herrega Google keetiin seeni.\n<b>2.</b> Herrega baankii ykn maallaqa mobaayilaa kee kamiifuu badhaasa banaa barbaadi.\n<b>3.</b> <a href=" xumuri. https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">Daldala USSD</a> badhaasa irratti ibsame, akka Hafnaan Sakatta'uu ykn Yeroo Qilleensaa Bituu.\n <b>4.</b> Bal’ina daldalaa irra deebi’ii ilaali. Yoo kufe ykn guutuu hin taane irra deebi'ii yaali.\n<b>5.</b> Stax ergaawwan kee ni ilaala, kunis guyyoota 7&#8211;10 fudhachuu danda'a. \n<b>6.</b> Dhuma torbanitti kaffaltii argatta</string>
+    <string name="bounty_email_stage_desc2"><b>1.</b> Herrega Google keetiin seeni.\n<b>2.</b> Herrega baankii ykn maallaqa mobaayilaa kee kamiifuu badhaasa banaa barbaadi.\n<b>3.</b> <a href=" xumuri. https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">Daldala USSD</a> badhaasa irratti ibsame, akka Hafnaan Sakatta\'uu ykn Yeroo Qilleensaa Bituu.\n <b>4.</b> Bal\'ina daldalaa irra deebi\'ii ilaali. Yoo kufe ykn guutuu hin taane irra deebi\'ii yaali.\n<b>5.</b> Stax ergaawwan kee ni ilaala, kunis guyyoota 7&#8211;10 fudhachuu danda\'a. \n<b>6.</b> Dhuma torbanitti kaffaltii argatta</string>
     <string name="descrip_bounty_airtime">Yeroo qilleensaa nama kamiifuu %1$s bitadhaa</string>
     <string name="bounty_airtime_explain">Nama biraatiif yeroo qilleensaa bitadhu %1$s</string>
     <string name="descrip_bounty_p2p">Nama biraatti maallaqa ergaa %1$s</string>
@@ -548,7 +548,7 @@
     <string name="bounty_uploading_email">Walqunnamsiisaa jira, mee eegaa&#8230;</string>
     <string name="bounty_api_internet_error">Maaloo interneetii daataa qabaachuu keessan mirkaneessaa</string>
     <string name="bounty_api_other_error">Mee irra deebi\'ii yaali. Yoo kun itti fufe, gaarummaadhaan ussd@stax.me irratti nu qunnamaa.</string>
-    <string name="bounty_pending_short_desc">Daldala keessan mirkaneessaa jirra. Yoo milkaa’e guyyoota hojii 10 keessatti kaffaltiin akka kaffalamu eegaa.</string>
+    <string name="bounty_pending_short_desc">Daldala keessan mirkaneessaa jirra. Yoo milkaa\'e guyyoota hojii 10 keessatti kaffaltiin akka kaffalamu eegaa.</string>
     <string name="done">Raawwatame</string>
     <string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
     <string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
@@ -556,11 +556,11 @@
     <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
     <string name="bounty_claim_explained">USD $%1$d, %2$s himachuuf.\n\nAkkuma xumurtaniin, odeeffannoo kaffaltiidhaaf walitti qabuuf email isiniif ergina. Guyyoota hojii 7–10 keessatti kaffaltiin siif kaffalama</string>
     <string name="start_USSD_Flow">Dhangala\'aa USSD jalqabi</string>
-    <string name="checking_your_flow">Dhangala\'aa kee sakatta'uu</string>
+    <string name="checking_your_flow">Dhangala\'aa kee sakatta\'uu</string>
     <string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
     <string name="flow_done_title">DHANGALA\'AA HOJJETAME</string>
     <string name="flow_done_desc">Dhangala\'aa isaa ilaallee gaarii fakkaata! Inbox keessan keessatti email odeeffannoo kaffaltii qabu qabaachuu qabdu.</string>
-    <string name="go_through_another_flow">Dhangala’aa biraa keessa darbi</string>
+    <string name="go_through_another_flow">Dhangala\'aa biraa keessa darbi</string>
     <string name="flow_recorded">DHANGALA\'AA GALMEESSE</string>
     <string name="bounty_amount_with_currency">USD $%1$d</string>
     <string name="select_country">Biyya filadhu</string>
@@ -588,7 +588,7 @@
     <string name="internet_required">Interneetii barbaachisa</string>
     <string name="internet_required_bounty_desc">Dhangala\'aa USSD kaartaan gochuuf data ykn Wifi connection si barbaachisa. Mee wal qunnamaa irra deebi\'aa yaalaa.</string>
     <string name="try_again">Ammas yaali</string>
-    <string name="unknown_login_error">Dogoggora hin beekamne, maaloo irra deebi\'ii yaali. Yoo dogongorri itti fufe maaloo appicha cufaatii irra deebi'aa jalqabsiisaa.</string>
+    <string name="unknown_login_error">Dogoggora hin beekamne, maaloo irra deebi\'ii yaali. Yoo dogongorri itti fufe maaloo appicha cufaatii irra deebi\'aa jalqabsiisaa.</string>
 
     <string name="no_account_selected_error">Maaloo yoo xiqqaate akkaawuntii tokko filachuun Stax irratti dabaluu dandeessu</string>
 
@@ -604,7 +604,7 @@
     <string name="banner_upvote_cta"><u>Amma yaada kennaa</u></string>
     <string name="stax_banner_img_desc">Mallattoo baanarii Stax</string>
     <string name="banner_research_title">Stax daran fooyyessuuf kaffaltii argachuu barbaadduu?</string>
-    <string name="banner_research_cta">Har\'a qorannoo qorannoof galmaa'aa</string>
+    <string name="banner_research_cta">Har\'a qorannoo qorannoof galmaa\'aa</string>
 
     <string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
     <string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
@@ -617,7 +617,7 @@
     <string name="test_mode_almost_toast">Achitti jechuun ni danda\'ama!</string>
     <string name="test_mode_enabled">Haala qormaataa bobba\'eera</string>
 
-    <string name="faq_title">Gaaffiiwwan yeroo baay’ee gaafataman</string>
+    <string name="faq_title">Gaaffiiwwan yeroo baay\'ee gaafataman</string>
     <string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
     <string name="loading">Fe\'amaa jira&#8230;</string>
     <string name="loading_error">FAQ fe\'uu hin dandeenye, maaloo irra deebi\'ii yaali</string>
