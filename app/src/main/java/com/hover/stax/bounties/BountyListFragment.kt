@@ -19,9 +19,8 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentBountyListBinding
-import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.transactions.StaxTransaction
-import com.hover.stax.transactions.UpdateBountyTransactionsWorker
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
@@ -116,9 +115,9 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         dialog!!.showIt()
     }
 
-    private fun initCountryDropdown(channels: List<Channel>) = binding.bountyCountryDropdown.apply {
+    private fun initCountryDropdown(countryCodes: List<String>) = binding.bountyCountryDropdown.apply {
         setListener(this@BountyListFragment)
-        updateChoices(channels, bountyViewModel.currentCountryFilter.value)
+        updateChoices(countryCodes, bountyViewModel.country)
         isEnabled = true
     }
 
@@ -149,10 +148,8 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         transactions.observe(viewLifecycleOwner, txnObserver)
         sims.observe(viewLifecycleOwner, simsObserver)
         bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
-        channels.observe(viewLifecycleOwner) {
-            initCountryDropdown(it)
-            updateChannelList(it, bounties.value)
-        }
+        channels.observe(viewLifecycleOwner) { updateChannelList(it, bounties.value)}
+        channelCountryList.observe(viewLifecycleOwner) { initCountryDropdown(it) }
     }
 
     private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {
@@ -223,7 +220,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
     private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
-        (requireActivity() as MainActivity).makeCall(b.action)
+        (requireActivity() as AbstractHoverCallerActivity).makeRegularCall(b.action, R.string.clicked_start_bounty)
     }
 
     private fun showLoadingState() {

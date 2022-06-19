@@ -22,7 +22,6 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.database.Converters;
-import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -81,24 +80,22 @@ public class StaxContact {
 
     @SuppressLint("Range")
     public StaxContact(Uri contactData, Context c) {
-        if (contactData != null) {
-            Cursor cur = c.getContentResolver().query(contactData, null, null, null, null);
-            if (cur != null && cur.getCount() > 0 && cur.moveToNext()) {
-                id = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.RawContacts._ID));
-                Timber.e("pulled contact with id: %s", id);
-                lookupKey = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY));
-                name = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-                thumbUri = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
+        Cursor cur = c.getContentResolver().query(contactData, null, null, null, null);
+        if (cur != null && cur.getCount() > 0 && cur.moveToNext()) {
+            id = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.RawContacts._ID));
+            Timber.e("pulled contact with id: %s", id);
+            lookupKey = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY));
+            name = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
+            thumbUri = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
 
-                if (Integer.parseInt(cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    Cursor phones = c.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
-                    if (phones != null && phones.moveToNext())
-                        accountNumber = phones.getString(phones.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll(" ", "");
-                    if (phones != null) phones.close();
-                }
+            if (Integer.parseInt(cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                Cursor phones = c.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
+                if (phones != null && phones.moveToNext())
+                    accountNumber = phones.getString(phones.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll(" ", "");
+                if (phones != null) phones.close();
             }
-            if (cur != null) cur.close();
         }
+        if (cur != null) cur.close();
     }
 
     public static String shortName(List<StaxContact> contacts, Context c) {
@@ -107,7 +104,7 @@ public class StaxContact {
         else return c.getString(R.string.descrip_multcontacts, contacts.size());
     }
 
-    public static StaxContact findOrInit(Intent intent, String countryAlpha2, DatabaseRepo dr) {
+    public static StaxContact findOrInit(Intent intent, String countryAlpha2, ContactRepo dr) {
         StaxContact sc = checkInKeys(intent, countryAlpha2, dr);
         if (sc == null) sc = checkOutKeys(intent, countryAlpha2, dr);
         if (sc == null) sc = new StaxContact(intent);
@@ -116,7 +113,7 @@ public class StaxContact {
     }
 
     @SuppressWarnings("unchecked")
-    private static StaxContact checkInKeys(Intent intent, String countryAlpha2, DatabaseRepo dr) {
+    private static StaxContact checkInKeys(Intent intent, String countryAlpha2, ContactRepo dr) {
         HashMap<String, String> inExtras = (HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
         if (inExtras != null && inExtras.containsKey(StaxContact.ID_KEY))
             return dr.getContact(inExtras.get(StaxContact.ID_KEY));
@@ -128,22 +125,20 @@ public class StaxContact {
     }
 
     @SuppressWarnings("unchecked")
-    private static StaxContact checkOutKeys(Intent intent, String countryAlpha2, DatabaseRepo dr) {
+    private static StaxContact checkOutKeys(Intent intent, String countryAlpha2, ContactRepo dr) {
         HashMap<String, String> outExtras = (HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-
-        if (outExtras != null && outExtras.containsKey(SENDER_PHONE_KEY))
-            return getContactByPhoneValue(outExtras, SENDER_PHONE_KEY, countryAlpha2, dr);
-        else if (outExtras != null && outExtras.containsKey(SENDER_ACCOUNT_KEY))
-            return dr.getContactByPhone(outExtras.get(SENDER_ACCOUNT_KEY));
-        else if (outExtras != null && outExtras.containsKey(RECIPIENT_PHONE_KEY))
+         if (outExtras != null && outExtras.containsKey(RECIPIENT_PHONE_KEY))
             return getContactByPhoneValue(outExtras, RECIPIENT_PHONE_KEY, countryAlpha2, dr);
         else if (outExtras != null && outExtras.containsKey(RECIPIENT_ACCOUNT_KEY))
             return dr.getContactByPhone(outExtras.get(RECIPIENT_ACCOUNT_KEY));
-
+        else if (outExtras != null && outExtras.containsKey(SENDER_PHONE_KEY))
+             return getContactByPhoneValue(outExtras, SENDER_PHONE_KEY, countryAlpha2, dr);
+        else if (outExtras != null && outExtras.containsKey(SENDER_ACCOUNT_KEY))
+             return dr.getContactByPhone(outExtras.get(SENDER_ACCOUNT_KEY));
         return null;
     }
 
-    private static StaxContact getContactByPhoneValue(HashMap<String, String> map, String key, String countryAlpha2, DatabaseRepo dr) {
+    private static StaxContact getContactByPhoneValue(HashMap<String, String> map, String key, String countryAlpha2, ContactRepo dr) {
         StaxContact c = dr.getContactByPhone(PhoneHelper.getNationalSignificantNumber(map.get(key), countryAlpha2));
         if (c == null) c = dr.getContactByPhone(map.get(key));
         return c;

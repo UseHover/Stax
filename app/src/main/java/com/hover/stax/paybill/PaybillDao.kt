@@ -12,11 +12,11 @@ interface PaybillDao {
     @Query("SELECT * FROM paybills WHERE accountId = :accountId ORDER BY name ASC")
     fun getPaybillsByAccount(accountId: Int): Flow<List<Paybill>>
 
-    @Query("SELECT * FROM paybills WHERE accountId = :accountId and isSaved = 1 ORDER BY name ASC")
-    fun getSavedPaybills(accountId: Int): Flow<List<Paybill>>
-
     @Query("SELECT * FROM paybills WHERE id = :id")
     fun getPaybill(id: Int): Paybill?
+
+    @Query("SELECT * FROM paybills WHERE business_no = :bizNo AND channelId = :channelId")
+    fun getPaybill(bizNo: String, channelId: Int): Paybill?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(vararg paybill: Paybill?)

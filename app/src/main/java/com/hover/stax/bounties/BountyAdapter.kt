@@ -21,13 +21,13 @@ class BountyAdapter(private val selectListener: BountyListItem.SelectListener) :
 
     class BountyViewHolder(var binding: BountyCardChannelBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindItems(channelBounties: ChannelBounties, selectListener: BountyListItem.SelectListener) {
+        fun bindItems(channelBounties: ChannelBounties, listener: BountyListItem.SelectListener) {
             binding.bountyChannelCard.setTitle(channelBounties.channel.ussdName)
             binding.bountyList.removeAllViews()
 
             for (b in channelBounties.bounties) {
                 val bountyLi = BountyListItem(binding.bountyChannelCard.context, null)
-                bountyLi.setBounty(b, selectListener)
+                bountyLi.setBounty(b, listener)
                 binding.bountyList.addView(bountyLi)
             }
         }

@@ -9,7 +9,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_16"
             app:showBack="true"
-            app:subtitle="@string/manage_permission_desc"
             app:title="@string/manage_permissions_title">
 
         <LinearLayout

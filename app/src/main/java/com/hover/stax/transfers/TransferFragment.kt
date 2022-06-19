@@ -8,205 +8,180 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.lifecycle.Observer
+import androidx.annotation.CallSuper
+import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
 import com.hover.stax.actions.ActionSelect
-import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.bonus.Bonus
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.BonusViewModel
-import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
-import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
-import com.hover.stax.views.Stax2LineItem
-import com.hover.stax.views.StaxTextInputLayout
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
-    private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
+
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
+    private val channelsViewModel: ChannelsViewModel by viewModel()
 
     private val args by navArgs<TransferFragmentArgs>()
-
-    private lateinit var amountInput: StaxTextInputLayout
-    private lateinit var recipientInstitutionSelect: ActionSelect
-    private lateinit var contactInput: ContactInput
-    private lateinit var recipientValue: Stax2LineItem
 
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
+    private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
+        super.onCreate(savedInstanceState)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         setTransactionType(args.transactionType)
-
-        args.transactionUUID?.let {
-            transferViewModel.autoFill(it)
-        }
 
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onPause() {
-        super.onPause()
-        transferViewModel.setEditing(true)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        amountInput.setHint(getString(R.string.transfer_amount_label))
-        accountDropdown.setHint(getString(R.string.account_label))
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        transferViewModel.reset()
         init(binding.root)
+
+        bonusViewModel.getBonusList()
 
         startObservers(binding.root)
         startListeners()
+        fillFromArgs()
+    }
+
+    private fun fillFromArgs() {
+        args.accountId?.let { accountsViewModel.setActiveAccount(Integer.parseInt(it)) }
+        args.amount?.let { binding.editCard.amountInput.setText(it) }
+        args.contactId?.let { transferViewModel.setContact(it) }
+        args.channelId?.let { channelsViewModel.validateAccounts(Integer.parseInt(it)) }
     }
 
     override fun init(root: View) {
-        setTitle()
-
-        amountInput = binding.editCard.amountInput
-        contactInput = binding.editCard.contactSelect
-        recipientInstitutionSelect = binding.editCard.actionSelect
-        recipientValue = binding.summaryCard.recipientValue
-
-        if (actionSelectViewModel.filteredActions.value != null)
-            recipientInstitutionSelect.updateActions(actionSelectViewModel.filteredActions.value!!)
-
         super.init(root)
 
-        accountDropdown.setFetchAccountListener(this)
+        setTitle()
 
-        amountInput.apply {
-            setText(transferViewModel.amount.value)
-            requestFocus()
-        }
+        if (actionSelectViewModel.filteredActions.value != null)
+            binding.editCard.actionSelect.updateActions(actionSelectViewModel.filteredActions.value!!)
+
+        setUpFee()
     }
 
     private fun setTitle() {
-        val titleRes = if (TransactionType.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
-        binding.editCard.transferCard.setTitle(getString(titleRes))
-        binding.summaryCard.transferSummaryCard.setTitle(getString(titleRes))
+        val titleRes = if (accountsViewModel.getActionType() == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
+        binding.editCard.root.setTitle(getString(titleRes))
+        binding.summaryCard.root.setTitle(getString(titleRes))
+    }
+
+    private fun setUpFee() {
+        binding.summaryCard.feeValue.text = getString(R.string.check_fee)
+        binding.summaryCard.feeValue.textSize = 13.0F
+        binding.summaryCard.feeValue.setTextColor(getColor(requireContext(), R.color.stax_state_blue))
+        binding.summaryCard.feeValue.setOnClickListener { checkFee() }
+        showCheckFeeOption()
+    }
+
+    private fun checkFee() {
+        callHover(FEE_REQUEST)
+    }
+
+    private fun showCheckFeeOption() {
+        binding.summaryCard.feeValue.visibility = if (actionSelectViewModel.activeAction.value?.requiredParams?.contains("fee") == true) View.VISIBLE else ViewGroup.GONE
     }
 
     private fun setTransactionType(txnType: String) {
-        transferViewModel.setTransactionType(txnType)
-        channelsViewModel.setType(txnType)
+        accountsViewModel.setType(txnType)
     }
 
     override fun startObservers(root: View) {
         super.startObservers(root)
-        observeActionSelection()
         observeAccountList()
-        observeActiveChannel()
+        observeActiveAccount()
         observeActions()
+        observeActionSelection()
+        observeSelectedContact()
         observeAmount()
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
-        observeAutoFillToInstitution()
+        observeAccountsEvent()
+    }
 
-        with(transferViewModel) {
-            contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
-            request.observe(viewLifecycleOwner) {
-                AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
-                it?.let { view(it) }
-            }
+    private fun observeActiveAccount() {
+        accountsViewModel.activeAccount.observe(viewLifecycleOwner) { account ->
+            account?.let { binding.summaryCard.accountValue.setTitle(it.toString()) }
+            val err = accountsViewModel.errorCheck()
+            payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            binding.editCard.actionSelect.visibility = if (account != null) View.VISIBLE else View.GONE
         }
     }
 
     private fun observeActionSelection() {
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
-            recipientInstitutionSelect.selectRecipientNetwork(it)
-            setRecipientHint(it)
-        }
-    }
-
-    private fun observeActiveChannel() {
-        channelsViewModel.activeChannel.observe(viewLifecycleOwner) { channel ->
-            channel?.let {
-                transferViewModel.request.value?.let { request ->
-                    transferViewModel.setRecipientSmartly(request.requester_number, it)
-                }
-                binding.summaryCard.accountValue.setTitle(it.toString())
+            it?.let {
+                binding.editCard.actionSelect.selectRecipientNetwork(it)
+                setRecipientHint(it)
             }
-            recipientInstitutionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
-
-            checkForBonus()
         }
     }
 
     private fun observeActions() {
-        channelsViewModel.channelActions.observe(viewLifecycleOwner) {
+        accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
+            showBonusBanner(it.firstOrNull())
         }
+
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
-            recipientInstitutionSelect.updateActions(it)
+            binding.editCard.actionSelect.updateActions(it)
         }
     }
 
-    private fun observeAccountList() = with(channelsViewModel) {
-        accounts.observe(viewLifecycleOwner) {
-            if (it.isEmpty())
-                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
-
-            if (args.channelId != 0) { //to be used with bonus flow. Other uses will require a slight change in this
-                updateAccountDropdown()
-                return@observe
-            }
-
-            if (args.transactionUUID == null) {
-                accountDropdown.setCurrentAccount()
-                return@observe
+    private fun observeSelectedContact() {
+        transferViewModel.contact.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.summaryCard.recipientValue.setContact(it)
             }
         }
+    }
 
-        if(args.transactionType == HoverAction.AIRTIME) {
-            val observer = Observer<Account> { it?.let { setChannel(it) } }
-            activeAccount.observe(viewLifecycleOwner, observer)
-        }
+    private fun observeAccountList() = collectLatestLifecycleFlow(accountsViewModel.accounts) {
+        if (it.isEmpty())
+            setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
     }
 
     private fun observeAmount() {
         transferViewModel.amount.observe(viewLifecycleOwner) {
             it?.let {
+                if (binding.editCard.amountInput.text.isEmpty() && it.isNotEmpty())
+                    binding.editCard.amountInput.setText(it)
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             }
-        }
-    }
-
-    private fun observeAutoFillToInstitution() {
-        transferViewModel.completeAutoFilling.observe(viewLifecycleOwner) {
-            if (it != null && args.transactionUUID != null)
-                completeAutoFilling(it)
         }
     }
 
@@ -220,8 +195,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeRecentContacts() {
         transferViewModel.recentContacts.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
-                contactInput.setRecent(it, requireActivity())
-                transferViewModel.contact.value?.let { ct -> contactInput.setSelected(ct) }
+                binding.editCard.contactSelect.setRecent(it, requireActivity())
+                transferViewModel.contact.value?.let { ct ->
+                    binding.editCard.contactSelect.setSelected(ct)
+                }
             }
         }
     }
@@ -229,8 +206,17 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeNonStandardVariables() {
         actionSelectViewModel.nonStandardVariables.observe(viewLifecycleOwner) { variables ->
             if (variables != null) {
-                updateNonStandardForEntryList(variables)
-                updateNonStandardForSummaryCard(variables)
+                updateNonStandardInputs(variables)
+                updateNonStandardSummary(variables)
+            }
+        }
+    }
+
+    private fun observeAccountsEvent() {
+        lifecycleScope.launchWhenStarted {
+            channelsViewModel.accountEventFlow.collect {
+                val bonus = bonusViewModel.bonuses.value.firstOrNull() ?: return@collect
+                accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
             }
         }
     }
@@ -238,51 +224,51 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun startListeners() {
         setAmountInputListener()
         setContactInputListener()
-
-        recipientInstitutionSelect.setListener(this)
-        fab.setOnClickListener { fabClicked() }
-
-        binding.summaryCard.transferSummaryCard.setOnClickIcon { transferViewModel.setEditing(true) }
+        binding.editCard.actionSelect.setListener(this)
     }
 
     private fun setAmountInputListener() {
-        amountInput.apply {
+        binding.editCard.amountInput.apply {
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus)
-                    this.setState(
-                        null,
-                        if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
-                    )
-                else
-                    this.setState(null, AbstractStatefulInput.NONE)
+                setInputState(hasFocus, this, transferViewModel.amountErrors())
             }
         }
     }
 
     private fun setContactInputListener() {
-        contactInput.apply {
+        binding.editCard.contactSelect.apply {
+            setSelected(transferViewModel.contact.value)
             setAutocompleteClickListener { view, _, position, _ ->
                 val contact = view.getItemAtPosition(position) as StaxContact
                 transferViewModel.setContact(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(requireActivity()) }
+            setChooseContactListener { startContactPicker(requireActivity()) }
         }
     }
 
-    private fun fabClicked() {
-        if (validates()) {
-            if (transferViewModel.isEditing.value == true) {
-                transferViewModel.saveContact()
-                transferViewModel.setEditing(false)
-            } else {
-                (requireActivity() as MainActivity).submit(
-                    accountDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!
-                )
-                findNavController().popBackStack()
-            }
-        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+    override fun onFinishForm() {
+        transferViewModel.saveContact()
+        transferViewModel.setEditing(false)
+    }
+
+    override fun onSubmitForm() {
+        callHover(0)
+        findNavController().popBackStack()
+    }
+
+    private fun callHover(requestCode: Int) {
+        (requireActivity() as AbstractHoverCallerActivity).runSession(
+            payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
+            actionSelectViewModel.activeAction.value!!, getExtras(), requestCode
+        )
+    }
+
+    private fun getExtras(): HashMap<String, String> {
+        val extras = transferViewModel.wrapExtras()
+        extras.putAll(actionSelectViewModel.wrapExtras())
+        return extras
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -297,64 +283,49 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, afterCount: Int) {
-            with(transferViewModel) {
-                if (afterCount == 0) {
-                    resetRecipient()
-                    recipientValue.setContent("", "")
-                } else
-                    setRecipient(charSequence.toString())
-            }
+            transferViewModel.setRecipientNumber(charSequence.toString())
         }
     }
 
-    private fun validates(): Boolean {
-        val amountError = transferViewModel.amountErrors()
-        amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+    override fun validates(): Boolean {
+        val accountError = accountsViewModel.errorCheck()
+        payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val channelError = channelsViewModel.errorCheck()
-        accountDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        val amountError = transferViewModel.amountErrors()
+        binding.editCard.amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val actionError = actionSelectViewModel.errorCheck()
-        recipientInstitutionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        binding.editCard.actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
-        contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        binding.editCard.contactSelect.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
 
-        channelsViewModel.activeAccount.value?.let {
-            if (!channelsViewModel.isValidAccount()) {
-                accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-                fetchAccounts(it)
-                return false
-            }
-        }
-
-        return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
+        return accountError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }
 
     override fun onContactSelected(contact: StaxContact) {
         transferViewModel.setContact(contact)
-        contactInput.setSelected(contact)
+        binding.editCard.contactSelect.setSelected(contact)
     }
 
     override fun highlightAction(action: HoverAction?) {
         action?.let { actionSelectViewModel.setActiveAction(it) }
     }
 
-    private fun updateNonStandardForEntryList(variables: LinkedHashMap<String, String>) {
-        binding.editCard.nonStandardVariableRecyclerView.also {
-            nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this@TransferFragment, it)
-            it.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            it.adapter = nonStandardVariableAdapter
-        }
+    private fun updateNonStandardInputs(variables: LinkedHashMap<String, String>) {
+        val recyclerView = binding.editCard.nonStandardVariableRecyclerView
+        nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, recyclerView)
+        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+        recyclerView.adapter = nonStandardVariableAdapter
     }
 
-    private fun updateNonStandardForSummaryCard(variables: LinkedHashMap<String, String>) {
-        binding.summaryCard.nonStandardSummaryRecycler.apply {
-            layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            adapter = NonStandardSummaryAdapter(variables)
-        }
+    private fun updateNonStandardSummary(variables: LinkedHashMap<String, String>) {
+        val recyclerView = binding.summaryCard.nonStandardSummaryRecycler
+        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+        nonStandardSummaryAdapter = NonStandardSummaryAdapter(variables)
+        recyclerView.adapter = nonStandardSummaryAdapter
     }
 
     private fun setRecipientHint(action: HoverAction) {
@@ -363,10 +334,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         binding.summaryCard.recipientRow.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
 
         if (!action.requiresRecipient()) {
-            recipientValue.setContent(getString(R.string.self_choice), "")
+            binding.summaryCard.recipientValue.setContent(getString(R.string.self_choice), "")
         } else {
-            transferViewModel.forceUpdateContactUI()
-            contactInput.setHint(
+            binding.editCard.contactSelect.setHint(
                 if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
                     getString(R.string.recipientacct_label)
                 else
@@ -375,44 +345,30 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun completeAutoFilling(data: AutofillData) {
-        channelsViewModel.setChannelFromId(data.channelId, data.accountId)
-        transferViewModel.contact.value?.let { contactInput.setText(it.shortName(), false) }
-        amountInput.setText(transferViewModel.amount.value)
-        transferViewModel.setEditing(data.isEditing)
-        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, data.institutionId.toString()), AbstractStatefulInput.INFO)
-    }
-
-    private fun checkForBonus() {
+    private fun showBonusBanner(activeAction: HoverAction?) {
         if (args.transactionType == HoverAction.AIRTIME) {
-            val bonuses = bonusViewModel.bonuses.value
-            if (!bonuses.isNullOrEmpty())
-                showBonusBanner(bonuses)
-        }
-    }
+            val bonus = bonusViewModel.bonuses.value.firstOrNull() ?: return
 
-    private fun showBonusBanner(bonuses: List<Bonus>) = with(binding.bonusLayout) {
-        val channelId = bonuses.first().userChannel
+            with(binding.bonusLayout) {
+                cardBonus.visibility = View.VISIBLE
+                learnMore.movementMethod = LinkMovementMethod.getInstance()
 
-        cardBonus.visibility = View.VISIBLE
-        val bonus = bonuses.first()
-        val usingBonusChannel = channelsViewModel.activeChannel.value?.id == bonus.purchaseChannel
+                if (activeAction?.channel_id == bonus.purchaseChannel) {
+                    title.text = getString(R.string.congratulations)
+                    message.text = getString(R.string.valid_account_bonus_msg)
+                    cta.visibility = View.GONE
+                } else {
+                    title.text = getString(R.string.get_extra_airtime)
+                    message.text = getString(R.string.invalid_account_bonus_msg)
+                    cta.apply {
+                        visibility = View.VISIBLE
+                        text = getString(R.string.top_up_with_mpesa)
 
-        learnMore.movementMethod = LinkMovementMethod.getInstance()
-
-        if (usingBonusChannel) {
-            title.text = getString(R.string.congratulations)
-            message.text = getString(R.string.valid_account_bonus_msg)
-            cta.visibility = View.GONE
-        } else {
-            title.text = getString(R.string.get_extra_airtime)
-            message.text = getString(R.string.invalid_account_bonus_msg)
-            cta.apply {
-                visibility = View.VISIBLE
-                text = getString(R.string.top_up_with_mpesa)
-                setOnClickListener {
-                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                    channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channelId)
+                        setOnClickListener {
+                            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                            channelsViewModel.validateAccounts(bonus.userChannel)
+                        }
+                    }
                 }
             }
         }
@@ -424,33 +380,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if (!isEditing)
             binding.bonusLayout.cardBonus.visibility = View.GONE
         else
-            checkForBonus()
-    }
-
-    /**
-     * Handles instances where the active account is different from the bonus account to be used.
-     * ChannelId is fetched from the bonus object's user channel field.
-     * Channel and respective accounts are fetched before being passed to account dropdown
-     */
-    private fun updateAccountDropdown() = lifecycleScope.launch(Dispatchers.IO) {
-        val bonus = bonusViewModel.getBonusByPurchaseChannel(args.channelId)
-
-        bonus?.let {
-            val channel = channelsViewModel.getChannel(bonus.userChannel)
-            channelsViewModel.setActiveChannelAndAccount(bonus.purchaseChannel, channel!!.id)
-        } ?: run { Timber.e("Bonus cannot be found") }
-    }
-
-    /**
-     * Monitors changes in active account from account dropdown and sets bonus channel
-     */
-    private fun setChannel(account: Account) = lifecycleScope.launch(Dispatchers.IO) {
-        val bonus = bonusViewModel.getBonusByUserChannel(account.channelId)
-
-        if (bonus != null) {
-            val channel = channelsViewModel.getChannel(bonus.purchaseChannel)
-            channelsViewModel.setActiveChannel(channel!!)
-        }
+            showBonusBanner(actionSelectViewModel.activeAction.value)
     }
 
     override fun onDestroyView() {

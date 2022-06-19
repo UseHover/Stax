@@ -14,7 +14,7 @@
             android:orientation="vertical">
 
         <include
-                android:id="@+id/editRequestCard"
+                android:id="@+id/editCard"
                 layout="@layout/request_card_edit" />
 
         <include

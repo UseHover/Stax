@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.databinding.FragmentPaybillListBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
@@ -21,8 +22,9 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     private var _binding: FragmentPaybillListBinding? = null
     private val binding get() = _binding!!
 
+    private val accountsViewModel: AccountsViewModel by sharedViewModel()
+    private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private val paybillViewModel: PaybillViewModel by sharedViewModel()
-    private val args: PaybillListFragmentArgs by navArgs()
 
     private var dialog: StaxDialog? = null
 
@@ -35,51 +37,56 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
         super.onViewCreated(view, savedInstanceState)
 
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill_list)), requireActivity())
-
-        binding.contentLayout.setOnClickIcon { NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment(false)) }
-
-        paybillViewModel.getSavedPaybills(args.accountId)
-        paybillViewModel.getPopularPaybills(args.accountId)
-
+        updatePaybills(paybillViewModel.savedPaybills.value)
+        updateActions(accountsViewModel.channelActions.value)
+        startListeners()
         startObservers()
+    }
+
+    private fun startListeners() {
+        binding.contentLayout.setOnClickIcon { NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment()) }
 
         binding.newPaybill.newPaybillCard.setOnClickListener {
             PaybillNumberDialog().show(childFragmentManager, PaybillNumberDialog::class.java.simpleName)
         }
     }
 
-    private fun startObservers() = with(paybillViewModel) {
-        savedPaybills.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty())
-                showSavedPaybills(it)
-            else
-                toggleSavedPaybills(false)
-        }
+    private fun startObservers() {
+        paybillViewModel.savedPaybills.observe(viewLifecycleOwner) { updatePaybills(it) }
+        accountsViewModel.channelActions.observe(viewLifecycleOwner) { updateActions(it) }
 
-        popularPaybills.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty())
-                showPopularPaybills(it)
-            else
-                togglePopularPaybills(false)
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
+            it?.let { paybillViewModel.selectPaybill(it) }
         }
     }
 
 
-    private fun showPopularPaybills(paybills: List<HoverAction>) {
+    private fun showPopular(actions: List<HoverAction>) {
         togglePopularPaybills(true)
 
         binding.popularList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-            adapter = PaybillActionsAdapter(paybills, this@PaybillListFragment)
+            adapter = PaybillActionsAdapter(actions.filter { it.getVarValue(BUSINESS_NO) != BUSINESS_NO }, this@PaybillListFragment)
         }
     }
 
-    private fun showSavedPaybills(paybills: List<Paybill>) {
-        toggleSavedPaybills(true)
+    private fun updateActions(actions: List<HoverAction>?) {
+        if (actions.isNullOrEmpty())
+            togglePopularPaybills(false)
+        else
+            showPopular(actions)
+    }
 
-        binding.savedList.apply {
-            layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-            adapter = PaybillAdapter(paybills, this@PaybillListFragment)
+    private fun updatePaybills(paybills: List<Paybill>?) {
+        if (paybills.isNullOrEmpty())
+            toggleSavedPaybills(false)
+        else {
+            toggleSavedPaybills(true)
+
+            binding.savedList.apply {
+                layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+                adapter = PaybillAdapter(paybills, this@PaybillListFragment)
+            }
         }
     }
 
@@ -109,12 +116,14 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
 
     override fun onSelectPaybill(paybill: Paybill) {
         paybillViewModel.selectPaybill(paybill)
+        actionSelectViewModel.setActiveAction(paybill.actionId)
         findNavController().popBackStack()
     }
 
     override fun onSelectPaybill(action: HoverAction) {
-        paybillViewModel.selectAction(action)
-        findNavController().popBackStack()
+        paybillViewModel.selectPaybill(action)
+        actionSelectViewModel.setActiveAction(action)
+        requireActivity().supportFragmentManager.popBackStack();
     }
 
     override fun onPause() {

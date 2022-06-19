@@ -5,10 +5,14 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.hover.sdk.permissions.PermissionHelper
+import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
+import com.hover.stax.VARIANT
 import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.home.NAV_HOME
+import com.hover.stax.home.NAV_LINK_ACCOUNT
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.StaxGoogleLoginInterface
 import com.hover.stax.onboarding.signInVariant.SignInVariantFragmentDirections
@@ -43,14 +47,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
 
     private fun navigateNextScreen() {
         if (hasPassedOnboarding()) checkPermissionsAndNavigate()
-        else chooseOnboardingVariant()
-    }
-
-    private fun chooseOnboardingVariant() = when (Utils.getString(Constants.VARIANT, this) ?: "default") {
-        "interactive" -> NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalInteractiveOnboardingVariant())
-        "informational" ->  NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalSignInVariantFragment())
-        else -> Timber.i("Loading default fragment") //do nothing, loading default fragment
-
+        else NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalInteractiveOnboardingVariant())
     }
 
     override fun googleLoginSuccessful() {
@@ -69,7 +66,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
 
     private fun showBasicPermission() {
         PermissionUtils.showInformativeBasicPermissionDialog(0,
-            { PermissionUtils.requestPerms(Constants.NAV_HOME, this) }, {
+            { PermissionUtils.requestPerms(NAV_HOME, this) }, {
                 AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this)
             }, this
         )
@@ -83,7 +80,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
 
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_LINK_ACCOUNT)
+            putExtra(FRAGMENT_DIRECT, NAV_LINK_ACCOUNT)
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         startActivity(intent)

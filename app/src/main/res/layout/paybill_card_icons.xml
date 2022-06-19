@@ -9,15 +9,27 @@
         app:showBack="true"
         app:title="@string/choose_icon_title">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center">
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/iconList"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_8"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3"
+            app:spanCount="2"
             tools:itemCount="6"
             tools:listitem="@layout/item_icons" />
+
+    </FrameLayout>
+
+
 
 </com.hover.stax.views.StaxCardView>

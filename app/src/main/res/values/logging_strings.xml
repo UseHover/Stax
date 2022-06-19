@@ -54,6 +54,7 @@
 	<string name="visit_language" translatable="false">Language Choice</string>
 	<string name="visit_security" translatable="false">Security</string>
 	<string name="visit_change_pin" translatable="false">Change PIN</string>
+	<string name="visit_transaction_history">Transaction history</string>
 	<string name="visit_transaction" translatable="false">Transaction Detail</string>
 	<string name="visit_schedule" translatable="false">Schedule Detail</string>
 	<string name="visit_channel" translatable="false">Channel Detail</string>
@@ -65,6 +66,7 @@
 	<string name="visit_balance_and_history" translatable="false">Balance and history</string>
 	<string name="visit_link_account" translatable="false">Link an account</string>
 	<string name="visit_paybill" translatable="false">Paybill</string>
+	<string name="visit_merchant" translatable="false">Pay merchant</string>
 	<string name="visit_paybill_list" translatable="false">Paybill List</string>
 
 	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>
@@ -95,7 +97,7 @@
 
 	<string name="changed_default_account" translatable="false">Changed default account</string>
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
-	<string name="clicked_run_bounty_session" translatable="false">Clicked run bounty USSD session</string>
+	<string name="clicked_start_bounty" translatable="false">Clicked run bounty USSD session</string>
 	<string name="clicked_retry_bounty_session" translatable="false">Clicked retry bounty from transaction detail page</string>
 	<string name="create_login_success" translatable="false">User created successfully</string>
 	<string name="visited_rating_review_screen" translatable="false">Visited ratings and review screen</string>

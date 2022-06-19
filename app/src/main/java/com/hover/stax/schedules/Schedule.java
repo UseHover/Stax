@@ -10,7 +10,6 @@ import androidx.room.PrimaryKey;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,10 +20,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity(tableName = "schedules")
 public class Schedule {
     public final static int DAILY = 0, WEEKLY = 1, BIWEEKLY = 2, MONTHLY = 3, ONCE = 4;
-    public final static String SCHEDULE_ID = "schedule_id", DATE_KEY = "schedule_date";
+    public final static String SCHEDULE_ID = "schedule_id", DATE_KEY = "schedule_date", REQUEST_TYPE = "request";
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -84,7 +84,7 @@ public class Schedule {
     public Schedule(Long start, Boolean isRepeat, int frequency, Long end, List<StaxContact> contacts, String a, String n, Context c) {
         this(start, contacts, a, n);
         setRepeatVals(isRepeat, frequency, end);
-        type = Constants.REQUEST_TYPE;
+        type = REQUEST_TYPE;
         description = generateDescription(null, contacts, c);
     }
 
@@ -114,7 +114,7 @@ public class Schedule {
                 return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, StaxContact.shortName(contacts, c));
             case HoverAction.ME2ME:
                 return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
-            case Constants.REQUEST_TYPE:
+            case REQUEST_TYPE:
                 return c.getString(R.string.descrip_request, StaxContact.shortName(contacts, c));
             default:
                 return "Other";
@@ -135,7 +135,7 @@ public class Schedule {
                 return c.getString(R.string.notify_transfer_cta);
             case HoverAction.AIRTIME:
                 return c.getString(R.string.notify_airtime_cta);
-            case Constants.REQUEST_TYPE:
+            case REQUEST_TYPE:
                 return c.getString(R.string.notify_request_cta);
             default:
                 return null;
@@ -149,7 +149,7 @@ public class Schedule {
                 return c.getString(R.string.notify_transfer, description);
             case HoverAction.AIRTIME:
                 return c.getString(R.string.notify_airtime);
-            case Constants.REQUEST_TYPE:
+            case REQUEST_TYPE:
                 return c.getString(R.string.notify_request, StaxContact.shortName(contacts, c));
             default:
                 return null;

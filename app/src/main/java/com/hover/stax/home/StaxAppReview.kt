@@ -7,8 +7,9 @@ import android.net.Uri
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.stax.R
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
+
+const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
 
 internal object StaxAppReview {
 
@@ -22,7 +23,7 @@ internal object StaxAppReview {
         reviewManager.requestReviewFlow().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 reviewManager.launchReviewFlow(activity, task.result).addOnCompleteListener {
-                    Utils.saveBoolean(Constants.APP_RATED_NATIVELY, true, activity)
+                    Utils.saveBoolean(APP_RATED_NATIVELY, true, activity)
                 }
             }
         }

@@ -3,38 +3,37 @@ package com.hover.stax.accounts
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelsViewModel
-import com.hover.stax.utils.Constants
+import com.hover.stax.actions.ActionSelect
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
     private var showSelected: Boolean = true
-    private var helperText: String? = null
     private var highlightListener: HighlightListener? = null
-    private var accountFetchListener: AccountFetchListener? = null
 
-    private var accountList: List<Account> = ArrayList()
-
-    var highlightedAccount: Account? = null
+    private var highlightedAccount: Account? = null
 
     init {
         getAttrs(context, attributeSet)
     }
 
-    private fun getAttrs(context: Context, attributeSet: AttributeSet) {
-        val attributes = context.theme.obtainStyledAttributes(attributeSet, R.styleable.ChannelDropdown, 0, 0)
+    override fun getAttrs(context: Context, attrs: AttributeSet) {
+        super.getAttrs(context, attrs)
+        val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.ChannelDropdown, 0, 0)
 
         try {
             showSelected = attributes.getBoolean(R.styleable.ChannelDropdown_show_selected, true)
@@ -50,7 +49,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun accountUpdate(accounts: List<Account>) {
         if (accounts.isNotEmpty()) {
-            updateChoices(accounts)
+            updateChoices(accounts.toMutableList())
         } else if (!hasExistingContent()) {
             setState(context.getString(R.string.accounts_error_no_accounts), NONE)
         }
@@ -71,98 +70,88 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             }
 
             UIHelper.loadImage(context, account.logoUrl, target)
-
-            if (account.name == Constants.PLACEHOLDER) {
-                accountFetchListener?.fetchAccounts(account)
-            } else {
-                highlightedAccount = account
-            }
+            highlightedAccount = account
         }
     }
 
-    private fun updateChoices(accounts: List<Account>) {
+    private fun updateChoices(accounts: MutableList<Account>) {
         if (highlightedAccount == null) setDropdownValue(null)
-        accountList = accounts
+        accounts.add(Account("Add account"))
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
+        onSelect(accounts.firstOrNull { it.isDefault })
     }
 
-    fun setCurrentAccount(account: Account? = null, channelId: Int = 0) = onSelect(account ?: accountList.firstOrNull { it.isDefault }, channelId)
 
-    private fun onSelect(account: Account?, channelOverride: Int = 0) {
+    private fun onSelect(account: Account?) {
         setDropdownValue(account)
-        account?.let { highlightListener?.highlightAccount(it, channelOverride) }
+        if (account != null && account.id != 0)
+            highlightListener?.highlightAccount(account)
+        else
+            findNavController().navigate(R.id.navigation_linkAccount)
     }
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
 
-    fun setObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
+    fun setObservers(viewModel: AccountsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            val simsObserver = object: Observer<List<SimInfo>> {
-                override fun onChanged(t: List<SimInfo>?) {
-                    Timber.i("Got sims ${t?.size}")
-                }
-            }
-            val hniListObserver = object : Observer<List<String>> {
-                override fun onChanged(t: List<String>?) {
-                    Timber.i("Got new sim hni list $t")
-                }
-            }
-            val selectedObserver = object : Observer<List<Channel>> {
-                override fun onChanged(t: List<Channel>?) {
-                    Timber.e("Got new selected channels ${t?.size}")
-                }
-            }
-            val accountObserver = object: Observer<Account> {
-                override fun onChanged(t: Account?) {
-                    setDropdownValue(t)
+            lifecycleOwner.lifecycleScope.launch {
+                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    accounts.collect {
+                        accountUpdate(it)
+                    }
                 }
             }
 
-            sims.observe(lifecycleOwner, simsObserver)
-            simHniList.observe(lifecycleOwner, hniListObserver)
-            accounts.observe(lifecycleOwner) { accountUpdate(it) }
-            activeAccount.observe(lifecycleOwner, accountObserver)
+            activeAccount.observe(lifecycleOwner) {
+                if (it != null && showSelected) {
+                    setDropdownValue(it)
+                    setState(helperText, NONE)
+                }
+            }
 
-            selectedChannels.observe(lifecycleOwner, selectedObserver)
-            activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
-            channelActions.observe(lifecycleOwner) { setState(it, viewModel) }
+            channelActions.observe(lifecycleOwner) {
+                setState(it, viewModel)
+            }
         }
     }
 
-    private fun setState(actions: List<HoverAction>, viewModel: ChannelsViewModel) {
-        when {
-            viewModel.activeChannel.value != null && (actions.isEmpty()) -> setState(
+    private fun setState(actions: List<HoverAction>, viewModel: AccountsViewModel) {
+        if (viewModel.activeAccount.value == null && actions.isEmpty()) {
+            setState(
                 context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
                 ), ERROR
             )
-
-            actions.isNotEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
-                setState(
-                    context.getString(
-                        if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
-                        else R.string.self_only_money_warning
-                    ), INFO
-                )
-
-            viewModel.activeChannel.value != null && showSelected -> setState(helperText, SUCCESS)
-        }
+        } else if (actions.isNotEmpty() && actions.size == 1)
+            addInfoMessage(actions.first())
+        else if (viewModel.activeAccount.value != null && showSelected)
+            setState(helperText, SUCCESS)
     }
 
-    fun setFetchAccountListener(listener: AccountFetchListener) {
-        accountFetchListener = listener
+    private fun addInfoMessage(action: HoverAction) {
+        if (!action.requiresRecipient() && isSelf(action))
+            setState(
+                context.getString(
+                    if (action.transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
+                    else R.string.self_only_money_warning
+                ), INFO
+            )
+        else
+            setState(null, SUCCESS)
     }
+
+    private fun isSelf(action: HoverAction): Boolean {
+        return action.transaction_type == HoverAction.P2P || action.transaction_type == HoverAction.AIRTIME
+    }
+
+    fun getHighlightedAccount() = highlightedAccount
 
     interface HighlightListener {
-        fun highlightAccount(account: Account, channelOverride: Int = 0)
-    }
-
-    interface AccountFetchListener {
-        fun fetchAccounts(account: Account)
+        fun highlightAccount(account: Account)
     }
 }

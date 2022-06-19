@@ -14,6 +14,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -36,17 +37,14 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
         binding.title.text = getString(R.string.financial_wellness_tips)
         binding.backButton.setOnClickListener { findNavController().popBackStack() }
+
+        viewModel.getTips()
+
         startObserver()
     }
 
-    private fun startObserver() = with(viewModel) {
-        val tipId = args.tipId
-
-        tips.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                showFinancialTips(it, tipId)
-            }
-        }
+    private fun startObserver() = collectLatestLifecycleFlow(viewModel.tips) {
+        showFinancialTips(it, args.tipId)
     }
 
     private fun showFinancialTips(tips: List<FinancialTip>, id: String? = null) {
@@ -145,8 +143,8 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         binding.financialTipsDetail.visibility = View.GONE
         binding.tipsCard.visibility = View.VISIBLE
 
-        if (!viewModel.tips.value.isNullOrEmpty())
-            showFinancialTips(viewModel.tips.value!!, null)
+        if (viewModel.tips.value.isNotEmpty())
+            showFinancialTips(viewModel.tips.value, null)
     }
 
     override fun onDestroyView() {
