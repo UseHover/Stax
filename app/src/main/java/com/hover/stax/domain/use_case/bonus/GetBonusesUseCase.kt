@@ -9,9 +9,7 @@ import kotlinx.coroutines.flow.flow
 
 class GetBonusesUseCase(private val repository: BonusRepository) {
 
-    suspend fun getBonusList(): Flow<List<Bonus>> {
-        return repository.getBonusList()
-    }
+    suspend operator fun invoke(): Flow<List<Bonus>> = repository.getBonusList()
 
     fun getBonusByPurchaseChannel(channelId: Int): Flow<Resource<Bonus>> = flow {
         emit(Resource.Loading())

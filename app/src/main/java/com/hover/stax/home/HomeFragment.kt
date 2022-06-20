@@ -12,12 +12,10 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.domain.model.Bonus
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
-import com.hover.stax.financialTips.FinancialTip
-import com.hover.stax.financialTips.FinancialTipsViewModel
-import com.hover.stax.presentation.home.HomeState
+import com.hover.stax.domain.model.Bonus
+import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
@@ -25,7 +23,6 @@ import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.utils.network.NetworkMonitor
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
@@ -34,7 +31,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val wellnessViewModel: FinancialTipsViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
@@ -52,10 +48,11 @@ class HomeFragment : Fragment() {
 
         homeViewModel.getBonusList()
         homeViewModel.getAccounts()
+        homeViewModel.getFinancialTips()
 
         collectLatestLifecycleFlow(homeViewModel.homeState) {
-            if(it.bonuses.isNotEmpty())
-                showBonuses(it.bonuses)
+            showBonuses(it.bonuses)
+            setUpWellnessTips(it.financialTips)
         }
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
@@ -68,7 +65,6 @@ class HomeFragment : Fragment() {
             updateOfflineIndicator(it)
         }
 
-        setUpWellnessTips()
         setKeVisibility()
 
         lifecycleScope.launchWhenStarted {
@@ -85,7 +81,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showBonuses(bonusList: List<Bonus>){
+    private fun showBonuses(bonusList: List<Bonus>) {
         if (bonusList.isNotEmpty()) {
             with(binding.bonusCard) {
                 message.text = bonusList.first().message
@@ -117,9 +113,10 @@ class HomeFragment : Fragment() {
         binding.offlineBadge.visibility = if (isConnected) View.GONE else View.VISIBLE
     }
 
-    private fun setUpWellnessTips() = collectLatestLifecycleFlow(wellnessViewModel.tips) {
-        if (it.isNotEmpty())
-            showTip(it.first())
+    private fun setUpWellnessTips(tips: List<FinancialTip>) {
+        Timber.e("Found ${tips.size} tips")
+        if (tips.isNotEmpty())
+            showTip(tips.first())
         else
             binding.wellnessCard.tipsCard.visibility = View.GONE
     }

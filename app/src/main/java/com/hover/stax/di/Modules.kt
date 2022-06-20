@@ -15,15 +15,18 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.repository.AccountRepositoryImpl
 import com.hover.stax.data.repository.BonusRepositoryImpl
+import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.ParserRepo
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.repository.BonusRepository
+import com.hover.stax.domain.repository.FinancialTipsRepository
 import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.SetDefaultAccountUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
+import com.hover.stax.domain.use_case.financial_tips.GetTipsUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -108,6 +111,7 @@ val repositories = module {
 
     single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(named("CoroutineDispatcher"))) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
+    single<FinancialTipsRepository> { FinancialTipsRepositoryImpl(get(), get(named("CoroutineDispatcher")))}
 }
 
 val useCases = module {
@@ -118,5 +122,5 @@ val useCases = module {
     factoryOf(::SetDefaultAccountUseCase)
     factoryOf(::CreateAccountsUseCase)
 
-
+    factoryOf(::GetTipsUseCase)
 }

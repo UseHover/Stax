@@ -9,13 +9,12 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
+import com.hover.stax.domain.model.FinancialTip
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
-
-data class FinancialTip(val id: String, val title: String, val content: String, val snippet: String, val date: Date?, val shareCopy: String?, val deepLink: String?)
 
 class FinancialTipsViewModel(val application: Application) : ViewModel() {
 
