@@ -56,7 +56,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             activeAccount.value = accounts.firstOrNull { it.isDefault }
     }
 
-    fun getActionType(): String = type.value!!
+    fun getActionType(): String? = type.value
 
     private fun loadActions(type: String?) {
         if (type == null || activeAccount.value == null) return

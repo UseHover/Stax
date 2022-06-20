@@ -47,14 +47,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
 
     private fun navigateNextScreen() {
         if (hasPassedOnboarding()) checkPermissionsAndNavigate()
-        else chooseOnboardingVariant()
-    }
-
-    private fun chooseOnboardingVariant() = when (Utils.getString(VARIANT, this) ?: "default") {
-        "interactive" -> NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalInteractiveOnboardingVariant())
-        "informational" ->  NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalSignInVariantFragment())
-        else -> Timber.i("Loading default fragment") //do nothing, loading default fragment
-
+        else NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalInteractiveOnboardingVariant())
     }
 
     override fun googleLoginSuccessful() {

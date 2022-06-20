@@ -74,7 +74,6 @@ abstract class AbstractFormFragment : Fragment() {
     open fun startObservers(root: View) {
         summaryCard?.setOnClickIcon { abstractFormViewModel.setEditing(true) }
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
-        setupEmptyObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
         collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
@@ -86,11 +85,6 @@ abstract class AbstractFormFragment : Fragment() {
         account?.let {
             (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
         }
-    }
-
-    private fun setupEmptyObservers() {
-//        accountsViewModel.channelActions.observe(viewLifecycleOwner) { Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
-//        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) { Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}") }
     }
 
     @CallSuper
@@ -141,9 +135,15 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun chooseFabText(isEditing: Boolean): String {
-        return if (isEditing) getString(R.string.btn_continue)
-            else if (accountsViewModel.getActionType() == HoverAction.AIRTIME) getString(R.string.fab_airtimenow)
-            else getString(R.string.fab_transfernow)
+        return when {
+            isEditing -> getString(R.string.btn_continue)
+            accountsViewModel.getActionType() == HoverAction.AIRTIME -> getString(R.string.fab_airtimenow)
+            accountsViewModel.getActionType() == HoverAction.P2P ||
+                    accountsViewModel.getActionType() == HoverAction.MERCHANT ||
+                    accountsViewModel.getActionType() == HoverAction.BILL -> getString(R.string.fab_transfernow)
+            else -> getString(R.string.fab_submit)
+
+        }
     }
 
     open fun startContactPicker(c: Context) {
@@ -200,20 +200,20 @@ abstract class AbstractFormFragment : Fragment() {
                 abstractFormViewModel.setEditing(true)
             else
                 findNavController().popBackStack()
-                }
-            }
-
-            private fun resetVMs() {
-                abstractFormViewModel.reset()
-                accountsViewModel.reset()
-                actionSelectViewModel.activeAction.value = null
-            }
-
-
-            override fun onDestroy() {
-                resetVMs()
-                super.onDestroy()
         }
-
-        private fun log(event: String) = AnalyticsUtil.logAnalyticsEvent(event, requireContext())
     }
+
+    private fun resetVMs() {
+        abstractFormViewModel.reset()
+        accountsViewModel.reset()
+        actionSelectViewModel.activeAction.value = null
+    }
+
+
+    override fun onDestroy() {
+        resetVMs()
+        super.onDestroy()
+    }
+
+    private fun log(event: String) = AnalyticsUtil.logAnalyticsEvent(event, requireContext())
+}

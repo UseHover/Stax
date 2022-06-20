@@ -107,10 +107,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                     setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
             }
 
-//            accounts.observe(viewLifecycleOwner) {
-//                //no channels selected. navigate user to accounts fragment
-//
-//            }
             activeAccount.observe(viewLifecycleOwner, accountsObserver)
         }
 
@@ -177,9 +173,9 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     }
 
     private fun setClickListeners() = with(binding.shareCard) {
-        smsShareSelection.setOnClickListener { sendSms(requestViewModel) }
-        whatsappShareSelection.setOnClickListener { sendWhatsapp(requestViewModel) }
-        copylinkShareSelection.setOnClickListener { copyShareLink(it, requestViewModel) }
+        smsShareSelection.setOnClickListener { sendSms(requestViewModel, requireActivity()) }
+        whatsappShareSelection.setOnClickListener { sendWhatsapp(requestViewModel, requireActivity()) }
+        copylinkShareSelection.setOnClickListener { copyShareLink(it, requestViewModel, requireActivity()) }
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {

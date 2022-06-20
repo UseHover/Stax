@@ -770,6 +770,7 @@
     <string name="airtime_purchase_message">I just bought airtime with Stax app and the best part is - it works offline. Check it out - %1$s</string>
     <string name="check_balance_message">I just checked my balance with Stax app and the best part is - it works offline. Check it out - %1$s</string>
     <string name="send_money_message">I just transferred money with Stax app and the best part is - it works offline. Check it out - %1$s</string>
+    <string name="fab_submit">Submit</string>
 
 
 </resources>

@@ -22,20 +22,20 @@ const val SMS = 303
 
 interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
 
-    fun sendSms(requestViewModel: NewRequestViewModel) {
+    fun sendSms(requestViewModel: NewRequestViewModel, activity: Activity) {
         requestViewModel.saveRequest()
         SmsSentObserver(this, listOf(requestViewModel.requestee.value), Handler(), requestViewModel.getApplication()).start()
-        sendSms(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.getApplication())
+        sendSms(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), activity)
     }
 
-    fun sendWhatsapp(requestViewModel: NewRequestViewModel) {
+    fun sendWhatsapp(requestViewModel: NewRequestViewModel, activity: Activity) {
         requestViewModel.saveRequest()
-        sendWhatsapp(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.activeAccount.value, requestViewModel.getApplication())
+        sendWhatsapp(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.activeAccount.value, activity)
     }
 
-    fun copyShareLink(view: View, requestViewModel: NewRequestViewModel) {
+    fun copyShareLink(view: View, requestViewModel: NewRequestViewModel, activity: Activity) {
         requestViewModel.saveRequest()
-        copyShareLink(requestViewModel.formulatedRequest.value, view.findViewById(R.id.copylink_share_selection), requestViewModel.getApplication())
+        copyShareLink(requestViewModel.formulatedRequest.value, view.findViewById(R.id.copylink_share_selection), activity)
     }
 
     override fun onSmsSendEvent(sent: Boolean) {
