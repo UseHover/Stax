@@ -10,19 +10,19 @@
             android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/tipsCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/margin_10">
 
             <ImageButton
                     android:id="@+id/backButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_13"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="start"
                     android:padding="@dimen/margin_10"
-                    android:layout_marginStart="@dimen/margin_13"
                     android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -35,26 +35,37 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_18"
                     android:layout_marginEnd="@dimen/margin_13"
-                    app:fontFamily="@font/brutalista_bold"
                     android:gravity="end"
                     android:paddingHorizontal="@dimen/margin_10"
-                    tools:text="@string/financial_wellness_tips"
                     android:textAlignment="viewEnd"
                     android:textAllCaps="true"
                     android:textColor="@color/offWhite"
                     android:textSize="@dimen/text_16"
+                    app:fontFamily="@font/brutalista_bold"
+                    app:layout_constraintBottom_toBottomOf="@id/backButton"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/backButton"
                     app:layout_constraintTop_toTopOf="@id/backButton"
-                    app:layout_constraintBottom_toBottomOf="@id/backButton"/>
+                    tools:text="@string/financial_wellness_tips" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="80dp"
+                    android:id="@+id/empty"
+                    android:text="@string/no_tips_available"
+                    android:textSize="@dimen/text_16" />
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/financialTips"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/backButton"
-                    android:nestedScrollingEnabled="false"
                     tools:itemCount="5"
                     tools:listitem="@layout/item_wellness_tips" />
 
