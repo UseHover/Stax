@@ -15,7 +15,7 @@ import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MerchantViewModel(application: Application, contactRepo: ContactRepo, val merchantRepo: MerchantRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+class MerchantViewModel(application: Application, contactRepo: ContactRepo, private val merchantRepo: MerchantRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
 	val amount = MutableLiveData<String?>()
 	val merchant = MutableLiveData<Merchant?>()
