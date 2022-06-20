@@ -14,22 +14,22 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 	var filteredMerchants: MutableList<Merchant>? = ArrayList(allMerchants)
 
 	override fun getView(position: Int, v: View?, parent: ViewGroup): View {
-		var v = v
+		var view = v
 		val holder: ViewHolder
-		if (v == null) {
+		if (view == null) {
 			val binding: StaxSpinner2lineBinding =
 				StaxSpinner2lineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-			v = binding.getRoot()
+			view = binding.root
 			holder = ViewHolder(binding)
-			v.tag = holder
+			view.tag = holder
 		} else {
-			holder = v.tag as ViewHolder
+			holder = view.tag as ViewHolder
 		}
 		val m = filteredMerchants!![position]
 		holder.title.text = m.shortName()
 		holder.subtitle.text = m.tillNo
 		holder.subtitle.visibility = if (m.hasName()) View.VISIBLE else View.GONE
-		return v
+		return view
 	}
 
 	override fun getFilter(): Filter {
@@ -38,9 +38,9 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 				val filterResults = FilterResults()
 				val filtered: MutableList<Merchant> = ArrayList()
 				if (constraint != null) {
-					for (merchant in allMerchants!!) {
-						if (merchant.toString().replace(" ".toRegex(), "").toLowerCase()
-								.contains(constraint.toString().toLowerCase())
+					for (merchant in allMerchants) {
+						if (merchant.toString().replace(" ".toRegex(), "").lowercase()
+								.contains(constraint.toString().lowercase())
 						) {
 							filtered.add(merchant)
 						}
@@ -62,7 +62,7 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 					notifyDataSetChanged()
 				} else if (constraint.isNullOrEmpty()) {
 					// no filter, add entire original list back in
-					filteredMerchants!!.addAll(allMerchants!!)
+					filteredMerchants!!.addAll(allMerchants)
 					notifyDataSetInvalidated()
 				}
 			}
