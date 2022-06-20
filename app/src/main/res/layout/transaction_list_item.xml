@@ -11,7 +11,7 @@
             android:id="@+id/li_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cardViewColor"
+            android:background="@color/colorPrimaryDark"
             android:paddingHorizontal="@dimen/margin_10"
             android:paddingVertical="@dimen/margin_16"
             android:textColor="@color/grey"

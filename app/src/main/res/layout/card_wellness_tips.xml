@@ -51,29 +51,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="This is test content" />
-        </LinearLayout>
-
-        <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/banner_secondary"
-                android:padding="@dimen/margin_10"
-                android:id="@+id/readMoreLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/contentLayout">
 
             <TextView
-                    android:id="@+id/more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/margin_3"
-                    app:fontFamily="@font/brutalista_medium"
-                    android:gravity="start"
-                    android:text="@string/read_more"
-                    android:textColor="@color/banner_text"
-                    android:textSize="@dimen/text_16"
-                    app:drawableEndCompat="@drawable/ic_twotone_chevron_right_24" />
-        </FrameLayout>
+                android:id="@+id/readmore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/margin_3"
+                app:fontFamily="@font/brutalista_medium"
+                android:gravity="start"
+                android:text="@string/read_more"
+                android:textColor="@color/brightBlue"
+                android:textSize="@dimen/text_16"
+                android:layout_marginTop="@dimen/margin_13" />
+        </LinearLayout>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

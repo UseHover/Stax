@@ -215,8 +215,8 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     companion object {
-        const val GREEN_BG = "#46E6CC"
-        const val BLUE_BG = "#04CCFC"
+        const val GREEN_BG = "#45E5CB"
+        const val BLUE_BG = "#2376F3"
 
         const val STACK_OVERLAY_GAP = 10
         const val ROTATE_UPSIDE_DOWN = 180f

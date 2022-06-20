@@ -77,6 +77,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     }
 
     private fun loadSims() {
+
         viewModelScope.launch(Dispatchers.IO) { sims.postValue(repo.presentSims) }
 
         simReceiver?.let {

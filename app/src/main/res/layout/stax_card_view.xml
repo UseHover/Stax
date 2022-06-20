@@ -1,13 +1,13 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/cardViewHeader"
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_13"
         android:layout_marginTop="@dimen/margin_5"
         android:layout_marginBottom="@dimen/margin_21"
-        app:cardBackgroundColor="@color/cardViewColor"
+        app:cardBackgroundColor="@color/transparent"
         app:cardCornerRadius="@dimen/radius"
         app:cardElevation="8dp">
 
