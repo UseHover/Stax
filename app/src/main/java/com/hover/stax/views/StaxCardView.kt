@@ -43,7 +43,6 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     private fun makeFlatView() {
         val zero = 0
         binding.cardView.cardElevation = zero.toFloat()
-        //binding.cardView.radius = zero.toFloat()
         removeCardMargin()
     }
 
