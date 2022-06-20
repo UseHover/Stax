@@ -1,6 +1,6 @@
 package com.hover.stax.domain.use_case.accounts
 
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.repository.AccountRepository
 import kotlinx.coroutines.flow.Flow
 

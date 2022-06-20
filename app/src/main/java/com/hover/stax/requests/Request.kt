@@ -1,17 +1,15 @@
 package com.hover.stax.requests
 
 import android.content.Context
-
 import android.text.TextUtils
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.DateUtils.now
 import com.hover.stax.utils.Utils.formatAmount
 import com.hover.stax.utils.paymentLinkCryptography.Base64
@@ -60,7 +58,7 @@ class Request {
     constructor()
 
     @Ignore
-    constructor(amount: String?, note: String?, requester_number: String? ,  requester_institution_id:Int ) {
+    constructor(amount: String?, note: String?, requester_number: String?, requester_institution_id: Int) {
         this.amount = amount
         this.note = note
         this.requester_number = requester_number
@@ -108,13 +106,16 @@ class Request {
 
     fun generateWhatsappRecipientString(contacts: List<StaxContact>, account: Account?): String {
         val phones = StringBuilder()
-        if(contacts.isNotEmpty()) {
+        if (contacts.isNotEmpty()) {
             for (r in contacts.indices) {
                 if (phones.isNotEmpty()) phones.append(",")
-                contacts[r].let{
+                contacts[r].let {
                     phones.append(
-                        PhoneHelper.getInternationalNumberNoPlus(it.accountNumber,
-                        account?.countryAlpha2 ?: Lingver.getInstance().getLocale().country))
+                        PhoneHelper.getInternationalNumberNoPlus(
+                            it.accountNumber,
+                            account?.countryAlpha2 ?: Lingver.getInstance().getLocale().country
+                        )
+                    )
                 }
             }
         }
@@ -122,12 +123,16 @@ class Request {
     }
 
     fun generateMessage(c: Context): String {
-        val amountString = if (amount != null) c.getString(R.string.sms_amount_detail,
-            formatAmount(amount!!))
+        val amountString = if (amount != null) c.getString(
+            R.string.sms_amount_detail,
+            formatAmount(amount!!)
+        )
         else ""
         val noteString =
-            if (note != null && !TextUtils.isEmpty(note)) c.getString(R.string.sms_note_detail,
-                note)
+            if (note != null && !TextUtils.isEmpty(note)) c.getString(
+                R.string.sms_note_detail,
+                note
+            )
             else " "
         val paymentLink = generateStaxLink(c)
         return c.getString(R.string.sms_request_template, amountString, noteString, paymentLink)
@@ -136,11 +141,13 @@ class Request {
     private fun generateStaxLink(c: Context): String {
         val amountNoFormat = if (!amount.isNullOrEmpty()) amount else "0.00"
         val requesterNumber = requester_number!!.replace("+", "")
-        val params = c.getString(R.string.payment_url_end,
+        val params = c.getString(
+            R.string.payment_url_end,
             amountNoFormat,
             requester_institution_id,
             requesterNumber,
-            now())
+            now()
+        )
         Timber.i("encrypting from: %s", params)
         val encryptedString = encryptBijective(params, c)
         Timber.i("link: %s", c.resources.getString(R.string.payment_root_url, encryptedString))
@@ -180,22 +187,26 @@ class Request {
                 .setCharsetName("UTF8").setIterationCount(65536).setKey("ves€Z€xs€aBKgh")
                 .setDigestAlgorithm("SHA1").setSalt("A secured salt").setBase64Mode(Base64.DEFAULT)
                 .setAlgorithm("AES/CBC/PKCS5Padding").setSecureRandomAlgorithm("SHA1PRNG")
-                .setSecretKeyType("PBKDF2WithHmacSHA1").setIv(byteArrayOf(29,
-                    88,
-                    -79,
-                    -101,
-                    -108,
-                    -38,
-                    -126,
-                    90,
-                    52,
-                    101,
-                    -35,
-                    114,
-                    12,
-                    -48,
-                    -66,
-                    -30))
+                .setSecretKeyType("PBKDF2WithHmacSHA1").setIv(
+                    byteArrayOf(
+                        29,
+                        88,
+                        -79,
+                        -101,
+                        -108,
+                        -38,
+                        -126,
+                        90,
+                        52,
+                        101,
+                        -35,
+                        114,
+                        12,
+                        -48,
+                        -66,
+                        -30
+                    )
+                )
 
         fun decryptBijective(value: String, c: Context): String {
             val valueChar = value.toCharArray()

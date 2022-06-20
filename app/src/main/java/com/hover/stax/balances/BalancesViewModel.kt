@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.accounts.Account
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.accounts.PLACEHOLDER
 import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

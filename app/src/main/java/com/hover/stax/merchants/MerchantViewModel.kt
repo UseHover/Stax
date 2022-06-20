@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.schedules.ScheduleRepo

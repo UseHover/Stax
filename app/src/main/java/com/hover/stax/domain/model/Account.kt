@@ -1,4 +1,4 @@
-package com.hover.stax.accounts
+package com.hover.stax.domain.model
 
 import androidx.room.*
 import com.hover.stax.channels.Channel

@@ -1,7 +1,7 @@
 package com.hover.stax.merchants
 
 import androidx.room.*
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.channels.Channel
 import javax.annotation.Nullable
 

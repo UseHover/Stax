@@ -2,7 +2,7 @@ package com.hover.stax.data.local.accounts
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.accounts.DUMMY
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentBalanceBinding
+import com.hover.stax.domain.model.DUMMY
 import com.hover.stax.home.HomeFragmentDirections
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractHoverCallerActivity
