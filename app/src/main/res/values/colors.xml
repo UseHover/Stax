@@ -2,6 +2,10 @@
 <resources  xmlns:tools="http://schemas.android.com/tools">
 	<color name="colorPrimary" tools:override="true">#292B2C</color>
 	<color name="colorPrimaryDark" tools:override="true">#000A1A</color>
+
+	<color name="colorBackground">#1E2329</color>
+	<color name="colorSurface">#292E34</color>
+
 	<color name="brightBlue" tools:override="true">#0091E3</color>
 	<color name="brightBluePressed" tools:override="true">#01659E</color>
 	<color name="cardViewColor">#292E34</color>

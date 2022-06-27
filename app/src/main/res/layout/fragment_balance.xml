@@ -29,9 +29,10 @@
             android:layout_marginBottom="@dimen/margin_13"
             android:animateLayoutChanges="false"
             android:visibility="gone"
+            app:cardElevation="0dp"
             app:cardBackgroundColor="@color/cardViewColor"
             app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="8dp">
+            >
 
         <TextView
                 android:layout_width="match_parent"

@@ -68,13 +68,8 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
         balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
 
         collectLatestLifecycleFlow(homeViewModel.homeState) {
-            if (it.accounts.isNotEmpty())
                 updateAccounts(ArrayList(it.accounts))
         }
-
-//        balancesViewModel.accounts.observe(viewLifecycleOwner) {
-//            updateAccounts(ArrayList(it))
-//        }
 
         collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
