@@ -8,7 +8,7 @@
         android:layout_marginHorizontal="@dimen/margin_13"
         android:layout_marginTop="@dimen/margin_5"
         android:layout_marginBottom="@dimen/margin_21"
-        app:cardBackgroundColor="@color/transparent"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="@dimen/radius">
 
     <LinearLayout
@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/margin_5"
             android:paddingVertical="@dimen/margin_13">
 
         <androidx.constraintlayout.widget.ConstraintLayout
