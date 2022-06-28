@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+    <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
+    <string name="app_name" translatable="false">Stax</string>
+    <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
+    <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
+    <string name="root_url" translatable="false">https://www.usehover.com</string>
+    <string name="api_url" translatable="false">https://www.usehover.com/api</string>
+    <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
+    <string name="users_endpoint" translatable="false">/stax_users</string>
+
+    <string name="referee_endpoint" translatable="false">/set_referee</string>
+    <string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
+    <string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+    <string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
+    <string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
+    <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
+    <string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
+    <string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
+    <string name="privacy_policy_link" translatable="false">https://docs.usehover.com/staxpolicy</string>
+    <string name="default_notification_channel_id">app.hover.stax</string>
+
+    <string name="channels_json_staging" translatable="false">channels-staging.json</string>
+    <string name="channels_json_prod" translatable="false">channels-prod.json</string>
+    <string name="stax_handle" translatable="false">\@joinstax</string>
+
+    <string name="nav_home">Mana</string>
+    <string name="nav_balance_and_history">Madaallii fi seenaa</string>
+    <string name="nav_balances">Madaallii</string>
+
+    <string name="nav_get_paid">Kaffaltii Argachuu</string>
+
+    <string name="nav_link_account">Akkaawuntii tokko walitti hidhu</string>
+    <string name="nav_airtime">Yeroo qilleensaa bitachuu</string>
+    <string name="nav_transfer">Dabarsuu</string>
+    <string name="nav_new_request">Gaaffii Haaraa</string>
+    <string name="nav_settings">Sajoolee</string>
+    <string name="nav_account_detail">Bal\'ina Herregaa</string>
+    <string name="nav_transaction">Bal\'ina Daldalaa</string>
+    <string name="nav_schedule">Bal\'ina Sagantaa</string>
+    <string name="nav_request">Bal\'inaan Gaaffii</string>
+    <string name="nav_transfer_detail">Bal\'ina Jijjiirraa</string>
+
+    <string name="lang_cardhead">Choose a language</string>
+    <string-array name="supported_lang_codes">
+        <item>am</item>
+        <item>en</item>
+        <item>fr</item>
+        <item>sw</item>
+        <item>so</item>
+        <item>om</item>
+    </string-array>
+
+    <string name="btn_ok">TOLE</string>
+    <string name="btn_cancel">Haquu</string>
+    <string name="btn_save">Qusachuu</string>
+    <string name="btn_dontsave">Dhiisuu</string>
+    <string name="btn_continue">Itti fufuu</string>
+    <string name="btn_send">Erguu</string>
+    <string name="btn_edit">Gulaaluu</string>
+    <string name="btn_back">Dugda</string>
+    <string name="btn_test">Qormaata</string>
+    <string name="btn_done">Raawwatame</string>
+    <string name="btn_google_signin">Google tiin galmaa\'i</string>
+
+    <!-- ONBOARDING VARIANT ZERO (DEFAULT)-->
+    <string name="stax_tagline">Dhiphina malee maallaqa sochoosuu</string>
+    <string name="splash_screen_img_desc">dugduubee Stax </string>
+    <string name="slide_1_title">Nageenya eegamaa. Ariifataa. Mijataa</string>
+    <string name="slide_1_desc">Maallaqa erguu fi herrega baankii fi momo qabdu fayyadamuun yeroo qilleensaa offline bitadhaa</string>
+    <string name="onboarding_link_accounts">Amma akkaawuntii keessan walitti hidhaa</string>
+
+
+    <!-- ONBOARDING VARIANT_1 -->
+    <string name="onboarding_v1_slide1_title">Stax sarara ala hojjeta</string>
+    <string name="onboarding_v1_slide2_title">Maallaqa ergaa</string>
+    <string name="onboarding_v1_slide3_title">Maallaqa gaafadhaa</string>
+    <string name="onboarding_v1_slide4_title">Yeroo qilleensaa bitachuu</string>
+    <string name="onboarding_v1_general_desc">Muuxannoo Stax guutuu argachuuf Google waliin itti fufaa</string>
+    <string name="continue_with_google">Google waliin itti fufaa</string>
+
+    <string name="slide2_desc">Maallaqa haala nageenya qabuu fi salphaatti dabarsuu. Kaffaltii dabalataa hin kaffalamu.</string>
+    <string name="slide3_desc">Link salphaa ta\'een maamiltootaa fi hiriyoota irraa saffisaan kaffaltii argadhaa.</string>
+    <string name="slide4_desc">Yeroo qilleensaa sekondii muraasa keessatti siifi namoota jaallattuuf guuti.</string>
+    <string name="slide1_desc">Stax interneetii waliin ykn osoo hin qabaatin fayyadamaa. Yeroo kamiyyuu. Bakka kamittuu.</string>
+
+    <string name="use_stax_no_sigin">Stax osoo hin seenin fayyadami</string>
+    <string name="termsOfServiceFullLabel">Itti fufuudhaan, Haala tajaajila Stax irratti walii galtee jirta.</string>
+    <string name="privacyPolicyFullLabel">Imaammata Dhuunfaa keenya keessatti akkaataa daataa keessan itti fayyadamnu ilaali.</string>
+
+    <!-- ONBOARDING VARIANT_2 -->
+    <string name="welcome_to_stax">Akkam, baga nagaan gara Stax dhuftan.</string>
+    <string name="welcome_to_stax_fullContent">Yoo Stax irratti haaraa taate gaaffii tokko tokko qabaachuu dandeessa, tokko tokko qulqulleessuuf haa gargaarru. Filannoo baay\'ee siif ta\'u filadhu.</string>
+    <string name="onboarding_variant_2_question1">Stax anaaf ta\'aa?</string>
+    <string name="skip_prefix">Waa\'ee stax duraan beektu?</string>
+    <string name="skip">Irra darbuu</string>
+
+    <string name="welcome_title_one">Gara Stax baga nagaan dhuftan!</string>
+    <string name="welcome_sub_one">Gara Hawaasa Stax baga nagaan dhuftan. Ati akka ofiisaatti Staxxer dha. Kunoo wantoota tokko lama waa\'ee Stax si gammachiisu.</string>
+    <string name="welcome_title_two">Woohoo! Ati sirriitti nama barbaadaa turredha!</string>
+
+    <string name="welcome_title_three">Si uwwifnee jirra!</string>
+    <string name="welcome_sub_two">Waa\'ee Stax irratti wantoota si gammachiisan tokko lama kunooti.</string>
+    <string name="intro_feature_one_title">USSD kan ofumaan hojjetu</string>
+    <string name="intro_feature_one_desc">Walnyaatinsa koodii USSD dhibbaan lakkaa\'aman yaadachuun hin barbaachisu. Isiniif lakkoofnee jirra.</string>
+    <string name="intro_feature_two_title">Maallaqa kee guutummaatti to\'adhu</string>
+    <string name="intro_feature_two_desc">Baankii fi herrega maallaqa moobaayilaa keessan hunda irraa Stax irraa bulchuu fi baasuu.</string>
+    <string name="intro_feature_three_title">Dizaayiniin nageenya qaba</string>
+    <string name="intro_feature_three_desc">Odeeffannoo keessan yeroo hunda nageenya akka qabaatu gochuuf dizaayinoota nageenyaa Android\'n ijaaraman fayyadamne.</string>
+    <string name="explore_btn_text">Stax qoradhu</string>
+
+    <string name="does_stax_charge_fees">Stax kaffaltii ni kaffalaa?</string>
+    <string name="what_does_stax_do">Stax maal hojjeta?</string>
+
+    <string name="is_stax_for_you">Stax siif ta\'uu isaa adda baasuuf hamma siif ibsu filadhu</string>
+    <string name="variant_V2_checkbox_option1">Yeroo darbe USSD fayyadameeraa?</string>
+    <string name="variant_V2_checkbox_option2">Herrega baankii ykn Mobile Money tokkoo ol qabaa?</string>
+    <string name="variant_V2_checkbox_option3">Daataa moobaayila koo yeroo baayyee nan cufa?</string>
+    <string name="none_apply">Kanneen keessaa tokkollee hin hojjetu</string>
+    <string name="variant_v2_nocheckbox_desc1">Stax kaffaltii dabalataa si hin kaffalu. Yeroo tokko tokko baankii ykn dhiyeessaan maallaqa moobaayilaa kee daldala raawwachuu keetiin kaffaltii si irraa kaffala.\n\nStax maallaqa meeqa akka si irraa kaffalan hordofa.</string>
+    <string name="variant_v2_nocheckbox_desc2">Stax teknooloojii USSD fayyadamuun sarara ala daldala akka dandeessan taasisa. Stax waliin, hafnaan herrega keessanii ilaaluu, maallaqa erguu, yeroo qilleensaa bitachuu, herrega ofii keessaa maallaqa dabarsuu, herrega faayinaansii (baankii fi maallaqa moobaayilaa) hedduu appii tokko irraa to\'achuu dandeessu.\n\nAkkasumas hidhannoo namoonni Stax qaban biroo danda\'an uumuu dandeessu qarshii siif erguuf itti fayyadami.</string>
+
+    <string name="skip_tutorial">Barnoota darbi</string>
+
+    <!-- Home -->
+    <string name="welcome_to">Baga nagaan dhuftan</string>
+    <string name="cta_transfer">Maallaqa ergaa</string>
+    <string name="cta_airtime">Yeroo qilleensaa bitadhaa</string>
+    <string name="cta_request">Maallaqa gaafadhaa</string>
+    <string name="cta_paybill">Kaffaltii kaffalaa</string>
+
+    <!-- Balances -->
+    <string name="bal_cardhead">Madaallii</string>
+    <string name="channels_error_nodata">Mee tajaajila fe\'uuf daataa ibsi.</string>
+    <string name="channels_error_nosim">Maaloo filannoowwan calaluuf SIM deeggarame galchi.</string>
+    <string name="channels_error_noselect">Tajaajila tokko filachuu qabda.</string>
+    <string name="accounts_error_no_accounts">Akkaawuntii hin dabalamne</string>
+    <string name="link_account">Akkaawuntii walitti hidhu</string>
+    <string name="link_account_error">Akkaawuntii walitti hidhu filadhu.</string>
+    <string name="link_another"><u>+ Akkaawuntii biraa walitti hidhu</u></string>
+    <string name="add_another_account"><u>+ Akkaawuntii biraa itti dabali</u></string>
+    <string name="hist_cardhead">Seenaa</string>
+    <string name="hist_zerobody">Ammallee seenaa hin qabdu. Maallaqa ergi ykn yeroo qilleensaa bitadhaa jalqabuuf.</string>
+    <string name="future_cardhead">Daldala Fuulduraa</string>
+    <string name="pending_callout">Daldala ergame. Mirkaneessa eegaa jira.</string>
+    <string name="refresh_balance_desc">Madaallii kee haaromsi</string>
+    <string name="refresh_balances">Madaallii kee haaromsi</string>
+    <string name="refresh">Haaromsaa</string>
+    <string name="refresh_balance_error">Hafnaan keessan ilaaluuf herrega itti dabalaa.</string>
+
+    <string name="check_balance_title">Hafnaan isaa ilaali</string>
+    <string name="check_balance_desc">Gaarii! Akkaawuntii kee isa jalqabaa itti dabalte. Amma madaallii keessan Stax irratti ilaaluu dandeessu.</string>
+    <string name="check_balance_alt">Gaarii! Account milkaa\'inaan dabalame. Amma madaallii keessan Stax irratti ilaaluu dandeessu.</string>
+    <string name="check_balance_alt_plural">Gaarii! Akkaawuntii milkaa\'inaan dabalame. Amma madaallii keessan Stax irratti ilaaluu dandeessu.</string>
+
+    <string name="later">Booda</string>
+    <string name="no_connecion">Walitti dhufeenya hin qabu</string>
+    <string name="your_main_account">Akkaawuntii keessan isa guddaa</string>
+    <string name="your_other_account">Akkaawuntii keessan kan biraa</string>
+
+    <!-- ADD ACCOUNT -->
+    <string name="your_accounts">Akkaawuntii keessan</string>
+    <string name="add_an_account">Akkaawuntii itti dabali</string>
+    <string name="add_accounts_to_stax">Akkaawuntii gara Stax tti dabaluu</string>
+
+    <string name="search">Barbaaduu</string>
+    <string name="no_accounts_found_desc"><![CDATA[ Fakkaata "<b><font color="#39CBFC"> %1$s </font> </b>" ammallee Stax irratti hin tarreeffamne ykn galmee isaa sirrii hin taane.<br/>Waan biraa barbaaduuf yaali.]]></string>
+    <string name="cant_find_institution">Dhaabbata faayinaansii keessan argachuu hin dandeenyee?</string>
+    <string name="inform_us_here">Asirratti nu beeksisaa</string>
+
+    <string name="enter_institution_name">Maqaa maallaqa baankii/mobaayilaa galchi</string>
+    <string name="enter_shortcode">Koodii gabaabaa galchi</string>
+    <string name="inform_stax_desc">Nu Beeksisaa</string>
+    <string name="enter_financial_inst_err">Maqaa dhaabbata faayinaansii galchi</string>
+    <string name="enter_shortcode_err">Koodii gabaabaa sirrii galchi</string>
+    <string name="thank_you">Galatoomaa</string>
+    <string name="service_request_success_desc">Gareen Stax gamaaggamuu fi yeroo dhiyootti tajaajila kana dabaluudhaaf sirrii akka argatu mirkanaa\'aa</string>
+
+    <string name="nickname">Maqaa ijoollee</string>
+    <string name="label_saved">Fayye</string>
+    <string name="account_number_label">Lakkoofsa herregaa</string>
+    <string name="hint_enter_new_name">Maqaa haaraa galchi</string>
+
+
+    <string name="official_name">Maqaa ofiisaa</string>
+    <string name="which_account">Akkaawuntii kam?</string>
+    <string name="account_select_header">Herrega %1$s tokkoo ol qabda. Maaloo isa kam fayyadamuu akka barbaaddu gara %2$s filadhu.</string>
+    <string name="importing_channels">Chaanaalii galchaa jiru, mee eegaa</string>
+
+    <string name="incomplete_account_setup_header">Saagi herregaa guutuu hin taane</string>
+    <string name="incomplete_account_setup_desc">Herregni kee %1$s guutummaatti hin qindaa\'in. Itti fufuu keessan dura akkaawuntii keessan fiduu qabna. Maaloo qixeessuu xumuruuf madaallii isaa ilaaluu hojjedhu.</string>
+
+    <!-- Permissions -->
+    <string name="permissions_title">Hayyama barbaachisa</string>
+    <string name="permissions_basic_title">Hayyama bilbilaa fi ergaa gabaabaa nuuf kennaa.</string>
+    <string name="perms_basic_desc">Akkaawuntii adda addaa keessan hunda argachuu fi daldala akkaawuntii sana irratti raawwatamu adda baasuuf, Stax bilbilaa fi ergaa gabaabaa keessan akka fayyadamu hayyamaa.</string>
+    <string name="permissions_overlay_desc">Hayyamni kun Stax koodii USSD bakka bu\'ee akka bilbiluu fi haguuggii adeemsa daldalaa sitti agarsiisu akka uumu hayyamu.</string>
+    <string name="permissions_accessibility_desc">Dandeettii hafnaan kee ilaaluu, maallaqa dabarsuu ykn yeroo qilleensaa bitachuu siif kennuudhaaf, Stax hayyama agarsiisaa fi dhaqqabummaa kee barbaada</string>
+
+
+    <string name="permission_support_desc">ID deeggarsa keessan uumuuf hayyama bilbilaa nu barbaachisa</string>
+    <string name="nav_sim_permission">Hayyama SIM kenni</string>
+    <string name="perm_dialoghead">Wanti dhumaa tokko&#8230;</string>
+    <string name="perm_dialogbody">Stax hayyama 2 gara %1$s barbaada.</string>
+    <string name="use_ussd">USSD fayyadamaa</string>
+    <string name="buy_airtime">yeroo qilleensaa bitachuu</string>
+    <string name="check_balance">madaallii isaa ilaaluu</string>
+    <string name="send_money">maallaqa ergaa</string>
+    <string name="send_money_to">maallaqa erguu gara</string>
+    <string name="move_money">maallaqa sochoosuu</string>
+    <string name="perm_accessibiltiy_dialogbody">Stax hayyama dhaqqabummaa gara %1$s barbaada</string>
+    <string name="perm_progress1">Tarkaanfii 1ffaa 2ffaa: Hayyama agarsiisi</string>
+    <string name="perm_progress2">Tarkaanfii 2ffaa 2ffaa: Hayyama dhaqqabummaa</string>
+    <string name="perm_cta1">Sajoo agarsiisi</string>
+    <string name="perm_cta2">Sajoo irra deebi\'ii agarsiisi</string>
+
+    <!-- Hover Session -->
+    <string name="balance_msg">Hafnaan %1$s sakatta\'aa jira</string>
+    <string name="airtime_msg">Yeroo qilleensaa bitachuu</string>
+    <string name="transfer_msg">Maallaqa dabarsuu</string>
+    <string name="fetch_accounts">Herrega fiduu</string>
+    <string name="in_progress_text">Tajaajila USSD waliin walqunnamsiisuu&#8230;</string>
+    <string name="complete_text">Daldalli xumurame</string>
+
+    <!-- Transaction statuses -->
+    <string name="succeeded_cardHead">Milkaa\'e</string>
+    <string name="pending_cardHead">Eeggataa kan jiru</string>
+    <string name="failed_cardHead">Hin milkoofne</string>
+    <string name="null_service_name_text">tajaajila USSD kana</string>
+    <string name="no_response_error">%1$s irraa deebii hin qabu.</string>
+    <string name="incomplete_error">%1$s karaa gartokkee deebii kennuu dhaabe fakkaata.</string>
+    <string name="pin_error">Dogoggora PIN. %1$s maaloo PIN kee ilaaliitii irra deebitee yaali akka si gaafatu.</string>
+    <string name="balance_error">%1$s hafnaan kee daldala kana xumuruuf baay\'ee gadi aanaadha jedha.</string>
+    <string name="unregistered_error">%1$s tajaajila kanaaf hin galmoofne jedha.</string>
+    <string name="invalid_entry">Galteen kee tokko sirrii hin turre, maaltu akka dogoggora ta\'e ilaaluuf bal\'inaan ilaali.</string>
+    <string name="mmi_error">Neetworkiin kee dogongora deebise, maaloo irra deebi\'ii yaali.</string>
+    <string name="unspecified_error">Dogoggora hin beekamne.</string>
+    <string name="no_response_desc">%1$s irraa deebii hin arganne. Daldalli kun waan hojjete hin fakkaatu. Mee irra deebi\'ii yaali.</string>
+    <string name="incomplete_desc">%1$s irraa deebii gartokkee qofa arganne. Daldalli kun waan hojjete hin fakkaatu. Mee irra deebi\'ii yaali.</string>
+    <string name="invalid_entry_desc">Galtee kee keessaa tokko sirrii hin turre, maaltu akka dogoggora ta\'e ilaaluuf ibsa turtii armaan gadii ilaali. Maallaqni, lakkoofsi bilbilaa ykn lakkoofsi herregaa kamiyyuu sirrii ta\'uu isaa mirkaneessi. Bal\'ina walgahii armaan gadii ilaali.</string>
+    <string name="mmi_error_desc">Neetworkiin kee dogongora deebise, maaloo irra deebi\'ii yaali. Yoo kun baay\'ee ta\'e maaloo dhiyeessaa networkii ykn tajaajila maallaqaa keessan qunnamuun komii dhiheessaa.</string>
+    <string name="unspecified_error_desc">Dogoggora hin beekamne, maaltu akka dogoggora ta\'e baruuf bal\'inaan armaan gadii ilaali. Mee irra deebi\'ii yaali.</string>
+    <string name="action_run_error">Dogoggora tarkaanfii fiigicha. Mee irra deebi\'ii yaali.</string>
+
+    <!-- SDK Overrides -->
+    <string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Fooyya\'iinsa adeemsaa garagalchuudhaan agarsiisi <b>switch ON</b> iskiriinii itti aanu keessatti.</font>]]></string>
+    <string name="hsdk_access_msg"><![CDATA[<font color="#0A9A8D">Dhaqqabummaa banaa</font> <font color="#1E232A">in the <b>iskiriinii itti aanu</b> walgahii USSD fiiguuf</font>]]></string>
+    <string name="hsdk_access_btn">Sajoo banaa</string>
+    <string name="hsdk_overlay_tip">Itti aansuudhaan, switch ON jedhu tuqi</string>
+    <string name="hsdk_overlay_example">Appilikeeshiniiwwan biroo irratti agarsiisuu hayyami</string>
+    <string name="hsdk_settings">Sajoolee</string>
+    <string name="hsdk_off">Dhaamsuu</string>
+    <string name="hsdk_accessibility">Dhaqqabummaa</string>
+    <string name="hsdk_accessibility_sub">Tajaajila</string>
+    <string name="hsdk_enable_accessibility">Dhaqqabummaa dandeessisi</string>
+    <string name="access_service_summary">Bakka bu\'uun tajaajila Mobile Money fi Telecom waliin wal qunnamaa</string>
+    <string name="access_service_descript">Kunis muuxannoo salphaa fi dhaqqabamaa ta\'e kennuudhaaf menu USSD dubbisuu fi waliin walqunnamuuf fayyadama.</string>
+    <string name="hsdk_manual_env">Naannoo harkaan socho\'aa jira. Kutaan kun ni waraabama.</string>
+    <string name="hsdk_overlay_header">Daldala gochuu</string>
+    <string name="hsdk_complete">Daldalli xumurame</string>
+
+    <!-- Onboarding showcase -->
+    <string name="onboard_addaccounthead">Jalqabuuf account itti dabali.</string>
+    <string name="onboard_addaccountdesc">Maallaqa keessan hunda bakka tokkotti hordofaa. Maallaqni kee gonkumaa akkaawuntii ykn mix kee keessaa hin bahu.</string>
+    <string name="onboard_addaccount_greatwork_head">Hojii guddaa!</string>
+    <string name="onboard_addaccount_greatwork_desc">Amma herrega keessan kanneen biroo itti dabalaa akka hafnaan adda addaa keessan hunda bakka tokkotti ilaaluu dandeessu.</string>
+
+    <!-- Transfer -->
+    <string name="loading_link_dialoghead">Buusujirra, yeroo tokko</string>
+    <string name="transfer_amount_label">Hamma</string>
+    <string name="account_label">Herrega</string>
+    <string name="actions_fielderror">Akkaawuntii kun buy airtime hin deeggaru. Maaloo akkaawuntii adda ta\'e filadhu.</string>
+    <string name="recipientphone_label">lakkoofsa bilbilaa quunnamtii</string>
+    <string name="recipientacct_label">Lakkoofsa herregaa quunnamtii</string>
+    <string name="toast_error_contactperm">Kitaaba teessoo kee keessaa lakkoofsa filachuuf hayyama quunnamtii dubbisaniif kennuu qabda.</string>
+    <string name="toast_error_contactselect">Quunnamtii keessan filachuu irratti rakkoon mudateera. Mee irra deebi\'ii yaali.</string>
+    <string name="transfer_error_recipient_general">Mee lakkoofsa fudhataa galchi.</string>
+    <string name="transfer_error_recipient_phone">Mee lakkoofsa bilbilaa galchaa.</string>
+    <string name="transfer_error_recipient_account">Mee lakkoofsa herregaa galchaa.</string>
+    <string name="amount_fielderror">Mee maallaqa sirrii ta\'e galchi.</string>
+    <string name="channel_fielderror">Mee tajaajila tokko filadhaa.</string>
+    <string name="action_fielderror">Maaloo networkii fudhataa filadhu.</string>
+    <string name="channel_request_fieldinfo">Maaloo filannoo kee gara %1$s erguu akka danda\'u mirkaneessi</string>
+    <string name="no_actions_fielderror">Tajaajilli kun %1$s\'f fayyadamuun hin danda\'amu.</string>
+    <string name="toast_pleasefix">Mee dogongora diimaan agarsiifame sirreessaa.</string>
+    <string name="self_choice">Ofuma kiyya</string>
+    <string name="other_choice">Nama biraa</string>
+    <string name="onnet_choice">network irratti</string>
+    <string name="offnet_choice">Gara %1$s tti</string>
+    <string name="note_cardhead">Ibsa</string>
+    <string name="request_note_label">Gaaffiin keessan maali?</string>
+    <string name="recipient_label">Gara</string>
+    <string name="sender_label">Irraa</string>
+    <string name="send_who_header">Maallaqa erguu gara&#8230;</string>
+    <string name="airtime_who_header">Yeroo qilleensaa bitadhaa</string>
+    <string name="accounts_label">Irraa kaffalaa</string>
+    <string name="self_only_money_warning">Kunis maallaqa gara herrega ofii keessaniitti sochoosuuf qofa fayyadamuu dandeessu.</string>
+    <string name="self_only_airtime_warning">Kunis yeroo qilleensaa herrega mataa keessaniif bitachuuf qofa fayyadamuu dandeessu.</string>
+
+    <string name="fab_transfernow">Amma maallaqa ergaa</string>
+    <string name="fab_airtimenow">Yeroo qilleensaa amma bitadhaa</string>
+    <string name="noworry_explain">Odeeffannoo kana tarkaanfii itti aanu keessatti ilaaluu dandeessu.</string>
+    <string name="descrip_multcontacts">%1$d quunnamtii</string>
+
+    <string name="descrip_balance">%1$s madaallii sakatta\'i</string>
+    <string name="descrip_airtime_sent">%1$s yeroo qilleensaa gara %2$s erga</string>
+    <string name="descrip_transfer_sent">%1$s maallaqa gara %2$s ergu</string>
+    <string name="descrip_transfer_received">%1$s irraa maallaqa argate</string>
+    <string name="descrip_fetch_accounts">herrega %1$s irraa fide</string>
+    <string name="descrip_bill_paid">kaffaltii %1$s kaffalu</string>
+    <string name="descrip_recorded">Kutaa USSD %1$s irratti galmaa\'e</string>
+    <string name="descrip_airtime_sched">Yeroo qilleensaa %1$s waliin %2$s bitadhu</string>
+
+    <string name="descrip_long_airtime_send">yeroo qilleensaa %1$s %2$s waliin %3$s bitadhu</string>
+    <string name="descrip_long_transfer_send">%1$s %2$s irraa gara %3$s %4$s irratti ergi</string>
+    <string name="descrip_long_move">%1$s %2$s irraa gara %3$s sochoosi</string>
+    <string name="descrip_long_bill_paid">%1$s %2$s irraa gara %3$s kaffali</string>
+
+    <string name="enterValue_non_template_error">Maaloo %1$s sirrii galchi</string>
+
+    <!-- Request -->
+    <string name="req_cardhead">Maallaqa gaafadhaa</string>
+    <string name="into_account">Gara herrega</string>
+    <string name="put_in">Keessa kaa\'i</string>
+    <string name="put_in_desc">Kunis bakka maallaqa gaafatame itti argachuu barbaaddanidha</string>
+    <string name="account_num_desc">fkn. lakkoofsa bilbilaa maallaqa moobaayilaa ykn lakkoofsa herrega baankii keessanii</string>
+    <string name="send_request_to">Gaaffii ergi gara</string>
+    <string name="request_amount_label">How much money?</string>
+    <string name="amount_label_opt">Hanga (Filannoo)</string>
+    <string name="reqfrom_label">Gara</string>
+    <string name="btn_addcontact">+ Nama biraa itti dabali</string>
+    <string name="sms_request_template">Gaarummaadhaan yeroo dafee siif mijatutti %1$s naaf stax godhii. %2$s %3$s ta\'a</string>
+    <string name="sms_amount_detail">%1$s </string>
+    <string name="sms_note_detail">Yaadannoo: \"%1$s\" </string>
+    <string name="reqsave_head">Gaaffii qusachuu?</string>
+    <string name="toast_error_smsperm">Stax gaaffiin yoom akka ergamu ykn guutame akka beekuuf hayyama ergaa gabaabaa dubbisaa kennuu qabda.</string>
+    <string name="reqsave_msg">Gaaffii keessan waan hin ergine fakkaata. Haala kamiinuu qusachuu barbaadduu?</string>
+    <string name="toast_confirm_request">Gaaffiin keessan qusatameera.</string>
+    <string name="toast_request_scheduled">Gaaffiin keessan beellama qabamee jira. %1$s irratti ergaa akka ergitu si yaadachiifama</string>
+    <string name="descrip_request">Gaaffii gara %1$s</string>
+    <string name="requester_number_label">Herrega</string>
+    <string name="request_error_recipient">Mee lakkoofsa bilbilaa galchaa.</string>
+    <string name="requester_number_fielderror">Maaloo herrega ykn lakkoofsa bilbilaa maallaqa itti argachuu barbaaddan galchaa</string>
+    <string name="requester_account_error">Maaloo maallaqa keessan argachuuf account filadhaa ykn haaraa itti dabalaa</string>
+    <string name="sms_label">SMS</string>
+    <string name="whatsapp_label">WhatsApp</string>
+    <string name="copyLink_label"> Koppii gochuu linkii</string>
+    <string name="link_copied_label">Linkiin waraabame</string>
+    <string name="share_request_link_cardhead">Link gaaffii share gochuu</string>
+    <string name="share_again_cardhead">Link gaaffii share godhaa ammas</string>
+    <string name="account_name_error">Mee maqaa ijoollee haaraa galchi</string>
+    <string name="account_number_error">Mee lakkoofsa herregaa haaraa galchi</string>
+    <string name="accounts_error_noselect">Mee akkaawuntii filadhu.</string>
+
+    <!-- Scheduling -->
+    <string name="future_toggle">Booda ergaa</string>
+    <string name="date_label">Guyyaa</string>
+    <string name="repeat_toggle">Yeroo tokkoo ol ergaa</string>
+    <string name="repeatfreq_label">Yeroo hammam hammamiitti?</string>
+    <string name="end_label">Guyyaa xumuraa</string>
+    <string name="end_label_opt">Guyyaa xumuraa (dirqama kan hinta\'in).</string>
+    <string name="repeatnum_label_opt">Yeroo meeqa? (dirqama kan hinta\'in)</string>
+    <string name="repeatnum_label">Yeroo meeqa?</string>
+    <string name="toast_confirm_schedule">Jijjiirraan beellamame. %1$s irratti jijjiirraa akka gootan isin yaadachiifna</string>
+    <string-array name="frequency_choices">
+        <item>Guyyaa hunda</item>
+        <item>Torban torbaniin</item>
+        <item>Torban 2tti tokko</item>
+        <item>Ji\'a ji\'aan</item>
+    </string-array>
+    <string-array name="frequency_choices_values" translatable="false">
+        <item>0daily</item>
+        <item>1weekly</item>
+        <item>2biweekly</item>
+        <item>3monthly</item>
+    </string-array>
+    <string name="fab_schedule">Sagantaa</string>
+
+    <!-- Notifications -->
+    <string name="notify_default_title">Fayyadamaa sagantaa qabate</string>
+    <string name="notify_default_channel_descrip">Jijjiirraa fi gaaffii siin beellamame gochuuf beeksisa agarsiisi.</string>
+    <string name="notify_transfer">Yeroon maallaqa %1$s Stax waliin dabarsuu amma.</string>
+    <string name="notify_transfer_cta">Amma jijjiirraa</string>
+    <string name="notify_request">Yeroon gaaffii maallaqaa gara %1$s Stax waliin erguu amma.</string>
+    <string name="notify_request_cta">Gaaffii ergaa</string>
+    <string name="notify_airtime">Yeroon isaa yeroo qilleensa Stax waliin bitachuudha.</string>
+    <string name="notify_airtime_cta">Yeroo qilleensaa bitadhaa</string>
+
+    <!-- Details -->
+    <string name="pending_cardhead">Mirkaneessa eegaa jira</string>
+    <string name="pending_cardbody">Kutaan USSD xumurameera, garuu hanga ammaatti ergaa gabaabaa mirkaneessaa hin arganne.</string>
+    <string name="balance_label">Madaallii</string>
+    <string name="moneyout_label">Maallaqni ji\'a kana keessa ba\'e</string>
+    <string name="moneyin_label">Maallaqa baatii kana keessa</string>
+    <string name="fees_label">Kaffaltii bara kana %1$s kaffalame</string>
+    <string name="transactions_cardhead">Daldala</string>
+    <string name="network_label">Herrega fudhataa</string>
+    <string name="id_label">ID daldalaa</string>
+    <string name="stax_id_label">ID Istaaksii</string>
+    <string name="session_cardhead">Ergaawwan</string>
+    <string name="view_full_details">Bal\'ina isaa guutuu ilaalaa</string>
+    <string name="new_balance">Hafnaan haaraa %1$s</string>
+
+    <!-- Canceling -->
+    <string name="cancelfuture_head">Daldala gara fuula duraatti taasifamu haquu</string>
+    <string name="btn_canceltrans">Daldala haquu</string>
+    <string name="cancelfuture_msg">Kunis daldala gara fuula duraatti taasifamu ni haqa. Yeroo barbaaddetti daldala irra deebitee saganteessuu dandeessa.</string>
+    <string name="toast_confirm_cancelfuture">Daldalli gara fuula duraatti taasifamu haqame.</string>
+    <string name="cancelreq_head">Gaaffii haquu</string>
+    <string name="btn_cancelreq">Gaaffii haquu</string>
+    <string name="cancelreq_msg">Kunis gaaffii kana ni haqa. Yeroo barbaaddetti nama tokko irraa maallaqa irra deebitee gaafachuu dandeessa.</string>
+    <string name="toast_confirm_cancelreq">Gaaffiin haqame.</string>
+
+    <!-- Settings -->
+    <string name="meta_cardhead">Filannoowwan</string>
+    <string name="share_text">Qooduu</string>
+    <string name="share_stax">Stax waliif qoodaa</string>
+    <string name="first_login_dialoghead">Jalqaba maaloo galmaa\'aa</string>
+    <string name="add_referee_info">Odeeffannoo rifaralaa ilaali</string>
+    <string name="saved_referral">Rifaralaa qusatame</string>
+    <string name="copied">Koppii ta\'e</string>
+    <string name="share_sub">Appii Stax jedhamu</string>
+    <string name="share_explain">Share app karaa&#8230;</string>
+    <string name="share_msg">App kana ilaalaa https://play.google.com/store/apps/details?id=com.hover.stax</string>
+    <string name="connect_accounts">Akkaawuntii keessan walitti hidhaa</string>
+
+    <string name="login_google_err">Yeroo Google seentan dogongorri uumameera. Mee irra deebi\'ii yaali.</string>
+    <string name="referral_text">Koodii keessan:</string>
+    <string name="referral_label">Koodii bakka bu\'aa\'s</string>
+    <string name="privacy_policy_label">Stax App fayyadamuun, imaammata dhuunfaa keenya dubbistee haala tajaajilaa irratti walii galteetta. Dubbisuuf cuqaasaa</string>
+    <string name="dialog_confirm_logout_header">Ba\'uu Mirkaneessi</string>
+    <string name="logout_out_success">Logout milkaa\'eera</string>
+    <string name="dialog_confirm_logout_desc">"Ba\'uu akka barbaaddu mirkaneeffatteettaa?"</string>
+
+    <string name="name_label">Maqaa keessan guutuu galchaa</string>
+    <string name="phone_label">Lakkoofsa bilbilaa keessan galchaa</string>
+    <string name="referral_help">Koodii rifaralaa bakka bu\'aa Stax kan si onboard godhe galchi.</string>
+    <string name="referral_error_blank">Mee koodii rifaralaa galchaa.</string>
+    <string name="referral_error_invalid">Maaloo koodii rifaralaa sirrii ta\'e galchaa.</string>
+    <string name="referral_error_name">Maaloo maqaa sirrii galchi.</string>
+    <string name="referral_error_phone">Mee lakkoofsa bilbilaa sirrii ta\'e galchaa.</string>
+    <string name="referral_error_offline">Mee koodii rifaralaa qusachuuf toora interneetii seena.</string>
+    <string name="referral_error_self">ifii refer gochuu hin dandeessu.</string>
+    <string name="referral_error_data">Koodii rifaralaa keessan argachuuf toora interneetii seena.</string>
+    <string name="referral_error_try_again">Mee sekondii muraasa booda irra deebi\'ii yaali</string>
+
+    <string name="security_cardhead">Nageenya</string>
+    <string name="security_cardbody">Stax ulaagaa 740.17(b)(3) (i) ramaddii nageenyaa Biiroo Industirii fi Nageenyaa Yunaayitid Isteetis kan guute dha. Softiweeriin kun qunnamtii sarvariidhaaf HTTPS fayyadama; symmetric key RSA encryption yeroodhaaf mirkaneessitoota fayyadamaa meeshaa mataa isaanii irratti Android Keystore fayyadamuun kuusuudhaaf; fi DRM fayyadamuun koodii obfuscation.</string>
+    <string name="defaultacct_label">Herrega durtii</string>
+    <string name="manage_account">Herrega Bulchuu</string>
+    <string name="security_head">Stax waliin nageenya qaba</string>
+    <string name="removeaccount_dialoghead">%1$s amma haqi</string>
+    <string name="btn_removeaccount">Herrega irraa haquu</string>
+    <string name="removeaccount_msg">Yeroo barbaaddetti akkaawuntii kee ammas Stax irratti dabaluu dandeessa.</string>
+    <string name="toast_confirm_removepin">PIN milkaa\'inaan haqameera</string>
+    <string name="btn_savepin">PIN qusachuu</string>
+    <string name="btn_editpin">PIN gulaali</string>
+    <string name="editpin_label">PIN</string>
+    <string name="btn_removeacct">Herrega irraa balleessi</string>
+    <string name="toast_confirm_acctremoved">Account milkaa\'inaan haqameera</string>
+    <string name="toast_confirm_pinupdate">Pin fayye</string>
+    <string name="language_cardhead">Afaan</string>
+    <string name="app_version_and_device_id">Gosa appii: %1$s\nKoodii gosa:%2$s\nID meeshaa: %3$s</string>
+    <string name="disclaimer">Maqaaleen oomishaalee, maqaawwan daldalaa, fi mallattoon daldalaa hundi qabeenya abbootii qabeenyaa isaaniiti. Fayyadamni walitti hidhamiinsa hin agarsiisu.</string>
+
+    <string name="learn_stax_cardhead">Barachuu</string>
+    <string name="stax_features">Features Fi Kanneen Biroo on Stax</string>
+    <string name="stax_medium_url">http://joinstax.medium.com/</string>
+
+    <string name="contact_stax_cardhead">Qunnamaa</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+    <string name="receive_stax_updates">Odeeffannoo haaraa Stax fudhadhaa</string>
+
+    <string name="FAQs">Gaaffii fi deebii</string>
+    <string name="request_feature">Stax keessatti amala tokko gaafadhu</string>
+    <string name="email_support">Email deeggarsa</string>
+    <string name="stax_support_email">help@stax.me</string>
+    <string name="stax_support_email_mailTo">https://help@stax.me</string>
+    <string name="stax_emailing_subject">Stax deeggarsa id - %1$s</string>
+    <string name="send_email_using">Poostaa erguu fayyadamuun&#8230;</string>
+
+    <string name="account_cardhead">Herrega</string>
+    <string name="logout">Ba\'i</string>
+    <string name="logged_in_as">Akka %1$s tti seene</string>
+
+    <!-- System auth check -->
+    <string name="auth_title">Stax waliin mirkaneessi</string>
+    <string name="auth_descrip">Quba keetiin mirkaneessi</string>
+    <string name="toast_error_auth">Mirkaneessuun hin milkoofne</string>
+
+    <!-- Self destruct -->
+    <string name="destruct_cardbody">Ijaarsi Stax kun yeroon isaa darbeera. \n\nIjaarsa haaraa buufadhu Stax fayyadamuu itti fufuuf.</string>
+    <string name="btn_download">Version haaraa buufadhaa</string>
+    <string name="uninstall_cardbody">Update keessan download ta\'aa jira. \n\nGosa kana haquuf qaree armaan gadii cuqaasi. Erga buufanni keessan xumuramee booda beeksisa sana tuquun version haaraa sana install godhaa.</string>
+    <string name="btn_uninstall">Uninstall gochuu</string>
+    <string name="notify_download_head">stax update gochuu</string>
+    <string name="notify_download_body">Buufachaa jira</string>
+
+    <!-- Time -->
+    <string name="timeago_ago">%1$s dura</string>
+    <string name="timeago_from_now">%1$s amma irraa eegalee</string>
+    <string name="timeago_secondes">daqiiqaa tokkoo gadi</string>
+    <string name="timeago_minute">gara daqiiqaa tokkootti</string>
+    <string name="timeago_minutes">%1$d daqiiqaa</string>
+    <string name="timeago_hour">gara sa\'aatii tokkootti</string>
+    <string name="timeago_hours">gara %1$d sa\'aatii</string>
+    <string name="timeago_day">guyyaa tokkotti</string>
+    <string name="timeago_days">%1$d guyyoota</string>
+    <string name="timeago_month">gara ji\'a tokkootti</string>
+    <string name="timeago_months">Ji\'oota %1$d</string>
+    <string name="timeago_year">gara waggaa tokkootti</string>
+    <string name="timeago_years">%1$d waggaa</string>
+
+    <!-- SWIPE REFRESH -->
+    <string name="csr_text_state_normal">Madaallii haaromsuuf swipe gochuu </string>
+    <string name="csr_text_state_ready">Madaallii haaromsuuf gadhiisi</string>
+    <string name="csr_text_state_refresh">Madaallii haaromsaa&#8230;</string>
+    <string name="csr_text_state_complete">Madaallii haaromsaa xumurame</string>
+    <string name="csr_text_last_refresh">yeroo dhumaaf haaromfame:</string>
+
+    <!-- BOUNTY -->
+    <string name="nav_bounty">Badhaasa</string>
+    <string name="bounty_title">&#128184;  KAFFALTII ARGADHAA! KAARTAA DHANGALA\'AA USSD</string>
+    <string name="bounty_msg">Stax dhangala\'aa USSD keessa darbuuf USD $5 - $50 siif kaffala.</string>
+    <string name="get_started">Jalqabi</string>
+    <string name="bounty_email_stage_title">&#128506; KAARTAA DHANGALA\'AA USSD</string>
+    <string name="bounty_email_stage_desc1"><b>Gara Money Mapper baga nagaan dhuftan.</b> Stax USSD nama hundaaf salphisuu barbaada. Stax biyyoota hedduu keessatti namoota hedduutti fiduuf, menu USSD hunda akka addunyaatti kaartaan kaa\'uu qabna. Stax akka Money Mapper tti makamaa fi daldala USSD milkaa\'inaan kaartaa gootan hundaaf $5 - $20 USD argadhaa. Menuuwwan USSD ammallee nu barbaachisan (bounties) fuula itti aanu irratti tarreeffamaniiru. Yeroo baayyee badhaasa haaraa itti daballa!</string>
+    <string name="bounty_email_stage_desc2"><b>1.</b> Herrega Google keetiin seeni.\n<b>2.</b> Herrega baankii ykn maallaqa mobaayilaa kee kamiifuu badhaasa banaa barbaadi.\n<b>3.</b> <a href=" xumuri. https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">Daldala USSD</a> badhaasa irratti ibsame, akka Hafnaan Sakatta\'uu ykn Yeroo Qilleensaa Bituu.\n <b>4.</b> Bal\'ina daldalaa irra deebi\'ii ilaali. Yoo kufe ykn guutuu hin taane irra deebi\'ii yaali.\n<b>5.</b> Stax ergaawwan kee ni ilaala, kunis guyyoota 7&#8211;10 fudhachuu danda\'a. \n<b>6.</b> Dhuma torbanitti kaffaltii argatta</string>
+    <string name="descrip_bounty_airtime">Yeroo qilleensaa nama kamiifuu %1$s bitadhaa</string>
+    <string name="bounty_airtime_explain">Nama biraatiif yeroo qilleensaa bitadhu %1$s</string>
+    <string name="descrip_bounty_p2p">Nama biraatti maallaqa ergaa %1$s</string>
+    <string name="bounty_p2p_explain">Maallaqa kamiyyuu nama kamiifuu %1$s ergi</string>
+    <string name="descrip_bounty_offnet">irra %1$s</string>
+    <string name="descrip_bounty_cross_country">%1$s keessatti %2$s irratti</string>
+    <string name="descrip_bounty_me2me">Maallaqa gara herrega %1$s keetii sochoosi</string>
+    <string name="bounty_me2me_explain">Hamma kamiyyuu gara herrega %1$s mataa keetii ergi</string>
+    <string name="descrip_bounty_c2b">Kaffaltii%1$s kaffali</string>
+    <string name="descrip_bounty_c2b_b">irraa %1$s</string>
+    <string name="bounty_c2b_explain">Maallaqa kamiyyuu gara %1$s</string>
+    <string name="bounty_c2b_any">daldala kamiyyuu</string>
+
+    <string name="descrip_bounty_balance">Hafnaan isaa ilaali</string>
+    <string name="bounty_balance_explain">Hafnaan kee ilaali</string>
+    <string name="bounty_email">Email</string>
+    <string name="bounty_email_error">Maaloo teessoo imeelii sirrii ta\'e galchi</string>
+    <string name="bounty_uploading_email">Walqunnamsiisaa jira, mee eegaa&#8230;</string>
+    <string name="bounty_api_internet_error">Maaloo interneetii daataa qabaachuu keessan mirkaneessaa</string>
+    <string name="bounty_api_other_error">Mee irra deebi\'ii yaali. Yoo kun itti fufe, gaarummaadhaan ussd@stax.me irratti nu qunnamaa.</string>
+    <string name="bounty_pending_short_desc">Daldala keessan mirkaneessaa jirra. Yoo milkaa\'e guyyoota hojii 10 keessatti kaffaltiin akka kaffalamu eegaa.</string>
+    <string name="done">Raawwatame</string>
+    <string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
+    <string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
+    <string name="available_flows">DHANGALA\'AA ARGAMU</string>
+    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
+    <string name="bounty_claim_explained">USD $%1$d, %2$s himachuuf.\n\nAkkuma xumurtaniin, odeeffannoo kaffaltiidhaaf walitti qabuuf email isiniif ergina. Guyyoota hojii 7–10 keessatti kaffaltiin siif kaffalama</string>
+    <string name="start_USSD_Flow">Dhangala\'aa USSD jalqabi</string>
+    <string name="checking_your_flow">Dhangala\'aa kee sakatta\'uu</string>
+    <string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
+    <string name="flow_done_title">DHANGALA\'AA HOJJETAME</string>
+    <string name="flow_done_desc">Dhangala\'aa isaa ilaallee gaarii fakkaata! Inbox keessan keessatti email odeeffannoo kaffaltii qabu qabaachuu qabdu.</string>
+    <string name="go_through_another_flow">Dhangala\'aa biraa keessa darbi</string>
+    <string name="flow_recorded">DHANGALA\'AA GALMEESSE</string>
+    <string name="bounty_amount_with_currency">USD $%1$d</string>
+    <string name="select_country">Biyya filadhu</string>
+    <string name="filter_by_country">Biyyaadhaan calaqqisi</string>
+    <string name="filtering_in_progress">Siibaasuu jira, ega keessan &#8230;</string>
+    <string name="country">Biyya</string>
+    <string name="country_error_nodata">Mee tajaajila fi biyyoota fe\'uuf daataa ibsi.</string>
+    <string name="country_with_emoji">%1$s  %2$s </string>
+    <string name="all_countries_with_emoji">&#127758; Biyyoota hunda</string>
+    <string name="bounty_sim_err_header">SIM sirrii galchi</string>
+    <string name="bounty_sim_err_desc">Maaloo meeshaa kee keessatti SIM kaardii %1$s irraa galchiiti irra deebi\'ii yaali.</string>
+    <string name="retry">Irra deebi\'ii yaali</string>
+    <string name="submit_flow">Dhangala\'aa galchaa</string>
+    <string name="bounty_submitted_successfully">Bounty milkaa\'inaan galche</string>
+    <string name="language">Afaan</string>
+    <string name="bounty">Badhaasa</string>
+    <string name="bounty_error_none">Bounties hin jiru. Mee booda irra deebi\'aa ilaalaa.</string>
+
+    <string name="library_cardhead">Mana Kitaabaa USSD</string>
+    <string name="visit_library">Koodii gabaabaa USSD barbaadi</string>
+    <string name="shortcode">Koodii gabaabaa</string>
+    <string name="dial_btn">Bilbilaa %1$s</string>
+    <string name="dial_default">Bilbilaa</string>
+
+    <string name="internet_required">Interneetii barbaachisa</string>
+    <string name="internet_required_bounty_desc">Dhangala\'aa USSD kaartaan gochuuf data ykn Wifi connection si barbaachisa. Mee wal qunnamaa irra deebi\'aa yaalaa.</string>
+    <string name="try_again">Ammas yaali</string>
+    <string name="unknown_login_error">Dogoggora hin beekamne, maaloo irra deebi\'ii yaali. Yoo dogongorri itti fufe maaloo appicha cufaatii irra deebi\'aa jalqabsiisaa.</string>
+
+    <string name="no_account_selected_error">Maaloo yoo xiqqaate akkaawuntii tokko filachuun Stax irratti dabaluu dandeessu</string>
+
+    <!-- IN-APP BANNERS -->
+    <string name="banner_permission_title">SIM, SMS, Accessibility &amp; Overlay</string>
+    <string name="banner_permission_desc">Stax maaliif hayyama kana gaafata?</string>
+    <string name="banner_permission_cta"><u>Kana baruuf as tuqi</u></string>
+    <string name="banner_roundupnews_title">Stax Monthly Roundup isa haaraa qabadhaa</string>
+    <string name="banner_roundupnews_cta"><u>Amma dubbisuuf tuqi</u></string>
+    <string name="banner_gist_title">Stax gist adda ta\'e barbaadduu?</string>
+    <string name="banner_gist_cta"><u>Amma tarree ergaa keenyaa subscribe godhaa</u></string>
+    <string name="banner_upvote_title">Nu waliin ijaaraa! Gaaffii amala dabaluu/olkaa\'uu ykn dogongora gabaasuu.</string>
+    <string name="banner_upvote_cta"><u>Amma yaada kennaa</u></string>
+    <string name="stax_banner_img_desc">Mallattoo baanarii Stax</string>
+    <string name="banner_research_title">Stax daran fooyyessuuf kaffaltii argachuu barbaadduu?</string>
+    <string name="banner_research_cta">Har\'a qorannoo qorannoof galmaa\'aa</string>
+
+    <string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
+    <string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+    <string name="banner_upvoteurl">https://stax.nolt.io/</string>
+    <string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
+
+    <!-- TEST MODE -->
+    <string name="test_mode_toast">Amma haala qormaataa keessa jirta.</string>
+    <string name="test_mode_disabled">Haalli qormaataa hanqifame.</string>
+    <string name="test_mode_almost_toast">Achitti jechuun ni danda\'ama!</string>
+    <string name="test_mode_enabled">Haala qormaataa bobba\'eera</string>
+
+    <string name="faq_title">Gaaffiiwwan yeroo baay\'ee gaafataman</string>
+    <string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
+    <string name="loading">Fe\'amaa jira&#8230;</string>
+    <string name="loading_error">FAQ fe\'uu hin dandeenye, maaloo irra deebi\'ii yaali</string>
+    <string name="faq_internet_error">Amalli kun interneetii barbaada, maaloo irra deebi\'aa yaalaa</string>
+
+    <string name="working_offline">Toora ala hojjechuu</string>
+
+    <string name="marketing_email_optin">Stax gara fuulduraatti email naaf erguu danda\'a.</string>
+    <string name="email_client_not_found">Maamiltoonni email meeshaa irratti hin argamne.</string>
+    <string name="enable_call_permission">Mee koodii USSD bilbiluuf hayyama bilbilaa dandeessisi.</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Ergaawwan</string>
+    <string name="sync_header">Walsimsiisaa</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Mallattoo keessan</string>
+    <string name="reply_title">Tarkaanfii deebii durtii</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Yeroo yeroon email walsimsiisaa</string>
+    <string name="attachment_title">Dabalata dhufan buufadhaa</string>
+    <string name="attachment_summary_on">Imeelii dhufaniif dabalataan ofumaan buufadhu
+	</string>
+    <string name="attachment_summary_off">Dabalata yeroo harkaan gaafatamu qofa buufadhu</string>
+
+    <string name="ussd_lib">USSD jedhaa bilbilaa</string>
+
+    <string name="error_running_action">Dhiifama, ida\'amuun tajaajilaa kun cabee jira.</string>
+
+    <!-- Financial Tips -->
+    <string name="financial_wellness_tips">Gorsa Fayyaa Faayinaansii</string>
+    <string name="btn_share">Qooduu</string>
+    <string name="share_wellness_tip">Gorsa Faayinaansii Share godhaa</string>
+    <string name="read_more"><u>Read more</u></string>
+
+    <!-- Paybill -->
+    <string name="business_number_label">Lakkoofsa daldalaa</string>
+    <string name="save_bill">Bilbila kana qusadhaa</string>
+    <string name="save_bill_prompt">Lakkoofsa daldalaa galchi</string>
+    <string name="bill_name_label"> Maqaa ijoollee</string>
+    <string name="amount_checkbox_label">Yeroo hunda maallaqa wal fakkaatu kaffali</string>
+    <string name="business_number_prompt">Lakkoofsa daldalaa galchi</string>
+    <string name="btn_delete">Haquu</string>
+    <string name="choose_icon_title">Asxaa filadhu</string>
+    <string name="account_no_label">Lakk herregaa: %1$s</string>
+    <string name="paybill_delete_success">Paybill milkaa\'inaan haqameera</string>
+    <string name="paybill_delete_header">Kaffaltii Kaffaltii Haquu</string>
+    <string name="paybill_delete_msg">Haquu akka barbaaddu mirkaneeffatteettaa %1$s?</string>
+    <string name="paybill_error_business_number">Maaloo lakkoofsa daldalaa sirrii ta\'e galchaa</string>
+    <string name="paybill_save_success">Paybill milkaa\'inaan qusate</string>
+    <string name="bill_name_error">Maaloo maqaa sirrii galchi</string>
+    <string name="label_popular">Beekamaa</string>
+    <string name="pay_now">Amma kaffali</string>
+    <string name="paybill_update_header">Kaffaltii Kaffaltii Haaraa</string>
+    <string name="paybill_update_msg">Update gochuu akka barbaaddu mirkaneeffatteettaa %1$s?</string>
+    <string name="paybill_update_success">Paybill milkaa\'inaan haaromfame</string>
+    <string name="btn_update">Odeeffannoo dhiyeenyaa</string>
+
+    <string name="btn_not_now">Amma miti</string>
+
+
+</resources>
