@@ -46,7 +46,7 @@
                     android:layout_marginStart="@dimen/margin_21"
                     app:fontFamily="@font/brutalista_bold"
                     android:gravity="end"
-                    android:paddingHorizontal="@dimen/margin_10"
+                    android:paddingHorizontal="@dimen/margin_13"
                     tools:text="@string/bal_cardhead"
                     android:textAlignment="viewEnd"
                     android:textAllCaps="true"
