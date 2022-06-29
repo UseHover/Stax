@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingEnd="@dimen/margin_10"
         android:paddingStart="0dp"
         android:paddingTop="@dimen/margin_10"
+        android:paddingEnd="@dimen/margin_10"
         android:paddingBottom="11dp">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/favoriteIcon"
-        android:padding="@dimen/margin_13"
-        android:background="?selectableItemBackground"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/favorite_empty"/>
+            android:id="@+id/favoriteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?selectableItemBackground"
+            android:padding="@dimen/margin_13"
+            android:src="@drawable/favorite_empty" />
 
     <TextView
             android:id="@+id/li_title"
@@ -29,11 +30,17 @@
             android:textColor="@color/offWhite"
             android:textSize="@dimen/text_16" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/li_button"
-            style="@style/StaxButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical" />
+            android:elevation="0dp"
+            android:gravity="center_vertical"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/buttonColor"
+            app:cornerRadius="@dimen/margin_5"
+            app:fontFamily="@font/brutalista_medium" />
 
 </LinearLayout>

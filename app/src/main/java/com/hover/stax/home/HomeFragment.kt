@@ -134,7 +134,7 @@ class HomeFragment : Fragment() {
                         NavUtil.navigate(findNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tip.id))
                     }
 
-                    readMoreLayout.setOnClickListener {
+                    readmore.setOnClickListener {
                         NavUtil.navigate(findNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(null))
                     }
                 }

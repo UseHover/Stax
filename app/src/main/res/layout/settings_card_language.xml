@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	app:title="@string/language_cardhead">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/language_cardhead">
 
-	<TextView
-		android:id="@+id/select_language_btn"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_10"
-		android:layout_marginBottom="@dimen/margin_8"
-		android:paddingVertical="@dimen/margin_21"
-		android:background="?attr/selectableItemBackground"
-		android:textSize="@dimen/text_16" />
+    <TextView
+            android:id="@+id/select_language_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_8"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="@dimen/margin_21"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_16" />
 
 </com.hover.stax.views.StaxCardView>

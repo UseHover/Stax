@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_8"
             app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="@dimen/margin_8"
+            app:cardElevation="0dp"
             app:cardBackgroundColor="@color/cardViewColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/date">

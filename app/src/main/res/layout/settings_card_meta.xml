@@ -25,15 +25,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:labelFor="@id/defaultAccountSpinner"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxCornerRadiusBottomEnd="@dimen/margin_5"
+            app:boxCornerRadiusBottomStart="@dimen/margin_5"
+            app:boxCornerRadiusTopEnd="@dimen/margin_5"
+            app:boxCornerRadiusTopStart="@dimen/margin_5"
             android:hint="@string/defaultacct_label">
 
-        <AutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/defaultAccountSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:dropDownWidth="wrap_content"
-                android:textColor="@color/offWhite"
+                android:textColor="@color/grey"
                 android:textCursorDrawable="@null"
                 android:editable="false"
                 android:textSize="@dimen/text_19" />
@@ -47,6 +52,6 @@
             android:checked="true"
             android:padding="@dimen/margin_10"
             android:text="@string/test_mode_enabled"
-            android:textColor="@color/offWhite"
+            android:textColor="@color/grey"
             android:textSize="@dimen/text_16" />
 </com.hover.stax.views.StaxCardView>
