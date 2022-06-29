@@ -18,6 +18,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountsAdapter
@@ -94,9 +95,21 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
             }
         }
 
+        val simsObserver = object: Observer<List<SimInfo>> {
+            override fun onChanged(t: List<SimInfo>?) {
+                Timber.v("Loaded ${t?.size} sims")
+            }
+        }
+
+        val countryListObserver = object: Observer<List<String>> {
+            override fun onChanged(t: List<String>?) {
+                Timber.v("Loaded ${t?.size} hnis")
+            }
+        }
+
         channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
-        sims.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} sims") }
-        simCountryList.observe(viewLifecycleOwner) { Timber.v("Loaded ${it?.size} hnis") }
+        sims.observe(viewLifecycleOwner, simsObserver)
+        simCountryList.observe(viewLifecycleOwner, countryListObserver)
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         filteredChannels.observe(viewLifecycleOwner, channelsObserver)
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
@@ -179,7 +192,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun showEmptyState() {
-        val content = resources.getString(R.string.no_accounts_found_desc, channelsViewModel.filterQuery.value!!)
+        val content = resources.getString(R.string.no_accounts_found_desc, channelsViewModel.filterQuery.value ?: getString(R.string.empty_channel_placeholder))
         binding.emptyState.noAccountFoundDesc.apply {
             text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
             movementMethod = LinkMovementMethod.getInstance()

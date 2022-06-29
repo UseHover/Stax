@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -29,6 +30,12 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     private var _binding: FragmentWellnessBinding? = null
     private val binding get() = _binding!!
 
+    private val backPressedCallback = object: OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            showTipList()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentWellnessBinding.inflate(inflater, container, false)
         return binding.root
@@ -43,6 +50,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         viewModel.getTips()
 
         startObserver()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
     private fun startObserver() = collectLatestLifecycleFlow(viewModel.tipsState) {
@@ -61,6 +69,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         if (id != null) {
             tips.firstOrNull { it.id == id }?.let { onTipSelected(it, true) }
         } else {
+            backPressedCallback.isEnabled = false
             binding.financialTips.apply {
                 layoutManager = UIHelper.setMainLinearManagers(requireActivity())
                 isNestedScrollingEnabled = false
@@ -73,6 +82,8 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     override fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean) {
         logTipRead(tip, isFromDeeplink)
+
+        backPressedCallback.isEnabled = true
 
         binding.tipsCard.visibility = View.GONE
         binding.financialTipsDetail.apply {

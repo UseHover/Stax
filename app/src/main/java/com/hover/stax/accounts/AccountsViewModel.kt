@@ -125,7 +125,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         activeAccount.value = accounts.value.firstOrNull { it.isDefault }
     }
 
-    fun setDefaultAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
+    fun setDefaultAccount(account: Account)  = viewModelScope.launch(Dispatchers.IO) {
         if (accounts.value.isNotEmpty()) {
             val accts = accounts.value
             //remove current default account

@@ -20,7 +20,7 @@ class RequestDetailViewModel(val repo: AccountRepo, private val requestRepo: Req
     }
 
     private fun loadAccount(r: Request): LiveData<Account> {
-        return repo.getLiveAccount(r.requester_account_id!!)
+        return repo.getLiveAccount(r.requester_account_id)
     }
 
     fun setRequest(id: Int) = viewModelScope.launch(Dispatchers.IO) {
