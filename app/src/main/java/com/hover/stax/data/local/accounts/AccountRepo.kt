@@ -1,7 +1,8 @@
-package com.hover.stax.accounts
+package com.hover.stax.data.local.accounts
 
 import androidx.lifecycle.LiveData
 import com.hover.stax.database.AppDatabase
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,8 @@ class AccountRepo(db: AppDatabase) {
     fun getAccountsByChannel(channelId: Int): List<Account> = accountDao.getAccountsByChannel(channelId)
 
     fun getDefaultAccount(): Account? = accountDao.getDefaultAccount()
+
+    suspend fun getDefaultAccountAsync(): Account? = accountDao.getDefaultAccountAsync()
 
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
@@ -44,9 +47,11 @@ class AccountRepo(db: AppDatabase) {
 
     fun insert(account: Account) = accountDao.insert(account)
 
-    fun insert(accounts: List<Account>): List<Long> = accountDao.insertAll(accounts)
+    suspend fun insert(accounts: List<Account>): List<Long> = accountDao.insertAll(accounts)
 
     fun update(account: Account?) = account?.let { accountDao.update(it) }
+
+    suspend fun update(accounts: List<Account>) = accountDao.updateAll(accounts)
 
     fun delete(account: Account) = accountDao.delete(account)
 

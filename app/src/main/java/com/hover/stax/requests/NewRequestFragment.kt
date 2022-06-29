@@ -13,7 +13,7 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding

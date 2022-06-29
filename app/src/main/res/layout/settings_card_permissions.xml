@@ -14,7 +14,7 @@
             android:background="?selectableItemBackground"
             android:paddingVertical="@dimen/margin_13"
             android:text="@string/manage_permissions_title"
-            android:textColor="@color/offWhite"
+            android:textColor="@color/grey"
             android:textSize="@dimen/text_16" />
 
 </com.hover.stax.views.StaxCardView>

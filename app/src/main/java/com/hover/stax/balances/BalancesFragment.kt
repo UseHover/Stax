@@ -13,14 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.accounts.DUMMY
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentBalanceBinding
+import com.hover.stax.domain.model.DUMMY
 import com.hover.stax.home.HomeFragmentDirections
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLatestLifecycleFlow
@@ -43,6 +44,9 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     private val accountsViewModel: AccountsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
+
+    private val homeViewModel: HomeViewModel by sharedViewModel()
+
     private lateinit var cardStackAdapter: BalanceCardStackAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -63,8 +67,8 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
 
         balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
 
-        balancesViewModel.accounts.observe(viewLifecycleOwner) {
-            updateAccounts(ArrayList(it))
+        collectLatestLifecycleFlow(homeViewModel.homeState) {
+                updateAccounts(ArrayList(it.accounts))
         }
 
         collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
@@ -206,8 +210,8 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
     }
 
     companion object {
-        const val GREEN_BG = "#46E6CC"
-        const val BLUE_BG = "#04CCFC"
+        const val GREEN_BG = "#45E5CB"
+        const val BLUE_BG = "#2376F3"
 
         const val STACK_OVERLAY_GAP = 10
         const val ROTATE_UPSIDE_DOWN = 180f

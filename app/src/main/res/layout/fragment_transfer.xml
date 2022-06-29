@@ -12,6 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_89"
+            android:paddingHorizontal="@dimen/margin_5"
             android:descendantFocusability="afterDescendants"
             android:focusableInTouchMode="true"
             android:orientation="vertical">

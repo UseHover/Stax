@@ -7,10 +7,10 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
-import com.hover.stax.accounts.ACCOUNT_ID
-import com.hover.stax.accounts.ACCOUNT_NAME
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.PhoneHelper
+import com.hover.stax.domain.model.ACCOUNT_ID
+import com.hover.stax.domain.model.ACCOUNT_NAME
 import com.hover.stax.settings.TEST_MODE
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils

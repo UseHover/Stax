@@ -1,6 +1,7 @@
-package com.hover.stax.bonus
+package com.hover.stax.data.local.bonus
 
 import com.hover.stax.database.AppDatabase
+import com.hover.stax.domain.model.Bonus
 
 class BonusRepo(val db: AppDatabase) {
 
@@ -12,9 +13,9 @@ class BonusRepo(val db: AppDatabase) {
 
     fun save(bonuses: List<Bonus>) = dao.insertAll(bonuses)
 
-    fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus? = dao.getBonusByPurchaseChannel(purchaseChannelId)
+    suspend fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus? = dao.getBonusByPurchaseChannel(purchaseChannelId)
 
-    fun getBonusByUserChannel(userChannelId: Int): Bonus? = dao.getBonusByUserChannel(userChannelId)
+    suspend fun getBonusByUserChannel(userChannelId: Int): Bonus? = dao.getBonusByUserChannel(userChannelId)
 
     fun delete(bonus: Bonus) = dao.delete(bonus)
 
