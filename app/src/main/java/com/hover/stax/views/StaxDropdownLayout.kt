@@ -1,17 +1,20 @@
 package com.hover.stax.views
 
 import android.content.Context
-import android.text.InputType
-import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.View
+import com.hover.stax.views.AbstractStatefulInput
 import android.widget.AutoCompleteTextView
 import androidx.annotation.CallSuper
-import com.google.android.material.textfield.TextInputLayout
+import android.content.res.TypedArray
+import android.text.InputType
+import android.util.AttributeSet
 import com.hover.stax.R
+import com.google.android.material.textfield.TextInputLayout
+import android.view.View.OnFocusChangeListener
+import android.view.LayoutInflater
+import android.view.View
 import com.hover.stax.databinding.StaxDropdownBinding
 
-open class StaxDropdownLayout(context: Context, attrs: AttributeSet) : AbstractStatefulInput(context, attrs) {
+open class StaxDropdownLayout(context: Context, attrs: AttributeSet): AbstractStatefulInput(context, attrs) {
 
     private val binding: StaxDropdownBinding
 

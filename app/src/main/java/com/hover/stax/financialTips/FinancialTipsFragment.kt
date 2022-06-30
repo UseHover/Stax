@@ -13,8 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
-import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLatestLifecycleFlow
@@ -53,19 +51,11 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
-    private fun startObserver() = collectLatestLifecycleFlow(viewModel.tipsState) {
-        if (it.tips.isEmpty()) {
-            binding.empty.visibility = View.VISIBLE
-            binding.financialTips.visibility = View.GONE
-            binding.financialTipsDetail.visibility = View.GONE
-        } else
-            showFinancialTips(it.tips, args.tipId)
+    private fun startObserver() = collectLatestLifecycleFlow(viewModel.tips) {
+        showFinancialTips(it, args.tipId)
     }
 
     private fun showFinancialTips(tips: List<FinancialTip>, id: String? = null) {
-        binding.empty.visibility = View.GONE
-        binding.financialTips.visibility = View.VISIBLE
-
         if (id != null) {
             tips.firstOrNull { it.id == id }?.let { onTipSelected(it, true) }
         } else {
@@ -164,8 +154,8 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         binding.financialTipsDetail.visibility = View.GONE
         binding.tipsCard.visibility = View.VISIBLE
 
-        if (viewModel.tipsState.value.tips.isNotEmpty())
-            showFinancialTips(viewModel.tipsState.value.tips, null)
+        if (viewModel.tips.value.isNotEmpty())
+            showFinancialTips(viewModel.tips.value, null)
     }
 
     override fun onDestroyView() {

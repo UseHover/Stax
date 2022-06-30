@@ -2,7 +2,7 @@ package com.hover.stax.balances
 
 import android.content.Context
 import android.view.ViewGroup
-import com.hover.stax.domain.model.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.StackBalanceCardBinding
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.staxcardstack.StaxCardStackAdapter

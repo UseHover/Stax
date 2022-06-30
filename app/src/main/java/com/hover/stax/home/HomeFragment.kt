@@ -5,6 +5,7 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
@@ -12,17 +13,18 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.bonus.Bonus
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
-import com.hover.stax.domain.model.Bonus
-import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.presentation.home.HomeViewModel
+import com.hover.stax.financialTips.FinancialTip
+import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.utils.network.NetworkMonitor
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
@@ -31,10 +33,9 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    private val wellnessViewModel: FinancialTipsViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
-
-    private val homeViewModel: HomeViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -46,14 +47,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeViewModel.getBonusList()
-        homeViewModel.getAccounts()
-        homeViewModel.getFinancialTips()
-
-        collectLatestLifecycleFlow(homeViewModel.homeState) {
-            showBonuses(it.bonuses)
-            setUpWellnessTips(it.financialTips)
-        }
+        bonusViewModel.fetchBonuses()
+        setupBanner()
 
         binding.airtime.setOnClickListener { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
         binding.transfer.setOnClickListener { navigateTo(getTransferDirection(HoverAction.P2P)) }
@@ -65,6 +60,7 @@ class HomeFragment : Fragment() {
             updateOfflineIndicator(it)
         }
 
+        setUpWellnessTips()
         setKeVisibility()
 
         lifecycleScope.launchWhenStarted {
@@ -81,20 +77,24 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showBonuses(bonusList: List<Bonus>) {
-        if (bonusList.isNotEmpty()) {
-            with(binding.bonusCard) {
-                message.text = bonusList.first().message
-                learnMore.movementMethod = LinkMovementMethod.getInstance()
-            }
-            binding.bonusCard.apply {
-                cardBonus.visibility = View.VISIBLE
-                cta.setOnClickListener {
-                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                    validateAccounts(bonusList.first())
+    private fun setupBanner() {
+        bonusViewModel.getBonusList()
+
+        collectLatestLifecycleFlow(bonusViewModel.bonuses) { bonusList ->
+            if (bonusList.isNotEmpty()) {
+                with(binding.bonusCard) {
+                    message.text = bonusList.first().message
+                    learnMore.movementMethod = LinkMovementMethod.getInstance()
                 }
-            }
-        } else binding.bonusCard.cardBonus.visibility = View.GONE
+                binding.bonusCard.apply {
+                    cardBonus.visibility = View.VISIBLE
+                    cta.setOnClickListener {
+                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                        validateAccounts(bonusList.first())
+                    }
+                }
+            } else binding.bonusCard.cardBonus.visibility = View.GONE
+        }
     }
 
     private fun setKeVisibility() {
@@ -113,10 +113,9 @@ class HomeFragment : Fragment() {
         binding.offlineBadge.visibility = if (isConnected) View.GONE else View.VISIBLE
     }
 
-    private fun setUpWellnessTips(tips: List<FinancialTip>) {
-        Timber.e("Found ${tips.size} tips")
-        if (tips.isNotEmpty())
-            showTip(tips.first())
+    private fun setUpWellnessTips() = collectLatestLifecycleFlow(wellnessViewModel.tips) {
+        if (it.isNotEmpty())
+            showTip(it.first())
         else
             binding.wellnessCard.tipsCard.visibility = View.GONE
     }
@@ -134,7 +133,7 @@ class HomeFragment : Fragment() {
                         NavUtil.navigate(findNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tip.id))
                     }
 
-                    readmore.setOnClickListener {
+                    readMoreLayout.setOnClickListener {
                         NavUtil.navigate(findNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(null))
                     }
                 }

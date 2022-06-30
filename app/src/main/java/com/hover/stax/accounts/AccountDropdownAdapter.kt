@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
-import com.hover.stax.domain.model.Account
+import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.UIHelper.loadImage
 
 class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : ArrayAdapter<Account>(context, 0, accounts) {
@@ -41,7 +41,7 @@ class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : Ar
         fun setAccount(account: Account) {
             binding.serviceItemNameId.text = account.alias
 
-            if (account.logoUrl.isEmpty())
+            if(account.logoUrl.isEmpty())
                 binding.serviceItemImageId.loadImage(binding.root.context, R.drawable.ic_add)
             else
                 binding.serviceItemImageId.loadImage(binding.root.context, account.logoUrl)
