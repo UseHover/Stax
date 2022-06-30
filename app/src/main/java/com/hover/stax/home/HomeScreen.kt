@@ -116,24 +116,30 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
                              financialTip: FinancialTip) {
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	Card(elevation = 2.dp, modifier = Modifier.padding(all = size13)) {
-		Column(modifier = Modifier
+		Row(modifier = Modifier
 			.padding(all = size13)
 			.clickable { tipInterface?.onTipClicked(null) }) {
 
-			TextWithImageLinear(drawable = R.drawable.ic_tip_of_day,
-				stringRes = R.string.tip_of_the_day,
-				Modifier.padding(bottom = 5.dp))
-			Text(text = financialTip.title,
-				style = MaterialTheme.typography.body2,
-				textDecoration = TextDecoration.Underline)
-			Text(text = financialTip.snippet,
-				style = MaterialTheme.typography.body2,
-				maxLines = 2,
-				overflow = TextOverflow.Ellipsis,
-				modifier = Modifier.padding(bottom = size13, top = 3.dp))
-			Text(text = stringResource(id = R.string.read_more),
-				color = colorResource(id = R.color.brightBlue),
-				modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) })
+			Column(modifier = Modifier.weight(1f)){
+				TextWithImageLinear(drawable = R.drawable.ic_tip_of_day,
+					stringRes = R.string.tip_of_the_day,
+					Modifier.padding(bottom = 5.dp))
+				Text(text = financialTip.title,
+					style = MaterialTheme.typography.body2,
+					textDecoration = TextDecoration.Underline)
+				Text(text = financialTip.snippet,
+					style = MaterialTheme.typography.body2,
+					maxLines = 2,
+					overflow = TextOverflow.Ellipsis,
+					modifier = Modifier.padding(bottom = size13, top = 3.dp))
+				Text(text = stringResource(id = R.string.read_more),
+					color = colorResource(id = R.color.brightBlue),
+					modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) })
+			}
+
+			Image(painter = painterResource(id = R.drawable.tips_fancy_icon),
+				contentDescription = null,
+				modifier = Modifier.size(70.dp).align(Alignment.CenterVertically),)
 		}
 	}
 }
