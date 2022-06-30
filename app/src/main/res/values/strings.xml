@@ -719,6 +719,7 @@
     <string name="btn_share">Share</string>
     <string name="share_wellness_tip">Share Financial Tip</string>
     <string name="read_more"><u>Read more</u></string>
+    <string name="tip_of_the_day">Tip of the day</string>
 
     <!-- Paybill -->
     <string name="business_number_label">Business number</string>

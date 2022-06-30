@@ -116,7 +116,7 @@ private fun BalanceItem(staxAccount: Account,
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	Column {
 		Row(modifier = Modifier
-			.background(color = colorResource(id = R.color.colorBackground))
+			.background(color = MaterialTheme.colors.background)
 			.fillMaxWidth()
 			.padding(vertical = size18)
 			.clickable { balanceTapListener?.onTapDetail(accountId = staxAccount.id) }) {
@@ -169,7 +169,7 @@ fun BalanceScreen(homeViewModel: HomeViewModel, balanceTapListener: BalanceTapLi
 			val homeState = homeViewModel.homeState.collectAsState()
 			val context = LocalContext.current
 
-			Column(modifier = Modifier.background(color = colorResource(id = R.color.colorBackground))) {
+			Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
 				BalanceHeader(onClickedAddAccount = onClickedAddAccount, homeState.value.accounts.isNotEmpty())
 				ShowBalances(accountList = homeState.value.accounts,
 					context = context,
@@ -192,7 +192,7 @@ fun BalanceScreenPreview() {
 			accountList.add(fakeAccount())
 			val context = LocalContext.current
 
-			Column(modifier = Modifier.background(color = colorResource(id = R.color.colorBackground))) {
+			Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
 				BalanceHeader(onClickedAddAccount = {}, accountExists = true)
 				ShowBalances(accountList = emptyList(),
 					context = context,
