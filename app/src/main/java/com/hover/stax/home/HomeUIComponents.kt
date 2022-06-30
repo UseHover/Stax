@@ -3,7 +3,6 @@ package com.hover.stax.home
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -18,13 +17,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.hover.stax.R
 import com.hover.stax.balances.BalancesFragment
@@ -38,11 +35,15 @@ import timber.log.Timber
 fun TopBar(showOfflineBadge: Boolean) {
 	Row(modifier = Modifier
 		.fillMaxWidth()
-		.padding(all = dimensionResource(id = R.dimen.margin_13)), horizontalArrangement = Arrangement.SpaceBetween) {
-		TextWithImageLinear(drawable = R.drawable.stax_logo, stringRes = R.string.nav_home, modifier = Modifier)
+		.padding(all = dimensionResource(id = R.dimen.margin_13)),
+		horizontalArrangement = Arrangement.SpaceBetween) {
+		TextWithImageLinear(drawable = R.drawable.stax_logo,
+			stringRes = R.string.nav_home,
+			modifier = Modifier)
 		if (showOfflineBadge) {
 			TextWithImageLinear(drawable = R.drawable.ic_internet_off,
-				stringRes = R.string.working_offline, modifier = Modifier.align(Alignment.CenterVertically))
+				stringRes = R.string.working_offline,
+				modifier = Modifier.align(Alignment.CenterVertically))
 		}
 	}
 }
@@ -111,27 +112,30 @@ fun PrimaryFeatures(
 }
 
 @Composable
-private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?, financialTip: FinancialTip) {
+private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
+                             financialTip: FinancialTip) {
 	val size13 = dimensionResource(id = R.dimen.margin_13)
-Card(elevation = 2.dp, modifier = Modifier.padding(all = size13) ) {
-	Column(modifier = Modifier
-		.padding(all = size13)
-		.clickable { tipInterface?.onTipClicked(null) }) {
-		
-		TextWithImageLinear(drawable = R.drawable.ic_tip_of_day, stringRes = R.string.tip_of_the_day, Modifier.padding(bottom = 5.dp))
-		Text(text = financialTip.title, style = MaterialTheme.typography.body2, textDecoration = TextDecoration.Underline)
-		Text(text = financialTip.snippet,
-			style = MaterialTheme.typography.body2,
-			maxLines = 2,
-			overflow = TextOverflow.Ellipsis,
-			modifier = Modifier.padding(bottom = size13, top = 3.dp)
-			)
-		Text(text = stringResource(id = R.string.read_more),
-			color = colorResource(id = R.color.brightBlue),
-			modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) }
-			)
+	Card(elevation = 2.dp, modifier = Modifier.padding(all = size13)) {
+		Column(modifier = Modifier
+			.padding(all = size13)
+			.clickable { tipInterface?.onTipClicked(null) }) {
+
+			TextWithImageLinear(drawable = R.drawable.ic_tip_of_day,
+				stringRes = R.string.tip_of_the_day,
+				Modifier.padding(bottom = 5.dp))
+			Text(text = financialTip.title,
+				style = MaterialTheme.typography.body2,
+				textDecoration = TextDecoration.Underline)
+			Text(text = financialTip.snippet,
+				style = MaterialTheme.typography.body2,
+				maxLines = 2,
+				overflow = TextOverflow.Ellipsis,
+				modifier = Modifier.padding(bottom = size13, top = 3.dp))
+			Text(text = stringResource(id = R.string.read_more),
+				color = colorResource(id = R.color.brightBlue),
+				modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) })
+		}
 	}
-}
 }
 
 interface FinancialTipClickInterface {
@@ -169,14 +173,19 @@ private fun TextWithImageVertical(@DrawableRes drawable: Int,
 
 
 @Composable
-private fun TextWithImageLinear(@DrawableRes drawable: Int, @StringRes stringRes: Int, modifier: Modifier) {
+private fun TextWithImageLinear(@DrawableRes drawable: Int,
+                                @StringRes stringRes: Int,
+                                modifier: Modifier) {
 	val margin13 = dimensionResource(id = R.dimen.margin_13)
 	Row(horizontalArrangement = Arrangement.Center, modifier = modifier) {
-		Image(painter = painterResource(id = drawable),
+		Image(
+			painter = painterResource(id = drawable),
 			contentDescription = null,
-			)
+		)
 		Text(text = stringResource(id = stringRes),
-			modifier = Modifier.padding(horizontal = margin13).align(Alignment.CenterVertically),
+			modifier = Modifier
+				.padding(horizontal = margin13)
+				.align(Alignment.CenterVertically),
 			color = colorResource(id = R.color.offWhite))
 	}
 }
@@ -228,8 +237,7 @@ fun HomeScreenPreview() {
 		deepLink = null)
 
 	StaxTheme {
-		Surface(modifier = Modifier.fillMaxSize(),
-			color = MaterialTheme.colors.background) {
+		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Column {
 				TopBar(showOfflineBadge = true)
 				BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",

@@ -67,7 +67,7 @@ private fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolea
 			modifier = Modifier.weight(1f),
 			style = MaterialTheme.typography.h3)
 
-		if(accountExists) {
+		if (accountExists) {
 			Text(text = stringResource(id = R.string.add_an_account),
 				modifier = Modifier
 					.clickable(onClick = onClickedAddAccount)
@@ -156,6 +156,7 @@ private fun BalanceItem(staxAccount: Account,
 		Divider(color = colorResource(id = R.color.nav_grey))
 	}
 }
+
 interface BalanceTapListener {
 	fun onTapRefresh(account: Account?)
 	fun onTapDetail(accountId: Int)
@@ -163,14 +164,17 @@ interface BalanceTapListener {
 
 
 @Composable
-fun BalanceScreen(homeViewModel: HomeViewModel, balanceTapListener: BalanceTapListener, onClickedAddAccount: () -> Unit) {
+fun BalanceScreen(homeViewModel: HomeViewModel,
+                  balanceTapListener: BalanceTapListener,
+                  onClickedAddAccount: () -> Unit) {
 	StaxTheme {
 		Surface {
 			val homeState = homeViewModel.homeState.collectAsState()
 			val context = LocalContext.current
 
 			Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
-				BalanceHeader(onClickedAddAccount = onClickedAddAccount, homeState.value.accounts.isNotEmpty())
+				BalanceHeader(onClickedAddAccount = onClickedAddAccount,
+					homeState.value.accounts.isNotEmpty())
 				ShowBalances(accountList = homeState.value.accounts,
 					context = context,
 					balanceTapListener = balanceTapListener,
