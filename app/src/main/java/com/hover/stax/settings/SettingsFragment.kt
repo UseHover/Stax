@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.languages.LanguageViewModel

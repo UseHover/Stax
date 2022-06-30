@@ -109,8 +109,10 @@ public class StaxCardStackView extends ViewGroup {
             childTop += lp.topMargin;
             if (i != 0) {
                 childTop -= mOverlapGaps * 2;
+                child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+            } else {
+                child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
             }
-            child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
             childTop += lp.mHeaderHeight;
         }
     }

@@ -9,6 +9,7 @@ import android.os.Build
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.view.WindowInsetsController
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -23,7 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber

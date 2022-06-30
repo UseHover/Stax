@@ -6,10 +6,10 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.domain.model.Account
-import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountRepo
 import com.hover.stax.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
+import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.ParserRepo

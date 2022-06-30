@@ -20,9 +20,6 @@ interface ChannelDao {
     fun getChannelsByIds(channel_ids: List<Int>): List<Channel>
 
     @Query("SELECT * FROM channels WHERE id IN (:channel_ids) ORDER BY name ASC")
-    suspend fun getChannelsByIdsAsync(channel_ids: List<Int>): List<Channel>
-
-    @Query("SELECT * FROM channels WHERE id IN (:channel_ids) ORDER BY name ASC")
     fun getChannels(channel_ids: IntArray): LiveData<List<Channel>>
 
     @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode ORDER BY name ASC")

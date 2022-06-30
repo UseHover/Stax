@@ -10,7 +10,7 @@
         android:paddingEnd="0dp"
         app:cardBackgroundColor="@color/cardViewColor"
         app:cardCornerRadius="@dimen/radius"
-
+        app:cardElevation="8dp"
         app:cardPreventCornerOverlap="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout

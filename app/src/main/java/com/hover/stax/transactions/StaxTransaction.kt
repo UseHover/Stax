@@ -15,7 +15,7 @@ import timber.log.Timber
 import com.hover.stax.R
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.domain.model.ACCOUNT_ID
+import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.utils.Utils
 import java.util.HashMap

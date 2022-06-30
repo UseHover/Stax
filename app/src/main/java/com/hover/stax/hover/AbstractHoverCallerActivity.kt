@@ -7,7 +7,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.home.NavHelper
 import com.hover.stax.notifications.PushNotificationTopicsInterface

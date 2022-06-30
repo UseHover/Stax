@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.ItemWellnessTipsBinding
-import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.utils.DateUtils
 
 class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListener: SelectListener) : RecyclerView.Adapter<FinancialTipsAdapter.ViewHolder>() {

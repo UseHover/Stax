@@ -15,7 +15,7 @@ import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil
 
-abstract class AbstractFormViewModel(application: Application, val contactRepo: ContactRepo, private val scheduleRepo: ScheduleRepo) : AndroidViewModel(application) {
+abstract class AbstractFormViewModel(application: Application, val contactRepo: ContactRepo, val scheduleRepo: ScheduleRepo) : AndroidViewModel(application) {
 
     var recentContacts: LiveData<List<StaxContact>> = MutableLiveData()
     val schedule = MutableLiveData<Schedule>()

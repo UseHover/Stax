@@ -7,12 +7,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.BalanceItemBinding
-import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.DUMMY
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import timber.log.Timber
 
 
 class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceListener?) : RecyclerView.Adapter<BalanceAdapter.BalancesViewHolder>() {
@@ -72,8 +73,8 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
             }
 
             setColors(
-                holder, UIHelper.getColor(account.primaryColorHex, true, holder.itemView.context),
-                UIHelper.getColor(account.secondaryColorHex, false, holder.itemView.context)
+                    holder, UIHelper.getColor(account.primaryColorHex, true, holder.itemView.context),
+                    UIHelper.getColor(account.secondaryColorHex, false, holder.itemView.context)
             )
 
             if (account.id == DUMMY) {

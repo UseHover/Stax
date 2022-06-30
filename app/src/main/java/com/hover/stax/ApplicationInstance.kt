@@ -8,7 +8,9 @@ import com.appsflyer.AppsFlyerProperties
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
-import com.hover.stax.di.*
+import com.hover.stax.database.appModule
+import com.hover.stax.database.dataModule
+import com.hover.stax.database.networkModule
 import com.hover.stax.utils.network.NetworkMonitor
 import com.uxcam.UXCam
 import com.yariksoffice.lingver.Lingver
@@ -45,7 +47,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(listOf(appModule, dataModule, networkModule, repositories, useCases))
+            modules(listOf(appModule, dataModule, networkModule))
         }
     }
 
