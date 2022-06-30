@@ -76,7 +76,7 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
     fun wrapExtras(): HashMap<String, String> {
         val extras: HashMap<String, String> = hashMapOf()
         if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
-        if (contact.value != null) {
+        if (contact.value != null && contact.value?.accountNumber != null) {
             extras[StaxContact.ID_KEY] = contact.value!!.id
             extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
             extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
