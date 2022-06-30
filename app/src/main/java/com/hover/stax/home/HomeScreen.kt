@@ -1,9 +1,9 @@
 package com.hover.stax.home
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -16,6 +16,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -30,9 +31,11 @@ import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.databinding.BalanceFragmentContainerBinding
+import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.network.NetworkMonitor
 import timber.log.Timber
@@ -217,7 +220,8 @@ fun HomeScreen(homeViewModel: HomeViewModel,
                onPayBillClicked: () -> Unit,
                onRequestMoneyClicked: () -> Unit,
                onClickedTC: () -> Unit,
-               onClickedTopUp: () -> Unit) {
+               context: Context,
+               tipInterface: FinancialTipClickInterface) {
 
 	val homeState = homeViewModel.homeState.collectAsState()
 	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
@@ -225,13 +229,13 @@ fun HomeScreen(homeViewModel: HomeViewModel,
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Column {
+			Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
 				TopBar(isInternetConnected = hasNetwork)
 
 				if(homeState.value.bonuses.isNotEmpty()) {
 					BonusCard(message = homeState.value.bonuses.first().message,
 						onClickedTC = onClickedTC,
-						onClickedTopUp = onClickedTopUp)
+						onClickedTopUp = { clickedOnBonus(context, channelsViewModel, homeState.value.bonuses.first()) })
 				}
 
 				PrimaryFeatures(onSendMoneyClicked = onSendMoneyClicked,
@@ -242,17 +246,21 @@ fun HomeScreen(homeViewModel: HomeViewModel,
 					showKEFeatures(simCountryList.value))
 
 				AndroidViewBinding(BalanceFragmentContainerBinding::inflate) {
-					val balanceFragment = fragmentContainerView.getFragment<BalancesFragment>()
-					Timber.i("Balance fragment visibility is: ${balanceFragment.isVisible}")
+				//	val balanceFragment = fragmentContainerView.getFragment<BalancesFragment>()
+					Timber.i("Balance fragment visibility is here")
 				}
 				if(homeState.value.financialTips.isNotEmpty()) {
-					FinancialTipCard(tipInterface = null, financialTip = homeState.value.financialTips.first())
+					FinancialTipCard(tipInterface = tipInterface, financialTip = homeState.value.financialTips.first())
 				}
 			}
 		}
 	}
 }
 
+private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: Bonus ) {
+	AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.clicked_bonus_airtime_banner), context)
+	channelsViewModel.validateAccounts(bonus.userChannel)
+}
 private fun showKEFeatures(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
 
@@ -269,7 +277,7 @@ fun HomeScreenPreview() {
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Column {
+			Column (modifier = Modifier.verticalScroll(rememberScrollState())){
 				TopBar(isInternetConnected = false)
 				BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
 					onClickedTC = {},
