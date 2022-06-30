@@ -21,6 +21,7 @@
     <string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
     <string name="privacy_policy_link" translatable="false">https://docs.usehover.com/staxpolicy</string>
     <string name="default_notification_channel_id">app.hover.stax</string>
+    <string name="terms_and_condition_url">https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/</string>
 
     <string name="channels_json_staging" translatable="false">channels-staging.json</string>
     <string name="channels_json_prod" translatable="false">channels-prod.json</string>
@@ -761,6 +762,8 @@
     <string name="congratulations">Congratulations</string>
     <string name="get_extra_airtime">Get Extra Airtime</string>
     <string name="learn_more"><a href="https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/">T&amp;Cs apply</a></string>
+    <string name="tc_apply">T&amp;Cs apply</string>
+
 
     <!-- Fees -->
     <string name="fee_fetched_header">Business number</string>

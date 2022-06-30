@@ -8,6 +8,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/compose-model-1656539898723.xml" value="0.25" />
+        <entry key="../../../../../layout/compose-model-1656544350344.xml" value="0.375" />
+        <entry key="../../../../../layout/compose-model-1656545250435.xml" value="0.25" />
         <entry key="../../../../layout/compose-model-1647504975633.xml" value="0.2673141891891892" />
         <entry key="../../../../layout/compose-model-1648556434513.xml" value="0.24957770270270271" />
         <entry key="app/src/main/res/drawable-v21/button_bg.xml" value="0.229" />
@@ -25,13 +28,12 @@
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/dialog_bg.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/ic_baseline_open_in_new_16.xml" value="0.258" />
-        <entry key="app/src/main/res/drawable/ic_circle.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_copy.xml" value="0.182" />
         <entry key="app/src/main/res/drawable/ic_error.xml" value="0.137" />
-        <entry key="app/src/main/res/drawable/ic_grey_circle.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/ic_grey_circle_small.xml" value="0.249" />
         <entry key="app/src/main/res/drawable/ic_info_red.xml" value="0.137" />
+        <entry key="app/src/main/res/drawable/ic_internet_off.xml" value="0.156" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
         <entry key="app/src/main/res/drawable/ic_payment.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
@@ -102,7 +104,6 @@
         <entry key="app/src/main/res/layout/fragment_link_account.xml" value="0.24140625" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1331521739130435" />
-        <entry key="app/src/main/res/layout/fragment_merchant.xml" value="0.2905982905982906" />
         <entry key="app/src/main/res/layout/fragment_non_interactive_tutorial.xml" value="0.2056159420289855" />
         <entry key="app/src/main/res/layout/fragment_paybill.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_paybill_list.xml" value="0.33" />
@@ -129,7 +130,6 @@
         <entry key="app/src/main/res/layout/item_paybill_action.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_sigin_viewpager.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/item_transaction_history.xml" value="0.28974358974358977" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/library_list_item.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/no_account_empty_state.xml" value="0.3319746376811594" />
@@ -137,7 +137,6 @@
         <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/paybill_card_icons.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/paybill_card_save.xml" value="0.2905982905982906" />
         <entry key="app/src/main/res/layout/paybill_card_save_bill.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/paybill_summary.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/permission_help_accessibility.xml" value="0.19145299145299147" />
@@ -164,7 +163,6 @@
         <entry key="app/src/main/res/layout/settings_card_language.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/settings_card_learn.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
-        <entry key="app/src/main/res/layout/settings_card_permissions.xml" value="0.2905982905982906" />
         <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/settings_card_support.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_ussd_library.xml" value="0.19145299145299147" />
@@ -224,7 +222,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
