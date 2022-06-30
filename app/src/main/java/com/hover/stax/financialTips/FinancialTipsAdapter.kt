@@ -26,11 +26,6 @@ class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListe
         fun setItems(tip: FinancialTip) {
             tip.date?.let {
                 binding.date.text = DateUtils.humanFriendlyDate(it)
-
-                Timber.e(it.toString())
-
-                Timber.e(Date(it).toString())
-                Timber.e(DateUtils.humanFriendlyDate(it))
             }
             binding.title.text = tip.title
             binding.snippet.text = tip.snippet
