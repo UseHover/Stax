@@ -10,6 +10,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -24,15 +27,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.hover.stax.R
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.databinding.BalanceFragmentContainerBinding
 import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.network.NetworkMonitor
 import timber.log.Timber
 
 @Composable
-fun TopBar(showOfflineBadge: Boolean) {
+fun TopBar(isInternetConnected: Boolean) {
 	Row(modifier = Modifier
 		.fillMaxWidth()
 		.padding(all = dimensionResource(id = R.dimen.margin_13)),
@@ -40,7 +46,7 @@ fun TopBar(showOfflineBadge: Boolean) {
 		TextWithImageLinear(drawable = R.drawable.stax_logo,
 			stringRes = R.string.nav_home,
 			modifier = Modifier)
-		if (showOfflineBadge) {
+		if (!isInternetConnected) {
 			TextWithImageLinear(drawable = R.drawable.ic_internet_off,
 				stringRes = R.string.working_offline,
 				modifier = Modifier.align(Alignment.CenterVertically))
@@ -88,6 +94,7 @@ fun PrimaryFeatures(
 	onBuyGoodsClicked: () -> Unit,
 	onPayBillClicked: () -> Unit,
 	onRequestMoneyClicked: () -> Unit,
+	showKenyaFeatures : Boolean
 ) {
 	Row(horizontalArrangement = Arrangement.SpaceEvenly,
 		modifier = Modifier
@@ -99,12 +106,14 @@ fun PrimaryFeatures(
 		TextWithImageVertical(onItemClick = onBuyAirtimeClicked,
 			drawable = R.drawable.ic_system_upate_24,
 			stringRes = R.string.cta_airtime)
-		TextWithImageVertical(onItemClick = onBuyGoodsClicked,
-			drawable = R.drawable.ic_card,
-			stringRes = R.string.cta_merchant)
-		TextWithImageVertical(onItemClick = onPayBillClicked,
-			drawable = R.drawable.ic_utility,
-			stringRes = R.string.cta_paybill)
+		if(showKenyaFeatures) {
+			TextWithImageVertical(onItemClick = onBuyGoodsClicked,
+				drawable = R.drawable.ic_card,
+				stringRes = R.string.cta_merchant)
+			TextWithImageVertical(onItemClick = onPayBillClicked,
+				drawable = R.drawable.ic_utility,
+				stringRes = R.string.cta_paybill)
+		}
 		TextWithImageVertical(onItemClick = onRequestMoneyClicked,
 			drawable = R.drawable.ic_baseline_people_24,
 			stringRes = R.string.cta_request)
@@ -139,7 +148,10 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 
 			Image(painter = painterResource(id = R.drawable.tips_fancy_icon),
 				contentDescription = null,
-				modifier = Modifier.size(60.dp).align(Alignment.CenterVertically),)
+				modifier = Modifier
+					.size(60.dp)
+					.padding(start = size13)
+					.align(Alignment.CenterVertically),)
 		}
 	}
 }
@@ -153,11 +165,10 @@ private fun TextWithImageVertical(@DrawableRes drawable: Int,
                                   @StringRes stringRes: Int,
                                   onItemClick: () -> Unit) {
 	val size24 = dimensionResource(id = R.dimen.margin_24)
-	val size55 = dimensionResource(id = R.dimen.margin_55)
 	val blue = colorResource(id = R.color.stax_state_blue)
 	Column(modifier = Modifier
 		.clickable(onClick = onItemClick)
-		.padding(horizontal = 8.dp),
+		.padding(horizontal = 2.dp),
 		verticalArrangement = Arrangement.Center) {
 
 		Image(painter = painterResource(id = drawable),
@@ -173,7 +184,7 @@ private fun TextWithImageVertical(@DrawableRes drawable: Int,
 			textAlign = TextAlign.Center,
 			modifier = Modifier
 				.padding(top = size24)
-				.width(size55))
+				.widthIn(min = 50.dp, max = 65.dp) )
 	}
 }
 
@@ -198,37 +209,51 @@ private fun TextWithImageLinear(@DrawableRes drawable: Int,
 
 
 @Composable
-fun HomeScreen() {
-	val financialTip = FinancialTip(id = "1234",
-		title = "Do you want to save money",
-		content = "This is a test content here so lets see if its going to use ellipse overflow",
-		snippet = "This is a test content here so lets see if its going to use ellipse overflow, with an example here",
-		date = DateUtils.todayDate(),
-		shareCopy = null,
-		deepLink = null)
+fun HomeScreen(homeViewModel: HomeViewModel,
+               channelsViewModel: ChannelsViewModel,
+               onSendMoneyClicked: () -> Unit,
+               onBuyAirtimeClicked: () -> Unit,
+               onBuyGoodsClicked: () -> Unit,
+               onPayBillClicked: () -> Unit,
+               onRequestMoneyClicked: () -> Unit,
+               onClickedTC: () -> Unit,
+               onClickedTopUp: () -> Unit) {
+
+	val homeState = homeViewModel.homeState.collectAsState()
+	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
+	val simCountryList = channelsViewModel.simCountryList.observeAsState(initial = emptyList())
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Column {
-				TopBar(showOfflineBadge = true)
-				BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
-					onClickedTC = {},
-					onClickedTopUp = {})
-				PrimaryFeatures(onSendMoneyClicked = { },
-					onBuyAirtimeClicked = { },
-					onBuyGoodsClicked = { },
-					onPayBillClicked = { },
-					onRequestMoneyClicked = {})
+				TopBar(isInternetConnected = hasNetwork)
+
+				if(homeState.value.bonuses.isNotEmpty()) {
+					BonusCard(message = homeState.value.bonuses.first().message,
+						onClickedTC = onClickedTC,
+						onClickedTopUp = onClickedTopUp)
+				}
+
+				PrimaryFeatures(onSendMoneyClicked = onSendMoneyClicked,
+					onBuyAirtimeClicked = onBuyAirtimeClicked,
+					onBuyGoodsClicked = onBuyGoodsClicked,
+					onPayBillClicked = onPayBillClicked,
+					onRequestMoneyClicked = onRequestMoneyClicked,
+					showKEFeatures(simCountryList.value))
 
 				AndroidViewBinding(BalanceFragmentContainerBinding::inflate) {
 					val balanceFragment = fragmentContainerView.getFragment<BalancesFragment>()
 					Timber.i("Balance fragment visibility is: ${balanceFragment.isVisible}")
 				}
-				FinancialTipCard(tipInterface = null, financialTip = financialTip)
+				if(homeState.value.financialTips.isNotEmpty()) {
+					FinancialTipCard(tipInterface = null, financialTip = homeState.value.financialTips.first())
+				}
 			}
 		}
 	}
 }
+
+private fun showKEFeatures(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
 
 @Preview
@@ -245,7 +270,7 @@ fun HomeScreenPreview() {
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Column {
-				TopBar(showOfflineBadge = true)
+				TopBar(isInternetConnected = false)
 				BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
 					onClickedTC = {},
 					onClickedTopUp = {})
@@ -253,7 +278,7 @@ fun HomeScreenPreview() {
 					onBuyAirtimeClicked = { },
 					onBuyGoodsClicked = { },
 					onPayBillClicked = { },
-					onRequestMoneyClicked = {})
+					onRequestMoneyClicked = {}, true)
 
 				FinancialTipCard(tipInterface = null, financialTip = financialTip)
 			}
