@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -122,7 +123,7 @@ class HomeFragment : Fragment() {
 
     private fun showTip(tip: FinancialTip) {
         tip.date?.let {
-            if (android.text.format.DateUtils.isToday(it.time)) {
+            if (android.text.format.DateUtils.isToday(it)) {
                 with(binding.wellnessCard) {
                     tipsCard.visibility = View.VISIBLE
 
