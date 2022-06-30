@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.ItemWellnessTipsBinding
 import com.hover.stax.utils.DateUtils
+import timber.log.Timber
+import java.util.*
 
 class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListener: SelectListener) : RecyclerView.Adapter<FinancialTipsAdapter.ViewHolder>() {
 
@@ -23,7 +25,12 @@ class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListe
 
         fun setItems(tip: FinancialTip) {
             tip.date?.let {
-                binding.date.text = DateUtils.humanFriendlyDate(it.time)
+                binding.date.text = DateUtils.humanFriendlyDate(it)
+
+                Timber.e(it.toString())
+
+                Timber.e(Date(it).toString())
+                Timber.e(DateUtils.humanFriendlyDate(it))
             }
             binding.title.text = tip.title
             binding.snippet.text = tip.snippet
