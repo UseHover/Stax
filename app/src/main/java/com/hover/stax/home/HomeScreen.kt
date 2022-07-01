@@ -6,6 +6,8 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
@@ -19,6 +21,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -31,10 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.balances.BalanceScreen
-import com.hover.stax.balances.BalanceScreenPreview
-import com.hover.stax.balances.BalanceTapListener
-import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.balances.*
 import com.hover.stax.databinding.BalanceFragmentContainerBinding
 import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.model.FinancialTip
@@ -216,55 +216,76 @@ private fun TextWithImageLinear(@DrawableRes drawable: Int,
 	}
 }
 
+data class HomeClickFunctions(val onSendMoneyClicked: () -> Unit,
+                              val onBuyAirtimeClicked: () -> Unit,
+                              val onBuyGoodsClicked: () -> Unit,
+                              val onPayBillClicked: () -> Unit,
+                              val onRequestMoneyClicked: () -> Unit,
+                              val onClickedTC: () -> Unit,
+                              val onClickedAddNewAccount: () -> Unit,)
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel,
                balancesViewModel: BalancesViewModel,
                channelsViewModel: ChannelsViewModel,
-               onSendMoneyClicked: () -> Unit,
-               onBuyAirtimeClicked: () -> Unit,
-               onBuyGoodsClicked: () -> Unit,
-               onPayBillClicked: () -> Unit,
-               onRequestMoneyClicked: () -> Unit,
-               onClickedTC: () -> Unit,
-               onClickedAddNewAccount: () -> Unit,
-               context: Context,
+               homeClickFunctions: HomeClickFunctions,
                balanceTapListener: BalanceTapListener,
                tipInterface: FinancialTipClickInterface) {
 
 	val homeState = homeViewModel.homeState.collectAsState()
+	val balances = balancesViewModel.accounts.observeAsState()
 	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
 	val simCountryList = channelsViewModel.simCountryList.observeAsState(initial = emptyList())
+	val context = LocalContext.current
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Column {
-				TopBar(isInternetConnected = hasNetwork)
+			LazyColumn {
+				item{
+					TopBar(isInternetConnected = hasNetwork)
 
-				if (homeState.value.bonuses.isNotEmpty()) {
-					BonusCard(message = homeState.value.bonuses.first().message,
-						onClickedTC = onClickedTC,
-						onClickedTopUp = {
-							clickedOnBonus(context,
-								channelsViewModel,
-								homeState.value.bonuses.first())
-						})
+					if (homeState.value.bonuses.isNotEmpty()) {
+						BonusCard(message = homeState.value.bonuses.first().message,
+							onClickedTC = homeClickFunctions.onClickedTC,
+							onClickedTopUp = {
+								clickedOnBonus(context,
+									channelsViewModel,
+									homeState.value.bonuses.first())
+							})
+					}
+
+					PrimaryFeatures(onSendMoneyClicked = homeClickFunctions.onSendMoneyClicked,
+						onBuyAirtimeClicked = homeClickFunctions.onBuyAirtimeClicked,
+						onBuyGoodsClicked = homeClickFunctions.onBuyGoodsClicked,
+						onPayBillClicked = homeClickFunctions.onPayBillClicked,
+						onRequestMoneyClicked = homeClickFunctions.onRequestMoneyClicked,
+						showKEFeatures(simCountryList.value))
+
+
 				}
 
-				PrimaryFeatures(onSendMoneyClicked = onSendMoneyClicked,
-					onBuyAirtimeClicked = onBuyAirtimeClicked,
-					onBuyGoodsClicked = onBuyGoodsClicked,
-					onPayBillClicked = onPayBillClicked,
-					onRequestMoneyClicked = onRequestMoneyClicked,
-					showKEFeatures(simCountryList.value))
+				item {
+					BalanceHeader(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount,
+						(balances.value !=null && balances.value!!.isNotEmpty()))
 
-				BalanceScreen(balancesViewModel = balancesViewModel,
-					balanceTapListener = balanceTapListener,
-					onClickedAddAccount = onClickedAddNewAccount)
+					if (balances.value !=null && balances.value!!.isEmpty()) {
+						EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
+					}
+				}
 
-				if (homeState.value.financialTips.isNotEmpty()) {
-					FinancialTipCard(tipInterface = tipInterface,
-						financialTip = homeState.value.financialTips.first())
+				balances.value?.let {
+					items(it) { account ->
+						BalanceItem(staxAccount = account,
+							context = context,
+							balanceTapListener = balanceTapListener)
+					}
+				}
+
+				item {
+					if (homeState.value.financialTips.isNotEmpty()) {
+						FinancialTipCard(tipInterface = tipInterface,
+							financialTip = homeState.value.financialTips.first())
+					}
 				}
 			}
 		}

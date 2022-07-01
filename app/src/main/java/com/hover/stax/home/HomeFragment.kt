@@ -56,26 +56,38 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
 		observeForBalances()
 	}
 
+	private fun getHomeClickFunctions() : HomeClickFunctions {
+		val onSendMoneyClicked = { navigateTo(getTransferDirection(HoverAction.P2P)) }
+		val onBuyAirtimeClicked = { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
+		val onBuyGoodsClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
+		val onPayBillClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
+		val onRequestMoneyClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) }
+		val onClickedAddNewAccount = {(requireActivity() as MainActivity).checkPermissionsAndNavigate(
+			MainNavigationDirections.actionGlobalAddChannelsFragment())}
+		val onClickedTermsAndConditions = {
+			Utils.openUrl(getString(R.string.terms_and_condition_url),
+				requireContext())
+		}
+
+		return HomeClickFunctions(
+			onSendMoneyClicked = onSendMoneyClicked,
+			onBuyAirtimeClicked = onBuyAirtimeClicked,
+			onBuyGoodsClicked = onBuyGoodsClicked,
+			onPayBillClicked = onPayBillClicked,
+			onRequestMoneyClicked = onRequestMoneyClicked,
+			onClickedAddNewAccount = onClickedAddNewAccount,
+			onClickedTC = onClickedTermsAndConditions)
+	}
+
 	private fun setComposeView() {
 		binding.root.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 		binding.root.setContent {
 			HomeScreen(homeViewModel = homeViewModel,
 				channelsViewModel = channelsViewModel,
 				balancesViewModel = balancesViewModel,
-				onSendMoneyClicked = { navigateTo(getTransferDirection(HoverAction.P2P)) },
-				onBuyAirtimeClicked = { navigateTo(getTransferDirection(HoverAction.AIRTIME)) },
-				onBuyGoodsClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) },
-				onPayBillClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) },
-				onRequestMoneyClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) },
-				onClickedAddNewAccount = {(requireActivity() as MainActivity).checkPermissionsAndNavigate(
-					MainNavigationDirections.actionGlobalAddChannelsFragment())},
-				onClickedTC = {
-					Utils.openUrl(getString(R.string.terms_and_condition_url),
-						requireContext())
-				},
+				homeClickFunctions = getHomeClickFunctions(),
 				tipInterface = this@HomeFragment,
-				balanceTapListener = this@HomeFragment,
-				context = requireContext())
+				balanceTapListener = this@HomeFragment)
 		}
 	}
 

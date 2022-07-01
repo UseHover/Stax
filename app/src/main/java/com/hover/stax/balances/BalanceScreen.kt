@@ -31,12 +31,11 @@ import androidx.compose.ui.unit.sp
 import com.danchoo.glideimage.GlideImage
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
-import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.DateUtils
 
 @Composable
-private fun ShowBalances(accountList: List<Account>,
+fun ShowBalances(accountList: List<Account>,
                          balanceTapListener: BalanceTapListener?,
                          onClickedAddAccount: () -> Unit,
                          context: Context) {
@@ -56,7 +55,7 @@ private fun ShowBalances(accountList: List<Account>,
 }
 
 @Composable
-private fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
+fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	Row(modifier = Modifier
 		.padding(all = size13)
@@ -81,7 +80,7 @@ private fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolea
 }
 
 @Composable
-private fun EmptyBalance(onClickedAddAccount: () -> Unit) {
+fun EmptyBalance(onClickedAddAccount: () -> Unit) {
 	val size34 = dimensionResource(id = R.dimen.margin_34)
 	val size16 = dimensionResource(id = R.dimen.margin_16)
 	Column(modifier = Modifier.padding(horizontal = size34, vertical = size16)) {
@@ -107,14 +106,15 @@ private fun EmptyBalance(onClickedAddAccount: () -> Unit) {
 }
 
 @Composable
-private fun BalanceItem(staxAccount: Account,
-                        balanceTapListener: BalanceTapListener?,
-                        context: Context) {
+fun BalanceItem(staxAccount: Account,
+                balanceTapListener: BalanceTapListener?,
+                context: Context) {
 	val size24 = dimensionResource(id = R.dimen.margin_24)
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	Column {
 		Row(modifier = Modifier
 			.fillMaxWidth()
+			.padding(horizontal =  13.dp)
 			.heightIn(min = 70.dp)
 			.clickable { balanceTapListener?.onTapBalanceDetail(accountId = staxAccount.id) }) {
 			GlideImage(data = staxAccount.logoUrl,
