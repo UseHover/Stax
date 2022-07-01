@@ -13,12 +13,11 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.balances.BalanceTapListener
-import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
