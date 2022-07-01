@@ -56,21 +56,23 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
 		observeForBalances()
 	}
 
-	private fun getHomeClickFunctions() : HomeClickFunctions {
+	private fun getHomeClickFunctions(): HomeClickFunctions {
 		val onSendMoneyClicked = { navigateTo(getTransferDirection(HoverAction.P2P)) }
 		val onBuyAirtimeClicked = { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
-		val onBuyGoodsClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
-		val onPayBillClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
-		val onRequestMoneyClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) }
-		val onClickedAddNewAccount = {(requireActivity() as MainActivity).checkPermissionsAndNavigate(
-			MainNavigationDirections.actionGlobalAddChannelsFragment())}
+		val onBuyGoodsClicked =
+			{ navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
+		val onPayBillClicked =
+			{ navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
+		val onRequestMoneyClicked =
+			{ navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) }
+		val onClickedAddNewAccount = {
+			(requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
+		}
 		val onClickedTermsAndConditions = {
-			Utils.openUrl(getString(R.string.terms_and_condition_url),
-				requireContext())
+			Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
 		}
 
-		return HomeClickFunctions(
-			onSendMoneyClicked = onSendMoneyClicked,
+		return HomeClickFunctions(onSendMoneyClicked = onSendMoneyClicked,
 			onBuyAirtimeClicked = onBuyAirtimeClicked,
 			onBuyGoodsClicked = onBuyGoodsClicked,
 			onPayBillClicked = onPayBillClicked,
@@ -133,10 +135,8 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
 	}
 
 	private fun askToCheckBalance(account: Account) {
-		val dialog = StaxDialog(requireActivity())
-			.setDialogTitle(R.string.check_balance_title)
-			.setDialogMessage(R.string.check_balance_desc)
-			.setNegButton(R.string.later, null)
+		val dialog = StaxDialog(requireActivity()).setDialogTitle(R.string.check_balance_title)
+			.setDialogMessage(R.string.check_balance_desc).setNegButton(R.string.later, null)
 			.setPosButton(R.string.check_balance_title) { onTapBalanceRefresh(account) }
 		dialog.showIt()
 	}
@@ -151,13 +151,15 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
 
 	override fun onTapBalanceRefresh(account: Account?) {
 		if (account != null) {
-			AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
+			AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single),
+				requireContext())
 			balancesViewModel.requestBalance(account)
 		}
 	}
 
 	override fun onTapBalanceDetail(accountId: Int) {
-		findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
+		findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(
+			accountId))
 	}
 
 	override fun onDestroyView() {

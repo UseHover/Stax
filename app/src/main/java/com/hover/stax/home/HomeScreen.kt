@@ -8,8 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -31,11 +29,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.balances.*
-import com.hover.stax.databinding.BalanceFragmentContainerBinding
 import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.presentation.home.HomeViewModel
@@ -43,7 +39,20 @@ import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.network.NetworkMonitor
-import timber.log.Timber
+
+data class HomeClickFunctions(
+	val onSendMoneyClicked: () -> Unit,
+	val onBuyAirtimeClicked: () -> Unit,
+	val onBuyGoodsClicked: () -> Unit,
+	val onPayBillClicked: () -> Unit,
+	val onRequestMoneyClicked: () -> Unit,
+	val onClickedTC: () -> Unit,
+	val onClickedAddNewAccount: () -> Unit,
+)
+
+interface FinancialTipClickInterface {
+	fun onTipClicked(tipId: String?)
+}
 
 @Composable
 fun TopBar(isInternetConnected: Boolean) {
@@ -165,10 +174,6 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 	}
 }
 
-interface FinancialTipClickInterface {
-	fun onTipClicked(tipId: String?)
-}
-
 @Composable
 private fun TextWithImageVertical(@DrawableRes drawable: Int,
                                   @StringRes stringRes: Int,
@@ -216,14 +221,6 @@ private fun TextWithImageLinear(@DrawableRes drawable: Int,
 	}
 }
 
-data class HomeClickFunctions(val onSendMoneyClicked: () -> Unit,
-                              val onBuyAirtimeClicked: () -> Unit,
-                              val onBuyGoodsClicked: () -> Unit,
-                              val onPayBillClicked: () -> Unit,
-                              val onRequestMoneyClicked: () -> Unit,
-                              val onClickedTC: () -> Unit,
-                              val onClickedAddNewAccount: () -> Unit,)
-
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel,
                balancesViewModel: BalancesViewModel,
@@ -241,9 +238,8 @@ fun HomeScreen(homeViewModel: HomeViewModel,
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			LazyColumn {
-				item{
+				item {
 					TopBar(isInternetConnected = hasNetwork)
-
 					if (homeState.value.bonuses.isNotEmpty()) {
 						BonusCard(message = homeState.value.bonuses.first().message,
 							onClickedTC = homeClickFunctions.onClickedTC,
@@ -253,22 +249,19 @@ fun HomeScreen(homeViewModel: HomeViewModel,
 									homeState.value.bonuses.first())
 							})
 					}
-
 					PrimaryFeatures(onSendMoneyClicked = homeClickFunctions.onSendMoneyClicked,
 						onBuyAirtimeClicked = homeClickFunctions.onBuyAirtimeClicked,
 						onBuyGoodsClicked = homeClickFunctions.onBuyGoodsClicked,
 						onPayBillClicked = homeClickFunctions.onPayBillClicked,
 						onRequestMoneyClicked = homeClickFunctions.onRequestMoneyClicked,
 						showKEFeatures(simCountryList.value))
-
-
 				}
 
 				item {
 					BalanceHeader(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount,
-						(balances.value !=null && balances.value!!.isNotEmpty()))
+						(balances.value != null && balances.value!!.isNotEmpty()))
 
-					if (balances.value !=null && balances.value!!.isEmpty()) {
+					if (balances.value != null && balances.value!!.isEmpty()) {
 						EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
 					}
 				}

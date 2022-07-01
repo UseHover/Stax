@@ -13,8 +13,6 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,26 +31,6 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.DateUtils
-
-@Composable
-fun ShowBalances(accountList: List<Account>,
-                         balanceTapListener: BalanceTapListener?,
-                         onClickedAddAccount: () -> Unit,
-                         context: Context) {
-
-	if (accountList.isEmpty()) {
-		EmptyBalance(onClickedAddAccount)
-	}
-	else {
-		LazyColumn(modifier = Modifier.fillMaxWidth().padding(13.dp)) {
-			items(accountList) { account ->
-				BalanceItem(staxAccount = account,
-					context = context,
-					balanceTapListener = balanceTapListener)
-			}
-		}
-	}
-}
 
 @Composable
 fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
@@ -106,15 +84,13 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
 }
 
 @Composable
-fun BalanceItem(staxAccount: Account,
-                balanceTapListener: BalanceTapListener?,
-                context: Context) {
+fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, context: Context) {
 	val size24 = dimensionResource(id = R.dimen.margin_24)
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	Column {
 		Row(modifier = Modifier
 			.fillMaxWidth()
-			.padding(horizontal =  13.dp)
+			.padding(horizontal = 13.dp)
 			.heightIn(min = 70.dp)
 			.clickable { balanceTapListener?.onTapBalanceDetail(accountId = staxAccount.id) }) {
 			GlideImage(data = staxAccount.logoUrl,
@@ -159,29 +135,6 @@ interface BalanceTapListener {
 	fun onTapBalanceDetail(accountId: Int)
 }
 
-
-@Composable
-fun BalanceScreen(balancesViewModel: BalancesViewModel,
-                  balanceTapListener: BalanceTapListener,
-                  onClickedAddAccount: () -> Unit) {
-	StaxTheme {
-		Surface {
-			val balances = balancesViewModel.accounts.observeAsState(initial = emptyList())
-			val context = LocalContext.current
-
-			Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
-				BalanceHeader(onClickedAddAccount = onClickedAddAccount,
-					balances.value.isNotEmpty())
-				ShowBalances(accountList = balances.value,
-					context = context,
-					balanceTapListener = balanceTapListener,
-					onClickedAddAccount = onClickedAddAccount)
-			}
-		}
-	}
-}
-
-
 @Preview
 @Composable
 fun BalanceScreenPreview() {
@@ -191,14 +144,28 @@ fun BalanceScreenPreview() {
 			accountList.add(fakeAccount())
 			accountList.add(fakeAccount())
 			accountList.add(fakeAccount())
-			val context = LocalContext.current
 
 			Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
 				BalanceHeader(onClickedAddAccount = {}, accountExists = false)
-				ShowBalances(accountList = emptyList(),
-					context = context,
-					balanceTapListener = null,
-					onClickedAddAccount = {})
+				BalanceListForPreview(accountList = emptyList())
+			}
+		}
+	}
+}
+
+@Composable
+private fun BalanceListForPreview(accountList: List<Account>) {
+
+	if (accountList.isEmpty()) {
+		EmptyBalance {}
+	}
+	else {
+		LazyColumn(modifier = Modifier
+			.fillMaxWidth()
+			.padding(13.dp)) {
+			items(accountList) { account ->
+				val context = LocalContext.current
+				BalanceItem(staxAccount = account, context = context, balanceTapListener = null)
 			}
 		}
 	}
