@@ -132,6 +132,7 @@
     <string name="cta_airtime">Buy airtime</string>
     <string name="cta_request">Request money</string>
     <string name="cta_paybill">Pay a bill</string>
+    <string name="cta_paybill_linebreak">Pay\n a bill</string>
     <string name="cta_merchant">Buy goods</string>
 
     <!-- Balances -->

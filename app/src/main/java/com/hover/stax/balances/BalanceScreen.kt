@@ -85,7 +85,7 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
 
 @Composable
 fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, context: Context) {
-	val size24 = dimensionResource(id = R.dimen.margin_24)
+	val size34 = dimensionResource(id = R.dimen.margin_34)
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	Column {
 		Row(modifier = Modifier
@@ -96,17 +96,17 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 			GlideImage(data = staxAccount.logoUrl,
 				contentScale = ContentScale.Crop,
 				placeHolder = R.drawable.image_placeholder,
-				width = size24,
-				height = size24,
+				width = size34,
+				height = size34,
 				modifier = Modifier
 					.clip(CircleShape)
-					.align(Alignment.CenterVertically)
-					.padding(horizontal = size13))
+					.align(Alignment.CenterVertically))
 
 			Text(text = staxAccount.name,
 				style = MaterialTheme.typography.body1,
 				modifier = Modifier
 					.weight(1f)
+					.padding(start = size13)
 					.align(Alignment.CenterVertically),
 				color = colorResource(id = R.color.white))
 			Column(modifier = Modifier.align(Alignment.CenterVertically)) {

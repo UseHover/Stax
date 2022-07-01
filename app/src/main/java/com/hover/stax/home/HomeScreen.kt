@@ -128,7 +128,7 @@ fun PrimaryFeatures(onSendMoneyClicked: () -> Unit,
 				stringRes = R.string.cta_merchant)
 			TextWithImageVertical(onItemClick = onPayBillClicked,
 				drawable = R.drawable.ic_utility,
-				stringRes = R.string.cta_paybill)
+				stringRes = R.string.cta_paybill_linebreak)
 		}
 		TextWithImageVertical(onItemClick = onRequestMoneyClicked,
 			drawable = R.drawable.ic_baseline_people_24,
