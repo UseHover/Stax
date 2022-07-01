@@ -6,7 +6,7 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionRepo
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelRepo

@@ -31,9 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.balances.*
 import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil

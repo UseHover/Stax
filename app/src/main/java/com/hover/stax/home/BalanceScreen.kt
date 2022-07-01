@@ -1,4 +1,4 @@
-package com.hover.stax.balances
+package com.hover.stax.home
 
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
@@ -31,6 +31,12 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.DateUtils
+
+
+interface BalanceTapListener {
+	fun onTapBalanceRefresh(account: Account?)
+	fun onTapBalanceDetail(accountId: Int)
+}
 
 @Composable
 fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
@@ -126,13 +132,9 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 					.clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) })
 
 		}
-		Divider(color = colorResource(id = R.color.nav_grey), modifier = Modifier.padding(horizontal = 13.dp))
+		Divider(color = colorResource(id = R.color.nav_grey),
+			modifier = Modifier.padding(horizontal = 13.dp))
 	}
-}
-
-interface BalanceTapListener {
-	fun onTapBalanceRefresh(account: Account?)
-	fun onTapBalanceDetail(accountId: Int)
 }
 
 @Preview

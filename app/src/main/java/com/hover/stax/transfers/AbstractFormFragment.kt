@@ -21,7 +21,7 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.permissions.PermissionUtils
