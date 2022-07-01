@@ -5,10 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -48,10 +45,7 @@ private fun ShowBalances(accountList: List<Account>,
 		EmptyBalance(onClickedAddAccount)
 	}
 	else {
-		LazyColumn(modifier = Modifier.fillMaxWidth()) {
-			item {
-				Text("Some test here")
-			}
+		LazyColumn(modifier = Modifier.fillMaxWidth().padding(13.dp)) {
 			items(accountList) { account ->
 				BalanceItem(staxAccount = account,
 					context = context,
@@ -80,6 +74,7 @@ private fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolea
 				contentDescription = null,
 				modifier = Modifier
 					.clip(CircleShape)
+					.clickable(onClick = onClickedAddAccount)
 					.background(color = colorResource(id = R.color.brightBlue)))
 		}
 	}
@@ -116,13 +111,11 @@ private fun BalanceItem(staxAccount: Account,
                         balanceTapListener: BalanceTapListener?,
                         context: Context) {
 	val size24 = dimensionResource(id = R.dimen.margin_24)
-	val size18 = dimensionResource(id = R.dimen.margin_18)
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	Column {
 		Row(modifier = Modifier
-			.background(color = MaterialTheme.colors.background)
 			.fillMaxWidth()
-			.padding(vertical = size18)
+			.heightIn(min = 70.dp)
 			.clickable { balanceTapListener?.onTapBalanceDetail(accountId = staxAccount.id) }) {
 			GlideImage(data = staxAccount.logoUrl,
 				contentScale = ContentScale.Crop,
@@ -140,7 +133,7 @@ private fun BalanceItem(staxAccount: Account,
 					.weight(1f)
 					.align(Alignment.CenterVertically),
 				color = colorResource(id = R.color.white))
-			Column {
+			Column(modifier = Modifier.align(Alignment.CenterVertically)) {
 				Text(text = staxAccount.latestBalance ?: " -",
 					modifier = Modifier.align(Alignment.End),
 					color = colorResource(id = R.color.offWhite))
