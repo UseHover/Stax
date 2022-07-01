@@ -23,9 +23,6 @@ import kotlinx.coroutines.launch
 
 class BalancesViewModel(application: Application, val actionRepo: ActionRepo, val accountRepo: AccountRepo) : AndroidViewModel(application) {
 
-    private var _showBalances = MutableLiveData(false)
-    val showBalances: LiveData<Boolean> = _showBalances
-
     var userRequestedBalanceAccount = MutableLiveData<Account?>()
 
     private var _balanceAction = MutableSharedFlow<HoverAction>()
@@ -38,14 +35,7 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo, va
     val actionRunError = _actionRunError.receiveAsFlow()
 
     init {
-        _showBalances.value = Utils.getBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, getApplication(), true)
-
         getAccounts()
-    }
-
-    fun setBalanceState(show: Boolean) = viewModelScope.launch {
-        Utils.saveBoolean(BalancesFragment.BALANCE_VISIBILITY_KEY, show, getApplication())
-        _showBalances.postValue(show)
     }
 
     fun requestBalance(account: Account) {

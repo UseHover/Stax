@@ -3,8 +3,11 @@ package com.hover.stax.home
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -16,7 +19,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -29,7 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.balances.BalancesFragment
+import com.hover.stax.balances.BalanceScreen
+import com.hover.stax.balances.BalanceScreenPreview
+import com.hover.stax.balances.BalanceTapListener
+import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.BalanceFragmentContainerBinding
 import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.model.FinancialTip
@@ -84,6 +89,7 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
 				contentDescription = stringResource(id = R.string.get_rewarded),
 				modifier = Modifier
 					.size(70.dp)
+					.padding(start = size13)
 					.align(Alignment.CenterVertically))
 		}
 
@@ -91,14 +97,12 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
 }
 
 @Composable
-fun PrimaryFeatures(
-	onSendMoneyClicked: () -> Unit,
-	onBuyAirtimeClicked: () -> Unit,
-	onBuyGoodsClicked: () -> Unit,
-	onPayBillClicked: () -> Unit,
-	onRequestMoneyClicked: () -> Unit,
-	showKenyaFeatures : Boolean
-) {
+fun PrimaryFeatures(onSendMoneyClicked: () -> Unit,
+                    onBuyAirtimeClicked: () -> Unit,
+                    onBuyGoodsClicked: () -> Unit,
+                    onPayBillClicked: () -> Unit,
+                    onRequestMoneyClicked: () -> Unit,
+                    showKenyaFeatures: Boolean) {
 	Row(horizontalArrangement = Arrangement.SpaceEvenly,
 		modifier = Modifier
 			.padding(horizontal = 13.dp, vertical = 26.dp)
@@ -109,7 +113,7 @@ fun PrimaryFeatures(
 		TextWithImageVertical(onItemClick = onBuyAirtimeClicked,
 			drawable = R.drawable.ic_system_upate_24,
 			stringRes = R.string.cta_airtime)
-		if(showKenyaFeatures) {
+		if (showKenyaFeatures) {
 			TextWithImageVertical(onItemClick = onBuyGoodsClicked,
 				drawable = R.drawable.ic_card,
 				stringRes = R.string.cta_merchant)
@@ -132,7 +136,7 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 			.padding(all = size13)
 			.clickable { tipInterface?.onTipClicked(null) }) {
 
-			Column(modifier = Modifier.weight(1f)){
+			Column(modifier = Modifier.weight(1f)) {
 				TextWithImageLinear(drawable = R.drawable.ic_tip_of_day,
 					stringRes = R.string.tip_of_the_day,
 					Modifier.padding(bottom = 5.dp))
@@ -149,12 +153,14 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 					modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) })
 			}
 
-			Image(painter = painterResource(id = R.drawable.tips_fancy_icon),
+			Image(
+				painter = painterResource(id = R.drawable.tips_fancy_icon),
 				contentDescription = null,
 				modifier = Modifier
 					.size(60.dp)
 					.padding(start = size13)
-					.align(Alignment.CenterVertically),)
+					.align(Alignment.CenterVertically),
+			)
 		}
 	}
 }
@@ -187,7 +193,7 @@ private fun TextWithImageVertical(@DrawableRes drawable: Int,
 			textAlign = TextAlign.Center,
 			modifier = Modifier
 				.padding(top = size24)
-				.widthIn(min = 50.dp, max = 65.dp) )
+				.widthIn(min = 50.dp, max = 65.dp))
 	}
 }
 
@@ -213,6 +219,7 @@ private fun TextWithImageLinear(@DrawableRes drawable: Int,
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel,
+               balancesViewModel: BalancesViewModel,
                channelsViewModel: ChannelsViewModel,
                onSendMoneyClicked: () -> Unit,
                onBuyAirtimeClicked: () -> Unit,
@@ -220,7 +227,9 @@ fun HomeScreen(homeViewModel: HomeViewModel,
                onPayBillClicked: () -> Unit,
                onRequestMoneyClicked: () -> Unit,
                onClickedTC: () -> Unit,
+               onClickedAddNewAccount: () -> Unit,
                context: Context,
+               balanceTapListener: BalanceTapListener,
                tipInterface: FinancialTipClickInterface) {
 
 	val homeState = homeViewModel.homeState.collectAsState()
@@ -229,13 +238,17 @@ fun HomeScreen(homeViewModel: HomeViewModel,
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+			Column {
 				TopBar(isInternetConnected = hasNetwork)
 
-				if(homeState.value.bonuses.isNotEmpty()) {
+				if (homeState.value.bonuses.isNotEmpty()) {
 					BonusCard(message = homeState.value.bonuses.first().message,
 						onClickedTC = onClickedTC,
-						onClickedTopUp = { clickedOnBonus(context, channelsViewModel, homeState.value.bonuses.first()) })
+						onClickedTopUp = {
+							clickedOnBonus(context,
+								channelsViewModel,
+								homeState.value.bonuses.first())
+						})
 				}
 
 				PrimaryFeatures(onSendMoneyClicked = onSendMoneyClicked,
@@ -245,23 +258,27 @@ fun HomeScreen(homeViewModel: HomeViewModel,
 					onRequestMoneyClicked = onRequestMoneyClicked,
 					showKEFeatures(simCountryList.value))
 
-				AndroidViewBinding(BalanceFragmentContainerBinding::inflate) {
-				//	val balanceFragment = fragmentContainerView.getFragment<BalancesFragment>()
-					Timber.i("Balance fragment visibility is here")
-				}
-				if(homeState.value.financialTips.isNotEmpty()) {
-					FinancialTipCard(tipInterface = tipInterface, financialTip = homeState.value.financialTips.first())
+				BalanceScreen(balancesViewModel = balancesViewModel,
+					balanceTapListener = balanceTapListener,
+					onClickedAddAccount = onClickedAddNewAccount)
+
+				if (homeState.value.financialTips.isNotEmpty()) {
+					FinancialTipCard(tipInterface = tipInterface,
+						financialTip = homeState.value.financialTips.first())
 				}
 			}
 		}
 	}
 }
 
-private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: Bonus ) {
-	AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.clicked_bonus_airtime_banner), context)
+private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: Bonus) {
+	AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.clicked_bonus_airtime_banner),
+		context)
 	channelsViewModel.validateAccounts(bonus.userChannel)
 }
-private fun showKEFeatures(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
+
+private fun showKEFeatures(countryIsos: List<String>): Boolean =
+	countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
 
 @Preview
@@ -277,7 +294,7 @@ fun HomeScreenPreview() {
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Column (modifier = Modifier.verticalScroll(rememberScrollState())){
+			Column {
 				TopBar(isInternetConnected = false)
 				BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
 					onClickedTC = {},
@@ -286,7 +303,10 @@ fun HomeScreenPreview() {
 					onBuyAirtimeClicked = { },
 					onBuyGoodsClicked = { },
 					onPayBillClicked = { },
-					onRequestMoneyClicked = {}, true)
+					onRequestMoneyClicked = {},
+					true)
+
+				BalanceScreenPreview()
 
 				FinancialTipCard(tipInterface = null, financialTip = financialTip)
 			}

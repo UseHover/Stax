@@ -93,7 +93,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
             BOUNTY_REQUEST -> showBountyDetails(data)
             FEE_REQUEST -> showFeeDetails(data)
             else -> {
-                balancesViewModel.setBalanceState(true)
                 navToTransactionDetail(data)
             }
         }

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +49,9 @@ private fun ShowBalances(accountList: List<Account>,
 	}
 	else {
 		LazyColumn(modifier = Modifier.fillMaxWidth()) {
+			item {
+				Text("Some test here")
+			}
 			items(accountList) { account ->
 				BalanceItem(staxAccount = account,
 					context = context,
@@ -119,7 +123,7 @@ private fun BalanceItem(staxAccount: Account,
 			.background(color = MaterialTheme.colors.background)
 			.fillMaxWidth()
 			.padding(vertical = size18)
-			.clickable { balanceTapListener?.onTapDetail(accountId = staxAccount.id) }) {
+			.clickable { balanceTapListener?.onTapBalanceDetail(accountId = staxAccount.id) }) {
 			GlideImage(data = staxAccount.logoUrl,
 				contentScale = ContentScale.Crop,
 				placeHolder = R.drawable.image_placeholder,
@@ -150,7 +154,7 @@ private fun BalanceItem(staxAccount: Account,
 				modifier = Modifier
 					.align(Alignment.CenterVertically)
 					.padding(horizontal = size13)
-					.clickable { balanceTapListener?.onTapRefresh(staxAccount) })
+					.clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) })
 
 		}
 		Divider(color = colorResource(id = R.color.nav_grey))
@@ -158,24 +162,24 @@ private fun BalanceItem(staxAccount: Account,
 }
 
 interface BalanceTapListener {
-	fun onTapRefresh(account: Account?)
-	fun onTapDetail(accountId: Int)
+	fun onTapBalanceRefresh(account: Account?)
+	fun onTapBalanceDetail(accountId: Int)
 }
 
 
 @Composable
-fun BalanceScreen(homeViewModel: HomeViewModel,
+fun BalanceScreen(balancesViewModel: BalancesViewModel,
                   balanceTapListener: BalanceTapListener,
                   onClickedAddAccount: () -> Unit) {
 	StaxTheme {
 		Surface {
-			val homeState = homeViewModel.homeState.collectAsState()
+			val balances = balancesViewModel.accounts.observeAsState(initial = emptyList())
 			val context = LocalContext.current
 
 			Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
 				BalanceHeader(onClickedAddAccount = onClickedAddAccount,
-					homeState.value.accounts.isNotEmpty())
-				ShowBalances(accountList = homeState.value.accounts,
+					balances.value.isNotEmpty())
+				ShowBalances(accountList = balances.value,
 					context = context,
 					balanceTapListener = balanceTapListener,
 					onClickedAddAccount = onClickedAddAccount)
@@ -197,7 +201,7 @@ fun BalanceScreenPreview() {
 			val context = LocalContext.current
 
 			Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
-				BalanceHeader(onClickedAddAccount = {}, accountExists = true)
+				BalanceHeader(onClickedAddAccount = {}, accountExists = false)
 				ShowBalances(accountList = emptyList(),
 					context = context,
 					balanceTapListener = null,
