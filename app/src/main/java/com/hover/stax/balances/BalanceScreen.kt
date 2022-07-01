@@ -126,7 +126,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 					.clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) })
 
 		}
-		Divider(color = colorResource(id = R.color.nav_grey))
+		Divider(color = colorResource(id = R.color.nav_grey), modifier = Modifier.padding(horizontal = 13.dp))
 	}
 }
 
