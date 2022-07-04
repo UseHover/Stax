@@ -56,7 +56,7 @@
 
     <fragment
             android:id="@+id/navigation_home"
-            android:name="com.hover.stax.home.HomeFragment"
+            android:name="com.hover.stax.presentation.home.HomeFragment"
             android:label="@string/nav_home"
             tools:layout="@layout/fragment_home">
         <action
