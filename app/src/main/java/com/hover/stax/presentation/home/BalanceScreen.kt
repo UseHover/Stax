@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.danchoo.glideimage.GlideImage
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.ui.theme.ColorSurface
@@ -35,6 +36,7 @@ import com.hover.stax.ui.theme.DarkGray
 import com.hover.stax.ui.theme.OffWhite
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.DateUtils
+import timber.log.Timber
 
 
 interface BalanceTapListener {
@@ -95,7 +97,8 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
 
         OutlinedButton(
             onClick = onClickedAddAccount,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .shadow(elevation = 0.dp),
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(width = 0.5.dp, color = DarkGray),
@@ -126,19 +129,25 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
             .padding(horizontal = 13.dp)
             .heightIn(min = 70.dp)
             .clickable { balanceTapListener?.onTapBalanceDetail(accountId = staxAccount.id) }) {
-            GlideImage(
-                data = staxAccount.logoUrl,
-                contentScale = ContentScale.Crop,
-                placeHolder = R.drawable.image_placeholder,
-                width = size34,
-                height = size34,
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(staxAccount.logoUrl)
+                    .crossfade(true)
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .build(),
+                contentDescription = "",
+                placeholder = painterResource(id = R.drawable.image_placeholder),
+                error = painterResource(id = R.drawable.ic_stax),
                 modifier = Modifier
+                    .size(size34)
                     .clip(CircleShape)
-                    .align(Alignment.CenterVertically)
+                    .align(Alignment.CenterVertically),
+                contentScale = ContentScale.Crop
             )
 
             Text(
-                text = staxAccount.name,
+                text = staxAccount.alias,
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier
                     .weight(1f)
@@ -146,6 +155,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                     .align(Alignment.CenterVertically),
                 color = colorResource(id = R.color.white)
             )
+
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
                     text = staxAccount.latestBalance ?: " -",
@@ -155,7 +165,8 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                 Text(
                     text = DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),
                     modifier = Modifier.align(Alignment.End),
-                    color = colorResource(id = R.color.offWhite)
+                    color = colorResource(id = R.color.offWhite),
+                    style = MaterialTheme.typography.caption
                 )
             }
 
@@ -163,10 +174,11 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .padding(horizontal = size13)
+                    .padding(start = size13)
                     .clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) })
 
         }
+
         Divider(
             color = colorResource(id = R.color.nav_grey),
             modifier = Modifier.padding(horizontal = 13.dp)
@@ -179,12 +191,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 fun BalanceScreenPreview() {
     StaxTheme {
         Surface {
-//			val accountList = mutableListOf<Account>()
-//			accountList.add(fakeAccount())
-//			accountList.add(fakeAccount())
-//			accountList.add(fakeAccount())
-
-            Column(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
+            Column(modifier = Modifier.background(color = colors.background)) {
                 BalanceHeader(onClickedAddAccount = {}, accountExists = false)
                 BalanceListForPreview(accountList = emptyList())
             }

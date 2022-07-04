@@ -8,8 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,6 +34,7 @@ import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.network.NetworkMonitor
+import org.koin.androidx.compose.getViewModel
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -115,7 +114,6 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
                     .align(Alignment.CenterVertically)
             )
         }
-
     }
 }
 
@@ -268,77 +266,89 @@ private fun HorizontalImageTextView(
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel,
-    balancesViewModel: BalancesViewModel,
-    channelsViewModel: ChannelsViewModel,
     homeClickFunctions: HomeClickFunctions,
     balanceTapListener: BalanceTapListener,
     tipInterface: FinancialTipClickInterface
 ) {
 
-    val homeState = homeViewModel.homeState.collectAsState()
-    val balances = balancesViewModel.accounts.observeAsState()
+    val homeViewModel: HomeViewModel = getViewModel()
+    val balancesViewModel: BalancesViewModel = getViewModel()
+    val channelsViewModel: ChannelsViewModel = getViewModel()
+
+    with(homeViewModel) {
+        getBonusList()
+        getAccounts()
+        getFinancialTips()
+    }
+
+    val homeState by homeViewModel.homeState.collectAsState()
+    val accounts by balancesViewModel.accounts.observeAsState()
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-    val simCountryList = channelsViewModel.simCountryList.observeAsState(initial = emptyList())
+    val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
     val context = LocalContext.current
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-            Scaffold (
+            Scaffold(
                 topBar = { TopBar(isInternetConnected = hasNetwork) },
                 content = {
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                        if (homeState.value.bonuses.isNotEmpty()) {
-                            BonusCard(message = homeState.value.bonuses.first().message,
-                                onClickedTC = homeClickFunctions.onClickedTC,
-                                onClickedTopUp = {
-                                    clickedOnBonus(
-                                        context,
-                                        channelsViewModel,
-                                        homeState.value.bonuses.first()
-                                    )
-                                })
-                        }
-
-                        PrimaryFeatures(
-                            onSendMoneyClicked = homeClickFunctions.onSendMoneyClicked,
-                            onBuyAirtimeClicked = homeClickFunctions.onBuyAirtimeClicked,
-                            onBuyGoodsClicked = homeClickFunctions.onBuyGoodsClicked,
-                            onPayBillClicked = homeClickFunctions.onPayBillClicked,
-                            onRequestMoneyClicked = homeClickFunctions.onRequestMoneyClicked,
-                            showKEFeatures(simCountryList.value)
-                        )
-
-                        BalanceHeader(
-                            onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount,
-                            (balances.value != null && balances.value!!.isNotEmpty())
-                        )
-
-                        if (balances.value != null && balances.value!!.isEmpty()) {
-                            EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
-                        }
-
-                        LazyColumn(content = {
-                            balances.value?.let {
-                                items(it) { account ->
-                                    BalanceItem(
-                                        staxAccount = account,
-                                        context = context,
-                                        balanceTapListener = balanceTapListener
-                                    )
-                                }
+                    LazyColumn {
+                        item {
+                            if (homeState.bonuses.isNotEmpty()) {
+                                BonusCard(message = homeState.bonuses.first().message,
+                                    onClickedTC = homeClickFunctions.onClickedTC,
+                                    onClickedTopUp = {
+                                        clickedOnBonus(
+                                            context,
+                                            channelsViewModel,
+                                            homeState.bonuses.first()
+                                        )
+                                    })
                             }
-                        })
+                        }
 
-                        if (homeState.value.financialTips.isNotEmpty()) {
-                            FinancialTipCard(
-                                tipInterface = tipInterface,
-                                financialTip = homeState.value.financialTips.first()
+                        item {
+                            PrimaryFeatures(
+                                onSendMoneyClicked = homeClickFunctions.onSendMoneyClicked,
+                                onBuyAirtimeClicked = homeClickFunctions.onBuyAirtimeClicked,
+                                onBuyGoodsClicked = homeClickFunctions.onBuyGoodsClicked,
+                                onPayBillClicked = homeClickFunctions.onPayBillClicked,
+                                onRequestMoneyClicked = homeClickFunctions.onRequestMoneyClicked,
+                                showKEFeatures(simCountryList)
                             )
+                        }
+
+                        item {
+                            BalanceHeader(
+                                onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, !accounts.isNullOrEmpty()
+                            )
+
+                            if (accounts.isNullOrEmpty()) {
+                                EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
+                            }
+                        }
+
+                        accounts?.let {
+                            items(it) { account ->
+                                BalanceItem(
+                                    staxAccount = account,
+                                    context = context,
+                                    balanceTapListener = balanceTapListener
+                                )
+                            }
+                        }
+
+                        item {
+                            if (homeState.financialTips.isNotEmpty()) {
+                                FinancialTipCard(
+                                    tipInterface = tipInterface,
+                                    financialTip = homeState.financialTips.first()
+                                )
+                            }
                         }
                     }
                 }
-                    )
+            )
         }
     }
 }
@@ -370,24 +380,35 @@ fun HomeScreenPreview() {
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                TopBar(isInternetConnected = false)
-                BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
-                    onClickedTC = {},
-                    onClickedTopUp = {})
-                PrimaryFeatures(
-                    onSendMoneyClicked = { },
-                    onBuyAirtimeClicked = { },
-                    onBuyGoodsClicked = { },
-                    onPayBillClicked = { },
-                    onRequestMoneyClicked = {},
-                    true
-                )
-
-                BalanceScreenPreview()
-
-                FinancialTipCard(tipInterface = null, financialTip = financialTip)
-            }
+            Scaffold(
+                topBar = {
+                    TopBar(isInternetConnected = false)
+                },
+                content = {
+                    LazyColumn(content = {
+                        item {
+                            BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
+                                onClickedTC = {},
+                                onClickedTopUp = {})
+                        }
+                        item {
+                            PrimaryFeatures(
+                                onSendMoneyClicked = { },
+                                onBuyAirtimeClicked = { },
+                                onBuyGoodsClicked = { },
+                                onPayBillClicked = { },
+                                onRequestMoneyClicked = {},
+                                true
+                            )
+                        }
+                        item {
+                            BalanceScreenPreview()
+                        }
+                        item {
+                            FinancialTipCard(tipInterface = null, financialTip = financialTip)
+                        }
+                    })
+                })
         }
     }
 }

@@ -177,7 +177,7 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     kapt 'com.github.bumptech.glide:compiler:4.13.2'
-    implementation 'com.github.danchoo21:glide-image:1.2.2'
+    implementation "io.coil-kt:coil-compose:2.1.0"
     implementation 'com.google.accompanist:accompanist-drawablepainter:0.24.1-alpha'
 
     def roomVersion = "2.4.2"
@@ -192,6 +192,7 @@ dependencies {
     //di
     def koin_version= "3.2.0"
     implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-androidx-compose:$koin_version"
 
     // Tests
     testImplementation 'junit:junit:4.13.2'

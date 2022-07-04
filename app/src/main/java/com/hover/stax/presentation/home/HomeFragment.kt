@@ -43,7 +43,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadData()
+//        loadData()
 
         setComposeView()
         observeForBonus()
@@ -86,9 +86,6 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
         binding.root.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         binding.root.setContent {
             HomeScreen(
-                homeViewModel = homeViewModel,
-                channelsViewModel = channelsViewModel,
-                balancesViewModel = balancesViewModel,
                 homeClickFunctions = getHomeClickFunctions(),
                 tipInterface = this@HomeFragment,
                 balanceTapListener = this@HomeFragment
