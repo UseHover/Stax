@@ -120,9 +120,17 @@ object UIHelper {
 
 }
 
-fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: FlowCollector<T>) {
+fun <T> Fragment.collectLifecycleFlow(flow: Flow<T>, collect: FlowCollector<T>) {
     viewLifecycleOwner.lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(collect)
+        }
+    }
+}
+
+fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: FlowCollector<T>) {
+    viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collect(collect)
         }
     }

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -32,8 +31,6 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
-    private val homeViewModel: HomeViewModel by sharedViewModel()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -43,42 +40,28 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        loadData()
-
         setComposeView()
-        observeForBonus()
         observeForBalances()
-    }
-
-    private fun loadData() = with(homeViewModel) {
-        getBonusList()
-        getAccounts()
-        getFinancialTips()
+        observeForBonus()
     }
 
     private fun getHomeClickFunctions(): HomeClickFunctions {
-        val onSendMoneyClicked = { navigateTo(getTransferDirection(HoverAction.P2P)) }
-        val onBuyAirtimeClicked = { navigateTo(getTransferDirection(HoverAction.AIRTIME)) }
-        val onBuyGoodsClicked = { navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment()) }
-        val onPayBillClicked =
-            { navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment()) }
-        val onRequestMoneyClicked =
-            { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest()) }
-        val onClickedAddNewAccount = {
-            (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
-        }
-        val onClickedTermsAndConditions = {
-            Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
-        }
+        fun onSendMoneyClicked() = navigateTo(getTransferDirection(HoverAction.P2P))
+        fun onBuyAirtimeClicked() = navigateTo(getTransferDirection(HoverAction.AIRTIME))
+        fun onBuyGoodsClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment())
+        fun onPayBillClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
+        fun onRequestMoneyClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())
+        fun onClickedAddNewAccount() = (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
+        fun onClickedTermsAndConditions() = Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
 
         return HomeClickFunctions(
-            onSendMoneyClicked = onSendMoneyClicked,
-            onBuyAirtimeClicked = onBuyAirtimeClicked,
-            onBuyGoodsClicked = onBuyGoodsClicked,
-            onPayBillClicked = onPayBillClicked,
-            onRequestMoneyClicked = onRequestMoneyClicked,
-            onClickedAddNewAccount = onClickedAddNewAccount,
-            onClickedTC = onClickedTermsAndConditions
+            onSendMoneyClicked = { onSendMoneyClicked() },
+            onBuyAirtimeClicked = { onBuyAirtimeClicked() },
+            onBuyGoodsClicked = { onBuyGoodsClicked() },
+            onPayBillClicked = { onPayBillClicked() },
+            onRequestMoneyClicked = { onRequestMoneyClicked() },
+            onClickedAddNewAccount = { onClickedAddNewAccount() },
+            onClickedTC = { onClickedTermsAndConditions() }
         )
     }
 
@@ -86,6 +69,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
         binding.root.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         binding.root.setContent {
             HomeScreen(
+                channelsViewModel,
                 homeClickFunctions = getHomeClickFunctions(),
                 tipInterface = this@HomeFragment,
                 balanceTapListener = this@HomeFragment
@@ -94,33 +78,22 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     }
 
     private fun observeForBonus() {
-        lifecycleScope.launchWhenStarted {
-            channelsViewModel.accountEventFlow.collect {
-                navigateTo(
-                    getTransferDirection(
-                        HoverAction.AIRTIME,
-                        bonusViewModel.bonuses.value.first().userChannel.toString()
-                    )
-                )
-            }
+        collectLatestLifecycleFlow(channelsViewModel.accountEventFlow) {
+            navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().userChannel.toString()))
         }
     }
 
     private fun observeForBalances() {
-        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+        collectLifecycleFlow(balancesViewModel.balanceAction) {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
 
-        lifecycleScope.launchWhenStarted {
-            channelsViewModel.accountCallback.collect {
-                askToCheckBalance(it)
-            }
+        collectLatestLifecycleFlow(channelsViewModel.accountCallback) {
+            askToCheckBalance(it)
         }
 
-        lifecycleScope.launchWhenStarted {
-            balancesViewModel.actionRunError.collect {
-                UIHelper.flashMessage(requireActivity(), it)
-            }
+        collectLatestLifecycleFlow(balancesViewModel.actionRunError) {
+            UIHelper.flashMessage(requireActivity(), it)
         }
     }
 

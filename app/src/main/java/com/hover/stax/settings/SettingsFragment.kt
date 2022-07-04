@@ -80,7 +80,7 @@ class SettingsFragment : Fragment() {
             NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount())
         }
 
-        collectLatestLifecycleFlow(accountsViewModel.accounts) {
+        collectLifecycleFlow(accountsViewModel.accounts) {
             if (it.isEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE
                 binding.settingsCard.connectAccounts.visibility = VISIBLE

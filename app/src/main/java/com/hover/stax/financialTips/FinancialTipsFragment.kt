@@ -17,7 +17,7 @@ import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.collectLatestLifecycleFlow
+import com.hover.stax.utils.collectLifecycleFlow
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -53,7 +53,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
-    private fun startObserver() = collectLatestLifecycleFlow(viewModel.tipsState) {
+    private fun startObserver() = collectLifecycleFlow(viewModel.tipsState) {
         if (it.tips.isEmpty()) {
             binding.empty.visibility = View.VISIBLE
             binding.financialTips.visibility = View.GONE

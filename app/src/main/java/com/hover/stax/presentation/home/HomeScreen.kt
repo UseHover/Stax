@@ -1,6 +1,7 @@
 package com.hover.stax.presentation.home
 
 import android.content.Context
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,6 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.Bonus
@@ -266,14 +269,12 @@ private fun HorizontalImageTextView(
 
 @Composable
 fun HomeScreen(
+    channelsViewModel: ChannelsViewModel,
     homeClickFunctions: HomeClickFunctions,
     balanceTapListener: BalanceTapListener,
     tipInterface: FinancialTipClickInterface
 ) {
-
     val homeViewModel: HomeViewModel = getViewModel()
-    val balancesViewModel: BalancesViewModel = getViewModel()
-    val channelsViewModel: ChannelsViewModel = getViewModel()
 
     with(homeViewModel) {
         getBonusList()
@@ -282,7 +283,6 @@ fun HomeScreen(
     }
 
     val homeState by homeViewModel.homeState.collectAsState()
-    val accounts by balancesViewModel.accounts.observeAsState()
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
     val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
     val context = LocalContext.current
@@ -320,22 +320,20 @@ fun HomeScreen(
 
                         item {
                             BalanceHeader(
-                                onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, !accounts.isNullOrEmpty()
+                                onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
                             )
 
-                            if (accounts.isNullOrEmpty()) {
+                            if (homeState.accounts.isEmpty()) {
                                 EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
                             }
                         }
 
-                        accounts?.let {
-                            items(it) { account ->
-                                BalanceItem(
-                                    staxAccount = account,
-                                    context = context,
-                                    balanceTapListener = balanceTapListener
-                                )
-                            }
+                        items(homeState.accounts) { account ->
+                            BalanceItem(
+                                staxAccount = account,
+                                context = context,
+                                balanceTapListener = balanceTapListener
+                            )
                         }
 
                         item {
@@ -351,6 +349,12 @@ fun HomeScreen(
             )
         }
     }
+
+//    LaunchedEffect(true) {
+//        channelsViewModel.accountEventFlow.collect {
+//            Toast.makeText(context, "Successfully created account", Toast.LENGTH_SHORT).show()
+//        }
+//    }
 }
 
 private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: Bonus) {
@@ -361,9 +365,7 @@ private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewMode
     channelsViewModel.validateAccounts(bonus.userChannel)
 }
 
-private fun showKEFeatures(countryIsos: List<String>): Boolean =
-    countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
-
+private fun showKEFeatures(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
 @Preview
 @Composable

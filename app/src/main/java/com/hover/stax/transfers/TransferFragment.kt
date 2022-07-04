@@ -25,13 +25,11 @@ import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLatestLifecycleFlow
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
-import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -170,7 +168,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeAccountList() = collectLatestLifecycleFlow(accountsViewModel.accounts) {
+    private fun observeAccountList() = collectLifecycleFlow(accountsViewModel.accounts) {
         if (it.isEmpty())
             setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
     }
