@@ -5,9 +5,10 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -23,10 +24,10 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.utils.network.NetworkMonitor
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -64,9 +65,11 @@ class HomeFragment : Fragment() {
         setUpWellnessTips()
         setKeVisibility()
 
-        lifecycleScope.launchWhenStarted {
-            channelsViewModel.accountEventFlow.collect {
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().userChannel.toString()))
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                channelsViewModel.accountEventFlow.collect {
+                    navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonusList.value.bonuses.first().userChannel.toString()))
+                }
             }
         }
     }
@@ -81,17 +84,17 @@ class HomeFragment : Fragment() {
     private fun setupBanner() {
         bonusViewModel.getBonusList()
 
-        collectLatestLifecycleFlow(bonusViewModel.bonuses) { bonusList ->
-            if (bonusList.isNotEmpty()) {
+        collectLatestLifecycleFlow(bonusViewModel.bonusList) { bonusList ->
+            if (bonusList.bonuses.isNotEmpty()) {
                 with(binding.bonusCard) {
-                    message.text = bonusList.first().message
+                    message.text = bonusList.bonuses.first().message
                     learnMore.movementMethod = LinkMovementMethod.getInstance()
                 }
                 binding.bonusCard.apply {
                     cardBonus.visibility = View.VISIBLE
                     cta.setOnClickListener {
                         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                        validateAccounts(bonusList.first())
+                        validateAccounts(bonusList.bonuses.first())
                     }
                 }
             } else binding.bonusCard.cardBonus.visibility = View.GONE
