@@ -32,7 +32,6 @@ import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
 
@@ -168,7 +167,7 @@ private fun FinancialTipCard(
     financialTip: FinancialTip
 ) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
-    Card(elevation = 2.dp, modifier = Modifier.padding(all = size13)) {
+    Card(elevation = 0.dp, modifier = Modifier.padding(all = size13)) {
         Row(modifier = Modifier
             .padding(all = size13)
             .clickable { tipInterface?.onTipClicked(null) }) {
@@ -179,11 +178,17 @@ private fun FinancialTipCard(
                     stringRes = R.string.tip_of_the_day,
                     Modifier.padding(bottom = 5.dp)
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Text(
                     text = financialTip.title,
                     style = MaterialTheme.typography.body2,
                     textDecoration = TextDecoration.Underline
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     text = financialTip.snippet,
                     style = MaterialTheme.typography.body2,
@@ -241,7 +246,6 @@ private fun VerticalImageTextView(
         )
     }
 }
-
 
 @Composable
 private fun HorizontalImageTextView(
@@ -334,7 +338,9 @@ fun HomeScreen(
                         }
 
                         item {
-                            if (homeState.financialTips.isNotEmpty()) {
+                            homeState.financialTips.firstOrNull {
+                                android.text.format.DateUtils.isToday(it.date!!)
+                            }?.let {
                                 FinancialTipCard(
                                     tipInterface = tipInterface,
                                     financialTip = homeState.financialTips.first()
