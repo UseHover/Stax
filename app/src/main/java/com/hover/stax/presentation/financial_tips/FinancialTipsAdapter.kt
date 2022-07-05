@@ -1,4 +1,4 @@
-package com.hover.stax.financialTips
+package com.hover.stax.presentation.financial_tips
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -24,7 +24,7 @@ class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListe
 
         fun setItems(tip: FinancialTip) {
             tip.date?.let {
-                binding.date.text = DateUtils.humanFriendlyDate(it.time)
+                binding.date.text = DateUtils.humanFriendlyDate(it)
             }
             binding.title.text = tip.title
             binding.snippet.text = tip.snippet

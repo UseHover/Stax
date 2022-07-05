@@ -3,17 +3,15 @@ package com.hover.stax.data.repository
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
-import com.hover.stax.domain.model.Bonus
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.data.local.bonus.BonusRepo
+import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.repository.BonusRepository
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -46,7 +44,6 @@ class BonusRepositoryImpl(private val bonusRepo: BonusRepo, private val channelR
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun getBonusList(): Flow<List<Bonus>> = channelFlow {
         val simHnis = channelRepo.presentSims.map { it.osReportedHni }
 

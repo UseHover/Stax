@@ -1,7 +1,6 @@
 package com.hover.stax.presentation.home
 
 import android.content.Context
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -11,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -28,7 +26,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.Bonus
@@ -349,12 +346,6 @@ fun HomeScreen(
             )
         }
     }
-
-//    LaunchedEffect(true) {
-//        channelsViewModel.accountEventFlow.collect {
-//            Toast.makeText(context, "Successfully created account", Toast.LENGTH_SHORT).show()
-//        }
-//    }
 }
 
 private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: Bonus) {
@@ -375,7 +366,7 @@ fun HomeScreenPreview() {
         title = "Do you want to save money",
         content = "This is a test content here so lets see if its going to use ellipse overflow",
         snippet = "This is a test content here so lets see if its going to use ellipse overflow, with an example here",
-        date = DateUtils.todayDate(),
+        date = System.currentTimeMillis(),
         shareCopy = null,
         deepLink = null
     )

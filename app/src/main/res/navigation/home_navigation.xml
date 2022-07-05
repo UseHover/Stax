@@ -374,7 +374,7 @@
     </fragment>
     <fragment
             android:id="@+id/tipsFragment"
-            android:name="com.hover.stax.financialTips.FinancialTipsFragment"
+            android:name="com.hover.stax.presentation.financial_tips.FinancialTipsFragment"
             android:label="WellnessFragment">
         <argument
                 android:name="tipId"

@@ -155,6 +155,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun createDefaultSelector(accounts: List<Account>) {
+        binding.settingsCard.connectAccounts.visibility = GONE
         val spinner = binding.settingsCard.defaultAccountSpinner
         binding.settingsCard.defaultAccountEntry.visibility = VISIBLE
         accountAdapter = ArrayAdapter(requireActivity(), R.layout.stax_spinner_item, accounts)

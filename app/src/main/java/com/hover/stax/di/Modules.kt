@@ -111,7 +111,7 @@ val repositories = module {
 
     single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(named("CoroutineDispatcher"))) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
-    single<FinancialTipsRepository> { FinancialTipsRepositoryImpl(get(), get(named("CoroutineDispatcher")))}
+    single<FinancialTipsRepository> { FinancialTipsRepositoryImpl(get())}
 }
 
 val useCases = module {

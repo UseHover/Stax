@@ -1,4 +1,4 @@
-package com.hover.stax.financialTips
+package com.hover.stax.presentation.financial_tips
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,7 +14,6 @@ import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
