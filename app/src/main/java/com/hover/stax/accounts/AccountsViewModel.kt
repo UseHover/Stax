@@ -16,15 +16,16 @@ import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.schedules.Schedule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
-    private val _accounts = MutableStateFlow<List<Account>>(emptyList())
-    val accounts: StateFlow<List<Account>> = _accounts
+    private val _accounts = MutableStateFlow(AccountList())
+    val accountList = _accounts.asStateFlow()
+
     val activeAccount = MutableLiveData<Account>()
 
     private var type = MutableLiveData<String>()
@@ -41,7 +42,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     private fun fetchAccounts() = viewModelScope.launch {
         repo.getAccounts().collect {
-            _accounts.value = it
+            _accounts.value = accountList.value.copy(accounts = it)
 
             setActiveAccountIfNull(it)
         }
@@ -61,7 +62,8 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     private fun loadActions(type: String?) {
         if (type == null || activeAccount.value == null) return
 
-        if (accounts.value.isEmpty()) return
+        if (accountList.value.accounts.isEmpty()) return
+
         loadActions(activeAccount.value!!, type)
     }
 
@@ -95,7 +97,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             loadActions(account, type.value!!)
     }
 
-    fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value.find { it.id == accountId }) }
+    fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accountList.value.accounts.find { it.id == accountId }) }
 
     fun setActiveAccountFromChannel(userChannelId: Int) = viewModelScope.launch {
         repo.getAccounts().collect { accounts ->
@@ -122,12 +124,12 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
     fun reset() {
-        activeAccount.value = accounts.value.firstOrNull { it.isDefault }
+        activeAccount.value = accountList.value.accounts.firstOrNull { it.isDefault }
     }
 
-    fun setDefaultAccount(account: Account)  = viewModelScope.launch(Dispatchers.IO) {
-        if (accounts.value.isNotEmpty()) {
-            val accts = accounts.value
+    fun setDefaultAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
+        if (accountList.value.accounts.isNotEmpty()) {
+            val accts = accountList.value.accounts
             //remove current default account
             val current: Account? = accts.firstOrNull { it.isDefault }
             current?.isDefault = false
@@ -144,3 +146,5 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
 }
+
+data class AccountList(val accounts: List<Account> = emptyList())

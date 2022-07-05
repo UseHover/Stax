@@ -144,8 +144,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             }
         }
 
-        collectLifecycleFlow(accountsViewModel.accounts) {
-            if(it.isEmpty())
+        collectLifecycleFlow(accountsViewModel.accountList) {
+            if(it.accounts.isEmpty())
                 setDropdownTouchListener(PaybillFragmentDirections.actionGlobalAddChannelsFragment())
         }
     }

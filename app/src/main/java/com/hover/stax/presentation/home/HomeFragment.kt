@@ -78,8 +78,8 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     }
 
     private fun observeForBonus() {
-        collectLatestLifecycleFlow(channelsViewModel.accountEventFlow) {
-            navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().userChannel.toString()))
+        collectLifecycleFlow(channelsViewModel.accountEventFlow) {
+            navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonusList.value.bonuses.first().userChannel.toString()))
         }
     }
 
@@ -88,11 +88,11 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
 
-        collectLatestLifecycleFlow(channelsViewModel.accountCallback) {
+        collectLifecycleFlow(channelsViewModel.accountCallback) {
             askToCheckBalance(it)
         }
 
-        collectLatestLifecycleFlow(balancesViewModel.actionRunError) {
+        collectLifecycleFlow(balancesViewModel.actionRunError) {
             UIHelper.flashMessage(requireActivity(), it)
         }
     }

@@ -26,7 +26,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.stax.R
@@ -36,7 +35,6 @@ import com.hover.stax.ui.theme.DarkGray
 import com.hover.stax.ui.theme.OffWhite
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.DateUtils
-import timber.log.Timber
 
 
 interface BalanceTapListener {
@@ -162,6 +160,9 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                     modifier = Modifier.align(Alignment.End),
                     color = colorResource(id = R.color.offWhite)
                 )
+
+                Spacer(modifier = Modifier.height(3.dp))
+
                 Text(
                     text = DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),
                     modifier = Modifier.align(Alignment.End),
@@ -216,12 +217,5 @@ private fun BalanceListForPreview(accountList: List<Account>) {
             }
         }
     }
-}
-
-private fun fakeAccount(): Account {
-    val account = Account(name = "Dummy account")
-    account.latestBalance = "24,500"
-    account.latestBalanceTimestamp = 12345
-    return account
 }
 

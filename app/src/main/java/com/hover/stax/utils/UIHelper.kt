@@ -26,7 +26,6 @@ import com.hover.stax.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -120,24 +119,11 @@ object UIHelper {
 
 }
 
-fun <T> Fragment.collectLifecycleFlow(flow: Flow<T>, collect: FlowCollector<T>) {
-    viewLifecycleOwner.lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.collect(collect)
-        }
-    }
-}
-
-fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: FlowCollector<T>) {
+fun <T> Fragment.collectLifecycleFlow(flow: Flow<T>, collector: FlowCollector<T>) {
     viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.collect(collect)
+            flow.collect(collector)
         }
     }
 }
 
-//fun <T> Fragment.collectLatestSharedFlow(flow: SharedFlow<Account>, collect: suspend (T) -> Unit) {
-//    lifecycleScope.launchWhenStarted {
-//        flow.collect { collect }
-//    }
-//}

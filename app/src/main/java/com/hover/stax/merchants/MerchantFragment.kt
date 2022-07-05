@@ -61,8 +61,8 @@ class MerchantFragment : AbstractFormFragment() {
 	}
 
 	private fun observeAccountList() {
-		collectLifecycleFlow(accountsViewModel.accounts) {
-			if (it.isEmpty())
+		collectLifecycleFlow(accountsViewModel.accountList) {
+			if(it.accounts.isEmpty())
 				setDropdownTouchListener(MerchantFragmentDirections.actionMerchantFragmentToAccountsFragment())
 		}
 	}
