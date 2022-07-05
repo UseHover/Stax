@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
@@ -27,6 +29,7 @@ import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -71,15 +74,19 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
 
-        lifecycleScope.launchWhenStarted {
-            channelsViewModel.accountCallback.collect {
-                askToCheckBalance(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                channelsViewModel.accountCallback.collect {
+                    askToCheckBalance(it)
+                }
             }
         }
 
-        lifecycleScope.launchWhenStarted {
-            balancesViewModel.actionRunError.collect {
-                UIHelper.flashMessage(requireActivity(), it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                balancesViewModel.actionRunError.collect {
+                    UIHelper.flashMessage(requireActivity(), it)
+                }
             }
         }
     }
