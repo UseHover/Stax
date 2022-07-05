@@ -13,8 +13,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 class BonusRepositoryImpl(private val bonusRepo: BonusRepo, private val channelRepo: ChannelRepo, private val coroutineDispatcher: CoroutineDispatcher) : BonusRepository {
 
@@ -22,26 +22,20 @@ class BonusRepositoryImpl(private val bonusRepo: BonusRepo, private val channelR
     private val db = Firebase.firestore.also { it.firestoreSettings = settings }
 
     override suspend fun fetchBonuses() {
-        withContext(coroutineDispatcher) {
-            db.collection("bonuses")
-                .get()
-                .addOnSuccessListener { snapshot ->
-                    val results = snapshot.map { document ->
-                        Bonus(
-                            document.data["user_channel"].toString().toInt(), document.data["purchase_channel"].toString().toInt(),
-                            document.data["bonus_percent"].toString().toDouble(), document.data["message"].toString()
-                        )
-                    }
+        val bonuses = db.collection("bonuses")
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document ->
+                document.data?.let {
+                    Bonus(
+                        it["user_channel"].toString().toInt(), it["purchase_channel"].toString().toInt(),
+                        it["bonus_percent"].toString().toDouble(), it["message"].toString()
+                    )
+                }
+            }
 
-                    Timber.e("Saved ${results.size} bonuses")
-                    launch {
-                        filterResults(results)
-                    }
-                }
-                .addOnFailureListener {
-                    Timber.e("Error fetching bonuses: ${it.localizedMessage}")
-                }
-        }
+        filterResults(bonuses)
     }
 
     override suspend fun getBonusList(): Flow<List<Bonus>> = channelFlow {
