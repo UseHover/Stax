@@ -66,7 +66,7 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launchWhenStarted {
             channelsViewModel.accountEventFlow.collect {
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonuses.value.first().userChannel.toString()))
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonusList.value.bonuses.first().userChannel.toString()))
             }
         }
     }
@@ -81,17 +81,17 @@ class HomeFragment : Fragment() {
     private fun setupBanner() {
         bonusViewModel.getBonusList()
 
-        collectLatestLifecycleFlow(bonusViewModel.bonuses) { bonusList ->
-            if (bonusList.isNotEmpty()) {
+        collectLatestLifecycleFlow(bonusViewModel.bonusList) { bonusList ->
+            if (bonusList.bonuses.isNotEmpty()) {
                 with(binding.bonusCard) {
-                    message.text = bonusList.first().message
+                    message.text = bonusList.bonuses.first().message
                     learnMore.movementMethod = LinkMovementMethod.getInstance()
                 }
                 binding.bonusCard.apply {
                     cardBonus.visibility = View.VISIBLE
                     cta.setOnClickListener {
                         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                        validateAccounts(bonusList.first())
+                        validateAccounts(bonusList.bonuses.first())
                     }
                 }
             } else binding.bonusCard.cardBonus.visibility = View.GONE
