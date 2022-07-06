@@ -43,6 +43,7 @@ data class HomeClickFunctions(
     val onRequestMoneyClicked: () -> Unit,
     val onClickedTC: () -> Unit,
     val onClickedAddNewAccount: () -> Unit,
+    val onClickedSettingsIcon: () -> Unit
 )
 
 interface FinancialTipClickInterface {
@@ -50,25 +51,29 @@ interface FinancialTipClickInterface {
 }
 
 @Composable
-fun TopBar(isInternetConnected: Boolean) {
+fun TopBar(isInternetConnected: Boolean, onClickedSettingsIcon:() -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(all = dimensionResource(id = R.dimen.margin_13)),
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         HorizontalImageTextView(
             drawable = R.drawable.stax_logo,
             stringRes = R.string.nav_home,
-            modifier = Modifier
+            modifier = Modifier.weight(1f)
         )
         if (!isInternetConnected) {
             HorizontalImageTextView(
                 drawable = R.drawable.ic_internet_off,
                 stringRes = R.string.working_offline,
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp)
             )
         }
+        Image(painter = painterResource(id = R.drawable.ic_settings),
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.CenterVertically)
+                .clickable(onClick = onClickedSettingsIcon),
+        )
     }
 }
 
@@ -253,7 +258,7 @@ private fun HorizontalImageTextView(
     @StringRes stringRes: Int,
     modifier: Modifier
 ) {
-    Row(horizontalArrangement = Arrangement.Center, modifier = modifier) {
+    Row(horizontalArrangement = Arrangement.Start, modifier = modifier) {
         Image(
             painter = painterResource(id = drawable),
             contentDescription = null,
@@ -291,7 +296,7 @@ fun HomeScreen(
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
-                topBar = { TopBar(isInternetConnected = hasNetwork) },
+                topBar = { TopBar(isInternetConnected = hasNetwork, homeClickFunctions.onClickedSettingsIcon) },
                 content = {
                     LazyColumn {
                         item {
@@ -381,7 +386,7 @@ fun HomeScreenPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(isInternetConnected = false)
+                    TopBar(isInternetConnected = false, {})
                 },
                 content = {
                     LazyColumn(content = {

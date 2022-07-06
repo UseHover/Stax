@@ -42,7 +42,7 @@ class NavHelper(val activity: AppCompatActivity) {
         navController?.let {
             NavigationUI.setupWithNavController(nav, navController!!)
             appBarConfiguration = AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_balance, R.id.navigation_history, R.id.libraryFragment, R.id.navigation_settings
+                R.id.navigation_home, R.id.navigation_balance, R.id.navigation_history, R.id.libraryFragment
             ).build()
         }
 

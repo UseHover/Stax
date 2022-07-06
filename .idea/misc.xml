@@ -24,10 +24,12 @@
         <entry key="../../../../../layout/compose-model-1656664443233.xml" value="0.45" />
         <entry key="../../../../../layout/compose-model-1656665801372.xml" value="0.26815878378378377" />
         <entry key="../../../../../layout/compose-model-1656665811861.xml" value="0.39537037037037037" />
+        <entry key="../../../../../layout/compose-model-1656930644054.xml" value="0.39537037037037037" />
+        <entry key="../../../../../layout/compose-model-1657096843959.xml" value="0.26815878378378377" />
+        <entry key="../../../../../layout/compose-model-1657102301566.xml" value="0.27449324324324326" />
+        <entry key="../../../../../layout/compose-model-1657104562263.xml" value="0.39537037037037037" />
         <entry key="../../../../layout/compose-model-1647504975633.xml" value="0.2673141891891892" />
         <entry key="../../../../layout/compose-model-1648556434513.xml" value="0.24957770270270271" />
-        <entry key="../../../../layout/compose-model-1657022273175.xml" value="0.3194444444444444" />
-        <entry key="../../../../layout/compose-model-1657022314198.xml" value="0.3078547297297297" />
         <entry key="app/src/main/res/drawable-v21/button_bg.xml" value="0.229" />
         <entry key="app/src/main/res/drawable/banner_gist.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/banner_permission.xml" value="0.2535" />
@@ -239,7 +241,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
