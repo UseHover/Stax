@@ -28,7 +28,7 @@ import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.collectLatestLifecycleFlow
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
@@ -76,7 +76,7 @@ abstract class AbstractFormFragment : Fragment() {
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
-        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+        collectLifecycleFlow(balancesViewModel.balanceAction) {
             callHover(accountsViewModel.activeAccount.value, it)
         }
     }

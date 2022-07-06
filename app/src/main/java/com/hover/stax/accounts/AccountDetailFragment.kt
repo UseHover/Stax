@@ -178,7 +178,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun observeBalanceCheck() {
-        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+        collectLifecycleFlow(balancesViewModel.balanceAction) {
             attemptCallHover(viewModel.account.value, it)
         }
     }

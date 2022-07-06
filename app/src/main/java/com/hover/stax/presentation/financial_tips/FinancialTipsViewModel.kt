@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class FinancialTipsViewModel(private val getTipsUseCase: GetTipsUseCase) : ViewModel() {
 
@@ -15,6 +16,7 @@ class FinancialTipsViewModel(private val getTipsUseCase: GetTipsUseCase) : ViewM
 
     fun getTips() = viewModelScope.launch {
         getTipsUseCase().collect {
+            Timber.e("Collecting ${it.size}")
             _tips.value = _tips.value.copy(tips = it)
         }
     }

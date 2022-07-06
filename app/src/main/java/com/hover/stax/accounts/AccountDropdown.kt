@@ -12,7 +12,6 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.actions.ActionSelect
 import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
@@ -100,8 +99,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         with(viewModel) {
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    accounts.collect {
-                        accountUpdate(it)
+                    accountList.collect {
+                        accountUpdate(it.accounts)
                     }
                 }
             }

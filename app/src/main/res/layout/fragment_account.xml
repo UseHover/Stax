@@ -7,6 +7,7 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_5"
             android:layout_marginTop="@dimen/margin_13"
             android:layout_marginBottom="@dimen/margin_55"
             android:orientation="vertical">
@@ -65,12 +66,12 @@
 
                     <TextView
                             android:id="@+id/fees_description"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_34"
                             android:layout_weight="1"
+                            android:paddingBottom="@dimen/margin_8"
                             android:text="@string/fees_label"
                             android:textColor="@color/offWhite"
-                            android:paddingBottom="@dimen/margin_8"
-                            android:layout_marginEnd="@dimen/margin_34"
-                            android:layout_height="wrap_content"
                             android:textSize="@dimen/text_16" />
 
                     <TextView

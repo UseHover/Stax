@@ -119,16 +119,11 @@ object UIHelper {
 
 }
 
-fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: FlowCollector<T>) {
+fun <T> Fragment.collectLifecycleFlow(flow: Flow<T>, collector: FlowCollector<T>) {
     viewLifecycleOwner.lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.collect(collect)
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(collector)
         }
     }
 }
 
-//fun <T> Fragment.collectLatestSharedFlow(flow: SharedFlow<Account>, collect: suspend (T) -> Unit) {
-//    lifecycleScope.launchWhenStarted {
-//        flow.collect { collect }
-//    }
-//}
