@@ -783,6 +783,6 @@
     <string name="no_tips_available">No tips available.</string>
 
     <string name="empty_channel_placeholder">the service</string>
-
+    <string name="def_account_update_msg">Default account successfully updated to %1$s.</string>
 
 </resources>

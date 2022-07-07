@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.ItemWellnessTipsBinding
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.utils.DateUtils
+import timber.log.Timber
+import java.util.*
 
 class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListener: SelectListener) : RecyclerView.Adapter<FinancialTipsAdapter.ViewHolder>() {
 

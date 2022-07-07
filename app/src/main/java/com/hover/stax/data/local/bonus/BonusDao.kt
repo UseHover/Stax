@@ -11,10 +11,10 @@ interface BonusDao {
     val bonuses: Flow<List<Bonus>>
 
     @Query("SELECT * FROM bonuses WHERE purchase_channel = :purchaseChannelId")
-    suspend fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus?
+    fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus?
 
     @Query("SELECT * FROM bonuses WHERE user_channel = :userChannelId")
-    suspend fun getBonusByUserChannel(userChannelId: Int): Bonus?
+    fun getBonusByUserChannel(userChannelId: Int): Bonus?
 
     @Query("SELECT * FROM bonuses WHERE purchase_channel IN (:purchaseChannelIds) AND user_channel in (:userChannelIds)")
     fun getBonuses(purchaseChannelIds: List<Int>, userChannelIds: List<Int>): List<Bonus>

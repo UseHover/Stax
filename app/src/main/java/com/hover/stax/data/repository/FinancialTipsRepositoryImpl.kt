@@ -8,11 +8,9 @@ import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.domain.repository.FinancialTipsRepository
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 
 class FinancialTipsRepositoryImpl(val context: Context) : FinancialTipsRepository {
 

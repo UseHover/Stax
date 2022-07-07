@@ -5,10 +5,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
+import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.schedules.Schedule
@@ -23,7 +23,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
     val activeAccount = MutableLiveData<Account?>()
     val amount = MutableLiveData<String?>()
     private val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
-    val requestee = MutableLiveData<StaxContact>()
+    val requestee = MutableLiveData<StaxContact?>()
     var requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String?>()
 

@@ -18,7 +18,6 @@ import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber

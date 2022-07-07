@@ -29,6 +29,7 @@ import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.financial_tips.GetTipsUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
+import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
@@ -38,7 +39,6 @@ import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.merchants.MerchantViewModel
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.paybill.PaybillViewModel
-import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestDetailViewModel
 import com.hover.stax.requests.RequestRepo

@@ -45,12 +45,12 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(listOf(appModule, dataModule, networkModule, repositories, useCases))
+            modules(appModule + dataModule + networkModule + useCases + repositories)
         }
     }
 
     private fun initUxCam() {
-        if(!BuildConfig.DEBUG) UXCam.startWithKey(getString(R.string.uxcam_key))
+        if (!BuildConfig.DEBUG) UXCam.startWithKey(getString(R.string.uxcam_key))
     }
 
     private fun setLogger() {
@@ -79,7 +79,7 @@ class ApplicationInstance : Application() {
         AppsFlyerLib.getInstance().apply {
             init(getString(R.string.appsflyer_key), conversionListener, this@ApplicationInstance)
 
-            if(AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID) == null)
+            if (AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID) == null)
                 setCustomerUserId(Hover.getDeviceId(this@ApplicationInstance))
 
             start(this@ApplicationInstance)

@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.TextView
 import com.hover.stax.databinding.StaxSpinner2lineBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): ArrayAdapter<Merchant>(context, 0, allMerchants) {
 
@@ -39,8 +41,8 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 				val filtered: MutableList<Merchant> = ArrayList()
 				if (constraint != null) {
 					for (merchant in allMerchants) {
-						if (merchant.toString().replace(" ".toRegex(), "").lowercase()
-								.contains(constraint.toString().lowercase())
+						if (merchant.toString().replace(" ".toRegex(), "").lowercase(Locale.getDefault())
+								.contains(constraint.toString().lowercase(Locale.getDefault()))
 						) {
 							filtered.add(merchant)
 						}
