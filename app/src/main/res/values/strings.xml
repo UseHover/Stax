@@ -780,9 +780,9 @@
     <string name="check_balance_message">I just checked my balance with Stax app and the best part is - it works offline. Check it out - %1$s</string>
     <string name="send_money_message">I just transferred money with Stax app and the best part is - it works offline. Check it out - %1$s</string>
     <string name="fab_submit">Submit</string>
-    <string name="no_tips_available">No tips available.</string>
 
     <string name="empty_channel_placeholder">the service</string>
+    <string name="def_account_update_msg">Default account successfully updated to %1$s.</string>
 
 
 </resources>

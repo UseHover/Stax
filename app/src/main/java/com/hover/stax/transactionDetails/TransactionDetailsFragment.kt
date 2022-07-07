@@ -224,7 +224,7 @@ class TransactionDetailsFragment : Fragment() {
                 setupContactSupportButton(transaction.action_id, binding.statusInfo.btnRetry)
             else binding.statusInfo.btnRetry.setOnClickListener{ maybeRetry(transaction) }
         }
-        binding.statusInfo.btnRetry.visibility = if (transaction.isRetryable) VISIBLE else GONE
+        binding.statusInfo.btnRetry.visibility = if (transaction.canRetry) VISIBLE else GONE
     }
 
     private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false

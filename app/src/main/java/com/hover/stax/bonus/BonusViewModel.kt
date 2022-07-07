@@ -13,7 +13,6 @@ import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -64,6 +63,10 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
         val showBonuses = hasValidSim(simHnis, bonusChannels)
         _bonusList.update { _bonusList.value.copy(bonuses = if (showBonuses) toSave else emptyList()) }
     }
+
+    fun getBonusByPurchaseChannel(channelId: Int): Bonus? = repo.getBonusByPurchaseChannel(channelId)
+
+    fun getBonusByUserChannel(channelId: Int): Bonus? = repo.getBonusByUserChannel(channelId)
 
     /**
      * Extract the hnis from the bonus channels and compare with current sim hnis.

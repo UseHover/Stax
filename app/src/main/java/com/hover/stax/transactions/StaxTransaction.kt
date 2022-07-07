@@ -15,7 +15,7 @@ import timber.log.Timber
 import com.hover.stax.R
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.domain.model.ACCOUNT_ID
+import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.utils.Utils
 import java.util.HashMap
@@ -106,13 +106,12 @@ data class StaxTransaction(
 	}
 
 	private fun getCounterPartyNo(intent: Intent, contact: StaxContact?): String? {
-		if (contact != null)
-			return contact.accountNumber
-		else if (intent.hasExtra(HoverAction.ACCOUNT_KEY))
-			return intent.getStringExtra(HoverAction.ACCOUNT_KEY)
-		else if (intent.hasExtra(BUSINESS_NO))
-			return intent.getStringExtra(BUSINESS_NO)
-		else return null
+		return when {
+			contact != null -> contact.accountNumber
+			intent.hasExtra(HoverAction.ACCOUNT_KEY) -> intent.getStringExtra(HoverAction.ACCOUNT_KEY)
+			intent.hasExtra(BUSINESS_NO) -> intent.getStringExtra(BUSINESS_NO)
+			else -> null
+		}
 	}
 
 	fun update(data: Intent, action: HoverAction, contact: StaxContact, context: Context) {
@@ -154,7 +153,7 @@ data class StaxTransaction(
 		}
 	}
 
-	val isRetryable: Boolean
+	val canRetry: Boolean
 		get() = isRecorded || ((transaction_type == HoverAction.P2P || transaction_type == HoverAction.AIRTIME
 				|| transaction_type == HoverAction.BALANCE) && isFailed)
 
