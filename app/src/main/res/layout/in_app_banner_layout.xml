@@ -11,8 +11,8 @@
             android:layout_margin="@dimen/margin_13"
             android:animateLayoutChanges="false"
             android:clipToPadding="true"
-            app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="@dimen/margin_8">
+            app:cardElevation="0dp"
+            app:cardCornerRadius="@dimen/radius">
 
         <LinearLayout
                 android:layout_width="match_parent"

@@ -8,7 +8,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact

@@ -24,10 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -121,16 +120,11 @@ object UIHelper {
 
 }
 
-fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) -> Unit) {
+fun <T> Fragment.collectLifecycleFlow(flow: Flow<T>, collector: FlowCollector<T>) {
     viewLifecycleOwner.lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.collect(collect)
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(collector)
         }
     }
 }
 
-//fun <T> Fragment.collectLatestSharedFlow(flow: SharedFlow<Account>, collect: suspend (T) -> Unit) {
-//    lifecycleScope.launchWhenStarted {
-//        flow.collect { collect }
-//    }
-//}
