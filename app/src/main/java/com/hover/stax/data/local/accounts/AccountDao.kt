@@ -38,11 +38,14 @@ interface AccountDao {
     @Query("SELECT * FROM accounts where isDefault = 1")
     fun getDefaultAccount(): Account?
 
+    @Query("SELECT * FROM accounts where isDefault = 1")
+    suspend fun getDefaultAccountAsync(): Account?
+
     @Query("SELECT COUNT(id) FROM accounts")
     fun getDataCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(accounts: List<Account>): List<Long>
+    suspend fun insertAll(accounts: List<Account>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(account: Account)
@@ -51,7 +54,7 @@ interface AccountDao {
     fun update(account: Account?)
 
     @Update
-    fun updateAll(accounts: List<Account>)
+    suspend fun updateAll(accounts: List<Account>)
 
     @Delete
     fun delete(account: Account)

@@ -66,5 +66,5 @@
         <item name="snackbarButtonStyle">@style/StaxButton</item>
         <item name="snackbarTextViewStyle">@style/StaxSnackbarText</item>
     </style>
-
+    
 </resources>

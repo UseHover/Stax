@@ -17,6 +17,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.databinding.FragmentAccountBinding
+import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter

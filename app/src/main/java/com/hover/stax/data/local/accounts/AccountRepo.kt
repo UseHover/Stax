@@ -19,6 +19,8 @@ class AccountRepo(db: AppDatabase) {
 
     fun getDefaultAccount(): Account? = accountDao.getDefaultAccount()
 
+    suspend fun getDefaultAccountAsync(): Account? = accountDao.getDefaultAccountAsync()
+
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
     fun getLiveAccount(id: Int?): LiveData<Account> = accountDao.getLiveAccount(id)
@@ -45,9 +47,11 @@ class AccountRepo(db: AppDatabase) {
 
     fun insert(account: Account) = accountDao.insert(account)
 
-    fun insert(accounts: List<Account>): List<Long> = accountDao.insertAll(accounts)
+    suspend fun insert(accounts: List<Account>): List<Long> = accountDao.insertAll(accounts)
 
     fun update(account: Account?) = account?.let { accountDao.update(it) }
+
+    suspend fun update(accounts: List<Account>) = accountDao.updateAll(accounts)
 
     fun delete(account: Account) = accountDao.delete(account)
 

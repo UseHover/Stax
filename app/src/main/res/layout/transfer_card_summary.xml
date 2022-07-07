@@ -1,117 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/transferSummaryCard"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:showBack="true"
-    app:title="@string/nav_transfer">
-
-    <TableLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/transferSummaryCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_10">
+        app:showBack="true"
+        app:title="@string/nav_transfer">
 
-        <TableRow
-            android:id="@+id/accountsRow"
-            android:layout_marginTop="@dimen/margin_21">
-
-            <TextView
-                android:id="@+id/accountsLabel"
-                android:text="@string/pay_with_label"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-            <com.hover.stax.views.Stax2LineItem
-                android:id="@+id/account_value"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/recipientRow"
-            android:layout_marginTop="@dimen/margin_21">
-
-            <TextView
-                android:text="@string/recipient_label"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-            <com.hover.stax.views.Stax2LineItem
-                android:id="@+id/recipientValue"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd" />
-        </TableRow>
-
-        <TableRow android:id="@+id/amountRow">
-
-            <TextView
-                android:text="@string/transfer_amount_label"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-            <TextView
-                android:id="@+id/amountValue"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_21" />
-        </TableRow>
-
-        <TableRow android:id="@+id/feeRow" android:visibility="gone">
-
-            <TextView
-                android:text="@string/transfer_fee_label"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-            <TextView
-                android:id="@+id/feeValue"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_21" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/noteRow"
-            android:layout_marginTop="@dimen/margin_21"
-            android:visibility="gone">
-
-            <TextView
-                android:text="@string/note_cardhead"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_16" />
-
-            <TextView
-                android:id="@+id/noteValue"
-                android:layout_weight="1"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_21" />
-        </TableRow>
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/nonStandardSummaryRecycler"
-                android:layout_height="wrap_content"
+        <TableLayout
                 android:layout_width="match_parent"
-            />
-    </TableLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_10">
 
-    <RelativeLayout
-        android:id="@+id/btnRow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_21"
-        android:visibility="gone">
+            <TableRow
+                    android:id="@+id/accountsRow"
+                    android:layout_marginTop="@dimen/margin_21">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnRowId"
-            style="@style/StaxButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="@string/btn_edit"
-            android:visibility="visible" />
-    </RelativeLayout>
+                <TextView
+                        android:id="@+id/accountsLabel"
+                        android:text="@string/pay_with_label"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_16" />
+
+                <com.hover.stax.views.Stax2LineItem
+                        android:id="@+id/account_value"
+                        android:layout_weight="1"
+                        android:textAlignment="viewEnd" />
+            </TableRow>
+
+            <TableRow
+                    android:id="@+id/recipientRow"
+                    android:layout_marginTop="@dimen/margin_21">
+
+                <TextView
+                        android:text="@string/recipient_label"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_16" />
+
+                <com.hover.stax.views.Stax2LineItem
+                        android:id="@+id/recipientValue"
+                        android:layout_weight="1"
+                        android:textAlignment="viewEnd" />
+            </TableRow>
+
+            <TableRow android:id="@+id/amountRow">
+
+                <TextView
+                        android:text="@string/transfer_amount_label"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_16" />
+
+                <TextView
+                        android:id="@+id/amountValue"
+                        android:layout_weight="1"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_21" />
+            </TableRow>
+
+            <TableRow
+                    android:id="@+id/feeRow"
+                    android:visibility="gone">
+
+                <TextView
+                        android:text="@string/transfer_fee_label"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_16" />
+
+                <TextView
+                        android:id="@+id/feeValue"
+                        android:layout_weight="1"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_21" />
+            </TableRow>
+
+            <TableRow
+                    android:id="@+id/noteRow"
+                    android:layout_marginTop="@dimen/margin_21"
+                    android:visibility="gone">
+
+                <TextView
+                        android:text="@string/note_cardhead"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_16" />
+
+                <TextView
+                        android:id="@+id/noteValue"
+                        android:layout_weight="1"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_21" />
+            </TableRow>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/nonStandardSummaryRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+        </TableLayout>
+
+        <RelativeLayout
+                android:id="@+id/btnRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_21"
+                android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnRowId"
+                    style="@style/StaxButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/btn_edit"
+                    android:visibility="visible" />
+        </RelativeLayout>
 </com.hover.stax.views.StaxCardView>
