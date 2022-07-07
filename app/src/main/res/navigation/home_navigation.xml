@@ -80,6 +80,9 @@
         <action
                 android:id="@+id/action_navigation_home_to_wellnessFragment"
                 app:destination="@id/tipsFragment" />
+
+        <action android:id="@+id/toSettingsFragment"
+                app:destination="@id/navigation_settings"/>
         <deepLink
                 android:id="@+id/balanceDL"
                 android:autoVerify="true"
@@ -174,6 +177,7 @@
             android:name="com.hover.stax.faq.FaqFragment"
             android:label="@string/FAQs"
             tools:layout="@layout/fragment_faq" />
+
 
     <fragment
             android:id="@+id/transactionDetailsFragment"
