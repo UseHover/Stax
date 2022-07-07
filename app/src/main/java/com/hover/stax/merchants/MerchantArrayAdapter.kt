@@ -8,28 +8,30 @@ import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.TextView
 import com.hover.stax.databinding.StaxSpinner2lineBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): ArrayAdapter<Merchant>(context, 0, allMerchants) {
 
 	var filteredMerchants: MutableList<Merchant>? = ArrayList(allMerchants)
 
 	override fun getView(position: Int, v: View?, parent: ViewGroup): View {
-		var v = v
+		var view = v
 		val holder: ViewHolder
-		if (v == null) {
+		if (view == null) {
 			val binding: StaxSpinner2lineBinding =
 				StaxSpinner2lineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-			v = binding.getRoot()
+			view = binding.root
 			holder = ViewHolder(binding)
-			v.tag = holder
+			view.tag = holder
 		} else {
-			holder = v.tag as ViewHolder
+			holder = view.tag as ViewHolder
 		}
 		val m = filteredMerchants!![position]
 		holder.title.text = m.shortName()
 		holder.subtitle.text = m.tillNo
 		holder.subtitle.visibility = if (m.hasName()) View.VISIBLE else View.GONE
-		return v
+		return view
 	}
 
 	override fun getFilter(): Filter {
@@ -38,9 +40,9 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 				val filterResults = FilterResults()
 				val filtered: MutableList<Merchant> = ArrayList()
 				if (constraint != null) {
-					for (merchant in allMerchants!!) {
-						if (merchant.toString().replace(" ".toRegex(), "").toLowerCase()
-								.contains(constraint.toString().toLowerCase())
+					for (merchant in allMerchants) {
+						if (merchant.toString().replace(" ".toRegex(), "").lowercase(Locale.getDefault())
+								.contains(constraint.toString().lowercase(Locale.getDefault()))
 						) {
 							filtered.add(merchant)
 						}
@@ -62,7 +64,7 @@ class MerchantArrayAdapter(context: Context, val allMerchants: List<Merchant>): 
 					notifyDataSetChanged()
 				} else if (constraint.isNullOrEmpty()) {
 					// no filter, add entire original list back in
-					filteredMerchants!!.addAll(allMerchants!!)
+					filteredMerchants!!.addAll(allMerchants)
 					notifyDataSetInvalidated()
 				}
 			}

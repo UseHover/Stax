@@ -44,5 +44,9 @@ val Typography = Typography(
         fontFamily = Brutalista,
         fontWeight = FontWeight.Medium,
         fontSize = 17.sp
+    ),
+    caption = TextStyle(
+        fontFamily = Brutalista,
+        fontWeight = FontWeight.Normal
     )
 )

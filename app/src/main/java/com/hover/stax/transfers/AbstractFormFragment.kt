@@ -17,18 +17,18 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.collectLatestLifecycleFlow
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
@@ -76,7 +76,7 @@ abstract class AbstractFormFragment : Fragment() {
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
-        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+        collectLifecycleFlow(balancesViewModel.balanceAction) {
             callHover(accountsViewModel.activeAccount.value, it)
         }
     }

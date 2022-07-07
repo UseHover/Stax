@@ -1,15 +1,15 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/cardViewHeader"
+        android:id="@+id/cardView"
+        app:cardElevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_13"
         android:layout_marginTop="@dimen/margin_5"
         android:layout_marginBottom="@dimen/margin_21"
-        app:cardBackgroundColor="@color/cardViewColor"
-        app:cardCornerRadius="@dimen/radius"
-        app:cardElevation="8dp">
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="@dimen/radius">
 
     <LinearLayout
             android:id="@+id/content"
@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/margin_5"
             android:paddingVertical="@dimen/margin_13">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +46,7 @@
                     android:layout_marginStart="@dimen/margin_21"
                     app:fontFamily="@font/brutalista_bold"
                     android:gravity="end"
-                    android:paddingHorizontal="@dimen/margin_10"
+                    android:paddingHorizontal="@dimen/margin_13"
                     tools:text="@string/bal_cardhead"
                     android:textAlignment="viewEnd"
                     android:textAllCaps="true"

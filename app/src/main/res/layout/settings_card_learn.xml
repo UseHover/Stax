@@ -16,17 +16,26 @@
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
                 android:text="@string/financial_wellness_tips"
-                android:padding="@dimen/margin_13"
+                android:paddingStart="@dimen/margin_13"
+                android:paddingEnd="@dimen/margin_13"
+                android:paddingTop="@dimen/margin_16"
+                android:textColor="@color/grey"
+                android:paddingBottom="@dimen/margin_16"
                 android:textSize="@dimen/text_16" />
 
         <TextView
                 android:id="@+id/learnStax"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/margin_13"
+                android:paddingStart="@dimen/margin_13"
+                android:paddingEnd="@dimen/margin_13"
+                android:paddingTop="@dimen/margin_16"
+                android:paddingBottom="@dimen/margin_16"
+                android:textColor="@color/grey"
                 android:background="?selectableItemBackground"
                 android:text="@string/stax_features"
                 android:textSize="@dimen/text_16"
+                app:drawableTint="@color/grey"
                 app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
     </LinearLayout>
 </com.hover.stax.views.StaxCardView>

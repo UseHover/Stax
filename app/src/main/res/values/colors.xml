@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources  xmlns:tools="http://schemas.android.com/tools">
-	<color name="colorPrimary" tools:override="true">#292E35</color>
-	<color name="colorPrimaryDark" tools:override="true">#1E232A</color>
-	<color name="brightBlue" tools:override="true">#39CBFC</color>
-	<color name="brightBluePressed" tools:override="true">#2AAFDC</color>
-	<color name="cardViewColor">#292E35</color>
+	<color name="colorPrimary" tools:override="true">#292B2C</color>
+	<color name="colorPrimaryDark" tools:override="true">#000A1A</color>
+
+	<color name="colorBackground">#1E2329</color>
+	<color name="colorSurface">#292E34</color>
+
+	<color name="brightBlue" tools:override="true">#0091E3</color>
+	<color name="brightBluePressed" tools:override="true">#01659E</color>
+	<color name="cardViewColor">#292E34</color>
 	<color name="cardDarkBlue">#1D2735</color>
 	<color name="cardDarkRed">#5A120D</color>
 	<color name="buttonColor">#3A3E45</color>
@@ -18,11 +22,11 @@
 	<color name="nav_grey">#3F444A</color>
 	<color name="transparent_grey">#77000000</color>
 	<color name="transparent_overlay">#1E232AA3</color>
-	<color name="stax_state_green">#05EB8F</color>
-	<color name="stax_state_blue">#1878F9</color>
-	<color name="stax_state_yellow">#FFCA32</color>
+	<color name="stax_state_green">#24B314</color>
+	<color name="stax_state_blue">#0091E3</color>
+	<color name="stax_state_yellow">#FFB447</color>
 	<color name="stax_bounty_red_bg">#342C34</color>
-	<color name="stax_state_red">#FF0028</color>
+	<color name="stax_state_red">#F32345</color>
 	<color name="pending_brown">#343734</color>
 	<color name="muted_green">#2A3932</color>
 	<color name="lighter_grey">#3F434A</color>
@@ -30,10 +34,10 @@
 	<color name="faint_blue">#CDE5FE</color>
 	<color name="button_white">#EDF9FF</color>
 
-	<color name="banner_permission_primary">#45E6CE</color>
-	<color name="banner_gist_primary">#00CCFF</color>
-	<color name="banner_secondary">#BFF2FF</color>
-	<color name="banner_text">#2F364A</color>
+	<color name="banner_permission_primary">#1E2329</color>
+	<color name="banner_gist_primary">#1E2329</color>
+	<color name="banner_secondary">#1E2329</color>
+	<color name="banner_text">#F1F1F4</color>
 
 	<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/offWhite</color>
 </resources>

@@ -17,7 +17,7 @@ import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLatestLifecycleFlow
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
@@ -144,8 +144,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             }
         }
 
-        collectLatestLifecycleFlow(accountsViewModel.accounts) {
-            if(it.isEmpty())
+        collectLifecycleFlow(accountsViewModel.accountList) {
+            if(it.accounts.isEmpty())
                 setDropdownTouchListener(PaybillFragmentDirections.actionGlobalAddChannelsFragment())
         }
     }

@@ -7,37 +7,35 @@
         app:showBack="true"
         app:title="@string/nav_airtime">
 
-    <com.hover.stax.accounts.AccountDropdown
-        android:id="@+id/payWithDropdown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:editable="false"
-        android:hint="@string/pay_with_label" />
+        <com.hover.stax.accounts.AccountDropdown
+                android:id="@+id/payWithDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:hint="@string/pay_with_label" />
 
+        <com.hover.stax.actions.ActionSelect
+                android:id="@+id/action_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
-    <com.hover.stax.actions.ActionSelect
-            android:id="@+id/action_select"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+        <com.hover.stax.contacts.ContactInput
+                android:id="@+id/contact_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <com.hover.stax.contacts.ContactInput
-        android:id="@+id/contact_select"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <com.hover.stax.views.StaxTextInput
+                android:id="@+id/amountInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/transfer_amount_label"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal" />
 
-    <com.hover.stax.views.StaxTextInput
-        android:id="@+id/amountInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/transfer_amount_label"
-        android:imeOptions="actionNext"
-        android:inputType="numberDecimal" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/nonStandardVariableRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/nonStandardVariableRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
 </com.hover.stax.views.StaxCardView>

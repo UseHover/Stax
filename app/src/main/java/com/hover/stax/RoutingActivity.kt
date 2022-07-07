@@ -20,7 +20,7 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.financialTips.FinancialTipsFragment
+import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.PERM_ACTIVITY
 import com.hover.stax.inapp_banner.BannerUtils

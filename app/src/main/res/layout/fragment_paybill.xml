@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_marginTop="@dimen/margin_13">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:descendantFocusability="afterDescendants"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="afterDescendants"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/margin_5">
 
         <include
                 android:id="@+id/editCard"
@@ -30,15 +31,15 @@
                 android:visibility="gone" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_13"
-            android:lineSpacingExtra="2sp"
-            android:id="@+id/noWorryText"
-            android:text="@string/noworry_explain"
-            android:textColor="@color/offWhite"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:textSize="@dimen/text_16" />
+                android:id="@+id/noWorryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:lineSpacingExtra="2sp"
+                android:text="@string/noworry_explain"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
 
         <Button
                 android:id="@+id/fab"
@@ -48,8 +49,8 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginHorizontal="@dimen/margin_13"
                 android:layout_marginTop="10dp"
-                app:fontFamily="@font/brutalista_medium"
                 android:text="@string/btn_continue"
+                app:fontFamily="@font/brutalista_medium"
                 app:layout_anchorGravity="end|bottom" />
 
     </LinearLayout>
