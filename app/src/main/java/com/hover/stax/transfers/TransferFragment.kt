@@ -33,7 +33,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
-
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
     private val channelsViewModel: ChannelsViewModel by viewModel()

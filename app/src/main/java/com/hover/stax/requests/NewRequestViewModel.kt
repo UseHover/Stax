@@ -23,7 +23,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
     val activeAccount = MutableLiveData<Account?>()
     val amount = MutableLiveData<String?>()
     private val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
-    val requestee = MutableLiveData<StaxContact>()
+    val requestee = MutableLiveData<StaxContact?>()
     var requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String?>()
 

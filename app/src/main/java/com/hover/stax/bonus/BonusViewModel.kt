@@ -64,10 +64,6 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
         _bonusList.update { _bonusList.value.copy(bonuses = if (showBonuses) toSave else emptyList()) }
     }
 
-    fun getBonusByPurchaseChannel(channelId: Int): Bonus? = repo.getBonusByPurchaseChannel(channelId)
-
-    fun getBonusByUserChannel(channelId: Int): Bonus? = repo.getBonusByUserChannel(channelId)
-
     /**
      * Extract the hnis from the bonus channels and compare with current sim hnis.
      * Return true if user has a valid sim
