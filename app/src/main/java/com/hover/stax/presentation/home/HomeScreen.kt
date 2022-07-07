@@ -62,6 +62,7 @@ fun TopBar(isInternetConnected: Boolean, onClickedSettingsIcon:() -> Unit) {
             stringRes = R.string.nav_home,
             modifier = Modifier.weight(1f)
         )
+
         if (!isInternetConnected) {
             HorizontalImageTextView(
                 drawable = R.drawable.ic_internet_off,
@@ -69,10 +70,12 @@ fun TopBar(isInternetConnected: Boolean, onClickedSettingsIcon:() -> Unit) {
                 modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp)
             )
         }
+
         Image(painter = painterResource(id = R.drawable.ic_settings),
             contentDescription = null,
             modifier = Modifier.align(Alignment.CenterVertically)
-                .clickable(onClick = onClickedSettingsIcon),
+                .clickable(onClick = onClickedSettingsIcon)
+                .size(25.dp),
         )
     }
 }
@@ -256,7 +259,7 @@ private fun VerticalImageTextView(
 private fun HorizontalImageTextView(
     @DrawableRes drawable: Int,
     @StringRes stringRes: Int,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     Row(horizontalArrangement = Arrangement.Start, modifier = modifier) {
         Image(
@@ -386,7 +389,7 @@ fun HomeScreenPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(isInternetConnected = false, {})
+                    TopBar(isInternetConnected = false) {}
                 },
                 content = {
                     LazyColumn(content = {
