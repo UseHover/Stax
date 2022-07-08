@@ -51,8 +51,8 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
-    private fun startObserver() = collectLatestLifecycleFlow(viewModel.tips) {
-        showFinancialTips(it, args.tipId)
+    private fun startObserver() = collectLatestLifecycleFlow(viewModel.tipState) {
+        showFinancialTips(it.tips, args.tipId)
     }
 
     private fun showFinancialTips(tips: List<FinancialTip>, id: String? = null) {
@@ -154,8 +154,8 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         binding.financialTipsDetail.visibility = View.GONE
         binding.tipsCard.visibility = View.VISIBLE
 
-        if (viewModel.tips.value.isNotEmpty())
-            showFinancialTips(viewModel.tips.value, null)
+        if (viewModel.tipState.value.tips.isNotEmpty())
+            showFinancialTips(viewModel.tipState.value.tips, null)
     }
 
     override fun onDestroyView() {

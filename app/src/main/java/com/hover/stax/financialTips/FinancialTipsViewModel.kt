@@ -15,13 +15,15 @@ import timber.log.Timber
 
 data class FinancialTip(val id: String, val title: String, val content: String, val snippet: String, val date: Long?, val shareCopy: String?, val deepLink: String?)
 
+data class FinancialTipsState(val tips: List<FinancialTip> = emptyList())
+
 class FinancialTipsViewModel(val application: Application) : ViewModel() {
 
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
 
-    private val _tips = MutableStateFlow<List<FinancialTip>>(emptyList())
-    val tips: StateFlow<List<FinancialTip>> = _tips
+    private val _tips = MutableStateFlow(FinancialTipsState())
+    val tipState: StateFlow<FinancialTipsState> = _tips
 
     init {
         db.firestoreSettings = settings
@@ -44,10 +46,11 @@ class FinancialTipsViewModel(val application: Application) : ViewModel() {
                     )
                 }
 
-                _tips.value = financialTip.filterNot { it.date == null }.sortedByDescending { it.date }
+                _tips.value = tipState.value.copy(tips = financialTip.filterNot { it.date == null }.sortedByDescending { it.date })
             }
             .addOnFailureListener {
                 Timber.e("Error fetching wellness tips: ${it.localizedMessage}")
+                _tips.value = tipState.value.copy(tips = emptyList())
             }
     }
 }

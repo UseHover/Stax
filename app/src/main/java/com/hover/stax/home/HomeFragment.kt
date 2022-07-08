@@ -117,9 +117,9 @@ class HomeFragment : Fragment() {
         binding.offlineBadge.visibility = if (isConnected) View.GONE else View.VISIBLE
     }
 
-    private fun setUpWellnessTips() = collectLatestLifecycleFlow(wellnessViewModel.tips) {
-        if (it.isNotEmpty())
-            showTip(it.first())
+    private fun setUpWellnessTips() = collectLatestLifecycleFlow(wellnessViewModel.tipState) {
+        if (it.tips.isNotEmpty())
+            showTip(it.tips.first())
         else
             binding.wellnessCard.tipsCard.visibility = View.GONE
     }
