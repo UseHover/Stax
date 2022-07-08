@@ -51,7 +51,7 @@ interface FinancialTipClickInterface {
 }
 
 @Composable
-fun TopBar(isInternetConnected: Boolean, onClickedSettingsIcon:() -> Unit) {
+fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, onClickedSettingsIcon:() -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,7 +59,7 @@ fun TopBar(isInternetConnected: Boolean, onClickedSettingsIcon:() -> Unit) {
     ) {
         HorizontalImageTextView(
             drawable = R.drawable.stax_logo,
-            stringRes = R.string.nav_home,
+            stringRes = title,
             modifier = Modifier.weight(1f)
         )
 
@@ -268,6 +268,7 @@ private fun HorizontalImageTextView(
         )
         Text(
             text = stringResource(id = stringRes),
+            style = MaterialTheme.typography.button,
             modifier = Modifier
                 .padding(start = dimensionResource(id = R.dimen.margin_13))
                 .align(Alignment.CenterVertically),
@@ -299,7 +300,7 @@ fun HomeScreen(
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
-                topBar = { TopBar(isInternetConnected = hasNetwork, homeClickFunctions.onClickedSettingsIcon) },
+                topBar = { TopBar(title = R.string.nav_home, isInternetConnected = hasNetwork, homeClickFunctions.onClickedSettingsIcon) },
                 content = {
                     LazyColumn {
                         item {
@@ -389,7 +390,7 @@ fun HomeScreenPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(isInternetConnected = false) {}
+                    TopBar(title = R.string.nav_home, isInternetConnected = false) {}
                 },
                 content = {
                     LazyColumn(content = {
