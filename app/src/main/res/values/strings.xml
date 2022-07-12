@@ -784,5 +784,6 @@
 
     <string name="empty_channel_placeholder">the service</string>
     <string name="def_account_update_msg">Default account successfully updated to %1$s.</string>
+    <string name="uxcam_session_url">uxcam_session_url</string>
 
 </resources>

@@ -9,6 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
+import com.hover.stax.R
 import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,7 +30,7 @@ object AnalyticsUtil {
 		logAmplitude(event, null, context)
 		logFirebase(event, null, context)
 		logAppsFlyer(event, null, context)
-		logUXCamIfRequired(event)
+		logUXCam(event, null)
 
 	}
 
@@ -37,7 +38,7 @@ object AnalyticsUtil {
 	fun logAnalyticsEvent(event: String, context: Context, excludeAmplitude: Boolean) {
 		logFirebase(event, null, context)
 		logAppsFlyer(event, null, context)
-		logUXCamIfRequired(event)
+		logUXCam(event, null)
 	}
 
 	@JvmStatic
@@ -45,10 +46,10 @@ object AnalyticsUtil {
 		logAmplitude(event, args, context)
 		logFirebase(event, args, context)
 		logAppsFlyer(event, args, context)
-		logUXCamIfRequired(event)
+		logUXCam(event, args)
 	}
 
-	private fun logUXCamIfRequired(event: String) {
+	private fun logUXCam(event: String, args: JSONObject?) {
 		if(event.lowercase().contains("visited")) {
 			UXCam.tagScreenName(event)
 		}
@@ -62,10 +63,14 @@ object AnalyticsUtil {
 
 	private fun logFirebase(event: String, args: JSONObject?, context: Context) {
 		val deviceId = Hover.getDeviceId(context)
-		var bundle: Bundle? = null
-		if (args != null) {
-			bundle = convertJSONObjectToBundle(args)
+		val bundle: Bundle = if (args != null) {
+			convertJSONObjectToBundle(args)
+		} else {
+			Bundle()
 		}
+
+		bundle.putString(context.getString(R.string.uxcam_session_url), UXCam.urlForCurrentSession())
+
 		val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
 		firebaseAnalytics.apply {
 			setUserId(deviceId); logEvent(strippedForFireAnalytics(event),
