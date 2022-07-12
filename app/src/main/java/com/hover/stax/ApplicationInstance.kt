@@ -2,6 +2,7 @@ package com.hover.stax
 
 import android.app.Application
 import android.content.ComponentCallbacks
+import com.amplitude.api.Amplitude
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.AppsFlyerProperties
@@ -12,8 +13,11 @@ import com.hover.stax.database.appModule
 import com.hover.stax.database.dataModule
 import com.hover.stax.database.networkModule
 import com.hover.stax.utils.network.NetworkMonitor
+import com.uxcam.OnVerificationListener
 import com.uxcam.UXCam
 import com.yariksoffice.lingver.Lingver
+import org.json.JSONException
+import org.json.JSONObject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -52,7 +56,29 @@ class ApplicationInstance : Application() {
     }
 
     private fun initUxCam() {
-        if(!BuildConfig.DEBUG) UXCam.startWithKey(getString(R.string.uxcam_key))
+        if (!BuildConfig.DEBUG) {
+            UXCam.startWithKey(getString(R.string.uxcam_key))
+
+            UXCam.addVerificationListener(object : OnVerificationListener {
+                override fun onVerificationSuccess() {
+                    FirebaseCrashlytics.getInstance()
+                        .setCustomKey(getString(R.string.uxcam_session_url), UXCam.urlForCurrentSession())
+
+                    val eventProperties = JSONObject()
+                    val userProperties = JSONObject()
+                    try {
+                        eventProperties.put(getString(R.string.uxcam_session_url), UXCam.urlForCurrentSession())
+                        userProperties.put(getString(R.string.uxcam_session_url), UXCam.urlForCurrentUser())
+                    } catch (exception: JSONException) {
+                    }
+
+                    Amplitude.getInstance().logEvent("uxcam", eventProperties)
+                    Amplitude.getInstance().setUserProperties(userProperties)
+                }
+
+                override fun onVerificationFailed(errorMessage: String) {}
+            })
+        }
     }
 
     private fun setLogger() {
