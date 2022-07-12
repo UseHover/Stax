@@ -12,7 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
 import com.amplitude.api.Amplitude
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
@@ -32,8 +35,12 @@ import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.uxcam.OnVerificationListener
+import com.uxcam.UXCam
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONException
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -74,6 +81,8 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             initHover()
             initFirebaseMessagingTopics()
             updateBannerSessionCounter()
+            initUxCam()
+            registerUXCamPushNotification()
         }
 
         createNotificationChannel()
@@ -127,6 +136,44 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
                 validateUser()
             }
         }
+    }
+
+    private fun initUxCam() {
+        if (!BuildConfig.DEBUG) {
+            UXCam.startWithKey(getString(R.string.uxcam_key))
+
+            UXCam.addVerificationListener(object : OnVerificationListener {
+                override fun onVerificationSuccess() {
+                    FirebaseCrashlytics.getInstance()
+                        .setCustomKey(getString(R.string.uxcam_session_url), UXCam.urlForCurrentSession())
+
+                    val eventProperties = JSONObject()
+                    val userProperties = JSONObject()
+                    try {
+                        eventProperties.put(getString(R.string.uxcam_session_url), UXCam.urlForCurrentSession())
+                        userProperties.put(getString(R.string.uxcam_session_url), UXCam.urlForCurrentUser())
+                    } catch (exception: JSONException) {
+                    }
+
+                    Amplitude.getInstance().logEvent("uxcam_session", eventProperties)
+                    Amplitude.getInstance().setUserProperties(userProperties)
+                }
+
+                override fun onVerificationFailed(errorMessage: String) {}
+            })
+        }
+
+    }
+
+    private fun registerUXCamPushNotification(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            val token = task.result
+
+            UXCam.setPushNotificationToken(token)
+        })
     }
 
     private fun createNotificationChannel() {
