@@ -46,7 +46,7 @@ val appModule = module {
     viewModel { NewRequestViewModel(get(), get(), get(), get(), get()) }
     viewModel { TransferViewModel(get(), get(), get(), get()) }
     viewModel { ScheduleDetailViewModel(get(), get(), get()) }
-    viewModel { BalancesViewModel(get(), get()) }
+    viewModel { BalancesViewModel(get(), get(), get()) }
     viewModel { TransactionHistoryViewModel(get(), get()) }
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get(), get(), get()) }
@@ -54,7 +54,7 @@ val appModule = module {
     viewModel { TransactionDetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get(), get(), get()) }
-    viewModel { FinancialTipsViewModel() }
+    viewModel { FinancialTipsViewModel(get()) }
     viewModel { PaybillViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { MerchantViewModel(get(), get(), get(), get()) }
     viewModel { RequestDetailViewModel(get(), get(), get()) }

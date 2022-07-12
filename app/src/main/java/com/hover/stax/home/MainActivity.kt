@@ -9,9 +9,6 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
@@ -24,18 +21,17 @@ import com.hover.stax.requests.SMS
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.utils.*
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
-import com.uxcam.UXCam
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface {
 
-    private val accountsViewModel: AccountsViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private val requestViewModel: NewRequestViewModel by viewModel()
-    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by viewModel()
 
@@ -50,7 +46,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         navHelper.setUpNav()
 
         initFromIntent()
-        startObservers()
         checkForRequest(intent)
         checkForFragmentDirection(intent)
         observeForAppReview()
@@ -76,26 +71,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
 
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {
         if (it) StaxAppReview.launchStaxReview(this@MainActivity)
-    }
-
-    private fun startObservers() {
-        // The class name is to prevent the SAM constructor from being compiled to singleton causing breakages. See
-        // https://stackoverflow.com/a/54939860/2371515
-//        actionSelectViewModel.activeAction.observe(this) {
-//            Timber.v("Got new active action ${this.javaClass.simpleName}: $it ${it?.public_id}")
-//        }
-//
-//        with(accountsViewModel) {
-//            activeAccount.observe(this@MainActivity) {
-//                Timber.v("Got new active account ${this.javaClass.simpleName}: $it ${it?.name}")
-//            }
-//            channelActions.observe(this@MainActivity) {
-//                Timber.v("Got new actions ${this.javaClass.simpleName}: %s", it?.size)
-//            }
-////            accounts.observe(this@MainActivity) {
-////                Timber.v("Observing accounts ${this.javaClass.simpleName}: %s", it?.size)
-////            }
-//        }
     }
 
     private fun checkForRequest(intent: Intent) {
@@ -139,7 +114,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
-            sendSms(requestViewModel)
+            sendSms(requestViewModel, this)
         } else if (requestCode == SMS) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))

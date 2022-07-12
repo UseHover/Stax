@@ -12,28 +12,32 @@ import com.hover.stax.actions.ActionRepo
 import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.schedules.Schedule
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
     val accounts: StateFlow<List<Account>> = _accounts
-    val activeAccount = MutableLiveData<Account>()
+    val activeAccount = MutableLiveData<Account?>()
 
     private var type = MutableLiveData<String>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
+
+    private val accountUpdateChannel = Channel<String>()
+    val accountUpdateMsg = accountUpdateChannel.receiveAsFlow()
 
     init {
         fetchAccounts()
 
         channelActions.apply {
-            addSource(type, this@AccountsViewModel::loadActions)
             addSource(activeAccount, this@AccountsViewModel::loadActions)
+            addSource(type, this@AccountsViewModel::loadActions)
         }
     }
 
@@ -54,7 +58,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             activeAccount.value = accounts.firstOrNull { it.isDefault }
     }
 
-    fun getActionType(): String = type.value!!
+    fun getActionType(): String? = type.value
 
     private fun loadActions(type: String?) {
         if (type == null || activeAccount.value == null) return
@@ -81,28 +85,21 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     private fun loadActions(channelId: Int, t: String = HoverAction.AIRTIME) = viewModelScope.launch(Dispatchers.IO) {
         val actions = actionRepo.getActions(channelId, t)
-        Timber.e("Found ${actions.size}")
         channelActions.postValue(actions)
     }
 
     private fun checkForBonus(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         val bonus = bonusRepo.getBonusByUserChannel(account.channelId)
-        Timber.e("Bonus is ${bonus?.purchaseChannel} - ${bonus?.message}")
 
-        if (bonus != null) {
-            Timber.e("Loading actions for bonus channel")
+        if (bonus != null)
             loadActions(bonus.purchaseChannel)
-        } else {
-            Timber.e("Loading normal actions for ${account.name} of type ${type.value}")
+        else
             loadActions(account, type.value!!)
-        }
     }
 
     fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accounts.value.find { it.id == accountId }) }
 
     fun setActiveAccountFromChannel(userChannelId: Int) = viewModelScope.launch {
-        Timber.e("Fetching for channel id : $userChannelId")
-
         repo.getAccounts().collect { accounts ->
             activeAccount.postValue(accounts.firstOrNull { it.channelId == userChannelId })
         }
@@ -130,17 +127,22 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         activeAccount.value = accounts.value.firstOrNull { it.isDefault }
     }
 
-    fun setDefaultAccount(account: Account) {
+    fun setDefaultAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         if (accounts.value.isNotEmpty()) {
             val accts = accounts.value
             //remove current default account
             val current: Account? = accts.firstOrNull { it.isDefault }
+
+            if (account.id == current?.id) return@launch
+
             current?.isDefault = false
             repo.update(current)
 
             val a = accts.first { it.id == account.id }
             a.isDefault = true
             repo.update(a)
+
+            accountUpdateChannel.send((getApplication() as Context).getString(R.string.def_account_update_msg, account.alias))
         }
     }
 

@@ -267,15 +267,24 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         return payWithError == null && businessNoError == null && accountNoError == null && amountError == null && nickNameError == null
     }
 
-    override fun onSubmitForm() = with(accountsViewModel) {
-        val actions = channelActions.value
-        val account = activeAccount.value
-        val actionToRun = actionSelectViewModel.activeAction.value
+    override fun onSubmitForm() {
+        with(accountsViewModel) {
+            val actions = channelActions.value
+            val account = activeAccount.value
+            val activeAction = actionSelectViewModel.activeAction.value
 
-        if (!actions.isNullOrEmpty() && account != null)
-            (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun ?: actions.first(), viewModel.wrapExtras(), 0)
-        else
-            Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $account")
+            val actionToRun = if (activeAction == null)
+                actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
+            else
+                actions!!.first()
+
+            if (!actions.isNullOrEmpty() && account != null)
+                (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun ?: actions.first(), viewModel.wrapExtras(), 0)
+            else
+                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $account")
+
+            findNavController().popBackStack()
+        }
     }
 
     private fun showUpdatePaybillConfirmation() = viewModel.selectedPaybill.value?.let {

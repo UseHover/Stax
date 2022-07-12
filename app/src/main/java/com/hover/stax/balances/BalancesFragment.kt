@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,10 +29,8 @@ import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
@@ -70,7 +66,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
 
         balancesViewModel.showBalances.observe(viewLifecycleOwner) { showBalanceCards(it) }
 
-        collectLatestLifecycleFlow(accountsViewModel.accounts) {
+        balancesViewModel.accounts.observe(viewLifecycleOwner) {
             updateAccounts(ArrayList(it))
         }
 
@@ -78,10 +74,19 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
 
-        lifecycleScope.launchWhenStarted {
-            channelsViewModel.accountCallback.collect {
-                Toast.makeText(requireActivity(), "Account ${it.name} event has been received", Toast.LENGTH_SHORT).show()
-                askToCheckBalance(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                channelsViewModel.accountCallback.collect {
+                    askToCheckBalance(it)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                balancesViewModel.actionRunError.collect {
+                    UIHelper.flashMessage(requireActivity(), it)
+                }
             }
         }
     }
@@ -150,6 +155,7 @@ class BalancesFragment : Fragment(), BalanceAdapter.BalanceListener {
             updateBalanceCardStackHeight(accounts.size)
             showAddAccount(accounts, balancesViewModel.showBalances.value!!)
         }
+
         val balancesAdapter = BalanceAdapter(accounts, this)
         balancesRecyclerView.adapter = balancesAdapter
         showBalanceCards(balancesViewModel.showBalances.value!!)

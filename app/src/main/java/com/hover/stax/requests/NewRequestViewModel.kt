@@ -23,7 +23,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
     val activeAccount = MutableLiveData<Account?>()
     val amount = MutableLiveData<String?>()
     private val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
-    val requestee = MutableLiveData<StaxContact>()
+    val requestee = MutableLiveData<StaxContact?>()
     var requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String?>()
 
@@ -88,8 +88,11 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun createRequest() {
         saveContacts()
-        val request = Request(amount.value, note.value, requesterNumber.value, activeAccount.value!!.institutionId!!)
-        formulatedRequest.value = request
+        
+        activeAccount.value?.let {
+            val request = Request(amount.value, note.value, requesterNumber.value, it.institutionId!!)
+            formulatedRequest.value = request
+        }
     }
 
     fun saveRequest() {

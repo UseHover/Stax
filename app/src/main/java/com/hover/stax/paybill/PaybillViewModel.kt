@@ -18,9 +18,10 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class PaybillViewModel(application: Application, contactRepo: ContactRepo, val actionRepo: ActionRepo,
-                       private val billRepo: PaybillRepo, val accountRepo: AccountRepo, scheduleRepo: ScheduleRepo)
-    : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+class PaybillViewModel(
+    application: Application, contactRepo: ContactRepo, val actionRepo: ActionRepo,
+    private val billRepo: PaybillRepo, val accountRepo: AccountRepo, scheduleRepo: ScheduleRepo
+) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val savedPaybills = MutableLiveData<List<Paybill>>()
 
@@ -58,11 +59,11 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     }
 
     fun selectPaybill(action: HoverAction) {
-//        deSelectPaybill()
+        deSelectPaybill()
         Timber.e("selecting paybill by action: %s", action.to_institution_name)
         val paybill = Paybill(
-                "", action.to_institution_name, Paybill.extractBizNumber(action), null, action.public_id,
-                0, getString(R.string.root_url).plus(action.to_institution_logo)
+            "", action.to_institution_name, Paybill.extractBizNumber(action), null, action.public_id,
+            0, getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
     }
@@ -195,13 +196,11 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
     fun updatePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("updating bill")
         with(paybill) {
-            apply {
-                name = nickname.value!!
-                businessNo = businessNumber.value!!
-                accountNo = accountNumber.value!!
-                logo = iconDrawable.value ?: 0
-                recurringAmount = if (saveAmount.value!!) amount.value!!.toInt() else 0
-            }
+            name = nickname.value!!
+            businessNo = businessNumber.value!!
+            accountNo = accountNumber.value!!
+            logo = iconDrawable.value ?: 0
+            recurringAmount = if (saveAmount.value!!) amount.value!!.toInt() else 0
 
             billRepo.update(this)
         }
@@ -228,6 +227,7 @@ class PaybillViewModel(application: Application, contactRepo: ContactRepo, val a
         if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
         if (businessNumber.value != null) extras[BUSINESS_NO] = businessNumber.value!!
         if (accountNumber.value != null) extras[HoverAction.ACCOUNT_KEY] = accountNumber.value!!
+
         return extras
     }
 }

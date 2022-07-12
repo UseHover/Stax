@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+    <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
+    <string name="app_name" translatable="false">Stax</string>
+    <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
+    <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
+    <string name="root_url" translatable="false">https://www.usehover.com</string>
+    <string name="api_url" translatable="false">https://www.usehover.com/api</string>
+    <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
+    <string name="users_endpoint" translatable="false">/stax_users</string>
+
+    <string name="referee_endpoint" translatable="false">/set_referee</string>
+    <string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
+    <string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+    <string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
+    <string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
+    <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
+    <string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
+    <string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
+    <string name="privacy_policy_link" translatable="false">https://docs.usehover.com/staxpolicy</string>
+    <string name="default_notification_channel_id">app.hover.stax</string>
+
+    <string name="channels_json_staging" translatable="false">channels-staging.json</string>
+    <string name="channels_json_prod" translatable="false">channels-prod.json</string>
+    <string name="stax_handle" translatable="false">\@joinstax</string>
+
+    <string name="nav_home">Ardaa</string>
+    <string name="nav_balance_and_history">Hadhaaga iyo dhaqdhaqaaqa</string>
+    <string name="nav_balances">Hadhaaga</string>
+
+    <string name="nav_get_paid">Lacag hel</string>
+
+    <string name="nav_link_account">Ku xidh koonto</string>
+    <string name="nav_airtime">Iibso waqtiga hawada</string>
+    <string name="nav_transfer">Dir lacag</string>
+    <string name="nav_new_request">Dalab cusub</string>
+    <string name="nav_settings">Hagaajin</string>
+    <string name="nav_account_detail">Macluumaadka koontada</string>
+    <string name="nav_transaction">Macluumaadka dhaqdhaqaaqa</string>
+    <string name="nav_schedule">Macluumaadka jadwalka</string>
+    <string name="nav_request">Macluumaadka dalabka</string>
+    <string name="nav_transfer_detail">Macluumaadka xawilaadda</string>
+
+    <string name="lang_cardhead">Dooro Luuqad</string>
+    <string-array name="supported_lang_codes">
+        <item>am</item>
+        <item>en</item>
+        <item>fr</item>
+        <item>sw</item>
+        <item>so</item>
+        <item>om</item>
+    </string-array>
+
+    <string name="btn_ok">Sax</string>
+    <string name="btn_cancel">Burin</string>
+    <string name="btn_save">Xafid</string>
+    <string name="btn_dontsave">Kaguur</string>
+    <string name="btn_continue">Siiwad</string>
+    <string name="btn_send">Dir</string>
+    <string name="btn_edit">Hagaaji</string>
+    <string name="btn_back">Laabo</string>
+    <string name="btn_test">Tibjaabo</string>
+    <string name="btn_done">Dhamaad</string>
+    <string name="btn_google_signin">Ku gal koontada Google</string>
+
+    <!-- ONBOARDING VARIANT ZERO (DEFAULT)-->
+    <string name="stax_tagline">Dhaqdhaqaaji lacagahaaga walwal la\'aann</string>
+    <string name="splash_screen_img_desc">Sawirka Stax</string>
+    <string name="slide_1_title">Ammaano. Dagdagsiimo. Huffanaan</string>
+    <string name="slide_1_desc">Ku dirso lacagahaaga oo ku iibso waqtiga hawada oo dhamaan koontooyinkaaga hal meel</string>
+    <string name="onboarding_link_accounts">Ku xidh koontada hadda</string>
+
+
+    <!-- ONBOARDING VARIANT_1 -->
+    <string name="onboarding_v1_slide1_title">Stax wuxuu u shaqeeyaa qaab offline ah</string>
+    <string name="onboarding_v1_slide2_title">Dir lacag</string>
+    <string name="onboarding_v1_slide3_title">Dalbo lacag</string>
+    <string name="onboarding_v1_slide4_title">Iibso waqtiga hawada</string>
+    <string name="onboarding_v1_general_desc">Ku gal koontada google si aad u hesho dhamaan adeegyadeena</string>
+    <string name="continue_with_google">Ku gal koontada Google</string>
+
+    <string name="slide2_desc">Lacagahaaga kuxawil ammaano iyo dagdagsiimo. Khidmad la\'aan.</string>
+    <string name="slide3_desc">Ka hel lacagaha asxaaptaada iyo macaamiishaada si fudud adoo isticmaalaya link.</string>
+    <string name="slide4_desc">U iibi waqtiga hawada naftaada iyo asxaabtaada.</string>
+    <string name="slide1_desc">Ku isticmaal Stax khad iyo khad la\'aanba, Goor walba. Goor kasta.</string>
+
+    <string name="use_stax_no_sigin">Isticmaal Stax diwaan galin la\'aan</string>
+    <string name="termsOfServiceFullLabel">Markaad sii wadato, waxaad ogashahay dhamaan shuruucda adeegga Stax.</string>
+    <string name="privacyPolicyFullLabel">Ka eeg shuruucda adeegga sida aan u isticmaalno xogtaada.</string>
+
+    <!-- ONBOARDING VARIANT_2 -->
+    <string name="welcome_to_stax">Salaan, kusoo dhawow Stax.</string>
+    <string name="welcome_to_stax_fullContent">Haddaad Stax kucusbtahay Stax laga yaaba inaad su\'aal qabto, Noo oggolow inaan kugu caawinno cadeynta qaar. Xulo ikhtiyaarka kugu haboon adiga.</string>
+    <string name="onboarding_variant_2_question1">Stax ma anaa laygu talagalay?</string>
+    <string name="skip_prefix">Horey u ogtahay wax ku saabsan Stax?</string>
+    <string name="skip">Iska dhaaf</string>
+
+    <string name="welcome_title_one">Kusoo dhawoow Stax!</string>
+    <string name="welcome_sub_one">Kusoo dhawow bulshada Stax. Hadda laga bilaabo waxaad tahay Staxxer. Halkan waxaa loogu talagalay dhowr waxyaabood oo aad ku farxi karto Stax.</string>
+    <string name="welcome_title_two">Woohoo! Waxaad si sax ah u tahay cidda aan raadineynay!</string>
+
+    <string name="welcome_title_three">Garabkaagaan taagannahay!</string>
+    <string name="welcome_sub_two">Waa kuwan dhowr waxyaabood oo aad ku farxi karto Stax.</string>
+    <string name="intro_feature_one_title">Fududaynta USSD-ga</string>
+    <string name="intro_feature_one_desc">Looma baahna inaad xasuusatto boqolaal USSD kode oo isku daris. Annagaa hawusha kuu qabanayna.</string>
+    <string name="intro_feature_two_title">Si buuxda u xakamee lacagtaada</string>
+    <string name="intro_feature_two_desc">Maaree oo ka bixi dhammaan bangiyadaada iyo xisaabaadka lacagta mobilada adoo isticmaalaya Stax.</string>
+    <string name="intro_feature_three_title">Fudaydin horaan leh</string>
+    <string name="intro_feature_three_desc">Waxaan ka faa\'iidaysanay Android oo lagu dhisay nakhshad aamin ah si aan xogtaada u ilaalino mar walba.</string>
+    <string name="explore_btn_text">Booqo Stax</string>
+
+    <string name="does_stax_charge_fees">Stax wax khidmad ah may goosattaa?</string>
+    <string name="what_does_stax_do">Maxay Stax qabataa?</string>
+
+    <string name="is_stax_for_you">Si loo garto haddii Stax laguugu talagalay kadooro kuwan hoose adi ku qeexayya</string>
+    <string name="variant_V2_checkbox_option1">Waxaan adeegsaday USSD wakhti hore?</string>
+    <string name="variant_V2_checkbox_option2">Waxaan haystaa wax ka badan hal bangi ama koonto lacageed?</string>
+    <string name="variant_V2_checkbox_option3">Waxaan damiyaa xogteyda mobilada marwalba?ilkaaga?</string>
+    <string name="none_apply">Kuwan midkoodna ima khuseyso</string>
+    <string name="variant_v2_nocheckbox_desc1">Stax kuma dalaco khidmad dheeraad ah. Mararka qaarkood bangigaaga ama bixiyaha lacagta moobilka ayaa kugu dalaci khidmadaha wax kala iibsiga.\n\nStax waxa ay la socotaa inta lacag ay kugu soo dalacayaan</string>
+    <string name="variant_v2_nocheckbox_desc2">Stax waxay isticmaashaa tignoolajiyada USSD si ay kuugu suurtagasho inaad wax kala soocdo offline. Stax, waxaad ka hubin kartaa hadhaaga koontadaada, diri kartaa lacag, iibsan kartaa wakhtiga hawada, lacag ku xawili karta akoonnada gaarka ah, waxaad ka maamuli kartaa xisaabo maaliyadeed oo badan (bangi iyo lacagta mobaylada) hal app.\n\nWaxa kale oo aad samayn kartaa xidhiidho ay dadka kale ee Stax wataa awoodaan u isticmaal in aan lacag kuu soo diro.</string>
+
+    <string name="skip_tutorial">Kabood tababbarka</string>
+
+    <!-- Home -->
+    <string name="welcome_to">Kusoo dhawoow</string>
+    <string name="cta_transfer">Dir lacag</string>
+    <string name="cta_airtime">Iibso waqtiga hawada</string>
+    <string name="cta_request">Codso lacag</string>
+    <string name="cta_paybill">Biil bixin</string>
+
+    <!-- Balances -->
+    <string name="bal_cardhead">Hadhaaga</string>
+    <string name="channels_error_nodata">Fadlan u jeedso xogta si aad u xajiso adeegyada.</string>
+    <string name="channels_error_nosim">Fadlan gali SIM si laguu taxo adeegyadaad isticmaasho.</string>
+    <string name="channels_error_noselect">Waa iaad doorattaa adeeg.</string>
+    <string name="accounts_error_no_accounts">Majiro </string>
+    <string name="link_account">Kuxidh koonto</string>
+    <string name="link_account_error">Dooro koonto si loogu xidho.</string>
+    <string name="link_another"><u>+ Koonta kale ku xidh</u></string>
+    <string name="add_another_account"><u>+ Koonto kale kudarso</u></string>
+    <string name="hist_cardhead">Taariikh</string>
+    <string name="hist_zerobody">Wax dhaqdhaqaaqa malihid. Dir lacag ama iibso waqtiga hawada si aad u bilowdo.</string>
+    <string name="future_cardhead">Dhaqdhaqaaqa mustaqbalka</string>
+    <string name="pending_callout">Xawilaaddu way hirgashay. Waxaa la sugayaa xaqiijin.</string>
+    <string name="refresh_balance_desc">Cusboonaysii hadhaagaaga</string>
+    <string name="refresh_balances">Cusboonaysii hadhaayaasha</string>
+    <string name="refresh">Cusboonaysii</string>
+    <string name="refresh_balance_error">Koonto gasho si\'aad u xaqiijiso hadhaagaaga</string>
+
+    <string name="check_balance_title">Fiiri hadhaaga</string>
+    <string name="check_balance_desc">Sax! koontada ugu horaysa waad gashatay. Hadda hadhaagaaga waad fiirin kartaa adoo isticmaalayya Stax.</string>
+    <string name="check_balance_alt">Sax! Koontada si sax ah ayaa loogu xidhay. Hadda hadhaagaaga waad fiirin kartaa adoo isticmaalayya Stax.</string>
+    <string name="check_balance_alt_plural">Sax! Koontada si sax ah ayaa loogu xidhay. Hadda hadhaagaaga waad fiirin kartaa adoo isticmaalayya Stax.</string>
+
+    <string name="later">Dhawaan</string>
+    <string name="no_connecion">Khad majiro</string>
+    <string name="your_main_account">Koontada muhiimka ah</string>
+    <string name="your_other_account">Koontada kale</string>
+
+    <!-- ADD ACCOUNT -->
+    <string name="your_accounts">koontooyinkaaga</string>
+    <string name="add_an_account">Kudar koonto kale</string>
+    <string name="add_accounts_to_stax">Ku xidhiidh Stax koontooyinkaaga</string>
+
+    <string name="search">Raadi</string>
+    <string name="no_accounts_found_desc"><![CDATA[ waxay u eegtahay "<b><font color="#39CBFC"> %1$s </font> </b>" inuunan ku jirin Stax wali ama macluumaad qaldan aad galisay.<br/>Isku day inaad wax kale raadiso]]></string>
+    <string name="cant_find_institution">Koontadaada lama helin?</string>
+    <string name="inform_us_here">Na ogaysii</string>
+
+    <string name="enter_institution_name">Gali magaca adeegga maliyadeed</string>
+    <string name="enter_shortcode">Gali koodhka gaaban</string>
+    <string name="inform_stax_desc">Na ogaysii</string>
+    <string name="enter_financial_inst_err">Gali magaca adeega maaliyadeed</string>
+    <string name="enter_shortcode_err">Gali koodhka gaaban ee saxda ah</string>
+    <string name="thank_you">Waad mahadsantahay</string>
+    <string name="service_request_success_desc">Inta dhiman shirkadda ayaa xaqiijin doonto adeegan si dhawaan loo shaaciyo</string>
+
+    <string name="nickname">Naanays</string>
+    <string name="label_saved">xafiday</string>
+    <string name="account_number_label">Lanbarka koontada</string>
+    <string name="hint_enter_new_name">Gali magac cusub</string>
+
+
+    <string name="official_name">Magaca sharciyaysan</string>
+    <string name="which_account">Koontadee?</string>
+    <string name="account_select_header">Waxaad haystaa kabadan hal %1$s koonto. Fadlan dooro adeegga aad isticmaalayso %2$s.</string>
+    <string name="importing_channels">Waxaa lasoo dajinayyaa idaacadaha, fadlan sug</string>
+
+    <string name="incomplete_account_setup_header">Koonto samays aan dhamaystirnayn</string>
+    <string name="incomplete_account_setup_desc">Koontadaada %1$s samayskiisu si sax ah uuma dhamaystirna. Waxaad u baahan inaan koontada soo jiidno intaadan ka dhamaan. Fadlan hadhaaga xaqiiji si aad u dhamaystirto samayka koontada.</string>
+
+    <!-- Permissions -->
+    <string name="permissions_title">Fassaxa waa loo baahan yahay.</string>
+    <string name="permissions_basic_title">Noo ogolow fasaxa taleefanka iyo fariimaha.</string>
+    <string name="perms_basic_desc">Si aad u hesho dhamaan koontooyinka iyo dabagalka dhaqdhaqaaqa koontooyinkaas, U ogolow Stax fasaxa taleefanka iyo farimmaha.</string>
+    <string name="permissions_overlay_desc">Fasaxyadan waxay Stax u ogalaanayaan garaaciodda USSD-ga iyo inuu maamulo iswaydaarsiga si uu kuu tuso wax qabadka xawilaadda.</string>
+    <string name="permissions_accessibility_desc">Si uu kuugu fudaydiyo xaqiijinta hadhaaga, xawilaadda lacagta iyo iibsashada waqtiga hawada, Stax wuxuu u baahanayahay ogalaanshaha display and accessibility permission</string>
+
+
+    <string name="permission_support_desc">Waxaan u baahannahay ogalaanshaha phone permissions si loo abuuro ID-ga caawimaadka</string>
+    <string name="nav_sim_permission">ogalaanshaha SIM-ka</string>
+    <string name="perm_dialoghead">Hal shay oo ugu dambeeya…</string>
+    <string name="perm_dialogbody">Stax wuxuu u baahanayahay 2 ogalaansho oo ah %1$s.</string>
+    <string name="use_ussd">Isticmaal USSD</string>
+    <string name="buy_airtime">Iibso waqtiga hawada</string>
+    <string name="check_balance">Xaqiiji hadhaaga</string>
+    <string name="send_money">Dir lacag</string>
+    <string name="send_money_to">U dir lacag</string>
+    <string name="move_money">Lacag xawil</string>
+    <string name="perm_accessibiltiy_dialogbody">Stax wuxuu u baahan yahay ogalaanshaha accessibility permission si uu %1$s</string>
+    <string name="perm_progress1">Talaabada 1aad ee 2da: Display permission</string>
+    <string name="perm_progress2">Talaabada 2aad of 2da: Accessibility permission</string>
+    <string name="perm_cta1">Itus hagaajinta</string>
+    <string name="perm_cta2">Itus hagaajinta marlabaad</string>
+
+    <!-- Hover Session -->
+    <string name="balance_msg">Xaqiiji %1$s hadhaaga</string>
+    <string name="airtime_msg">Iiibsashada waqtiga hawada</string>
+    <string name="transfer_msg">Xawilaadda lacagta</string>
+    <string name="fetch_accounts">Soo jiidashada koontooyinka</string>
+    <string name="in_progress_text">La xidhiidhka adeegyada USSD-ga…</string>
+    <string name="complete_text">Wax kala iibsiga wuu dhamaaday</string>
+
+    <!-- Transaction statuses -->
+    <string name="succeeded_cardHead">Guulaystay</string>
+    <string name="pending_cardHead">La sugayo</string>
+    <string name="failed_cardHead">Guuldaraystay</string>
+    <string name="null_service_name_text">Adeeggan USSD-ga</string>
+    <string name="no_response_error">Lagama helin wax warcelina %1$s.</string>
+    <string name="incomplete_error">Waxay u eegtahay inuu %1$s istaagay warcelintu iyadoo socotta.</string>
+    <string name="pin_error">Lanbar sireed khalda. %1$s waxaan ku waydiinaynaa inaad fadlan marlabaad lanbar sireedkaaga aad xaqiijiso ood ku celiso</string>
+    <string name="balance_error">%1$s Wuxuu leeyahay inuu hadhaagaagu kugu si aad u dhamaystirto kala iibsigan.</string>
+    <string name="unregistered_error">%1$s Wuxuu leeyahay inaad haysan koonto sii aad adeeggan u isticmaasho.</string>
+    <string name="invalid_entry">Mid ka mid ah wax gelintaada ayaa ahaa mid aan sax ahayn, eeg faahfaahinta si aad u aragto waxa khaldamay.</string>
+    <string name="mmi_error">Shabakaddaadu waxay soo celisay khalad, fadlan isku day mar kale.</string>
+    <string name="unspecified_error">Cillad aan la ogayn.</string>
+    <string name="no_response_desc">Wax jawaab ah kama helin %1$s. Uma maleyneyno in macaamilkaani uu shaqeeyay. Fadlan isku day mar kale</string>
+    <string name="incomplete_desc">Waxaan ka helnay jawaab qayb keliya %1$s. Uma maleyneyno in macaamilkaani uu shaqeeyay. Fadlan isku day mar kale</string>
+    <string name="invalid_entry_desc">Mid ka mid ah wax gelintaada ayaa ahaa mid aan sax ahayn, eeg faahfaahinta fadhiga hoose si aad u aragto waxa khaldamay. Hubi in lacag kasta, lambarada telefoonka, ama lambarrada akoonnada ay sax yihiin. Hoos ka eeg faahfaahinta kulanka.</string>
+    <string name="mmi_error_desc">Shabakaddaadu waxay soo celisay khalad, fadlan isku day mar kale. Haddii ay tani wax badan dhacdo fadlan la xidhiidh bixiyahaaga shabakada ama adeega lacagta si aad uga cabato.</string>
+    <string name="unspecified_error_desc">Khalad aan la garanayn, eeg faahfaahinta hoose si aad u ogaato waxa khaldamay Fadlan isku day mar kale</string>
+    <string name="action_run_error">Khalad kayimi socodsiinta ficilkan, Fadlan isku day mar kale</string>
+
+    <!-- SDK Overrides -->
+    <string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Tus horumarka cusub adiga oo leexinaya <b>switch ON</b> Shaashada xigta</font>]]></string>
+    <string name="hsdk_access_msg"><![CDATA[<font color="#0A9A8D">Shid Accessibility</font> <font color="#1E232A">in the <b>next screen</b> si uu USSD-gu u shaqeeyo</font>]]></string>
+    <string name="hsdk_access_btn">Fur hagaajinta</string>
+    <string name="hsdk_overlay_tip">Talaabada xigta, taabo daarida</string>
+    <string name="hsdk_overlay_example">Ogolow display over other apps</string>
+    <string name="hsdk_settings">Hagaajinta</string>
+    <string name="hsdk_off">Dami</string>
+    <string name="hsdk_accessibility">Accessibility</string>
+    <string name="hsdk_accessibility_sub">Adeegga</string>
+    <string name="hsdk_enable_accessibility">Ogolow Accessibility</string>
+    <string name="access_service_summary">Ku xidho lacagta mobaylka iyo adeegyada isgaadhsiinta adoo ku hadlaya magacaaga</string>
+    <string name="access_service_descript">Tan waxa loo isticmaalaa in lagu akhriyo oo lala falgalo liiska USSD-ga si loo bixiyo khibrad la fududeeyey oo la heli karo.</string>
+    <string name="hsdk_manual_env">Deegaanka gacanta ayaa lagu buuxiyaa. Kulankaan waa la duubi doonaa</string>
+    <string name="hsdk_overlay_header">Kala iibsigu wuu socdaa</string>
+    <string name="hsdk_complete">Kala iibsigu wuu dhamaaday</string>
+
+    <!-- Onboarding showcase -->
+    <string name="onboard_addaccounthead">Kudarso kooonto si\'aad u wadato\'.</string>
+    <string name="onboard_addaccountdesc">Lacagtaada hal meel kala tix raac. Lacagahaagu waligood kaama baxayaan oo iskumana laaq mayaan</string>
+    <string name="onboard_addaccount_greatwork_head">Shaqo wanaagsan!</string>
+    <string name="onboard_addaccount_greatwork_desc">Hadda ku dar xisaabaadkaaga kale si aad hal meel ugu arki karto dhammaan baaqyadaada gaarka ah.</string>
+
+    <!-- Transfer -->
+    <string name="loading_link_dialoghead">Wareegayaa, wax yar sug</string>
+    <string name="transfer_amount_label">Cadadka</string>
+    <string name="account_label">Koontooyinka</string>
+    <string name="actions_fielderror">Koontadan kama gadan kartid wakhtiga hawada. Fadlan door akoon ka duwan</string>
+    <string name="recipientphone_label">Lambarka telefoonka</string>
+    <string name="recipientacct_label">Lambarka koontada</string>
+    <string name="toast_error_contactperm">Waa in aad u ogolaato xiriiriyaha akhriska ah si ay lambar uga doortaan buugga ciwaanka.</string>
+    <string name="toast_error_contactselect">Dhib baa ka dhacday doorashada lambarka. Fadlan isku day mar kale.</string>
+    <string name="transfer_error_recipient_general">Fadlan gali lambarka loo diraha.</string>
+    <string name="transfer_error_recipient_phone">Fadlan gali taleefan lambar.</string>
+    <string name="transfer_error_recipient_account">Fadlan gali lambarka koontada.</string>
+    <string name="amount_fielderror">Fadlan gali cadad saxsan.</string>
+    <string name="channel_fielderror">Fadlan doooro adeeg.</string>
+    <string name="action_fielderror">Fadlan dooro shabakadda loo diraha.</string>
+    <string name="channel_request_fieldinfo">Fadlan xaqiiji inuu adeegga aad doorattay uu wax diri karo %1$s</string>
+    <string name="no_actions_fielderror">Adeeggan looma isticmaali karo si %1$s.</string>
+    <string name="toast_pleasefix">Fadlan sax khaladaadka ku calaamadaysan casaanka.</string>
+    <string name="self_choice">Naf-ahaantay</string>
+    <string name="other_choice">Qof-kale</string>
+    <string name="onnet_choice">Shabakadan</string>
+    <string name="offnet_choice">ku %1$s</string>
+    <string name="note_cardhead">Sharaxaada</string>
+    <string name="request_note_label">Waa maxay codsigaagu?</string>
+    <string name="recipient_label">Ku</string>
+    <string name="sender_label">Ka</string>
+    <string name="send_who_header">U dir lacag</string>
+    <string name="airtime_who_header">U gad waqtiga hawada</string>
+    <string name="accounts_label">Ka bixi</string>
+    <string name="self_only_money_warning">Tan waxa kaliya oo loo isticmaali karaa in lacag loogu xawilo akoonkaaga.</string>
+    <string name="self_only_airtime_warning">Tan waxa kaliya oo lagu iibsan karaa wakhtiga hawada ee akoonkaaga.</string>
+
+    <string name="fab_transfernow">Dir lacag hadda</string>
+    <string name="fab_airtimenow">Waqtiga hawada iibso hadda</string>
+    <string name="noworry_explain">You can review this info in the next step.</string>
+    <string name="descrip_multcontacts">%1$d xiriirada</string>
+
+    <string name="descrip_balance">%1$s Fiiri hadhaaga</string>
+    <string name="descrip_airtime_sent">%1$s U dir waqtiga hawada %2$s</string>
+    <string name="descrip_transfer_sent">%1$s U dir lacag %2$s</string>
+    <string name="descrip_transfer_received">Ka qaado lacag %1$s</string>
+    <string name="descrip_fetch_accounts">Koontooyinka laga soo jiiday %1$s</string>
+    <string name="descrip_bill_paid">Biil %1$s bixinta</string>
+    <string name="descrip_recorded">Fadhiga USSD ayaa la duubay %1$s</string>
+    <string name="descrip_airtime_sched">Ku iibso waqtiga hawada %1$s uu hel %2$s</string>
+
+    <string name="descrip_long_airtime_send">ku iibso %1$s wakhtiga hawada oo hel %2$s for %3$s</string>
+    <string name="descrip_long_transfer_send">Dir %1$s ka %2$s illa %3$s kor %4$s</string>
+    <string name="descrip_long_move">Xawil %1$s ka %2$s illa %3$s</string>
+    <string name="descrip_long_bill_paid">Bixi %1$s Ka %2$s illa %3$s</string>
+
+    <string name="enterValue_non_template_error">Fadlan gali wax sax ah %1$s</string>
+
+    <!-- Request -->
+    <string name="req_cardhead">Dalbo lacag</string>
+    <string name="into_account">Koontada</string>
+    <string name="put_in">Gali</string>
+    <string name="put_in_desc">Tani waa meesha aad rabto inaad ka hesho lacagta la codsado</string>
+    <string name="account_num_desc">tusaale. lambarka telefoonkaaga lacagta gacanta ama lambarka xisaabta bangiga</string>
+    <string name="send_request_to">Codsi u dir</string>
+    <string name="request_amount_label">Intee lacag ah?</string>
+    <string name="amount_label_opt">Cadadka (ikhtiyaar)</string>
+    <string name="reqfrom_label">Ku</string>
+    <string name="btn_addcontact">+ Qof kale ku dar</string>
+    <string name="sms_request_template">Si naxariis leh ii stax garee %1$s marka ugu horeysa ee kugu habboon. %2$s %3$s</string>
+    <string name="sms_amount_detail">%1$s </string>
+    <string name="sms_note_detail">Xasuus: \"%1$s\" </string>
+    <string name="reqsave_head">Xafid codsiga?</string>
+    <string name="toast_error_smsperm">Waa inaad bixisa ogolaanshaha SMS-ka la akhriyay si uu Stax kuugu sheego marka codsiga la diro ama la fuliyo.</string>
+    <string name="reqsave_msg">Waxay u egtahay inaadan dirin codsigaaga Si kastaba ma jeclaan lahayd laxafido codsigan?</string>
+    <string name="toast_confirm_request">Codsigaaga waa la xafidsay.</string>
+    <string name="toast_request_scheduled">Codsigaaga waa la qorsheeyay Waxaa lagu xasuusin doonaa inaad fariin u dirto %1$s</string>
+    <string name="descrip_request">Rcodsi ku wajahan %1$s</string>
+    <string name="requester_number_label">Koonto</string>
+    <string name="request_error_recipient">Fadlan gali taleefan lambar</string>
+    <string name="requester_number_fielderror">Fadlan geli akoonka ama lambarka taleefanka aad rabto inaad lacagta ku hesho</string>
+    <string name="requester_account_error">Fadlan door akoon ama ku dar mid cusub si aad lacagtaada u hesho</string>
+    <string name="sms_label">SMS</string>
+    <string name="whatsapp_label">WhatsApp</string>
+    <string name="copyLink_label">koobiyee linkiga</string>
+    <string name="link_copied_label">Linkiga waa la koobiyeeyay</string>
+    <string name="share_request_link_cardhead">Wadaag linkiga codsiga</string>
+    <string name="share_again_cardhead">Malabaad wadaag linkiga codsiga</string>
+    <string name="account_name_error">Fadlan naanays cusub gali.</string>
+    <string name="account_number_error">Fadlan gali lambar koonto cusub.</string>
+    <string name="accounts_error_noselect">Fadlan dooro koonto.</string>
+
+    <!-- Scheduling -->
+    <string name="future_toggle">Dhawaan dir</string>
+    <string name="date_label">Taariikh</string>
+    <string name="repeat_toggle">Hal mar kabadan dir</string>
+    <string name="repeatfreq_label">Intee jeer?</string>
+    <string name="end_label">Dhamaadka taariikhda</string>
+    <string name="end_label_opt">Dhamaad taariikh (ikhtiyaar ah)</string>
+    <string name="repeatnum_label_opt">Imisa jeer? (ikhtiyaar ah)</string>
+    <string name="repeatnum_label">Imasa jeer?</string>
+    <string name="toast_confirm_schedule">Xawilaadda waa la qorsheeyay. Waan ku xasuusinaynaa si aad u xawisho %1$s</string>
+    <string-array name="frequency_choices">
+        <item>Maalin walba</item>
+        <item>Todobaad walba</item>
+        <item>2dii todobaad mar</item>
+        <item>Bil walba</item>
+    </string-array>
+    <string-array name="frequency_choices_values" translatable="false">
+        <item>0daily</item>
+        <item>1weekly</item>
+        <item>2biweekly</item>
+        <item>3monthly</item>
+    </string-array>
+    <string name="fab_schedule">Jadwalka</string>
+
+    <!-- Notifications -->
+    <string name="notify_default_title">Isticmaalaha waa la qorsheeyay</string>
+    <string name="notify_default_channel_descrip">Tus ogaysiisyada si aad u samayso wareejinta iyo codsiyada aad qorshaysay.</string>
+    <string name="notify_transfer">Waa xiligii lacagta la xawili lahaa %1$s ayadoo laysticmaalayo Stax.</string>
+    <string name="notify_transfer_cta">Xawill hadda</string>
+    <string name="notify_request">Waa waqtigii loo diri lahaa codsi lacageed %1$s ayadoo laysticmaalayo Stax.</string>
+    <string name="notify_request_cta">Dir codsiga</string>
+    <string name="notify_airtime">Waa waqtigii aad ku iibsan lahayd waqtiga hawada Stax.</string>
+    <string name="notify_airtime_cta">Iibso waqtiga hawada.</string>
+
+    <!-- Details -->
+    <string name="pending_cardhead">Waxaa lasugayaa xaqiijinta</string>
+    <string name="pending_cardbody">Kalfadhiga USSD waa dhammaaday, laakiin weli maanu helin xaqiijin SMS ah.</string>
+    <string name="balance_label">Hadhaaga</string>
+    <string name="moneyout_label">Lacagta bishan kaa baxday</string>
+    <string name="moneyin_label">Lacagta bishan kusoo gashay</string>
+    <string name="fees_label">Guud ahaan khidmadahan aad bixisay %1$s sanadkan</string>
+    <string name="transactions_cardhead">Kala iibsiga</string>
+    <string name="network_label">Koontada qaataha</string>
+    <string name="id_label">ID-ga kala iibsiga.</string>
+    <string name="stax_id_label">ID-ga STax</string>
+    <string name="session_cardhead">fariimaha.</string>
+    <string name="view_full_details">Daalaco dhamaan macluumaadka</string>
+    <string name="new_balance">Hadhaaga cusub %1$s</string>
+
+    <!-- Canceling -->
+    <string name="cancelfuture_head">Tirtir dhamaan dhaqdhaqaaqa mustaqbalka.</string>
+    <string name="btn_canceltrans">Tirtir dhaqdhaqaaqa.</string>
+    <string name="cancelfuture_msg">Tani waxay tirtiri doontaa wax kala iibsiga mustaqbalka. Waxaad dib u qabsan kartaa wax kala iibsiga wakhti kasta.</string>
+    <string name="toast_confirm_cancelfuture">Dhaqdhaqaaqa waa la tirtiray.</string>
+    <string name="cancelreq_head">Tirtir dalabka</string>
+    <string name="btn_cancelreq">Tirtir dalabka</string>
+    <string name="cancelreq_msg">Tani waxay burin doontaa codsigan. Waxaad dib uga codsan kartaa qof lacag wakhti kasta.</string>
+    <string name="toast_confirm_cancelreq">Dalabka waa la tirtiray</string>
+
+    <!-- Settings -->
+    <string name="meta_cardhead">Doorashada</string>
+    <string name="share_text">Wadaag</string>
+    <string name="share_stax">Wadaag Stax</string>
+    <string name="first_login_dialoghead">Horta, fadlan gal</string>
+    <string name="add_referee_info">Eeg macluumaadka gudbinta</string>
+    <string name="saved_referral">Gudbinta xafidan</string>
+    <string name="copied">La koobiyey</string>
+    <string name="share_sub">Stax app</string>
+    <string name="share_explain">Wadaag appka iyada oo loo-maro</string>
+    <string name="share_msg">Fiiri barnaamijkan https://play.google.com/store/apps/details?id=com.hover.stax</string>
+    <string name="connect_accounts">Ku xir koontadaada</string>
+
+    <string name="login_google_err">Cillad ayaa qabsattay markii laysku dayay in lagu galo koontada Google. Fadlan markale tijaabi.</string>
+    <string name="referral_text">Koodhkaaga:</string>
+    <string name="referral_label">Koodhka agentiga</string>
+    <string name="privacy_policy_label">Markaad isticmaalayso Stax App, waxaad akhriday siyaasaddayada sirnimada oo aad ogolaatay shuruudaha adeegga. Guji si aad u aqriso</string>
+    <string name="dialog_confirm_logout_header">Xaqiiji Kabixitaanka</string>
+    <string name="logout_out_success">Kabixitaanka waa lagu guulaystay</string>
+    <string name="dialog_confirm_logout_desc">"Miyaad hubtaa inaad kabaxdo?"</string>
+
+    <string name="name_label">Magacaaga buuxa gali</string>
+    <string name="phone_label">Taleefan lambarkaaga gali</string>
+    <string name="referral_help">Geli koodka gudbinta ee wakiilka Stax ee ku diwaangaliyay.</string>
+    <string name="referral_error_blank">Fadlan geli koodka gudbinta.</string>
+    <string name="referral_error_invalid">Fadlan geli kood tixraac sax ah.</string>
+    <string name="referral_error_name">Fadlan geli magac sax ah</string>
+    <string name="referral_error_phone">Fadlan geli lambar taleefan oo sax ah.</string>
+    <string name="referral_error_offline">Fadlan noqo online si aad u kaydsato koodka gudbinta</string>
+    <string name="referral_error_self">Adigu ma tixraacin kartid naftaada.</string>
+    <string name="referral_error_data">Fadlan gal online si aad u hesho koodka tixraaca.</string>
+    <string name="referral_error_try_again">Fadlan isku day mar kale dhowr ilbiriqsi ka dib</string>
+
+    <string name="security_cardhead">Amniga</string>
+    <string name="security_cardbody">Stax waxa uu buuxiyey shuruudaha 740.17(b)(3) (i) kala soocida amniga ee Xafiiska Warshadaha iyo Amniga ee Maraykanka. Software-kani waxa uu HTTPS u isticmaalayaa xidhiidhka serverka; Symmetric key RSA sir si ku meel gaar ah loogu kaydiyo aqoonsiga isticmaalaha qalabkooda iyaga oo isticmaalaya Android Keyystore; iyo koodka qarinta iyadoo la isticmaalayo DRM.</string>
+    <string name="defaultacct_label">Koontada asalka ah</string>
+    <string name="manage_account">Maamul Koontada</string>
+    <string name="security_head">Ku xafid Stax</string>
+    <string name="removeaccount_dialoghead">Ka saar %1$s Hadda</string>
+    <string name="btn_removeaccount">Ka saar akoontiga</string>
+    <string name="removeaccount_msg">Waxaad akoonkaaga ku dari kartaa Stax markasta aad doontid.</string>
+    <string name="toast_confirm_removepin">Lambar sireedka waala masaxay</string>
+    <string name="btn_savepin">Xafid lambarsireedka</string>
+    <string name="btn_editpin">Hagaaji lambarsireedka</string>
+    <string name="editpin_label">Lambar sireed</string>
+    <string name="btn_removeacct">Ka saar koontada</string>
+    <string name="toast_confirm_acctremoved">Koontada si guul leh ayaa meesha looga saaray</string>
+    <string name="toast_confirm_pinupdate">Lambar sireedka waa la xafiday</string>
+    <string name="language_cardhead">Luuqadda</string>
+    <string name="app_version_and_device_id">Nooca App-ka: %1$s\nVersion code:%2$s\nDevice ID: %3$s</string>
+    <string name="disclaimer">Dhammaan magacyada alaabooyinka, sumadaha, iyo sumadaha ganacsiga waa hanti ay leeyihiin milkiilayaashooda. Isticmaalku ma tilmaamayo ku-xidhnaanshiyaha.
+</string>
+
+    <string name="learn_stax_cardhead">Baro</string>
+    <string name="stax_features">Tilmaamo iyo in ka badan oo ku saabsan Stax</string>
+    <string name="stax_medium_url">http://joinstax.medium.com/</string>
+
+    <string name="contact_stax_cardhead">Nala soo xidhiidh</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+    <string name="receive_stax_updates">Hel wararka Stax</string>
+
+    <string name="FAQs">FAQs</string>
+    <string name="request_feature">Codso sifada Stax</string>
+    <string name="email_support">Caawimaadka iimaylka</string>
+    <string name="stax_support_email">help@stax.me</string>
+    <string name="stax_support_email_mailTo">https://help@stax.me</string>
+    <string name="stax_emailing_subject">Stax support id - %1$s</string>
+    <string name="send_email_using">Dir iimayl adoo isticmaalaya…</string>
+
+    <string name="account_cardhead">Koonto</string>
+    <string name="logout">Ka bax</string>
+    <string name="logged_in_as">Waxaad ku gashay sidii %1$s</string>
+
+    <!-- System auth check -->
+    <string name="auth_title">Ku xaqiiji Stax</string>
+    <string name="auth_descrip">Ku cadee farahaaga</string>
+    <string name="toast_error_auth">Xaqiijinta waa fashilantay</string>
+
+    <!-- Self destruct -->
+    <string name="destruct_cardbody">Dhismahan Stax wuu dhacay \n\n Soo deji dhismihii ugu dambeeyay si aad u sii wadato isticmaalka Stax.</string>
+    <string name="btn_download">Soo deji nooc cusub</string>
+    <string name="uninstall_cardbody">Cusboonaysiintaadu waa soo dejinaysaa \n\n Guji badhanka hoose si aad u uninstall u saarto noocaan. Marka soo dejintaadu dhammaato taabo ogeysiinta si aad u rakibto nooca cusub.</string>
+    <string name="btn_uninstall">Ka saar</string>
+    <string name="notify_download_head">Cusboonaysiinta Stax</string>
+    <string name="notify_download_body">Soo dejinta</string>
+
+    <!-- Time -->
+    <string name="timeago_ago">%1$s ka hor</string>
+    <string name="timeago_from_now">%1$s laga bilaabo hadda</string>
+    <string name="timeago_secondes">Daqiiqad kayar</string>
+    <string name="timeago_minute">Kudhawaad daqiiqad</string>
+    <string name="timeago_minutes">%1$d daqiiqado</string>
+    <string name="timeago_hour">Ku dhawaad saacad</string>
+    <string name="timeago_hours">Kudhawaad %1$d saacado</string>
+    <string name="timeago_day">Maalin</string>
+    <string name="timeago_days">%1$d Cisho</string>
+    <string name="timeago_month">Kudhawaad bil</string>
+    <string name="timeago_months">%1$d Bilood</string>
+    <string name="timeago_year">Kudhawaad sanad</string>
+    <string name="timeago_years">%1$d sanado</string>
+
+    <!-- SWIPE REFRESH -->
+    <string name="csr_text_state_normal">Soo jiid si\'aad u cusboonaysiiso hadhaaga</string>
+    <string name="csr_text_state_ready">Siidaa si aad u cusboonaysiiso hadhaaga</string>
+    <string name="csr_text_state_refresh">Cusboonaysiinta hadhaaga…</string>
+    <string name="csr_text_state_complete">Cusboonaysiinta hadhaagu way dhamaattay</string>
+    <string name="csr_text_last_refresh">Cusboonaysiintii ugu dambaysay</string>
+
+    <!-- BOUNTY -->
+    <string name="nav_bounty">Fadliga</string>
+    <string name="bounty_title">&#128184;  HEL LACAG! Khariidaynta USSD</string>
+    <string name="bounty_msg">Stax waxay ku siin doontaa USD $5 - $50 si aad ugu dhex marto socodka USSD.</string>
+    <string name="get_started">Billow</string>
+    <string name="bounty_email_stage_title">&#128506;  Khariidaynta isku socodka USSD</string>
+    <string name="bounty_email_stage_desc1"><b>Ku Soo Dhawoow Khariidaynta Lacagta.</b> Stax waxa uu rabaa in uu USSD u fududeeyo qof walba. Si loogu geeyo Stax dad badan oo ku nool wadamo badan, Waxaan u baahanahay in aan khariidayno USSD kasta oo caalami ah. Ku biir Stax sida Khariidadaha Lacagta oo ka hel $5 - $20 USD wax kala beddelasho kasta oo USSD ah oo aad si guul leh u khariidayso. Liiska USSD-ga ee aan wali u baahanahay (faa\'iidooyin) ayaa ku taxan bogga xiga. Waxaan ku darnaa faa\'iidooyin cusub marar badan!</string>
+    <string name="bounty_email_stage_desc2"><b>1.</b>Ku soo gal akoonkaaga Google.\n<b>2.</b> ka hel abaalmarin furan mid ka mid ah akoonnada lacagta bangigaaga ama mobilkaaga.\n<b>3.</b> Buuxi <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD-ga kala iibsiga</a> lagu tilmaamay fa\'iidada, sida xaqiijita hadhaaga ama iibsiga waqtiga hawada.\n <b>4.</b> Xaqiiji kala iibsiga USSD-ga. Isku day haddi ay fashilantay ama ay dhamaystiri waydo\n<b>5.</b> Stax ayaa dib u eegi doona soo gudbintaada, taasoo qaadan karta 7–10 maalmood. \n<b>6.</b> Waxa mushahar lagu siinayaa dhamaadka usbuuca walba.</string>
+    <string name="descrip_bounty_airtime">U iibi waqtiga hawada qof kasta %1$s</string>
+    <string name="bounty_airtime_explain">U iibi waqtiga hawada qof kale %1$s</string>
+    <string name="descrip_bounty_p2p">Lacag u dir qof kale %1$s</string>
+    <string name="bounty_p2p_explain">Qof kale lacag u dir %1$s</string>
+    <string name="descrip_bounty_offnet">on %1$s</string>
+    <string name="descrip_bounty_cross_country">in %1$s on %2$s</string>
+    <string name="descrip_bounty_me2me">U dir lacag %1$s koontadaada</string>
+    <string name="bounty_me2me_explain">U dir lacag kasta %1$s koontadaada</string>
+    <string name="descrip_bounty_c2b">Biil bixin %1$s</string>
+    <string name="descrip_bounty_c2b_b"> from %1$s</string>
+    <string name="bounty_c2b_explain">Lacag kaste u dir %1$s</string>
+    <string name="bounty_c2b_any">Ganacsi walba</string>
+
+    <string name="descrip_bounty_balance">Xaqiiji hadhaaga</string>
+    <string name="bounty_balance_explain">Xaqiiji hadhaagaaga</string>
+    <string name="bounty_email">Iimayl</string>
+    <string name="bounty_email_error">Fadlan gali iimayl sax ah</string>
+    <string name="bounty_uploading_email">Xiriirayya, Fadlan sug…</string>
+    <string name="bounty_api_internet_error">Fadlan xaqiiji inuu khad shaqaynayya kuugu jiro</string>
+    <string name="bounty_api_other_error">Fadlan markale tijaabi. Haddii ay tani sii socoto, fadlan nagalasoo xidhiidh ussd@stax.me.</string>
+    <string name="bounty_pending_short_desc">Waxaan xaqiijinaynaa dhaqdhaqaaqa. Hadduu guulaysto, Naga filo inaan mushaarkaaga ku siino muddo 10 cisho gudaheed.</string>
+    <string name="done">Dhamaad</string>
+    <string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
+    <string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
+    <string name="available_flows">SOCODKA LA HELI KARO</string>
+    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
+    <string name="bounty_claim_explained">Si aad u dalbato USD $%1$d, %2$s.\n\n Isla marka aad dhammayso, waxaanu kuu soo diri doonaa iimayl si aad u ururiso macluumaadka lacag bixinta. Waxa lagu siin doonaa 7–10 maalmood oo shaqo gudahood</string>
+    <string name="start_USSD_Flow">Billow khariidaynta USSD-ga</string>
+    <string name="checking_your_flow">Waxaa la xaqiijinyaa socdaalkaaga</string>
+    <string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
+    <string name="flow_done_title">Socdaalku wuu dhamaaday</string>
+    <string name="flow_done_desc">Waxaan hubinnay socodka waxayna u egtahay mid wanaagsan! Waa inaad ku haysataa iimaylka sanduuqaaga boostada oo wata macluumaadka lacag bixinta.</string>
+    <string name="go_through_another_flow">Socdaal kale billow</string>
+    <string name="flow_recorded">Socdaalka waa la duubay</string>
+    <string name="bounty_amount_with_currency">USD $%1$d</string>
+    <string name="select_country">Dooro dal</string>
+    <string name="filter_by_country">Ku raadi magac dal</string>
+    <string name="filtering_in_progress">Raadinaya, fadlan sug…</string>
+    <string name="country">Dal</string>
+    <string name="country_error_nodata">Fadlan daar internetka si aad u hesho adeegyada iyo wadamada.</string>
+    <string name="country_with_emoji">%1$s  %2$s </string>
+    <string name="all_countries_with_emoji">&#127758; Dalalkoo dhan</string>
+    <string name="bounty_sim_err_header">SIM sax ah gali</string>
+    <string name="bounty_sim_err_desc">Fadlan kaarka SIM ka %1$s ka geli taleefankaaga oo isku day mar kale.</string>
+    <string name="retry">Markale tijaabi.</string>
+    <string name="submit_flow">Gudbi socdaalka</string>
+    <string name="bounty_submitted_successfully">Abaalmarinta ayaa loo gudbiyay si guul leh</string>
+    <string name="language">Luuqad</string>
+    <string name="bounty">aAbaalmarin</string>
+    <string name="bounty_error_none">Wax aAbaalmarin ah lama hayo Fadlan mar kale hubi hadhow</string>
+
+    <string name="library_cardhead">Maktabadda USSD</string>
+    <string name="visit_library">Hel koodhka gaaban ee USSD</string>
+    <string name="shortcode">Koodhka gaaban</string>
+    <string name="dial_btn">Wac %1$s</string>
+    <string name="dial_default">Wac</string>
+
+    <string name="internet_required">Internedka waa loobaahan yahay.</string>
+    <string name="internet_required_bounty_desc">Waxaad u baahan tahay khadka internedka si aad u khariidayso isu socodka USSD. Fadlan isku day markale</string>
+    <string name="try_again">Tijaabi markale</string>
+    <string name="unknown_login_error">Khalad aan la garanayn, fadlan isku day mar kale. Haddii ciladdu sii socoto, fadlan xidh abka oo dib u bilow.</string>
+
+    <string name="no_account_selected_error">Fadlan dooro ugu yaraan hal koonto oo aad Stax ku darto</string>
+
+    <!-- IN-APP BANNERS -->
+    <string name="banner_permission_title">SIM, SMS, Accessibility &amp; Overlay</string>
+    <string name="banner_permission_desc">Muxuu Stax u weydiistaa ogolaanshahan?</string>
+    <string name="banner_permission_cta"><u>Halkan ku dhufo si aad u ogaato</u></string>
+    <string name="banner_roundupnews_title">La soco wararka ugu danbeeyay ee Stax ee billaha ah.</string>
+    <string name="banner_roundupnews_cta"><u>Taabo si aad hadda u akhrido</u></string>
+    <string name="banner_gist_title">Ma rabtaa qoraallo gaar ah oo Stax?</string>
+    <string name="banner_gist_cta"><u>Imika iska diiwaan geli liiska iimaylka</u></string>
+    <string name="banner_upvote_title">Nala dhis! Kudar/Codee codso ama cillad ka warbixi.</string>
+    <string name="banner_upvote_cta"><u>Hadda fikir ka dhiibo</u></string>
+    <string name="stax_banner_img_desc">Boodhka calaamadda Stax</string>
+    <string name="banner_research_title">Ma doonaysaa in aad lacag hesho si aad Stax uga dhigto mid ka sii fiican?</string>
+    <string name="banner_research_cta">Isku dar daraasadka cilmi baarista maanta</string>
+
+    <string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
+    <string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+    <string name="banner_upvoteurl">https://stax.nolt.io/</string>
+    <string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
+
+    <!-- TEST MODE -->
+    <string name="test_mode_toast">Hadda waxaad ku jirtaa habka tijaabada.</string>
+    <string name="test_mode_disabled">Habka tijaabada waa laga baxay.</string>
+    <string name="test_mode_almost_toast">Ku dhawaad!</string>
+    <string name="test_mode_enabled">Habka tijaabada ayaa ku hawlan</string>
+
+    <string name="faq_title">Suaalaha badanka lawaydiiyo</string>
+    <string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
+    <string name="loading">Soodejinaya…</string>
+    <string name="loading_error">Lama soo saari karo FAQ, fadlan isku day mar kale</string>
+    <string name="faq_internet_error">Habkani waxa u baahan yahay khadka internedka, fadlan isku day mar kale</string>
+
+    <string name="working_offline">Qaab khadla\'aan</string>
+
+    <string name="marketing_email_optin">Stax waxay ii soo diri kartaa iimaylo mustaqbalka.</string>
+    <string name="email_client_not_found">Iimayl macmiil lagama helin aaladda</string>
+    <string name="enable_call_permission">Fadlan awood u geli ogolaanshaha wacitaanka si aad u garaacdo koodka USSD.</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Fariin</string>
+    <string name="sync_header">Isku-dubarid</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Saxeexaagga</string>
+    <string name="reply_title">Ficilka jawaabta caadiga ah</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Isku-dubarid iimaylka xilliyo</string>
+    <string name="attachment_title">Soo deji lifaaqyada soo socda</string>
+    <string name="attachment_summary_on">Si toos ah u soo deji lifaaqyada iimaylada soo socda
+	</string>
+    <string name="attachment_summary_off">Soo deji lifaaqyada kaliya marka gacanta lagu codsado</string>
+
+    <string name="ussd_lib">garaac USSD</string>
+
+    <string name="error_running_action">Naga raali noqo, xidhiidhinta adeeggan wuu xun yahay.</string>
+
+    <!-- Financial Tips -->
+    <string name="financial_wellness_tips">Talooyinka fayoobid maliyadeed</string>
+    <string name="btn_share">Wadaag</string>
+    <string name="share_wellness_tip">Wadaag talooyin maliyadeed</string>
+    <string name="read_more"><u>Sii wad akhriska</u></string>
+
+    <!-- Paybill -->
+    <string name="business_number_label">Lanbar ganacsi</string>
+    <string name="save_bill">Xafid biil bixinta</string>
+    <string name="save_bill_prompt">Gali lanbar ganacsi</string>
+    <string name="bill_name_label">Naanays</string>
+    <string name="amount_checkbox_label">Goorwalba bixi qiimo isleeg</string>
+    <string name="business_number_prompt">Gali lanbar ganacsi</string>
+    <string name="btn_delete">Tirtir</string>
+    <string name="choose_icon_title">Dooro calaamad</string>
+    <string name="account_no_label">Lanbarka koontada: %1$s</string>
+    <string name="paybill_delete_success">Biil bixinta waa la tirtiray</string>
+    <string name="paybill_delete_header">Tirtir biil bixinta </string>
+    <string name="paybill_delete_msg">Maad hubtaa in la tirtito %1$s?</string>
+    <string name="paybill_error_business_number">Fadlan gali lanbar ganacsi oo sax ah</string>
+    <string name="paybill_save_success">Biil bixinta waa la xafiday</string>
+    <string name="bill_name_error">Fadlan gali magac sax ah</string>
+    <string name="label_popular">Caan ah</string>
+    <string name="pay_now">Hadda bixi</string>
+    <string name="paybill_update_header">Cusboonaysii biil bixinta</string>
+    <string name="paybill_update_msg">Maad hubtaa inaad cusboonaysiin rabto %1$s?</string>
+    <string name="paybill_update_success">Biilbixinta waa la cusboonaysiiyay</string>
+    <string name="btn_update">Cusboonaysii</string>
+
+    <string name="btn_not_now">Hadda maaha</string>
+
+
+</resources>
