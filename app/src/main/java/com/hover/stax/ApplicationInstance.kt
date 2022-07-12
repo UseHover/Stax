@@ -12,7 +12,6 @@ import com.hover.stax.database.appModule
 import com.hover.stax.database.dataModule
 import com.hover.stax.database.networkModule
 import com.hover.stax.utils.network.NetworkMonitor
-import com.uxcam.UXCam
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -32,7 +31,6 @@ class ApplicationInstance : Application() {
         initFirebase()
 
         initAppsFlyer()
-        initUxCam()
     }
 
     private fun initFirebase() {
@@ -49,10 +47,6 @@ class ApplicationInstance : Application() {
             androidContext(this@ApplicationInstance)
             modules(listOf(appModule, dataModule, networkModule))
         }
-    }
-
-    private fun initUxCam() {
-        if(!BuildConfig.DEBUG) UXCam.startWithKey(getString(R.string.uxcam_key))
     }
 
     private fun setLogger() {
