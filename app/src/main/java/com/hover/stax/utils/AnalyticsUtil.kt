@@ -14,6 +14,7 @@ import com.uxcam.UXCam
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
+import java.util.*
 
 object AnalyticsUtil {
 	@JvmStatic
@@ -31,7 +32,6 @@ object AnalyticsUtil {
 		logFirebase(event, null, context)
 		logAppsFlyer(event, null, context)
 		logUXCam(event, null)
-
 	}
 
 	@JvmStatic
@@ -52,6 +52,12 @@ object AnalyticsUtil {
 	private fun logUXCam(event: String, args: JSONObject?) {
 		if(event.lowercase().contains("visited")) {
 			UXCam.tagScreenName(event)
+		}
+
+		if(args != null){
+			UXCam.logEvent(event, args)
+		} else {
+			UXCam.logEvent(event)
 		}
 	}
 

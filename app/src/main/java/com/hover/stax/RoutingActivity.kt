@@ -130,7 +130,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
                 val variant = remoteConfig.getString("onboarding_variant")
-                Timber.i("Onboarding variant fetched $variant")
                 Utils.saveString(VARIANT, variant, this@RoutingActivity)
 
                 validateUser()
