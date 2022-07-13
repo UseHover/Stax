@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
@@ -24,11 +25,13 @@ import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLifecycleFlow
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -166,8 +169,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeAccountList() = collectLifecycleFlow(accountsViewModel.accountList) {
-        if (it.accounts.isEmpty())
+    private fun observeAccountList() = collectLatestLifecycleFlow(accountsViewModel.accounts) {
+        if (it.isEmpty())
             setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
     }
 
@@ -209,9 +212,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun observeAccountsEvent() {
-        collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return@collectLifecycleFlow
-            accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
+        lifecycleScope.launchWhenStarted {
+            channelsViewModel.accountEventFlow.collect {
+                val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return@collect
+                accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
+            }
         }
     }
 

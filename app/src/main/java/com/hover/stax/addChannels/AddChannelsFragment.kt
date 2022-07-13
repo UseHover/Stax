@@ -22,7 +22,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountsAdapter
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.channels.Channel

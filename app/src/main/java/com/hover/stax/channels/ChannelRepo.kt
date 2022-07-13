@@ -31,8 +31,6 @@ class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
-    suspend fun getChannelsByIdsAsync(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
-
     fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
         return channelDao.getChannels(countryCode.uppercase(), channelIds)
     }

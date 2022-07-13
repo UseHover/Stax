@@ -13,7 +13,7 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
@@ -21,7 +21,7 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLifecycleFlow
+import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.*
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
@@ -102,8 +102,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         }
 
         with(accountsViewModel) {
-            collectLifecycleFlow(accountList){
-                if (it.accounts.isEmpty())
+            collectLatestLifecycleFlow(accounts){
+                if (it.isEmpty())
                     setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
             }
 

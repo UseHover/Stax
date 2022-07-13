@@ -1,8 +1,8 @@
 package com.hover.stax.merchants
 
 import androidx.room.*
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
-import com.hover.stax.domain.model.Account
 import javax.annotation.Nullable
 
 @Entity(tableName = "merchants",
@@ -56,6 +56,6 @@ data class Merchant(
 	}
 
 	fun hasName(): Boolean {
-		return businessName != null && businessName!!.isNotEmpty()
+		return businessName != null && !businessName!!.isEmpty()
 	}
 }
