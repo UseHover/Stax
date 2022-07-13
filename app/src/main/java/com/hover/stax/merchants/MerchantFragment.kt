@@ -14,10 +14,9 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentMerchantBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.transfers.AbstractFormFragment
-import com.hover.stax.transfers.TransferFragmentDirections
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLatestLifecycleFlow
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
@@ -62,8 +61,8 @@ class MerchantFragment : AbstractFormFragment() {
 	}
 
 	private fun observeAccountList() {
-		collectLatestLifecycleFlow(accountsViewModel.accounts) {
-			if (it.isEmpty())
+		collectLifecycleFlow(accountsViewModel.accountList) {
+			if(it.accounts.isEmpty())
 				setDropdownTouchListener(MerchantFragmentDirections.actionMerchantFragmentToAccountsFragment())
 		}
 	}

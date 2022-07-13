@@ -8,15 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
+import com.hover.stax.presentation.home.TopBar
+import com.hover.stax.transactions.TransactionHistoryFragmentDirections
+import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.RequestServiceDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -39,6 +47,8 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
         super.onViewCreated(view, savedInstanceState)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, LibraryFragment::class.java.simpleName), requireActivity())
 
+        initToolbar()
+
         binding.countryCard.showProgressIndicator()
         binding.countryDropdown.setListener(this)
 
@@ -50,6 +60,20 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
         setupEmptyState()
         setSearchInputWatcher()
         setObservers()
+    }
+
+    private fun initToolbar() {
+        binding.toolbar.setContent {
+            StaxTheme { Toolbar() }
+        }
+    }
+
+    @Composable
+    private fun Toolbar() {
+        val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
+        TopBar(title = R.string.library_cardhead, isInternetConnected = hasNetwork) {
+            findNavController().navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings())
+        }
     }
 
     private fun setObservers() {

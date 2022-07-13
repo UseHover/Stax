@@ -4,59 +4,64 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/saveBill"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_8"
-            android:paddingStart="@dimen/margin_13"
-            android:paddingEnd="@dimen/margin_5"
-            android:text="@string/save_bill"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_16" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/saveDetails"
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="@dimen/margin_8"
-            android:layout_height="wrap_content">
-
-        <ImageView
-                android:id="@+id/billIcon"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:layout_marginEnd="@dimen/margin_8"
-                android:background="@drawable/icon_bg_circle"
-                android:layout_marginTop="@dimen/margin_5"
-                android:padding="@dimen/margin_8"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread"
-                app:srcCompat="@drawable/ic_smile" />
-
-        <com.hover.stax.views.StaxTextInput
-                android:id="@+id/billNameInput"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/bill_name_label"
-                android:imeOptions="actionDone"
-                android:inputType="textCapWords"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/billIcon"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/margin_8">
 
         <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/saveAmount"
-                android:layout_width="match_parent"
+                android:id="@+id/saveBill"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/margin_13"
                 android:paddingEnd="@dimen/margin_5"
-                android:text="@string/amount_checkbox_label"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/billIcon"
-                app:layout_constraintTop_toBottomOf="@id/billNameInput" />
+                android:text="@string/save_bill"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_16" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/saveDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:id="@+id/billIcon"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:layout_marginEnd="@dimen/margin_8"
+                    android:background="@drawable/icon_bg_circle"
+                    android:padding="@dimen/margin_8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="spread"
+                    app:srcCompat="@drawable/ic_smile" />
+
+            <com.hover.stax.views.StaxTextInput
+                    android:id="@+id/billNameInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/bill_name_label"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapWords"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/billIcon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/saveAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/margin_13"
+                    android:paddingEnd="@dimen/margin_5"
+                    android:text="@string/amount_checkbox_label"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_16"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/billIcon"
+                    app:layout_constraintTop_toBottomOf="@id/billNameInput" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </com.hover.stax.views.StaxCardView>

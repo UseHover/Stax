@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.hover.stax.views.StaxCardView
-                android:id="@+id/countryCard"
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/library_cardhead">
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/margin_5">
+
+            <com.hover.stax.views.StaxCardView
+                    android:id="@+id/countryCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
             <com.hover.stax.countries.CountryDropdown
                     android:id="@+id/country_dropdown"
@@ -30,22 +42,23 @@
                     android:hint="@string/search"
                     android:imeOptions="actionDone"
                     android:inputType="textFilter" />
-        </com.hover.stax.views.StaxCardView>
+            </com.hover.stax.views.StaxCardView>
 
-        <include
-                android:id="@+id/emptyState"
-                layout="@layout/no_account_empty_state" />
+            <include
+                    android:id="@+id/emptyState"
+                    layout="@layout/no_account_empty_state" />
 
-        <com.hover.stax.views.StaxCardView
-                android:id="@+id/shortcodesParent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/shortcodes"
+            <com.hover.stax.views.StaxCardView
+                    android:id="@+id/shortcodesParent"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-        </com.hover.stax.views.StaxCardView>
+                    android:layout_height="wrap_content">
 
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/shortcodes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+            </com.hover.stax.views.StaxCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

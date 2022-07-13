@@ -16,6 +16,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
+                android:textColor="@color/grey"
                 android:padding="@dimen/margin_10"
                 android:text="@string/FAQs"
                 android:textSize="@dimen/text_16" />
@@ -26,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
                 android:padding="@dimen/margin_10"
+                android:textColor="@color/grey"
                 android:text="@string/request_feature"
                 android:textSize="@dimen/text_16"
                 app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
@@ -38,6 +40,7 @@
                 android:padding="@dimen/margin_10"
                 android:text="@string/twitter"
                 android:textSize="@dimen/text_16"
+                android:textColor="@color/grey"
                 app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
 
         <TextView
@@ -47,6 +50,7 @@
                 android:background="?selectableItemBackground"
                 android:padding="@dimen/margin_10"
                 android:text="@string/email_support"
+                android:textColor="@color/grey"
                 android:textSize="@dimen/text_16"
                 app:drawableEndCompat="@drawable/email_filled_24" />
 
@@ -61,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@id/marketingOptIn"
                     android:padding="@dimen/margin_10"
+                    android:textColor="@color/grey"
                     android:text="@string/receive_stax_updates"
                     android:textSize="@dimen/text_16" />
 

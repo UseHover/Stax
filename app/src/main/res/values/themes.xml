@@ -7,7 +7,7 @@
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         // Set the splash screen background, animated icon, and animation duration.
-        <item name="windowSplashScreenBackground">@color/colorPrimaryDark</item>
+        <item name="windowSplashScreenBackground">@color/colorBackground</item>
 
         // Use windowSplashScreenAnimatedIcon to add either a drawable or an
         // animated drawable. One of these is required.
@@ -30,7 +30,7 @@
         <item name="colorSecondaryVariant">@color/brightBlue</item>
         <item name="colorOnSecondary">@color/cardViewColor</item>
 
-        <item name="colorSurface">@color/cardViewColor</item>
+        <item name="colorSurface">@color/colorSurface</item>
         <item name="colorOnSurface">@color/offWhite</item>
         <item name="colorOnBackground">@color/darkGrey</item>
         <item name="colorError">@color/stax_state_red</item>
@@ -41,9 +41,9 @@
         <item name="colorSwitchThumbNormal">@color/grey</item>
 
         <item name="windowActionBar">false</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorBackground</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorBackground</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:fitsSystemWindows">true</item>
 
         <item name="titleTextColor">@color/offWhite</item>

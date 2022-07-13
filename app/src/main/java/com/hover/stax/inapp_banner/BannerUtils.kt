@@ -2,8 +2,7 @@ package com.hover.stax.inapp_banner
 
 import android.content.Context
 import com.hover.sdk.permissions.PermissionHelper
-import com.hover.stax.accounts.AccountRepo
-import com.hover.stax.schedules.ScheduleRepo
+import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.*

@@ -3,29 +3,13 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/onboarding_navigation"
-        app:startDestination="@+id/defaultOnboardingFragment">
+        app:startDestination="@+id/interactiveOnboardingFragment">
 
     <action android:id="@+id/action_global_InteractiveOnboardingVariant"
             app:destination="@id/interactiveOnboardingFragment"/>
 
     <action android:id="@+id/action_global_SignInVariantFragment"
             app:destination="@id/interactiveOnboardingFragment"/>
-
-    <fragment
-            android:id="@+id/defaultOnboardingFragment"
-            android:name="com.hover.stax.onboarding.defaultVariant.DefaultVariantFragment"
-            android:label="@string/onboarding_v1_slide1_title"
-            tools:layout="@layout/fragment_default_variant" />
-
-    <fragment
-            android:id="@+id/signInVariantFragment"
-            android:name="com.hover.stax.onboarding.signInVariant.SignInVariantFragment"
-            android:label="@string/onboarding_v1_slide1_title"
-            tools:layout="@layout/fragment_signin_variant">
-        <action
-                android:id="@+id/action_signInVariantFragment_to_welcomeFragment"
-                app:destination="@id/welcomeFragment" />
-    </fragment>
 
     <fragment
             android:id="@+id/interactiveOnboardingFragment"
@@ -85,9 +69,6 @@
         <action
                 android:id="@+id/action_introFragment_to_checkBoxOnboardingFragment"
                 app:destination="@id/checkboxOnboardingFragment" />
-        <action
-                android:id="@+id/action_introFragment_to_signInVariantFragment"
-                app:destination="@id/signInVariantFragment" />
     </fragment>
 
 </navigation>

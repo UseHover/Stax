@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	app:title="@string/security_cardhead">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/security_cardhead">
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_10"
-		android:layout_marginTop="@dimen/margin_21"
-		android:textColor="@color/offWhite"
-		android:textSize="@dimen/text_16"
-		app:fontFamily="@font/brutalista_medium"
-		android:text="@string/security_head" />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_21"
+            android:text="@string/security_head"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16"
+            app:fontFamily="@font/brutalista_medium" />
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_10"
-		android:layout_marginTop="@dimen/margin_8"
-		android:layout_marginBottom="@dimen/margin_13"
-		android:textSize="@dimen/text_16"
-		android:lineSpacingExtra="@dimen/text_spacing_8"
-		android:textColor="@color/offWhite"
-		android:text="@string/security_cardbody"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginBottom="@dimen/margin_13"
+            android:lineSpacingExtra="@dimen/text_spacing_8"
+            android:text="@string/security_cardbody"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_16" />
 
 </com.hover.stax.views.StaxCardView>
