@@ -56,7 +56,7 @@
 
     <fragment
             android:id="@+id/navigation_home"
-            android:name="com.hover.stax.home.HomeFragment"
+            android:name="com.hover.stax.presentation.home.HomeFragment"
             android:label="@string/nav_home"
             tools:layout="@layout/fragment_home">
         <action
@@ -80,6 +80,9 @@
         <action
                 android:id="@+id/action_navigation_home_to_wellnessFragment"
                 app:destination="@id/tipsFragment" />
+
+        <action android:id="@+id/toSettingsFragment"
+                app:destination="@id/navigation_settings"/>
         <deepLink
                 android:id="@+id/balanceDL"
                 android:autoVerify="true"
@@ -174,6 +177,7 @@
             android:name="com.hover.stax.faq.FaqFragment"
             android:label="@string/FAQs"
             tools:layout="@layout/fragment_faq" />
+
 
     <fragment
             android:id="@+id/transactionDetailsFragment"
@@ -374,7 +378,7 @@
     </fragment>
     <fragment
             android:id="@+id/tipsFragment"
-            android:name="com.hover.stax.financialTips.FinancialTipsFragment"
+            android:name="com.hover.stax.presentation.financial_tips.FinancialTipsFragment"
             android:label="WellnessFragment">
         <argument
                 android:name="tipId"

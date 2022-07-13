@@ -16,9 +16,4 @@
             android:icon="@drawable/ic_ussd_lib"
             android:title="@string/ussd_lib" />
 
-    <item
-            android:id="@+id/navigation_settings"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/nav_settings" />
-
 </menu>

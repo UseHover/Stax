@@ -10,49 +10,60 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_13"
             android:layout_marginBottom="@dimen/margin_89"
+            android:paddingHorizontal="@dimen/margin_5"
             android:orientation="vertical">
 
         <include
                 android:id="@+id/share_card"
                 layout="@layout/settings_card_share" />
 
+
         <include
                 android:id="@+id/settings_card"
                 layout="@layout/settings_card_meta" />
+
 
         <include
                 android:id="@+id/bounty_card"
                 layout="@layout/settings_card_bounties" />
 
+
         <include
-            android:id="@+id/permission_card"
-            layout="@layout/settings_card_permissions" />
+                android:id="@+id/permission_card"
+                layout="@layout/settings_card_permissions" />
+
 
         <include
                 android:id="@+id/stax_learn"
                 layout="@layout/settings_card_learn" />
 
+
         <include
                 android:id="@+id/stax_support"
                 layout="@layout/settings_card_support" />
+
 
         <include
                 android:id="@+id/securityCard"
                 layout="@layout/settings_security_card" />
 
+
         <include
                 android:id="@+id/languageCard"
                 layout="@layout/settings_card_language" />
 
+
         <include
                 android:id="@+id/accountCard"
                 layout="@layout/settings_account_card" />
+
 
         <TextView
                 android:id="@+id/stax_and_device_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_marginTop="@dimen/margin_13"
                 android:layout_marginBottom="@dimen/margin_13"
                 android:lineSpacingExtra="2sp"
                 android:text="@string/disclaimer"

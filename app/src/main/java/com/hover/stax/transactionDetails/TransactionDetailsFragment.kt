@@ -20,7 +20,7 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.ApplicationInstance
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
+import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
@@ -224,7 +224,7 @@ class TransactionDetailsFragment : Fragment() {
                 setupContactSupportButton(transaction.action_id, binding.statusInfo.btnRetry)
             else binding.statusInfo.btnRetry.setOnClickListener{ maybeRetry(transaction) }
         }
-        binding.statusInfo.btnRetry.visibility = if (transaction.isRetryable) VISIBLE else GONE
+        binding.statusInfo.btnRetry.visibility = if (transaction.canRetry) VISIBLE else GONE
     }
 
     private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false

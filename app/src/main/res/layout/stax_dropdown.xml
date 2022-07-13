@@ -4,10 +4,15 @@
         android:id="@+id/inputLayout"
         style="@style/StaxLabeledDropdown"
         android:layout_width="match_parent"
+        app:boxBackgroundColor="@android:color/transparent"
+        app:boxCornerRadiusBottomEnd="@dimen/margin_5"
+        app:boxCornerRadiusBottomStart="@dimen/margin_5"
+        app:boxCornerRadiusTopEnd="@dimen/margin_5"
+        app:boxCornerRadiusTopStart="@dimen/margin_5"
         android:layout_height="wrap_content"
         android:labelFor="@id/autoCompleteView">
 
-    <AutoCompleteTextView
+    <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/autoCompleteView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
