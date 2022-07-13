@@ -9,7 +9,7 @@
     <string name="api_url" translatable="false">https://www.usehover.com/api</string>
     <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
     <string name="users_endpoint" translatable="false">/stax_users</string>
-    <string name="tips_table" translatable="false">wellness_tips</string>
+    <string name="tips_table" translatable="false">financial_tips</string>
 
     <string name="referee_endpoint" translatable="false">/set_referee</string>
     <string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
@@ -51,6 +51,8 @@
         <item>en</item>
         <item>fr</item>
         <item>sw</item>
+        <item>so</item>
+        <item>om</item>
     </string-array>
 
     <string name="btn_ok">OK</string>
@@ -771,6 +773,10 @@
     <string name="check_balance_message">I just checked my balance with Stax app and the best part is - it works offline. Check it out - %1$s</string>
     <string name="send_money_message">I just transferred money with Stax app and the best part is - it works offline. Check it out - %1$s</string>
     <string name="fab_submit">Submit</string>
+
+    <string name="empty_channel_placeholder">the service</string>
+    <string name="def_account_update_msg">Default account successfully updated to %1$s.</string>
+    <string name="uxcam_session_url">uxcam_session_url</string>
 
 
 </resources>

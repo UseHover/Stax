@@ -10,15 +10,16 @@ import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) : ViewModel() {
 
-    private val _bonusList = MutableStateFlow<List<Bonus>>(emptyList())
-    val bonuses: StateFlow<List<Bonus>> = _bonusList
+    private val _bonusList = MutableStateFlow(BonusList())
+    val bonusList = _bonusList.asStateFlow()
 
     private val db = Firebase.firestore
     private val settings = firestoreSettings { isPersistenceEnabled = true }
@@ -43,12 +44,12 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
             }
             .addOnFailureListener {
                 Timber.e("Error fetching bonuses: ${it.localizedMessage}")
-                _bonusList.value = emptyList()
+                _bonusList.update { _bonusList.value.copy(bonuses = emptyList()) }
             }
     }
 
     fun getBonusList() = viewModelScope.launch(Dispatchers.IO) {
-        repo.bonuses.collect { _bonusList.value = it }
+        repo.bonuses.collect { items -> _bonusList.update { _bonusList.value.copy(bonuses = items) } }
     }
 
     private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
@@ -59,12 +60,8 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
         repo.updateBonuses(toSave)
 
         val showBonuses = hasValidSim(simHnis, bonusChannels)
-        _bonusList.value = if (showBonuses) toSave else emptyList()
+        _bonusList.update { _bonusList.value.copy(bonuses = if (showBonuses) toSave else emptyList()) }
     }
-
-    fun getBonusByPurchaseChannel(channelId: Int): Bonus? = repo.getBonusByPurchaseChannel(channelId)
-
-    fun getBonusByUserChannel(channelId: Int): Bonus? = repo.getBonusByUserChannel(channelId)
 
     /**
      * Extract the hnis from the bonus channels and compare with current sim hnis.
@@ -82,3 +79,5 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
         return hniList.isNotEmpty()
     }
 }
+
+data class BonusList(val bonuses: List<Bonus> = emptyList())

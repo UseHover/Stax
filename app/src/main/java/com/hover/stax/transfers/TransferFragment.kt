@@ -36,7 +36,6 @@ import timber.log.Timber
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
-
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
     private val channelsViewModel: ChannelsViewModel by viewModel()
@@ -215,7 +214,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeAccountsEvent() {
         lifecycleScope.launchWhenStarted {
             channelsViewModel.accountEventFlow.collect {
-                val bonus = bonusViewModel.bonuses.value.firstOrNull() ?: return@collect
+                val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return@collect
                 accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
             }
         }
@@ -347,7 +346,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun showBonusBanner(activeAction: HoverAction?) {
         if (args.transactionType == HoverAction.AIRTIME) {
-            val bonus = bonusViewModel.bonuses.value.firstOrNull() ?: return
+            val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return
 
             with(binding.bonusLayout) {
                 cardBonus.visibility = View.VISIBLE

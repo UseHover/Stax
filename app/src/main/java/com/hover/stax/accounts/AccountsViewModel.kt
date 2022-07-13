@@ -12,11 +12,12 @@ import com.hover.stax.actions.ActionRepo
 import com.hover.stax.bonus.BonusRepo
 import com.hover.stax.schedules.Schedule
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
@@ -27,6 +28,9 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     private var type = MutableLiveData<String>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
+
+    private val accountUpdateChannel = Channel<String>()
+    val accountUpdateMsg = accountUpdateChannel.receiveAsFlow()
 
     init {
         fetchAccounts()
@@ -123,17 +127,22 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         activeAccount.value = accounts.value.firstOrNull { it.isDefault }
     }
 
-    fun setDefaultAccount(account: Account) {
+    fun setDefaultAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         if (accounts.value.isNotEmpty()) {
             val accts = accounts.value
             //remove current default account
             val current: Account? = accts.firstOrNull { it.isDefault }
+
+            if (account.id == current?.id) return@launch
+
             current?.isDefault = false
             repo.update(current)
 
             val a = accts.first { it.id == account.id }
             a.isDefault = true
             repo.update(a)
+
+            accountUpdateChannel.send((getApplication() as Context).getString(R.string.def_account_update_msg, account.alias))
         }
     }
 
