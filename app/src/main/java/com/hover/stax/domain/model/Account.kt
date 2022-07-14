@@ -28,7 +28,7 @@ data class Account(
         @ColumnInfo
         var institutionId: Int?,
 
-        @ColumnInfo(name = "institution_type", defaultValue = "bank")
+        @ColumnInfo(name = "institution_type", defaultValue = Channel.BANK_TYPE)
         var institutionType: String,
 
         @JvmField

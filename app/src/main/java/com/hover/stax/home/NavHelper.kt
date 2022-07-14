@@ -108,7 +108,7 @@ class NavHelper(val activity: AppCompatActivity) {
         R.id.libraryFragment, NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
         NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
         NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
-        NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
+        NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment().setIsForTelecom(false)
         NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment()
         else -> null //invalid or unmapped route, return nothing
     }

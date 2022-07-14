@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -29,6 +30,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
+import com.hover.stax.transfers.TransferFragmentArgs
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -49,6 +51,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
+    private val args by navArgs<AddChannelsFragmentArgs>()
+
     private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
     private var tracker: SelectionTracker<Long>? = null
 
@@ -62,8 +66,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
-
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
+        val screenPurpose = if(args.isForTelecom) R.string.visit_link_simcard else R.string.visit_link_account
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(screenPurpose)), requireContext())
         initArguments()
 
         return binding.root
@@ -90,26 +94,30 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         startObservers()
 
         setFabListener()
+        displayChangesIfForTelecom()
+    }
+
+    private fun displayChangesIfForTelecom() {
+        if(args.isForTelecom) {
+            binding.searchInput.visibility = GONE
+            binding.countryDropdown.visibility = GONE
+            binding.channelsListCard.setTitle(R.string.link_sim_to_stax)
+        }
     }
 
     private fun startObservers() = with(channelsViewModel) {
-        val channelsObserver = object: Observer<List<Channel>> {
-            override fun onChanged(t: List<Channel>?) {
-                t?.let { loadFilteredChannels(it) }
-            }
-        }
+        val channelsObserver =
+            Observer<List<Channel>> { t -> t?.let {
+                var filteredChannels = it
+                if(args.isForTelecom) filteredChannels = channelsViewModel.filterPresentSimTelecoms()
+                loadFilteredChannels(filteredChannels)
+            } }
 
-        val simsObserver = object: Observer<List<SimInfo>> {
-            override fun onChanged(t: List<SimInfo>?) {
-                Timber.v("Loaded ${t?.size} sims")
-            }
-        }
+        val simsObserver =
+            Observer<List<SimInfo>> { t -> Timber.v("Loaded ${t?.size} sims") }
 
-        val countryListObserver = object: Observer<List<String>> {
-            override fun onChanged(t: List<String>?) {
-                Timber.v("Loaded ${t?.size} hnis")
-            }
-        }
+        val countryListObserver =
+            Observer<List<String>> { t -> Timber.v("Loaded ${t?.size} hnis") }
 
         channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
         sims.observe(viewLifecycleOwner, simsObserver)
@@ -180,7 +188,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun showSelected(visible: Boolean) {
-        binding.selectedChannelsCard.visibility = if (visible) VISIBLE else GONE
+        binding.selectedChannelsCard.visibility = if (args.isForTelecom) GONE else if (visible) VISIBLE else GONE
         binding.channelsListCard.setBackButtonVisibility(if (visible) GONE else VISIBLE)
     }
 

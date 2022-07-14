@@ -89,7 +89,7 @@ class SettingsFragment : Fragment() {
 
     private fun setUpMeta() {
         binding.settingsCard.connectAccounts.setOnClickListener {
-            NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount())
+            NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount().setIsForTelecom(false))
         }
 
         collectLifecycleFlow(accountsViewModel.accountList) {

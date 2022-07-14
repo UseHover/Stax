@@ -121,6 +121,12 @@
             android:name="com.hover.stax.addChannels.AddChannelsFragment"
             android:label="@string/nav_link_account"
             tools:layout="@layout/fragment_add_channels">
+
+        <argument
+            android:name="isForTelecom"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
         <action
                 android:id="@+id/action_navigation_linkAccount_to_navigation_home"
                 app:destination="@id/navigation_home"
@@ -130,7 +136,7 @@
                 android:id="@+id/linkAccountDL"
                 android:autoVerify="true"
                 app:mimeType="text/plain"
-                app:uri="stax.me/linkaccount" />
+                app:uri="stax.me/linkaccount?{isForTelecom}" />
     </fragment>
 
 

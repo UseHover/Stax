@@ -104,7 +104,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         with(accountsViewModel) {
             collectLifecycleFlow(accountList){
                 if (it.accounts.isEmpty())
-                    setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
+                    setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment().setIsForTelecom(false))
             }
 
             activeAccount.observe(viewLifecycleOwner, accountsObserver)

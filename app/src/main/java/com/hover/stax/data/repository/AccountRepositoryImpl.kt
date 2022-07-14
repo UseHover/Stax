@@ -11,6 +11,7 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.domain.repository.AccountRepository
+import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,7 +22,7 @@ import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
+class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, private val presentSimUseCase: GetPresentSimUseCase,  val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
 
     private val context: Context by inject()
 
@@ -49,10 +50,10 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
     //This only gets ID if account is a Telecos e.g Safaricom, MTN. It assumes different Teleco for each sim slots.
     //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
-    private fun getSubscriptionId(channel : Channel) : Int? {
+    private suspend fun getSubscriptionId(channel : Channel) : Int? {
         var subscriberId : Int? = null
         if(channel.institutionType == Channel.TELECOM_TYPE) {
-            val presentSims = channelRepo.presentSims
+            val presentSims = presentSimUseCase()
             if(channel.getHniList().contains(presentSims.first().osReportedHni)) {
                 subscriberId = presentSims.first().subscriptionId
             }

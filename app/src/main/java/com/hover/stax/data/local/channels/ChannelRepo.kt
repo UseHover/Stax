@@ -7,14 +7,9 @@ import com.hover.sdk.sims.SimInfoDao
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.AppDatabase
 
-class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
+class ChannelRepo(db: AppDatabase) {
 
-    private val simDao: SimInfoDao = sdkDb.simDao()
     private val channelDao: ChannelDao = db.channelDao()
-
-    // SIMs
-    val presentSims: List<SimInfo>
-        get() = simDao.present
 
     val publishedChannels: LiveData<List<Channel>> = channelDao.publishedChannels
 

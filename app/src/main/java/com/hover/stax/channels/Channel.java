@@ -17,7 +17,7 @@ import timber.log.Timber;
 
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {
-    static public String BANK_TYPE = "bank", TELECOM_TYPE = "telecom";
+    public static final String BANK_TYPE = "bank", TELECOM_TYPE = "telecom", MOBILE_MONEY = "mmo";
 
     @PrimaryKey
     @NonNull
@@ -61,7 +61,7 @@ public class Channel implements Comparable<Channel> {
     @ColumnInfo(name = "secondary_color_hex")
     public String secondaryColorHex;
 
-    @ColumnInfo(name = "institution_type", defaultValue = "bank")
+    @ColumnInfo(name = "institution_type", defaultValue = BANK_TYPE)
     public String institutionType;
 
     // Dont use the below, it needs to be removed

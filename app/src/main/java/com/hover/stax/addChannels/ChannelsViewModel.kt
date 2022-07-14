@@ -21,6 +21,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.PLACEHOLDER
+import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class ChannelsViewModel(application: Application, val repo: ChannelRepo,
+                        val presentSimUseCase: GetPresentSimUseCase,
                         val accountRepo: AccountRepo,
                         val actionRepo: ActionRepo,
                         private val bonusRepo: BonusRepo) : AndroidViewModel(application),
@@ -79,7 +81,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     private fun loadSims() {
-        viewModelScope.launch(Dispatchers.IO) { sims.postValue(repo.presentSims) }
+        viewModelScope.launch(Dispatchers.IO) { sims.postValue(presentSimUseCase()) }
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(getApplication())
@@ -93,11 +95,13 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         simReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 viewModelScope.launch {
-                    sims.postValue(repo.presentSims)
+                    sims.postValue(presentSimUseCase())
                 }
             }
         }
     }
+
+
 
     private fun onAllChannelsUpdate(channels: List<Channel>?) {
         updateCountryChannels(channels, countryChoice.value)
@@ -113,6 +117,8 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
 
         _channelCountryList.postValue(countryCodes)
     }
+
+
 
     private fun onSimUpdate(countryCodes: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -206,10 +212,11 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     //TODO: This is duplicating AccountRepositoryImpl and logic should live there not here.
     //This only gets ID if account is a Telecos e.g Safaricom, MTN. It assumes different Teleco for each sim slots.
     //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
-    private fun getSubscriptionId(channel : Channel) : Int? {
+    private suspend fun getSubscriptionId(channel : Channel) : Int? {
         var subscriberId : Int? = null
         if(channel.institutionType == Channel.TELECOM_TYPE) {
-            val presentSims = repo.presentSims
+            val presentSims = presentSimUseCase()
+            if(presentSims.isEmpty()) return null
             if(channel.getHniList().contains(presentSims.first().osReportedHni)) {
                 subscriberId = presentSims.first().subscriptionId
             }
@@ -219,6 +226,17 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         }
         return subscriberId
     }
+
+    fun filterPresentSimTelecoms() : List<Channel> {
+        val presentSims = sims.value
+        if(presentSims.isNullOrEmpty()) return emptyList()
+        var filtered = filteredChannels.value?.filter { it.institutionType !=null && it.institutionType == Channel.TELECOM_TYPE }
+        filtered = filtered?.filter { it.getHniList().contains(presentSims.first().osReportedHni) }
+        if(presentSims.size > 1)  filtered =  filtered?.filter { it.getHniList().contains(presentSims[1].osReportedHni) }
+        return filtered ?: emptyList()
+    }
+
+
 
     private fun promptBalanceCheck(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val account = accountRepo.getAccount(accountId)
