@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import timber.log.Timber;
 
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {
+    static public String BANK_TYPE = "bank", TELECOM_TYPE = "telecom";
 
     @PrimaryKey
     @NonNull
@@ -109,6 +111,10 @@ public class Channel implements Comparable<Channel> {
         if (showSelected)
             sorted_list.addAll(0, selected_list);
         return sorted_list;
+    }
+
+    public List<String> getHniList() {
+        return Arrays.asList(hniList.substring(1, hniList.length() - 2).split(","));
     }
 
     Channel update(JSONObject jsonObject, String rootUrl) {

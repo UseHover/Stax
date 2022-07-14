@@ -28,7 +28,7 @@ data class Account(
         @ColumnInfo
         var institutionId: Int?,
 
-        @ColumnInfo(name = "institution_type")
+        @ColumnInfo(name = "institution_type", defaultValue = "bank")
         var institutionType: String,
 
         @JvmField
@@ -45,7 +45,10 @@ data class Account(
         val secondaryColorHex: String,
 
         @ColumnInfo(defaultValue = "0")
-        var isDefault: Boolean = false
+        var isDefault: Boolean = false,
+
+        @ColumnInfo(name = "subscriber_id")
+        var subscriberId : Int? = null,
 ) : Comparable<Account> {
 
     constructor(name: String, channel: Channel) : this(

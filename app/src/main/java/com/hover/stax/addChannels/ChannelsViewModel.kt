@@ -32,7 +32,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
+class ChannelsViewModel(application: Application, val repo: ChannelRepo,
+                        val accountRepo: AccountRepo,
+                        val actionRepo: ActionRepo,
+                        private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -176,14 +179,16 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         accountCreatedEvent.emit(true)
     }
 
+    //TODO: This is duplicating AccountRepositoryImpl and logic should live there not here.
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = accountRepo.getDefaultAccount()
 
         val accounts = channels.mapIndexed { index, channel ->
+            val subscriberId = getSubscriberId(channel)
             val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
             Account(
                 accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0
+                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, subscriberId = subscriberId
             )
         }.onEach {
             logChoice(it)
@@ -193,7 +198,26 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         channels.onEach { it.selected = true }.also { repo.update(it) }
         val accountIds = accountRepo.insert(accounts)
 
+        //This is currently the only difference when compared with the function in AccountRepositoryImpl.
+        //Comment above is here to make it clearer when refactoring
         promptBalanceCheck(accountIds.first().toInt())
+    }
+
+    //TODO: This is duplicating AccountRepositoryImpl and logic should live there not here.
+    //This only gets ID if account is a Telecos e.g Safaricom, MTN. It assumes different Teleco for each sim slots.
+    //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
+    private fun getSubscriberId(channel : Channel) : Int? {
+        var subscriberId : Int? = null
+        if(channel.institutionType == Channel.TELECOM_TYPE) {
+            val presentSims = repo.presentSims
+            if(channel.getHniList().contains(presentSims.first().osReportedHni)) {
+                subscriberId = presentSims.first().subscriptionId
+            }
+            else if(presentSims.size > 1 && channel.getHniList().contains(presentSims[1].osReportedHni)) {
+                subscriberId = presentSims[1].subscriptionId
+            }
+        }
+        return subscriberId
     }
 
     private fun promptBalanceCheck(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
