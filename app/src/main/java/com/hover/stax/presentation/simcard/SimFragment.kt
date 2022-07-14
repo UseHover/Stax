@@ -17,7 +17,7 @@ class SimFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater,
 	                          container: ViewGroup?,
 	                          savedInstanceState: Bundle?): View {
-		AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
+		AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_sim)), requireContext())
 		_binding = FragmentSimBinding.inflate(inflater, container, false)
 		return binding.root
 	}

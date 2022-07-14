@@ -47,8 +47,8 @@ data class Account(
         @ColumnInfo(defaultValue = "0")
         var isDefault: Boolean = false,
 
-        @ColumnInfo(name = "subscriber_id")
-        var subscriberId : Int? = null,
+        @ColumnInfo(name = "subscription_id")
+        var subscriptionId : Int? = null,
 ) : Comparable<Account> {
 
     constructor(name: String, channel: Channel) : this(

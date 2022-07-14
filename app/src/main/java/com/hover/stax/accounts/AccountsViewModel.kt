@@ -2,17 +2,16 @@ package com.hover.stax.accounts
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.PLACEHOLDER
+import com.hover.stax.domain.use_case.sims.GetLivePresentSimUseCase
 import com.hover.stax.schedules.Schedule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -21,7 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
+class AccountsViewModel(application: Application, val getLivePresentSimUseCase: GetLivePresentSimUseCase, val repo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
     private val _accounts = MutableStateFlow(AccountList())
@@ -35,6 +34,11 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     private val accountUpdateChannel = Channel<String>()
     val accountUpdateMsg = accountUpdateChannel.receiveAsFlow()
 
+    private val simSubscriptionIds = MediatorLiveData<IntArray>()
+    val telecomAccounts = MediatorLiveData<List<SimInfo>>()
+
+
+
     init {
         fetchAccounts()
 
@@ -42,6 +46,9 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             addSource(activeAccount, this@AccountsViewModel::loadActions)
             addSource(type, this@AccountsViewModel::loadActions)
         }
+
+        simSubscriptionIds.addSource(getLivePresentSimUseCase(), this::setSubscriptionIds)
+        telecomAccounts.addSource(simSubscriptionIds, this::getTelecomAccounts)
     }
 
     private fun fetchAccounts() = viewModelScope.launch {
@@ -54,6 +61,14 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     fun setType(t: String) {
         type.value = t
+    }
+
+    private fun setSubscriptionIds(sims: List<SimInfo>) {
+        simSubscriptionIds.postValue(sims.map { it.subscriptionId }.toIntArray())
+    }
+
+    private fun getTelecomAccounts(subIds: IntArray) : LiveData<List<Account>> {
+        return repo.getLiveTelecomAccounts(subIds)
     }
 
     private fun setActiveAccountIfNull(accounts: List<Account>) {

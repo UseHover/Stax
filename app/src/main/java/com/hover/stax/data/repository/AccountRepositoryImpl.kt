@@ -32,11 +32,11 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         val defaultAccount = accountRepo.getDefaultAccountAsync()
 
         val accounts = channels.mapIndexed { index, channel ->
-            val subscriberId = getSubscriberId(channel)
+            val subscriptionId = getSubscriptionId(channel)
             val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
             Account(
                 accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, subscriberId = subscriberId
+                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, subscriptionId = subscriptionId
             )
         }.onEach {
             logChoice(it)
@@ -49,7 +49,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
     //This only gets ID if account is a Telecos e.g Safaricom, MTN. It assumes different Teleco for each sim slots.
     //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
-    private fun getSubscriberId(channel : Channel) : Int? {
+    private fun getSubscriptionId(channel : Channel) : Int? {
         var subscriberId : Int? = null
         if(channel.institutionType == Channel.TELECOM_TYPE) {
             val presentSims = channelRepo.presentSims
