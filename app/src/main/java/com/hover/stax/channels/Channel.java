@@ -59,6 +59,9 @@ public class Channel implements Comparable<Channel> {
     @ColumnInfo(name = "secondary_color_hex")
     public String secondaryColorHex;
 
+    @ColumnInfo(name = "institution_type", defaultValue = "bank")
+    public String institutionType;
+
     // Dont use the below, it needs to be removed
     @NonNull
     @ColumnInfo(name = "selected", defaultValue = "0")
@@ -121,6 +124,7 @@ public class Channel implements Comparable<Channel> {
             institutionId = jsonObject.getInt("institution_id");
             primaryColorHex = jsonObject.getString("primary_color_hex");
             secondaryColorHex = jsonObject.getString("secondary_color_hex");
+            institutionType = jsonObject.getString("institution_type");
         } catch (JSONException e) {
             Timber.d(e.getLocalizedMessage());
         }

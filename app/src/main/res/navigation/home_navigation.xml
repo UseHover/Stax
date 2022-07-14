@@ -13,6 +13,7 @@
             android:id="@+id/action_global_NavigationHistory"
             app:destination="@id/navigation_history" />
 
+
     <action
             android:id="@+id/action_global_NavigationSettings"
             app:destination="@id/navigation_settings" />
@@ -26,8 +27,8 @@
             app:destination="@id/tipsFragment" />
 
     <action
-            android:id="@+id/action_global_NavigationBalance"
-            app:destination="@id/navigation_balance" />
+            android:id="@+id/action_global_NavigationSIM"
+            app:destination="@id/navigation_sim_fragment" />
 
     <action
             android:id="@+id/action_global_NavigationHome"
@@ -91,6 +92,8 @@
 
     </fragment>
 
+
+
     <fragment
             android:id="@+id/navigation_history"
             android:name="com.hover.stax.transactions.TransactionHistoryFragment"
@@ -108,10 +111,10 @@
     </fragment>
 
     <fragment
-            android:id="@+id/navigation_balance"
-            android:name="com.hover.stax.balances.BalancesFragment"
-            android:label="@string/nav_balance_and_history"
-            tools:layout="@layout/fragment_balance" />
+            android:id="@+id/navigation_sim_fragment"
+            android:name="com.hover.stax.presentation.simcard.SimFragment"
+            android:label="@string/nav_sim"
+            tools:layout="@layout/fragment_sim" />
 
     <fragment
             android:id="@+id/navigation_linkAccount"

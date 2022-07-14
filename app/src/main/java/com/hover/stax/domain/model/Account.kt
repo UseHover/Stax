@@ -28,6 +28,9 @@ data class Account(
         @ColumnInfo
         var institutionId: Int?,
 
+        @ColumnInfo(name = "institution_type")
+        var institutionType: String,
+
         @JvmField
         @ColumnInfo
         var countryAlpha2: String?,
@@ -46,13 +49,13 @@ data class Account(
 ) : Comparable<Account> {
 
     constructor(name: String, channel: Channel) : this(
-            name, name, channel.logoUrl, "", channel.institutionId, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex
+            name, name, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex
     )
 
     constructor(name: String) : this(name, primaryColor = "#292E35")
 
     constructor(name: String, primaryColor: String) : this(
-            name, alias = name, logoUrl = "", accountNo = "", institutionId = -1, countryAlpha2 = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
+            name, alias = name, logoUrl = "", accountNo = "", institutionId = -1, institutionType = "", countryAlpha2 = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
     )
 
     @PrimaryKey(autoGenerate = true)

@@ -20,7 +20,6 @@ const val NAV_HOME = 600
 const val NAV_TRANSFER = 601
 const val NAV_AIRTIME = 602
 const val NAV_REQUEST = 603
-const val NAV_BALANCE = 604
 const val NAV_SETTINGS = 605
 const val NAV_LINK_ACCOUNT = 606
 const val NAV_PAYBILL = 608
@@ -42,7 +41,7 @@ class NavHelper(val activity: AppCompatActivity) {
         navController?.let {
             NavigationUI.setupWithNavController(nav, navController!!)
             appBarConfiguration = AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_history, R.id.libraryFragment
+                R.id.navigation_home, R.id.navigation_sim,  R.id.navigation_history, R.id.libraryFragment
             ).build()
         }
 
@@ -101,10 +100,11 @@ class NavHelper(val activity: AppCompatActivity) {
     }
 
     private fun getNavDirections(destId: Int): NavDirections? = when (destId) {
+        R.id.navigation_home, NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
+        R.id.navigation_sim -> MainNavigationDirections.actionGlobalNavigationSIM()
         R.id.navigation_request, NAV_REQUEST -> MainNavigationDirections.actionGlobalNavigationRequest()
         R.id.navigation_history, NAV_HISTORY -> MainNavigationDirections.actionGlobalNavigationHistory()
         R.id.navigation_settings, NAV_SETTINGS -> MainNavigationDirections.actionGlobalNavigationSettings()
-        R.id.navigation_home, NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
         R.id.libraryFragment, NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
         NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
         NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)

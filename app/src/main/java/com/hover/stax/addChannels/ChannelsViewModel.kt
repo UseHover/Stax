@@ -182,7 +182,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         val accounts = channels.mapIndexed { index, channel ->
             val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
             Account(
-                accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.countryAlpha2,
+                accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
                 channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0
             )
         }.onEach {
