@@ -177,6 +177,7 @@
     <string name="add_an_account">Add an account</string>
     <string name="add_accounts_to_stax">Add accounts to Stax</string>
     <string name="link_sim_to_stax">Link your SIM cards to Stax</string>
+    <string name="link_nth_sim_to_stax">Link your %1$s SIM card</string>
     <string name="your_linked_sim">Your linked SIM cards</string>
 
     <!-- SIM CARD -->

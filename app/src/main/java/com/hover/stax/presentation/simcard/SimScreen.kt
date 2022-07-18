@@ -93,7 +93,7 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
 							}
 						}
 						else {
-							LinkSimCard(id = R.string.link_sim_to_stax,
+							LinkSimCard(id = R.string.link_nth_sim_to_stax, stringArg = intToNthWord(index),
 								onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount)
 						}
 					}
@@ -110,7 +110,7 @@ fun SimScreenPreview() {
 	val accounts = mutableListOf<Account>()
 	val account1 = Account("Telecom")
 	val account2 = Account("Safaricom")
-	account1.id = 1
+	account1.id = 0
 	account1.subscriptionId = 1
 	account1.latestBalance = "NGN 200"
 	account1.latestBalanceTimestamp = 123
@@ -135,7 +135,15 @@ fun SimScreenPreview() {
 					item {
 						if(accounts.isEmpty()) GrantPermissionText()
 					}
-					items(accounts) { account ->
+
+					item {
+						accounts.let {
+							if(it.isEmpty()) {
+								LinkSimCard(id = R.string.link_sim_to_stax, onClickedLinkSimCard = {  })
+							}
+						}
+					}
+					itemsIndexed(accounts) { index, account ->
 							if(account.id > 0) {
 								SimItem(simIndex = 1,
 									account = account,
@@ -144,7 +152,7 @@ fun SimScreenPreview() {
 								}
 							}
 							else {
-								LinkSimCard(id = R.string.link_sim_to_stax,
+								LinkSimCard(id = R.string.link_nth_sim_to_stax, stringArg = intToNthWord(index),
 									onClickedLinkSimCard = {  })
 							}
 						}
@@ -298,11 +306,12 @@ fun SimItemTopRow(simIndex: Int,
 }
 
 @Composable
-fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit) {
+fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit, stringArg : String = "") {
 	OutlinedButton(
 		onClick = onClickedLinkSimCard,
 		modifier = Modifier
 			.fillMaxWidth()
+			.padding(vertical = 13.dp)
 			.shadow(elevation = 0.dp),
 		shape = MaterialTheme.shapes.medium,
 		border = BorderStroke(width = 0.5.dp, color = DarkGray),
@@ -312,7 +321,7 @@ fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit) {
 		)
 	) {
 		Text(
-			text = stringResource(id = id),
+			text = stringResource(id = id, stringArg),
 			style = MaterialTheme.typography.button,
 			modifier = Modifier
 				.fillMaxWidth()
@@ -320,5 +329,18 @@ fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit) {
 			textAlign = TextAlign.Center
 		)
 	}
-
 }
+
+private fun intToNthWord(digit: Int) : String = nthWord[digit]
+val nthWord = arrayOf(
+	"first",
+	"second",
+	"third",
+	"fourth",
+	"fifth",
+	"sixth",
+	"seventh",
+	"eighth",
+	"ninth",
+	"tenth",
+)

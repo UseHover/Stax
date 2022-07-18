@@ -95,12 +95,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
         setFabListener()
         if(args.isForTelecom) {
-            displayTelecomChanges()
+            displayTelecomUiChanges()
             channelsViewModel.loadTelecomChannels()
         }
     }
 
-    private fun displayTelecomChanges() {
+    private fun displayTelecomUiChanges() {
         if(args.isForTelecom) {
             binding.searchInput.visibility = GONE
             binding.countryDropdown.visibility = GONE
