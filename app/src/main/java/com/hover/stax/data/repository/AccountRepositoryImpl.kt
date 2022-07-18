@@ -53,14 +53,14 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
     private suspend fun getSubscriptionId(channel : Channel) : Int? {
         var subscriptionId : Int? = null
-        if(channel.institutionType == Channel.TELECOM_TYPE) {
+        //if(channel.institutionType == Channel.TELECOM_TYPE) {
             val presentSims = presentSimUseCase()
             if(presentSims.isEmpty()) return null
             val simInfo : SimInfo? = presentSims.find { channel.hniList.contains(it.osReportedHni) }
             simInfo?.let {
                 subscriptionId = it.subscriptionId
             }
-        }
+        //}
         return subscriptionId
     }
 

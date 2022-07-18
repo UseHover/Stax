@@ -53,6 +53,7 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
 	val presentSims = accountsViewModel.presentSims.observeAsState(initial = emptyList())
 	val bonuses = bonusViewModel.bonusList.collectAsState()
 
+
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Scaffold(topBar = {
@@ -79,14 +80,14 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
 						}
 					}
 
-					accounts.value?.let {
-						itemsIndexed(it) { index, account ->
-							if (account.id > 0) {
-								val sim =
-									presentSims.value.find { it.subscriptionId == account.subscriptionId }
-								SimItem(simIndex = sim?.slotIdx ?: 1,
-									account = account,
-									bonus = (bonuses.value.bonuses.first().bonusPercent * 100).toInt(),
+					if(!accounts.value.isNullOrEmpty() && presentSims.value.isNotEmpty()) {
+						itemsIndexed(presentSims.value) { index, presentSim ->
+							val simAccount = accounts.value?.find { it.subscriptionId == presentSim.subscriptionId }
+							if (simAccount !=null) {
+								val bonus = bonuses.value.bonuses.firstOrNull()
+								SimItem(simIndex = presentSim.slotIdx + 1,
+									account = simAccount,
+									bonus = ((bonus?.bonusPercent ?: 0.0) * 100).toInt(),
 									onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime) { }
 							}
 							else {
@@ -205,8 +206,9 @@ fun SimItem(simIndex: Int,
 				account = account,
 				onClickedCheckBalance = onClickedCheckBalance)
 			Column {
+				val notYetChecked = stringResource(id = R.string.not_yet_checked)
 				Text(text = stringResource(id = R.string.airtime_balance_holder,
-					account.latestBalance ?: "-"),
+					account.latestBalance ?: notYetChecked),
 					color = TextGrey,
 					modifier = Modifier.padding(top = size13),
 					style = MaterialTheme.typography.body1)
@@ -279,16 +281,15 @@ fun SimItemTopRow(simIndex: Int, account: Account, onClickedCheckBalance: () -> 
 
 		Button(onClick = onClickedCheckBalance,
 			modifier = Modifier
-				.width(120.dp)
+				.width(150.dp)
 				.shadow(elevation = 2.dp),
 			shape = MaterialTheme.shapes.medium,
 			colors = ButtonDefaults.buttonColors(backgroundColor = BrightBlue,
 				contentColor = ColorPrimary)) {
 			Text(text = stringResource(id = R.string.check_balance_capitalized),
-				style = MaterialTheme.typography.button,
+				style = MaterialTheme.typography.body2,
 				modifier = Modifier.fillMaxWidth(),
-				textAlign = TextAlign.Center,
-				fontSize = 12.sp)
+				textAlign = TextAlign.Center)
 		}
 	}
 }
