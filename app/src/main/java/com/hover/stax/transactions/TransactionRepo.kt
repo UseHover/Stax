@@ -56,6 +56,8 @@ class TransactionRepo(db: AppDatabase) {
 
     fun getTransactionAsync(uuid: String): Flow<StaxTransaction> = transactionDao.getTransactionAsync(uuid)
 
+    fun deleteAccountTransactions(accountId: Int) = transactionDao.deleteAccountTransactions(accountId)
+
     fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
         AppDatabase.databaseWriteExecutor.execute {
             try {

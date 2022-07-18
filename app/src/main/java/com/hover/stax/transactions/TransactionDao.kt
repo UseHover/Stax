@@ -49,4 +49,8 @@ interface TransactionDao {
 
     @Update
     fun update(transaction: StaxTransaction?)
+
+    @Query("DELETE FROM stax_transactions WHERE account_id = :accountId")
+    fun deleteAccountTransactions(accountId: Int)
+
 }
