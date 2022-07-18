@@ -13,6 +13,7 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.domain.use_case.sims.GetLivePresentSimUseCase
 import com.hover.stax.schedules.Schedule
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class AccountsViewModel(application: Application, val getLivePresentSimUseCase: GetLivePresentSimUseCase, val repo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
+class AccountsViewModel(application: Application,
+                        getLivePresentSimUseCase: GetLivePresentSimUseCase,
+                        val repo: AccountRepo,
+                        val actionRepo: ActionRepo,
+                        private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
     private val _accounts = MutableStateFlow(AccountList())
@@ -68,8 +73,10 @@ class AccountsViewModel(application: Application, val getLivePresentSimUseCase: 
         simSubscriptionIds.postValue(sims.map { it.subscriptionId }.toIntArray())
     }
 
-    private fun getTelecomAccounts(subIds: IntArray) : LiveData<List<Account>> {
-        return repo.getLiveTelecomAccounts(subIds)
+    private fun getTelecomAccounts(subIds: IntArray){
+        viewModelScope.launch(Dispatchers.IO) {
+            telecomAccounts.postValue(repo.getTelecomAccounts(subIds))
+        }
     }
 
     private fun setActiveAccountIfNull(accounts: List<Account>) {

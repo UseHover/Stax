@@ -47,8 +47,8 @@ data class SimScreenClickFunctions(
 
 @Composable
 fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
-	val accountsViewModel : AccountsViewModel by getViewModel()
-	val bonusViewModel : BonusViewModel by getViewModel()
+	val accountsViewModel : AccountsViewModel = getViewModel()
+	val bonusViewModel : BonusViewModel =  getViewModel()
 
 	val accounts =  accountsViewModel.telecomAccounts.observeAsState(initial = null)
 	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
@@ -69,6 +69,15 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
 					item {
 						accounts.value?.let {
 							if(it.isEmpty()) GrantPermissionText()
+						}
+					}
+
+					item {
+						accounts.value?.let {
+							if(it.isEmpty()) {
+								LinkSimCard(id = R.string.link_sim_to_stax,
+									onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount)
+							}
 						}
 					}
 
@@ -261,7 +270,9 @@ fun SimItemTopRow(simIndex: Int,
 			contentScale = ContentScale.Crop
 		)
 
-		Column(modifier = Modifier.weight(1f).padding(horizontal = 13.dp)) {
+		Column(modifier = Modifier
+			.weight(1f)
+			.padding(horizontal = 13.dp)) {
 			Text(text = account.name, style = MaterialTheme.typography.body1)
 			Text(text = stringResource(id = R.string.sim_index, simIndex), 
 				color = TextGrey, style = MaterialTheme.typography.body2)

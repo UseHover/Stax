@@ -15,7 +15,7 @@ interface AccountDao {
     fun getLiveAccounts(): LiveData<List<Account>>
 
     @Query("SELECT * FROM accounts WHERE subscription_id IN (:subscriptionIds)")
-    fun getLiveAccountsBySubscribedSim(subscriptionIds: IntArray): LiveData<List<Account>>
+    suspend fun getAccountsBySubscribedSim(subscriptionIds: IntArray): List<Account>
 
     @Query("SELECT * FROM accounts WHERE channelId = :channelId ORDER BY alias ASC")
     fun getAccountsByChannel(channelId: Int): List<Account>
