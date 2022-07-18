@@ -48,6 +48,7 @@
 	<string name="start_load_screen" translatable="false">Visited load screen</string>
 	<string name="finish_load_screen" translatable="false">Complete load screen</string>
 	<string name="refresh_balance_single" translatable="false">Clicked refresh single balance</string>
+	<string name="refresh_sim_airtime_balance" translatable="false">Clicked refresh sim airtime balance</string>
 	<string name="refresh_balance_all" translatable="false">Clicked refresh all balances</string>
 	<string name="visit_screen" translatable="false">Visited %1$s screen</string>
 	<string name="visit_onboarding" translatable="false">Onboarding</string>

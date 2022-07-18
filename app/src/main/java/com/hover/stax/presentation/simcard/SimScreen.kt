@@ -3,6 +3,7 @@ package com.hover.stax.presentation.simcard
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -32,6 +33,8 @@ import com.hover.stax.R
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.domain.model.Account
+import com.hover.stax.presentation.home.BalanceTapListener
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.presentation.home.TopBar
 import com.hover.stax.ui.theme.*
 import com.hover.stax.utils.DateUtils
@@ -40,11 +43,10 @@ import org.koin.androidx.compose.getViewModel
 
 data class SimScreenClickFunctions(val onClickedAddNewAccount: () -> Unit,
                                    val onClickedSettingsIcon: () -> Unit,
-                                   val onClickedCheckBalance: () -> Unit,
                                    val onClickedBuyAirtime: () -> Unit)
 
 @Composable
-fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
+fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions, balanceTapListener: BalanceTapListener) {
 	val accountsViewModel: AccountsViewModel = getViewModel()
 	val bonusViewModel: BonusViewModel = getViewModel()
 
@@ -52,7 +54,6 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
 	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
 	val presentSims = accountsViewModel.presentSims.observeAsState(initial = emptyList())
 	val bonuses = bonusViewModel.bonusList.collectAsState()
-
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -88,7 +89,8 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
 								SimItem(simIndex = presentSim.slotIdx + 1,
 									account = simAccount,
 									bonus = ((bonus?.bonusPercent ?: 0.0) * 100).toInt(),
-									onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime) { }
+									onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime,
+									balanceTapListener = balanceTapListener)
 							}
 							else {
 								LinkSimCard(id = R.string.link_nth_sim_to_stax,
@@ -148,7 +150,7 @@ fun SimScreenPreview() {
 							SimItem(simIndex = 1,
 								account = account,
 								bonus = (0.05 * 100).toInt(),
-								onClickedBuyAirtime = { }) { }
+								onClickedBuyAirtime = { }, balanceTapListener = null)
 						}
 						else {
 							LinkSimCard(id = R.string.link_nth_sim_to_stax,
@@ -189,7 +191,7 @@ fun SimItem(simIndex: Int,
             account: Account,
             bonus: Int,
             onClickedBuyAirtime: () -> Unit,
-            onClickedCheckBalance: () -> Unit) {
+            balanceTapListener: BalanceTapListener?) {
 
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	OutlinedButton(onClick = {},
@@ -204,7 +206,7 @@ fun SimItem(simIndex: Int,
 		Column(modifier = Modifier.fillMaxWidth()) {
 			SimItemTopRow(simIndex = simIndex,
 				account = account,
-				onClickedCheckBalance = onClickedCheckBalance)
+				balanceTapListener = balanceTapListener)
 			Column {
 				val notYetChecked = stringResource(id = R.string.not_yet_checked)
 				Text(text = stringResource(id = R.string.airtime_balance_holder,
@@ -214,7 +216,7 @@ fun SimItem(simIndex: Int,
 					style = MaterialTheme.typography.body1)
 
 				Text(text = stringResource(id = R.string.as_of,
-					DateUtils.humanFriendlyDate(account.latestBalanceTimestamp)),
+					DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)),
 					color = TextGrey,
 					modifier = Modifier.padding(bottom = 26.dp),
 					style = MaterialTheme.typography.body1)
@@ -256,7 +258,7 @@ fun SimItem(simIndex: Int,
 }
 
 @Composable
-fun SimItemTopRow(simIndex: Int, account: Account, onClickedCheckBalance: () -> Unit) {
+fun SimItemTopRow(simIndex: Int, account: Account, balanceTapListener: BalanceTapListener?) {
 	val size34 = dimensionResource(id = R.dimen.margin_34)
 	Row {
 		AsyncImage(model = ImageRequest.Builder(LocalContext.current).data(account.logoUrl)
@@ -279,7 +281,7 @@ fun SimItemTopRow(simIndex: Int, account: Account, onClickedCheckBalance: () -> 
 				style = MaterialTheme.typography.body2)
 		}
 
-		Button(onClick = onClickedCheckBalance,
+		Button(onClick = { balanceTapListener?.onTapBalanceRefresh(account) },
 			modifier = Modifier
 				.width(150.dp)
 				.shadow(elevation = 2.dp),
