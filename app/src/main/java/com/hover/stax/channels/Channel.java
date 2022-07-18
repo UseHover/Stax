@@ -113,10 +113,6 @@ public class Channel implements Comparable<Channel> {
         return sorted_list;
     }
 
-    public List<String> getHniList() {
-        return Arrays.asList(hniList.substring(1, hniList.length() - 2).split(","));
-    }
-
     Channel update(JSONObject jsonObject, String rootUrl) {
         try {
             id = jsonObject.getInt("id");

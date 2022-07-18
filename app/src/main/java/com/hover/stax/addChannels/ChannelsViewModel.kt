@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
 
 class ChannelsViewModel(application: Application, val repo: ChannelRepo,
                         val presentSimUseCase: GetPresentSimUseCase,
@@ -50,6 +51,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     val filterQuery = MutableLiveData<String?>()
     private var countryChannels = MediatorLiveData<List<Channel>>()
     val filteredChannels = MediatorLiveData<List<Channel>>()
+    val telecomChannelsLiveData = MutableLiveData<List<Channel>>()
 
     private val _channelCountryList = MediatorLiveData<List<String>>()
     val channelCountryList: LiveData<List<String>> = _channelCountryList
@@ -136,6 +138,12 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
             countryCode.isNullOrEmpty() || countryCode == CountryAdapter.CODE_ALL_COUNTRIES -> channels
             else -> channels?.filter { it.countryAlpha2 == countryChoice.value }
         }
+
+        val channel = channels?.find { it.rootCode == "*556#" }
+        val telecomChannels = channels?.filter { it.institutionType == Channel.TELECOM_TYPE && it.countryAlpha2.lowercase() == "ng" }
+        Timber.i("Found MTN telecom channel: ${channel?.name ?: "Null"} ")
+        Timber.i("All telecom channels: ${telecomChannels?.size ?: "Zero"} ")
+
     }
 
     private fun getCountriesAndFirebaseSubscriptions(sims: List<SimInfo>?): List<String>? {
@@ -217,23 +225,35 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         if(channel.institutionType == Channel.TELECOM_TYPE) {
             val presentSims = presentSimUseCase()
             if(presentSims.isEmpty()) return null
-            if(channel.getHniList().contains(presentSims.first().osReportedHni)) {
+            if(channel.hniList.contains(presentSims.first().osReportedHni)) {
                 subscriberId = presentSims.first().subscriptionId
             }
-            else if(presentSims.size > 1 && channel.getHniList().contains(presentSims[1].osReportedHni)) {
+            else if(presentSims.size > 1 && channel.hniList.contains(presentSims[1].osReportedHni)) {
                 subscriberId = presentSims[1].subscriptionId
             }
         }
         return subscriberId
     }
 
-    fun filterPresentSimTelecoms() : List<Channel> {
+    fun loadTelecomChannels() {
         val presentSims = sims.value
-        if(presentSims.isNullOrEmpty()) return emptyList()
-        var filtered = filteredChannels.value?.filter { it.institutionType !=null && it.institutionType == Channel.TELECOM_TYPE }
-        filtered = filtered?.filter { it.getHniList().contains(presentSims.first().osReportedHni) }
-        if(presentSims.size > 1)  filtered =  filtered?.filter { it.getHniList().contains(presentSims[1].osReportedHni) }
-        return filtered ?: emptyList()
+        if(!presentSims.isNullOrEmpty()) {
+            Timber.i("Present sims loaded")
+            viewModelScope.launch(Dispatchers.IO) {
+                val telecomChannels = repo.publishedTelecomChannels()
+                val presentSimTelecomChannels = mutableListOf<Channel>()
+                Timber.i("Telecom  channel filter size is ${telecomChannels.size}")
+                Timber.i("Sim 1 HNI: ${presentSims.first().osReportedHni}")
+                Timber.i("Sim 2 HNI: ${presentSims[1].osReportedHni}")
+                telecomChannels.forEach {
+                    Timber.i("HNI list ${it.hniList}")
+                }
+                presentSimTelecomChannels.addAll(telecomChannels.filter { it.hniList.contains(presentSims.first().osReportedHni) })
+                if(presentSims.size > 1)  presentSimTelecomChannels.addAll(telecomChannels.filter { it.hniList.contains(presentSims[1].osReportedHni) })
+                Timber.i("Present sim telecom  channel filter size is ${presentSimTelecomChannels.size}")
+                telecomChannelsLiveData.postValue(presentSimTelecomChannels)
+            }
+        }
     }
 
 

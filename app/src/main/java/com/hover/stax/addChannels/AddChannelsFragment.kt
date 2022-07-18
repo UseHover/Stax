@@ -94,10 +94,13 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         startObservers()
 
         setFabListener()
-        displayChangesIfForTelecom()
+        if(args.isForTelecom) {
+            displayTelecomChanges()
+            channelsViewModel.loadTelecomChannels()
+        }
     }
 
-    private fun displayChangesIfForTelecom() {
+    private fun displayTelecomChanges() {
         if(args.isForTelecom) {
             binding.searchInput.visibility = GONE
             binding.countryDropdown.visibility = GONE
@@ -108,9 +111,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private fun startObservers() = with(channelsViewModel) {
         val channelsObserver =
             Observer<List<Channel>> { t -> t?.let {
-                var filteredChannels = it
-                if(args.isForTelecom) filteredChannels = channelsViewModel.filterPresentSimTelecoms()
-                loadFilteredChannels(filteredChannels)
+                loadFilteredChannels(it)
             } }
 
         val simsObserver =
@@ -123,8 +124,9 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         sims.observe(viewLifecycleOwner, simsObserver)
         simCountryList.observe(viewLifecycleOwner, countryListObserver)
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        filteredChannels.observe(viewLifecycleOwner, channelsObserver)
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
+        if(args.isForTelecom) telecomChannelsLiveData.observe(viewLifecycleOwner, channelsObserver)
+        else filteredChannels.observe(viewLifecycleOwner, channelsObserver)
     }
 
     private fun fillUpChannelLists() {

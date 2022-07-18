@@ -54,10 +54,10 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         var subscriberId : Int? = null
         if(channel.institutionType == Channel.TELECOM_TYPE) {
             val presentSims = presentSimUseCase()
-            if(channel.getHniList().contains(presentSims.first().osReportedHni)) {
+            if(channel.hniList.contains(presentSims.first().osReportedHni)) {
                 subscriberId = presentSims.first().subscriptionId
             }
-            else if(presentSims.size > 1 && channel.getHniList().contains(presentSims.get(1).osReportedHni)) {
+            else if(presentSims.size > 1 && channel.hniList.contains(presentSims[1].osReportedHni)) {
                 subscriberId = presentSims.first().subscriptionId
             }
         }
