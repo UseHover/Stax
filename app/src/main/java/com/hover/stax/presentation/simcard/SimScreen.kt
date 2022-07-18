@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -39,19 +38,17 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
 
-data class SimScreenClickFunctions(
-	val onClickedAddNewAccount: () -> Unit,
-	val onClickedSettingsIcon: () -> Unit,
-	val onClickedCheckBalance: () -> Unit,
-	val onClickedBuyAirtime: () -> Unit
-)
+data class SimScreenClickFunctions(val onClickedAddNewAccount: () -> Unit,
+                                   val onClickedSettingsIcon: () -> Unit,
+                                   val onClickedCheckBalance: () -> Unit,
+                                   val onClickedBuyAirtime: () -> Unit)
 
 @Composable
 fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
-	val accountsViewModel : AccountsViewModel = getViewModel()
-	val bonusViewModel : BonusViewModel =  getViewModel()
+	val accountsViewModel: AccountsViewModel = getViewModel()
+	val bonusViewModel: BonusViewModel = getViewModel()
 
-	val accounts =  accountsViewModel.telecomAccounts.observeAsState(initial = null)
+	val accounts = accountsViewModel.telecomAccounts.observeAsState(initial = null)
 	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
 	val presentSims = accountsViewModel.presentSims.observeAsState(initial = emptyList())
 	val bonuses = bonusViewModel.bonusList.collectAsState()
@@ -69,13 +66,13 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
 					}
 					item {
 						accounts.value?.let {
-							if(it.isEmpty()) GrantPermissionText()
+							if (it.isEmpty()) GrantPermissionText()
 						}
 					}
 
 					item {
 						accounts.value?.let {
-							if(it.isEmpty()) {
+							if (it.isEmpty()) {
 								LinkSimCard(id = R.string.link_sim_to_stax,
 									onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount)
 							}
@@ -83,20 +80,21 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions) {
 					}
 
 					accounts.value?.let {
-					itemsIndexed(it) { index, account ->
-						if(account.id > 0) {
-							val sim =  presentSims.value.find { it.subscriptionId == account.subscriptionId }
-							SimItem(simIndex = sim?.slotIdx ?: 1,
-								account = account,
-								bonus = (bonuses.value.bonuses.first().bonusPercent * 100).toInt(),
-								onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime) {
+						itemsIndexed(it) { index, account ->
+							if (account.id > 0) {
+								val sim =
+									presentSims.value.find { it.subscriptionId == account.subscriptionId }
+								SimItem(simIndex = sim?.slotIdx ?: 1,
+									account = account,
+									bonus = (bonuses.value.bonuses.first().bonusPercent * 100).toInt(),
+									onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime) { }
+							}
+							else {
+								LinkSimCard(id = R.string.link_nth_sim_to_stax,
+									stringArg = intToNthWord(index),
+									onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount)
 							}
 						}
-						else {
-							LinkSimCard(id = R.string.link_nth_sim_to_stax, stringArg = intToNthWord(index),
-								onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount)
-						}
-					}
 					}
 				}
 			})
@@ -133,29 +131,30 @@ fun SimScreenPreview() {
 						PageTitle()
 					}
 					item {
-						if(accounts.isEmpty()) GrantPermissionText()
+						if (accounts.isEmpty()) GrantPermissionText()
 					}
 
 					item {
 						accounts.let {
-							if(it.isEmpty()) {
-								LinkSimCard(id = R.string.link_sim_to_stax, onClickedLinkSimCard = {  })
+							if (it.isEmpty()) {
+								LinkSimCard(id = R.string.link_sim_to_stax,
+									onClickedLinkSimCard = { })
 							}
 						}
 					}
 					itemsIndexed(accounts) { index, account ->
-							if(account.id > 0) {
-								SimItem(simIndex = 1,
-									account = account,
-									bonus = (0.05 * 100).toInt(),
-									onClickedBuyAirtime = { }) {
-								}
-							}
-							else {
-								LinkSimCard(id = R.string.link_nth_sim_to_stax, stringArg = intToNthWord(index),
-									onClickedLinkSimCard = {  })
-							}
+						if (account.id > 0) {
+							SimItem(simIndex = 1,
+								account = account,
+								bonus = (0.05 * 100).toInt(),
+								onClickedBuyAirtime = { }) { }
 						}
+						else {
+							LinkSimCard(id = R.string.link_nth_sim_to_stax,
+								stringArg = intToNthWord(index),
+								onClickedLinkSimCard = { })
+						}
+					}
 				}
 			})
 		}
@@ -165,11 +164,9 @@ fun SimScreenPreview() {
 @Composable
 fun PageTitle() {
 	val size13 = dimensionResource(id = R.dimen.margin_13)
-	Text(
-		text = stringResource(id = R.string.your_linked_sim),
+	Text(text = stringResource(id = R.string.your_linked_sim),
 		modifier = Modifier.padding(vertical = size13),
-		style = MaterialTheme.typography.button
-	)
+		style = MaterialTheme.typography.button)
 }
 
 @Composable
@@ -187,88 +184,81 @@ fun GrantPermissionText() {
 }
 
 @Composable
-fun SimItem(simIndex: Int, 
+fun SimItem(simIndex: Int,
             account: Account,
-            bonus : Int,
-            onClickedBuyAirtime: () -> Unit, 
+            bonus: Int,
+            onClickedBuyAirtime: () -> Unit,
             onClickedCheckBalance: () -> Unit) {
-	
+
 	val size13 = dimensionResource(id = R.dimen.margin_13)
-	OutlinedButton(
-		onClick = {},
+	OutlinedButton(onClick = {},
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(vertical = 13.dp)
 			.shadow(elevation = 0.dp),
 		shape = MaterialTheme.shapes.medium,
 		border = BorderStroke(width = 0.5.dp, color = DarkGray),
-		colors = ButtonDefaults.buttonColors(
-			backgroundColor = ColorSurface,
-			contentColor = OffWhite
-		)
-	) {
-		Column(modifier = Modifier
-			.fillMaxWidth()) {
-			SimItemTopRow(simIndex = simIndex, account = account, onClickedCheckBalance = onClickedCheckBalance)
+		colors = ButtonDefaults.buttonColors(backgroundColor = ColorSurface,
+			contentColor = OffWhite)) {
+		Column(modifier = Modifier.fillMaxWidth()) {
+			SimItemTopRow(simIndex = simIndex,
+				account = account,
+				onClickedCheckBalance = onClickedCheckBalance)
 			Column {
-				Text(text = stringResource(id = R.string.airtime_balance_holder, account.latestBalance ?: "-"),
-				color = TextGrey, modifier = Modifier.padding(top = size13), style = MaterialTheme.typography.body1)
+				Text(text = stringResource(id = R.string.airtime_balance_holder,
+					account.latestBalance ?: "-"),
+					color = TextGrey,
+					modifier = Modifier.padding(top = size13),
+					style = MaterialTheme.typography.body1)
 
-				Text(text = stringResource(id = R.string.as_of, DateUtils.humanFriendlyDate(account.latestBalanceTimestamp)),
-					color = TextGrey, modifier = Modifier.padding(bottom = 26.dp), style = MaterialTheme.typography.body1)
+				Text(text = stringResource(id = R.string.as_of,
+					DateUtils.humanFriendlyDate(account.latestBalanceTimestamp)),
+					color = TextGrey,
+					modifier = Modifier.padding(bottom = 26.dp),
+					style = MaterialTheme.typography.body1)
 
-				OutlinedButton(
-					onClick = onClickedBuyAirtime,
+				OutlinedButton(onClick = onClickedBuyAirtime,
 					modifier = Modifier
 						.padding(bottom = 6.dp)
 						.shadow(elevation = 0.dp)
 						.wrapContentWidth(),
 					shape = MaterialTheme.shapes.medium,
 					border = BorderStroke(width = 0.5.dp, color = DarkGray),
-					colors = ButtonDefaults.buttonColors(
-						backgroundColor = ColorSurface,
-						contentColor = OffWhite
-					)
-				) {
+					colors = ButtonDefaults.buttonColors(backgroundColor = ColorSurface,
+						contentColor = OffWhite)) {
 					Row(modifier = Modifier
 						.wrapContentWidth()
 						.padding(all = 5.dp)) {
 						var buyAirtimeLabel = stringResource(id = R.string.nav_airtime)
-						if(bonus > 0) {
+						if (bonus > 0) {
 							val bonusPercent = bonus.toString().plus("%")
-							buyAirtimeLabel = stringResource(id = R.string.buy_airitme_with_discount, bonusPercent)
+							buyAirtimeLabel =
+								stringResource(id = R.string.buy_airitme_with_discount,
+									bonusPercent)
 						}
-						Text(
-							text = buyAirtimeLabel,
+						Text(text = buyAirtimeLabel,
 							style = MaterialTheme.typography.button,
-							modifier = Modifier
-								.padding(end = 5.dp),
+							modifier = Modifier.padding(end = 5.dp),
 							textAlign = TextAlign.Start,
-							fontSize = 14.sp
-						)
+							fontSize = 14.sp)
 						Image(painter = painterResource(id = R.drawable.ic_bonus),
-							contentDescription = null, modifier = Modifier.size(18.dp) )
+							contentDescription = null,
+							modifier = Modifier.size(18.dp))
 					}
 				}
 
 			}
-			
+
 		}
 	}
 }
 
 @Composable
-fun SimItemTopRow(simIndex: Int,
-                  account: Account, 
-                  onClickedCheckBalance: () -> Unit) {
+fun SimItemTopRow(simIndex: Int, account: Account, onClickedCheckBalance: () -> Unit) {
 	val size34 = dimensionResource(id = R.dimen.margin_34)
 	Row {
-		AsyncImage(
-			model = ImageRequest.Builder(LocalContext.current)
-				.data(account.logoUrl)
-				.crossfade(true)
-				.diskCachePolicy(CachePolicy.ENABLED)
-				.build(),
+		AsyncImage(model = ImageRequest.Builder(LocalContext.current).data(account.logoUrl)
+			.crossfade(true).diskCachePolicy(CachePolicy.ENABLED).build(),
 			contentDescription = "",
 			placeholder = painterResource(id = R.drawable.image_placeholder),
 			error = painterResource(id = R.drawable.ic_stax),
@@ -276,15 +266,15 @@ fun SimItemTopRow(simIndex: Int,
 				.size(size34)
 				.clip(CircleShape)
 				.align(Alignment.CenterVertically),
-			contentScale = ContentScale.Crop
-		)
+			contentScale = ContentScale.Crop)
 
 		Column(modifier = Modifier
 			.weight(1f)
 			.padding(horizontal = 13.dp)) {
 			Text(text = account.name, style = MaterialTheme.typography.body1)
-			Text(text = stringResource(id = R.string.sim_index, simIndex), 
-				color = TextGrey, style = MaterialTheme.typography.body2)
+			Text(text = stringResource(id = R.string.sim_index, simIndex),
+				color = TextGrey,
+				style = MaterialTheme.typography.body2)
 		}
 
 		Button(onClick = onClickedCheckBalance,
@@ -292,46 +282,38 @@ fun SimItemTopRow(simIndex: Int,
 				.width(120.dp)
 				.shadow(elevation = 2.dp),
 			shape = MaterialTheme.shapes.medium,
-			colors = ButtonDefaults.buttonColors(backgroundColor = BrightBlue, contentColor = ColorPrimary)) {
-			Text(
-				text = stringResource(id = R.string.check_balance_capitalized),
+			colors = ButtonDefaults.buttonColors(backgroundColor = BrightBlue,
+				contentColor = ColorPrimary)) {
+			Text(text = stringResource(id = R.string.check_balance_capitalized),
 				style = MaterialTheme.typography.button,
-				modifier = Modifier
-					.fillMaxWidth(),
+				modifier = Modifier.fillMaxWidth(),
 				textAlign = TextAlign.Center,
-				fontSize = 12.sp
-			)
+				fontSize = 12.sp)
 		}
 	}
 }
 
 @Composable
-fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit, stringArg : String = "") {
-	OutlinedButton(
-		onClick = onClickedLinkSimCard,
+fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit, stringArg: String = "") {
+	OutlinedButton(onClick = onClickedLinkSimCard,
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(vertical = 13.dp)
 			.shadow(elevation = 0.dp),
 		shape = MaterialTheme.shapes.medium,
 		border = BorderStroke(width = 0.5.dp, color = DarkGray),
-		colors = ButtonDefaults.buttonColors(
-			backgroundColor = ColorSurface,
-			contentColor = OffWhite
-		)
-	) {
-		Text(
-			text = stringResource(id = id, stringArg),
+		colors = ButtonDefaults.buttonColors(backgroundColor = ColorSurface,
+			contentColor = OffWhite)) {
+		Text(text = stringResource(id = id, stringArg),
 			style = MaterialTheme.typography.button,
 			modifier = Modifier
 				.fillMaxWidth()
 				.padding(top = 5.dp, bottom = 5.dp),
-			textAlign = TextAlign.Center
-		)
+			textAlign = TextAlign.Center)
 	}
 }
 
-private fun intToNthWord(digit: Int) : String = nthWord[digit]
+private fun intToNthWord(digit: Int): String = nthWord[digit]
 val nthWord = arrayOf(
 	"first",
 	"second",
