@@ -3,6 +3,7 @@ package com.hover.stax.data.repository
 import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.ActionApi
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
@@ -51,17 +52,16 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     //This only gets ID if account is a Telecos e.g Safaricom, MTN. It assumes different Teleco for each sim slots.
     //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
     private suspend fun getSubscriptionId(channel : Channel) : Int? {
-        var subscriberId : Int? = null
+        var subscriptionId : Int? = null
         if(channel.institutionType == Channel.TELECOM_TYPE) {
             val presentSims = presentSimUseCase()
-            if(channel.hniList.contains(presentSims.first().osReportedHni)) {
-                subscriberId = presentSims.first().subscriptionId
-            }
-            else if(presentSims.size > 1 && channel.hniList.contains(presentSims[1].osReportedHni)) {
-                subscriberId = presentSims.first().subscriptionId
+            if(presentSims.isEmpty()) return null
+            val simInfo : SimInfo? = presentSims.find { channel.hniList.contains(it.osReportedHni) }
+            simInfo?.let {
+                subscriptionId = it.subscriptionId
             }
         }
-        return subscriberId
+        return subscriptionId
     }
 
     override suspend fun setDefaultAccount(account: Account) {

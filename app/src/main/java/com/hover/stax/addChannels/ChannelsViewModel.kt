@@ -42,7 +42,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
-    val allChannels: LiveData<List<Channel>> = repo.publishedChannels
+    val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
 
     var sims = MutableLiveData<List<SimInfo>>()
     var simCountryList: LiveData<List<String>> = MutableLiveData()
@@ -103,8 +103,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         }
     }
 
-
-
     private fun onAllChannelsUpdate(channels: List<Channel>?) {
         updateCountryChannels(channels, countryChoice.value)
     }
@@ -119,8 +117,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
 
         _channelCountryList.postValue(countryCodes)
     }
-
-
 
     private fun onSimUpdate(countryCodes: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -221,42 +217,31 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     //This only gets ID if account is a Telecos e.g Safaricom, MTN. It assumes different Teleco for each sim slots.
     //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
     private suspend fun getSubscriptionId(channel : Channel) : Int? {
-        var subscriberId : Int? = null
+        var subscriptionId : Int? = null
         if(channel.institutionType == Channel.TELECOM_TYPE) {
             val presentSims = presentSimUseCase()
             if(presentSims.isEmpty()) return null
-            if(channel.hniList.contains(presentSims.first().osReportedHni)) {
-                subscriberId = presentSims.first().subscriptionId
-            }
-            else if(presentSims.size > 1 && channel.hniList.contains(presentSims[1].osReportedHni)) {
-                subscriberId = presentSims[1].subscriptionId
+            val simInfo : SimInfo? = presentSims.find { channel.hniList.contains(it.osReportedHni) }
+            simInfo?.let {
+                subscriptionId = it.subscriptionId
             }
         }
-        return subscriberId
+        return subscriptionId
     }
 
     fun loadTelecomChannels() {
         val presentSims = sims.value
         if(!presentSims.isNullOrEmpty()) {
-            Timber.i("Present sims loaded")
             viewModelScope.launch(Dispatchers.IO) {
                 val telecomChannels = repo.publishedTelecomChannels()
                 val presentSimTelecomChannels = mutableListOf<Channel>()
-                Timber.i("Telecom  channel filter size is ${telecomChannels.size}")
-                Timber.i("Sim 1 HNI: ${presentSims.first().osReportedHni}")
-                Timber.i("Sim 2 HNI: ${presentSims[1].osReportedHni}")
-                telecomChannels.forEach {
-                    Timber.i("HNI list ${it.hniList}")
+                presentSims.forEach { simInfo->
+                    presentSimTelecomChannels.addAll(telecomChannels.filter { it.hniList.contains(simInfo.osReportedHni) })
                 }
-                presentSimTelecomChannels.addAll(telecomChannels.filter { it.hniList.contains(presentSims.first().osReportedHni) })
-                if(presentSims.size > 1)  presentSimTelecomChannels.addAll(telecomChannels.filter { it.hniList.contains(presentSims[1].osReportedHni) })
-                Timber.i("Present sim telecom  channel filter size is ${presentSimTelecomChannels.size}")
                 telecomChannelsLiveData.postValue(presentSimTelecomChannels)
             }
         }
     }
-
-
 
     private fun promptBalanceCheck(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val account = accountRepo.getAccount(accountId)
