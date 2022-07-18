@@ -2,13 +2,15 @@ package com.hover.stax.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.financial_tips.GetTipsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -48,9 +50,8 @@ class HomeViewModel(
         }
     }
 
-    fun getFinancialTips() = viewModelScope.launch {
-        getTipsUseCase.tips.collect {
-            _homeState.value = homeState.value.copy(financialTips = it)
-        }
-    }
+    fun getFinancialTips() = getTipsUseCase().onEach { result ->
+        if (result is Resource.Success)
+            _homeState.value = homeState.value.copy(financialTips = result.data ?: emptyList())
+    }.launchIn(viewModelScope)
 }
