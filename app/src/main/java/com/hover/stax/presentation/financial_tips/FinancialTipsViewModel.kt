@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.hover.stax.domain.use_case.financial_tips.GetTipsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
 class FinancialTipsViewModel(private val getTipsUseCase: GetTipsUseCase) : ViewModel() {
@@ -14,10 +14,7 @@ class FinancialTipsViewModel(private val getTipsUseCase: GetTipsUseCase) : ViewM
     private val _tips = MutableStateFlow(FinancialTipsState())
     val tipsState = _tips.asStateFlow()
 
-    fun getTips() = viewModelScope.launch {
-        getTipsUseCase().collect {
-            Timber.e("Collecting ${it.size}")
-            _tips.value = _tips.value.copy(tips = it)
-        }
-    }
+    fun getTips() = getTipsUseCase.tips.onEach {
+        _tips.value = _tips.value.copy(tips = it)
+    }.launchIn(viewModelScope)
 }

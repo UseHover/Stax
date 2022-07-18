@@ -5,7 +5,6 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
 
-const val DUMMY = -1
 const val PLACEHOLDER = "placeholder"
 const val ACCOUNT_NAME: String = "account_name"
 const val ACCOUNT_ID: String = "account_id"
@@ -74,13 +73,6 @@ data class Account(
         } else {
             now()
         }
-    }
-
-    fun dummy(): Account {
-        id = DUMMY
-        latestBalanceTimestamp = -1L
-        latestBalance = "0"
-        return this
     }
 
     override fun toString() = buildString {

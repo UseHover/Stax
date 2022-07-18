@@ -15,7 +15,6 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -26,9 +25,8 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
     private val context: Context by inject()
 
-    override suspend fun fetchAccounts(): Flow<List<Account>> {
-        return accountRepo.getAccounts()
-    }
+    override val fetchAccounts: Flow<List<Account>>
+        get() = accountRepo.getAccounts()
 
     override suspend fun createAccounts(channels: List<Channel>): List<Long> {
         val defaultAccount = accountRepo.getDefaultAccountAsync()
@@ -49,7 +47,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     }
 
     override suspend fun setDefaultAccount(account: Account) {
-        fetchAccounts().collect { accounts ->
+        fetchAccounts.collect { accounts ->
             val current = accounts.firstOrNull { it.isDefault }?.also {
                 it.isDefault = false
             }

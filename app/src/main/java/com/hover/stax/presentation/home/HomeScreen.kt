@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +24,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.Bonus
@@ -34,6 +33,7 @@ import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
+import timber.log.Timber
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -67,13 +67,16 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
             HorizontalImageTextView(
                 drawable = R.drawable.ic_internet_off,
                 stringRes = R.string.working_offline,
-                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(horizontal = 16.dp)
             )
         }
 
         Image(painter = painterResource(id = R.drawable.ic_settings),
             contentDescription = null,
-            modifier = Modifier.align(Alignment.CenterVertically)
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
                 .clickable(onClick = onClickedSettingsIcon)
                 .size(25.dp),
         )
@@ -82,6 +85,8 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
 
 @Composable
 fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Unit) {
+    LogCompositions(tag = "BonusCard", msg = "BonusCard")
+
     val size13 = dimensionResource(id = R.dimen.margin_13)
     val size10 = dimensionResource(id = R.dimen.margin_10)
 
@@ -282,20 +287,18 @@ fun HomeScreen(
     channelsViewModel: ChannelsViewModel,
     homeClickFunctions: HomeClickFunctions,
     balanceTapListener: BalanceTapListener,
-    tipInterface: FinancialTipClickInterface
+    tipInterface: FinancialTipClickInterface,
+    homeViewModel: HomeViewModel
 ) {
-    val homeViewModel: HomeViewModel = getViewModel()
-
-    with(homeViewModel) {
-        getBonusList()
-        getAccounts()
-        getFinancialTips()
-    }
-
     val homeState by homeViewModel.homeState.collectAsState()
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
     val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
     val context = LocalContext.current
+
+    Timber.e("==============================")
+    homeState.accounts.forEach {
+        Timber.e("Account balance for ${it.name} is ${it.latestBalance}")
+    }
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -418,5 +421,19 @@ fun HomeScreenPreview() {
                     })
                 })
         }
+    }
+}
+
+class Ref(var value: Int)
+
+// Note the inline function below which ensures that this function is essentially
+// copied at the call site to ensure that its logging only recompositions from the
+// original call site.
+@Composable
+inline fun LogCompositions(tag: String, msg: String) {
+    if (BuildConfig.DEBUG) {
+        val ref = remember { Ref(0) }
+        SideEffect { ref.value++ }
+        Timber.e(tag, "Compositions: $msg ${ref.value}")
     }
 }

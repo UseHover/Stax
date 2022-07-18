@@ -23,6 +23,13 @@ class HomeViewModel(
 
     init {
         fetchBonuses()
+        fetchData()
+    }
+
+    fun fetchData() {
+        getBonusList()
+        getAccounts()
+        getFinancialTips()
     }
 
     private fun fetchBonuses() = viewModelScope.launch {
@@ -30,19 +37,19 @@ class HomeViewModel(
     }
 
     fun getBonusList() = viewModelScope.launch {
-        getBonusesUseCase().collect {
+        getBonusesUseCase.bonusList.collect {
             _homeState.value = _homeState.value.copy(bonuses = it)
         }
     }
 
     fun getAccounts() = viewModelScope.launch {
-        getAccountsUseCase().collect {
+        getAccountsUseCase.accounts.collect {
             _homeState.value = _homeState.value.copy(accounts = it)
         }
     }
 
     fun getFinancialTips() = viewModelScope.launch {
-        getTipsUseCase().collect {
+        getTipsUseCase.tips.collect {
             _homeState.value = homeState.value.copy(financialTips = it)
         }
     }

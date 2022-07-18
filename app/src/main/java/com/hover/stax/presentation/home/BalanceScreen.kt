@@ -44,6 +44,7 @@ interface BalanceTapListener {
 
 @Composable
 fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
+    LogCompositions(tag = "BalanceHeader", msg = "BalanceHeader")
     val size13 = dimensionResource(id = R.dimen.margin_13)
 
     Row(
@@ -119,6 +120,8 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
 
 @Composable
 fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, context: Context) {
+    LogCompositions(tag = "BalanceItem", msg = "BalanceItem")
+    
     val size34 = dimensionResource(id = R.dimen.margin_34)
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Column {
@@ -156,7 +159,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
-                    text = staxAccount.latestBalance ?: " -",
+                    text = staxAccount.latestBalance ?: " - ",
                     modifier = Modifier.align(Alignment.End),
                     color = colorResource(id = R.color.offWhite)
                 )

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AccountRepository {
 
-    suspend fun fetchAccounts(): Flow<List<Account>>
+    val fetchAccounts: Flow<List<Account>>
 
     suspend fun createAccounts(channels: List<Channel>): List<Long>
 

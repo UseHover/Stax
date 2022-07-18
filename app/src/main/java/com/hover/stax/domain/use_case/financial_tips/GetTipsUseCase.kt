@@ -4,8 +4,8 @@ import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.domain.repository.FinancialTipsRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetTipsUseCase(private val financialTipsRepository: FinancialTipsRepository) {
+class GetTipsUseCase(financialTipsRepository: FinancialTipsRepository) {
 
-    suspend operator fun invoke() : Flow<List<FinancialTip>> = financialTipsRepository.fetchTips()
+    val tips : Flow<List<FinancialTip>> = financialTipsRepository.tips
 
 }
