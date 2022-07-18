@@ -105,8 +105,8 @@ class SimFragment : Fragment(), BalanceTapListener {
 
 	override fun onTapBalanceRefresh(account: Account?) {
 		if (account != null) {
-			Timber.i("Check balance clicked with ${account.name}")
-			AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_sim_airtime_balance), requireContext())
+			AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_sim_airtime_balance),
+				requireContext())
 			balancesViewModel.requestBalance(account)
 		}
 	}

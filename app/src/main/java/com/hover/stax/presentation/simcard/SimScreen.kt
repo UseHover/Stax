@@ -3,7 +3,6 @@ package com.hover.stax.presentation.simcard
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -34,7 +33,6 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.domain.model.Account
 import com.hover.stax.presentation.home.BalanceTapListener
-import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.presentation.home.TopBar
 import com.hover.stax.ui.theme.*
 import com.hover.stax.utils.DateUtils
@@ -46,7 +44,8 @@ data class SimScreenClickFunctions(val onClickedAddNewAccount: () -> Unit,
                                    val onClickedBuyAirtime: () -> Unit)
 
 @Composable
-fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions, balanceTapListener: BalanceTapListener) {
+fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions,
+              balanceTapListener: BalanceTapListener) {
 	val accountsViewModel: AccountsViewModel = getViewModel()
 	val bonusViewModel: BonusViewModel = getViewModel()
 
@@ -58,7 +57,7 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions, balanceTapListen
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Scaffold(topBar = {
-				TopBar(title = R.string.nav_home,
+				TopBar(title = R.string.nav_sim,
 					isInternetConnected = hasNetwork,
 					simScreenClickFunctions.onClickedSettingsIcon)
 			}, content = {
@@ -81,10 +80,11 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions, balanceTapListen
 						}
 					}
 
-					if(!accounts.value.isNullOrEmpty() && presentSims.value.isNotEmpty()) {
+					if (!accounts.value.isNullOrEmpty() && presentSims.value.isNotEmpty()) {
 						itemsIndexed(presentSims.value) { index, presentSim ->
-							val simAccount = accounts.value?.find { it.subscriptionId == presentSim.subscriptionId }
-							if (simAccount !=null) {
+							val simAccount =
+								accounts.value?.find { it.subscriptionId == presentSim.subscriptionId }
+							if (simAccount != null) {
 								val bonus = bonuses.value.bonuses.firstOrNull()
 								SimItem(simIndex = presentSim.slotIdx + 1,
 									account = simAccount,
@@ -111,7 +111,7 @@ fun SimScreenPreview() {
 	val accounts = mutableListOf<Account>()
 	val account1 = Account("Telecom")
 	val account2 = Account("Safaricom")
-	account1.id = 0
+	account1.id = 1
 	account1.subscriptionId = 1
 	account1.latestBalance = "NGN 200"
 	account1.latestBalanceTimestamp = 123
@@ -150,7 +150,8 @@ fun SimScreenPreview() {
 							SimItem(simIndex = 1,
 								account = account,
 								bonus = (0.05 * 100).toInt(),
-								onClickedBuyAirtime = { }, balanceTapListener = null)
+								onClickedBuyAirtime = { },
+								balanceTapListener = null)
 						}
 						else {
 							LinkSimCard(id = R.string.link_nth_sim_to_stax,
