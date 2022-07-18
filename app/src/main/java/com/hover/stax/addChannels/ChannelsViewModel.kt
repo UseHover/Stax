@@ -134,12 +134,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
             countryCode.isNullOrEmpty() || countryCode == CountryAdapter.CODE_ALL_COUNTRIES -> channels
             else -> channels?.filter { it.countryAlpha2 == countryChoice.value }
         }
-
-        val channel = channels?.find { it.rootCode == "*556#" }
-        val telecomChannels = channels?.filter { it.institutionType == Channel.TELECOM_TYPE && it.countryAlpha2.lowercase() == "ng" }
-        Timber.i("Found MTN telecom channel: ${channel?.name ?: "Null"} ")
-        Timber.i("All telecom channels: ${telecomChannels?.size ?: "Zero"} ")
-
     }
 
     private fun getCountriesAndFirebaseSubscriptions(sims: List<SimInfo>?): List<String>? {
@@ -234,9 +228,14 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         if(!presentSims.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
                 val telecomChannels = repo.publishedTelecomChannels()
+                Timber.i("Telecom channels size is: ${telecomChannels.size}")
                 val presentSimTelecomChannels = mutableListOf<Channel>()
                 presentSims.forEach { simInfo->
-                    presentSimTelecomChannels.addAll(telecomChannels.filter { it.hniList.contains(simInfo.osReportedHni) })
+                    Timber.i("My present sim ${simInfo.operatorName} hni is: ${simInfo.osReportedHni}")
+                    presentSimTelecomChannels.addAll(telecomChannels.filter {
+                        Timber.i("telecom channel ${it.name} hni list is  ${it.hniList}")
+                        it.hniList.contains(simInfo.osReportedHni)
+                    })
                 }
                 telecomChannelsLiveData.postValue(presentSimTelecomChannels)
             }
