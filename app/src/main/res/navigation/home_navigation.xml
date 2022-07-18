@@ -114,7 +114,21 @@
             android:id="@+id/navigation_sim_fragment"
             android:name="com.hover.stax.presentation.simcard.SimFragment"
             android:label="@string/nav_sim"
-            tools:layout="@layout/fragment_sim" />
+            tools:layout="@layout/fragment_sim">
+
+        <action
+            android:id="@+id/to_LinkAccountFragment"
+            app:destination="@+id/navigation_linkAccount" />
+
+        <action
+            android:id="@+id/to_SettingsFragment"
+            app:destination="@+id/navigation_settings" />
+
+        <action
+            android:id="@+id/to_TransferFragment"
+            app:destination="@+id/navigation_transfer" />
+
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_linkAccount"

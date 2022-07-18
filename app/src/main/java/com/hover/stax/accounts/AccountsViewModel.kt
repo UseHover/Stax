@@ -34,8 +34,9 @@ class AccountsViewModel(application: Application, val getLivePresentSimUseCase: 
     private val accountUpdateChannel = Channel<String>()
     val accountUpdateMsg = accountUpdateChannel.receiveAsFlow()
 
-    private val simSubscriptionIds = MediatorLiveData<IntArray>()
-    val telecomAccounts = MediatorLiveData<List<SimInfo>>()
+    val simSubscriptionIds = MediatorLiveData<IntArray>()
+    val telecomAccounts = MediatorLiveData<List<Account>>()
+    val presentSims : LiveData<List<SimInfo>> = getLivePresentSimUseCase()
 
 
 

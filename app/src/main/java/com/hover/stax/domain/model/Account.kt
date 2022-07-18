@@ -49,6 +49,7 @@ data class Account(
 
         @ColumnInfo(name = "subscription_id")
         var subscriptionId : Int? = null,
+
 ) : Comparable<Account> {
 
     constructor(name: String, channel: Channel) : this(
