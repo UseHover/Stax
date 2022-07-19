@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +26,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.Bonus
@@ -32,8 +33,6 @@ import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.network.NetworkMonitor
-import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -51,7 +50,7 @@ interface FinancialTipClickInterface {
 }
 
 @Composable
-fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, onClickedSettingsIcon:() -> Unit) {
+fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, onClickedSettingsIcon: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,7 +72,8 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
             )
         }
 
-        Image(painter = painterResource(id = R.drawable.ic_settings),
+        Image(
+            painter = painterResource(id = R.drawable.ic_settings),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
@@ -85,8 +85,6 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
 
 @Composable
 fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Unit) {
-    LogCompositions(tag = "BonusCard", msg = "BonusCard")
-
     val size13 = dimensionResource(id = R.dimen.margin_13)
     val size10 = dimensionResource(id = R.dimen.margin_10)
 
@@ -101,17 +99,22 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
                     text = stringResource(id = R.string.get_rewarded),
                     style = MaterialTheme.typography.h3
                 )
-                Text(text = message, modifier = Modifier.padding(vertical = size10))
+                Text(
+                    text = message,
+                    modifier = Modifier.padding(vertical = size10),
+                    style = MaterialTheme.typography.body1
+                )
                 Text(
                     text = stringResource(id = R.string.tc_apply),
                     textDecoration = TextDecoration.Underline,
                     color = colorResource(id = R.color.brightBlue),
+                    style = MaterialTheme.typography.body2,
                     modifier = Modifier.clickable(onClick = onClickedTC)
                 )
                 Text(
                     text = stringResource(id = R.string.top_up),
                     color = colorResource(id = R.color.brightBlue),
-                    style = MaterialTheme.typography.h3,
+                    style = MaterialTheme.typography.h4,
                     modifier = Modifier
                         .padding(top = size13)
                         .clickable(onClick = onClickedTopUp)
@@ -252,7 +255,7 @@ private fun VerticalImageTextView(
             text = stringResource(id = stringRes),
             color = colorResource(id = R.color.offWhite),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.caption,
             modifier = Modifier
                 .padding(top = size24)
                 .widthIn(min = 50.dp, max = 65.dp)
@@ -294,11 +297,6 @@ fun HomeScreen(
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
     val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
     val context = LocalContext.current
-
-    Timber.e("==============================")
-    homeState.accounts.forEach {
-        Timber.e("Account balance for ${it.name} is ${it.latestBalance}")
-    }
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -421,19 +419,5 @@ fun HomeScreenPreview() {
                     })
                 })
         }
-    }
-}
-
-class Ref(var value: Int)
-
-// Note the inline function below which ensures that this function is essentially
-// copied at the call site to ensure that its logging only recompositions from the
-// original call site.
-@Composable
-inline fun LogCompositions(tag: String, msg: String) {
-    if (BuildConfig.DEBUG) {
-        val ref = remember { Ref(0) }
-        SideEffect { ref.value++ }
-        Timber.e(tag, "Compositions: $msg ${ref.value}")
     }
 }
