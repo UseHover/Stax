@@ -79,6 +79,7 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         }
 
         repo.delete(account)
+        transactionRepo.deleteAccountTransactions(account.id)
 
         val accounts = repo.getAllAccounts()
         val changeDefault = account.isDefault
@@ -94,5 +95,6 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
             }
 
         channelRepo.update(channelsToUpdate.toList())
+
     }
 }
