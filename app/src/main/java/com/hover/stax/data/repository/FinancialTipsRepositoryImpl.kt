@@ -17,25 +17,22 @@ class FinancialTipsRepositoryImpl(val context: Context) : FinancialTipsRepositor
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
 
-    override val tips: Flow<List<FinancialTip>>
-        get() = flow {
-            val today = System.currentTimeMillis()
+    override suspend fun getTips(): List<FinancialTip> {
+        val today = System.currentTimeMillis()
 
-            val tips = db.collection(context.getString(R.string.tips_table))
-                .orderBy("date", Query.Direction.DESCENDING)
-                .whereLessThanOrEqualTo("date", today / 1000)
-                .limit(20)
-                .get()
-                .await()
-                .documents
-                .mapNotNull { document ->
-                    FinancialTip(
-                        document.id, document.data!!["title"].toString(), document.data!!["content"].toString(),
-                        document.data!!["snippet"].toString(), (document.data!!["date"].toString().toLong() * 1000), document.data!!["share copy"].toString(),
-                        document.data!!["deep link"].toString()
-                    )
-                }
-
-            emit(tips)
-        }
+        return db.collection(context.getString(R.string.tips_table))
+            .orderBy("date", Query.Direction.DESCENDING)
+            .whereLessThanOrEqualTo("date", today / 1000)
+            .limit(20)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document ->
+                FinancialTip(
+                    document.id, document.data!!["title"].toString(), document.data!!["content"].toString(),
+                    document.data!!["snippet"].toString(), (document.data!!["date"].toString().toLong() * 1000), document.data!!["share copy"].toString(),
+                    document.data!!["deep link"].toString()
+                )
+            }
+    }
 }

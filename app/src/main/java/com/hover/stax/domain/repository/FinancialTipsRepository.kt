@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface FinancialTipsRepository {
 
-    val tips: Flow<List<FinancialTip>>
+    suspend fun getTips(): List<FinancialTip>
 }
