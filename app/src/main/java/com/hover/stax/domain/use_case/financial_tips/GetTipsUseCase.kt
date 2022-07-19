@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.*
 
 class GetTipsUseCase(private val financialTipsRepository: FinancialTipsRepository) {
 
-//    val tips : Flow<List<FinancialTip>> = financialTipsRepository.tips
-
     operator fun invoke(): Flow<Resource<List<FinancialTip>>> = flow {
         try {
             emit(Resource.Loading())

@@ -28,7 +28,7 @@ class HomeViewModel(
         fetchData()
     }
 
-    fun fetchData() {
+    private fun fetchData() {
         getBonusList()
         getAccounts()
         getFinancialTips()
@@ -38,19 +38,19 @@ class HomeViewModel(
         fetchBonusUseCase()
     }
 
-    fun getBonusList() = viewModelScope.launch {
+    private fun getBonusList() = viewModelScope.launch {
         getBonusesUseCase.bonusList.collect {
             _homeState.value = _homeState.value.copy(bonuses = it)
         }
     }
 
-    fun getAccounts() = viewModelScope.launch {
+    private fun getAccounts() = viewModelScope.launch {
         getAccountsUseCase.accounts.collect {
             _homeState.value = _homeState.value.copy(accounts = it)
         }
     }
 
-    fun getFinancialTips() = getTipsUseCase().onEach { result ->
+    private fun getFinancialTips() = getTipsUseCase().onEach { result ->
         if (result is Resource.Success)
             _homeState.value = homeState.value.copy(financialTips = result.data ?: emptyList())
     }.launchIn(viewModelScope)
