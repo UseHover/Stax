@@ -19,6 +19,7 @@ import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
+import com.hover.stax.domain.model.Bonus
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.AnalyticsUtil
@@ -29,6 +30,7 @@ import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -44,6 +46,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
+
+    private var bonus: Bonus? = null
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -255,12 +259,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun callHover(requestCode: Int) {
         (requireActivity() as AbstractHoverCallerActivity).runSession(
             payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
-            actionSelectViewModel.activeAction.value!!, getExtras(), requestCode
+            actionToUse, getExtras(actionToUse.transaction_type == HoverAction.BILL, actionSelectViewModel.activeAction.value!!.requiresRecipient()), requestCode
         )
     }
 
-    private fun getExtras(): HashMap<String, String> {
-        val extras = transferViewModel.wrapExtras()
+    private val actionToUse: HoverAction
+        get() {
+            val activeAction = actionSelectViewModel.activeAction.value!!
+            return if (activeAction.channel_id == bonus?.purchaseChannel)
+                accountsViewModel.channelActions.value?.firstOrNull { it.from_institution_id == it.to_institution_id } ?: activeAction
+            else
+                activeAction
+        }
+
+    private fun getExtras(isBill: Boolean, forOther: Boolean): HashMap<String, String> {
+        val extras = transferViewModel.wrapExtras(isBill, forOther)
         extras.putAll(actionSelectViewModel.wrapExtras())
         return extras
     }
@@ -341,13 +354,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun showBonusBanner(activeAction: HoverAction?) {
         if (args.transactionType == HoverAction.AIRTIME) {
-            val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return
+            bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return
 
             with(binding.bonusLayout) {
                 cardBonus.visibility = View.VISIBLE
                 learnMore.movementMethod = LinkMovementMethod.getInstance()
 
-                if (activeAction?.channel_id == bonus.purchaseChannel) {
+                if (activeAction?.channel_id == bonus!!.purchaseChannel) {
                     title.text = getString(R.string.congratulations)
                     message.text = getString(R.string.valid_account_bonus_msg)
                     cta.visibility = View.GONE
@@ -360,7 +373,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
                         setOnClickListener {
                             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                            channelsViewModel.validateAccounts(bonus.userChannel)
+                            channelsViewModel.validateAccounts(bonus!!.userChannel)
                         }
                     }
                 }

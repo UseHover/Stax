@@ -181,17 +181,15 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.1.0"
     implementation 'com.google.accompanist:accompanist-drawablepainter:0.24.1-alpha'
 
-    def roomVersion = "2.4.2"
-    implementation "androidx.room:room-ktx:$roomVersion"
-    implementation "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-    androidTestImplementation "androidx.room:room-testing:$roomVersion"
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
 
     implementation "androidx.core:core-ktx:1.8.0"
     implementation "io.grpc:grpc-okhttp:1.44.1"
 
     //di
-    def koin_version= "3.2.0"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
 

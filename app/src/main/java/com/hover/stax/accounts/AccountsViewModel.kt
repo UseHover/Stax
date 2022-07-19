@@ -12,14 +12,17 @@ import com.hover.stax.actions.ActionRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.schedules.Schedule
+import com.uxcam.internals.an.t
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo, private val bonusRepo: BonusRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
@@ -87,16 +90,21 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         )
     }
 
-    private fun loadActions(channelId: Int, t: String = HoverAction.AIRTIME) = viewModelScope.launch(Dispatchers.IO) {
-        val actions = actionRepo.getActions(channelId, t)
-        channelActions.postValue(actions)
+    /**
+     * Used to load actions for bonus airtime. Additionally loads the MPESA paybill action for bonus airtime purchases
+     */
+    private fun loadActions(bonus: Bonus, t: String = HoverAction.AIRTIME) = viewModelScope.launch(Dispatchers.IO) {
+        val actions = actionRepo.getActions(bonus.purchaseChannel, t)
+        val billActions = actionRepo.getActions(bonus.userChannel, HoverAction.BILL).filter { it.from_institution_id == it.to_institution_id }
+
+        channelActions.postValue(actions + billActions)
     }
 
     private fun checkForBonus(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         val bonus = bonusRepo.getBonusByUserChannel(account.channelId)
 
         if (bonus != null)
-            loadActions(bonus.purchaseChannel)
+            loadActions(bonus)
         else
             loadActions(account, type.value!!)
     }
