@@ -10,13 +10,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_13"
             android:layout_marginBottom="@dimen/margin_89"
-            android:paddingHorizontal="@dimen/margin_5"
             android:orientation="vertical">
 
         <include
                 android:id="@+id/share_card"
                 layout="@layout/settings_card_share" />
-
 
         <include
                 android:id="@+id/settings_card"
@@ -41,7 +39,6 @@
         <include
                 android:id="@+id/stax_support"
                 layout="@layout/settings_card_support" />
-
 
         <include
                 android:id="@+id/securityCard"
