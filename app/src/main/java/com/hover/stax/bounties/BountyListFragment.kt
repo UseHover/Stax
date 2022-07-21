@@ -15,7 +15,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentBountyListBinding
@@ -83,15 +82,17 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         } else showOfflineDialog()
     }
 
-    private fun updateActionConfig() = Hover.initialize(requireActivity(), object : Hover.DownloadListener {
-        override fun onError(p0: String?) {
-            AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
-        }
+    private fun updateActionConfig() = lifecycleScope.launch {
+        Hover.initialize(requireActivity(), object : Hover.DownloadListener {
+            override fun onError(p0: String?) {
+                AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
+            }
 
-        override fun onSuccess(p0: ArrayList<HoverAction>?) {
-            Timber.i("Action configs initialized successfully $p0")
-        }
-    })
+            override fun onSuccess(p0: ArrayList<HoverAction>?) {
+                Timber.i("Action configs initialized successfully $p0")
+            }
+        })
+    }
 
     private fun updateChannelsWorker() = with(WorkManager.getInstance(requireActivity())) {
         beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateChannelsWorker.makeWork()).enqueue()
@@ -138,7 +139,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
             }
         }
 
-        val simsObserver = object: Observer<List<SimInfo>> {
+        val simsObserver = object : Observer<List<SimInfo>> {
             override fun onChanged(t: List<SimInfo>?) {
                 Timber.v("Sims update ${t?.size}")
             }
@@ -147,39 +148,43 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         actions.observe(viewLifecycleOwner, actionsObserver)
         transactions.observe(viewLifecycleOwner, txnObserver)
         sims.observe(viewLifecycleOwner, simsObserver)
-        bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
-        channels.observe(viewLifecycleOwner) { updateChannelList(it, bounties.value)}
+//        bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
+//        channels.observe(viewLifecycleOwner) { updateChannelList(it, bounties.value)}
+        bounties.observe(viewLifecycleOwner) { showBounties(it) }
         channelCountryList.observe(viewLifecycleOwner) { initCountryDropdown(it) }
     }
 
-    private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {
-        binding.countryFilter.hideProgressIndicator()
+//    private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {
+//        binding.countryFilter.hideProgressIndicator()
+//
+//        if (!channels.isNullOrEmpty() && !bounties.isNullOrEmpty() &&
+//            bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country
+//        ) {
+//            hideLoadingState()
+//
+//            binding.msgNoBounties.visibility = View.GONE
+//            binding.bountiesRecyclerView.visibility = View.VISIBLE
+//
+//            showBounties(channels, bounties!!)
+//        } else {
+//            binding.msgNoBounties.visibility = View.VISIBLE
+//            binding.bountiesRecyclerView.visibility = View.GONE
+//        }
+//    }
 
-        if (!channels.isNullOrEmpty() && !bounties.isNullOrEmpty() &&
-            bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country
+    private fun showBounties(channelBounties: List<ChannelBounties>) {
+        if (channelBounties.isNotEmpty() && (bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES
+                    || bountyViewModel.channels.value?.firstOrNull()?.countryAlpha2 == bountyViewModel.country)
         ) {
             hideLoadingState()
 
             binding.msgNoBounties.visibility = View.GONE
             binding.bountiesRecyclerView.visibility = View.VISIBLE
-
-            showBounties(channels, bounties!!)
+            bountyAdapter.submitList(channelBounties)
         } else {
             binding.msgNoBounties.visibility = View.VISIBLE
             binding.bountiesRecyclerView.visibility = View.GONE
         }
-    }
-
-    private fun showBounties(channels: List<Channel>, bounties: List<Bounty>) = lifecycleScope.launch {
-        val openBounties = bounties.filter { it.action.bounty_is_open || it.transactionCount != 0 }
-
-        val channelBounties = channels.filter { c ->
-            openBounties.any { it.action.channel_id == c.id }
-        }.map { channel ->
-            ChannelBounties(channel, openBounties.filter { it.action.channel_id == channel.id })
-        }
-
-        bountyAdapter.submitList(channelBounties)
     }
 
     override fun viewTransactionDetail(uuid: String?) {
@@ -193,7 +198,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     override fun countrySelect(countryCode: String) {
         showLoadingState()
 
-        bountyViewModel.filterChannels(countryCode).observe(viewLifecycleOwner) { updateChannelList(it, bountyViewModel.bounties.value) }
+        bountyViewModel.filterChannels(countryCode)
     }
 
     private fun showSimErrorDialog(b: Bounty) {

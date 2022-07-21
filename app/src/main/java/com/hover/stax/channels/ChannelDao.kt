@@ -28,6 +28,9 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode AND id IN (:channel_ids) ORDER BY name ASC")
     fun getChannels(countryCode: String, channel_ids: IntArray): LiveData<List<Channel>>
 
+    @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode AND id IN (:channel_ids) ORDER BY name ASC")
+    fun getChannelsByCountryCode(channel_ids: IntArray, countryCode: String): List<Channel>
+
     @Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
     fun getChannel(id: Int): Channel?
 

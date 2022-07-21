@@ -3,7 +3,9 @@ package com.hover.stax.login
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -14,7 +16,6 @@ import com.hover.stax.user.StaxUser
 import com.hover.stax.user.UserRepo
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
@@ -25,7 +26,8 @@ class LoginViewModel(application: Application, private val userRepo: UserRepo, p
     lateinit var signInClient: GoogleSignInClient
 
     val user = MutableLiveData<GoogleSignInAccount>()
-    val staxUser = MutableLiveData<StaxUser?>()
+    var staxUser = MutableLiveData<StaxUser?>()
+        private set
 
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()

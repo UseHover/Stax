@@ -18,6 +18,7 @@ import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
+import timber.log.Timber
 
 private const val MAX_LOOKUP_COUNT = 40
 
@@ -27,9 +28,12 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
     var country: String = CountryAdapter.CODE_ALL_COUNTRIES
 
     val actions: LiveData<List<HoverAction>>
-    val channels: LiveData<List<Channel>>
+    val channels: MediatorLiveData<List<Channel>> = MediatorLiveData()
     val transactions: LiveData<List<StaxTransaction>>
     private val bountyList = MediatorLiveData<List<Bounty>>()
+
+    private val _bounties = MutableLiveData<List<ChannelBounties>>()
+    val bounties: LiveData<List<ChannelBounties>> = _bounties
 
     private var _channelCountryList = MediatorLiveData<List<String>>()
     val channelCountryList: LiveData<List<String>> = _channelCountryList
@@ -50,7 +54,7 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
 
         loadSims()
         actions = actionRepo.bountyActions
-        channels = Transformations.switchMap(actions, this::loadChannels)
+        channels.addSource(actions, this::loadChannels)
         _channelCountryList.addSource(channels, this::loadCountryList)
         transactions = transactionRepo.bountyTransactions!!
         bountyList.apply {
@@ -66,7 +70,7 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(getApplication())
-                    .registerReceiver(it, IntentFilter(getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"))
+                .registerReceiver(it, IntentFilter(getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"))
         }
         Hover.updateSimInfo(getApplication())
     }
@@ -79,45 +83,56 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
         return false
     }
 
-    private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
-        if (actions == null) return MutableLiveData()
+    private fun loadChannels(actions: List<HoverAction>?) = viewModelScope.launch(Dispatchers.IO) {
+        if (actions == null) return@launch
+        Timber.e("Actions loaded, fetching channels")
+
         val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
 
-        val channelList = runBlocking {
-            getChannelsAsync(ids).await()
-        }
+        val channelList = getChannelsAsync(ids)
+        channels.postValue(channelList)
+        Timber.e("Found ${channelList.size} channels ")
 
-        return MutableLiveData(channelList)
+        _bounties.postValue(filterBounties())
     }
 
     private fun loadCountryList(channels: List<Channel>) = viewModelScope.launch {
         val countryCodes = mutableListOf(country)
-        countryCodes.addAll(channels.map { it.countryAlpha2 }.distinct())
+        countryCodes.addAll(channels.map { it.countryAlpha2 }.sorted().distinct())
         _channelCountryList.postValue(countryCodes)
     }
 
-    private fun getChannelsAsync(ids: List<Int>): Deferred<List<Channel>> = viewModelScope.async(Dispatchers.IO) {
-        val channels = ArrayList<Channel>()
+    private suspend fun getChannelsAsync(ids: List<Int>): List<Channel> {
+        val list: Deferred<List<Channel>>
 
-        ids.chunked(MAX_LOOKUP_COUNT).forEach { idList ->
-            val results = repo.getChannelsByIds(idList)
-            channels.addAll(results)
+        coroutineScope {
+            list = async(Dispatchers.IO) {
+                val channels = ArrayList<Channel>()
+
+                ids.chunked(MAX_LOOKUP_COUNT).forEach { idList ->
+                    val results = repo.getChannelsByIds(idList)
+                    channels.addAll(results)
+                }
+
+                channels
+            }
         }
 
-        channels
+        return list.await()
     }
 
-    val bounties: LiveData<List<Bounty>>
-        get() = bountyList
-
-    fun filterChannels(countryCode: String): LiveData<List<Channel>> {
+    fun filterChannels(countryCode: String) = viewModelScope.launch(Dispatchers.IO) {
         country = countryCode
-        val actions = actions.value ?: return MutableLiveData(ArrayList())
+        val actions = actions.value ?: return@launch
 
-        return if (countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
+         if (countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
             loadChannels(actions)
-        else
-            repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
+        else {
+            val countryChannels = repo.getChannelsByCountryCode(getChannelIdArray(actions), countryCode)
+             channels.postValue(countryChannels)
+             Timber.e("Found ${countryChannels.size} channels for $countryCode")
+             _bounties.postValue(filterBounties())
+         }
     }
 
     private fun getChannelIdArray(actions: List<HoverAction>): IntArray = actions.distinctBy { it.channel_id }.map { it.channel_id }.toIntArray()
@@ -127,16 +142,45 @@ class BountyViewModel(application: Application, val repo: ChannelRepo, val actio
     }
 
     private fun makeBounties(actions: List<HoverAction>?) {
-        if (actions != null) makeBounties(actions, transactions.value)
-    }
-
-    private fun makeBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?) {
-        viewModelScope.launch(Dispatchers.Main) {
-            bountyList.value = getBounties(actions, transactions)
+        if (actions != null) {
+            Timber.e("Actions loaded, now to fetch bounties.")
+            makeBounties(actions, transactions.value)
         }
     }
 
-    private suspend fun getBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?): MutableList<Bounty> {
+    private fun makeBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("We are making bounties with ${actions?.size} actions and ${transactions?.size} transactions")
+        val loadedBounties = getBounties(actions, transactions)
+        bountyList.postValue(loadedBounties)
+
+        Timber.e("While making bounties, we found ${loadedBounties.size} bounties.")
+
+        val channelBounties = filterBounties()
+        Timber.e("We made bounties and found ${channelBounties.size} channelBounties")
+        _bounties.postValue(channelBounties)
+    }
+
+    private fun filterBounties(): List<ChannelBounties> {
+        Timber.e("Filtering bounties")
+
+        Timber.e("Channels are ${channels.value?.size} and bounties are ${bountyList.value?.size}")
+        if (channels.value.isNullOrEmpty() || bountyList.value.isNullOrEmpty())
+            return emptyList()
+
+        val openBounties = bountyList.value!!.filter { it.action.bounty_is_open || it.transactionCount != 0 }
+        Timber.e("Found ${openBounties.size} open bounties")
+
+        val channelBounties = channels.value!!.filter { c ->
+            openBounties.any { it.action.channel_id == c.id }
+        }.map { channel ->
+            ChannelBounties(channel, openBounties.filter { it.action.channel_id == channel.id })
+        }
+
+        Timber.e("Channel bounties fetched current country is ${channelBounties.size}")
+        return channelBounties
+    }
+
+    private suspend fun getBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?): List<Bounty> {
         coroutineScope {
             bountyListAsync = async(Dispatchers.IO) {
                 val bounties: MutableList<Bounty> = ArrayList()

@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 const val TEST_MODE = "test_mode"
 
@@ -205,6 +206,7 @@ class SettingsFragment : Fragment() {
 
     private fun startBounties() {
         val staxUser = loginViewModel.staxUser.value
+
         val navDirection = if (staxUser == null || !staxUser.isMapper)
             SettingsFragmentDirections.actionNavigationSettingsToBountyEmailFragment()
         else
