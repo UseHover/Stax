@@ -35,7 +35,7 @@ class BountiesViewModel(private val simsUseCase: GetPresentSimsUseCase, private 
 
     var bountiesState = MutableStateFlow(BountiesState())
         private set
-    
+
     var country = MutableStateFlow(CountryAdapter.CODE_ALL_COUNTRIES)
         private set
 

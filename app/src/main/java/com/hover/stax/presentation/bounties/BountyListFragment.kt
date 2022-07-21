@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
@@ -59,10 +61,8 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
         startObservers()
 
-        binding.bountiesRecyclerView.adapter = bountyAdapter
         binding.bountyCountryDropdown.isEnabled = false
         binding.countryFilter.apply {
-//            showProgressIndicator()
             setOnClickIcon {
                 NavUtil.navigate(findNavController(), BountyListFragmentDirections.actionBountyListFragmentToNavigationSettings())
             }
@@ -123,8 +123,10 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     private fun initRecyclerView() {
-        binding.bountiesRecyclerView.layoutManager = UIHelper.setMainLinearManagers(context)
-        bountyAdapter.setHasStableIds(true)
+        binding.bountiesRecyclerView.apply {
+            adapter = bountyAdapter
+            layoutManager = UIHelper.setMainLinearManagers(context)
+        }
     }
 
     private fun startObservers() = with(bountiesViewModel) {
@@ -224,12 +226,13 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     private fun retrySimMatch(b: Bounty?) {
+        b?.let { viewBountyDetail(b) }
 //        with(bountiesViewModel.sims) {
 //            removeObservers(viewLifecycleOwner)
 //            observe(viewLifecycleOwner) { b?.let { viewBountyDetail(b) } }
 //        }
-//
-//        Hover.updateSimInfo(requireActivity())
+
+        Hover.updateSimInfo(requireActivity())
     }
 
     override fun onPause() {

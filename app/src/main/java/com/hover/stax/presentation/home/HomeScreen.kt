@@ -21,6 +21,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -59,7 +60,8 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
         HorizontalImageTextView(
             drawable = R.drawable.stax_logo,
             stringRes = title,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            MaterialTheme.typography.button
         )
 
         if (!isInternetConnected) {
@@ -68,7 +70,8 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
                 stringRes = R.string.working_offline,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
+                MaterialTheme.typography.button
             )
         }
 
@@ -192,7 +195,8 @@ private fun FinancialTipCard(
                 HorizontalImageTextView(
                     drawable = R.drawable.ic_tip_of_day,
                     stringRes = R.string.tip_of_the_day,
-                    Modifier.padding(bottom = 5.dp)
+                    Modifier.padding(bottom = 5.dp),
+                    MaterialTheme.typography.button
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -264,19 +268,20 @@ private fun VerticalImageTextView(
 }
 
 @Composable
-private fun HorizontalImageTextView(
+internal fun HorizontalImageTextView(
     @DrawableRes drawable: Int,
     @StringRes stringRes: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier, textStyle: TextStyle
 ) {
     Row(horizontalArrangement = Arrangement.Start, modifier = modifier) {
         Image(
             painter = painterResource(id = drawable),
             contentDescription = null,
+            modifier = Modifier.align(Alignment.CenterVertically),
         )
         Text(
             text = stringResource(id = stringRes),
-            style = MaterialTheme.typography.button,
+            style = textStyle,
             modifier = Modifier
                 .padding(start = dimensionResource(id = R.dimen.margin_13))
                 .align(Alignment.CenterVertically),
