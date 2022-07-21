@@ -1,4 +1,4 @@
-package com.hover.stax.bounties
+package com.hover.stax.presentation.bounties
 
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -10,10 +10,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
+import com.hover.stax.domain.model.Bounty
+import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.Utils.getPackage

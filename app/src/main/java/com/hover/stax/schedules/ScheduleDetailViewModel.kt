@@ -2,7 +2,7 @@ package com.hover.stax.schedules
 
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import kotlinx.coroutines.launch

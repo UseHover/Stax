@@ -15,8 +15,8 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.hover.stax.bounties.BountyEmailFragmentDirections
 import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.presentation.bounties.BountyEmailFragmentDirections
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel

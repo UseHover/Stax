@@ -8,9 +8,9 @@ import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.domain.model.ACCOUNT_ID
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.domain.model.PLACEHOLDER

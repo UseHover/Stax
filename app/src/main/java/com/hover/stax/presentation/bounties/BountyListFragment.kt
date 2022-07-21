@@ -1,11 +1,10 @@
-package com.hover.stax.bounties
+package com.hover.stax.presentation.bounties
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -13,22 +12,21 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
+import com.hover.stax.data.remote.workers.UpdateBountyTransactionsWorker
 import com.hover.stax.databinding.FragmentBountyListBinding
+import com.hover.stax.domain.model.Bounty
+import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.hover.AbstractHoverCallerActivity
-import com.hover.stax.transactions.StaxTransaction
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.NavUtil
-import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.*
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
@@ -37,6 +35,8 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     private lateinit var networkMonitor: NetworkMonitor
 
     private val bountyViewModel: BountyViewModel by sharedViewModel()
+    private val bountiesViewModel: BountiesViewModel by viewModel()
+
     private var _binding: FragmentBountyListBinding? = null
     private val binding get() = _binding!!
 
@@ -62,7 +62,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         binding.bountiesRecyclerView.adapter = bountyAdapter
         binding.bountyCountryDropdown.isEnabled = false
         binding.countryFilter.apply {
-            showProgressIndicator()
+//            showProgressIndicator()
             setOnClickIcon {
                 NavUtil.navigate(findNavController(), BountyListFragmentDirections.actionBountyListFragmentToNavigationSettings())
             }
@@ -124,63 +124,48 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
     private fun initRecyclerView() {
         binding.bountiesRecyclerView.layoutManager = UIHelper.setMainLinearManagers(context)
+        bountyAdapter.setHasStableIds(true)
     }
 
-    private fun startObservers() = with(bountyViewModel) {
-        val actionsObserver = object : Observer<List<HoverAction>> {
-            override fun onChanged(t: List<HoverAction>?) {
-                Timber.v("Actions update: ${t?.size}")
+    private fun startObservers() = with(bountiesViewModel) {
+        collectLifecycleFlow(countryList) {
+            initCountryDropdown(it)
+        }
+
+        collectLifecycleFlow(bountiesState) {
+            when {
+                it.loading -> {
+                    showLoadingState()
+                    Timber.e("Loading bounties")
+                }
+                !it.loading && it.bounties.isNotEmpty() -> {
+                    showBounties(it.bounties)
+                    Timber.e("Found ${it.bounties.size} bounties to display")
+                }
+                !it.loading && it.bounties.isEmpty() -> hideLoadingState()
+                !it.loading && it.error.isNotEmpty() -> {
+                    hideLoadingState()
+                    Timber.e("An error occurred while loading bounties")
+                }
             }
         }
 
-        val txnObserver = object : Observer<List<StaxTransaction>> {
-            override fun onChanged(t: List<StaxTransaction>?) {
-                Timber.v("Transactions update ${t?.size}")
-            }
+        collectLifecycleFlow(country) {
+            bountyAdapter.clear()
         }
-
-        val simsObserver = object : Observer<List<SimInfo>> {
-            override fun onChanged(t: List<SimInfo>?) {
-                Timber.v("Sims update ${t?.size}")
-            }
-        }
-
-        actions.observe(viewLifecycleOwner, actionsObserver)
-        transactions.observe(viewLifecycleOwner, txnObserver)
-        sims.observe(viewLifecycleOwner, simsObserver)
-//        bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
-//        channels.observe(viewLifecycleOwner) { updateChannelList(it, bounties.value)}
-        bounties.observe(viewLifecycleOwner) { showBounties(it) }
-        channelCountryList.observe(viewLifecycleOwner) { initCountryDropdown(it) }
     }
-
-//    private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {
-//        binding.countryFilter.hideProgressIndicator()
-//
-//        if (!channels.isNullOrEmpty() && !bounties.isNullOrEmpty() &&
-//            bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country
-//        ) {
-//            hideLoadingState()
-//
-//            binding.msgNoBounties.visibility = View.GONE
-//            binding.bountiesRecyclerView.visibility = View.VISIBLE
-//
-//            showBounties(channels, bounties!!)
-//        } else {
-//            binding.msgNoBounties.visibility = View.VISIBLE
-//            binding.bountiesRecyclerView.visibility = View.GONE
-//        }
-//    }
 
     private fun showBounties(channelBounties: List<ChannelBounties>) {
-        if (channelBounties.isNotEmpty() && (bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES
-                    || bountyViewModel.channels.value?.firstOrNull()?.countryAlpha2 == bountyViewModel.country)
-        ) {
+        if (channelBounties.isNotEmpty()/* && (bountiesViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES
+                    || bountiesViewModel.bountiesState.value.bounties.firstOrNull()?.bounties.f == bountyViewModel.country */) {
             hideLoadingState()
+
+            Timber.e("Showing ${channelBounties.size} bounties")
 
             binding.msgNoBounties.visibility = View.GONE
             binding.bountiesRecyclerView.visibility = View.VISIBLE
-            bountyAdapter.submitList(channelBounties)
+
+            bountyAdapter.addItems(channelBounties)
         } else {
             binding.msgNoBounties.visibility = View.VISIBLE
             binding.bountiesRecyclerView.visibility = View.GONE
@@ -192,13 +177,13 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     override fun viewBountyDetail(b: Bounty) {
-        if (bountyViewModel.isSimPresent(b)) showBountyDescDialog(b) else showSimErrorDialog(b)
+        if (bountiesViewModel.isSimPresent(b)) showBountyDescDialog(b) else showSimErrorDialog(b)
     }
 
     override fun countrySelect(countryCode: String) {
         showLoadingState()
 
-        bountyViewModel.filterChannels(countryCode)
+        bountiesViewModel.loadBounties(countryCode)
     }
 
     private fun showSimErrorDialog(b: Bounty) {
@@ -239,12 +224,12 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
     }
 
     private fun retrySimMatch(b: Bounty?) {
-        with(bountyViewModel.sims) {
-            removeObservers(viewLifecycleOwner)
-            observe(viewLifecycleOwner) { b?.let { viewBountyDetail(b) } }
-        }
-
-        Hover.updateSimInfo(requireActivity())
+//        with(bountiesViewModel.sims) {
+//            removeObservers(viewLifecycleOwner)
+//            observe(viewLifecycleOwner) { b?.let { viewBountyDetail(b) } }
+//        }
+//
+//        Hover.updateSimInfo(requireActivity())
     }
 
     override fun onPause() {

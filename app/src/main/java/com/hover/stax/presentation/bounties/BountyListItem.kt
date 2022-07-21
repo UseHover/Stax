@@ -1,4 +1,4 @@
-package com.hover.stax.bounties
+package com.hover.stax.presentation.bounties
 
 import android.content.Context
 import android.text.Spannable
@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import com.hover.stax.R
 import com.hover.stax.databinding.BountyListItemBinding
+import com.hover.stax.domain.model.Bounty
 
 class BountyListItem(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 

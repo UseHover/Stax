@@ -1,4 +1,4 @@
-package com.hover.stax.bounties
+package com.hover.stax.domain.model
 
 import android.content.Context
 import com.hover.sdk.actions.HoverAction
@@ -8,7 +8,6 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.transactions.StaxTransaction
 import com.yariksoffice.lingver.Lingver
 import java.util.*
-
 
 class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
 

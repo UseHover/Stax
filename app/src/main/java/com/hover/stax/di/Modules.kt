@@ -3,33 +3,27 @@ package com.hover.stax.di
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.actions.ActionRepo
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.bonus.BonusViewModel
-import com.hover.stax.bounties.BountyViewModel
-import com.hover.stax.channels.ChannelRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.bonus.BonusRepo
-import com.hover.stax.data.repository.AccountRepositoryImpl
-import com.hover.stax.data.repository.BonusRepositoryImpl
-import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
+import com.hover.stax.data.local.channels.ChannelRepo
+import com.hover.stax.data.local.parser.ParserRepo
+import com.hover.stax.data.repository.*
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.database.ParserRepo
-import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.domain.repository.BonusRepository
-import com.hover.stax.domain.repository.FinancialTipsRepository
+import com.hover.stax.domain.repository.*
 import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.SetDefaultAccountUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
+import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
+import com.hover.stax.domain.use_case.channels.GetPresentSimsUseCase
 import com.hover.stax.domain.use_case.financial_tips.GetTipsUseCase
 import com.hover.stax.faq.FaqViewModel
-import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
-import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
@@ -39,6 +33,10 @@ import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.merchants.MerchantViewModel
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.paybill.PaybillViewModel
+import com.hover.stax.presentation.bounties.BountyViewModel
+import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
+import com.hover.stax.presentation.home.BalancesViewModel
+import com.hover.stax.presentation.home.HomeViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestDetailViewModel
 import com.hover.stax.requests.RequestRepo
@@ -48,9 +46,11 @@ import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
+import com.hover.stax.presentation.bounties.BountiesViewModel
 import com.hover.stax.user.UserRepo
 import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -80,6 +80,7 @@ val appModule = module {
     viewModelOf(::BonusViewModel)
 
     viewModelOf(::HomeViewModel)
+    viewModelOf(::BountiesViewModel)
 }
 
 val dataModule = module(createdAtStart = true) {
@@ -111,7 +112,10 @@ val repositories = module {
 
     single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(named("CoroutineDispatcher"))) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
-    single<FinancialTipsRepository> { FinancialTipsRepositoryImpl(get())}
+    single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
+
+    singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
+    singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
 }
 
 val useCases = module {
@@ -123,4 +127,7 @@ val useCases = module {
     factoryOf(::CreateAccountsUseCase)
 
     factoryOf(::GetTipsUseCase)
+
+    factoryOf(::GetChannelBountiesUseCase)
+    factoryOf(::GetPresentSimsUseCase)
 }

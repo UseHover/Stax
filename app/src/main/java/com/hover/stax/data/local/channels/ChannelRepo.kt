@@ -1,11 +1,10 @@
-package com.hover.stax.channels
+package com.hover.stax.data.local.channels
 
 import androidx.lifecycle.LiveData
-import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
-import com.hover.stax.accounts.ChannelWithAccounts
+import com.hover.stax.channels.Channel
 import com.hover.stax.database.AppDatabase
 
 class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {

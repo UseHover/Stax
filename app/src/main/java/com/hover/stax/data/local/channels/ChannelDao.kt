@@ -1,8 +1,9 @@
-package com.hover.stax.channels
+package com.hover.stax.data.local.channels
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.hover.stax.accounts.ChannelWithAccounts
+import com.hover.stax.channels.Channel
 
 @Dao
 interface ChannelDao {
