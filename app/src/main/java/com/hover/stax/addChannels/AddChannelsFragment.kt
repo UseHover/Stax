@@ -92,20 +92,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
         bonusViewModel.getBonusList()
         startObservers()
-
         setFabListener()
-        if(args.isForTelecom) {
-            displayTelecomUiChanges()
-            channelsViewModel.loadTelecomChannels()
-        }
-    }
-
-    private fun displayTelecomUiChanges() {
-        if(args.isForTelecom) {
-            binding.searchInput.visibility = GONE
-            binding.countryDropdown.visibility = GONE
-            binding.channelsListCard.setTitle(R.string.link_sim_to_stax)
-        }
     }
 
     private fun startObservers() = with(channelsViewModel) {
@@ -125,8 +112,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         simCountryList.observe(viewLifecycleOwner, countryListObserver)
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
-        if(args.isForTelecom) telecomChannelsLiveData.observe(viewLifecycleOwner, channelsObserver)
-        else filteredChannels.observe(viewLifecycleOwner, channelsObserver)
+        filteredChannels.observe(viewLifecycleOwner, channelsObserver)
     }
 
     private fun fillUpChannelLists() {

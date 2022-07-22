@@ -9,6 +9,8 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
+import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
@@ -34,6 +36,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -118,6 +121,9 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         } else if (requestCode == SMS) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
+        }
+        else if(requestCode == PERMS_REQ_CODE && PermissionHelper(this).permissionsGranted(grantResults)) {
+            channelsViewModel.createTelecomAccounts()
         }
     }
 

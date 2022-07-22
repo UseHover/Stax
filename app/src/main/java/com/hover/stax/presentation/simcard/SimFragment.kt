@@ -10,9 +10,11 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentSimBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
+import com.hover.stax.home.NavHelper
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.BalancesViewModel
@@ -28,6 +30,7 @@ class SimFragment : Fragment(), BalanceTapListener {
 	private val binding get() = _binding!!
 	private val accountViewModel: AccountsViewModel by sharedViewModel()
 	private val balancesViewModel: BalancesViewModel by sharedViewModel()
+	private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
 	override fun onCreateView(inflater: LayoutInflater,
 	                          container: ViewGroup?,
@@ -49,11 +52,24 @@ class SimFragment : Fragment(), BalanceTapListener {
 
 	private fun setObservers() {
 		observeForBalances()
-		accountViewModel.simSubscriptionIds.observe(viewLifecycleOwner) {
+		accountViewModel.presentSims.observe(viewLifecycleOwner) {
 			Timber.i("${this.javaClass.simpleName} subscription ids size: ${it.size}")
+			val telecomAccounts = accountViewModel.telecomAccounts.value
+			if( telecomAccounts !=null && telecomAccounts.size != it.size) {
+					channelsViewModel.createTelecomAccounts()
+			}
 		}
+
 		accountViewModel.telecomAccounts.observe(viewLifecycleOwner) {
 			Timber.i("${this.javaClass.simpleName} telecomAccounts size ${it.size}")
+			val presentSims = accountViewModel.presentSims.value
+			if(presentSims !=null && presentSims.size !=it.size) {
+					channelsViewModel.createTelecomAccounts()
+			}
+		}
+
+		accountViewModel.simSubscriptionIds.observe(viewLifecycleOwner) {
+			Timber.i("${this.javaClass.simpleName} subscription ids size: ${it.size}")
 		}
 
 	}
@@ -77,10 +93,7 @@ class SimFragment : Fragment(), BalanceTapListener {
 	}
 
 	private fun getSimScreenClickFunctions(): SimScreenClickFunctions {
-		fun onClickedAddNewAccount() =
-			(requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment()
-				.setIsForTelecom(true))
-
+		fun onClickedAddNewAccount() = NavHelper(requireActivity() as MainActivity).requestBasicPerms()
 		fun onClickedSettingsIcon() = navigateTo(SimFragmentDirections.toSettingsFragment())
 		fun onBuyAirtimeClicked() = navigateTo(getTransferDirection(HoverAction.AIRTIME))
 

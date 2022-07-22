@@ -51,7 +51,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     val filterQuery = MutableLiveData<String?>()
     private var countryChannels = MediatorLiveData<List<Channel>>()
     val filteredChannels = MediatorLiveData<List<Channel>>()
-    val telecomChannelsLiveData = MutableLiveData<List<Channel>>()
 
     private val _channelCountryList = MediatorLiveData<List<String>>()
     val channelCountryList: LiveData<List<String>> = _channelCountryList
@@ -155,6 +154,44 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         }
     }
 
+    fun createTelecomAccounts() {
+        val presentSimList = sims.value
+        if(presentSimList !=null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val currentTelecomAccounts = accountRepo.getTelecomAccounts(presentSimList.map { it.subscriptionId }.toIntArray())
+                val unlinkedSims = getUnlinkedSIMs(currentTelecomAccounts, presentSimList)
+                if(unlinkedSims.isNotEmpty()) {
+                    val allTelecomChannels = repo.publishedTelecomChannels(unlinkedSims.map { it.countryIso }.distinct())
+                    allTelecomChannels.forEach {
+                        val matchedSim = presentSimList.find { sim -> it.hniList.contains(sim.osReportedHni) }
+                        if(matchedSim != null) {
+                            createAccount(it, matchedSim.subscriptionId, false)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun createAccount(channel: Channel, subscriptionId: Int?, isDefault: Boolean) {
+        val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
+        val account = Account(
+            accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
+            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, subscriptionId = subscriptionId
+        )
+
+        channel.selected = true
+        repo.update(channel)
+        accountRepo.insert(account)
+
+        logChoice(account)
+        ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, getApplication())
+    }
+
+    private fun getUnlinkedSIMs(accounts: List<Account>, sims: List<SimInfo>) : List<SimInfo> {
+        return sims.filter {  accounts.find { account-> account.subscriptionId == it.subscriptionId } == null  }
+    }
+
     private fun logChoice(account: Account) {
         joinChannelGroup(account.channelId, getApplication() as Context)
         val args = JSONObject()
@@ -183,16 +220,14 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         accountCreatedEvent.emit(true)
     }
 
-    //TODO: This is duplicating AccountRepositoryImpl and logic should live there not here.
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = accountRepo.getDefaultAccount()
 
         val accounts = channels.mapIndexed { index, channel ->
-            val subscriptionId = getSubscriptionId(channel)
             val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
             Account(
                 accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, subscriptionId = subscriptionId
+                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, subscriptionId = null
             )
         }.onEach {
             logChoice(it)
@@ -205,41 +240,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         //This is currently the only difference when compared with the function in AccountRepositoryImpl.
         //Comment above is here to make it clearer when refactoring
         promptBalanceCheck(accountIds.first().toInt())
-    }
-
-    //TODO: This is duplicating AccountRepositoryImpl and logic should live there not here.
-    //This only gets ID if account is a Telecoms e.g Safaricom, MTN. It assumes different Teleco for each sim slots.
-    //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
-    private suspend fun getSubscriptionId(channel : Channel) : Int? {
-        var subscriptionId : Int? = null
-        if(channel.institutionType == Channel.TELECOM_TYPE) {
-            val presentSims = presentSimUseCase()
-            if(presentSims.isEmpty()) return null
-            val simInfo : SimInfo? = presentSims.find { channel.hniList.contains(it.osReportedHni) }
-            simInfo?.let {
-                subscriptionId = it.subscriptionId
-            }
-        }
-        return subscriptionId
-    }
-
-    fun loadTelecomChannels() {
-        val presentSims = sims.value
-        if(!presentSims.isNullOrEmpty()) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val telecomChannels = repo.publishedTelecomChannels()
-                Timber.i("Telecom channels size is: ${telecomChannels.size}")
-                val presentSimTelecomChannels = mutableListOf<Channel>()
-                presentSims.forEach { simInfo->
-                    Timber.i("My present sim ${simInfo.operatorName} hni is: ${simInfo.osReportedHni}")
-                    presentSimTelecomChannels.addAll(telecomChannels.filter {
-                        Timber.i("telecom channel ${it.name} hni list is  ${it.hniList}")
-                        it.hniList.contains(simInfo.osReportedHni)
-                    })
-                }
-                telecomChannelsLiveData.postValue(presentSimTelecomChannels)
-            }
-        }
     }
 
     private fun promptBalanceCheck(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {

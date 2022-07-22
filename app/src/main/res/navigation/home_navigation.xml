@@ -117,10 +117,6 @@
             tools:layout="@layout/fragment_sim">
 
         <action
-            android:id="@+id/to_LinkAccountFragment"
-            app:destination="@+id/navigation_linkAccount" />
-
-        <action
             android:id="@+id/to_SettingsFragment"
             app:destination="@+id/navigation_settings" />
 
@@ -135,11 +131,6 @@
             android:name="com.hover.stax.addChannels.AddChannelsFragment"
             android:label="@string/nav_link_account"
             tools:layout="@layout/fragment_add_channels">
-
-        <argument
-            android:name="isForTelecom"
-            android:defaultValue="false"
-            app:argType="boolean" />
 
         <action
                 android:id="@+id/action_navigation_linkAccount_to_navigation_home"

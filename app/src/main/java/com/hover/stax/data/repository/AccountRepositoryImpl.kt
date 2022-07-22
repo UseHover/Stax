@@ -30,38 +30,26 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     override val fetchAccounts: Flow<List<Account>>
         get() = accountRepo.getAccounts()
 
-    override suspend fun createAccounts(channels: List<Channel>): List<Long> {
+    override suspend fun createAccounts(channels: List<Channel>) {
         val defaultAccount = accountRepo.getDefaultAccountAsync()
-
-        val accounts = channels.mapIndexed { index, channel ->
-            val subscriptionId = getSubscriptionId(channel)
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
-            Account(
-                accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, subscriptionId = subscriptionId
-            )
-        }.onEach {
-            logChoice(it)
-            ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, context)
+        channels.mapIndexed { index, channel ->
+            createAccount(channel, null, defaultAccount == null && index == 0)
         }
-
-        channels.onEach { it.selected = true }.also { channelRepo.update(it) }
-        return accountRepo.insert(accounts)
     }
 
-    //This only gets ID if account is a Telecos e.g Safaricom, MTN. It assumes different Teleco for each sim slots.
-    //For better accuracy, we need user to manually select the preferred SIM card due to the edge case of same 2 telecos on the same device.
-    private suspend fun getSubscriptionId(channel : Channel) : Int? {
-        var subscriptionId : Int? = null
-        if(channel.institutionType == Channel.TELECOM_TYPE) {
-            val presentSims = presentSimUseCase()
-            if(presentSims.isEmpty()) return null
-            val simInfo : SimInfo? = presentSims.find { channel.hniList.contains(it.osReportedHni) }
-            simInfo?.let {
-                subscriptionId = it.subscriptionId
-            }
-        }
-        return subscriptionId
+    override suspend fun createAccount(channel: Channel, subscriptionId: Int?, isDefault: Boolean) {
+        val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
+        val account = Account(
+            accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
+            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, subscriptionId = subscriptionId
+        )
+
+        channel.selected = true
+        channelRepo.update(channel)
+        accountRepo.insert(account)
+
+        logChoice(account)
+        ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
     }
 
     override suspend fun setDefaultAccount(account: Account) {

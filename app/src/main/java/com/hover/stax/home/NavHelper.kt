@@ -108,12 +108,13 @@ class NavHelper(val activity: AppCompatActivity) {
         R.id.libraryFragment, NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
         NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
         NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
-        NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment().setIsForTelecom(false)
+        NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
         NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment()
         else -> null //invalid or unmapped route, return nothing
     }
 
-    private fun requestBasicPerms() {
+
+    fun requestBasicPerms() {
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
             { PermissionUtils.requestPerms(PERMS_REQ_CODE, activity) },

@@ -56,7 +56,8 @@ fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions,
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Scaffold(topBar = {
+			Scaffold(
+				topBar = {
 				TopBar(title = R.string.nav_sim,
 					isInternetConnected = hasNetwork,
 					simScreenClickFunctions.onClickedSettingsIcon)
