@@ -123,7 +123,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
         }
         else if(requestCode == PERMS_REQ_CODE && PermissionHelper(this).permissionsGranted(grantResults)) {
-            channelsViewModel.createTelecomAccounts()
+            channelsViewModel.createSimSpecificTelecomAccounts()
         }
     }
 

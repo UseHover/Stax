@@ -56,7 +56,7 @@ class SimFragment : Fragment(), BalanceTapListener {
 			Timber.i("${this.javaClass.simpleName} prsent sim size: ${it.size}")
 			val telecomAccounts = accountViewModel.telecomAccounts.value
 			if( telecomAccounts !=null && telecomAccounts.size != it.size) {
-					channelsViewModel.createTelecomAccounts()
+					channelsViewModel.createSimSpecificTelecomAccounts()
 			}
 		}
 
@@ -64,7 +64,7 @@ class SimFragment : Fragment(), BalanceTapListener {
 			Timber.i("${this.javaClass.simpleName} telecomAccounts size ${it.size}")
 			val presentSims = accountViewModel.presentSims.value
 			if(presentSims !=null && presentSims.size !=it.size) {
-					channelsViewModel.createTelecomAccounts()
+					channelsViewModel.createSimSpecificTelecomAccounts()
 			}
 		}
 

@@ -154,7 +154,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         }
     }
 
-    fun createTelecomAccounts() {
+    fun createSimSpecificTelecomAccounts() {
         val presentSimList = sims.value
         if(presentSimList !=null) {
             viewModelScope.launch(Dispatchers.IO) {
