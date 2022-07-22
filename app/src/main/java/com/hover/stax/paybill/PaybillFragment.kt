@@ -146,7 +146,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
         collectLifecycleFlow(accountsViewModel.accountList) {
             if(it.accounts.isEmpty())
-                setDropdownTouchListener(PaybillFragmentDirections.actionGlobalAddChannelsFragment().setIsForTelecom(false))
+                setDropdownTouchListener(PaybillFragmentDirections.actionGlobalAddChannelsFragment())
         }
     }
 

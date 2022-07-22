@@ -51,8 +51,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val args by navArgs<AddChannelsFragmentArgs>()
-
     private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
     private var tracker: SelectionTracker<Long>? = null
 
@@ -66,8 +64,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
-        val screenPurpose = if(args.isForTelecom) R.string.visit_link_simcard else R.string.visit_link_account
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(screenPurpose)), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
 
         return binding.root
@@ -176,7 +173,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun showSelected(visible: Boolean) {
-        binding.selectedChannelsCard.visibility = if (args.isForTelecom) GONE else if (visible) VISIBLE else GONE
+        binding.selectedChannelsCard.visibility = if (visible) VISIBLE else GONE
         binding.channelsListCard.setBackButtonVisibility(if (visible) GONE else VISIBLE)
     }
 

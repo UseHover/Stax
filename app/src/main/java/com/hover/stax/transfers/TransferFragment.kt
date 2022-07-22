@@ -168,7 +168,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun observeAccountList() = collectLifecycleFlow(accountsViewModel.accountList) {
         if (it.accounts.isEmpty())
-            setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment().setIsForTelecom(false))
+            setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
     }
 
     private fun observeAmount() {

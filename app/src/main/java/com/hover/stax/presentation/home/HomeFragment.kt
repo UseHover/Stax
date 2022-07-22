@@ -55,7 +55,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
         fun onBuyGoodsClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment())
         fun onPayBillClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
         fun onRequestMoneyClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())
-        fun onClickedAddNewAccount() = (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment().setIsForTelecom(false))
+        fun onClickedAddNewAccount() = (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
         fun onClickedTermsAndConditions() = Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
         fun onClickedSettingsIcon() = navigateTo(HomeFragmentDirections.toSettingsFragment())
 

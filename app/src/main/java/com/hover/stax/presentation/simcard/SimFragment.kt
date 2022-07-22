@@ -53,7 +53,7 @@ class SimFragment : Fragment(), BalanceTapListener {
 	private fun setObservers() {
 		observeForBalances()
 		accountViewModel.presentSims.observe(viewLifecycleOwner) {
-			Timber.i("${this.javaClass.simpleName} subscription ids size: ${it.size}")
+			Timber.i("${this.javaClass.simpleName} prsent sim size: ${it.size}")
 			val telecomAccounts = accountViewModel.telecomAccounts.value
 			if( telecomAccounts !=null && telecomAccounts.size != it.size) {
 					channelsViewModel.createTelecomAccounts()
@@ -71,7 +71,6 @@ class SimFragment : Fragment(), BalanceTapListener {
 		accountViewModel.simSubscriptionIds.observe(viewLifecycleOwner) {
 			Timber.i("${this.javaClass.simpleName} subscription ids size: ${it.size}")
 		}
-
 	}
 
 	private fun observeForBalances() {
