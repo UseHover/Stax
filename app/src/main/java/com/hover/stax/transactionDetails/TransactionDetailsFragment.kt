@@ -241,7 +241,7 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun maybeRetry(transaction: StaxTransaction) {
         if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
-            UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
+            UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading), isAppError = true)
         else {
             retry(transaction)
         }
