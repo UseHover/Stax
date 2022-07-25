@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,14 +34,17 @@ import com.hover.stax.ui.theme.Brutalista
 import com.hover.stax.ui.theme.StaxTheme
 
 @Composable
-fun BountyList(bountyViewModel: BountiesViewModel) {
+fun BountyList(bountyViewModel: BountiesViewModel, selectListener: SelectListener) {
     val bountiesState by bountyViewModel.bountiesState.collectAsState()
 
     StaxTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize(), color = MaterialTheme.colors.background
+        ) {
             LazyColumn {
-                items(bountiesState.bounties) { channelBounty ->
-                    ChannelBountyCard(channelBounty = channelBounty)
+                items(bountiesState.bounties) {
+                    ChannelBountyCard(channelBounty = it, selectListener)
                 }
             }
         }
@@ -48,7 +52,7 @@ fun BountyList(bountyViewModel: BountiesViewModel) {
 }
 
 @Composable
-fun ChannelBountyCard(channelBounty: ChannelBounties) {
+fun ChannelBountyCard(channelBounty: ChannelBounties, selectListener: SelectListener) {
     Column {
         Text(
             text = channelBounty.channel.ussdName.uppercase(),
@@ -61,18 +65,18 @@ fun ChannelBountyCard(channelBounty: ChannelBounties) {
         )
 
         channelBounty.bounties.forEach {
-            BountyCard(bounty = it)
+            BountyCard(bounty = it, selectListener)
         }
     }
 }
 
 @Composable
-fun BountyCard(bounty: Bounty) {
+fun BountyCard(bounty: Bounty, selectListener: SelectListener) {
     val context = LocalContext.current
     val margin8 = dimensionResource(id = R.dimen.margin_8)
     val margin13 = dimensionResource(id = R.dimen.margin_13)
 
-    val bountyState = getBountyState(bounty)
+    val bountyState = getBountyState(bounty, selectListener)
 
     val strikeThrough = TextStyle(
         fontFamily = Brutalista,
@@ -85,6 +89,7 @@ fun BountyCard(bounty: Bounty) {
         modifier = Modifier
             .background(color = colorResource(id = bountyState.color))
             .padding(vertical = margin8)
+            .clickable { bountyState.clickListener }
     ) {
         Row(
             modifier = Modifier
@@ -95,7 +100,8 @@ fun BountyCard(bounty: Bounty) {
             Text(
                 text = bounty.generateDescription(context),
                 modifier = Modifier
-                    .padding(top = margin8, bottom = margin8, end = margin13),
+                    .padding(top = margin8, bottom = margin8, end = margin13)
+                    .weight(1f),
                 style = if (bountyState.isOpen) MaterialTheme.typography.body1 else strikeThrough
             )
 
@@ -145,7 +151,11 @@ fun BountyCardPreview() {
     val margin13 = dimensionResource(id = R.dimen.margin_13)
     val margin8 = dimensionResource(id = R.dimen.margin_8)
 
-    Column(modifier = Modifier.background(color = colorResource(id = R.color.colorSurface)).padding(vertical = margin8)) {
+    Column(
+        modifier = Modifier
+            .background(color = colorResource(id = R.color.colorSurface))
+            .padding(vertical = margin8)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -191,15 +201,22 @@ fun BountiesPreview() {
     }
 }
 
-//TODO add click listeners
-private fun getBountyState(bounty: Bounty): BountyItemState {
+private fun getBountyState(bounty: Bounty, selectListener: SelectListener): BountyItemState {
     return when {
         bounty.hasASuccessfulTransactions() -> BountyItemState(R.color.muted_green, R.string.done, R.drawable.ic_check, false) {}
-        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_error, false) {}
-        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open -> BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_error, true) {}
+        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_error, false) {
+            selectListener.viewTransactionDetail(bounty.transactions.last().uuid)
+        }
+        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open -> BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_error, true) {
+            selectListener.viewBountyDetail(bounty)
+        }
         !bounty.action.bounty_is_open -> BountyItemState(R.color.lighter_grey, 0, 0, false) {}
-        bounty.transactionCount > 0 -> BountyItemState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true) {}
-        else -> BountyItemState(R.color.colorSurface, 0, 0, true) {}
+        bounty.transactionCount > 0 -> BountyItemState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true) {
+            selectListener.viewTransactionDetail(bounty.transactions.last().uuid)
+        }
+        else -> BountyItemState(R.color.colorSurface, 0, 0, true) {
+            selectListener.viewBountyDetail(bounty)
+        }
     }
 }
 
@@ -208,5 +225,10 @@ data class BountyItemState(
     @StringRes val msg: Int,
     @DrawableRes val icon: Int,
     val isOpen: Boolean,
-    val onItemClick: () -> Unit
+    val clickListener: () -> Unit
 )
+
+interface SelectListener {
+    fun viewTransactionDetail(uuid: String?)
+    fun viewBountyDetail(b: Bounty)
+}

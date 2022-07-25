@@ -83,12 +83,7 @@ class BountiesViewModel(private val simsUseCase: GetPresentSimsUseCase, private 
             when (result) {
                 is Resource.Loading -> bountiesState.update { it.copy(loading = true) }
                 is Resource.Error -> bountiesState.update { it.copy(loading = false, error = result.message!!) }
-                is Resource.Success -> {
-//                    if (countryCode == CountryAdapter.CODE_ALL_COUNTRIES) {
-//                        emitSlowly(result.data!!)
-//                    } else
-                        bountiesState.update { it.copy(loading = false, bounties = result.data!!) }
-                }
+                is Resource.Success -> bountiesState.update { it.copy(loading = false, bounties = result.data!!) }
             }
         }.launchIn(viewModelScope)
     }

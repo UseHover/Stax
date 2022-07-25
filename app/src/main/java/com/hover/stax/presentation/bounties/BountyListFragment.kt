@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -30,19 +31,16 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAdapter.SelectListener {
+class BountyListFragment : Fragment(), SelectListener, CountryAdapter.SelectListener {
 
     private lateinit var networkMonitor: NetworkMonitor
 
-    private val bountyViewModel: BountyViewModel by sharedViewModel()
     private val bountiesViewModel: BountiesViewModel by viewModel()
 
     private var _binding: FragmentBountyListBinding? = null
     private val binding get() = _binding!!
 
     private var dialog: StaxDialog? = null
-
-    private val bountyAdapter = BountyAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
@@ -116,13 +114,16 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
     private fun initCountryDropdown(countryCodes: List<String>) = binding.bountyCountryDropdown.apply {
         setListener(this@BountyListFragment)
-        updateChoices(countryCodes, bountyViewModel.country)
+        updateChoices(countryCodes, bountiesViewModel.country.value)
         isEnabled = true
     }
 
     private fun initBountyList() {
-        binding.bountyList.setContent {
-            BountyList(bountyViewModel = bountiesViewModel)
+        binding.bountyList.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                BountyList(bountyViewModel = bountiesViewModel, this@BountyListFragment)
+            }
         }
     }
 
@@ -146,10 +147,6 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
                     binding.msgNoBounties.visibility = View.VISIBLE
                 }
             }
-        }
-
-        collectLifecycleFlow(country) {
-            bountyAdapter.clear()
         }
     }
 
@@ -204,11 +201,6 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
     private fun retrySimMatch(b: Bounty?) {
         b?.let { viewBountyDetail(b) }
-//        with(bountiesViewModel.sims) {
-//            removeObservers(viewLifecycleOwner)
-//            observe(viewLifecycleOwner) { b?.let { viewBountyDetail(b) } }
-//        }
-
         Hover.updateSimInfo(requireActivity())
     }
 
