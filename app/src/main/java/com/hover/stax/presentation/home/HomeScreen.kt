@@ -1,6 +1,7 @@
 package com.hover.stax.presentation.home
 
 import android.content.Context
+import android.text.Html
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.Bonus
@@ -280,7 +282,7 @@ internal fun HorizontalImageTextView(
             modifier = Modifier.align(Alignment.CenterVertically),
         )
         Text(
-            text = stringResource(id = stringRes),
+            text = Html.fromHtml(stringResource(id = stringRes), HtmlCompat.FROM_HTML_MODE_LEGACY).toString(),
             style = textStyle,
             modifier = Modifier
                 .padding(start = dimensionResource(id = R.dimen.margin_13))

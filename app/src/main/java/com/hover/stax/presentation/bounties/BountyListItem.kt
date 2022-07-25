@@ -37,7 +37,7 @@ class BountyListItem(context: Context, attrs: AttributeSet?) : LinearLayout(cont
 
     private fun chooseState() {
 		when {
-			bounty!!.hasASuccessfulTransaction() -> {
+			bounty!!.hasASuccessfulTransactions() -> {
 				setState(R.color.muted_green, R.string.done, R.drawable.ic_check, false, null)
 			}
 			bounty!!.isLastTransactionFailed() && !bounty!!.action.bounty_is_open -> {

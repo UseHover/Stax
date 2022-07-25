@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
@@ -57,7 +55,7 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         super.onViewCreated(view, savedInstanceState)
         networkMonitor = NetworkMonitor(requireActivity())
 
-        initRecyclerView()
+        initBountyList()
 
         startObservers()
 
@@ -122,10 +120,9 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
         isEnabled = true
     }
 
-    private fun initRecyclerView() {
-        binding.bountiesRecyclerView.apply {
-            adapter = bountyAdapter
-            layoutManager = UIHelper.setMainLinearManagers(context)
+    private fun initBountyList() {
+        binding.bountyList.setContent {
+            BountyList(bountyViewModel = bountiesViewModel)
         }
     }
 
@@ -138,39 +135,21 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
             when {
                 it.loading -> {
                     showLoadingState()
-                    Timber.e("Loading bounties")
+                    binding.msgNoBounties.visibility = View.GONE
                 }
                 !it.loading && it.bounties.isNotEmpty() -> {
-                    showBounties(it.bounties)
-                    Timber.e("Found ${it.bounties.size} bounties to display")
-                }
-                !it.loading && it.bounties.isEmpty() -> hideLoadingState()
-                !it.loading && it.error.isNotEmpty() -> {
                     hideLoadingState()
-                    Timber.e("An error occurred while loading bounties")
+                    binding.msgNoBounties.visibility = View.GONE
+                }
+                !it.loading && it.bounties.isEmpty() -> {
+                    hideLoadingState()
+                    binding.msgNoBounties.visibility = View.VISIBLE
                 }
             }
         }
 
         collectLifecycleFlow(country) {
             bountyAdapter.clear()
-        }
-    }
-
-    private fun showBounties(channelBounties: List<ChannelBounties>) {
-        if (channelBounties.isNotEmpty()/* && (bountiesViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES
-                    || bountiesViewModel.bountiesState.value.bounties.firstOrNull()?.bounties.f == bountyViewModel.country */) {
-            hideLoadingState()
-
-            Timber.e("Showing ${channelBounties.size} bounties")
-
-            binding.msgNoBounties.visibility = View.GONE
-            binding.bountiesRecyclerView.visibility = View.VISIBLE
-
-            bountyAdapter.addItems(channelBounties)
-        } else {
-            binding.msgNoBounties.visibility = View.VISIBLE
-            binding.bountiesRecyclerView.visibility = View.GONE
         }
     }
 
@@ -217,12 +196,10 @@ class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAda
 
     private fun showLoadingState() {
         binding.bountyCountryDropdown.setState(getString(R.string.filtering_in_progress), AbstractStatefulInput.INFO)
-        binding.bountiesRecyclerView.visibility = View.GONE
     }
 
     private fun hideLoadingState() {
         binding.bountyCountryDropdown.setState(null, AbstractStatefulInput.NONE)
-        binding.bountiesRecyclerView.visibility = View.VISIBLE
     }
 
     private fun retrySimMatch(b: Bounty?) {

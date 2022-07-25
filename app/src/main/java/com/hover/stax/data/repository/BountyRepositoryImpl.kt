@@ -9,6 +9,7 @@ import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.domain.repository.BountyRepository
 import com.hover.stax.transactions.StaxTransaction
+import com.uxcam.internals.an.t
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -56,18 +57,18 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
         val transactionList = transactions?.toMutableList() ?: mutableListOf()
 
         for (action in actions) {
-            val filterTransactions = mutableListOf<StaxTransaction>()
-            val iter = transactionList.listIterator()
+            val filteredTransactions = mutableListOf<StaxTransaction>()
+            val iterator = transactionList.listIterator()
 
-            while (iter.hasNext()) {
-                val t = iter.next()
-                if (t.action_id == action.public_id) {
-                    filterTransactions.add(t)
-                    iter.remove()
+            while (iterator.hasNext()) {
+                val transaction = iterator.next()
+                if (transaction.action_id == action.public_id) {
+                    filteredTransactions.add(transaction)
+                    iterator.remove()
                 }
             }
 
-            bounties.add(Bounty(action, filterTransactions))
+            bounties.add(Bounty(action, filteredTransactions))
         }
 
         Timber.e("Returning ${bounties.size} bounties")
