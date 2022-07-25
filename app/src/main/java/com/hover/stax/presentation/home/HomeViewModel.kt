@@ -1,16 +1,15 @@
 package com.hover.stax.presentation.home
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.financial_tips.GetTipsUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -22,6 +21,9 @@ class HomeViewModel(
 
     private val _homeState = MutableStateFlow(HomeState())
     val homeState = _homeState.asStateFlow()
+
+    var accounts = MutableLiveData<List<Account>>()
+        private set
 
     init {
         fetchBonuses()
@@ -39,19 +41,19 @@ class HomeViewModel(
     }
 
     private fun getBonusList() = viewModelScope.launch {
-        getBonusesUseCase.bonusList.collect {
-            _homeState.value = _homeState.value.copy(bonuses = it)
+        getBonusesUseCase.bonusList.collect { bonusList ->
+            _homeState.update { it.copy(bonuses = bonusList) }
         }
     }
 
     private fun getAccounts() = viewModelScope.launch {
-        getAccountsUseCase.accounts.collect {
-            _homeState.value = _homeState.value.copy(accounts = it)
+        getAccountsUseCase.accounts.collect { accountList ->
+            accounts.postValue(accountList)
         }
     }
 
     private fun getFinancialTips() = getTipsUseCase().onEach { result ->
         if (result is Resource.Success)
-            _homeState.value = homeState.value.copy(financialTips = result.data ?: emptyList())
+            _homeState.update { it.copy(financialTips = result.data ?: emptyList()) }
     }.launchIn(viewModelScope)
 }
