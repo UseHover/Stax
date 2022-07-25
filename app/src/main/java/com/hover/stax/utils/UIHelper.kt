@@ -34,7 +34,7 @@ object UIHelper {
 
     private const val INITIAL_ITEMS_FETCH = 30
 
-    fun flashMessage(context: Context, view: View?, message: String?) {
+    fun flashMessage(context: Context, view: View?, message: String) {
         if (view == null) flashMessage(context, message) else showSnack(view, message)
     }
 
@@ -44,12 +44,17 @@ object UIHelper {
         s.show()
     }
 
-    fun flashMessage(context: Context, message: String?) {
+    fun flashMessage(context: Context, message: String, isAppError: Boolean = false) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        AnalyticsUtil.logAnalyticsEvent(message, context)
+        if(isAppError) AnalyticsUtil.logErrorAndReportToFirebase(context.getString(R.string.toast_err_tag), message, null)
     }
 
-    fun flashMessage(context: Context, messageRes: Int) {
-        Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show()
+    fun flashMessage(context: Context, messageRes: Int, isAppError: Boolean = false) {
+        val message = context.getString(messageRes)
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        AnalyticsUtil.logAnalyticsEvent(message, context)
+        if(isAppError) AnalyticsUtil.logErrorAndReportToFirebase(context.getString(R.string.toast_err_tag), message, null)
     }
 
     fun setMainLinearManagers(context: Context?): LinearLayoutManager {
