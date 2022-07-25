@@ -31,7 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class BountyListFragment : Fragment(), SelectListener, CountryAdapter.SelectListener {
+class BountyListFragment : Fragment(), SelectListener {
 
     private lateinit var networkMonitor: NetworkMonitor
 
@@ -55,9 +55,6 @@ class BountyListFragment : Fragment(), SelectListener, CountryAdapter.SelectList
 
         initBountyList()
 
-        startObservers()
-
-        binding.bountyCountryDropdown.isEnabled = false
         binding.countryFilter.apply {
             setOnClickIcon {
                 NavUtil.navigate(findNavController(), BountyListFragmentDirections.actionBountyListFragmentToNavigationSettings())
@@ -112,40 +109,11 @@ class BountyListFragment : Fragment(), SelectListener, CountryAdapter.SelectList
         dialog!!.showIt()
     }
 
-    private fun initCountryDropdown(countryCodes: List<String>) = binding.bountyCountryDropdown.apply {
-        setListener(this@BountyListFragment)
-        updateChoices(countryCodes, bountiesViewModel.country.value)
-        isEnabled = true
-    }
-
     private fun initBountyList() {
         binding.bountyList.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 BountyList(bountyViewModel = bountiesViewModel, this@BountyListFragment)
-            }
-        }
-    }
-
-    private fun startObservers() = with(bountiesViewModel) {
-        collectLifecycleFlow(countryList) {
-            initCountryDropdown(it)
-        }
-
-        collectLifecycleFlow(bountiesState) {
-            when {
-                it.loading -> {
-                    showLoadingState()
-                    binding.msgNoBounties.visibility = View.GONE
-                }
-                !it.loading && it.bounties.isNotEmpty() -> {
-                    hideLoadingState()
-                    binding.msgNoBounties.visibility = View.GONE
-                }
-                !it.loading && it.bounties.isEmpty() -> {
-                    hideLoadingState()
-                    binding.msgNoBounties.visibility = View.VISIBLE
-                }
             }
         }
     }
@@ -156,12 +124,6 @@ class BountyListFragment : Fragment(), SelectListener, CountryAdapter.SelectList
 
     override fun viewBountyDetail(b: Bounty) {
         if (bountiesViewModel.isSimPresent(b)) showBountyDescDialog(b) else showSimErrorDialog(b)
-    }
-
-    override fun countrySelect(countryCode: String) {
-        showLoadingState()
-
-        bountiesViewModel.loadBounties(countryCode)
     }
 
     private fun showSimErrorDialog(b: Bounty) {
@@ -189,14 +151,6 @@ class BountyListFragment : Fragment(), SelectListener, CountryAdapter.SelectList
     private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
         (requireActivity() as AbstractHoverCallerActivity).makeRegularCall(b.action, R.string.clicked_start_bounty)
-    }
-
-    private fun showLoadingState() {
-        binding.bountyCountryDropdown.setState(getString(R.string.filtering_in_progress), AbstractStatefulInput.INFO)
-    }
-
-    private fun hideLoadingState() {
-        binding.bountyCountryDropdown.setState(null, AbstractStatefulInput.NONE)
     }
 
     private fun retrySimMatch(b: Bounty?) {

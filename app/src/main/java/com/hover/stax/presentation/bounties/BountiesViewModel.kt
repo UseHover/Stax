@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class BountiesViewModel(private val simsUseCase: GetPresentSimsUseCase, private val bountiesUseCase: GetChannelBountiesUseCase, val application: Application) : ViewModel() {
+class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private val bountiesUseCase: GetChannelBountiesUseCase, val application: Application) : ViewModel() {
 
     var countryList = MutableStateFlow<List<String>>(emptyList())
         private set
@@ -86,14 +86,6 @@ class BountiesViewModel(private val simsUseCase: GetPresentSimsUseCase, private 
                 is Resource.Success -> bountiesState.update { it.copy(loading = false, bounties = result.data!!) }
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun emitSlowly(channelBounties: List<ChannelBounties>) = viewModelScope.launch(Dispatchers.IO) {
-        channelBounties.chunked(20).forEach { list ->
-            delay(1000)
-
-            bountiesState.update { it.copy(loading = false, bounties = list) }
-        }
     }
 
     fun isSimPresent(bounty: Bounty): Boolean = simsUseCase.simPresent(bounty, sims.value)
