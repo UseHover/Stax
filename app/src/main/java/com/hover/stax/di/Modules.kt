@@ -46,7 +46,6 @@ import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.presentation.bounties.BountiesViewModel
 import com.hover.stax.user.UserRepo
 import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -80,7 +79,6 @@ val appModule = module {
     viewModelOf(::BonusViewModel)
 
     viewModelOf(::HomeViewModel)
-    viewModelOf(::BountiesViewModel)
 }
 
 val dataModule = module(createdAtStart = true) {

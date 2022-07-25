@@ -15,18 +15,16 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.remote.workers.UpdateBountyTransactionsWorker
 import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.domain.model.Bounty
-import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.hover.AbstractHoverCallerActivity
-import com.hover.stax.utils.*
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
+import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
-import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -35,7 +33,7 @@ class BountyListFragment : Fragment(), SelectListener {
 
     private lateinit var networkMonitor: NetworkMonitor
 
-    private val bountiesViewModel: BountiesViewModel by viewModel()
+    private val bountiesViewModel: BountyViewModel by viewModel()
 
     private var _binding: FragmentBountyListBinding? = null
     private val binding get() = _binding!!
