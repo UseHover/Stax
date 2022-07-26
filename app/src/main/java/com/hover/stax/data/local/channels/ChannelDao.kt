@@ -11,8 +11,8 @@ interface ChannelDao {
     @get:Query("SELECT * FROM channels WHERE published = 1 AND institution_type != 'telecom' ORDER BY isFavorite DESC, name ASC")
     val publishedNonTelecomChannels: LiveData<List<Channel>>
 
-    @Query("SELECT * FROM channels WHERE institution_type == 'telecom' ")
-    suspend fun publishedTelecomChannels(): List<Channel>
+    @Query("SELECT * FROM channels WHERE published = 1 AND institution_type = 'telecom' AND country_alpha2 IN (:countryCodes)")
+    suspend fun publishedTelecomChannels(countryCodes : List<String>): List<Channel>
 
     @get:Query("SELECT * FROM channels ORDER BY name ASC")
     val allChannels: LiveData<List<Channel>>
