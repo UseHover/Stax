@@ -14,10 +14,10 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE published = 1 AND institution_type = 'telecom' AND country_alpha2 IN (:countryCodes)")
     suspend fun publishedTelecomChannels(countryCodes : List<String>): List<Channel>
 
-    @get:Query("SELECT * FROM channels ORDER BY name ASC")
+    @get:Query("SELECT * FROM channels WHERE institution_type != 'telecom' ORDER BY name ASC")
     val allChannels: LiveData<List<Channel>>
 
-    @Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC, name ASC")
+    @Query("SELECT * FROM channels WHERE selected = :selected AND institution_type != 'telecom' ORDER BY defaultAccount DESC, name ASC")
     fun getSelected(selected: Boolean): LiveData<List<Channel>>
 
     @Query("SELECT * FROM channels WHERE id IN (:channel_ids) ORDER BY name ASC")
@@ -45,7 +45,7 @@ interface ChannelDao {
     val channels: List<Channel>
 
     @Transaction
-    @Query("SELECT * FROM channels where selected = 1 ORDER BY name ASC")
+    @Query("SELECT * FROM channels where selected = 1 AND institution_type != 'telecom' ORDER BY name ASC")
     fun getChannelsAndAccounts(): List<ChannelWithAccounts>
 
     @Transaction
