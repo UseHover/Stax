@@ -12,32 +12,31 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.Bounty
-import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.channels.GetPresentSimsUseCase
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private val bountiesUseCase: GetChannelBountiesUseCase, val application: Application) : ViewModel() {
 
-    var countryList = MutableStateFlow<List<String>>(emptyList())
-        private set
+    private val _countryList = MutableStateFlow<List<String>>(emptyList())
+    val countryList = _countryList.asStateFlow()
 
-    var sims = MutableStateFlow<List<SimInfo>>(emptyList())
-        private set
+    private val _sims = MutableStateFlow<List<SimInfo>>(emptyList())
+    val sims = _sims.asStateFlow()
 
-    var bountiesState = MutableStateFlow(BountiesState())
-        private set
+    private val _bountiesState = MutableStateFlow(BountiesState())
+    val bountiesState = _bountiesState.asStateFlow()
 
-    var country = MutableStateFlow(CountryAdapter.CODE_ALL_COUNTRIES)
-        private set
+    private val _country = MutableStateFlow(CountryAdapter.CODE_ALL_COUNTRIES)
+    val country = _country.asStateFlow()
+
+    private val onBountySelectEvent = Channel<BountySelectEvent>()
+    val bountySelectEvent = onBountySelectEvent.receiveAsFlow()
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -59,7 +58,7 @@ class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private va
 
     private fun loadCountryList() = viewModelScope.launch {
         bountiesUseCase.getChannelList().collect { codes ->
-            countryList.update { codes }
+            _countryList.update { codes }
         }
     }
 
@@ -74,21 +73,25 @@ class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private va
     }
 
     private fun fetchSims() = viewModelScope.launch(Dispatchers.IO) {
-        sims.update { it }
+        _sims.update { it }
     }
 
     fun loadBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES) {
-        country.value = countryCode
+        _country.value = countryCode
         bountiesUseCase.getBounties(countryCode).onEach { result ->
             when (result) {
-                is Resource.Loading -> bountiesState.update { it.copy(loading = true) }
-                is Resource.Error -> bountiesState.update { it.copy(loading = false, error = result.message!!) }
-                is Resource.Success -> bountiesState.update { it.copy(loading = false, bounties = result.data!!) }
+                is Resource.Loading -> _bountiesState.update { it.copy(loading = true) }
+                is Resource.Error -> _bountiesState.update { it.copy(loading = false, error = result.message!!) }
+                is Resource.Success -> _bountiesState.update { it.copy(loading = false, bounties = result.data!!) }
             }
         }.launchIn(viewModelScope)
     }
 
     fun isSimPresent(bounty: Bounty): Boolean = simsUseCase.simPresent(bounty, sims.value)
+
+    fun handleBountyEvent(bountySelectEvent: BountySelectEvent) = viewModelScope.launch {
+        onBountySelectEvent.send(bountySelectEvent)
+    }
 
     override fun onCleared() {
         try {

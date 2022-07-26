@@ -42,12 +42,11 @@ import com.hover.stax.ui.theme.Brutalista
 import com.hover.stax.ui.theme.StaxTheme
 import com.yariksoffice.lingver.Lingver
 import java.util.*
-import kotlin.math.exp
 
 const val CODE_ALL_COUNTRIES = "00"
 
 @Composable
-fun BountyList(bountyViewModel: BountyViewModel, selectListener: SelectListener) {
+fun BountyList(bountyViewModel: BountyViewModel) {
     val bountiesState by bountyViewModel.bountiesState.collectAsState()
 
     StaxTheme {
@@ -61,7 +60,7 @@ fun BountyList(bountyViewModel: BountyViewModel, selectListener: SelectListener)
                 }
 
                 items(bountiesState.bounties) {
-                    ChannelBountyCard(channelBounty = it, selectListener)
+                    ChannelBountyCard(channelBounty = it, bountyViewModel)
                 }
 
                 if (bountiesState.bounties.isEmpty() && !bountiesState.loading) {
@@ -82,7 +81,7 @@ fun BountyList(bountyViewModel: BountyViewModel, selectListener: SelectListener)
 }
 
 @Composable
-fun ChannelBountyCard(channelBounty: ChannelBounties, selectListener: SelectListener) {
+fun ChannelBountyCard(channelBounty: ChannelBounties, bountyViewModel: BountyViewModel) {
     if (channelBounty.bounties.isNotEmpty())
         Column {
             Text(
@@ -96,18 +95,18 @@ fun ChannelBountyCard(channelBounty: ChannelBounties, selectListener: SelectList
             )
 
             channelBounty.bounties.forEach {
-                BountyCard(bounty = it, selectListener)
+                BountyCard(bounty = it, bountyViewModel)
             }
         }
 }
 
 @Composable
-fun BountyCard(bounty: Bounty, selectListener: SelectListener) {
+fun BountyCard(bounty: Bounty, bountyViewModel: BountyViewModel) {
     val context = LocalContext.current
     val margin8 = dimensionResource(id = R.dimen.margin_8)
     val margin13 = dimensionResource(id = R.dimen.margin_13)
 
-    val bountyState = getBountyState(bounty, selectListener)
+    val bountyState = getBountyState(bounty)
 
     val strikeThrough = TextStyle(
         fontFamily = Brutalista,
@@ -120,7 +119,7 @@ fun BountyCard(bounty: Bounty, selectListener: SelectListener) {
         modifier = Modifier
             .background(color = colorResource(id = bountyState.color))
             .padding(vertical = margin8)
-            .clickable { bountyState.clickListener }
+            .clickable { bountyState.bountySelectEvent?.let { bountyViewModel.handleBountyEvent(it) } }
     ) {
         Row(
             modifier = Modifier
@@ -171,7 +170,7 @@ fun CountryDropdown(bountyViewModel: BountyViewModel, isLoading: Boolean) {
 
     val context = LocalContext.current
 
-    if(interactionSource.collectIsPressedAsState().value)
+    if (interactionSource.collectIsPressedAsState().value)
         expanded = !expanded
 
     Column(
@@ -193,7 +192,7 @@ fun CountryDropdown(bountyViewModel: BountyViewModel, isLoading: Boolean) {
             trailingIcon = {
                 Icon(
                     icon,
-                    "contentDescription",
+                    "Dropdown",
                     Modifier.clickable { expanded = !expanded },
                     tint = if (isLoading) colorResource(id = R.color.stax_state_blue) else Color.White
                 )
@@ -223,7 +222,7 @@ fun CountryDropdown(bountyViewModel: BountyViewModel, isLoading: Boolean) {
                     Text(
                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.margin_10)),
                         text = getCountryString(countryCode, context),
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.button
                     )
                 }
             }
@@ -385,22 +384,20 @@ fun BountiesPreview() {
     }
 }
 
-private fun getBountyState(bounty: Bounty, selectListener: SelectListener): BountyItemState {
+private fun getBountyState(bounty: Bounty): BountyItemState {
     return when {
-        bounty.hasASuccessfulTransactions() -> BountyItemState(R.color.muted_green, R.string.done, R.drawable.ic_check, false) {}
-        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_error, false) {
-            selectListener.viewTransactionDetail(bounty.transactions.last().uuid)
-        }
-        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open -> BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_error, true) {
-            selectListener.viewBountyDetail(bounty)
-        }
-        !bounty.action.bounty_is_open -> BountyItemState(color = R.color.lighter_grey, msg = 0, icon = 0, isOpen = false) {}
-        bounty.transactionCount > 0 -> BountyItemState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true) {
-            selectListener.viewTransactionDetail(bounty.transactions.last().uuid)
-        }
-        else -> BountyItemState(color = R.color.colorSurface, msg = 0, icon = 0, isOpen = true) {
-            selectListener.viewBountyDetail(bounty)
-        }
+        bounty.hasASuccessfulTransactions() ->
+            BountyItemState(R.color.muted_green, R.string.done, R.drawable.ic_check, false, null)
+        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open ->
+            BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_error, false, BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))
+        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open ->
+            BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_error, true, BountySelectEvent.ViewBountyDetail(bounty))
+        !bounty.action.bounty_is_open ->
+            BountyItemState(color = R.color.lighter_grey, msg = 0, icon = 0, isOpen = false, bountySelectEvent = null)
+        bounty.transactionCount > 0 ->
+            BountyItemState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true, BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))
+        else ->
+            BountyItemState(color = R.color.colorSurface, msg = 0, icon = 0, isOpen = true, bountySelectEvent = BountySelectEvent.ViewBountyDetail(bounty))
     }
 }
 
@@ -429,10 +426,10 @@ data class BountyItemState(
     @StringRes val msg: Int,
     @DrawableRes val icon: Int,
     val isOpen: Boolean,
-    val clickListener: () -> Unit
+    val bountySelectEvent: BountySelectEvent?
 )
 
-interface SelectListener {
-    fun viewTransactionDetail(uuid: String?)
-    fun viewBountyDetail(b: Bounty)
+sealed class BountySelectEvent {
+    data class ViewTransactionDetail(val uuid: String) : BountySelectEvent()
+    data class ViewBountyDetail(val bounty: Bounty) : BountySelectEvent()
 }

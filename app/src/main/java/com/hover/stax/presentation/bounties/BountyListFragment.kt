@@ -22,6 +22,7 @@ import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class BountyListFragment : Fragment(), SelectListener {
+class BountyListFragment : Fragment()  {
 
     private lateinit var networkMonitor: NetworkMonitor
 
@@ -52,6 +53,7 @@ class BountyListFragment : Fragment(), SelectListener {
         networkMonitor = NetworkMonitor(requireActivity())
 
         initBountyList()
+        observeBountyEvents()
 
         binding.countryFilter.apply {
             setOnClickIcon {
@@ -63,6 +65,13 @@ class BountyListFragment : Fragment(), SelectListener {
     override fun onResume() {
         super.onResume()
         forceUserToBeOnline()
+    }
+
+    private fun observeBountyEvents() = collectLifecycleFlow(bountiesViewModel.bountySelectEvent) {
+        when (it) {
+            is BountySelectEvent.ViewBountyDetail -> viewBountyDetail(it.bounty)
+            is BountySelectEvent.ViewTransactionDetail -> NavUtil.showTransactionDetailsFragment(findNavController(), it.uuid)
+        }
     }
 
     private fun forceUserToBeOnline() {
@@ -111,16 +120,12 @@ class BountyListFragment : Fragment(), SelectListener {
         binding.bountyList.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                BountyList(bountyViewModel = bountiesViewModel, this@BountyListFragment)
+                BountyList(bountyViewModel = bountiesViewModel)
             }
         }
     }
 
-    override fun viewTransactionDetail(uuid: String?) {
-        uuid?.let { NavUtil.showTransactionDetailsFragment(findNavController(), uuid) }
-    }
-
-    override fun viewBountyDetail(b: Bounty) {
+    private fun viewBountyDetail(b: Bounty) {
         if (bountiesViewModel.isSimPresent(b)) showBountyDescDialog(b) else showSimErrorDialog(b)
     }
 
