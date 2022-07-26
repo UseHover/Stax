@@ -6,6 +6,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -40,6 +42,7 @@ import com.hover.stax.ui.theme.Brutalista
 import com.hover.stax.ui.theme.StaxTheme
 import com.yariksoffice.lingver.Lingver
 import java.util.*
+import kotlin.math.exp
 
 const val CODE_ALL_COUNTRIES = "00"
 
@@ -61,7 +64,7 @@ fun BountyList(bountyViewModel: BountyViewModel, selectListener: SelectListener)
                     ChannelBountyCard(channelBounty = it, selectListener)
                 }
 
-                if (bountiesState.bounties.isEmpty()) {
+                if (bountiesState.bounties.isEmpty() && !bountiesState.loading) {
                     item {
                         Text(
                             modifier = Modifier
@@ -161,11 +164,15 @@ fun CountryDropdown(bountyViewModel: BountyViewModel, isLoading: Boolean) {
     var expanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(country) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     val icon = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
     val borderColor = if (isLoading) colorResource(id = R.color.stax_state_blue) else Color.White
 
     val context = LocalContext.current
+
+    if(interactionSource.collectIsPressedAsState().value)
+        expanded = !expanded
 
     Column(
         Modifier
@@ -197,7 +204,8 @@ fun CountryDropdown(bountyViewModel: BountyViewModel, isLoading: Boolean) {
                 focusedBorderColor = borderColor,
                 unfocusedLabelColor = borderColor
             ),
-            readOnly = true
+            readOnly = true,
+            interactionSource = interactionSource
         )
 
         DropdownMenu(
@@ -399,32 +407,20 @@ private fun getBountyState(bounty: Bounty, selectListener: SelectListener): Boun
 fun getCountryString(code: String, context: Context): String = if (code.isEmpty() || code == CountryAdapter.CODE_ALL_COUNTRIES)
     context.getString(R.string.all_countries_with_emoji)
 else
-    context.getString(R.string.country_with_emoji, code.countryCodeToUnicodeFlag(), getFullCountryName(code))
+    context.getString(R.string.country_with_emoji, countryCodeToEmoji(code), getFullCountryName(code))
 
 private fun getFullCountryName(code: String): String {
     val locale = Locale(Lingver.getInstance().getLanguage(), code)
     return locale.displayCountry
 }
 
-fun String.countryCodeToUnicodeFlag(): String {
-    try {
-        return this
-            .filter { it in 'A'..'Z' }
-            .map { it.code.toByte() }
-            .flatMap { char ->
-                listOf(
-                    0xD8.toByte(),
-                    0x3C.toByte(),
-                    0xDD.toByte(),
-                    (0xE6.toByte() + (char - 'A'.code.toByte())).toByte()
-                )
-            }
-            .toByteArray()
-            .let { bytes ->
-                String(bytes, Charsets.UTF_16)
-            }
+private fun countryCodeToEmoji(countryCode: String): String {
+    return try {
+        val firstLetter = Character.codePointAt(countryCode.uppercase(), 0) - 0x41 + 0x1F1E6
+        val secondLetter = Character.codePointAt(countryCode.uppercase(), 1) - 0x41 + 0x1F1E6
+        String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
     } catch (e: Exception) {
-        return ""
+        ""
     }
 }
 
