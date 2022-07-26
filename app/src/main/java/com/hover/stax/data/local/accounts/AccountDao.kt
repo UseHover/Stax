@@ -14,7 +14,7 @@ interface AccountDao {
     @Query("SELECT * FROM accounts WHERE institution_type != 'telecom' ORDER BY alias ASC")
     fun getLiveAccounts(): LiveData<List<Account>>
 
-    @Query("SELECT * FROM accounts WHERE subscription_id IN (:subscriptionIds) AND institution_type == 'telecom'")
+    @Query("SELECT * FROM accounts WHERE subscription_id IN (:subscriptionIds)")
     suspend fun getAccountsBySubscribedSim(subscriptionIds: IntArray): List<Account>
 
     @Query("SELECT * FROM accounts WHERE channelId = :channelId AND institution_type != 'telecom' ORDER BY alias ASC")

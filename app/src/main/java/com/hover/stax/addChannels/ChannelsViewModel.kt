@@ -160,9 +160,12 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
             viewModelScope.launch(Dispatchers.IO) {
                 val currentTelecomAccounts = accountRepo.getTelecomAccounts(presentSimList.map { it.subscriptionId }.toIntArray())
                 val unlinkedSims = getUnlinkedSIMs(currentTelecomAccounts, presentSimList)
+                Timber.i("total unlinked sim is: ${unlinkedSims.size}")
                 if(unlinkedSims.isNotEmpty()) {
-                    val allTelecomChannels = repo.publishedTelecomChannels(unlinkedSims.map { it.countryIso }.distinct())
+                    val allTelecomChannels = repo.publishedTelecomChannels()
+                    Timber.i("all sim supported Telecom channels in  is: ${allTelecomChannels.size}")
                     allTelecomChannels.forEach {
+                        Timber.i("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
                         val matchedSim = presentSimList.find { sim -> it.hniList.contains(sim.osReportedHni) }
                         if(matchedSim != null) {
                             createAccount(it, matchedSim.subscriptionId, false)
