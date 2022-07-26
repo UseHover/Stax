@@ -387,15 +387,15 @@ fun BountiesPreview() {
 private fun getBountyState(bounty: Bounty): BountyItemState {
     return when {
         bounty.hasASuccessfulTransactions() ->
-            BountyItemState(R.color.muted_green, R.string.done, R.drawable.ic_check, false, null)
+            BountyItemState(color = R.color.muted_green, msg = R.string.done, icon = R.drawable.ic_check, isOpen = false, bountySelectEvent = null)
         bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open ->
-            BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_error, false, BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))
+            BountyItemState(color = R.color.stax_bounty_red_bg, msg = R.string.bounty_transaction_failed, icon = R.drawable.ic_error, isOpen = false, bountySelectEvent = BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))
         bounty.isLastTransactionFailed() && bounty.action.bounty_is_open ->
-            BountyItemState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_error, true, BountySelectEvent.ViewBountyDetail(bounty))
+            BountyItemState(color = R.color.stax_bounty_red_bg, msg = R.string.bounty_transaction_failed_try_again, icon = R.drawable.ic_error, isOpen = true, bountySelectEvent = BountySelectEvent.ViewBountyDetail(bounty))
         !bounty.action.bounty_is_open ->
             BountyItemState(color = R.color.lighter_grey, msg = 0, icon = 0, isOpen = false, bountySelectEvent = null)
         bounty.transactionCount > 0 ->
-            BountyItemState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true, BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))
+            BountyItemState(color = R.color.pending_brown, msg = R.string.bounty_pending_short_desc, icon = R.drawable.ic_warning, isOpen = true, bountySelectEvent = BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))
         else ->
             BountyItemState(color = R.color.colorSurface, msg = 0, icon = 0, isOpen = true, bountySelectEvent = BountySelectEvent.ViewBountyDetail(bounty))
     }
