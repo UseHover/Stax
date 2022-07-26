@@ -35,6 +35,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -143,7 +144,7 @@ fun BountyCard(bounty: Bounty, bountyViewModel: BountyViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = bounty.generateDescription(context),
+                text = bounty.generateDescription(context).replaceFirstChar { it.uppercase() },
                 modifier = Modifier
                     .padding(top = margin8, bottom = margin8, end = margin13)
                     .weight(1f),
