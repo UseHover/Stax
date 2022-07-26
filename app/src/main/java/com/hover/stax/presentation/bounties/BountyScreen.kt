@@ -1,9 +1,16 @@
 package com.hover.stax.presentation.bounties
 
 import android.content.Context
+import android.text.Html
+import android.text.method.LinkMovementMethod
+import android.view.Gravity
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -24,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +42,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.text.HtmlCompat
+import androidx.core.widget.TextViewCompat
 import com.hover.stax.R
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.Bounty
@@ -48,6 +60,8 @@ const val CODE_ALL_COUNTRIES = "00"
 @Composable
 fun BountyList(bountyViewModel: BountyViewModel) {
     val bountiesState by bountyViewModel.bountiesState.collectAsState()
+    val countries by bountyViewModel.countryList.collectAsState(initial = listOf(CODE_ALL_COUNTRIES))
+    val country by bountyViewModel.country.collectAsState()
 
     StaxTheme {
         Surface(
@@ -56,7 +70,7 @@ fun BountyList(bountyViewModel: BountyViewModel) {
         ) {
             LazyColumn {
                 item {
-                    CountryDropdown(bountyViewModel, bountiesState.loading)
+                    CountryDropdown(countries, country, bountiesState.loading, bountyViewModel)
                 }
 
                 items(bountiesState.bounties) {
@@ -105,6 +119,7 @@ fun BountyCard(bounty: Bounty, bountyViewModel: BountyViewModel) {
     val context = LocalContext.current
     val margin8 = dimensionResource(id = R.dimen.margin_8)
     val margin13 = dimensionResource(id = R.dimen.margin_13)
+    val margin5 = dimensionResource(id = R.dimen.margin_5)
 
     val bountyState = getBountyState(bounty)
 
@@ -145,21 +160,50 @@ fun BountyCard(bounty: Bounty, bountyViewModel: BountyViewModel) {
         }
 
         if (bountyState.msg != 0)
-            HorizontalImageTextView(
+            SpannableImageTextView(
                 drawable = bountyState.icon,
                 stringRes = bountyState.msg,
                 modifier = Modifier
-                    .padding(start = margin13, end = margin13, top = 5.dp, bottom = dimensionResource(id = R.dimen.margin_10)),
-                MaterialTheme.typography.caption
+                    .padding(start = margin13, end = margin13, top = margin5, bottom = margin5),
             )
     }
 }
 
 @Composable
-fun CountryDropdown(bountyViewModel: BountyViewModel, isLoading: Boolean) {
-    val countries by bountyViewModel.countryList.collectAsState(initial = listOf(CODE_ALL_COUNTRIES))
-    val country by bountyViewModel.country.collectAsState()
+internal fun SpannableImageTextView(
+    @DrawableRes drawable: Int,
+    @StringRes stringRes: Int,
+    modifier: Modifier = Modifier
+) {
+    val text = Html.fromHtml(stringResource(id = stringRes), HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
 
+    Row(horizontalArrangement = Arrangement.Start, modifier = modifier) {
+        Image(
+            painter = painterResource(id = drawable),
+            contentDescription = null,
+            modifier = Modifier.align(Alignment.CenterVertically),
+        )
+        //only workaround available for handling html text in compose textviews
+        AndroidView(
+            factory = { context ->
+                TextView(context).apply {
+                    setText(text)
+                    setTextColor(R.color.offWhite)
+                    TextViewCompat.setTextAppearance(this, android.R.style.TextAppearance_Material_Caption)
+                    layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+                    movementMethod = LinkMovementMethod.getInstance()
+                    gravity = Gravity.CENTER_VERTICAL
+                    typeface = context.resources.getFont(R.font.brutalista_regular)
+                }
+            }, modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(start = dimensionResource(id = R.dimen.margin_8))
+        )
+    }
+}
+
+@Composable
+fun CountryDropdown(countries: List<String>, country: String, isLoading: Boolean, bountyViewModel: BountyViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(country) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
@@ -291,11 +335,10 @@ fun BountyCardPreview() {
             )
         }
 
-        HorizontalImageTextView(
+        SpannableImageTextView(
             drawable = R.drawable.ic_error,
             stringRes = R.string.bounty_transaction_failed,
-            modifier = Modifier.padding(start = margin13, end = margin13, top = 5.dp, bottom = dimensionResource(id = R.dimen.margin_10)),
-            MaterialTheme.typography.caption
+            modifier = Modifier.padding(start = margin8, end = margin13, top = 5.dp, bottom = dimensionResource(id = R.dimen.margin_10)),
         )
     }
 }
@@ -393,11 +436,11 @@ private fun getBountyState(bounty: Bounty): BountyItemState {
         bounty.isLastTransactionFailed() && bounty.action.bounty_is_open ->
             BountyItemState(color = R.color.stax_bounty_red_bg, msg = R.string.bounty_transaction_failed_try_again, icon = R.drawable.ic_error, isOpen = true, bountySelectEvent = BountySelectEvent.ViewBountyDetail(bounty))
         !bounty.action.bounty_is_open ->
-            BountyItemState(color = R.color.lighter_grey, msg = 0, icon = 0, isOpen = false, bountySelectEvent = null)
+            BountyItemState(color = R.color.lighter_grey, isOpen = false, bountySelectEvent = null)
         bounty.transactionCount > 0 ->
             BountyItemState(color = R.color.pending_brown, msg = R.string.bounty_pending_short_desc, icon = R.drawable.ic_warning, isOpen = true, bountySelectEvent = BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))
         else ->
-            BountyItemState(color = R.color.colorSurface, msg = 0, icon = 0, isOpen = true, bountySelectEvent = BountySelectEvent.ViewBountyDetail(bounty))
+            BountyItemState(color = R.color.colorSurface, isOpen = true, bountySelectEvent = BountySelectEvent.ViewBountyDetail(bounty))
     }
 }
 
@@ -422,11 +465,11 @@ private fun countryCodeToEmoji(countryCode: String): String {
 }
 
 data class BountyItemState(
-    @ColorRes val color: Int,
-    @StringRes val msg: Int,
-    @DrawableRes val icon: Int,
-    val isOpen: Boolean,
-    val bountySelectEvent: BountySelectEvent?
+    @ColorRes val color: Int = 0,
+    @StringRes val msg: Int = 0,
+    @DrawableRes val icon: Int = 0,
+    val isOpen: Boolean = true,
+    val bountySelectEvent: BountySelectEvent? = null
 )
 
 sealed class BountySelectEvent {

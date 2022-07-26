@@ -46,13 +46,11 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
         if (actions.isEmpty()) return emptyList()
 
         val bounties = getBounties(actions, transactions)
-        Timber.e("Found ${bounties.size} bounties")
 
         return generateChannelBounties(channels, bounties)
     }
 
     private fun getBounties(actions: List<HoverAction>, transactions: List<StaxTransaction>?): List<Bounty> {
-        Timber.e("We have ${actions.size} actions and ${transactions?.size} transactions")
         val bounties: MutableList<Bounty> = ArrayList()
         val transactionList = transactions?.toMutableList() ?: mutableListOf()
 
@@ -71,17 +69,13 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
             bounties.add(Bounty(action, filteredTransactions))
         }
 
-        Timber.e("Returning ${bounties.size} bounties")
-
         return bounties
     }
 
     private fun generateChannelBounties(channels: List<Channel>, bounties: List<Bounty>): List<ChannelBounties> {
-        Timber.e("We are generating bounties from ${channels.size} and ${bounties.size} bounties")
         if (channels.isEmpty() || bounties.isEmpty()) return emptyList()
 
         val openBounties = bounties.filter { it.action.bounty_is_open || it.transactionCount != 0 }
-        Timber.e("Found ${openBounties.size} open bounties")
 
         val channelBounties = channels.filter { c ->
             openBounties.any { it.action.channel_id == c.id }
@@ -89,7 +83,6 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
             ChannelBounties(channel, openBounties.filter { it.action.channel_id == channel.id })
         }
 
-        Timber.e("Channel bounties fetched current country is ${channelBounties.size}")
         return channelBounties
     }
 

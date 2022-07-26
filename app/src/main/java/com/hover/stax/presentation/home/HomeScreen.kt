@@ -282,7 +282,7 @@ internal fun HorizontalImageTextView(
             modifier = Modifier.align(Alignment.CenterVertically),
         )
         Text(
-            text = Html.fromHtml(stringResource(id = stringRes), HtmlCompat.FROM_HTML_MODE_LEGACY).toString(),
+            text = stringResource(id = stringRes),
             style = textStyle,
             modifier = Modifier
                 .padding(start = dimensionResource(id = R.dimen.margin_13))
