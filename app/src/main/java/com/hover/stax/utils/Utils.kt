@@ -137,7 +137,7 @@ object Utils {
         return getBuildConfigValue(c, "DEBUG") as Boolean
     }
 
-    private fun getBuildConfigValue(context: Context, fieldName: String?): Any? {
+    private fun getBuildConfigValue(context: Context, fieldName: String): Any? {
         try {
             val clazz = Class.forName(getPackage(context) + ".BuildConfig")
             val field = clazz.getField(fieldName)

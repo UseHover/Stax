@@ -3,9 +3,9 @@ package com.hover.stax.accounts
 import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.transactions.StaxTransaction
@@ -17,7 +17,8 @@ import java.util.*
 
 
 class AccountDetailViewModel(val application: Application, val repo: AccountRepo, private val transactionRepo: TransactionRepo,
-                             private val channelRepo: ChannelRepo, val actionRepo: ActionRepo) : ViewModel() {
+                             private val channelRepo: ChannelRepo, val actionRepo: ActionRepo
+) : ViewModel() {
 
     private val id = MutableLiveData<Int>()
     var account: LiveData<Account> = MutableLiveData()

@@ -1,4 +1,4 @@
-package com.hover.stax.database
+package com.hover.stax.data.local.parser
 
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.parsers.ParserDao
