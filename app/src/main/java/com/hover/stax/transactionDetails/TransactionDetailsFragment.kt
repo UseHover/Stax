@@ -88,18 +88,28 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun startObservers() = with(viewModel) {
+        val txnObserver = object : Observer<Transaction> {
+            override fun onChanged(t: Transaction?) {
+                t?.let { Timber.e("Updating transaction messages ${t.uuid}") }
+            }
+        }
+        
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
         merchant.observe(viewLifecycleOwner) { updateRecipient(it) }
         account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
-        hoverTransaction.observe(viewLifecycleOwner) { it?.let { Timber.e("Updating transaction messages ${it.uuid}") } }
+        hoverTransaction.observe(viewLifecycleOwner, txnObserver)
         messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
         bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
 
-        val observer = Observer<Boolean> {
-            Timber.i("Expecting sms $it")
-            action.value?.let { a -> updateAction(a) }
+
+        val observer = object: Observer<Boolean> {
+            override fun onChanged(t: Boolean?) {
+                Timber.i("Expecting sms $t")
+                action.value?.let { a -> updateAction(a) }
+            }
+
         }
         isExpectingSMS.observe(viewLifecycleOwner, observer)
     }

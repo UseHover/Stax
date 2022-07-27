@@ -118,7 +118,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
     }
 
     private fun showEmptyState() {
-        val content = resources.getString(R.string.no_accounts_found_desc, viewModel.filterQuery.value!!)
+        val content = resources.getString(R.string.no_accounts_found_desc, viewModel.filterQuery.value ?: getString(R.string.empty_channel_placeholder))
         binding.emptyState.noAccountFoundDesc.apply {
             text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
             movementMethod = LinkMovementMethod.getInstance()

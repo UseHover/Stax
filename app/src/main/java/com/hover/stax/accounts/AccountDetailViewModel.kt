@@ -48,13 +48,13 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
 
     private fun loadFeesThisYear(id: Int): LiveData<Double>? = transactionRepo.getFees(id, calendar.get(Calendar.YEAR))
 
-    fun updateAccountName(newName: String) = viewModelScope.launch {
+    fun updateAccountName(newName: String) = viewModelScope.launch(Dispatchers.IO) {
         val a = account.value!!
         a.alias = newName
         repo.update(a)
     }
 
-    fun updateAccountNumber(newNumber: String) = viewModelScope.launch {
+    fun updateAccountNumber(newNumber: String) = viewModelScope.launch(Dispatchers.IO) {
         val a = account.value!!
         a.accountNo = newNumber
         repo.update(a)

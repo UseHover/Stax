@@ -303,6 +303,7 @@ fun HomeScreen(
     val homeState by homeViewModel.homeState.collectAsState()
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
     val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
+    val accounts by homeViewModel.accounts.observeAsState(initial = emptyList())
     val context = LocalContext.current
 
     StaxTheme {
@@ -346,7 +347,7 @@ fun HomeScreen(
                             }
                         }
 
-                        items(homeState.accounts) { account ->
+                        items(accounts){ account ->
                             BalanceItem(
                                 staxAccount = account,
                                 context = context,

@@ -1,7 +1,9 @@
 package com.hover.stax.presentation.home
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
@@ -20,6 +22,9 @@ class HomeViewModel(
     private val _homeState = MutableStateFlow(HomeState())
     val homeState = _homeState.asStateFlow()
 
+    var accounts = MutableLiveData<List<Account>>()
+        private set
+
     init {
         fetchBonuses()
         fetchData()
@@ -36,8 +41,8 @@ class HomeViewModel(
     }
 
     private fun getBonusList() = viewModelScope.launch {
-        getBonusesUseCase.bonusList.collect {
-            _homeState.value = _homeState.value.copy(bonuses = it)
+        getBonusesUseCase.bonusList.collect { bonusList ->
+            _homeState.update { it.copy(bonuses = bonusList) }
         }
     }
 
@@ -49,6 +54,6 @@ class HomeViewModel(
 
     private fun getFinancialTips() = getTipsUseCase().onEach { result ->
         if (result is Resource.Success)
-            _homeState.value = homeState.value.copy(financialTips = result.data ?: emptyList())
+            _homeState.update { it.copy(financialTips = result.data ?: emptyList()) }
     }.launchIn(viewModelScope)
 }
