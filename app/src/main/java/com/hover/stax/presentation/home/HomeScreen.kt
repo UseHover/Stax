@@ -342,7 +342,7 @@ fun HomeScreen(
                                 onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
                             )
 
-                            if (homeState.accounts.isEmpty()) {
+                            if (accounts.isEmpty()) {
                                 EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
                             }
                         }

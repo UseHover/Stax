@@ -1,5 +1,6 @@
 package com.hover.stax.presentation.home
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,8 +23,9 @@ class HomeViewModel(
     private val _homeState = MutableStateFlow(HomeState())
     val homeState = _homeState.asStateFlow()
 
-    var accounts = MutableLiveData<List<Account>>()
-        private set
+    private val _accounts = MutableLiveData<List<Account>>()
+    val accounts: LiveData<List<Account>> = _accounts
+
 
     init {
         fetchBonuses()
@@ -49,6 +51,7 @@ class HomeViewModel(
     private fun getAccounts() = viewModelScope.launch {
         getAccountsUseCase.accounts.collect { accounts ->
             _homeState.update { it.copy(accounts = accounts) }
+            _accounts.postValue(accounts)
         }
     }
 
