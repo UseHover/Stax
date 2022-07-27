@@ -35,7 +35,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -50,7 +49,6 @@ import com.hover.stax.R
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
-import com.hover.stax.presentation.home.HorizontalImageTextView
 import com.hover.stax.ui.theme.Brutalista
 import com.hover.stax.ui.theme.StaxTheme
 import com.yariksoffice.lingver.Lingver
@@ -430,7 +428,7 @@ fun BountiesPreview() {
 
 private fun getBountyState(bounty: Bounty): BountyItemState {
     return when {
-        bounty.hasASuccessfulTransactions() ->
+        bounty.hasSuccessfulTransactions() ->
             BountyItemState(color = R.color.muted_green, msg = R.string.done, icon = R.drawable.ic_check, isOpen = false, bountySelectEvent = null)
         bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open ->
             BountyItemState(color = R.color.stax_bounty_red_bg, msg = R.string.bounty_transaction_failed, icon = R.drawable.ic_error, isOpen = false, bountySelectEvent = BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))

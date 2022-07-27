@@ -12,7 +12,7 @@ interface BountyRepository {
 
     val bountyActions: List<HoverAction>
 
-    fun simPresent(bounty: Bounty, sims: List<SimInfo>): Boolean
+    fun isSimPresent(bounty: Bounty, sims: List<SimInfo>): Boolean
 
     fun getCountryList(): Flow<List<String>>
 

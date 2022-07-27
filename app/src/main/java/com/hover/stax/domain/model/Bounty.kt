@@ -12,9 +12,8 @@ import java.util.*
 class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
 
     val transactionCount get(): Int = transactions.size
-
-    fun lastTransactionIndex(): Int = transactions.lastIndex
-    fun hasASuccessfulTransactions(): Boolean = transactions.any { it.status == Transaction.SUCCEEDED }
+    
+    fun hasSuccessfulTransactions(): Boolean = transactions.any { it.status == Transaction.SUCCEEDED }
     fun isLastTransactionFailed(): Boolean = if (transactionCount == 0) false else transactions.last().status == Transaction.FAILED
 
     fun generateDescription(c: Context): String = when (action.transaction_type) {

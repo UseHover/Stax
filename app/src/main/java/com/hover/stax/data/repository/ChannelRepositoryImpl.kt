@@ -16,7 +16,7 @@ class ChannelRepositoryImpl(val channelRepo: ChannelRepo) : ChannelRepository {
 
     override suspend fun getChannelsByIds(ids: List<Int>): List<Channel> = channelRepo.getChannelsByIds(ids)
 
-    override suspend fun getChannelsByCountryCode(ids: IntArray, countryCode: String): List<Channel> = channelRepo.getChannelsByCountryCode(ids, countryCode)
+    override suspend fun getChannelsByCountryCode(ids: IntArray, countryCode: String): List<Channel> = channelRepo.getChannelsByCountry(ids, countryCode)
 
     override suspend fun filterChannels(countryCode: String, actions: List<HoverAction>): List<Channel> {
         val ids = actions.asSequence().distinctBy { it.channel_id }.map { it.channel_id }.toList()

@@ -32,11 +32,11 @@ class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getChannelsByIdsAsync(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
-    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
-        return channelDao.getChannels(countryCode.uppercase(), channelIds)
-    }
+//    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
+//        return channelDao.getChannels(countryCode.uppercase(), channelIds)
+//    }
 
-    fun getChannelsByCountryCode(channelIds: IntArray, countryCode: String): List<Channel> = channelDao.getChannelsByCountryCode(channelIds, countryCode)
+    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): List<Channel> = channelDao.getChannels(countryCode, channelIds)
 
     fun getChannelsByCountry(countryCode: String): List<Channel> {
         return channelDao.getChannels(countryCode.uppercase())

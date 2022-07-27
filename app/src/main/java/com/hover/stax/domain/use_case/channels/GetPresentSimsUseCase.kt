@@ -9,6 +9,6 @@ class GetPresentSimsUseCase(channelRepository: ChannelRepository, private val bo
 
     val presentSims: List<SimInfo> = channelRepository.presentSims
 
-    fun simPresent(bounty: Bounty, sims: List<SimInfo>): Boolean = bountyRepository.simPresent(bounty, sims)
+    fun simPresent(bounty: Bounty, sims: List<SimInfo>): Boolean = bountyRepository.isSimPresent(bounty, sims)
 
 }

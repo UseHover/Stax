@@ -21,7 +21,7 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
     override val bountyActions: List<HoverAction>
         get() = actionRepo.bounties
 
-    override fun simPresent(bounty: Bounty, sims: List<SimInfo>): Boolean {
+    override fun isSimPresent(bounty: Bounty, sims: List<SimInfo>): Boolean {
         if (sims.isEmpty()) return false
 
         sims.forEach { simInfo ->
@@ -55,17 +55,7 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
         val transactionList = transactions?.toMutableList() ?: mutableListOf()
 
         for (action in actions) {
-            val filteredTransactions = mutableListOf<StaxTransaction>()
-            val iterator = transactionList.listIterator()
-
-            while (iterator.hasNext()) {
-                val transaction = iterator.next()
-                if (transaction.action_id == action.public_id) {
-                    filteredTransactions.add(transaction)
-                    iterator.remove()
-                }
-            }
-
+            val filteredTransactions = transactionList.filter { it.action_id == action.public_id }
             bounties.add(Bounty(action, filteredTransactions))
         }
 

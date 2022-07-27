@@ -73,7 +73,7 @@ class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private va
     }
 
     private fun fetchSims() = viewModelScope.launch(Dispatchers.IO) {
-        _sims.update { it }
+        _sims.update { simsUseCase.presentSims }
     }
 
     fun loadBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES) {
