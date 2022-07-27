@@ -174,7 +174,7 @@ internal fun SpannableImageTextView(
     @StringRes stringRes: Int,
     modifier: Modifier = Modifier
 ) {
-    val text = Html.fromHtml(stringResource(id = stringRes), HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+    val text = HtmlCompat.fromHtml(stringResource(id = stringRes), HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
 
     Row(horizontalArrangement = Arrangement.Start, modifier = modifier) {
         Image(
