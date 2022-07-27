@@ -25,7 +25,7 @@ class LoginViewModel(application: Application, private val userRepo: UserRepo, p
 
     lateinit var signInClient: GoogleSignInClient
 
-    val user = MutableLiveData<GoogleSignInAccount>()
+    val googleUser = MutableLiveData<GoogleSignInAccount>()
     var staxUser = MutableLiveData<StaxUser?>()
         private set
 
@@ -129,7 +129,7 @@ class LoginViewModel(application: Application, private val userRepo: UserRepo, p
 
     private fun setUser(signInAccount: GoogleSignInAccount, idToken: String) {
         Timber.e("setting user: %s", signInAccount.email)
-        user.postValue(signInAccount)
+        googleUser.postValue(signInAccount)
 
         progress.value = 33
         uploadUserToStax(signInAccount.email, signInAccount.displayName, idToken)

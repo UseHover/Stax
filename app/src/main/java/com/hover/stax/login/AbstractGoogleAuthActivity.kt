@@ -74,7 +74,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
             it?.let { staxGoogleLoginInterface.googleLoginFailed() }
         }
 
-        user.observe(this@AbstractGoogleAuthActivity) {
+        googleUser.observe(this@AbstractGoogleAuthActivity) {
             it?.let { staxGoogleLoginInterface.googleLoginSuccessful() }
         }
     }
