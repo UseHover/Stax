@@ -5,25 +5,30 @@
         android:layout_height="wrap_content"
         app:title="@string/security_cardhead">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_10"
-            android:layout_marginTop="@dimen/margin_21"
-            android:text="@string/security_head"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16"
-            app:fontFamily="@font/brutalista_medium" />
-
-    <TextView
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_10"
-            android:layout_marginTop="@dimen/margin_8"
-            android:layout_marginBottom="@dimen/margin_13"
-            android:lineSpacingExtra="@dimen/text_spacing_8"
-            android:text="@string/security_cardbody"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text_16" />
+            android:background="@color/colorSurface"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/margin_10"
+            android:paddingVertical="@dimen/margin_13">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/security_head"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16"
+                app:fontFamily="@font/brutalista_medium" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:lineSpacingExtra="@dimen/text_spacing_8"
+                android:text="@string/security_cardbody"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_16" />
+    </LinearLayout>
 
 </com.hover.stax.views.StaxCardView>

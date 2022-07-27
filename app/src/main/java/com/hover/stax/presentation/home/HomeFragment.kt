@@ -20,6 +20,8 @@ import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener {
@@ -30,6 +32,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val homeViewModel: HomeViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -41,6 +44,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
         super.onViewCreated(view, savedInstanceState)
 
         setComposeView()
+
         observeForBalances()
         observeForBonus()
     }
@@ -74,7 +78,8 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
                 channelsViewModel,
                 homeClickFunctions = getHomeClickFunctions(),
                 tipInterface = this@HomeFragment,
-                balanceTapListener = this@HomeFragment
+                balanceTapListener = this@HomeFragment,
+                homeViewModel = homeViewModel
             )
         }
     }

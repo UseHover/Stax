@@ -4,8 +4,8 @@ import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.repository.BonusRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetBonusesUseCase(private val repository: BonusRepository) {
+class GetBonusesUseCase(repository: BonusRepository) {
 
-    suspend operator fun invoke(): Flow<List<Bonus>> = repository.getBonusList()
+    val bonusList: Flow<List<Bonus>> = repository.bonusList
 
 }

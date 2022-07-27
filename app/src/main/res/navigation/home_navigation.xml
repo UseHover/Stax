@@ -344,7 +344,7 @@
 
     <fragment
             android:id="@+id/bountyEmailFragment"
-            android:name="com.hover.stax.bounties.BountyEmailFragment"
+            android:name="com.hover.stax.presentation.bounties.BountyEmailFragment"
             android:label="@string/nav_bounty"
             android:tag="@string/nav_bounty"
             tools:layout="@layout/fragment_bounty_email">
@@ -364,7 +364,7 @@
 
     <fragment
             android:id="@+id/bountyListFragment"
-            android:name="com.hover.stax.bounties.BountyListFragment"
+            android:name="com.hover.stax.presentation.bounties.BountyListFragment"
             android:label="@string/nav_bounty"
             tools:layout="@layout/bounty_card_channel">
         <action

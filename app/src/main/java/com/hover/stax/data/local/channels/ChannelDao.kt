@@ -1,8 +1,9 @@
-package com.hover.stax.channels
+package com.hover.stax.data.local.channels
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.hover.stax.accounts.ChannelWithAccounts
+import com.hover.stax.channels.Channel
 
 @Dao
 interface ChannelDao {
@@ -25,8 +26,11 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode ORDER BY name ASC")
     fun getChannels(countryCode: String): List<Channel>
 
+//    @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode AND id IN (:channel_ids) ORDER BY name ASC")
+//    fun getChannels(countryCode: String, channel_ids: IntArray): LiveData<List<Channel>>
+
     @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode AND id IN (:channel_ids) ORDER BY name ASC")
-    fun getChannels(countryCode: String, channel_ids: IntArray): LiveData<List<Channel>>
+    fun getChannels(countryCode: String, channel_ids: IntArray): List<Channel>
 
     @Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
     fun getChannel(id: Int): Channel?

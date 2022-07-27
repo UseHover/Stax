@@ -50,8 +50,6 @@ class NavHelper(val activity: AppCompatActivity) {
         setDestinationChangeListener(nav)
     }
 
-    fun showTxnDetails(uuid: String, isNewTransaction: Boolean? = false) = navController?.let { NavUtil.showTransactionDetailsFragment(it, uuid, isNewTransaction!!) }
-
     fun navigateWellness(tipId: String?) = navController?.let {
         NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment(tipId))
     }
@@ -79,9 +77,6 @@ class NavHelper(val activity: AppCompatActivity) {
     private fun setDestinationChangeListener(nav: BottomNavigationView) = navController?.let {
         it.addOnDestinationChangedListener { _, destination, _ ->
             nav.visibility = if (destination.id == R.id.navigation_linkAccount) View.GONE else View.VISIBLE
-
-            if (destination.id == R.id.bountyEmailFragment || destination.id == R.id.bountyListFragment)
-                nav.menu.findItem(R.id.navigation_settings).isChecked = true
         }
     }
 

@@ -4,7 +4,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.repository.BonusRepository
@@ -38,23 +38,24 @@ class BonusRepositoryImpl(private val bonusRepo: BonusRepo, private val channelR
         filterResults(bonuses)
     }
 
-    override suspend fun getBonusList(): Flow<List<Bonus>> = channelFlow {
-        val simHnis = channelRepo.presentSims.map { it.osReportedHni }
+    override val bonusList: Flow<List<Bonus>>
+        get() = channelFlow {
+            val simHnis = channelRepo.presentSims.map { it.osReportedHni }
 
-        bonusRepo.bonuses.collect {
-            withContext(coroutineDispatcher) {
-                launch {
-                    val bonusChannels = getBonusChannels(it)
-                    val showBonuses = hasValidSim(simHnis, bonusChannels)
+            bonusRepo.bonuses.collect {
+                withContext(coroutineDispatcher) {
+                    launch {
+                        val bonusChannels = getBonusChannels(it)
+                        val showBonuses = hasValidSim(simHnis, bonusChannels)
 
-                    if (showBonuses)
-                        send(it)
-                    else
-                        send(emptyList())
+                        if (showBonuses)
+                            send(it)
+                        else
+                            send(emptyList())
+                    }
                 }
             }
         }
-    }
 
     override suspend fun saveBonuses(bonusList: List<Bonus>) {
         return bonusRepo.save(bonusList)

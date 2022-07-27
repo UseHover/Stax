@@ -25,6 +25,11 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 15.sp
     ),
+    subtitle2 = TextStyle(
+        fontFamily = Brutalista,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
+    ),
     h1 = TextStyle(
         fontFamily = Brutalista,
         fontWeight = FontWeight.Medium,
@@ -39,6 +44,11 @@ val Typography = Typography(
         fontFamily = Brutalista,
         fontWeight = FontWeight.Medium,
         fontSize = 19.sp
+    ),
+    h4 = TextStyle(
+        fontFamily = Brutalista,
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp
     ),
     button = TextStyle(
         fontFamily = Brutalista,
