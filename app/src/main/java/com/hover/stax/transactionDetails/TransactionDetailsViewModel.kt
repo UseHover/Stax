@@ -8,11 +8,11 @@ import com.hover.sdk.api.Hover.getSMSMessageByUUID
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.ParserRepo
+import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.transactions.StaxTransaction

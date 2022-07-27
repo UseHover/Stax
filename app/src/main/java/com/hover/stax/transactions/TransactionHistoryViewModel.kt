@@ -2,7 +2,7 @@ package com.hover.stax.transactions
 
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

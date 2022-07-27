@@ -47,8 +47,8 @@ class HomeViewModel(
     }
 
     private fun getAccounts() = viewModelScope.launch {
-        getAccountsUseCase.accounts.collect { accountList ->
-            accounts.postValue(accountList)
+        getAccountsUseCase.accounts.collect { accounts ->
+            _homeState.update { it.copy(accounts = accounts) }
         }
     }
 
