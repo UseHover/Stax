@@ -43,8 +43,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.title.text = getString(R.string.financial_wellness_tips)
-        binding.backButton.setOnClickListener { findNavController().popBackStack() }
+        initViews()
 
         viewModel.getTips()
 
@@ -52,13 +51,35 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
+    private fun initViews(){
+        binding.title.text = getString(R.string.financial_wellness_tips)
+        binding.backButton.setOnClickListener { findNavController().popBackStack() }
+        binding.progressIndicator.setVisibilityAfterHide(View.GONE)
+    }
+
     private fun startObserver() = collectLifecycleFlow(viewModel.tipsState) {
-        if (it.tips.isEmpty()) {
-            binding.empty.visibility = View.VISIBLE
-            binding.financialTips.visibility = View.GONE
-            binding.financialTipsDetail.visibility = View.GONE
-        } else
-            showFinancialTips(it.tips, args.tipId)
+        when {
+            it.isLoading -> {
+                binding.progressIndicator.show()
+                binding.empty.visibility = View.GONE
+            }
+            it.tips.isEmpty() && !it.isLoading-> {
+                binding.progressIndicator.hide()
+                binding.empty.visibility = View.VISIBLE
+                binding.financialTips.visibility = View.GONE
+                binding.financialTipsDetail.visibility = View.GONE
+            }
+            it.tips.isNotEmpty() -> {
+                binding.progressIndicator.hide()
+                showFinancialTips(it.tips, args.tipId)
+            }
+            it.error.isNotEmpty() -> {
+                binding.progressIndicator.hide()
+                binding.empty.visibility = View.VISIBLE
+                binding.financialTips.visibility = View.GONE
+                binding.financialTipsDetail.visibility = View.GONE
+            }
+        }
     }
 
     private fun showFinancialTips(tips: List<FinancialTip>, id: String? = null) {

@@ -17,10 +17,10 @@ class FinancialTipsRepositoryImpl(val context: Context) : FinancialTipsRepositor
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
 
-    override suspend fun fetchTips(): Flow<List<FinancialTip>> = flow {
+    override suspend fun getTips(): List<FinancialTip> {
         val today = System.currentTimeMillis()
 
-        val tips = db.collection(context.getString(R.string.tips_table))
+        return db.collection(context.getString(R.string.tips_table))
             .orderBy("date", Query.Direction.DESCENDING)
             .whereLessThanOrEqualTo("date", today / 1000)
             .limit(20)
@@ -34,7 +34,5 @@ class FinancialTipsRepositoryImpl(val context: Context) : FinancialTipsRepositor
                     document.data!!["deep link"].toString()
                 )
             }
-
-        emit(tips)
     }
 }

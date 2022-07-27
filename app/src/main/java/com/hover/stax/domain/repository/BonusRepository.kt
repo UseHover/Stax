@@ -8,7 +8,7 @@ interface BonusRepository {
 
     suspend fun fetchBonuses()
 
-    suspend fun getBonusList(): Flow<List<Bonus>>
+    val bonusList: Flow<List<Bonus>>
 
     suspend fun saveBonuses(bonusList: List<Bonus>)
 

@@ -54,12 +54,13 @@ fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
         Text(
             text = stringResource(id = R.string.your_accounts),
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.h3
+            style = MaterialTheme.typography.h4
         )
 
         if (accountExists) {
             Text(
                 text = stringResource(id = R.string.add_an_account),
+                style = MaterialTheme.typography.body2,
                 modifier = Modifier
                     .clickable(onClick = onClickedAddAccount)
                     .padding(end = 5.dp)
@@ -146,7 +147,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 
             Text(
                 text = staxAccount.alias,
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.body2,
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = size13)
@@ -156,12 +157,13 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 
             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                 Text(
-                    text = staxAccount.latestBalance ?: " -",
+                    text = staxAccount.latestBalance ?: " - ",
                     modifier = Modifier.align(Alignment.End),
+                    style = MaterialTheme.typography.subtitle2,
                     color = colorResource(id = R.color.offWhite)
                 )
 
-                Spacer(modifier = Modifier.height(3.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
                     text = DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),

@@ -1,6 +1,7 @@
 package com.hover.stax.presentation.home
 
 import android.content.Context
+import android.text.Html
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -21,11 +22,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.Bonus
@@ -33,7 +36,6 @@ import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.network.NetworkMonitor
-import org.koin.androidx.compose.getViewModel
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -51,7 +53,7 @@ interface FinancialTipClickInterface {
 }
 
 @Composable
-fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, onClickedSettingsIcon:() -> Unit) {
+fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, onClickedSettingsIcon: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,20 +62,26 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
         HorizontalImageTextView(
             drawable = R.drawable.stax_logo,
             stringRes = title,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            MaterialTheme.typography.button
         )
 
         if (!isInternetConnected) {
             HorizontalImageTextView(
                 drawable = R.drawable.ic_internet_off,
                 stringRes = R.string.working_offline,
-                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(horizontal = 16.dp),
+                MaterialTheme.typography.button
             )
         }
 
-        Image(painter = painterResource(id = R.drawable.ic_settings),
+        Image(
+            painter = painterResource(id = R.drawable.ic_settings),
             contentDescription = null,
-            modifier = Modifier.align(Alignment.CenterVertically)
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
                 .clickable(onClick = onClickedSettingsIcon)
                 .size(25.dp),
         )
@@ -96,17 +104,22 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
                     text = stringResource(id = R.string.get_rewarded),
                     style = MaterialTheme.typography.h3
                 )
-                Text(text = message, modifier = Modifier.padding(vertical = size10))
+                Text(
+                    text = message,
+                    modifier = Modifier.padding(vertical = size10),
+                    style = MaterialTheme.typography.body1
+                )
                 Text(
                     text = stringResource(id = R.string.tc_apply),
                     textDecoration = TextDecoration.Underline,
                     color = colorResource(id = R.color.brightBlue),
+                    style = MaterialTheme.typography.body2,
                     modifier = Modifier.clickable(onClick = onClickedTC)
                 )
                 Text(
                     text = stringResource(id = R.string.top_up),
                     color = colorResource(id = R.color.brightBlue),
-                    style = MaterialTheme.typography.h3,
+                    style = MaterialTheme.typography.h4,
                     modifier = Modifier
                         .padding(top = size13)
                         .clickable(onClick = onClickedTopUp)
@@ -184,7 +197,8 @@ private fun FinancialTipCard(
                 HorizontalImageTextView(
                     drawable = R.drawable.ic_tip_of_day,
                     stringRes = R.string.tip_of_the_day,
-                    Modifier.padding(bottom = 5.dp)
+                    Modifier.padding(bottom = 5.dp),
+                    MaterialTheme.typography.button
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -247,7 +261,7 @@ private fun VerticalImageTextView(
             text = stringResource(id = stringRes),
             color = colorResource(id = R.color.offWhite),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.caption,
             modifier = Modifier
                 .padding(top = size24)
                 .widthIn(min = 50.dp, max = 65.dp)
@@ -256,19 +270,20 @@ private fun VerticalImageTextView(
 }
 
 @Composable
-private fun HorizontalImageTextView(
+internal fun HorizontalImageTextView(
     @DrawableRes drawable: Int,
     @StringRes stringRes: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier, textStyle: TextStyle
 ) {
     Row(horizontalArrangement = Arrangement.Start, modifier = modifier) {
         Image(
             painter = painterResource(id = drawable),
             contentDescription = null,
+            modifier = Modifier.align(Alignment.CenterVertically),
         )
         Text(
             text = stringResource(id = stringRes),
-            style = MaterialTheme.typography.button,
+            style = textStyle,
             modifier = Modifier
                 .padding(start = dimensionResource(id = R.dimen.margin_13))
                 .align(Alignment.CenterVertically),
@@ -282,19 +297,13 @@ fun HomeScreen(
     channelsViewModel: ChannelsViewModel,
     homeClickFunctions: HomeClickFunctions,
     balanceTapListener: BalanceTapListener,
-    tipInterface: FinancialTipClickInterface
+    tipInterface: FinancialTipClickInterface,
+    homeViewModel: HomeViewModel
 ) {
-    val homeViewModel: HomeViewModel = getViewModel()
-
-    with(homeViewModel) {
-        getBonusList()
-        getAccounts()
-        getFinancialTips()
-    }
-
     val homeState by homeViewModel.homeState.collectAsState()
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
     val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
+    val accounts by homeViewModel.accounts.observeAsState(initial = emptyList())
     val context = LocalContext.current
 
     StaxTheme {
@@ -333,12 +342,12 @@ fun HomeScreen(
                                 onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
                             )
 
-                            if (homeState.accounts.isEmpty()) {
+                            if (accounts.isEmpty()) {
                                 EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
                             }
                         }
 
-                        items(homeState.accounts) { account ->
+                        items(accounts){ account ->
                             BalanceItem(
                                 staxAccount = account,
                                 context = context,

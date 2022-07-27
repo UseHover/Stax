@@ -9,15 +9,15 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
+            android:background="@color/colorSurface"
             android:orientation="vertical"
+            android:paddingHorizontal="@dimen/margin_13"
             android:paddingTop="@dimen/margin_16"
             android:paddingBottom="@dimen/margin_16">
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_10"
                 android:layout_marginBottom="@dimen/margin_5"
                 android:text="@string/logout"
                 android:textSize="@dimen/text_16" />
@@ -26,10 +26,9 @@
                 android:id="@+id/loggedInAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_10"
-                android:textColor="@color/grey"
                 android:text="@string/logged_in_as"
-                android:textSize="@dimen/text_13" />
+                android:textColor="@color/grey"
+                android:textSize="14sp" />
     </LinearLayout>
 
 </com.hover.stax.views.StaxCardView>

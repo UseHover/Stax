@@ -1,4 +1,4 @@
-package com.hover.stax.bounties
+package com.hover.stax.presentation.bounties
 
 import android.os.Bundle
 import android.text.method.LinkMovementMethod

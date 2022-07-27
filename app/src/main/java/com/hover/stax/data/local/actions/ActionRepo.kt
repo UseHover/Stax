@@ -1,10 +1,9 @@
-package com.hover.stax.actions
+package com.hover.stax.data.local.actions
 
 import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverActionDao
 import com.hover.sdk.database.HoverRoomDatabase
-import com.hover.stax.database.AppDatabase
 
 class ActionRepo(sdkDb: HoverRoomDatabase) {
 
@@ -44,4 +43,7 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
 
     val bountyActions: LiveData<List<HoverAction>>
         get() = actionDao.bountyActions
+
+    val bounties: List<HoverAction>
+        get() = actionDao.bounties
 }

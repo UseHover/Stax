@@ -46,7 +46,7 @@ open class StaxDropdownLayout(context: Context, attrs: AttributeSet): AbstractSt
         if (helperText != null) binding.inputLayout.hint = helperText.toString()
     }
 
-    override fun initView() {
+    final override fun initView() {
         super.initView()
         autoCompleteTextView = binding.autoCompleteView
     }

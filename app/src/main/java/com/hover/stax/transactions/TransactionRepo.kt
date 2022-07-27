@@ -5,12 +5,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.AppDatabase
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.flow.Flow
@@ -28,8 +27,11 @@ class TransactionRepo(db: AppDatabase) {
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?
         get() = transactionDao.transactionsForAppReview
 
-    val allNonBountyTransactions : LiveData<List<StaxTransaction>>
+    val allNonBountyTransactions: LiveData<List<StaxTransaction>>
         get() = transactionDao.nonBountyTransactions
+
+    val bountyTransactionList: List<StaxTransaction>
+        get() = transactionDao.bountyTransactionList
 
     @SuppressLint("DefaultLocale")
     suspend fun hasTransactionLastMonth(): Boolean {
@@ -55,6 +57,8 @@ class TransactionRepo(db: AppDatabase) {
     }
 
     fun getTransactionAsync(uuid: String): Flow<StaxTransaction> = transactionDao.getTransactionAsync(uuid)
+
+    fun deleteAccountTransactions(accountId: Int) = transactionDao.deleteAccountTransactions(accountId)
 
     fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
         AppDatabase.databaseWriteExecutor.execute {

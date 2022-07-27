@@ -1,4 +1,4 @@
-package com.hover.stax.bounties
+package com.hover.stax.data.remote.workers
 
 import android.content.Context
 import androidx.work.*
@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit
 class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     companion object {
-        val TAG = "BountyTransactionWorker"
-        val BOUNTY_TRANSACTION_WORK_ID = "BOUNTY_TRANSACTION"
+        const val TAG = "BountyTransactionWorker"
+        const val BOUNTY_TRANSACTION_WORK_ID = "BOUNTY_TRANSACTION"
 
         fun makeToil(): PeriodicWorkRequest {
             return PeriodicWorkRequest.Builder(UpdateChannelsWorker::class.java, 24, TimeUnit.HOURS)
