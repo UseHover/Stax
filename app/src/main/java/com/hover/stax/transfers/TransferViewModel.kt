@@ -14,13 +14,15 @@ import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.Utils
 import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-private const val BONUS_AIRTIME = 4084495
-private const val STAX_PREFIX = "STAX#"
+const val BONUS_AIRTIME = "bonus_airtime_number"
+const val STAX_PREFIX = "stax_airtime_prefix"
+const val STAX_OWN_PREFIX = "stax_own_prefix"
 private const val KE_PREFIX = "0"
 
 class TransferViewModel(application: Application, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
@@ -92,15 +94,28 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
         }
 
         if (isBill) {
-            extras[BUSINESS_NO] = BONUS_AIRTIME.toString()
+            val airtimeConfigs = getAirtimeConfigs() ?: return hashMapOf()
+
+            extras[BUSINESS_NO] = airtimeConfigs.first
             extras[HoverAction.ACCOUNT_KEY] = if (forOther)
-                STAX_PREFIX + KE_PREFIX + PhoneHelper.getNationalSignificantNumber(contact.value!!.accountNumber, "KE")
-            else STAX_PREFIX + "1"
+                airtimeConfigs.second + KE_PREFIX + PhoneHelper.getNationalSignificantNumber(contact.value!!.accountNumber, "KE")
+            else airtimeConfigs.third
         }
 
         if (note.value != null) extras[HoverAction.NOTE_KEY] = note.value!!
 
         return extras
+    }
+
+    private fun getAirtimeConfigs(): Triple<String, String, String>? {
+        val bonusAirtimeNo = Utils.getString(BONUS_AIRTIME, getApplication())
+        val prefix = Utils.getString(STAX_PREFIX, getApplication())
+        val ownPrefix = Utils.getString(STAX_OWN_PREFIX, getApplication())
+
+        if (bonusAirtimeNo == null || prefix == null || ownPrefix == null)
+            return null
+
+        return Triple(bonusAirtimeNo, prefix, ownPrefix)
     }
 
     fun load(encryptedString: String) = viewModelScope.launch {

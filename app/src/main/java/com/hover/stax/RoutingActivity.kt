@@ -32,6 +32,9 @@ import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.transfers.BONUS_AIRTIME
+import com.hover.stax.transfers.STAX_OWN_PREFIX
+import com.hover.stax.transfers.STAX_PREFIX
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -129,12 +132,23 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
-                val variant = remoteConfig.getString("onboarding_variant")
-                Utils.saveString(VARIANT, variant, this@RoutingActivity)
+
+
+                saveAirtimeConfigs(remoteConfig)
 
                 validateUser()
             }
         }
+    }
+
+    private fun saveAirtimeConfigs(remoteConfig: FirebaseRemoteConfig) {
+        val bonusAirtimeNo = remoteConfig.getString(BONUS_AIRTIME)
+        val staxPrefix = remoteConfig.getString(STAX_PREFIX)
+        val ownPrefix = remoteConfig.getString(STAX_OWN_PREFIX)
+
+        Utils.saveString(BONUS_AIRTIME, bonusAirtimeNo, this)
+        Utils.saveString(STAX_PREFIX, staxPrefix, this)
+        Utils.saveString(STAX_OWN_PREFIX, ownPrefix, this)
     }
 
     private fun initUxCam() {

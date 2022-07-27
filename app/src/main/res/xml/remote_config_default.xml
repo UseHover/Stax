@@ -5,8 +5,16 @@
         <value>123</value>
     </entry>
     <entry>
-        <key>onboarding_variant</key>
-        <value>default</value>
+        <key>bonus_airtime_number</key>
+        <value>4084495</value>
+    </entry>
+    <entry>
+        <key>stax_airtime_prefix</key>
+        <value>STAX#</value>
+    </entry>
+    <entry>
+        <key>stax_own_prefix</key>
+        <value>STAX#1</value>
     </entry>
 
 </defaultsMap>
