@@ -9,12 +9,10 @@ import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.domain.repository.BountyRepository
 import com.hover.stax.transactions.StaxTransaction
-import com.uxcam.internals.an.t
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : BountyRepository {
 
