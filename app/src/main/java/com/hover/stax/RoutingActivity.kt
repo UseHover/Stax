@@ -133,6 +133,8 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
                 Utils.saveString(VARIANT, variant, this@RoutingActivity)
 
                 validateUser()
+            }.addOnFailureListener {
+                validateUser()
             }
         }
     }
