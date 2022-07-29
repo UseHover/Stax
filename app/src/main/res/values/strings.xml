@@ -163,7 +163,7 @@
     <string name="check_balance_alt_plural">Nice! Accounts added successfully. You can now check your balances on Stax.</string>
 
     <string name="finish_adding_title">Finish importing account</string>
-    <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This wont take long.</string>
+    <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This won\'t take long.</string>
     <string name="connect_cta">Connect now</string>
 
     <string name="later">Later</string>
