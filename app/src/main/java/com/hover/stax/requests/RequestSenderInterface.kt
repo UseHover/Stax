@@ -14,6 +14,7 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.utils.UIHelper.flashAndReportMessage
 import com.hover.stax.utils.UIHelper.flashMessage
 import com.hover.stax.utils.Utils.copyToClipboard
 
@@ -112,6 +113,6 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
     }
 
     fun showError(c: Context) {
-        flashMessage(c, c.getString(R.string.loading_link_dialoghead))
+        flashAndReportMessage(c, c.getString(R.string.loading_link_dialoghead))
     }
 }

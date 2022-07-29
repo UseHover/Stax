@@ -41,7 +41,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         hsb.run()
         updatePushNotifGroupStatus()
     } catch (e: Exception) {
-        runOnUiThread { UIHelper.flashMessage(this, getString(R.string.error_running_action)) }
+        runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.error_running_action)) }
         createLog(hsb, "Failed Actions")
     }
 

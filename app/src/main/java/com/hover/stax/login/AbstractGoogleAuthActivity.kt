@@ -137,7 +137,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
     }
 
     override fun googleLoginFailed() {
-        UIHelper.flashMessage(this, R.string.login_google_err)
+        UIHelper.flashAndReportMessage(this, R.string.login_google_err)
     }
 
     companion object {
