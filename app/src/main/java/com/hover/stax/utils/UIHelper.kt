@@ -34,7 +34,7 @@ object UIHelper {
 
     private const val INITIAL_ITEMS_FETCH = 30
 
-    fun flashMessage(context: Context, view: View?, message: String) {
+    fun showAndReportSnackBar(context: Context, view: View?, message: String) {
         if (view == null) flashAndReportMessage(context, message) else showSnack(view, message)
     }
 

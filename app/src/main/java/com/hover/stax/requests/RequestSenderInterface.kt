@@ -15,7 +15,6 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
-import com.hover.stax.utils.UIHelper.flashMessage
 import com.hover.stax.utils.Utils.copyToClipboard
 
 const val REQUEST_LINK = "request_link"

@@ -104,7 +104,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         else ""
     }
 
-    private fun showMessage(str: String) = UIHelper.flashMessage(this, findViewById(R.id.fab), str)
+    private fun showMessage(str: String) = UIHelper.showAndReportSnackBar(this, findViewById(R.id.fab), str)
 
     private fun showBountyDetails(data: Intent?) {
         Timber.i("Request code is bounty")
