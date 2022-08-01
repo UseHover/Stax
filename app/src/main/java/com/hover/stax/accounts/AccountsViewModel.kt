@@ -27,7 +27,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     private val _accounts = MutableStateFlow(AccountList())
     val accountList = _accounts.asStateFlow()
 
-    val activeAccount = MutableLiveData<Account>()
+    val activeAccount = MutableLiveData<Account?>()
 
     private var type = MutableLiveData<String>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
