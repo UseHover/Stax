@@ -44,4 +44,6 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
     val bountyActions: LiveData<List<HoverAction>>
         get() = actionDao.bountyActions
 
+    val bounties: List<HoverAction>
+        get() = actionDao.bounties
 }
