@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : BountyRepository {
 
     override val bountyActions: List<HoverAction>
-        get() = actionRepo.bounties
+        get() = actionRepo.bountyActions.value!!
 
     override fun isSimPresent(bounty: Bounty, sims: List<SimInfo>): Boolean {
         if (sims.isEmpty()) return false
