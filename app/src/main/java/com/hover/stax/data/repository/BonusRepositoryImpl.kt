@@ -4,6 +4,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.channels.Channel
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.domain.model.Bonus
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class BonusRepositoryImpl(private val bonusRepo: BonusRepo, private val channelRepo: ChannelRepo, private val coroutineDispatcher: CoroutineDispatcher) : BonusRepository {
+class BonusRepositoryImpl(private val bonusRepo: BonusRepo, private val simRepo: SimRepo, private val channelRepo: ChannelRepo, private val coroutineDispatcher: CoroutineDispatcher) : BonusRepository {
 
     private val settings = firestoreSettings { isPersistenceEnabled = true }
     private val db = Firebase.firestore.also { it.firestoreSettings = settings }
@@ -40,7 +41,7 @@ class BonusRepositoryImpl(private val bonusRepo: BonusRepo, private val channelR
 
     override val bonusList: Flow<List<Bonus>>
         get() = channelFlow {
-            val simHnis = channelRepo.presentSims.map { it.osReportedHni }
+            val simHnis =  simRepo.getPresentSims().map { it.osReportedHni }
 
             bonusRepo.bonuses.collect {
                 withContext(coroutineDispatcher) {

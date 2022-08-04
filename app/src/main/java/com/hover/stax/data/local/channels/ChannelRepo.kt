@@ -11,8 +11,8 @@ class ChannelRepo(db: AppDatabase) {
 
     private val channelDao: ChannelDao = db.channelDao()
 
-    val publishedChannels: LiveData<List<Channel>> = channelDao.publishedChannels
-    suspend fun publishedTelecomChannels() : List<Channel> = channelDao.publishedChannelsByInstitutionType("telecom")
+    val publishedNonTelecomChannels: LiveData<List<Channel>> = channelDao.publishedNonTelecomChannels
+    suspend fun publishedTelecomChannels() : List<Channel> = channelDao.publishedTelecomChannels()
 
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
 

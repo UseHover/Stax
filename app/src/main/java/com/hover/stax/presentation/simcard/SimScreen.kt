@@ -46,12 +46,12 @@ data class SimScreenClickFunctions(val onClickedAddNewAccount: () -> Unit,
 @Composable
 fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions,
               balanceTapListener: BalanceTapListener) {
-	val accountsViewModel: AccountsViewModel = getViewModel()
+	val simViewModel : SimViewModel = getViewModel()
 	val bonusViewModel: BonusViewModel = getViewModel()
 
-	val accounts = accountsViewModel.telecomAccounts.observeAsState(initial = null)
+	val accounts = simViewModel.telecomAccounts.observeAsState(initial = null)
 	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-	val presentSims = accountsViewModel.presentSims.observeAsState(initial = emptyList())
+	val presentSims = simViewModel.presentSims.observeAsState(initial = emptyList())
 	val bonuses = bonusViewModel.bonusList.collectAsState()
 
 	StaxTheme {

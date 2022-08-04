@@ -23,7 +23,7 @@ import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, private val presentSimUseCase: GetPresentSimUseCase,  val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
+class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
 
     private val context: Context by inject()
 
