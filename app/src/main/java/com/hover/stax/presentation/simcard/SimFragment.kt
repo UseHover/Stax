@@ -28,7 +28,6 @@ class SimFragment : Fragment(), BalanceTapListener {
 
 	private var _binding: FragmentSimBinding? = null
 	private val binding get() = _binding!!
-	private val accountViewModel: AccountsViewModel by sharedViewModel()
 	private val balancesViewModel: BalancesViewModel by sharedViewModel()
 	private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 	private val simViewModel : SimViewModel by sharedViewModel()
@@ -44,37 +43,14 @@ class SimFragment : Fragment(), BalanceTapListener {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		setObservers()
+		observeBalances()
 		binding.root.setContent {
 			SimScreen(simScreenClickFunctions = getSimScreenClickFunctions(),
 				balanceTapListener = this@SimFragment)
 		}
 	}
 
-	private fun setObservers() {
-		observeForBalances()
-		simViewModel.presentSims.observe(viewLifecycleOwner) {
-			Timber.i("${this.javaClass.simpleName} prsent sim size: ${it.size}")
-			val telecomAccounts = simViewModel.telecomAccounts.value
-			if( telecomAccounts !=null && telecomAccounts.size != it.size) {
-					channelsViewModel.createSimSpecificTelecomAccounts()
-			}
-		}
-
-		simViewModel.telecomAccounts.observe(viewLifecycleOwner) {
-			Timber.i("${this.javaClass.simpleName} telecomAccounts size ${it.size}")
-			val presentSims = simViewModel.presentSims.value
-			if(presentSims !=null && presentSims.size !=it.size) {
-					channelsViewModel.createSimSpecificTelecomAccounts()
-			}
-		}
-
-		simViewModel.simSubscriptionIds.observe(viewLifecycleOwner) {
-			Timber.i("${this.javaClass.simpleName} subscription ids size: ${it.size}")
-		}
-	}
-
-	private fun observeForBalances() {
+	private fun observeBalances() {
 		collectLifecycleFlow(balancesViewModel.balanceAction) {
 			attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
 		}
