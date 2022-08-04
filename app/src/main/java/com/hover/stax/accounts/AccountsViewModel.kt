@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class AccountsViewModel(application: Application,
-                        getLivePresentSimUseCase: GetLivePresentSimUseCase,
                         val repo: AccountRepo,
                         val actionRepo: ActionRepo,
                         private val bonusRepo: BonusRepo) : AndroidViewModel(application),
@@ -39,12 +38,6 @@ class AccountsViewModel(application: Application,
     private val accountUpdateChannel = Channel<String>()
     val accountUpdateMsg = accountUpdateChannel.receiveAsFlow()
 
-    val simSubscriptionIds = MediatorLiveData<IntArray>()
-    val telecomAccounts = MediatorLiveData<List<Account>>()
-    val presentSims : LiveData<List<SimInfo>> = getLivePresentSimUseCase()
-
-
-
     init {
         fetchAccounts()
 
@@ -52,9 +45,6 @@ class AccountsViewModel(application: Application,
             addSource(activeAccount, this@AccountsViewModel::loadActions)
             addSource(type, this@AccountsViewModel::loadActions)
         }
-
-        simSubscriptionIds.addSource(getLivePresentSimUseCase(), this::setSubscriptionIds)
-        telecomAccounts.addSource(simSubscriptionIds, this::getTelecomAccounts)
     }
 
     private fun fetchAccounts() = viewModelScope.launch {
@@ -67,16 +57,6 @@ class AccountsViewModel(application: Application,
 
     fun setType(t: String) {
         type.value = t
-    }
-
-    private fun setSubscriptionIds(sims: List<SimInfo>) {
-        simSubscriptionIds.postValue(sims.map { it.subscriptionId }.toIntArray())
-    }
-
-    private fun getTelecomAccounts(subIds: IntArray){
-        viewModelScope.launch(Dispatchers.IO) {
-            telecomAccounts.postValue(repo.getTelecomAccounts(subIds))
-        }
     }
 
     private fun setActiveAccountIfNull(accounts: List<Account>) {
