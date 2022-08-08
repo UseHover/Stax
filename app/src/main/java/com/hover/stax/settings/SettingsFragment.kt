@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 const val TEST_MODE = "test_mode"
 
@@ -70,7 +71,7 @@ class SettingsFragment : Fragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                accountsViewModel.accountUpdateMsg.collect { UIHelper.flashMessage(requireActivity(), it) }
+                accountsViewModel.accountUpdateMsg.collect { UIHelper.flashAndReportMessage(requireActivity(), it) }
             }
         }
     }
@@ -188,23 +189,24 @@ class SettingsFragment : Fragment() {
     private fun setUpEnableTestMode() {
         binding.settingsCard.testMode.setOnCheckedChangeListener { _, isChecked ->
             Utils.saveBoolean(TEST_MODE, isChecked, requireContext())
-            UIHelper.flashMessage(requireContext(), if (isChecked) R.string.test_mode_toast else R.string.test_mode_disabled)
+            UIHelper.flashAndReportMessage(requireContext(), if (isChecked) R.string.test_mode_toast else R.string.test_mode_disabled)
         }
         binding.settingsCard.testMode.visibility = if (Utils.getBoolean(TEST_MODE, requireContext())) VISIBLE else GONE
         binding.disclaimer.setOnClickListener {
             clickCounter++
-            if (clickCounter == 5) UIHelper.flashMessage(requireContext(), R.string.test_mode_almost_toast) else if (clickCounter == 7) enableTestMode()
+            if (clickCounter == 5) UIHelper.flashAndReportMessage(requireContext(), R.string.test_mode_almost_toast) else if (clickCounter == 7) enableTestMode()
         }
     }
 
     private fun enableTestMode() {
         Utils.saveBoolean(TEST_MODE, true, requireActivity())
         binding.settingsCard.testMode.visibility = VISIBLE
-        UIHelper.flashMessage(requireContext(), R.string.test_mode_toast)
+        UIHelper.flashAndReportMessage(requireContext(), R.string.test_mode_toast)
     }
 
     private fun startBounties() {
         val staxUser = loginViewModel.staxUser.value
+
         val navDirection = if (staxUser == null || !staxUser.isMapper)
             SettingsFragmentDirections.actionNavigationSettingsToBountyEmailFragment()
         else
@@ -225,7 +227,7 @@ class SettingsFragment : Fragment() {
     private fun logoutUser() {
         loginViewModel.silentSignOut()
         binding.staxSupport.marketingOptIn.isChecked = false
-        UIHelper.flashMessage(requireActivity(), getString(R.string.logout_out_success))
+        UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.logout_out_success))
     }
 
     private fun showLoginDialog() {

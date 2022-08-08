@@ -2,7 +2,7 @@ package com.hover.stax.transactions
 
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -15,6 +15,8 @@ class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: Act
 
     init {
         transactionHistory.addSource(allNonBountyTransaction, this::getTransactionHistory)
+        staxTransactions = repo.completeAndPendingTransferTransactions!!
+        appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
     }
 
     private fun getTransactionHistory(transactions: List<StaxTransaction>) {
@@ -39,11 +41,6 @@ class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: Act
             if (transaction.transaction_type == HoverAction.BALANCE) ++balancesTransactions else ++transfersAndAirtime
         }
         return if (balancesTransactions >= 4) true else transfersAndAirtime >= 2
-    }
-
-    init {
-        staxTransactions = repo.completeAndPendingTransferTransactions!!
-        appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
     }
 }
 

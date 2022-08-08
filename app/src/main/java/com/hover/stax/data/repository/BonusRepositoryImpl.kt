@@ -4,7 +4,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.repository.BonusRepository

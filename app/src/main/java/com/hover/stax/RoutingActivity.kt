@@ -131,6 +131,8 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             fetchAndActivate().addOnCompleteListener {
                 fetchConfigs(remoteConfig)
                 validateUser()
+            }.addOnFailureListener {
+                validateUser()
             }
         }
     }
@@ -263,7 +265,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         finish()
     }
 
-    override fun onAuthError(error: String) = runOnUiThread { UIHelper.flashMessage(this, getString(R.string.toast_error_auth)) }
+    override fun onAuthError(error: String) = runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_auth)) }
 
     override fun onAuthSuccess(action: HoverAction?) = chooseNavigation(intent)
 

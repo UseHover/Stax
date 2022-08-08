@@ -2,11 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 32,
-<<<<<<< HEAD
-    "identityHash": "7b995a5aacc2674bda5a1d44694c68b0",
-=======
     "identityHash": "e9dc3dbe16f88faa4d9a646e8503ec05",
->>>>>>> development
     "entities": [
       {
         "tableName": "channels",
@@ -130,11 +126,7 @@
       },
       {
         "tableName": "stax_transactions",
-<<<<<<< HEAD
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT, `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `balance` TEXT, `counterparty` TEXT)",
-=======
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `category` TEXT, `counterparty` TEXT)",
->>>>>>> development
         "fields": [
           {
             "fieldPath": "id",
@@ -181,15 +173,6 @@
             "defaultValue": "'pending'"
           },
           {
-<<<<<<< HEAD
-            "fieldPath": "category",
-            "columnName": "category",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-=======
->>>>>>> development
             "fieldPath": "initiated_at",
             "columnName": "initiated_at",
             "affinity": "INTEGER",
@@ -234,13 +217,8 @@
             "notNull": false
           },
           {
-<<<<<<< HEAD
-            "fieldPath": "balance",
-            "columnName": "balance",
-=======
             "fieldPath": "category",
             "columnName": "category",
->>>>>>> development
             "affinity": "TEXT",
             "notNull": false
           },
@@ -505,8 +483,6 @@
         },
         "indices": [],
         "foreignKeys": []
-<<<<<<< HEAD
-=======
       },
       {
         "tableName": "accounts",
@@ -603,17 +579,12 @@
             ]
           }
         ]
->>>>>>> development
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-<<<<<<< HEAD
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7b995a5aacc2674bda5a1d44694c68b0')"
-=======
       "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e9dc3dbe16f88faa4d9a646e8503ec05')"
->>>>>>> development
     ]
   }
 }

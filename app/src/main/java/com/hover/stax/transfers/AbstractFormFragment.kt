@@ -104,7 +104,7 @@ abstract class AbstractFormFragment : Fragment() {
             } else {
                 onSubmitForm()
             }
-        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+        } else UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.toast_pleasefix))
     }
 
     abstract fun validates(): Boolean
@@ -174,7 +174,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     private fun showError(userMsg: Int, logMsg: Int) {
         log(getString(logMsg))
-        UIHelper.flashMessage(requireContext(), getString(userMsg))
+        UIHelper.flashAndReportMessage(requireContext(), getString(userMsg))
     }
 
     abstract fun onContactSelected(contact: StaxContact)

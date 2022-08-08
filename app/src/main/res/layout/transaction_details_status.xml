@@ -40,6 +40,7 @@
             android:insetBottom="0dp"
             android:text="@string/try_again"
             android:textAllCaps="false"
+            app:cornerRadius="0dp"
             android:textColor="@color/offWhite"
             app:backgroundTint="@color/stax_state_blue"
             app:layout_constraintBottom_toBottomOf="parent"

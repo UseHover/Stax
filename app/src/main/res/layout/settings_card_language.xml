@@ -5,15 +5,19 @@
         android:layout_height="wrap_content"
         app:title="@string/language_cardhead">
 
-    <TextView
-            android:id="@+id/select_language_btn"
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_8"
-            android:background="?attr/selectableItemBackground"
             android:paddingVertical="@dimen/margin_21"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text_16" />
+            android:background="@color/colorSurface">
+
+        <TextView
+                android:id="@+id/select_language_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:textSize="@dimen/text_16" />
+    </LinearLayout>
 
 </com.hover.stax.views.StaxCardView>

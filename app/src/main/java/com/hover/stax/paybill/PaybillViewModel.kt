@@ -7,7 +7,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 
 import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.schedules.ScheduleRepo

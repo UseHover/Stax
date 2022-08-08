@@ -1,11 +1,10 @@
-package com.hover.stax.channels
+package com.hover.stax.data.local.channels
 
 import androidx.lifecycle.LiveData
-import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
-import com.hover.stax.accounts.ChannelWithAccounts
+import com.hover.stax.channels.Channel
 import com.hover.stax.database.AppDatabase
 
 class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
@@ -31,11 +30,9 @@ class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
-    suspend fun getChannelsByIdsAsync(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
+    fun getChannelsByIdsAsync(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
-    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
-        return channelDao.getChannels(countryCode.uppercase(), channelIds)
-    }
+    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): List<Channel> = channelDao.getChannels(countryCode, channelIds)
 
     fun getChannelsByCountry(countryCode: String): List<Channel> {
         return channelDao.getChannels(countryCode.uppercase())

@@ -13,7 +13,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestDetailBinding
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.DateUtils
-import com.hover.stax.utils.UIHelper.flashMessage
+import com.hover.stax.utils.UIHelper.flashAndReportMessage
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
@@ -98,7 +98,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
                 .setNegButton(R.string.btn_back) {}
                 .setPosButton(R.string.btn_cancelreq) {
                     viewModel.deleteRequest()
-                    flashMessage(requireActivity(), getString(R.string.toast_confirm_cancelreq))
+                    flashAndReportMessage(requireActivity(), getString(R.string.toast_confirm_cancelreq))
                     NavHostFragment.findNavController(this@RequestDetailFragment).popBackStack()
                 }
                 .isDestructive

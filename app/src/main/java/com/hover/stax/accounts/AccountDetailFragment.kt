@@ -211,7 +211,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun removeAccount(account: Account) {
         viewModel.removeAccount(account)
         NavHostFragment.findNavController(this).popBackStack()
-        UIHelper.flashMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))
+        UIHelper.flashAndReportMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))
     }
 
     private fun initRecyclerViews() {

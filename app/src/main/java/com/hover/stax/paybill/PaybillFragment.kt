@@ -120,7 +120,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             viewModel.selectedPaybill.value?.isSaved == true -> viewModel.setEditing(false)
             else -> {
                 viewModel.savePaybill(accountsViewModel.activeAccount.value, actionSelectViewModel.activeAction.value)
-                UIHelper.flashMessage(requireActivity(), R.string.paybill_save_success)
+                UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_save_success)
             }
         }
     }
@@ -295,7 +295,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             .setPosButton(R.string.btn_update) { _ ->
                 if (activity != null) {
                     viewModel.updatePaybill(it)
-                    UIHelper.flashMessage(requireActivity(), R.string.paybill_update_success)
+                    UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_update_success)
                     viewModel.setEditing(false)
                 }
             }
