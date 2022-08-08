@@ -14,26 +14,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<!--        <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:orientation="vertical">-->
 
-            <com.hover.stax.views.StaxCardView
-                    android:id="@+id/selectedChannels_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:defaultBackPress="true"
-                    app:showBack="true"
-                    app:title="@string/your_accounts">
+<!--            <com.hover.stax.views.StaxCardView-->
+<!--                    android:id="@+id/selectedChannels_card"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:defaultBackPress="true"-->
+<!--                    app:showBack="true"-->
+<!--                    app:title="@string/your_accounts">-->
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/selectedList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"/>
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/selectedList"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:nestedScrollingEnabled="false"/>-->
 
-            </com.hover.stax.views.StaxCardView>
+<!--            </com.hover.stax.views.StaxCardView>-->
 
             <com.hover.stax.views.StaxCardView
                     android:id="@+id/channels_list_card"
@@ -87,7 +87,7 @@
 
             </com.hover.stax.views.StaxCardView>
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
     </androidx.core.widget.NestedScrollView>
 
     <Button

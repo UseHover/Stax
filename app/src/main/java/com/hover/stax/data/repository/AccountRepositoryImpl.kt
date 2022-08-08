@@ -32,7 +32,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         val defaultAccount = accountRepo.getDefaultAccountAsync()
 
         val accounts = channels.mapIndexed { index, channel ->
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
+            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER )//placeholder alias for easier identification later
             Account(
                 accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.countryAlpha2,
                 channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0

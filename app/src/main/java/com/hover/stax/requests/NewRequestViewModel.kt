@@ -69,7 +69,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun accountError(): String? = if (activeAccount.value != null) null else getString(R.string.accounts_error_noselect)
 
-    fun isValidAccount(): Boolean = activeAccount.value!!.name != PLACEHOLDER
+    fun isValidAccount(): Boolean = !activeAccount.value!!.name.contains(PLACEHOLDER)
 
     fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else getString(R.string.requester_number_fielderror)
 

@@ -120,10 +120,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun fillUpChannelLists() {
-        binding.selectedList.apply {
-            layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        }
-
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
             adapter = selectAdapter
@@ -175,12 +171,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         showSelected(accounts.isNotEmpty())
-        if (accounts.isNotEmpty())
-            binding.selectedList.adapter = AccountsAdapter(accounts)
+//        if (accounts.isNotEmpty())
+//            binding.selectedList.adapter = AccountsAdapter(accounts)
     }
 
     private fun showSelected(visible: Boolean) {
-        binding.selectedChannelsCard.visibility = if (visible) VISIBLE else GONE
+//        binding.selectedChannelsCard.visibility = if (visible) VISIBLE else GONE
         binding.channelsListCard.setBackButtonVisibility(if (visible) GONE else VISIBLE)
     }
 
