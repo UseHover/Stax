@@ -19,7 +19,6 @@ import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
-import com.hover.stax.domain.model.Bonus
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.AnalyticsUtil
@@ -46,8 +45,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
-
-    private var bonus: Bonus? = null
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -154,7 +151,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeActions() {
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
-            showBonusBanner(it.firstOrNull())
+            showBonusBanner(it)
         }
 
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
@@ -259,21 +256,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun callHover(requestCode: Int) {
         (requireActivity() as AbstractHoverCallerActivity).runSession(
             payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
-            actionToUse, getExtras(actionToUse.transaction_type == HoverAction.BILL, actionSelectViewModel.activeAction.value!!.requiresRecipient()), requestCode
+            actionSelectViewModel.activeAction.value!!, getExtras(), requestCode
         )
     }
 
-    private val actionToUse: HoverAction
-        get() {
-            val activeAction = actionSelectViewModel.activeAction.value!!
-            return if (activeAction.channel_id == bonus?.purchaseChannel)
-                accountsViewModel.channelActions.value?.firstOrNull { it.from_institution_id == it.to_institution_id } ?: activeAction
-            else
-                activeAction
-        }
-
-    private fun getExtras(isBill: Boolean, forOther: Boolean): HashMap<String, String> {
-        val extras = transferViewModel.wrapExtras(isBill, forOther)
+    private fun getExtras(): HashMap<String, String> {
+        val extras = transferViewModel.wrapExtras()
         extras.putAll(actionSelectViewModel.wrapExtras())
         return extras
     }
@@ -352,15 +340,17 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun showBonusBanner(activeAction: HoverAction?) {
+    private fun showBonusBanner(actions: List<HoverAction>) {
         if (args.transactionType == HoverAction.AIRTIME) {
-            bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return
+            val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return
 
             with(binding.bonusLayout) {
                 cardBonus.visibility = View.VISIBLE
                 learnMore.movementMethod = LinkMovementMethod.getInstance()
 
-                if (activeAction?.channel_id == bonus!!.purchaseChannel) {
+                val hasBonus = actions.map { it.channel_id }.contains(bonus.userChannel)
+
+                if (hasBonus) {
                     title.text = getString(R.string.congratulations)
                     message.text = getString(R.string.valid_account_bonus_msg)
                     cta.visibility = View.GONE
@@ -373,7 +363,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
                         setOnClickListener {
                             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                            channelsViewModel.validateAccounts(bonus!!.userChannel)
+                            channelsViewModel.validateAccounts(bonus.userChannel)
                         }
                     }
                 }
@@ -387,7 +377,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if (!isEditing)
             binding.bonusLayout.cardBonus.visibility = View.GONE
         else
-            showBonusBanner(actionSelectViewModel.activeAction.value)
+            showBonusBanner(actionSelectViewModel.filteredActions.value ?: emptyList())
     }
 
     override fun onDestroyView() {

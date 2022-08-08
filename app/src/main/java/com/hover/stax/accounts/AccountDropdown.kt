@@ -128,7 +128,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         } else if (actions.isNotEmpty() && actions.size == 1)
             addInfoMessage(actions.first())
         else if (viewModel.activeAccount.value != null && showSelected)
-            setState(helperText, SUCCESS)
+            setState(null, SUCCESS)
     }
 
     private fun addInfoMessage(action: HoverAction) {

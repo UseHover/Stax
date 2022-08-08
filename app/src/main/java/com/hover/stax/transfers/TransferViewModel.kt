@@ -20,11 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-const val BONUS_AIRTIME = "bonus_airtime_number"
-const val STAX_PREFIX = "stax_airtime_prefix"
-const val STAX_OWN_PREFIX = "stax_own_prefix"
-private const val KE_PREFIX = "0"
-
 class TransferViewModel(application: Application, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val amount = MutableLiveData<String?>()
@@ -81,41 +76,16 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
         }
     }
 
-    fun wrapExtras(isBill: Boolean, forOther: Boolean): HashMap<String, String> {
+    fun wrapExtras(): HashMap<String, String> {
         val extras: HashMap<String, String> = hashMapOf()
         if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
         if (contact.value != null && contact.value?.accountNumber != null) {
             extras[StaxContact.ID_KEY] = contact.value!!.id
-
-            if (!isBill) {
-                extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
-                extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
-            }
+            extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
+            extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
         }
-
-        if (isBill) {
-            val airtimeConfigs = getAirtimeConfigs() ?: return hashMapOf()
-
-            extras[BUSINESS_NO] = airtimeConfigs.first
-            extras[HoverAction.ACCOUNT_KEY] = if (forOther)
-                airtimeConfigs.second + KE_PREFIX + PhoneHelper.getNationalSignificantNumber(contact.value!!.accountNumber, "KE")
-            else airtimeConfigs.third
-        }
-
         if (note.value != null) extras[HoverAction.NOTE_KEY] = note.value!!
-
         return extras
-    }
-
-    private fun getAirtimeConfigs(): Triple<String, String, String>? {
-        val bonusAirtimeNo = Utils.getString(BONUS_AIRTIME, getApplication())
-        val prefix = Utils.getString(STAX_PREFIX, getApplication())
-        val ownPrefix = Utils.getString(STAX_OWN_PREFIX, getApplication())
-
-        if (bonusAirtimeNo == null || prefix == null || ownPrefix == null)
-            return null
-
-        return Triple(bonusAirtimeNo, prefix, ownPrefix)
     }
 
     fun load(encryptedString: String) = viewModelScope.launch {
