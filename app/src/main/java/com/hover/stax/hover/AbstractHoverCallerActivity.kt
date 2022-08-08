@@ -41,7 +41,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         hsb.run()
         updatePushNotifGroupStatus()
     } catch (e: Exception) {
-        runOnUiThread { UIHelper.flashMessage(this, getString(R.string.error_running_action)) }
+        runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.error_running_action)) }
         createLog(hsb, "Failed Actions")
     }
 
@@ -104,7 +104,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         else ""
     }
 
-    private fun showMessage(str: String) = UIHelper.flashMessage(this, findViewById(R.id.fab), str)
+    private fun showMessage(str: String) = UIHelper.showAndReportSnackBar(this, findViewById(R.id.fab), str)
 
     private fun showBountyDetails(data: Intent?) {
         Timber.i("Request code is bounty")
