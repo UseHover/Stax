@@ -32,6 +32,7 @@ import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.transfers.STAX_PREFIX
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -128,9 +129,15 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
+                fetchConfigs(remoteConfig)
                 validateUser()
             }
         }
+    }
+
+    private fun fetchConfigs(remoteConfig: FirebaseRemoteConfig) {
+        val staxPrefix = remoteConfig.getString(STAX_PREFIX)
+        Utils.saveString(STAX_PREFIX, staxPrefix, this)
     }
 
     private fun initUxCam() {

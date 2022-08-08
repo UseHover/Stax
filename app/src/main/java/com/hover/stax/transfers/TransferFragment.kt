@@ -46,6 +46,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
 
+    private var hasBonus = false
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
@@ -261,7 +263,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun getExtras(): HashMap<String, String> {
-        val extras = transferViewModel.wrapExtras()
+        val extras = transferViewModel.wrapExtras(hasBonus)
         extras.putAll(actionSelectViewModel.wrapExtras())
         return extras
     }
@@ -348,7 +350,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 cardBonus.visibility = View.VISIBLE
                 learnMore.movementMethod = LinkMovementMethod.getInstance()
 
-                val hasBonus = actions.map { it.channel_id }.contains(bonus.userChannel)
+                hasBonus = actions.map { it.channel_id }.contains(bonus.userChannel)
 
                 if (hasBonus) {
                     title.text = getString(R.string.congratulations)

@@ -8,7 +8,6 @@ import com.hover.stax.R
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.requests.Request
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.ScheduleRepo
@@ -19,6 +18,9 @@ import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+
+const val STAX_PREFIX = "stax_airtime_prefix"
+private const val KE_PREFIX = "0"
 
 class TransferViewModel(application: Application, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
@@ -76,17 +78,20 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
         }
     }
 
-    fun wrapExtras(): HashMap<String, String> {
+    fun wrapExtras(isBonusAirtime: Boolean = false): HashMap<String, String> {
         val extras: HashMap<String, String> = hashMapOf()
         if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
         if (contact.value != null && contact.value?.accountNumber != null) {
             extras[StaxContact.ID_KEY] = contact.value!!.id
             extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
-            extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
+            extras[HoverAction.ACCOUNT_KEY] = if (isBonusAirtime) staxPrefix.plus(KE_PREFIX).plus(PhoneHelper.getNationalSignificantNumber(contact.value!!.accountNumber, "KE")) else
+                contact.value!!.accountNumber
         }
         if (note.value != null) extras[HoverAction.NOTE_KEY] = note.value!!
         return extras
     }
+
+    private val staxPrefix get() = Utils.getString(STAX_PREFIX, getApplication())
 
     fun load(encryptedString: String) = viewModelScope.launch {
         isLoading.postValue(true)
