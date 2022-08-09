@@ -35,40 +35,48 @@ import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.network.NetworkMonitor
 
-data class HomeClickFunctions(val onSendMoneyClicked: () -> Unit,
-                              val onBuyAirtimeClicked: () -> Unit,
-                              val onBuyGoodsClicked: () -> Unit,
-                              val onPayBillClicked: () -> Unit,
-                              val onRequestMoneyClicked: () -> Unit,
-                              val onClickedTC: () -> Unit,
-                              val onClickedAddNewAccount: () -> Unit,
-                              val onClickedSettingsIcon: () -> Unit)
+data class HomeClickFunctions(
+	val onSendMoneyClicked: () -> Unit,
+	val onBuyAirtimeClicked: () -> Unit,
+	val onBuyGoodsClicked: () -> Unit,
+	val onPayBillClicked: () -> Unit,
+	val onRequestMoneyClicked: () -> Unit,
+	val onClickedTC: () -> Unit,
+	val onClickedAddNewAccount: () -> Unit,
+	val onClickedSettingsIcon: () -> Unit
+)
 
 interface FinancialTipClickInterface {
 	fun onTipClicked(tipId: String?)
 }
 
 @Composable
-fun TopBar(@StringRes title: Int = R.string.app_name,
-           isInternetConnected: Boolean,
-           onClickedSettingsIcon: () -> Unit) {
+fun TopBar(
+	@StringRes title: Int = R.string.app_name,
+	isInternetConnected: Boolean,
+	onClickedSettingsIcon: () -> Unit
+) {
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(all = dimensionResource(id = R.dimen.margin_13)),
 	) {
-		HorizontalImageTextView(drawable = R.drawable.stax_logo,
+		HorizontalImageTextView(
+			drawable = R.drawable.stax_logo,
 			stringRes = title,
 			modifier = Modifier.weight(1f),
-			MaterialTheme.typography.button)
+			MaterialTheme.typography.button
+		)
 
 		if (!isInternetConnected) {
-			HorizontalImageTextView(drawable = R.drawable.ic_internet_off,
+			HorizontalImageTextView(
+				drawable = R.drawable.ic_internet_off,
 				stringRes = R.string.working_offline,
 				modifier = Modifier
 					.align(Alignment.CenterVertically)
 					.padding(horizontal = 16.dp),
-				MaterialTheme.typography.button)
+				MaterialTheme.typography.button
+			)
 		}
 
 		Image(
@@ -88,82 +96,114 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
 	val size10 = dimensionResource(id = R.dimen.margin_10)
 
 	Card(modifier = Modifier.padding(all = size13), elevation = 2.dp) {
-		Row(modifier = Modifier
-			.fillMaxWidth()
-			.padding(all = size13)) {
+		Row(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(all = size13)
+		) {
 			Column(modifier = Modifier.weight(1f)) {
-				Text(text = stringResource(id = R.string.get_rewarded),
-					style = MaterialTheme.typography.h3)
-				Text(text = message,
+				Text(
+					text = stringResource(id = R.string.get_rewarded),
+					style = MaterialTheme.typography.h3
+				)
+				Text(
+					text = message,
 					modifier = Modifier.padding(vertical = size10),
-					style = MaterialTheme.typography.body1)
-				Text(text = stringResource(id = R.string.tc_apply),
+					style = MaterialTheme.typography.body1
+				)
+				Text(
+					text = stringResource(id = R.string.tc_apply),
 					textDecoration = TextDecoration.Underline,
 					color = colorResource(id = R.color.brightBlue),
 					style = MaterialTheme.typography.body2,
-					modifier = Modifier.clickable(onClick = onClickedTC))
-				Text(text = stringResource(id = R.string.top_up),
+					modifier = Modifier.clickable(onClick = onClickedTC)
+				)
+				Text(
+					text = stringResource(id = R.string.top_up),
 					color = colorResource(id = R.color.brightBlue),
 					style = MaterialTheme.typography.h4,
 					modifier = Modifier
 						.padding(top = size13)
-						.clickable(onClick = onClickedTopUp))
+						.clickable(onClick = onClickedTopUp)
+				)
 			}
-			Image(painter = painterResource(id = R.drawable.ic_bonus),
+			Image(
+				painter = painterResource(id = R.drawable.ic_bonus),
 				contentDescription = stringResource(id = R.string.get_rewarded),
 				modifier = Modifier
 					.size(70.dp)
 					.padding(start = size13)
-					.align(Alignment.CenterVertically))
+					.align(Alignment.CenterVertically)
+			)
 		}
 	}
 }
 
 @Composable
-fun PrimaryFeatures(onSendMoneyClicked: () -> Unit,
-                    onBuyAirtimeClicked: () -> Unit,
-                    onBuyGoodsClicked: () -> Unit,
-                    onPayBillClicked: () -> Unit,
-                    onRequestMoneyClicked: () -> Unit,
-                    showKenyaFeatures: Boolean) {
-	Row(horizontalArrangement = Arrangement.SpaceEvenly,
+fun PrimaryFeatures(
+	onSendMoneyClicked: () -> Unit,
+	onBuyAirtimeClicked: () -> Unit,
+	onBuyGoodsClicked: () -> Unit,
+	onPayBillClicked: () -> Unit,
+	onRequestMoneyClicked: () -> Unit,
+	showKenyaFeatures: Boolean
+) {
+	Row(
+		horizontalArrangement = Arrangement.SpaceEvenly,
 		modifier = Modifier
 			.padding(horizontal = 13.dp, vertical = 26.dp)
-			.fillMaxWidth()) {
-		VerticalImageTextView(onItemClick = onSendMoneyClicked,
+			.fillMaxWidth()
+	) {
+		VerticalImageTextView(
+			onItemClick = onSendMoneyClicked,
 			drawable = R.drawable.ic_transfer_within_24,
-			stringRes = R.string.cta_transfer)
-		VerticalImageTextView(onItemClick = onBuyAirtimeClicked,
+			stringRes = R.string.cta_transfer
+		)
+		VerticalImageTextView(
+			onItemClick = onBuyAirtimeClicked,
 			drawable = R.drawable.ic_system_upate_24,
-			stringRes = R.string.cta_airtime)
+			stringRes = R.string.cta_airtime
+		)
 		if (showKenyaFeatures) {
-			VerticalImageTextView(onItemClick = onBuyGoodsClicked,
+			VerticalImageTextView(
+				onItemClick = onBuyGoodsClicked,
 				drawable = R.drawable.ic_card,
-				stringRes = R.string.cta_merchant)
-			VerticalImageTextView(onItemClick = onPayBillClicked,
+				stringRes = R.string.cta_merchant
+			)
+			VerticalImageTextView(
+				onItemClick = onPayBillClicked,
 				drawable = R.drawable.ic_utility,
-				stringRes = R.string.cta_paybill_linebreak)
+				stringRes = R.string.cta_paybill_linebreak
+			)
 		}
-		VerticalImageTextView(onItemClick = onRequestMoneyClicked,
+		VerticalImageTextView(
+			onItemClick = onRequestMoneyClicked,
 			drawable = R.drawable.ic_baseline_people_24,
-			stringRes = R.string.cta_request)
+			stringRes = R.string.cta_request
+		)
 	}
 }
 
 @Composable
-private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
-                             financialTip: FinancialTip,
-                             homeViewModel: HomeViewModel?) {
+private fun FinancialTipCard(
+	tipInterface: FinancialTipClickInterface?,
+	financialTip: FinancialTip,
+	homeViewModel: HomeViewModel?
+) {
 	val size13 = dimensionResource(id = R.dimen.margin_13)
 	Card(elevation = 0.dp, modifier = Modifier.padding(all = size13)) {
 		Column {
-			Row(modifier = Modifier
-				.fillMaxWidth()
-				.padding(all = size13)) {
-				HorizontalImageTextView(drawable = R.drawable.ic_tip_of_day,
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(all = size13)
+			) {
+				HorizontalImageTextView(
+					drawable = R.drawable.ic_tip_of_day,
 					stringRes = R.string.tip_of_the_day,
 					Modifier.weight(1f),
-					MaterialTheme.typography.button)
+					MaterialTheme.typography.button
+				)
 
 				Image(painter = painterResource(id = R.drawable.ic_close_white),
 					contentDescription = null,
@@ -178,17 +218,21 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 				Column(modifier = Modifier.weight(1f)) {
 					Spacer(modifier = Modifier.height(10.dp))
 
-					Text(text = financialTip.title,
+					Text(
+						text = financialTip.title,
 						style = MaterialTheme.typography.body2,
-						textDecoration = TextDecoration.Underline)
+						textDecoration = TextDecoration.Underline
+					)
 
 					Spacer(modifier = Modifier.height(8.dp))
 
-					Text(text = financialTip.snippet,
+					Text(
+						text = financialTip.snippet,
 						style = MaterialTheme.typography.body2,
 						maxLines = 2,
 						overflow = TextOverflow.Ellipsis,
-						modifier = Modifier.padding(bottom = size13, top = 3.dp))
+						modifier = Modifier.padding(bottom = size13, top = 3.dp)
+					)
 					Text(text = stringResource(id = R.string.read_more),
 						color = colorResource(id = R.color.brightBlue),
 						modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) })
@@ -208,15 +252,17 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 }
 
 @Composable
-private fun VerticalImageTextView(@DrawableRes drawable: Int,
-                                  @StringRes stringRes: Int,
-                                  onItemClick: () -> Unit) {
+private fun VerticalImageTextView(
+	@DrawableRes drawable: Int, @StringRes stringRes: Int, onItemClick: () -> Unit
+) {
 	val size24 = dimensionResource(id = R.dimen.margin_24)
 	val blue = colorResource(id = R.color.stax_state_blue)
-	Column(modifier = Modifier
-		.clickable(onClick = onItemClick)
-		.padding(horizontal = 2.dp),
-		verticalArrangement = Arrangement.Center) {
+	Column(
+		modifier = Modifier
+			.clickable(onClick = onItemClick)
+			.padding(horizontal = 2.dp),
+		verticalArrangement = Arrangement.Center
+	) {
 		Image(painter = painterResource(id = drawable),
 			contentDescription = null,
 			Modifier
@@ -225,42 +271,50 @@ private fun VerticalImageTextView(@DrawableRes drawable: Int,
 				.drawBehind {
 					drawCircle(radius = this.size.minDimension, color = blue)
 				})
-		Text(text = stringResource(id = stringRes),
+		Text(
+			text = stringResource(id = stringRes),
 			color = colorResource(id = R.color.offWhite),
 			textAlign = TextAlign.Center,
 			style = MaterialTheme.typography.caption,
 			modifier = Modifier
 				.padding(top = size24)
-				.widthIn(min = 50.dp, max = 65.dp))
+				.widthIn(min = 50.dp, max = 65.dp)
+		)
 	}
 }
 
 @Composable
-internal fun HorizontalImageTextView(@DrawableRes drawable: Int,
-                                     @StringRes stringRes: Int,
-                                     modifier: Modifier = Modifier,
-                                     textStyle: TextStyle) {
+internal fun HorizontalImageTextView(
+	@DrawableRes drawable: Int,
+	@StringRes stringRes: Int,
+	modifier: Modifier = Modifier,
+	textStyle: TextStyle
+) {
 	Row(horizontalArrangement = Arrangement.Start, modifier = modifier) {
 		Image(
 			painter = painterResource(id = drawable),
 			contentDescription = null,
 			modifier = Modifier.align(Alignment.CenterVertically),
 		)
-		Text(text = stringResource(id = stringRes),
+		Text(
+			text = stringResource(id = stringRes),
 			style = textStyle,
 			modifier = Modifier
 				.padding(start = dimensionResource(id = R.dimen.margin_13))
 				.align(Alignment.CenterVertically),
-			color = colorResource(id = R.color.offWhite))
+			color = colorResource(id = R.color.offWhite)
+		)
 	}
 }
 
 @Composable
-fun HomeScreen(channelsViewModel: ChannelsViewModel,
-               homeClickFunctions: HomeClickFunctions,
-               balanceTapListener: BalanceTapListener,
-               tipInterface: FinancialTipClickInterface,
-               homeViewModel: HomeViewModel) {
+fun HomeScreen(
+	channelsViewModel: ChannelsViewModel,
+	homeClickFunctions: HomeClickFunctions,
+	balanceTapListener: BalanceTapListener,
+	tipInterface: FinancialTipClickInterface,
+	homeViewModel: HomeViewModel
+) {
 	val homeState by homeViewModel.homeState.collectAsState()
 	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
 	val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
@@ -270,9 +324,11 @@ fun HomeScreen(channelsViewModel: ChannelsViewModel,
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Scaffold(topBar = {
-				TopBar(title = R.string.nav_home,
+				TopBar(
+					title = R.string.nav_home,
 					isInternetConnected = hasNetwork,
-					homeClickFunctions.onClickedSettingsIcon)
+					homeClickFunctions.onClickedSettingsIcon
+				)
 			}, content = {
 				LazyColumn {
 					item {
@@ -280,25 +336,29 @@ fun HomeScreen(channelsViewModel: ChannelsViewModel,
 							BonusCard(message = homeState.bonuses.first().message,
 								onClickedTC = homeClickFunctions.onClickedTC,
 								onClickedTopUp = {
-									clickedOnBonus(context,
-										channelsViewModel,
-										homeState.bonuses.first())
+									clickedOnBonus(
+										context, channelsViewModel, homeState.bonuses.first()
+									)
 								})
 						}
 					}
 
 					item {
-						PrimaryFeatures(onSendMoneyClicked = homeClickFunctions.onSendMoneyClicked,
+						PrimaryFeatures(
+							onSendMoneyClicked = homeClickFunctions.onSendMoneyClicked,
 							onBuyAirtimeClicked = homeClickFunctions.onBuyAirtimeClicked,
 							onBuyGoodsClicked = homeClickFunctions.onBuyGoodsClicked,
 							onPayBillClicked = homeClickFunctions.onPayBillClicked,
 							onRequestMoneyClicked = homeClickFunctions.onRequestMoneyClicked,
-							showKEFeatures(simCountryList))
+							showKEFeatures(simCountryList)
+						)
 					}
 
 					item {
-						BalanceHeader(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount,
-							homeState.accounts.isNotEmpty())
+						BalanceHeader(
+							onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount,
+							homeState.accounts.isNotEmpty()
+						)
 
 						if (accounts.isEmpty()) {
 							EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
@@ -306,9 +366,11 @@ fun HomeScreen(channelsViewModel: ChannelsViewModel,
 					}
 
 					items(accounts) { account ->
-						BalanceItem(staxAccount = account,
+						BalanceItem(
+							staxAccount = account,
 							context = context,
-							balanceTapListener = balanceTapListener)
+							balanceTapListener = balanceTapListener
+						)
 					}
 
 					item {
@@ -316,9 +378,9 @@ fun HomeScreen(channelsViewModel: ChannelsViewModel,
 							!android.text.format.DateUtils.isToday(it.date!!)
 						}?.let {
 							if (homeState.dismissedTipId != it.id) {
-								FinancialTipCard(tipInterface = tipInterface,
-									financialTip = it,
-									homeViewModel)
+								FinancialTipCard(
+									tipInterface = tipInterface, financialTip = it, homeViewModel
+								)
 							}
 						}
 					}
@@ -329,8 +391,9 @@ fun HomeScreen(channelsViewModel: ChannelsViewModel,
 }
 
 private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: Bonus) {
-	AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.clicked_bonus_airtime_banner),
-		context)
+	AnalyticsUtil.logAnalyticsEvent(
+		context.getString(R.string.clicked_bonus_airtime_banner), context
+	)
 	channelsViewModel.validateAccounts(bonus.userChannel)
 }
 
@@ -340,13 +403,15 @@ private fun showKEFeatures(countryIsos: List<String>): Boolean =
 @Preview
 @Composable
 fun HomeScreenPreview() {
-	val financialTip = FinancialTip(id = "1234",
+	val financialTip = FinancialTip(
+		id = "1234",
 		title = "Do you want to save money",
 		content = "This is a test content here so lets see if its going to use ellipse overflow",
 		snippet = "This is a test content here so lets see if its going to use ellipse overflow, with an example here",
 		date = System.currentTimeMillis(),
 		shareCopy = null,
-		deepLink = null)
+		deepLink = null
+	)
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -365,7 +430,8 @@ fun HomeScreenPreview() {
 							onBuyGoodsClicked = { },
 							onPayBillClicked = { },
 							onRequestMoneyClicked = {},
-							true)
+							true
+						)
 					}
 					item {
 						BalanceScreenPreview()
