@@ -201,7 +201,7 @@ private fun FinancialTipCard(
                     alignment = Alignment.CenterEnd)
             }
 
-            Row(modifier = Modifier.padding(horizontal = size13)
+            Row(modifier = Modifier.padding(start = size13, end = size13, bottom = size13)
                 .clickable { tipInterface?.onTipClicked(null) }) {
 
                 Column(modifier = Modifier.weight(1f)) {
