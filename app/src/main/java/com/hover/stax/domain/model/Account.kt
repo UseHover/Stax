@@ -4,6 +4,7 @@ import androidx.room.*
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
+import javax.annotation.Nullable
 
 const val PLACEHOLDER = "placeholder"
 const val ACCOUNT_NAME: String = "account_name"
@@ -47,6 +48,7 @@ data class Account(
         @ColumnInfo(defaultValue = "0")
         var isDefault: Boolean = false,
 
+        @Nullable
         @ColumnInfo(name = "subscription_id")
         var subscriptionId : Int? = null,
 
