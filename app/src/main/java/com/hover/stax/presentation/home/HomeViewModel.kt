@@ -60,7 +60,10 @@ class HomeViewModel(
             _homeState.update { it.copy(financialTips = result.data ?: emptyList()) }
     }.launchIn(viewModelScope)
 
-    private fun getDismissedFinancialTips() = _homeState.update { it.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "") }
+    private fun getDismissedFinancialTips() = _homeState.update {
+        it.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
+    }
+
     fun dismissTip(id: String) {
         viewModelScope.launch {
             tipsUseCase.dismissTip(id)
