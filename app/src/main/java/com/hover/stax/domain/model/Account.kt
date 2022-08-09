@@ -48,7 +48,6 @@ data class Account(
         @ColumnInfo(defaultValue = "0")
         var isDefault: Boolean = false,
 
-        @Nullable
         @ColumnInfo(name = "subscription_id")
         var subscriptionId : Int? = null,
 
