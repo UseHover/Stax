@@ -12,4 +12,5 @@ interface AccountRepository {
     suspend fun createAccount(channel: Channel, subscriptionId: Int?, isDefault: Boolean)
 
     suspend fun setDefaultAccount(account: Account)
+    suspend fun getTelecomAccounts(subscriberIds: IntArray) : List<Account>
 }

@@ -68,6 +68,10 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         }
     }
 
+    override suspend fun getTelecomAccounts(subscriberIds: IntArray): List<Account> {
+        return accountRepo.getTelecomAccounts(subscriberIds)
+    }
+
     private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
     private fun logChoice(account: Account) {

@@ -1,4 +1,5 @@
 package com.hover.stax.domain.use_case.sims
+import androidx.lifecycle.LiveData
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.repository.BountyRepository
@@ -9,5 +10,8 @@ class GetPresentSimUseCase(private val simRepository: SimRepository, private val
 		return simRepository.getPresentSims()
 	}
 
+	 fun withLiveData() : LiveData<List<SimInfo>> {
+		return simRepository.getPresentSimsLive()
+	}
 	fun simPresent(bounty: Bounty, sims: List<SimInfo>): Boolean = bountyRepository.isSimPresent(bounty, sims)
 }

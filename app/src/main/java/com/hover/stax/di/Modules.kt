@@ -23,7 +23,6 @@ import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.financial_tips.GetTipsUseCase
 import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
-import com.hover.stax.domain.use_case.sims.GetLivePresentSimUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
@@ -134,5 +133,4 @@ val useCases = module {
 
     factoryOf(::GetChannelBountiesUseCase)
     factoryOf(::GetPresentSimUseCase)
-    factoryOf(::GetLivePresentSimUseCase)
 }

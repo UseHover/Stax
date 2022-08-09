@@ -4,16 +4,13 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.PLACEHOLDER
-import com.hover.stax.domain.use_case.sims.GetLivePresentSimUseCase
 import com.hover.stax.schedules.Schedule
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
