@@ -189,48 +189,47 @@ private fun FinancialTipCard(
 ) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Card(elevation = 0.dp, modifier = Modifier.padding(all = size13)) {
-        Row(modifier = Modifier
-            .padding(all = size13)
-            .clickable { tipInterface?.onTipClicked(null) }) {
-
-            Column(modifier = Modifier.weight(1f)) {
-                HorizontalImageTextView(
-                    drawable = R.drawable.ic_tip_of_day,
+        Column {
+            Row(modifier = Modifier.fillMaxWidth().padding(all = size13)) {
+                HorizontalImageTextView(drawable = R.drawable.ic_tip_of_day,
                     stringRes = R.string.tip_of_the_day,
-                    Modifier.padding(bottom = 5.dp),
-                    MaterialTheme.typography.button
-                )
+                    Modifier.weight(1f),
+                    MaterialTheme.typography.button)
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = financialTip.title,
-                    style = MaterialTheme.typography.body2,
-                    textDecoration = TextDecoration.Underline
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = financialTip.snippet,
-                    style = MaterialTheme.typography.body2,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(bottom = size13, top = 3.dp)
-                )
-                Text(text = stringResource(id = R.string.read_more),
-                    color = colorResource(id = R.color.brightBlue),
-                    modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) })
+                Image(painter = painterResource(id = R.drawable.ic_close_white),
+                    contentDescription = null,
+                    alignment = Alignment.CenterEnd)
             }
 
-            Image(
-                painter = painterResource(id = R.drawable.tips_fancy_icon),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(60.dp)
-                    .padding(start = size13)
-                    .align(Alignment.CenterVertically),
-            )
+            Row(modifier = Modifier.padding(horizontal = size13)
+                .clickable { tipInterface?.onTipClicked(null) }) {
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(text = financialTip.title,
+                        style = MaterialTheme.typography.body2,
+                        textDecoration = TextDecoration.Underline)
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(text = financialTip.snippet,
+                        style = MaterialTheme.typography.body2,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(bottom = size13, top = 3.dp))
+                    Text(text = stringResource(id = R.string.read_more),
+                        color = colorResource(id = R.color.brightBlue),
+                        modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) })
+                }
+
+                Image(
+                    painter = painterResource(id = R.drawable.tips_fancy_icon),
+                    contentDescription = null,
+                    modifier = Modifier.size(60.dp).padding(start = size13)
+                        .align(Alignment.CenterVertically),
+                )
+            }
         }
     }
 }
@@ -419,11 +418,12 @@ fun HomeScreenPreview() {
                             )
                         }
                         item {
-                            BalanceScreenPreview()
-                        }
-                        item {
                             FinancialTipCard(tipInterface = null, financialTip = financialTip)
                         }
+                        item {
+                            BalanceScreenPreview()
+                        }
+
                     })
                 })
         }
