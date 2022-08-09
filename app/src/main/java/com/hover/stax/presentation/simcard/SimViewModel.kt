@@ -23,6 +23,8 @@ class SimViewModel(presentSimUseCase: GetPresentSimUseCase,
 		telecomAccounts.addSource(simSubscriptionIds, this::getTelecomAccounts)
 	}
 
+
+
 	private fun setSubscriptionIds(sims: List<SimInfo>) {
 		simSubscriptionIds.postValue(sims.map { it.subscriptionId }.toIntArray())
 	}

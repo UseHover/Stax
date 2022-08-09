@@ -29,8 +29,6 @@ class SimFragment : Fragment(), BalanceTapListener {
 	private var _binding: FragmentSimBinding? = null
 	private val binding get() = _binding!!
 	private val balancesViewModel: BalancesViewModel by sharedViewModel()
-	private val channelsViewModel: ChannelsViewModel by sharedViewModel()
-	private val simViewModel : SimViewModel by sharedViewModel()
 
 	override fun onCreateView(inflater: LayoutInflater,
 	                          container: ViewGroup?,

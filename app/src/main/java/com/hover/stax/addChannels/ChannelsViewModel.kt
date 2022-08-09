@@ -163,7 +163,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
                 Timber.i("total unlinked sim is: ${unlinkedSims.size}")
                 if(unlinkedSims.isNotEmpty()) {
                     val allTelecomChannels = repo.publishedTelecomChannels()
-                    Timber.i("all sim supported Telecom channels in  is: ${allTelecomChannels.size}")
+                    Timber.i("all published Telecom channels in  is: ${allTelecomChannels.size}")
                     allTelecomChannels.forEach {
                         Timber.i("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
                         val matchedSim = presentSimList.find { sim -> it.hniList.contains(sim.osReportedHni) }

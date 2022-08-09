@@ -22,6 +22,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import timber.log.Timber
 
 class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
 
@@ -69,6 +70,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     }
 
     override suspend fun getTelecomAccounts(subscriberIds: IntArray): List<Account> {
+        Timber.i("able to fetch telecom accounts")
         return accountRepo.getTelecomAccounts(subscriberIds)
     }
 
