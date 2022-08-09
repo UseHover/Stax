@@ -34,7 +34,6 @@ import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.network.NetworkMonitor
-import timber.log.Timber
 
 data class HomeClickFunctions(val onSendMoneyClicked: () -> Unit,
                               val onBuyAirtimeClicked: () -> Unit,
@@ -55,8 +54,8 @@ fun TopBar(@StringRes title: Int = R.string.app_name,
            onClickedSettingsIcon: () -> Unit) {
 	Row(
 		modifier = Modifier
-            .fillMaxWidth()
-            .padding(all = dimensionResource(id = R.dimen.margin_13)),
+			.fillMaxWidth()
+			.padding(all = dimensionResource(id = R.dimen.margin_13)),
 	) {
 		HorizontalImageTextView(drawable = R.drawable.stax_logo,
 			stringRes = title,
@@ -67,8 +66,8 @@ fun TopBar(@StringRes title: Int = R.string.app_name,
 			HorizontalImageTextView(drawable = R.drawable.ic_internet_off,
 				stringRes = R.string.working_offline,
 				modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(horizontal = 16.dp),
+					.align(Alignment.CenterVertically)
+					.padding(horizontal = 16.dp),
 				MaterialTheme.typography.button)
 		}
 
@@ -76,9 +75,9 @@ fun TopBar(@StringRes title: Int = R.string.app_name,
 			painter = painterResource(id = R.drawable.ic_settings),
 			contentDescription = null,
 			modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .clickable(onClick = onClickedSettingsIcon)
-                .size(25.dp),
+				.align(Alignment.CenterVertically)
+				.clickable(onClick = onClickedSettingsIcon)
+				.size(25.dp),
 		)
 	}
 }
@@ -90,8 +89,8 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
 
 	Card(modifier = Modifier.padding(all = size13), elevation = 2.dp) {
 		Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(all = size13)) {
+			.fillMaxWidth()
+			.padding(all = size13)) {
 			Column(modifier = Modifier.weight(1f)) {
 				Text(text = stringResource(id = R.string.get_rewarded),
 					style = MaterialTheme.typography.h3)
@@ -107,15 +106,15 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
 					color = colorResource(id = R.color.brightBlue),
 					style = MaterialTheme.typography.h4,
 					modifier = Modifier
-                        .padding(top = size13)
-                        .clickable(onClick = onClickedTopUp))
+						.padding(top = size13)
+						.clickable(onClick = onClickedTopUp))
 			}
 			Image(painter = painterResource(id = R.drawable.ic_bonus),
 				contentDescription = stringResource(id = R.string.get_rewarded),
 				modifier = Modifier
-                    .size(70.dp)
-                    .padding(start = size13)
-                    .align(Alignment.CenterVertically))
+					.size(70.dp)
+					.padding(start = size13)
+					.align(Alignment.CenterVertically))
 		}
 	}
 }
@@ -129,8 +128,8 @@ fun PrimaryFeatures(onSendMoneyClicked: () -> Unit,
                     showKenyaFeatures: Boolean) {
 	Row(horizontalArrangement = Arrangement.SpaceEvenly,
 		modifier = Modifier
-            .padding(horizontal = 13.dp, vertical = 26.dp)
-            .fillMaxWidth()) {
+			.padding(horizontal = 13.dp, vertical = 26.dp)
+			.fillMaxWidth()) {
 		VerticalImageTextView(onItemClick = onSendMoneyClicked,
 			drawable = R.drawable.ic_transfer_within_24,
 			stringRes = R.string.cta_transfer)
@@ -159,8 +158,8 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 	Card(elevation = 0.dp, modifier = Modifier.padding(all = size13)) {
 		Column {
 			Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = size13)) {
+				.fillMaxWidth()
+				.padding(all = size13)) {
 				HorizontalImageTextView(drawable = R.drawable.ic_tip_of_day,
 					stringRes = R.string.tip_of_the_day,
 					Modifier.weight(1f),
@@ -173,8 +172,8 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 			}
 
 			Row(modifier = Modifier
-                .padding(start = size13, end = size13, bottom = size13)
-                .clickable { tipInterface?.onTipClicked(null) }) {
+				.padding(start = size13, end = size13, bottom = size13)
+				.clickable { tipInterface?.onTipClicked(null) }) {
 
 				Column(modifier = Modifier.weight(1f)) {
 					Spacer(modifier = Modifier.height(10.dp))
@@ -199,9 +198,9 @@ private fun FinancialTipCard(tipInterface: FinancialTipClickInterface?,
 					painter = painterResource(id = R.drawable.tips_fancy_icon),
 					contentDescription = null,
 					modifier = Modifier
-                        .size(60.dp)
-                        .padding(start = size13)
-                        .align(Alignment.CenterVertically),
+						.size(60.dp)
+						.padding(start = size13)
+						.align(Alignment.CenterVertically),
 				)
 			}
 		}
@@ -215,24 +214,24 @@ private fun VerticalImageTextView(@DrawableRes drawable: Int,
 	val size24 = dimensionResource(id = R.dimen.margin_24)
 	val blue = colorResource(id = R.color.stax_state_blue)
 	Column(modifier = Modifier
-        .clickable(onClick = onItemClick)
-        .padding(horizontal = 2.dp),
+		.clickable(onClick = onItemClick)
+		.padding(horizontal = 2.dp),
 		verticalArrangement = Arrangement.Center) {
 		Image(painter = painterResource(id = drawable),
 			contentDescription = null,
-            Modifier
-                .size(size24)
-                .align(Alignment.CenterHorizontally)
-                .drawBehind {
-                    drawCircle(radius = this.size.minDimension, color = blue)
-                })
+			Modifier
+				.size(size24)
+				.align(Alignment.CenterHorizontally)
+				.drawBehind {
+					drawCircle(radius = this.size.minDimension, color = blue)
+				})
 		Text(text = stringResource(id = stringRes),
 			color = colorResource(id = R.color.offWhite),
 			textAlign = TextAlign.Center,
 			style = MaterialTheme.typography.caption,
 			modifier = Modifier
-                .padding(top = size24)
-                .widthIn(min = 50.dp, max = 65.dp))
+				.padding(top = size24)
+				.widthIn(min = 50.dp, max = 65.dp))
 	}
 }
 
@@ -250,8 +249,8 @@ internal fun HorizontalImageTextView(@DrawableRes drawable: Int,
 		Text(text = stringResource(id = stringRes),
 			style = textStyle,
 			modifier = Modifier
-                .padding(start = dimensionResource(id = R.dimen.margin_13))
-                .align(Alignment.CenterVertically),
+				.padding(start = dimensionResource(id = R.dimen.margin_13))
+				.align(Alignment.CenterVertically),
 			color = colorResource(id = R.color.offWhite))
 	}
 }
