@@ -165,12 +165,13 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                Text(
-                    text = DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),
-                    modifier = Modifier.align(Alignment.End),
-                    color = colorResource(id = R.color.offWhite),
-                    style = MaterialTheme.typography.caption
-                )
+                if (staxAccount.latestBalance != null)
+                    Text(
+                        text = DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),
+                        modifier = Modifier.align(Alignment.End),
+                        color = colorResource(id = R.color.offWhite),
+                        style = MaterialTheme.typography.caption
+                    )
             }
 
             Image(painter = painterResource(id = R.drawable.ic_refresh_white_24dp),
