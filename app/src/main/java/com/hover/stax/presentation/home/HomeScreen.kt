@@ -244,6 +244,7 @@ private fun VerticalImageTextView(
 ) {
     val size24 = dimensionResource(id = R.dimen.margin_24)
     val blue = colorResource(id = R.color.stax_state_blue)
+
     Column(
         modifier = Modifier
             .clickable(onClick = onItemClick)
