@@ -178,7 +178,9 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(start = size13)
-                    .clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) })
+                    .clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) }
+                    .size(32.dp)
+            )
 
         }
 

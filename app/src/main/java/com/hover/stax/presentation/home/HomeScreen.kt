@@ -1,5 +1,6 @@
 package com.hover.stax.presentation.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Html
 import androidx.annotation.DrawableRes
@@ -83,7 +84,7 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .clickable(onClick = onClickedSettingsIcon)
-                .size(25.dp),
+                .size(30.dp),
         )
     }
 }
@@ -292,6 +293,7 @@ internal fun HorizontalImageTextView(
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     channelsViewModel: ChannelsViewModel,
@@ -401,8 +403,8 @@ fun HomeScreenPreview() {
                 topBar = {
                     TopBar(title = R.string.nav_home, isInternetConnected = false) {}
                 },
-                content = {
-                    LazyColumn(content = {
+                content = { padding ->
+                    LazyColumn(modifier = Modifier.padding(padding), content = {
                         item {
                             BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
                                 onClickedTC = {},
