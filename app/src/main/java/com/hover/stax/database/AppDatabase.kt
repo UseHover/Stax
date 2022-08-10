@@ -41,7 +41,6 @@ import java.util.concurrent.Executors
         AutoMigration(from = 40, to = 41),
         AutoMigration(from = 41, to = 42),
         AutoMigration(from = 42, to = 43)
-
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
