@@ -17,14 +17,14 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.domain.model.Account
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.permissions.PermissionUtils
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
@@ -195,7 +195,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            Timber.e("Caught back press. isediting: %s", abstractFormViewModel.isEditing.value)
+            Timber.e("Caught back press. is editing: %s", abstractFormViewModel.isEditing.value)
             if (abstractFormViewModel.isEditing.value == false)
                 abstractFormViewModel.setEditing(true)
             else

@@ -17,7 +17,6 @@ import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
@@ -143,11 +142,6 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
                 viewModel.getSavedPaybills(account.id)
             }
         }
-
-        collectLifecycleFlow(accountsViewModel.accountList) {
-            if(it.accounts.isEmpty())
-                setDropdownTouchListener(PaybillFragmentDirections.actionGlobalAddChannelsFragment())
-        }
     }
 
     private fun observeActions() {
@@ -180,7 +174,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     }
 
     private fun updateBiz(name: String?, no: String?) {
-        binding.editCard.businessNoInput.setMutlipartText(name, no)
+        binding.editCard.businessNoInput.setMultipartText(name, no)
         binding.summaryCard.recipient.setContent(name, no)
     }
 
