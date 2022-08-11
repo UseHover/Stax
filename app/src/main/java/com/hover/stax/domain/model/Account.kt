@@ -48,8 +48,8 @@ data class Account(
         @ColumnInfo(defaultValue = "0")
         var isDefault: Boolean = false,
 
-        @ColumnInfo(name = "subscription_id")
-        var subscriptionId : Int? = null,
+        @ColumnInfo(name = "subscription_id", defaultValue = "-1")
+        var subscriptionId : Int = -1
 
 ) : Comparable<Account> {
 

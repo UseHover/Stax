@@ -33,10 +33,10 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     override suspend fun createAccounts(channels: List<Channel>) {
         val defaultAccount = accountRepo.getDefaultAccountAsync()
         channels.mapIndexed { index, channel ->
-            createAccount(channel, null, defaultAccount == null && index == 0)}
+            createAccount(channel, -1, defaultAccount == null && index == 0)}
     }
 
-    override suspend fun createAccount(channel: Channel, subscriptionId: Int?, isDefault: Boolean) {
+    override suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean) {
         val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
         val account = Account(
             accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,

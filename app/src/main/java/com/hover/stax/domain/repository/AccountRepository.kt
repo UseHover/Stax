@@ -10,7 +10,7 @@ interface AccountRepository {
     val fetchAccounts: Flow<List<Account>>
 
     suspend fun createAccounts(channels: List<Channel>)
-    suspend fun createAccount(channel: Channel, subscriptionId: Int?, isDefault: Boolean)
+    suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean)
 
     suspend fun setDefaultAccount(account: Account)
 
