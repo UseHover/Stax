@@ -29,6 +29,7 @@ import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -44,6 +45,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
+
+    private var hasBonus = false
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,7 +153,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeActions() {
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
-            showBonusBanner(it.firstOrNull())
+            showBonusBanner(it)
         }
 
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
@@ -255,7 +258,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun getExtras(): HashMap<String, String> {
-        val extras = transferViewModel.wrapExtras()
+        val extras = transferViewModel.wrapExtras(hasBonus)
         extras.putAll(actionSelectViewModel.wrapExtras())
         return extras
     }
@@ -334,7 +337,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun showBonusBanner(activeAction: HoverAction?) {
+    private fun showBonusBanner(actions: List<HoverAction>) {
         if (args.transactionType == HoverAction.AIRTIME) {
             val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return
 
@@ -342,7 +345,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 cardBonus.visibility = View.VISIBLE
                 learnMore.movementMethod = LinkMovementMethod.getInstance()
 
-                if (activeAction?.channel_id == bonus.purchaseChannel) {
+                hasBonus = actions.map { it.channel_id }.contains(bonus.userChannel)
+
+                if (hasBonus) {
                     title.text = getString(R.string.congratulations)
                     message.text = getString(R.string.valid_account_bonus_msg)
                     cta.visibility = View.GONE
@@ -369,7 +374,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if (!isEditing)
             binding.bonusLayout.cardBonus.visibility = View.GONE
         else
-            showBonusBanner(actionSelectViewModel.activeAction.value)
+            showBonusBanner(actionSelectViewModel.filteredActions.value ?: emptyList())
     }
 
     override fun onDestroyView() {
