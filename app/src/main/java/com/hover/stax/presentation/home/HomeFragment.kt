@@ -100,7 +100,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
         }
 
         collectLifecycleFlow(balancesViewModel.actionRunError) {
-            UIHelper.flashMessage(requireActivity(), it)
+            UIHelper.flashAndReportError(requireActivity(), it)
         }
     }
 

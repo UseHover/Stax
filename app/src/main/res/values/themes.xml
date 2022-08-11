@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!--    <style name="Theme.App.Starting" parent="android:Theme.Material.Light.NoActionBar">-->
-    <!--        <item name="android:statusBarColor">@color/purple_700</item>-->
-    <!--    </style>-->
-
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         // Set the splash screen background, animated icon, and animation duration.
         <item name="windowSplashScreenBackground">@color/colorBackground</item>
@@ -41,8 +37,8 @@
         <item name="colorSwitchThumbNormal">@color/grey</item>
 
         <item name="windowActionBar">false</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorBackground</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorBackground</item>
+        <item name="android:statusBarColor" >@color/colorBackground</item>
+        <item name="android:navigationBarColor" >@color/colorBackground</item>
         <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:fitsSystemWindows">true</item>
 

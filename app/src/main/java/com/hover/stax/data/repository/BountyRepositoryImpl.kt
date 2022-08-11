@@ -1,5 +1,6 @@
 package com.hover.stax.data.repository
 
+import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.channels.Channel
@@ -32,10 +33,8 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
     override fun getCountryList(): Flow<List<String>> = channelFlow {
         launch(coroutineDispatcher) {
             val actions = bountyActions
-
             val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
             actions.asSequence().map { it.country_alpha2.uppercase() }.distinct().sorted().toCollection(countryCodes)
-
             send(countryCodes)
         }
     }

@@ -108,7 +108,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
             .setPosButton(R.string.btn_delete) {
                 if (activity != null) {
                     paybillViewModel.deletePaybill(paybill)
-                    UIHelper.flashMessage(requireActivity(), R.string.paybill_delete_success)
+                    UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_delete_success)
                 }
             }
         dialog!!.showIt()

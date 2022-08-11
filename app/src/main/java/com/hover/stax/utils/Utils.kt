@@ -154,7 +154,7 @@ object Utils {
         val clip = ClipData.newPlainText("Stax content", content)
         if (clipboard != null) {
             clipboard.setPrimaryClip(clip)
-            UIHelper.flashMessage(c, c.getString(R.string.copied))
+            UIHelper.flashAndReportMessage(c, c.getString(R.string.copied))
             return true
         }
         return false
@@ -199,7 +199,7 @@ object Utils {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
             Timber.e("Activity not found")
-            UIHelper.flashMessage(context, context.getString(R.string.email_client_not_found))
+            UIHelper.flashAndReportMessage(context, context.getString(R.string.email_client_not_found))
         }
     }
 
@@ -241,6 +241,6 @@ object Utils {
         if (PermissionUtils.has(arrayOf(Manifest.permission.CALL_PHONE), c))
             c.startActivity(dialIntent)
         else
-            UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
+            UIHelper.flashAndReportMessage(c, c.getString(R.string.enable_call_permission))
     }
 }

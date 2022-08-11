@@ -4,9 +4,11 @@ buildscript {
         mavenCentral()
     }
 
-    ext.kotlin_version = '1.6.10'
-    ext.compose_version = '1.1.1'
+    ext.kotlin_version = '1.7.0'
+    ext.compose_version = '1.2.0'
     ext.nav_version = "2.4.2"
+    ext.koin_version = "3.2.0"
+    ext.room_version = '2.4.3'
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
@@ -23,6 +25,7 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://sdk.uxcam.com/android/' }
         maven {
             url "http://maven.usehover.com/releases"
             allowInsecureProtocol = true
@@ -40,10 +43,6 @@ allprojects {
             authentication { basic(BasicAuthentication) }
             content { includeGroup "com.hover" }
         }
-        maven{
-            url 'https://sdk.uxcam.com/android/'
-        }
-
     }
 }
 

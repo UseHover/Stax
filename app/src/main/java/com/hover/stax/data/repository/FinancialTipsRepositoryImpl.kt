@@ -6,8 +6,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
+import com.hover.stax.domain.model.FINANCIAL_TIP_ID
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.domain.repository.FinancialTipsRepository
+import com.hover.stax.utils.Utils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -34,5 +36,13 @@ class FinancialTipsRepositoryImpl(val context: Context) : FinancialTipsRepositor
                     document.data!!["deep link"].toString()
                 )
             }
+    }
+
+    override fun getDismissedTipId(): String? {
+        return Utils.getString(FINANCIAL_TIP_ID, context)
+    }
+
+    override fun dismissTip(id: String) {
+        Utils.saveString(FINANCIAL_TIP_ID, id, context)
     }
 }

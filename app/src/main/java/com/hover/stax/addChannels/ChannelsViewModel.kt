@@ -18,6 +18,7 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelUtil.updateChannels
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.PLACEHOLDER
@@ -227,7 +228,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         val defaultAccount = accountRepo.getDefaultAccount()
 
         val accounts = channels.mapIndexed { index, channel ->
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
+            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER) //ensures uniqueness of name due to db constraints
             Account(
                 accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
                 channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, subscriptionId = null
@@ -237,8 +238,8 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
         }
 
-        channels.onEach { it.selected = true }.also { repo.update(it) }
         val accountIds = accountRepo.insert(accounts)
+        channels.onEach { it.selected = true }.also { repo.update(it) }
 
         //This is currently the only difference when compared with the function in AccountRepositoryImpl.
         //Comment above is here to make it clearer when refactoring

@@ -34,8 +34,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     override suspend fun createAccounts(channels: List<Channel>) {
         val defaultAccount = accountRepo.getDefaultAccountAsync()
         channels.mapIndexed { index, channel ->
-            createAccount(channel, null, defaultAccount == null && index == 0)
-        }
+            createAccount(channel, null, defaultAccount == null && index == 0)}
     }
 
     override suspend fun createAccount(channel: Channel, subscriptionId: Int?, isDefault: Boolean) {

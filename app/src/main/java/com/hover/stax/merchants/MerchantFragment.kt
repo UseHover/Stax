@@ -51,20 +51,12 @@ class MerchantFragment : AbstractFormFragment() {
 
 	override fun startObservers(root: View) {
 		super.startObservers(root)
-		observeAccountList()
 		observeActiveAccount()
 		observeActions()
 		observeActionSelection()
 		observeSelectedMerchant()
 		observeAmount()
 		observeRecentMerchants()
-	}
-
-	private fun observeAccountList() {
-		collectLifecycleFlow(accountsViewModel.accountList) {
-			if(it.accounts.isEmpty())
-				setDropdownTouchListener(MerchantFragmentDirections.actionMerchantFragmentToAccountsFragment())
-		}
 	}
 
 	private fun observeActiveAccount() {

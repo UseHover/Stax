@@ -727,6 +727,7 @@
     <string name="ussd_lib">Dial USSD</string>
 
     <string name="error_running_action">Sorry, this service integration is broken.</string>
+    <string name="toast_err_tag">toast_err_notif</string>
     <string name="error_still_loading">Please wait a moment and try again.</string>
 
     <!-- Financial Tips -->
@@ -799,5 +800,6 @@
     <string name="empty_channel_placeholder">the service</string>
     <string name="def_account_update_msg">Default account successfully updated to %1$s.</string>
     <string name="uxcam_session_url">uxcam_session_url</string>
+    <string name="transaction_history">Transaction History</string>
 
 </resources>

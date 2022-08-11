@@ -145,7 +145,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
             sendSms(requestViewModel, this)
         } else if (requestCode == SMS) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
-            UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
+            UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_smsperm))
         }
         else if(requestCode == PERMS_REQ_CODE && PermissionHelper(this).permissionsGranted(grantResults)) {
             channelsViewModel.createSimSpecificTelecomAccounts()
