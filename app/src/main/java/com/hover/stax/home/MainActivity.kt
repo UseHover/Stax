@@ -85,23 +85,12 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         }
     }
     private fun observerSims() {
-
         simViewModel.presentSims.observe(this) {
-            Timber.i("${this.javaClass.simpleName} prsent sim size: ${it.size}")
-            val telecomAccounts = simViewModel.telecomAccounts.value
-            if( telecomAccounts !=null && telecomAccounts.size != it.size) {
-                channelsViewModel.createSimSpecificTelecomAccounts()
-            }
+            Timber.i("${this.javaClass.simpleName} present sim size: ${it.size}")
         }
-
         simViewModel.telecomAccounts.observe(this) {
             Timber.i("${this.javaClass.simpleName} telecomAccounts size ${it.size}")
-            val presentSims = simViewModel.presentSims.value
-            if(presentSims !=null && presentSims.size !=it.size) {
-                channelsViewModel.createSimSpecificTelecomAccounts()
-            }
         }
-
         simViewModel.simSubscriptionIds.observe(this) {
             Timber.i("${this.javaClass.simpleName} subscription ids size: ${it.size}")
         }
@@ -146,9 +135,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         } else if (requestCode == SMS) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_smsperm))
-        }
-        else if(requestCode == PERMS_REQ_CODE && PermissionHelper(this).permissionsGranted(grantResults)) {
-            channelsViewModel.createSimSpecificTelecomAccounts()
         }
     }
 

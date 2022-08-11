@@ -5,14 +5,13 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.ActionApi
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.CoroutineDispatcher
@@ -68,8 +67,19 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         }
     }
 
+    override suspend fun createTelecomAccounts(sims: List<SimInfo>) {
+            val allTelecomChannels = channelRepo.publishedTelecomChannels()
+            Timber.i("all published Telecom channels in  is: ${allTelecomChannels.size}")
+            allTelecomChannels.forEach {
+                Timber.i("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
+                val matchedSim = sims.find { sim -> it.hniList.contains(sim.osReportedHni) }
+                if (matchedSim != null) {
+                    createAccount(it, matchedSim.subscriptionId, false)
+                }
+            }
+    }
+
     override suspend fun getTelecomAccounts(subscriberIds: IntArray): List<Account> {
-        Timber.i("able to fetch telecom accounts")
         return accountRepo.getTelecomAccounts(subscriberIds)
     }
 

@@ -54,7 +54,7 @@ class SimFragment : Fragment(), BalanceTapListener {
 		}
 
 		collectLifecycleFlow(balancesViewModel.actionRunError) {
-			UIHelper.flashMessage(requireActivity(), it)
+			UIHelper.flashAndReportMessage(requireActivity(), it)
 		}
 	}
 

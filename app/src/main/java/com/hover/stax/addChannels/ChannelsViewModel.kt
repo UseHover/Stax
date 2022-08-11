@@ -18,7 +18,6 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelUtil.updateChannels
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.PLACEHOLDER
@@ -33,7 +32,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import timber.log.Timber
 
 class ChannelsViewModel(application: Application, val repo: ChannelRepo,
                         val presentSimUseCase: GetPresentSimUseCase,
@@ -155,47 +153,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         }
     }
 
-    fun createSimSpecificTelecomAccounts() {
-        val presentSimList = sims.value
-        if(presentSimList !=null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val currentTelecomAccounts = accountRepo.getTelecomAccounts(presentSimList.map { it.subscriptionId }.toIntArray())
-                val unlinkedSims = getUnlinkedSIMs(currentTelecomAccounts, presentSimList)
-                Timber.i("total unlinked sim is: ${unlinkedSims.size}")
-                if(unlinkedSims.isNotEmpty()) {
-                    val allTelecomChannels = repo.publishedTelecomChannels()
-                    Timber.i("all published Telecom channels in  is: ${allTelecomChannels.size}")
-                    allTelecomChannels.forEach {
-                        Timber.i("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
-                        val matchedSim = presentSimList.find { sim -> it.hniList.contains(sim.osReportedHni) }
-                        if(matchedSim != null) {
-                            createAccount(it, matchedSim.subscriptionId, false)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private suspend fun createAccount(channel: Channel, subscriptionId: Int?, isDefault: Boolean) {
-        val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
-        val account = Account(
-            accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, subscriptionId = subscriptionId
-        )
-
-        channel.selected = true
-        repo.update(channel)
-        accountRepo.insert(account)
-
-        logChoice(account)
-        ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, getApplication())
-    }
-
-    private fun getUnlinkedSIMs(accounts: List<Account>, sims: List<SimInfo>) : List<SimInfo> {
-        return sims.filter {  accounts.find { account-> account.subscriptionId == it.subscriptionId } == null  }
-    }
-
     private fun logChoice(account: Account) {
         joinChannelGroup(account.channelId, getApplication() as Context)
         val args = JSONObject()
@@ -241,8 +198,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         val accountIds = accountRepo.insert(accounts)
         channels.onEach { it.selected = true }.also { repo.update(it) }
 
-        //This is currently the only difference when compared with the function in AccountRepositoryImpl.
-        //Comment above is here to make it clearer when refactoring
+        //Refactoring tip: This is currently the only difference when compared with the function in AccountRepositoryImpl.
         promptBalanceCheck(accountIds.first().toInt())
     }
 
