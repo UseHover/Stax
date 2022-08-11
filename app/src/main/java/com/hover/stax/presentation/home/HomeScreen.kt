@@ -313,8 +313,8 @@ fun HomeScreen(
                 topBar = { TopBar(title = R.string.nav_home, isInternetConnected = hasNetwork, homeClickFunctions.onClickedSettingsIcon) },
                 content = {
                     LazyColumn {
-                        item {
-                            if (homeState.bonuses.isNotEmpty() && accounts.isNotEmpty()) {
+                        if (homeState.bonuses.isNotEmpty() && accounts.isNotEmpty())
+                            item {
                                 BonusCard(message = homeState.bonuses.first().message,
                                     onClickedTC = homeClickFunctions.onClickedTC,
                                     onClickedTopUp = {
@@ -324,8 +324,13 @@ fun HomeScreen(
                                             homeState.bonuses.first()
                                         )
                                     })
+
                             }
-                        }
+
+                        if (accounts.isEmpty())
+                            item {
+                                EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
+                            }
 
                         item {
                             PrimaryFeatures(
@@ -338,15 +343,12 @@ fun HomeScreen(
                             )
                         }
 
-                        item {
-                            BalanceHeader(
-                                onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
-                            )
-
-                            if (accounts.isEmpty()) {
-                                EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
+                        if (accounts.isNotEmpty())
+                            item {
+                                BalanceHeader(
+                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
+                                )
                             }
-                        }
 
                         items(accounts) { account ->
                             BalanceItem(

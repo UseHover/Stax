@@ -84,12 +84,23 @@ fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
 fun EmptyBalance(onClickedAddAccount: () -> Unit) {
     val size34 = dimensionResource(id = R.dimen.margin_34)
     val size16 = dimensionResource(id = R.dimen.margin_16)
-    Column(modifier = Modifier.padding(horizontal = size34, vertical = size16)) {
+    Column(modifier = Modifier.padding(vertical = size16)) {
+        val modifier = Modifier.padding(horizontal = size34)
+
+        Text(
+            text = stringResource(id = R.string.your_accounts),
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.padding(horizontal = size16)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = stringResource(id = R.string.empty_balance_desc),
             style = MaterialTheme.typography.body1,
             color = colorResource(id = R.color.offWhite),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = modifier
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -98,7 +109,8 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
             onClick = onClickedAddAccount,
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(elevation = 0.dp),
+                .shadow(elevation = 0.dp)
+                .then(modifier),
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(width = 0.5.dp, color = DarkGray),
             colors = ButtonDefaults.buttonColors(
@@ -196,11 +208,8 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 @Composable
 fun BalanceScreenPreview() {
     StaxTheme {
-        Surface {
-            Column(modifier = Modifier.background(color = colors.background)) {
-                BalanceHeader(onClickedAddAccount = {}, accountExists = false)
-                BalanceListForPreview(accountList = emptyList())
-            }
+        Surface(modifier = Modifier.background(color = colors.background)) {
+            BalanceListForPreview(accountList = emptyList())
         }
     }
 }
@@ -216,6 +225,9 @@ private fun BalanceListForPreview(accountList: List<Account>) {
                 .fillMaxWidth()
                 .padding(13.dp)
         ) {
+            item {
+                BalanceHeader(onClickedAddAccount = {}, accountExists = false)
+            }
             items(accountList) { account ->
                 val context = LocalContext.current
                 BalanceItem(staxAccount = account, context = context, balanceTapListener = null)
