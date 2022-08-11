@@ -186,49 +186,66 @@ fun PrimaryFeatures(
 @Composable
 private fun FinancialTipCard(
     tipInterface: FinancialTipClickInterface?,
-    financialTip: FinancialTip
+    financialTip: FinancialTip,
+    homeViewModel: HomeViewModel?
 ) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
 
     Card(elevation = 0.dp, modifier = Modifier.padding(all = size13)) {
         Column {
-            Row(modifier = Modifier.fillMaxWidth().padding(all = size13)) {
-                HorizontalImageTextView(drawable = R.drawable.ic_tip_of_day,
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = size13)) {
+                HorizontalImageTextView(
+                    drawable = R.drawable.ic_tip_of_day,
                     stringRes = R.string.tip_of_the_day,
                     Modifier.weight(1f),
-                    MaterialTheme.typography.button)
+                    MaterialTheme.typography.button
+                )
 
                 Image(painter = painterResource(id = R.drawable.ic_close_white),
                     contentDescription = null,
-                    alignment = Alignment.CenterEnd)
+                    alignment = Alignment.CenterEnd,
+                    modifier = Modifier.clickable { homeViewModel?.dismissTip(financialTip.id) })
             }
 
-            Row(modifier = Modifier.padding(horizontal = size13)
+            Row(modifier = Modifier
+                .padding(horizontal = size13)
                 .clickable { tipInterface?.onTipClicked(null) }) {
 
                 Column(modifier = Modifier.weight(1f)) {
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    Text(text = financialTip.title,
+                    Text(
+                        text = financialTip.title,
                         style = MaterialTheme.typography.body2,
-                        textDecoration = TextDecoration.Underline)
+                        textDecoration = TextDecoration.Underline
+                    )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(text = financialTip.snippet,
+                    Text(
+                        text = financialTip.snippet,
                         style = MaterialTheme.typography.body2,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(bottom = size13, top = 3.dp))
+                        modifier = Modifier.padding(bottom = size13, top = 3.dp)
+                    )
+
                     Text(text = stringResource(id = R.string.read_more),
                         color = colorResource(id = R.color.brightBlue),
-                        modifier = Modifier.clickable { tipInterface?.onTipClicked(financialTip.id) })
+                        modifier = Modifier
+                            .padding(bottom = size13)
+                            .clickable { tipInterface?.onTipClicked(financialTip.id) }
+                    )
                 }
 
                 Image(
                     painter = painterResource(id = R.drawable.tips_fancy_icon),
                     contentDescription = null,
-                    modifier = Modifier.size(60.dp).padding(start = size13)
+                    modifier = Modifier
+                        .size(60.dp)
+                        .padding(start = size13)
                         .align(Alignment.CenterVertically),
                 )
             }
@@ -375,7 +392,8 @@ fun HomeScreen(
                                 if (homeState.dismissedTipId != it.id)
                                     FinancialTipCard(
                                         tipInterface = tipInterface,
-                                        financialTip = homeState.financialTips.first()
+                                        financialTip = homeState.financialTips.first(),
+                                        homeViewModel
                                     )
                             }
                         }
@@ -436,7 +454,7 @@ fun HomeScreenPreview() {
                             BalanceScreenPreview()
                         }
                         item {
-                            FinancialTipCard(tipInterface = null, financialTip = financialTip)
+                            FinancialTipCard(tipInterface = null, financialTip = financialTip, null)
                         }
                     })
                 })
