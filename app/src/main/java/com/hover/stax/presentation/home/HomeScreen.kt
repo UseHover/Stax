@@ -375,7 +375,7 @@ fun HomeScreen(
 
 					item {
 						homeState.financialTips.firstOrNull {
-							!android.text.format.DateUtils.isToday(it.date!!)
+							android.text.format.DateUtils.isToday(it.date!!)
 						}?.let {
 							if (homeState.dismissedTipId != it.id) {
 								FinancialTipCard(
