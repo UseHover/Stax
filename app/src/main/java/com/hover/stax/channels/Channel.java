@@ -61,6 +61,7 @@ public class Channel implements Comparable<Channel> {
     @ColumnInfo(name = "secondary_color_hex")
     public String secondaryColorHex;
 
+    @NonNull
     @ColumnInfo(name = "institution_type", defaultValue = BANK_TYPE)
     public String institutionType;
 
