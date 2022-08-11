@@ -25,6 +25,7 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://sdk.uxcam.com/android/' }
         maven {
             url "http://maven.usehover.com/releases"
             allowInsecureProtocol = true
@@ -42,10 +43,6 @@ allprojects {
             authentication { basic(BasicAuthentication) }
             content { includeGroup "com.hover" }
         }
-        maven{
-            url 'https://sdk.uxcam.com/android/'
-        }
-
     }
 }
 
