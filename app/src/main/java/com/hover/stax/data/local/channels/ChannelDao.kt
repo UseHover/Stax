@@ -53,7 +53,10 @@ interface ChannelDao {
     fun getChannelAndAccounts(id: Int): ChannelWithAccounts?
 
     @get:Query("SELECT COUNT(id) FROM channels")
-    val dataCount: Int
+    val allDataCount: Int
+
+    @get:Query("SELECT COUNT(id) FROM channels WHERE institution_type == 'telecom' AND published = 1")
+    val publishedTelecomDataCount: Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vararg channels: Channel?)

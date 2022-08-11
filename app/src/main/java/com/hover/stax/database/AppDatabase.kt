@@ -39,7 +39,7 @@ import java.util.concurrent.Executors
         AutoMigration(from = 37, to = 38),
         AutoMigration(from = 38, to = 39),
         AutoMigration(from = 40, to = 41),
-        AutoMigration(from = 41, to = 42),
+        AutoMigration(from = 41, to = 42)
         //Manual migration for 42_43
     ]
 )
