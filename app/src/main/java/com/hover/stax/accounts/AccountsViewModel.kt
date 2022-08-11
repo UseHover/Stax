@@ -121,7 +121,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         }
     }
 
-    fun isValidAccount(): Boolean = activeAccount.value!!.name != PLACEHOLDER
+    fun isValidAccount(): Boolean = !activeAccount.value!!.name.contains(PLACEHOLDER)
 
     fun view(s: Schedule) {
         setType(s.type)

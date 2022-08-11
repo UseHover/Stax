@@ -196,7 +196,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         parsedAccounts.forEach {
             if (savedAccounts.contains(it.channelId)) {
                 Timber.e("Removing ${it.channelId} from ${it.name}")
-                accountRepo.deleteAccount(it.channelId, PLACEHOLDER)
+                accountRepo.deleteAccount(it.channelId, it.name.plus(PLACEHOLDER))
             }
         }
     }

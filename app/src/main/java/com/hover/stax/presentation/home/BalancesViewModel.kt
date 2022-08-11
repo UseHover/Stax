@@ -44,8 +44,10 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo, va
     }
 
     private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
-        val channelId = account?.channelId ?: -1
-        val action = actionRepo.getActions(channelId, if (account?.name == PLACEHOLDER) HoverAction.FETCH_ACCOUNTS else HoverAction.BALANCE).firstOrNull()
+        if(account == null) return@launch
+
+        val channelId = account.channelId
+        val action = actionRepo.getActions(channelId, if (account.name.contains(PLACEHOLDER)) HoverAction.FETCH_ACCOUNTS else HoverAction.BALANCE).firstOrNull()
         action?.let { _balanceAction.emit(action) } ?: run { _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action)) }
     }
 
