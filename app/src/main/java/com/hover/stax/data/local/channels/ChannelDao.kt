@@ -69,4 +69,5 @@ interface ChannelDao {
 
     @Query("DELETE FROM channels")
     fun deleteAll()
+
 }

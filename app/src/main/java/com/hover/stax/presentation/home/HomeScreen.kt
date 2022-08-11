@@ -1,14 +1,16 @@
 package com.hover.stax.presentation.home
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Html
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,7 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -28,7 +30,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.HtmlCompat
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.Bonus
@@ -83,7 +84,7 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .clickable(onClick = onClickedSettingsIcon)
-                .size(25.dp),
+                .size(30.dp),
         )
     }
 }
@@ -154,7 +155,7 @@ fun PrimaryFeatures(
     ) {
         VerticalImageTextView(
             onItemClick = onSendMoneyClicked,
-            drawable = R.drawable.ic_transfer_within_24,
+            drawable = R.drawable.ic_send_money,
             stringRes = R.string.cta_transfer
         )
         VerticalImageTextView(
@@ -165,7 +166,7 @@ fun PrimaryFeatures(
         if (showKenyaFeatures) {
             VerticalImageTextView(
                 onItemClick = onBuyGoodsClicked,
-                drawable = R.drawable.ic_card,
+                drawable = R.drawable.ic_shopping_cart,
                 stringRes = R.string.cta_merchant
             )
             VerticalImageTextView(
@@ -243,27 +244,36 @@ private fun VerticalImageTextView(
 ) {
     val size24 = dimensionResource(id = R.dimen.margin_24)
     val blue = colorResource(id = R.color.stax_state_blue)
+
     Column(
         modifier = Modifier
             .clickable(onClick = onItemClick)
             .padding(horizontal = 2.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painter = painterResource(id = drawable),
-            contentDescription = null,
-            Modifier
-                .size(size24)
-                .align(Alignment.CenterHorizontally)
-                .drawBehind {
-                    drawCircle(radius = this.size.minDimension, color = blue)
-                })
+        Box(
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(48.dp)
+                .background(blue),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = drawable),
+                contentDescription = "",
+                modifier = Modifier
+                    .size(size24)
+            )
+        }
+
         Text(
             text = stringResource(id = stringRes),
             color = colorResource(id = R.color.offWhite),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.caption,
             modifier = Modifier
-                .padding(top = size24)
+                .padding(top = dimensionResource(id = R.dimen.margin_16))
                 .widthIn(min = 50.dp, max = 65.dp)
         )
     }
@@ -292,6 +302,7 @@ internal fun HorizontalImageTextView(
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     channelsViewModel: ChannelsViewModel,
@@ -312,8 +323,8 @@ fun HomeScreen(
                 topBar = { TopBar(title = R.string.nav_home, isInternetConnected = hasNetwork, homeClickFunctions.onClickedSettingsIcon) },
                 content = {
                     LazyColumn {
-                        item {
-                            if (homeState.bonuses.isNotEmpty()) {
+                        if (homeState.bonuses.isNotEmpty() && accounts.isNotEmpty())
+                            item {
                                 BonusCard(message = homeState.bonuses.first().message,
                                     onClickedTC = homeClickFunctions.onClickedTC,
                                     onClickedTopUp = {
@@ -323,8 +334,13 @@ fun HomeScreen(
                                             homeState.bonuses.first()
                                         )
                                     })
+
                             }
-                        }
+
+                        if (accounts.isEmpty())
+                            item {
+                                EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
+                            }
 
                         item {
                             PrimaryFeatures(
@@ -337,17 +353,14 @@ fun HomeScreen(
                             )
                         }
 
-                        item {
-                            BalanceHeader(
-                                onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
-                            )
-
-                            if (accounts.isEmpty()) {
-                                EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
+                        if (accounts.isNotEmpty())
+                            item {
+                                BalanceHeader(
+                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
+                                )
                             }
-                        }
 
-                        items(accounts){ account ->
+                        items(accounts) { account ->
                             BalanceItem(
                                 staxAccount = account,
                                 context = context,
@@ -401,8 +414,8 @@ fun HomeScreenPreview() {
                 topBar = {
                     TopBar(title = R.string.nav_home, isInternetConnected = false) {}
                 },
-                content = {
-                    LazyColumn(content = {
+                content = { padding ->
+                    LazyColumn(modifier = Modifier.padding(padding), content = {
                         item {
                             BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
                                 onClickedTC = {},

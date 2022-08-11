@@ -163,7 +163,7 @@
     <string name="check_balance_alt_plural">Nice! Accounts added successfully. You can now check your balances on Stax.</string>
 
     <string name="finish_adding_title">Finish importing account</string>
-    <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This wont take long.</string>
+    <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This won\'t take long.</string>
     <string name="connect_cta">Connect now</string>
 
     <string name="later">Later</string>
@@ -713,6 +713,7 @@
     <string name="ussd_lib">Dial USSD</string>
 
     <string name="error_running_action">Sorry, this service integration is broken.</string>
+    <string name="toast_err_tag">toast_err_notif</string>
     <string name="error_still_loading">Please wait a moment and try again.</string>
 
     <!-- Financial Tips -->
@@ -753,7 +754,7 @@
     <string name="login_dialog_desc">Please sign in to Stax with Google to be able to receive marketing updates.</string>
     <string name="update_downloaded">An update has just been downloaded.</string>
     <string name="restart">Restart</string>
-    <string name="get_rewarded">Get Rewarded</string>
+    <string name="get_rewarded">Get Airtime Bonus</string>
 
     <!-- Bonus airtime -->
     <string name="bonus_airtime_applied">Bonus airtime will be applied.</string>
@@ -785,5 +786,6 @@
     <string name="empty_channel_placeholder">the service</string>
     <string name="def_account_update_msg">Default account successfully updated to %1$s.</string>
     <string name="uxcam_session_url">uxcam_session_url</string>
+    <string name="transaction_history">Transaction History</string>
 
 </resources>

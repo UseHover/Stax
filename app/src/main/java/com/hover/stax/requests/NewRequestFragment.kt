@@ -13,15 +13,14 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
+import com.hover.stax.domain.model.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.*
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
@@ -101,14 +100,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
             }
         }
 
-        with(accountsViewModel) {
-            collectLifecycleFlow(accountList){
-                if (it.accounts.isEmpty())
-                    setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
-            }
-
-            activeAccount.observe(viewLifecycleOwner, accountsObserver)
-        }
+        accountsViewModel.activeAccount.observe(viewLifecycleOwner, accountsObserver)
 
         with(requestViewModel) {
             amount.observe(viewLifecycleOwner) {
@@ -216,7 +208,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         requestViewModel.setEditing(false)
     }
 
-    override fun onSubmitForm() { }
+    override fun onSubmitForm() {}
 
     private fun updatePushNotifGroupStatus() {
         joinRequestMoneyGroup(requireContext())

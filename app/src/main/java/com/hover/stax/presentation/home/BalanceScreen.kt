@@ -84,12 +84,23 @@ fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
 fun EmptyBalance(onClickedAddAccount: () -> Unit) {
     val size34 = dimensionResource(id = R.dimen.margin_34)
     val size16 = dimensionResource(id = R.dimen.margin_16)
-    Column(modifier = Modifier.padding(horizontal = size34, vertical = size16)) {
+    Column(modifier = Modifier.padding(vertical = size16)) {
+        val modifier = Modifier.padding(horizontal = size34)
+
+        Text(
+            text = stringResource(id = R.string.your_accounts),
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.padding(horizontal = size16)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = stringResource(id = R.string.empty_balance_desc),
             style = MaterialTheme.typography.body1,
             color = colorResource(id = R.color.offWhite),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = modifier
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -98,7 +109,8 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
             onClick = onClickedAddAccount,
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(elevation = 0.dp),
+                .shadow(elevation = 0.dp)
+                .then(modifier),
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(width = 0.5.dp, color = DarkGray),
             colors = ButtonDefaults.buttonColors(
@@ -136,8 +148,8 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                     .diskCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = "",
-                placeholder = painterResource(id = R.drawable.image_placeholder),
-                error = painterResource(id = R.drawable.ic_stax),
+                placeholder = painterResource(id = R.drawable.img_placeholder),
+                error = painterResource(id = R.drawable.img_placeholder),
                 modifier = Modifier
                     .size(size34)
                     .clip(CircleShape)
@@ -165,12 +177,13 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                Text(
-                    text = DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),
-                    modifier = Modifier.align(Alignment.End),
-                    color = colorResource(id = R.color.offWhite),
-                    style = MaterialTheme.typography.caption
-                )
+                if (staxAccount.latestBalance != null)
+                    Text(
+                        text = DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),
+                        modifier = Modifier.align(Alignment.End),
+                        color = colorResource(id = R.color.offWhite),
+                        style = MaterialTheme.typography.caption
+                    )
             }
 
             Image(painter = painterResource(id = R.drawable.ic_refresh_white_24dp),
@@ -178,7 +191,9 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(start = size13)
-                    .clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) })
+                    .clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) }
+                    .size(32.dp)
+            )
 
         }
 
@@ -194,10 +209,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 fun BalanceScreenPreview() {
     StaxTheme {
         Surface {
-            Column(modifier = Modifier.background(color = colors.background)) {
-                BalanceHeader(onClickedAddAccount = {}, accountExists = false)
-                BalanceListForPreview(accountList = emptyList())
-            }
+            BalanceListForPreview(accountList = emptyList())
         }
     }
 }
@@ -213,6 +225,9 @@ private fun BalanceListForPreview(accountList: List<Account>) {
                 .fillMaxWidth()
                 .padding(13.dp)
         ) {
+            item {
+                BalanceHeader(onClickedAddAccount = {}, accountExists = false)
+            }
             items(accountList) { account ->
                 val context = LocalContext.current
                 BalanceItem(staxAccount = account, context = context, balanceTapListener = null)

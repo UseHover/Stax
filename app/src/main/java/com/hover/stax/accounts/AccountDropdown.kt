@@ -72,15 +72,16 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
-    private fun updateChoices(accounts: MutableList<Account>) {
+    private fun updateChoices(accounts: List<Account>) {
         if (highlightedAccount == null) setDropdownValue(null)
-        accounts.add(Account("Add account"))
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
-        onSelect(accounts.firstOrNull { it.isDefault })
+
+        if (accounts.firstOrNull()?.id != 0)
+            onSelect(accounts.firstOrNull { it.isDefault })
     }
 
 
@@ -99,7 +100,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     accountList.collect {
-                        accountUpdate(it.accounts)
+                        accountUpdate(it.accounts.plus(Account("Add account")))
                     }
                 }
             }
@@ -128,7 +129,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         } else if (actions.isNotEmpty() && actions.size == 1)
             addInfoMessage(actions.first())
         else if (viewModel.activeAccount.value != null && showSelected)
-            setState(helperText, SUCCESS)
+            setState(null, SUCCESS)
     }
 
     private fun addInfoMessage(action: HoverAction) {

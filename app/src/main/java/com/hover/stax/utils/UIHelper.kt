@@ -34,22 +34,35 @@ object UIHelper {
 
     private const val INITIAL_ITEMS_FETCH = 30
 
-    fun flashMessage(context: Context, view: View?, message: String?) {
-        if (view == null) flashMessage(context, message) else showSnack(view, message)
+    fun showAndReportSnackBar(context: Context, view: View?, message: String) {
+        if (view == null) flashAndReportMessage(context, message) else showSnack(view, message)
     }
 
     private fun showSnack(view: View, message: String?) {
         val s = Snackbar.make(view, message!!, Snackbar.LENGTH_LONG)
         s.anchorView = view
         s.show()
+        AnalyticsUtil.logAnalyticsEvent(message, view.context)
     }
 
-    fun flashMessage(context: Context, message: String?) {
+    fun flashAndReportMessage(context: Context, messageRes: Int) {
+        flashAndReportMessage(context, context.getString(messageRes))
+    }
+
+    fun flashAndReportMessage(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        AnalyticsUtil.logAnalyticsEvent(message, context)
     }
 
-    fun flashMessage(context: Context, messageRes: Int) {
-        Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show()
+    fun flashAndReportError(context: Context, messageRes: Int) {
+        val message = context.getString(messageRes)
+        flashAndReportError(context, message)
+    }
+
+    fun flashAndReportError(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        AnalyticsUtil.logAnalyticsEvent(message, context)
+        AnalyticsUtil.logErrorAndReportToFirebase(context.getString(R.string.toast_err_tag), message, null)
     }
 
     fun setMainLinearManagers(context: Context?): LinearLayoutManager {

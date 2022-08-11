@@ -9,7 +9,7 @@ import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
-import com.hover.stax.domain.use_case.financial_tips.GetTipsUseCase
+import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -17,7 +17,7 @@ class HomeViewModel(
     private val getBonusesUseCase: GetBonusesUseCase,
     private val fetchBonusUseCase: FetchBonusUseCase,
     private val getAccountsUseCase: GetAccountsUseCase,
-    private val getTipsUseCase: GetTipsUseCase
+    private val tipsUseCase: TipsUseCase
 ) : ViewModel() {
 
     private val _homeState = MutableStateFlow(HomeState())
@@ -25,7 +25,6 @@ class HomeViewModel(
 
     private val _accounts = MutableLiveData<List<Account>>()
     val accounts: LiveData<List<Account>> = _accounts
-
 
     init {
         fetchBonuses()
@@ -36,6 +35,7 @@ class HomeViewModel(
         getBonusList()
         getAccounts()
         getFinancialTips()
+        getDismissedFinancialTips()
     }
 
     private fun fetchBonuses() = viewModelScope.launch {
@@ -55,8 +55,19 @@ class HomeViewModel(
         }
     }
 
-    private fun getFinancialTips() = getTipsUseCase().onEach { result ->
+    private fun getFinancialTips() = tipsUseCase().onEach { result ->
         if (result is Resource.Success)
             _homeState.update { it.copy(financialTips = result.data ?: emptyList()) }
     }.launchIn(viewModelScope)
+
+    private fun getDismissedFinancialTips() = _homeState.update {
+        it.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
+    }
+
+    fun dismissTip(id: String) {
+        viewModelScope.launch {
+            tipsUseCase.dismissTip(id)
+           _homeState.update { it.copy(dismissedTipId = id) }
+        }
+    }
 }

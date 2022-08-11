@@ -23,20 +23,22 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.PERM_ACTIVITY
 import com.hover.stax.inapp_banner.BannerUtils
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.onboarding.OnBoardingActivity
+import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.transfers.STAX_PREFIX
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.uxcam.OnVerificationListener
 import com.uxcam.UXCam
+import com.uxcam.datamodel.UXConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -46,7 +48,6 @@ import timber.log.Timber
 
 const val FRAGMENT_DIRECT = "fragment_direct"
 const val FROM_FCM = "from_notification"
-const val VARIANT = "variant"
 
 class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
@@ -129,9 +130,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
-                val variant = remoteConfig.getString("onboarding_variant")
-                Utils.saveString(VARIANT, variant, this@RoutingActivity)
-
+                fetchConfigs(remoteConfig)
                 validateUser()
             }.addOnFailureListener {
                 validateUser()
@@ -139,9 +138,18 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         }
     }
 
+    private fun fetchConfigs(remoteConfig: FirebaseRemoteConfig) {
+        val staxPrefix = remoteConfig.getString(STAX_PREFIX)
+        Utils.saveString(STAX_PREFIX, staxPrefix, this)
+    }
+
     private fun initUxCam() {
         if (!BuildConfig.DEBUG) {
-            UXCam.startWithKey(getString(R.string.uxcam_key))
+            val config = UXConfig.Builder(getString(R.string.uxcam_key))
+                .enableAutomaticScreenNameTagging(false)
+                .enableImprovedScreenCapture(true)
+                .build()
+            UXCam.startWithConfiguration(config)
 
             UXCam.addVerificationListener(object : OnVerificationListener {
                 override fun onVerificationSuccess() {
@@ -166,7 +174,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     }
 
-    private fun registerUXCamPushNotification(){
+    private fun registerUXCamPushNotification() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 return@OnCompleteListener
@@ -262,7 +270,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         finish()
     }
 
-    override fun onAuthError(error: String) = runOnUiThread { UIHelper.flashMessage(this, getString(R.string.toast_error_auth)) }
+    override fun onAuthError(error: String) = runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_auth)) }
 
     override fun onAuthSuccess(action: HoverAction?) = chooseNavigation(intent)
 
