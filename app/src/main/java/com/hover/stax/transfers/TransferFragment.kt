@@ -120,7 +120,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun startObservers(root: View) {
         super.startObservers(root)
-        observeAccountList()
+
         observeActiveAccount()
         observeActions()
         observeActionSelection()
@@ -167,11 +167,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 binding.summaryCard.recipientValue.setContact(it)
             }
         }
-    }
-
-    private fun observeAccountList() = collectLifecycleFlow(accountsViewModel.accountList) {
-        if (it.accounts.isEmpty())
-            setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
     }
 
     private fun observeAmount() {

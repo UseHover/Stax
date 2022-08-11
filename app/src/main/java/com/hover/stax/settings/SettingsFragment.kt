@@ -69,10 +69,8 @@ class SettingsFragment : Fragment() {
 
         binding.bountyCard.getStartedWithBountyButton.setOnClickListener { startBounties() }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                accountsViewModel.accountUpdateMsg.collect { UIHelper.flashAndReportMessage(requireActivity(), it) }
-            }
+        collectLifecycleFlow(accountsViewModel.accountUpdateMsg) {
+            UIHelper.flashAndReportMessage(requireActivity(), it)
         }
     }
 

@@ -93,6 +93,16 @@
                 android:id="@+id/scheduled_card"
                 layout="@layout/home_card_future" />
 
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transaction_history"
+                android:textSize="@dimen/text_16"
+                android:layout_gravity="end"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:textAllCaps="true"
+                app:fontFamily="@font/brutalista_bold" />
+
         <include
                 android:id="@+id/history_card"
                 layout="@layout/transaction_card_history" />

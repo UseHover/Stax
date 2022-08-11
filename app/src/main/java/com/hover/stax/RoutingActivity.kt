@@ -38,6 +38,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.uxcam.OnVerificationListener
 import com.uxcam.UXCam
+import com.uxcam.datamodel.UXConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -144,7 +145,11 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun initUxCam() {
         if (!BuildConfig.DEBUG) {
-            UXCam.startWithKey(getString(R.string.uxcam_key))
+            val config = UXConfig.Builder(getString(R.string.uxcam_key))
+                .enableAutomaticScreenNameTagging(false)
+                .enableImprovedScreenCapture(true)
+                .build()
+            UXCam.startWithConfiguration(config)
 
             UXCam.addVerificationListener(object : OnVerificationListener {
                 override fun onVerificationSuccess() {
