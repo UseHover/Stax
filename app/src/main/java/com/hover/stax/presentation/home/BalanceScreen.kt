@@ -136,8 +136,8 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                     .diskCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = "",
-                placeholder = painterResource(id = R.drawable.image_placeholder),
-                error = painterResource(id = R.drawable.ic_stax),
+                placeholder = painterResource(id = R.drawable.img_placeholder),
+                error = painterResource(id = R.drawable.img_placeholder),
                 modifier = Modifier
                     .size(size34)
                     .clip(CircleShape)
