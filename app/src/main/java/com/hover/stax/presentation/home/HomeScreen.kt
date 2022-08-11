@@ -2,7 +2,6 @@ package com.hover.stax.presentation.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Html
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.HtmlCompat
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.Bonus
@@ -316,7 +314,7 @@ fun HomeScreen(
                 content = {
                     LazyColumn {
                         item {
-                            if (homeState.bonuses.isNotEmpty()) {
+                            if (homeState.bonuses.isNotEmpty() && accounts.isNotEmpty()) {
                                 BonusCard(message = homeState.bonuses.first().message,
                                     onClickedTC = homeClickFunctions.onClickedTC,
                                     onClickedTopUp = {
@@ -350,7 +348,7 @@ fun HomeScreen(
                             }
                         }
 
-                        items(accounts){ account ->
+                        items(accounts) { account ->
                             BalanceItem(
                                 staxAccount = account,
                                 context = context,
