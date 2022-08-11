@@ -5,10 +5,12 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,7 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -153,7 +155,7 @@ fun PrimaryFeatures(
     ) {
         VerticalImageTextView(
             onItemClick = onSendMoneyClicked,
-            drawable = R.drawable.ic_transfer_within_24,
+            drawable = R.drawable.ic_send_money,
             stringRes = R.string.cta_transfer
         )
         VerticalImageTextView(
@@ -164,7 +166,7 @@ fun PrimaryFeatures(
         if (showKenyaFeatures) {
             VerticalImageTextView(
                 onItemClick = onBuyGoodsClicked,
-                drawable = R.drawable.ic_card,
+                drawable = R.drawable.ic_shopping_cart,
                 stringRes = R.string.cta_merchant
             )
             VerticalImageTextView(
@@ -247,23 +249,31 @@ private fun VerticalImageTextView(
         modifier = Modifier
             .clickable(onClick = onItemClick)
             .padding(horizontal = 2.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painter = painterResource(id = drawable),
-            contentDescription = null,
-            Modifier
-                .size(size24)
-                .align(Alignment.CenterHorizontally)
-                .drawBehind {
-                    drawCircle(radius = this.size.minDimension, color = blue)
-                })
+        Box(
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(48.dp)
+                .background(blue),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = drawable),
+                contentDescription = "",
+                modifier = Modifier
+                    .size(size24)
+            )
+        }
+
         Text(
             text = stringResource(id = stringRes),
             color = colorResource(id = R.color.offWhite),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.caption,
             modifier = Modifier
-                .padding(top = size24)
+                .padding(top = dimensionResource(id = R.dimen.margin_16))
                 .widthIn(min = 50.dp, max = 65.dp)
         )
     }

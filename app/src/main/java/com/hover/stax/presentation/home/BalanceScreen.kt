@@ -208,7 +208,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 @Composable
 fun BalanceScreenPreview() {
     StaxTheme {
-        Surface(modifier = Modifier.background(color = colors.background)) {
+        Surface {
             BalanceListForPreview(accountList = emptyList())
         }
     }
