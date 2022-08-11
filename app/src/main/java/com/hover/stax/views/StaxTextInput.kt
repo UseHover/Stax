@@ -54,7 +54,7 @@ class StaxTextInput(context: Context, attrs: AttributeSet) : AbstractStatefulInp
         if (inputType > 0) binding?.inputEditText?.inputType = inputType
     }
 
-    fun setMutlipartText(text: String?, subtext: String?) {
+    fun setMultipartText(text: String?, subtext: String?) {
         if (text.isNullOrEmpty())
             setText(subtext)
         else if (subtext.isNullOrEmpty())
@@ -88,17 +88,9 @@ class StaxTextInput(context: Context, attrs: AttributeSet) : AbstractStatefulInp
     }
 
     fun addTextChangedListener(listener: TextWatcher) {
-//        textWatcher = object : TextWatcher {
-//            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) { listener.beforeTextChanged(charSequence, i, i1, i2)}
-//            override fun afterTextChanged(editable: Editable) { listener.afterTextChanged(editable)}
-//            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-//                currentText = charSequence.toString()
-//                Timber.e("watcher for $hint got an update: %s", currentText)
-//                listener.onTextChanged(charSequence, i, i1, i2)
-//            }
-//        }
         editText?.addTextChangedListener(listener)
     }
+
 
     @SuppressLint("ClickableViewAccessibility")
     override fun setOnClickListener(listener: OnClickListener?) {
