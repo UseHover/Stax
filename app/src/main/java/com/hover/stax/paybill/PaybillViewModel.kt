@@ -42,10 +42,6 @@ class PaybillViewModel(
     }
 
     fun selectPaybill(paybill: Paybill) {
-        Timber.e("selecting paybill by paybill: %s", paybill.businessNo)
-        Timber.e("current amount: %s", amount.value)
-        Timber.e("isSaved: %s", paybill.isSaved)
-
         selectedPaybill.value = paybill
 
         businessName.value = paybill.businessName

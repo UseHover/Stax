@@ -23,15 +23,16 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.PERM_ACTIVITY
 import com.hover.stax.inapp_banner.BannerUtils
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.onboarding.OnBoardingActivity
+import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.transfers.STAX_PREFIX
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -46,7 +47,6 @@ import timber.log.Timber
 
 const val FRAGMENT_DIRECT = "fragment_direct"
 const val FROM_FCM = "from_notification"
-const val VARIANT = "variant"
 
 class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
@@ -129,14 +129,17 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
-                val variant = remoteConfig.getString("onboarding_variant")
-                Utils.saveString(VARIANT, variant, this@RoutingActivity)
-
+                fetchConfigs(remoteConfig)
                 validateUser()
             }.addOnFailureListener {
                 validateUser()
             }
         }
+    }
+
+    private fun fetchConfigs(remoteConfig: FirebaseRemoteConfig) {
+        val staxPrefix = remoteConfig.getString(STAX_PREFIX)
+        Utils.saveString(STAX_PREFIX, staxPrefix, this)
     }
 
     private fun initUxCam() {
@@ -166,7 +169,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     }
 
-    private fun registerUXCamPushNotification(){
+    private fun registerUXCamPushNotification() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 return@OnCompleteListener
