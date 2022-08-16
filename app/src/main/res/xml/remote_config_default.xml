@@ -5,8 +5,7 @@
         <value>123</value>
     </entry>
     <entry>
-        <key>onboarding_variant</key>
-        <value>default</value>
+        <key>stax_airtime_prefix</key>
+        <value>STAX#</value>
     </entry>
-
 </defaultsMap>

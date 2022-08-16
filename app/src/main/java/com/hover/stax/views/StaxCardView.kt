@@ -34,16 +34,15 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
             useContextBackPress = a.getBoolean(R.styleable.StaxCardView_defaultBackPress, true)
             backDrawable = a.getResourceId(R.styleable.StaxCardView_backRes, 0)
             bgColor = a.getColor(R.styleable.StaxCardView_staxCardColor, ContextCompat.getColor(context, R.color.colorPrimary))
-            isFlatView = a.getBoolean(R.styleable.StaxCardView_isFlatView, false)
+            isFlatView = a.getBoolean(R.styleable.StaxCardView_isFlatView, true)
         } finally {
             a.recycle()
         }
     }
 
-    fun makeFlatView() {
+    private fun makeFlatView() {
         val zero = 0
-        binding.cardViewHeader.cardElevation = zero.toFloat()
-        binding.cardViewHeader.radius = zero.toFloat()
+        binding.cardView.cardElevation = zero.toFloat()
         removeCardMargin()
     }
 
@@ -115,7 +114,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     private fun removeCardMargin() {
         val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         params.setMargins(0, 0, 0, 0)
-        binding.cardViewHeader.layoutParams = params
+        binding.cardView.layoutParams = params
     }
 
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
@@ -135,7 +134,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     }
 
     fun updateState(icon: Int, backgroundColor: Int, title: Int) {
-        binding.cardViewHeader.apply {
+        binding.cardView.apply {
             setBackButtonVisibility(View.VISIBLE)
             setIcon(icon)
             setTitle(title)

@@ -7,8 +7,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.domain.model.Account
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.home.NavHelper
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
@@ -41,7 +41,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         hsb.run()
         updatePushNotifGroupStatus()
     } catch (e: Exception) {
-        runOnUiThread { UIHelper.flashMessage(this, getString(R.string.error_running_action)) }
+        runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.error_running_action)) }
         createLog(hsb, "Failed Actions")
     }
 
@@ -93,7 +93,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
             BOUNTY_REQUEST -> showBountyDetails(data)
             FEE_REQUEST -> showFeeDetails(data)
             else -> {
-                balancesViewModel.setBalanceState(true)
                 navToTransactionDetail(data)
             }
         }
@@ -105,7 +104,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         else ""
     }
 
-    private fun showMessage(str: String) = UIHelper.flashMessage(this, findViewById(R.id.fab), str)
+    private fun showMessage(str: String) = UIHelper.showAndReportSnackBar(this, findViewById(R.id.fab), str)
 
     private fun showBountyDetails(data: Intent?) {
         Timber.i("Request code is bounty")

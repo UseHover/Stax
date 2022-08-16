@@ -3,9 +3,11 @@ package com.hover.stax.accounts
 import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.domain.model.Account
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistory
 import com.hover.stax.transactions.TransactionRepo
@@ -15,7 +17,8 @@ import java.util.*
 
 
 class AccountDetailViewModel(val application: Application, val repo: AccountRepo, private val transactionRepo: TransactionRepo,
-                             private val channelRepo: ChannelRepo, val actionRepo: ActionRepo) : ViewModel() {
+                             private val channelRepo: ChannelRepo, val actionRepo: ActionRepo
+) : ViewModel() {
 
     private val id = MutableLiveData<Int>()
     var account: LiveData<Account> = MutableLiveData()
@@ -45,13 +48,13 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
 
     private fun loadFeesThisYear(id: Int): LiveData<Double>? = transactionRepo.getFees(id, calendar.get(Calendar.YEAR))
 
-    fun updateAccountName(newName: String) = viewModelScope.launch {
+    fun updateAccountName(newName: String) = viewModelScope.launch(Dispatchers.IO) {
         val a = account.value!!
         a.alias = newName
         repo.update(a)
     }
 
-    fun updateAccountNumber(newNumber: String) = viewModelScope.launch {
+    fun updateAccountNumber(newNumber: String) = viewModelScope.launch(Dispatchers.IO) {
         val a = account.value!!
         a.accountNo = newNumber
         repo.update(a)
@@ -77,6 +80,7 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         }
 
         repo.delete(account)
+        transactionRepo.deleteAccountTransactions(account.id)
 
         val accounts = repo.getAllAccounts()
         val changeDefault = account.isDefault
@@ -92,5 +96,6 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
             }
 
         channelRepo.update(channelsToUpdate.toList())
+
     }
 }

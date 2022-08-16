@@ -16,7 +16,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.FROM_FCM
 import com.hover.stax.R
-import com.hover.stax.financialTips.FinancialTipsFragment
+import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
 import timber.log.Timber
 import kotlin.random.Random

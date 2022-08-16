@@ -21,8 +21,8 @@
         <item name="fontFamily">@font/brutalista_medium</item>
         <item name="android:fontFamily">@font/brutalista_medium</item>
         <item name="android:background">@drawable/button_bg</item>
-        <item name="android:elevation">1dp</item>
-        <item name="elevation">1dp</item>
+<!--        <item name="android:elevation">1dp</item>-->
+<!--        <item name="elevation">1dp</item>-->
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
     </style>
@@ -45,7 +45,7 @@
     <style name="StaxButtonColored" parent="StaxButton">
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:background">@drawable/button_bg_colored</item>
-        <item name="elevation">1dp</item>
+<!--        <item name="elevation">1dp</item>-->
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
     </style>
@@ -55,7 +55,7 @@
         <item name="android:radius">5dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="backgroundTint">@color/brightBlue</item>
-        <item name="elevation">1dp</item>
+<!--        <item name="elevation">1dp</item>-->
         <item name="android:textSize">@dimen/text_16</item>
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>

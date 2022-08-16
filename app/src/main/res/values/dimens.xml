@@ -28,6 +28,7 @@
 	<dimen name="margin_26">26dp</dimen>
 	<dimen name="margin_34">34dp</dimen>
 	<dimen name="margin_43">43dp</dimen>
+	<dimen name="margin_50">50dp</dimen>
 	<dimen name="margin_55">55dp</dimen>
 	<dimen name="margin_65">65dp</dimen>
 	<dimen name="margin_68">68dp</dimen>

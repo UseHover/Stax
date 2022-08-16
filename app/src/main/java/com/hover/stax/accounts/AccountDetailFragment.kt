@@ -15,9 +15,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.balances.BalanceAdapter
-import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.databinding.FragmentAccountBinding
+import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
@@ -34,7 +35,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
-    RequestsAdapter.SelectListener, BalanceAdapter.BalanceListener {
+    RequestsAdapter.SelectListener {
 
     private val viewModel: AccountDetailViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
@@ -72,7 +73,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         binding.balanceCard.root.cardElevation = 0F
         binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
         binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onTapRefresh(viewModel.account.value) }
+        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onTapBalanceRefresh(viewModel.account.value) }
     }
 
     private fun setUpManage() {
@@ -144,7 +145,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
                     binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.detailsCard.officialName.text = if(acct.name == PLACEHOLDER) acct.alias else acct.name
+                    binding.detailsCard.officialName.text = if(acct.name.contains(PLACEHOLDER)) acct.alias else acct.name
 
                     binding.manageCard.nicknameInput.setText(acct.alias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
@@ -177,19 +178,17 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun observeBalanceCheck() {
-        collectLatestLifecycleFlow(balancesViewModel.balanceAction) {
+        collectLifecycleFlow(balancesViewModel.balanceAction) {
             attemptCallHover(viewModel.account.value, it)
         }
     }
 
-    override fun onTapRefresh(account: Account?) {
+    private fun onTapBalanceRefresh(account: Account?) {
         account?.let {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
             balancesViewModel.requestBalance(account)
         }
     }
-
-    override fun onTapDetail(accountId: Int) { }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {
         action?.let { account?.let { callHover(account, action) } }
@@ -212,7 +211,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun removeAccount(account: Account) {
         viewModel.removeAccount(account)
         NavHostFragment.findNavController(this).popBackStack()
-        UIHelper.flashMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))
+        UIHelper.flashAndReportMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))
     }
 
     private fun initRecyclerViews() {
@@ -273,4 +272,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
         _binding = null
     }
+
+
 }

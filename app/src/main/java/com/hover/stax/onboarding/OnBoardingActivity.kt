@@ -8,19 +8,18 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.VARIANT
 import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NAV_HOME
 import com.hover.stax.home.NAV_LINK_ACCOUNT
 import com.hover.stax.login.AbstractGoogleAuthActivity
-import com.hover.stax.login.StaxGoogleLoginInterface
-import com.hover.stax.onboarding.signInVariant.SignInVariantFragmentDirections
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.utils.*
-import timber.log.Timber
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 
-class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterface {
+class OnBoardingActivity : AbstractGoogleAuthActivity() {
 
     private lateinit var binding: OnboardingLayoutBinding
     private lateinit var navController: NavController
@@ -35,7 +34,6 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
 
         setupNavigation()
         navigateNextScreen()
-        setGoogleLoginInterface(this)
     }
 
     private fun setupNavigation() {
@@ -48,14 +46,6 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
     private fun navigateNextScreen() {
         if (hasPassedOnboarding()) checkPermissionsAndNavigate()
         else NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalInteractiveOnboardingVariant())
-    }
-
-    override fun googleLoginSuccessful() {
-        NavUtil.navigate(navController, SignInVariantFragmentDirections.actionSignInVariantFragmentToWelcomeFragment(1))
-    }
-
-    override fun googleLoginFailed() {
-        UIHelper.flashMessage(this, R.string.login_google_err)
     }
 
     fun checkPermissionsAndNavigate() {

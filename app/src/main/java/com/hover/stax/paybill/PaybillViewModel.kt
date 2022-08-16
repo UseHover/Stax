@@ -5,15 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountRepo
-import com.hover.stax.actions.ActionRepo
+
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.contacts.ContactRepo
+import com.hover.stax.domain.model.Account
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
@@ -42,10 +42,6 @@ class PaybillViewModel(
     }
 
     fun selectPaybill(paybill: Paybill) {
-        Timber.e("selecting paybill by paybill: %s", paybill.businessNo)
-        Timber.e("current amount: %s", amount.value)
-        Timber.e("isSaved: %s", paybill.isSaved)
-
         selectedPaybill.value = paybill
 
         businessName.value = paybill.businessName

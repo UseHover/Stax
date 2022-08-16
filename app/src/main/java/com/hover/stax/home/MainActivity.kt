@@ -11,7 +11,7 @@ import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
-import com.hover.stax.financialTips.FinancialTipsFragment
+import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.requests.NewRequestViewModel
@@ -117,7 +117,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
             sendSms(requestViewModel, this)
         } else if (requestCode == SMS) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
-            UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
+            UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_smsperm))
         }
     }
 

@@ -5,11 +5,11 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountRepo
-import com.hover.stax.accounts.PLACEHOLDER
+import com.hover.stax.domain.model.Account
+import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
@@ -69,7 +69,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun accountError(): String? = if (activeAccount.value != null) null else getString(R.string.accounts_error_noselect)
 
-    fun isValidAccount(): Boolean = activeAccount.value!!.name != PLACEHOLDER
+    fun isValidAccount(): Boolean = !activeAccount.value!!.name.contains(PLACEHOLDER)
 
     fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else getString(R.string.requester_number_fielderror)
 

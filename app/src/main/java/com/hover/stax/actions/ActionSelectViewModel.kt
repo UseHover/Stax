@@ -5,10 +5,11 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.hover.stax.accounts.ACCOUNT_NAME
+
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
 import com.hover.stax.R
+import com.hover.stax.domain.model.ACCOUNT_NAME
 import java.util.LinkedHashMap
 
 const val RECIPIENT_INSTITUTION = "recipientInstitution"

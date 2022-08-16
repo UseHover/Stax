@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.*
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.data.local.channels.ChannelDao
 import com.hover.stax.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

@@ -12,12 +12,10 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.actions.ActionSelect
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
@@ -74,15 +72,16 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
-    private fun updateChoices(accounts: MutableList<Account>) {
+    private fun updateChoices(accounts: List<Account>) {
         if (highlightedAccount == null) setDropdownValue(null)
-        accounts.add(Account("Add account"))
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
-        onSelect(accounts.firstOrNull { it.isDefault })
+
+        if (accounts.firstOrNull()?.id != 0)
+            onSelect(accounts.firstOrNull { it.isDefault })
     }
 
 
@@ -100,8 +99,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         with(viewModel) {
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    accounts.collect {
-                        accountUpdate(it)
+                    accountList.collect {
+                        accountUpdate(it.accounts.plus(Account("Add account")))
                     }
                 }
             }
@@ -130,7 +129,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         } else if (actions.isNotEmpty() && actions.size == 1)
             addInfoMessage(actions.first())
         else if (viewModel.activeAccount.value != null && showSelected)
-            setState(helperText, SUCCESS)
+            setState(null, SUCCESS)
     }
 
     private fun addInfoMessage(action: HoverAction) {

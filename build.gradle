@@ -4,14 +4,16 @@ buildscript {
         mavenCentral()
     }
 
-    ext.kotlin_version = '1.6.10'
-    ext.compose_version = '1.1.1'
+    ext.kotlin_version = '1.7.0'
+    ext.compose_version = '1.2.0'
     ext.nav_version = "2.4.2"
+    ext.koin_version = "3.2.0"
+    ext.room_version = '2.4.3'
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
-        classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath 'com.google.gms:google-services:4.3.13'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.firebase:perf-plugin:1.4.1'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
@@ -23,6 +25,7 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://sdk.uxcam.com/android/' }
         maven {
             url "http://maven.usehover.com/releases"
             allowInsecureProtocol = true
@@ -40,10 +43,6 @@ allprojects {
             authentication { basic(BasicAuthentication) }
             content { includeGroup "com.hover" }
         }
-        maven{
-            url 'https://sdk.uxcam.com/android/'
-        }
-
     }
 }
 

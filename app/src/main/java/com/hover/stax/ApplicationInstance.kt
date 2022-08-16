@@ -8,9 +8,7 @@ import com.appsflyer.AppsFlyerProperties
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
-import com.hover.stax.database.appModule
-import com.hover.stax.database.dataModule
-import com.hover.stax.database.networkModule
+import com.hover.stax.di.*
 import com.hover.stax.utils.network.NetworkMonitor
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
@@ -45,7 +43,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(listOf(appModule, dataModule, networkModule))
+            modules(appModule + dataModule + networkModule + useCases + repositories)
         }
     }
 
@@ -75,7 +73,7 @@ class ApplicationInstance : Application() {
         AppsFlyerLib.getInstance().apply {
             init(getString(R.string.appsflyer_key), conversionListener, this@ApplicationInstance)
 
-            if(AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID) == null)
+            if (AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID) == null)
                 setCustomerUserId(Hover.getDeviceId(this@ApplicationInstance))
 
             start(this@ApplicationInstance)

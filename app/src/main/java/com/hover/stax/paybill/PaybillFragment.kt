@@ -17,7 +17,6 @@ import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLatestLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
@@ -120,7 +119,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             viewModel.selectedPaybill.value?.isSaved == true -> viewModel.setEditing(false)
             else -> {
                 viewModel.savePaybill(accountsViewModel.activeAccount.value, actionSelectViewModel.activeAction.value)
-                UIHelper.flashMessage(requireActivity(), R.string.paybill_save_success)
+                UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_save_success)
             }
         }
     }
@@ -142,11 +141,6 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
                 binding.summaryCard.accountValue.setTitle(it.toString())
                 viewModel.getSavedPaybills(account.id)
             }
-        }
-
-        collectLatestLifecycleFlow(accountsViewModel.accounts) {
-            if(it.isEmpty())
-                setDropdownTouchListener(PaybillFragmentDirections.actionGlobalAddChannelsFragment())
         }
     }
 
@@ -180,7 +174,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     }
 
     private fun updateBiz(name: String?, no: String?) {
-        binding.editCard.businessNoInput.setMutlipartText(name, no)
+        binding.editCard.businessNoInput.setMultipartText(name, no)
         binding.summaryCard.recipient.setContent(name, no)
     }
 
@@ -295,7 +289,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             .setPosButton(R.string.btn_update) { _ ->
                 if (activity != null) {
                     viewModel.updatePaybill(it)
-                    UIHelper.flashMessage(requireActivity(), R.string.paybill_update_success)
+                    UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_update_success)
                     viewModel.setEditing(false)
                 }
             }

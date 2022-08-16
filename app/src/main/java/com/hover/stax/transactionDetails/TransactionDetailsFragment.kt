@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
@@ -20,9 +21,9 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.ApplicationInstance
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
+import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.merchants.Merchant
@@ -87,18 +88,28 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun startObservers() = with(viewModel) {
+        val txnObserver = object : Observer<Transaction> {
+            override fun onChanged(t: Transaction?) {
+                t?.let { Timber.e("Updating transaction messages ${t.uuid}") }
+            }
+        }
+        
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
         merchant.observe(viewLifecycleOwner) { updateRecipient(it) }
         account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
-        hoverTransaction.observe(viewLifecycleOwner) { it?.let { Timber.e("Updating transaction messages ${it.uuid}") } }
+        hoverTransaction.observe(viewLifecycleOwner, txnObserver)
         messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
         bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
 
-        val observer = Observer<Boolean> {
-            Timber.i("Expecting sms $it")
-            action.value?.let { a -> updateAction(a) }
+
+        val observer = object: Observer<Boolean> {
+            override fun onChanged(t: Boolean?) {
+                Timber.i("Expecting sms $t")
+                action.value?.let { a -> updateAction(a) }
+            }
+
         }
         isExpectingSMS.observe(viewLifecycleOwner, observer)
     }
@@ -134,7 +145,8 @@ class TransactionDetailsFragment : Fragment() {
         detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
         typeValue.text = transaction.toString(requireContext())
         viewModel.action.value?.let {
-            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, requireContext()) }
+            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, requireContext())
+        }
 
         statusValue.apply {
             text = transaction.humanStatus(requireContext())
@@ -171,7 +183,8 @@ class TransactionDetailsFragment : Fragment() {
         if (action.isOnNetwork) binding.details.recipInstitutionRow.visibility = GONE
         else binding.details.institutionValue.setTitle(action.to_institution_name)
         viewModel.transaction.value?.let {
-            binding.statusInfo.longDescription.text = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
+            val msg = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
+            binding.statusInfo.longDescription.text = HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
             binding.details.categoryValue.text = it.shortStatusExplain(action, requireContext())
             if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
@@ -187,13 +200,14 @@ class TransactionDetailsFragment : Fragment() {
     private fun updateMessages(ussdCallResponses: List<UssdCallResponse>?) {
         viewModel.action.value?.let {
             viewModel.transaction.value?.let { t ->
-                binding.statusInfo.longDescription.text = t.longStatus(
+                val msg = t.longStatus(
                     it,
                     ussdCallResponses?.last(),
                     viewModel.sms.value,
                     viewModel.isExpectingSMS.value ?: false,
                     requireContext()
                 )
+                binding.statusInfo.longDescription.text = HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
         }
     }
@@ -218,13 +232,13 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun addRetryOrSupportButton(transaction: StaxTransaction) {
         if (transaction.isRecorded)
-            binding.statusInfo.btnRetry.setOnClickListener{ retryBounty() }
+            binding.statusInfo.btnRetry.setOnClickListener { retryBounty() }
         else if (transaction.status == Transaction.FAILED) {
             if (shouldContactSupport(transaction.action_id))
                 setupContactSupportButton(transaction.action_id, binding.statusInfo.btnRetry)
-            else binding.statusInfo.btnRetry.setOnClickListener{ maybeRetry(transaction) }
+            else binding.statusInfo.btnRetry.setOnClickListener { maybeRetry(transaction) }
         }
-        binding.statusInfo.btnRetry.visibility = if (transaction.isRetryable) VISIBLE else GONE
+        binding.statusInfo.btnRetry.visibility = if (transaction.canRetry) VISIBLE else GONE
     }
 
     private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
@@ -241,7 +255,7 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun maybeRetry(transaction: StaxTransaction) {
         if (viewModel.account.value == null || viewModel.action.value == null || viewModel.transaction.value == null)
-            UIHelper.flashMessage(requireContext(), getString(R.string.error_still_loading))
+            UIHelper.flashAndReportError(requireContext(), R.string.error_still_loading)
         else {
             retry(transaction)
         }
@@ -285,7 +299,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun showShareExcitement(transaction: StaxTransaction) {
         val isTransactionSuccessful = !transaction.isRecorded && transaction.isSuccessful
 
-        val shareMessage = when(transaction.transaction_type) {
+        val shareMessage = when (transaction.transaction_type) {
             HoverAction.AIRTIME -> getString(R.string.airtime_purchase_message, getString(R.string.share_link))
             HoverAction.BALANCE -> getString(R.string.check_balance_message, getString(R.string.share_link))
             HoverAction.P2P -> getString(R.string.send_money_message, getString(R.string.share_link))
@@ -300,7 +314,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun setBottomSheetVisibility(isVisible: Boolean, shareMessage: String) {
         var updatedState = BottomSheetBehavior.STATE_HIDDEN
 
-        if(isVisible) {
+        if (isVisible) {
             updatedState = BottomSheetBehavior.STATE_EXPANDED
             val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down)
 
@@ -316,7 +330,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun showBonusAmount(amount: Int) = with(binding.details) {
         val txn = viewModel.transaction.value
 
-        if(amount > 0 && (txn != null && txn.isSuccessful)){
+        if (amount > 0 && (txn != null && txn.isSuccessful)) {
             bonusRow.visibility = VISIBLE
             bonusAmount.text = amount.toString()
         } else {

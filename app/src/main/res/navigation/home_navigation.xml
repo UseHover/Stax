@@ -26,10 +26,6 @@
             app:destination="@id/tipsFragment" />
 
     <action
-            android:id="@+id/action_global_NavigationBalance"
-            app:destination="@id/navigation_balance" />
-
-    <action
             android:id="@+id/action_global_NavigationHome"
             app:destination="@id/navigation_home" />
 
@@ -56,7 +52,7 @@
 
     <fragment
             android:id="@+id/navigation_home"
-            android:name="com.hover.stax.home.HomeFragment"
+            android:name="com.hover.stax.presentation.home.HomeFragment"
             android:label="@string/nav_home"
             tools:layout="@layout/fragment_home">
         <action
@@ -80,6 +76,9 @@
         <action
                 android:id="@+id/action_navigation_home_to_wellnessFragment"
                 app:destination="@id/tipsFragment" />
+
+        <action android:id="@+id/toSettingsFragment"
+                app:destination="@id/navigation_settings"/>
         <deepLink
                 android:id="@+id/balanceDL"
                 android:autoVerify="true"
@@ -103,12 +102,6 @@
                 app:mimeType="text/plain"
                 app:uri="stax.me/history" />
     </fragment>
-
-    <fragment
-            android:id="@+id/navigation_balance"
-            android:name="com.hover.stax.balances.BalancesFragment"
-            android:label="@string/nav_balance_and_history"
-            tools:layout="@layout/fragment_balance" />
 
     <fragment
             android:id="@+id/navigation_linkAccount"
@@ -174,6 +167,7 @@
             android:name="com.hover.stax.faq.FaqFragment"
             android:label="@string/FAQs"
             tools:layout="@layout/fragment_faq" />
+
 
     <fragment
             android:id="@+id/transactionDetailsFragment"
@@ -340,7 +334,7 @@
 
     <fragment
             android:id="@+id/bountyEmailFragment"
-            android:name="com.hover.stax.bounties.BountyEmailFragment"
+            android:name="com.hover.stax.presentation.bounties.BountyEmailFragment"
             android:label="@string/nav_bounty"
             android:tag="@string/nav_bounty"
             tools:layout="@layout/fragment_bounty_email">
@@ -360,7 +354,7 @@
 
     <fragment
             android:id="@+id/bountyListFragment"
-            android:name="com.hover.stax.bounties.BountyListFragment"
+            android:name="com.hover.stax.presentation.bounties.BountyListFragment"
             android:label="@string/nav_bounty"
             tools:layout="@layout/bounty_card_channel">
         <action
@@ -374,7 +368,7 @@
     </fragment>
     <fragment
             android:id="@+id/tipsFragment"
-            android:name="com.hover.stax.financialTips.FinancialTipsFragment"
+            android:name="com.hover.stax.presentation.financial_tips.FinancialTipsFragment"
             android:label="WellnessFragment">
         <argument
                 android:name="tipId"

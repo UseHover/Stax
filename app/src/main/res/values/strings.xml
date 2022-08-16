@@ -21,6 +21,7 @@
     <string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
     <string name="privacy_policy_link" translatable="false">https://docs.usehover.com/staxpolicy</string>
     <string name="default_notification_channel_id">app.hover.stax</string>
+    <string name="terms_and_condition_url">https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/</string>
 
     <string name="channels_json_staging" translatable="false">channels-staging.json</string>
     <string name="channels_json_prod" translatable="false">channels-prod.json</string>
@@ -131,6 +132,7 @@
     <string name="cta_airtime">Buy airtime</string>
     <string name="cta_request">Request money</string>
     <string name="cta_paybill">Pay a bill</string>
+    <string name="cta_paybill_linebreak">Pay\n a bill</string>
     <string name="cta_merchant">Buy goods</string>
 
     <!-- Balances -->
@@ -152,6 +154,8 @@
     <string name="refresh_balances">Refresh balances</string>
     <string name="refresh">Refresh</string>
     <string name="refresh_balance_error">Add an account to check your balance.</string>
+    <string name="empty_balance_desc">To make any successful transaction add an account. Securely manage your mobile money or bank accounts in one place with Stax</string>
+    <string name="add_account">Add account</string>
 
     <string name="check_balance_title">Check balance</string>
     <string name="check_balance_desc">Nice! You added your first account. You can now check your balance on Stax.</string>
@@ -159,7 +163,7 @@
     <string name="check_balance_alt_plural">Nice! Accounts added successfully. You can now check your balances on Stax.</string>
 
     <string name="finish_adding_title">Finish importing account</string>
-    <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This wont take long.</string>
+    <string name="finish_adding_desc">We need to connect with %1$s before you can use your account(s) for transactions. This won\'t take long.</string>
     <string name="connect_cta">Connect now</string>
 
     <string name="later">Later</string>
@@ -709,6 +713,7 @@
     <string name="ussd_lib">Dial USSD</string>
 
     <string name="error_running_action">Sorry, this service integration is broken.</string>
+    <string name="toast_err_tag">toast_err_notif</string>
     <string name="error_still_loading">Please wait a moment and try again.</string>
 
     <!-- Financial Tips -->
@@ -716,6 +721,7 @@
     <string name="btn_share">Share</string>
     <string name="share_wellness_tip">Share Financial Tip</string>
     <string name="read_more"><u>Read more</u></string>
+    <string name="tip_of_the_day">Tip of the day</string>
 
     <!-- Paybill -->
     <string name="business_number_label">Business number</string>
@@ -748,7 +754,7 @@
     <string name="login_dialog_desc">Please sign in to Stax with Google to be able to receive marketing updates.</string>
     <string name="update_downloaded">An update has just been downloaded.</string>
     <string name="restart">Restart</string>
-    <string name="get_rewarded">Get Rewarded</string>
+    <string name="get_rewarded">Get Airtime Bonus</string>
 
     <!-- Bonus airtime -->
     <string name="bonus_airtime_applied">Bonus airtime will be applied.</string>
@@ -761,6 +767,8 @@
     <string name="congratulations">Congratulations</string>
     <string name="get_extra_airtime">Get Extra Airtime</string>
     <string name="learn_more"><a href="https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/">T&amp;Cs apply</a></string>
+    <string name="tc_apply">T&amp;Cs apply</string>
+
 
     <!-- Fees -->
     <string name="fee_fetched_header">Business number</string>
@@ -773,10 +781,11 @@
     <string name="check_balance_message">I just checked my balance with Stax app and the best part is - it works offline. Check it out - %1$s</string>
     <string name="send_money_message">I just transferred money with Stax app and the best part is - it works offline. Check it out - %1$s</string>
     <string name="fab_submit">Submit</string>
+    <string name="no_tips_available">No tips available.</string>
 
     <string name="empty_channel_placeholder">the service</string>
     <string name="def_account_update_msg">Default account successfully updated to %1$s.</string>
     <string name="uxcam_session_url">uxcam_session_url</string>
-
+    <string name="transaction_history">Transaction History</string>
 
 </resources>
