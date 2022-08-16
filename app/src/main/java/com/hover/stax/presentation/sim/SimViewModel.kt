@@ -55,7 +55,6 @@ class SimViewModel(
     private suspend fun createAccountForSimsIfRequired(telecomAccounts: List<Account>, presentSims: List<SimInfo>) = viewModelScope.launch(Dispatchers.IO) {
         getSimsHavingNoTelecomAccount(telecomAccounts, presentSims).also {
             createAccountsUseCase.createTelecomAccounts(it)
-            Timber.i("total unlinked sim is: ${it.size}")
         }
     }
 

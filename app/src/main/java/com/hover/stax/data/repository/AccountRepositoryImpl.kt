@@ -33,7 +33,8 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     override suspend fun createAccounts(channels: List<Channel>) {
         val defaultAccount = accountRepo.getDefaultAccountAsync()
         channels.mapIndexed { index, channel ->
-            createAccount(channel, -1, defaultAccount == null && index == 0)}
+            createAccount(channel, -1, defaultAccount == null && index == 0)
+        }
     }
 
     override suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean) {
@@ -68,15 +69,16 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     }
 
     override suspend fun createTelecomAccounts(sims: List<SimInfo>) {
-            val allTelecomChannels = channelRepo.publishedTelecomChannels()
-            Timber.i("all published Telecom channels in  is: ${allTelecomChannels.size}")
-            allTelecomChannels.forEach {
+        val telecomChannels = channelRepo.publishedTelecomChannels()
+        Timber.i("all published Telecom channels in  is: ${telecomChannels.size}")
+
+        sims.forEach { sim ->
+            val channel = telecomChannels.firstOrNull { it.hniList.contains(sim.osReportedHni) }
+            channel?.let {
                 Timber.i("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
-                val matchedSim = sims.find { sim -> it.hniList.contains(sim.osReportedHni) }
-                if (matchedSim != null) {
-                    createAccount(it, matchedSim.subscriptionId, false)
-                }
+                createAccount(it, sim.subscriptionId, false)
             }
+        }
     }
 
     override fun getTelecomAccounts(subscriberIds: IntArray): Flow<List<Account>> {
