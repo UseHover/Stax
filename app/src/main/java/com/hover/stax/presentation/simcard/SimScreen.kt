@@ -3,6 +3,7 @@ package com.hover.stax.presentation.simcard
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -29,7 +31,6 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.stax.R
-import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.domain.model.Account
 import com.hover.stax.presentation.home.BalanceTapListener
@@ -39,295 +40,377 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
 
-data class SimScreenClickFunctions(val onClickedAddNewAccount: () -> Unit,
-                                   val onClickedSettingsIcon: () -> Unit,
-                                   val onClickedBuyAirtime: () -> Unit)
+data class SimScreenClickFunctions(
+    val onClickedAddNewAccount: () -> Unit,
+    val onClickedSettingsIcon: () -> Unit,
+    val onClickedBuyAirtime: () -> Unit
+)
 
 @Composable
-fun SimScreen(simScreenClickFunctions: SimScreenClickFunctions,
-              balanceTapListener: BalanceTapListener) {
-	val simViewModel : SimViewModel = getViewModel()
-	val bonusViewModel: BonusViewModel = getViewModel()
+fun SimScreen(
+    simScreenClickFunctions: SimScreenClickFunctions,
+    balanceTapListener: BalanceTapListener
+) {
+    val simViewModel: SimViewModel = getViewModel()
+    val bonusViewModel: BonusViewModel = getViewModel()
 
-	val accounts = simViewModel.telecomAccounts.observeAsState(initial = null)
-	val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-	val presentSims = simViewModel.presentSims.observeAsState(initial = emptyList())
-	val bonuses = bonusViewModel.bonusList.collectAsState()
+    val accounts = simViewModel.telecomAccounts.observeAsState(initial = null)
+    val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
+    val presentSims = simViewModel.presentSims.observeAsState(initial = emptyList())
+    val bonuses = bonusViewModel.bonusList.collectAsState()
 
-	StaxTheme {
-		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Scaffold(
-				topBar = {
-				TopBar(title = R.string.nav_sim,
-					isInternetConnected = hasNetwork,
-					simScreenClickFunctions.onClickedSettingsIcon)
-			}, content = {
-				LazyColumn(modifier = Modifier.padding(horizontal = 13.dp)) {
-					item {
-						PageTitle()
-					}
-					item {
-						accounts.value?.let {
-							if (it.isEmpty()) GrantPermissionText()
-						}
-					}
+    StaxTheme {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+            Scaffold(
+                topBar = {
+                    TopBar(
+                        title = R.string.nav_sim,
+                        isInternetConnected = hasNetwork,
+                        simScreenClickFunctions.onClickedSettingsIcon
+                    )
+                },
+                content = { innerPadding ->
+                    val paddingModifier = Modifier.padding(innerPadding)
 
-					item {
-						accounts.value?.let {
-							if (it.isEmpty()) {
-								LinkSimCard(id = R.string.link_sim_to_stax,
-									onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount)
-							}
-						}
-					}
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(horizontal = dimensionResource(id = R.dimen.margin_13))
+                            .then(paddingModifier)
+                    ) {
 
-					if (!accounts.value.isNullOrEmpty() && presentSims.value.isNotEmpty()) {
-						itemsIndexed(presentSims.value) { index, presentSim ->
-							val simAccount =
-								accounts.value?.find { it.subscriptionId == presentSim.subscriptionId }
-							if (simAccount != null) {
-								val bonus = bonuses.value.bonuses.firstOrNull()
-								SimItem(simIndex = presentSim.slotIdx + 1,
-									account = simAccount,
-									bonus = ((bonus?.bonusPercent ?: 0.0) * 100).toInt(),
-									onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime,
-									balanceTapListener = balanceTapListener)
-							}
-							else {
-								LinkSimCard(id = R.string.link_nth_sim_to_stax,
-									stringArg = intToNthWord(index),
-									onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount)
-							}
-						}
-					}
-				}
-			})
-		}
-	}
+                        item {
+                            PageTitle()
+                        }
+
+                        item {
+                            accounts.value?.let {
+                                if (it.isEmpty()) GrantPermissionText()
+                            }
+                        }
+
+                        item {
+                            accounts.value?.let {
+                                if (it.isEmpty()) {
+                                    LinkSimCard(
+                                        id = R.string.link_sim_to_stax,
+                                        onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount
+                                    )
+                                }
+                            }
+                        }
+
+                        if (!accounts.value.isNullOrEmpty() && presentSims.value.isNotEmpty()) {
+                            itemsIndexed(presentSims.value) { index, presentSim ->
+                                val simAccount =
+                                    accounts.value?.find { it.subscriptionId == presentSim.subscriptionId }
+                                if (simAccount != null) {
+                                    val bonus = bonuses.value.bonuses.firstOrNull()
+                                    SimItem(
+                                        simIndex = presentSim.slotIdx + 1,
+                                        account = simAccount,
+                                        bonus = ((bonus?.bonusPercent ?: 0.0) * 100).toInt(),
+                                        onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime,
+                                        balanceTapListener = balanceTapListener
+                                    )
+                                } else {
+                                    LinkSimCard(
+                                        id = R.string.link_nth_sim_to_stax,
+                                        stringArg = intToNthWord(index),
+                                        onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount
+                                    )
+                                }
+                            }
+                        }
+                    }
+                })
+        }
+    }
 }
 
 @Preview
 @Composable
 fun SimScreenPreview() {
-	val accounts = mutableListOf<Account>()
-	val account1 = Account("Telecom")
-	val account2 = Account("Safaricom")
-	account1.id = 1
-	account1.subscriptionId = 1
-	account1.latestBalance = "NGN 200"
-	account1.latestBalanceTimestamp = 123
+    val accounts = mutableListOf<Account>()
+    val account1 = Account("Telecom")
+    val account2 = Account("Safaricom")
+    account1.id = 1
+    account1.subscriptionId = 1
+    account1.latestBalance = "NGN 200"
+    account1.latestBalanceTimestamp = 123
 
-	account2.id = 2
-	account2.subscriptionId = 2
-	account2.latestBalance = "NGN 500"
-	account2.latestBalanceTimestamp = 2345
+    account2.id = 2
+    account2.subscriptionId = 2
+    account2.latestBalance = "NGN 500"
+    account2.latestBalanceTimestamp = 2345
 
-	accounts.add(account1)
-	accounts.add(account2)
+    accounts.add(account1)
+    accounts.add(account2)
 
-	StaxTheme {
-		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Scaffold(topBar = {
-				TopBar(title = R.string.nav_home, isInternetConnected = false, {})
-			}, content = {
-				LazyColumn(modifier = Modifier.padding(horizontal = 13.dp)) {
-					item {
-						PageTitle()
-					}
-					item {
-						if (accounts.isEmpty()) GrantPermissionText()
-					}
+    StaxTheme {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+            Scaffold(topBar = {
+                TopBar(title = R.string.nav_home, isInternetConnected = false, {})
+            }, content = { innerPadding ->
+                val paddingModifier = Modifier.padding(innerPadding)
 
-					item {
-						accounts.let {
-							if (it.isEmpty()) {
-								LinkSimCard(id = R.string.link_sim_to_stax,
-									onClickedLinkSimCard = { })
-							}
-						}
-					}
-					itemsIndexed(accounts) { index, account ->
-						if (account.id > 0) {
-							SimItem(simIndex = 1,
-								account = account,
-								bonus = (0.05 * 100).toInt(),
-								onClickedBuyAirtime = { },
-								balanceTapListener = null)
-						}
-						else {
-							LinkSimCard(id = R.string.link_nth_sim_to_stax,
-								stringArg = intToNthWord(index),
-								onClickedLinkSimCard = { })
-						}
-					}
-				}
-			})
-		}
-	}
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(horizontal = dimensionResource(id = R.dimen.margin_13))
+                        .then(paddingModifier)
+                ) {
+                    item {
+                        PageTitle()
+                    }
+
+                    if (accounts.isEmpty())
+                        item {
+                            GrantPermissionText()
+                        }
+
+                    accounts.let {
+                        if (it.isEmpty()) {
+                            item {
+                                LinkSimCard(id = R.string.link_sim_to_stax,
+                                    onClickedLinkSimCard = { })
+                            }
+                        }
+                    }
+
+                    itemsIndexed(accounts) { index, account ->
+                        if (account.id > 0) {
+                            SimItem(
+                                simIndex = 1,
+                                account = account,
+                                bonus = (0.05 * 100).toInt(),
+                                onClickedBuyAirtime = { },
+                                balanceTapListener = null
+                            )
+                        } else {
+                            LinkSimCard(id = R.string.link_nth_sim_to_stax,
+                                stringArg = intToNthWord(index),
+                                onClickedLinkSimCard = { })
+                        }
+                    }
+                }
+            })
+        }
+    }
 }
 
 @Composable
 fun PageTitle() {
-	val size13 = dimensionResource(id = R.dimen.margin_13)
-	Text(text = stringResource(id = R.string.your_linked_sim),
-		modifier = Modifier.padding(vertical = size13),
-		style = MaterialTheme.typography.button)
+    val size13 = dimensionResource(id = R.dimen.margin_13)
+    Text(
+        text = stringResource(id = R.string.your_linked_sim),
+        modifier = Modifier.padding(vertical = size13),
+        style = MaterialTheme.typography.button
+    )
 }
 
 @Composable
 fun GrantPermissionText() {
-	val size13 = dimensionResource(id = R.dimen.margin_13)
-	val size34 = dimensionResource(id = R.dimen.margin_34)
-	Text(
-		text = stringResource(id = R.string.simpage_permission_alert),
-		modifier = Modifier
-			.padding(vertical = size13, horizontal = size34)
-			.fillMaxWidth(),
-		textAlign = TextAlign.Center,
-		color = TextGrey,
-	)
+    val size13 = dimensionResource(id = R.dimen.margin_13)
+    val size34 = dimensionResource(id = R.dimen.margin_34)
+
+    Text(
+        text = stringResource(id = R.string.simpage_permission_alert),
+        modifier = Modifier
+            .padding(vertical = size13, horizontal = size34)
+            .fillMaxWidth(),
+        textAlign = TextAlign.Center,
+        color = TextGrey,
+    )
 }
 
 @Composable
-fun SimItem(simIndex: Int,
-            account: Account,
-            bonus: Int,
-            onClickedBuyAirtime: () -> Unit,
-            balanceTapListener: BalanceTapListener?) {
+fun SimItem(
+    simIndex: Int,
+    account: Account,
+    bonus: Int,
+    onClickedBuyAirtime: () -> Unit,
+    balanceTapListener: BalanceTapListener?
+) {
 
-	val size13 = dimensionResource(id = R.dimen.margin_13)
-	OutlinedButton(onClick = {},
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(vertical = 13.dp)
-			.shadow(elevation = 0.dp),
-		shape = MaterialTheme.shapes.medium,
-		border = BorderStroke(width = 0.5.dp, color = DarkGray),
-		colors = ButtonDefaults.buttonColors(backgroundColor = ColorSurface,
-			contentColor = OffWhite)) {
-		Column(modifier = Modifier.fillMaxWidth()) {
-			SimItemTopRow(simIndex = simIndex,
-				account = account,
-				balanceTapListener = balanceTapListener)
-			Column {
-				val notYetChecked = stringResource(id = R.string.not_yet_checked)
-				Text(text = stringResource(id = R.string.airtime_balance_holder,
-					account.latestBalance ?: notYetChecked),
-					color = TextGrey,
-					modifier = Modifier.padding(top = size13),
-					style = MaterialTheme.typography.body1)
+    val size13 = dimensionResource(id = R.dimen.margin_13)
 
-				Text(text = stringResource(id = R.string.as_of,
-					DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)),
-					color = TextGrey,
-					modifier = Modifier.padding(bottom = 26.dp),
-					style = MaterialTheme.typography.body1)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = size13)
+            .shadow(elevation = 0.dp)
+            .border(width = 0.5.dp, color = DarkGray, shape = RectangleShape)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(size13)
+        ) {
+            SimItemTopRow(
+                simIndex = simIndex,
+                account = account,
+                balanceTapListener = balanceTapListener
+            )
+            Column {
+                val notYetChecked = stringResource(id = R.string.not_yet_checked)
+                Text(
+                    text = stringResource(
+                        id = R.string.airtime_balance_holder,
+                        account.latestBalance ?: notYetChecked
+                    ),
+                    color = TextGrey,
+                    modifier = Modifier.padding(top = size13),
+                    style = MaterialTheme.typography.body1
+                )
 
-				OutlinedButton(onClick = onClickedBuyAirtime,
-					modifier = Modifier
-						.padding(bottom = 6.dp)
-						.shadow(elevation = 0.dp)
-						.wrapContentWidth(),
-					shape = MaterialTheme.shapes.medium,
-					border = BorderStroke(width = 0.5.dp, color = DarkGray),
-					colors = ButtonDefaults.buttonColors(backgroundColor = ColorSurface,
-						contentColor = OffWhite)) {
-					Row(modifier = Modifier
-						.wrapContentWidth()
-						.padding(all = 5.dp)) {
-						var buyAirtimeLabel = stringResource(id = R.string.nav_airtime)
-						if (bonus > 0) {
-							val bonusPercent = bonus.toString().plus("%")
-							buyAirtimeLabel =
-								stringResource(id = R.string.buy_airitme_with_discount,
-									bonusPercent)
-						}
-						Text(text = buyAirtimeLabel,
-							style = MaterialTheme.typography.button,
-							modifier = Modifier.padding(end = 5.dp),
-							textAlign = TextAlign.Start,
-							fontSize = 14.sp)
-						Image(painter = painterResource(id = R.drawable.ic_bonus),
-							contentDescription = null,
-							modifier = Modifier.size(18.dp))
-					}
-				}
+                Text(
+                    text = stringResource(
+                        id = R.string.as_of,
+                        DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)
+                    ),
+                    color = TextGrey,
+                    modifier = Modifier.padding(bottom = 26.dp),
+                    style = MaterialTheme.typography.body1
+                )
 
-			}
+                OutlinedButton(
+                    onClick = onClickedBuyAirtime,
+                    modifier = Modifier
+                        .padding(bottom = 6.dp)
+                        .shadow(elevation = 0.dp)
+                        .wrapContentWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    border = BorderStroke(width = 0.5.dp, color = DarkGray),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = ColorSurface,
+                        contentColor = OffWhite
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .padding(all = 5.dp)
+                    ) {
+                        var buyAirtimeLabel = stringResource(id = R.string.nav_airtime)
+                        if (bonus > 0) {
+                            val bonusPercent = bonus.toString().plus("%")
+                            buyAirtimeLabel =
+                                stringResource(
+                                    id = R.string.buy_airitme_with_discount,
+                                    bonusPercent
+                                )
+                        }
+                        Text(
+                            text = buyAirtimeLabel,
+                            style = MaterialTheme.typography.button,
+                            modifier = Modifier.padding(end = 5.dp),
+                            textAlign = TextAlign.Start,
+                            fontSize = 14.sp
+                        )
 
-		}
-	}
+                        Spacer(modifier = Modifier.width(3.dp))
+
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_bonus),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+
+            }
+
+        }
+    }
 }
 
 @Composable
 fun SimItemTopRow(simIndex: Int, account: Account, balanceTapListener: BalanceTapListener?) {
-	val size34 = dimensionResource(id = R.dimen.margin_34)
-	Row {
-		AsyncImage(model = ImageRequest.Builder(LocalContext.current).data(account.logoUrl)
-			.crossfade(true).diskCachePolicy(CachePolicy.ENABLED).build(),
-			contentDescription = "",
-			placeholder = painterResource(id = R.drawable.image_placeholder),
-			error = painterResource(id = R.drawable.ic_stax),
-			modifier = Modifier
-				.size(size34)
-				.clip(CircleShape)
-				.align(Alignment.CenterVertically),
-			contentScale = ContentScale.Crop)
+    val size34 = dimensionResource(id = R.dimen.margin_34)
 
-		Column(modifier = Modifier
-			.weight(1f)
-			.padding(horizontal = 13.dp)) {
-			Text(text = account.name, style = MaterialTheme.typography.body1)
-			Text(text = stringResource(id = R.string.sim_index, simIndex),
-				color = TextGrey,
-				style = MaterialTheme.typography.body2)
-		}
+    Row {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current).data(account.logoUrl)
+                .crossfade(true).diskCachePolicy(CachePolicy.ENABLED).build(),
+            contentDescription = "",
+            placeholder = painterResource(id = R.drawable.img_placeholder),
+            error = painterResource(id = R.drawable.img_placeholder),
+            modifier = Modifier
+                .size(size34)
+                .clip(CircleShape)
+                .align(Alignment.CenterVertically),
+            contentScale = ContentScale.Crop
+        )
 
-		Button(onClick = { balanceTapListener?.onTapBalanceRefresh(account) },
-			modifier = Modifier
-				.width(150.dp)
-				.shadow(elevation = 2.dp),
-			shape = MaterialTheme.shapes.medium,
-			colors = ButtonDefaults.buttonColors(backgroundColor = BrightBlue,
-				contentColor = ColorPrimary)) {
-			Text(text = stringResource(id = R.string.check_balance_capitalized),
-				style = MaterialTheme.typography.body2,
-				modifier = Modifier.fillMaxWidth(),
-				textAlign = TextAlign.Center)
-		}
-	}
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 13.dp)
+        ) {
+            Text(text = account.name, style = MaterialTheme.typography.body1)
+            Text(
+                text = stringResource(id = R.string.sim_index, simIndex),
+                color = TextGrey,
+                style = MaterialTheme.typography.body2
+            )
+        }
+
+        Button(
+            onClick = { balanceTapListener?.onTapBalanceRefresh(account) },
+            modifier = Modifier
+                .weight(1f)
+                .shadow(elevation = 0.dp),
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = BrightBlue,
+                contentColor = ColorPrimary
+            )
+        ) {
+            Text(
+                text = stringResource(id = R.string.check_balance_capitalized),
+                style = MaterialTheme.typography.body2,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 @Composable
 fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit, stringArg: String = "") {
-	OutlinedButton(onClick = onClickedLinkSimCard,
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(vertical = 13.dp)
-			.shadow(elevation = 0.dp),
-		shape = MaterialTheme.shapes.medium,
-		border = BorderStroke(width = 0.5.dp, color = DarkGray),
-		colors = ButtonDefaults.buttonColors(backgroundColor = ColorSurface,
-			contentColor = OffWhite)) {
-		Text(text = stringResource(id = id, stringArg),
-			style = MaterialTheme.typography.button,
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(top = 5.dp, bottom = 5.dp),
-			textAlign = TextAlign.Center)
-	}
+    OutlinedButton(
+        onClick = onClickedLinkSimCard,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 13.dp)
+            .shadow(elevation = 0.dp),
+        shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(width = 0.5.dp, color = DarkGray),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = ColorSurface,
+            contentColor = OffWhite
+        )
+    ) {
+        Text(
+            text = stringResource(id = id, stringArg),
+            style = MaterialTheme.typography.button,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp, bottom = 5.dp),
+            textAlign = TextAlign.Center
+        )
+    }
 }
 
 private fun intToNthWord(digit: Int): String = nthWord[digit]
 val nthWord = arrayOf(
-	"first",
-	"second",
-	"third",
-	"fourth",
-	"fifth",
-	"sixth",
-	"seventh",
-	"eighth",
-	"ninth",
-	"tenth",
+    "first",
+    "second",
+    "third",
+    "fourth",
+    "fifth",
+    "sixth",
+    "seventh",
+    "eighth",
+    "ninth",
+    "tenth",
 )

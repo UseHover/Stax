@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.databinding.FragmentSimBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NavHelper
@@ -22,81 +19,79 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 class SimFragment : Fragment(), BalanceTapListener {
 
-	private var _binding: FragmentSimBinding? = null
-	private val binding get() = _binding!!
-	private val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
-	override fun onCreateView(inflater: LayoutInflater,
-	                          container: ViewGroup?,
-	                          savedInstanceState: Bundle?): View {
-		AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen,
-			getString(R.string.visit_sim)), requireContext())
-		_binding = FragmentSimBinding.inflate(inflater, container, false)
-		return binding.root
-	}
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        ComposeView(requireContext()).apply {
+            AnalyticsUtil.logAnalyticsEvent(
+                getString(
+                    R.string.visit_screen,
+                    getString(R.string.visit_sim)
+                ), requireContext()
+            )
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		observeBalances()
-		binding.root.setContent {
-			SimScreen(simScreenClickFunctions = getSimScreenClickFunctions(),
-				balanceTapListener = this@SimFragment)
-		}
-	}
+            setContent {
+                SimScreen(
+                    simScreenClickFunctions = getSimScreenClickFunctions(),
+                    balanceTapListener = this@SimFragment
+                )
+            }
+        }
 
-	private fun observeBalances() {
-		collectLifecycleFlow(balancesViewModel.balanceAction) {
-			attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
-		}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeBalances()
+    }
 
-		collectLifecycleFlow(balancesViewModel.actionRunError) {
-			UIHelper.flashAndReportMessage(requireActivity(), it)
-		}
-	}
+    private fun observeBalances() {
+        collectLifecycleFlow(balancesViewModel.balanceAction) {
+            attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
+        }
 
-	private fun attemptCallHover(account: Account?, action: HoverAction?) {
-		action?.let { account?.let { callHover(account, action) } }
-	}
+        collectLifecycleFlow(balancesViewModel.actionRunError) {
+            UIHelper.flashAndReportMessage(requireActivity(), it)
+        }
+    }
 
-	private fun callHover(account: Account, action: HoverAction) {
-		(requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
-	}
+    private fun attemptCallHover(account: Account?, action: HoverAction?) {
+        action?.let { account?.let { callHover(account, action) } }
+    }
 
-	private fun getSimScreenClickFunctions(): SimScreenClickFunctions {
-		fun onClickedAddNewAccount() = NavHelper(requireActivity() as MainActivity).requestBasicPerms()
-		fun onClickedSettingsIcon() = navigateTo(SimFragmentDirections.toSettingsFragment())
-		fun onBuyAirtimeClicked() = navigateTo(getTransferDirection(HoverAction.AIRTIME))
+    private fun callHover(account: Account, action: HoverAction) {
+        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
+    }
 
-		return SimScreenClickFunctions(onClickedAddNewAccount = { onClickedAddNewAccount() },
-			onClickedSettingsIcon = { onClickedSettingsIcon() },
-			onClickedBuyAirtime = { onBuyAirtimeClicked() })
-	}
+    private fun getSimScreenClickFunctions(): SimScreenClickFunctions {
+        fun onClickedAddNewAccount() = NavHelper(requireActivity() as MainActivity).requestBasicPerms()
+        fun onClickedSettingsIcon() = navigateTo(SimFragmentDirections.toSettingsFragment())
+        fun onBuyAirtimeClicked() = navigateTo(getTransferDirection(HoverAction.AIRTIME))
 
-	private fun getTransferDirection(type: String, channelId: String? = null): NavDirections {
-		return SimFragmentDirections.toTransferFragment(type).also {
-			if (channelId != null) it.channelId = channelId
-		}
-	}
+        return SimScreenClickFunctions(onClickedAddNewAccount = { onClickedAddNewAccount() },
+            onClickedSettingsIcon = { onClickedSettingsIcon() },
+            onClickedBuyAirtime = { onBuyAirtimeClicked() })
+    }
 
-	private fun navigateTo(navDirections: NavDirections) =
-		(requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
+    private fun getTransferDirection(type: String, channelId: String? = null): NavDirections {
+        return SimFragmentDirections.toTransferFragment(type).also {
+            if (channelId != null) it.channelId = channelId
+        }
+    }
 
-	override fun onDestroyView() {
-		super.onDestroyView()
-		_binding = null
-	}
+    private fun navigateTo(navDirections: NavDirections) =
+        (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 
-	override fun onTapBalanceRefresh(account: Account?) {
-		if (account != null) {
-			AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_sim_airtime_balance),
-				requireContext())
-			balancesViewModel.requestBalance(account)
-		}
-	}
+    override fun onTapBalanceRefresh(account: Account?) {
+        if (account != null) {
+            AnalyticsUtil.logAnalyticsEvent(
+                getString(R.string.refresh_sim_airtime_balance),
+                requireContext()
+            )
+            balancesViewModel.requestBalance(account)
+        }
+    }
 
-	override fun onTapBalanceDetail(accountId: Int) {}
+    override fun onTapBalanceDetail(accountId: Int) {}
 }
