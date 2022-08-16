@@ -15,5 +15,6 @@ interface AccountRepository {
     suspend fun setDefaultAccount(account: Account)
 
     suspend fun createTelecomAccounts(sims: List<SimInfo>)
-    suspend fun getTelecomAccounts(subscriberIds: IntArray) : List<Account>
+
+    fun getTelecomAccounts(subscriberIds: IntArray) : Flow<List<Account>>
 }

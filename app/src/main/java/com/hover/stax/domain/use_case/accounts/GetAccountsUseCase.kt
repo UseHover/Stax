@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class GetAccountsUseCase(private val accountsRepository: AccountRepository) {
 
     val accounts: Flow<List<Account>> = accountsRepository.fetchAccounts
-    suspend fun telecomAccounts(subscriberIds: IntArray) : List<Account> = accountsRepository.getTelecomAccounts(subscriberIds)
+
+    fun telecomAccounts(subscriberIds: IntArray) : Flow<List<Account>> = accountsRepository.getTelecomAccounts(subscriberIds)
 
 }
