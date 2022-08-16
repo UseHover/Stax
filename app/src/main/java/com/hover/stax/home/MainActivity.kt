@@ -9,14 +9,11 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
-import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.presentation.simcard.SimViewModel
+import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.requests.RequestSenderInterface
@@ -37,8 +34,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val bonusViewModel: BonusViewModel by viewModel()
-    private val channelsViewModel: ChannelsViewModel by viewModel()
-    private val simViewModel : SimViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -54,7 +49,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         checkForRequest(intent)
         checkForFragmentDirection(intent)
         observeForAppReview()
-        observerSims()
         setGoogleLoginInterface(this)
 
         bonusViewModel.fetchBonuses()
@@ -82,17 +76,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     private fun checkForRequest(intent: Intent) {
         if (intent.hasExtra(REQUEST_LINK)) {
             createFromRequest(intent.getStringExtra(REQUEST_LINK)!!)
-        }
-    }
-    private fun observerSims() {
-        simViewModel.presentSims.observe(this) {
-            Timber.i("${this.javaClass.simpleName} present sim size: ${it.size}")
-        }
-        simViewModel.telecomAccounts.observe(this) {
-            Timber.i("${this.javaClass.simpleName} telecomAccounts size ${it.size}")
-        }
-        simViewModel.simSubscriptionIds.observe(this) {
-            Timber.i("${this.javaClass.simpleName} subscription ids size: ${it.size}")
         }
     }
 

@@ -79,7 +79,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
             }
     }
 
-    override suspend fun getTelecomAccounts(subscriberIds: IntArray): List<Account> {
+    override fun getTelecomAccounts(subscriberIds: IntArray): Flow<List<Account>> {
         return accountRepo.getTelecomAccounts(subscriberIds)
     }
 

@@ -45,7 +45,7 @@ import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.presentation.simcard.SimViewModel
+import com.hover.stax.presentation.sim.SimViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.user.UserRepo

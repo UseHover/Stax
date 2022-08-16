@@ -13,7 +13,7 @@ class AccountRepo(db: AppDatabase) {
 
     fun getAllLiveAccounts(): LiveData<List<Account>> = accountDao.getLiveAccounts()
 
-    suspend fun getTelecomAccounts(subscriberIds: IntArray) : List<Account> = accountDao.getAccountsBySubscribedSim(subscriberIds)
+    fun getTelecomAccounts(subscriberIds: IntArray) : Flow<List<Account>> = accountDao.getAccountsBySubscribedSim(subscriberIds)
 
     fun getAccountsCount(): Int = accountDao.getDataCount()
 

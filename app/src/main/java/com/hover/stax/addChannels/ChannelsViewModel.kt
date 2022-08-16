@@ -83,7 +83,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     private fun loadSims() {
-        viewModelScope.launch(Dispatchers.IO) { sims.postValue(presentSimUseCase()) }
+        viewModelScope.launch(Dispatchers.IO) { sims.postValue(presentSimUseCase.invoke()) }
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(getApplication())
@@ -97,7 +97,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         simReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 viewModelScope.launch {
-                    sims.postValue(presentSimUseCase())
+                    sims.postValue(presentSimUseCase.invoke())
                 }
             }
         }

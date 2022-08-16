@@ -112,7 +112,7 @@
 
     <fragment
         android:id="@+id/navigation_sim_fragment"
-        android:name="com.hover.stax.presentation.simcard.SimFragment"
+        android:name="com.hover.stax.presentation.sim.SimFragment"
         android:label="@string/nav_sim">
 
         <action

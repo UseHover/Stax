@@ -1,4 +1,4 @@
-package com.hover.stax.presentation.simcard
+package com.hover.stax.presentation.sim
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -31,7 +31,6 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.stax.R
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.domain.model.Account
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.TopBar
@@ -49,15 +48,13 @@ data class SimScreenClickFunctions(
 @Composable
 fun SimScreen(
     simScreenClickFunctions: SimScreenClickFunctions,
-    balanceTapListener: BalanceTapListener
+    balanceTapListener: BalanceTapListener,
+    simViewModel: SimViewModel = getViewModel()
 ) {
-    val simViewModel: SimViewModel = getViewModel()
-    val bonusViewModel: BonusViewModel = getViewModel()
-
-    val accounts = simViewModel.telecomAccounts.observeAsState(initial = null)
+    val simUiState by simViewModel.simUiState.collectAsState()
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-    val presentSims = simViewModel.presentSims.observeAsState(initial = emptyList())
-    val bonuses = bonusViewModel.bonusList.collectAsState()
+
+    val loading = simUiState.loading
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -82,29 +79,27 @@ fun SimScreen(
                             PageTitle()
                         }
 
-                        item {
-                            accounts.value?.let {
-                                if (it.isEmpty()) GrantPermissionText()
+                        if (!loading && simUiState.telecomAccounts.isEmpty()) {
+                            item {
+                                GrantPermissionText()
+                            }
+
+                            item {
+                                LinkSimCard(
+                                    id = R.string.link_sim_to_stax,
+                                    onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount
+                                )
+
                             }
                         }
 
-                        item {
-                            accounts.value?.let {
-                                if (it.isEmpty()) {
-                                    LinkSimCard(
-                                        id = R.string.link_sim_to_stax,
-                                        onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount
-                                    )
-                                }
-                            }
-                        }
+                        if (simUiState.telecomAccounts.isNotEmpty() && simUiState.presentSims.isNotEmpty()) {
+                            itemsIndexed(simUiState.presentSims) { index, presentSim ->
+                                val simAccount = simUiState.telecomAccounts.find { it.subscriptionId == presentSim.subscriptionId }
 
-                        if (!accounts.value.isNullOrEmpty() && presentSims.value.isNotEmpty()) {
-                            itemsIndexed(presentSims.value) { index, presentSim ->
-                                val simAccount =
-                                    accounts.value?.find { it.subscriptionId == presentSim.subscriptionId }
                                 if (simAccount != null) {
-                                    val bonus = bonuses.value.bonuses.firstOrNull()
+                                    val bonus = simUiState.bonuses.firstOrNull()
+
                                     SimItem(
                                         simIndex = presentSim.slotIdx + 1,
                                         account = simAccount,
@@ -130,21 +125,20 @@ fun SimScreen(
 @Preview
 @Composable
 fun SimScreenPreview() {
-    val accounts = mutableListOf<Account>()
-    val account1 = Account("Telecom")
-    val account2 = Account("Safaricom")
-    account1.id = 1
-    account1.subscriptionId = 1
-    account1.latestBalance = "NGN 200"
-    account1.latestBalanceTimestamp = 123
-
-    account2.id = 2
-    account2.subscriptionId = 2
-    account2.latestBalance = "NGN 500"
-    account2.latestBalanceTimestamp = 2345
-
-    accounts.add(account1)
-    accounts.add(account2)
+    val accounts = listOf(
+        Account("Telecom").apply {
+            id = 1
+            subscriptionId = 1
+            latestBalance = "NGN 200"
+            latestBalanceTimestamp = 123
+        },
+        Account("Safaricom").apply {
+            id = 2
+            subscriptionId = 2
+            latestBalance = "NGN 500"
+            latestBalanceTimestamp = 2345
+        }
+    )
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -238,7 +232,7 @@ fun SimItem(
             .fillMaxWidth()
             .padding(vertical = size13)
             .shadow(elevation = 0.dp)
-            .border(width = 0.5.dp, color = DarkGray, shape = RectangleShape)
+            .border(width = 1.dp, color = DarkGray, shape = RoundedCornerShape(5.dp))
     ) {
         Column(
             modifier = Modifier
