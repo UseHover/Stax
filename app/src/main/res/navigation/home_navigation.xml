@@ -13,7 +13,6 @@
         android:id="@+id/action_global_NavigationHistory"
         app:destination="@id/navigation_history" />
 
-
     <action
         android:id="@+id/action_global_NavigationSettings"
         app:destination="@id/navigation_settings" />
@@ -395,6 +394,7 @@
         android:label="WellnessFragment">
         <argument
             android:name="tipId"
+            android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
         <action

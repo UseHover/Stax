@@ -50,7 +50,7 @@ class NavHelper(val activity: AppCompatActivity) {
     }
 
     fun navigateWellness(tipId: String?) = navController?.let {
-        NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment(tipId))
+        NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment().apply { setTipId(tipId) })
     }
 
     fun navigateTransfer(type: String, accountId: String? = null, amount: String? = null, contactId: String? = null) {
