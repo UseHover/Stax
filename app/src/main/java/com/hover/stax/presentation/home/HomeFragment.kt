@@ -128,7 +128,8 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 
     override fun onTipClicked(tipId: String?) {
-        NavUtil.navigate(findNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tipId))
+        val destination = HomeFragmentDirections.actionNavigationHomeToWellnessFragment().apply { setTipId(tipId) }
+        NavUtil.navigate(findNavController(), destination)
     }
 
     override fun onTapBalanceRefresh(account: Account?) {

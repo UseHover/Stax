@@ -159,7 +159,7 @@ class SettingsFragment : Fragment() {
 
     private fun setupLearnCard() {
         with(binding.staxLearn) {
-            learnFinances.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToWellnessFragment(null)) }
+            learnFinances.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToWellnessFragment()) }
             learnStax.setOnClickListener { Utils.openUrl(getString(R.string.stax_medium_url), requireActivity()) }
         }
     }
