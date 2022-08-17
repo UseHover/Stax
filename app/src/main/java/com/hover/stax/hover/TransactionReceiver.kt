@@ -118,16 +118,16 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
     private fun getBizNo(intent: Intent): String? {
         val inExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as java.util.HashMap<String, String>?
-        if (inExtras != null && inExtras.containsKey(BUSINESS_NO))
-            return inExtras[BUSINESS_NO]
-        else return null
+        return if (inExtras != null && inExtras.containsKey(BUSINESS_NO))
+            inExtras[BUSINESS_NO]
+        else null
     }
 
     private fun getBizName(intent: Intent): String? {
         val outExtras = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as java.util.HashMap<String, String>?
-        if (outExtras != null && outExtras.containsKey(BUSINESS_NAME))
-            return outExtras[BUSINESS_NAME]?.replace(".", "") // MPESA adds a gramatically incorrect period which isn't easily fixable with a regex
-        else return null
+        return if (outExtras != null && outExtras.containsKey(BUSINESS_NAME))
+            outExtras[BUSINESS_NAME]?.replace(".", "") // MPESA adds a gramatically incorrect period which isn't easily fixable with a regex
+        else null
     }
 
     private fun updateTransaction(intent: Intent, c: Context) {
