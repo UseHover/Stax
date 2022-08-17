@@ -21,7 +21,6 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener {
@@ -86,7 +85,8 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
 
     private fun observeForBonus() {
         collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonusList.value.bonuses.first().userChannel.toString()))
+            if (bonusViewModel.bonusList.value.bonuses.isNotEmpty())
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonusList.value.bonuses.first().userChannel.toString()))
         }
     }
 
