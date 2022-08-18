@@ -143,7 +143,7 @@ class LoginViewModel(application: Application, private val userRepo: UserRepo, p
                     getInt("id"),
                     getString("username"),
                     getString("email"),
-                    getBoolean("is_mapper"),
+                    getBoolean("is_verified_mapper"),
                     getBoolean("marketing_opted_in"),
                     getInt("transaction_count"),
                     getInt("bounty_total")

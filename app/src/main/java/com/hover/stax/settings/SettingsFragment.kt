@@ -77,6 +77,7 @@ class SettingsFragment : Fragment() {
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
         if (loginViewModel.userIsNotSet()) loginViewModel.uploadLastUser()
+        else if (loginViewModel.staxUser.value?.isMapper == true) binding.bountyCard.root.visibility = VISIBLE
     }
 
     private fun setUpManagePermissions(){
@@ -120,22 +121,20 @@ class SettingsFragment : Fragment() {
 
     private fun setUpAccountDetails() {
         loginViewModel.staxUser.observe(viewLifecycleOwner) { staxUser ->
-            staxUser?.let {
-                binding.staxSupport.marketingOptIn.isChecked = it.marketingOptedIn
+            if (staxUser == null) binding.accountCard.accountCard.visibility = GONE
+            else {
+                binding.staxSupport.marketingOptIn.isChecked = staxUser.marketingOptedIn
+                if (staxUser.isMapper) binding.bountyCard.root.visibility = VISIBLE
 
-                if (optInMarketing && !it.marketingOptedIn) {
+                if (optInMarketing && !staxUser.marketingOptedIn) {
                     marketingOptIn(true)
                     optInMarketing = false
                 }
-            }
 
-            with(binding.accountCard) {
-                if (staxUser != null) {
+                with(binding.accountCard) {
                     accountCard.visibility = VISIBLE
                     loggedInAccount.text = getString(R.string.logged_in_as, staxUser.username)
                     accountCard.setOnClickListener { showLogoutConfirmDialog() }
-                } else {
-                    accountCard.visibility = GONE
                 }
             }
         }
