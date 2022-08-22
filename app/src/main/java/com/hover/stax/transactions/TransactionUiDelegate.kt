@@ -1,6 +1,8 @@
 package com.hover.stax.transactions
 
 import android.content.Context
+import android.text.Html
+import androidx.core.text.HtmlCompat
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
@@ -69,11 +71,13 @@ interface TransactionUiDelegate {
     }
 
     private fun getRecordedStatusDetail(c: Context): String {
-        return c.getString(when (transaction.status) {
+        val msg = c.getString(when (transaction.status) {
             Transaction.FAILED -> R.string.bounty_transaction_failed
             Transaction.PENDING -> R.string.bounty_flow_pending_dialog_msg
             else -> R.string.flow_done_desc
         })
+
+        return HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
     }
 
     private fun shortFailureMessage(a: HoverAction?, c: Context): String {
