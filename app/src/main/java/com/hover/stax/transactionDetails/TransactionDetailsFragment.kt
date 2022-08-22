@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -73,13 +75,29 @@ class TransactionDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         startObservers()
         setListeners()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+    }
+
+    private val backPressedCallback = object: OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            handleBackNavigation()
+        }
     }
 
     private fun setListeners() {
-        binding.transactionDetailsCard.setOnClickIcon { findNavController().popBackStack() }
+        binding.transactionDetailsCard.setOnClickIcon { handleBackNavigation() }
+
         binding.transactionHeader.viewLogText.setOnClickListener { showUSSDLog() }
         with(binding.details.detailsStaxUuid.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
         with(binding.details.confirmCodeCopy.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
+    }
+
+    private fun handleBackNavigation(){
+        val isBounty = viewModel.transaction.value?.isRecorded ?: false
+
+        if (isBounty) findNavController().popBackStack()
+        else NavUtil.navigate(findNavController(), TransactionDetailsFragmentDirections.actionTxnDetailsFragmentToNavigationHistory())
     }
 
     private fun showUSSDLog() {
@@ -93,7 +111,7 @@ class TransactionDetailsFragment : Fragment() {
                 t?.let { Timber.e("Updating transaction messages ${t.uuid}") }
             }
         }
-        
+
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
@@ -104,7 +122,7 @@ class TransactionDetailsFragment : Fragment() {
         bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
 
 
-        val observer = object: Observer<Boolean> {
+        val observer = object : Observer<Boolean> {
             override fun onChanged(t: Boolean?) {
                 Timber.i("Expecting sms $t")
                 action.value?.let { a -> updateAction(a) }

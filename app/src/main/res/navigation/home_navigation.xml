@@ -181,7 +181,6 @@
         <argument
             android:name="isNewTransaction"
             app:argType="boolean" />
-
         <action
             android:id="@+id/action_transactionDetailsFragment_to_bountyListFragment"
             app:destination="@id/bountyListFragment" />
@@ -191,6 +190,11 @@
         <action
             android:id="@+id/action_txnDetailsFragment_to_navigationHome"
             app:destination="@id/navigation_home"
+            app:popUpTo="@id/transactionDetailsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_txnDetailsFragment_to_navigationHistory"
+            app:destination="@id/navigation_history"
             app:popUpTo="@id/transactionDetailsFragment"
             app:popUpToInclusive="true" />
     </fragment>
