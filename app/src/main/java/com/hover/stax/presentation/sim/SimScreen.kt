@@ -44,6 +44,7 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
+import timber.log.Timber
 
 data class SimScreenClickFunctions(
     val onClickedAddNewAccount: () -> Unit,
@@ -51,9 +52,7 @@ data class SimScreenClickFunctions(
     val onClickedBuyAirtime: () -> Unit
 )
 
-private fun hasNotGratedSimPermission(context: Context) = !PermissionUtils.hasContactPermission(context)
-                    ||
-        !PermissionUtils.hasSmsPermission(context)
+private fun hasGratedSimPermission(context: Context) = PermissionUtils.hasContactPermission(context) && PermissionUtils.hasSmsPermission(context)
 
 @Composable
 fun SimScreen(
@@ -91,27 +90,17 @@ fun SimScreen(
                         }
 
                         if(loading) {
+                            Timber.i("Status: Loading")
                             item {
                                 NoticeText(stringRes = R.string.loading)
                             }
                         }
 
-                       else if (hasNotGratedSimPermission(context)) {
-                            item {
-                                NoticeText(stringRes = R.string.simpage_permission_alert)
-                            }
-
-                            item {
-                                LinkSimCard(
-                                    id = R.string.link_sim_to_stax,
-                                    onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount
-                                )
-                            }
-                        }
-
                         else if(simUiState.presentSims.isEmpty()) {
+                            Timber.i("Status: Detected empty sims")
                             item {
-                                NoticeText(stringRes = R.string.simpage_empty_sims)
+                                if(hasGratedSimPermission(context)) NoticeText(stringRes = R.string.simpage_empty_sims)
+                                else showGrantPermissionContent(simScreenClickFunctions.onClickedAddNewAccount)
                             }
                         }
 
@@ -121,6 +110,7 @@ fun SimScreen(
                                 val visibleSlotIdx = presentSim.slotIdx + 1
 
                                 if (simAccount != null) {
+                                    Timber.i("Status: Detected a supported sim")
                                     val bonus = simUiState.bonuses.firstOrNull()
                                     SimItem(
                                         simIndex = visibleSlotIdx,
@@ -130,7 +120,8 @@ fun SimScreen(
                                         balanceTapListener = balanceTapListener
                                     )
                                 } else {
-                                    UnSupportedSim(networkName = presentSim.networkOperatorName,
+                                    Timber.i("Status: Detected unsupported ${presentSim.operatorName}")
+                                    UnSupportedSim(networkName = presentSim.operatorName,
                                         slotId = visibleSlotIdx,
                                         context = LocalContext.current)
                                 }
@@ -234,6 +225,17 @@ private fun NoticeText(@StringRes stringRes: Int) {
         textAlign = TextAlign.Center,
         color = TextGrey,
     )
+}
+
+@Composable
+private fun showGrantPermissionContent( onClickedAddNewAccount: () -> Unit ) {
+    Column {
+        NoticeText(stringRes = R.string.simpage_permission_alert)
+        LinkSimCard(
+            id = R.string.link_sim_to_stax,
+            onClickedLinkSimCard = onClickedAddNewAccount
+        )
+    }
 }
 
 @Composable
