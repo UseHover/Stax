@@ -253,7 +253,7 @@ private fun UnSupportedSim(simInfo: SimInfo?, slotId: Int, context: Context) {
 
     //Sometimes operator name comes in as : No service,
     //We don't want user to see: "We detected a No service SIM in slot 1..."
-    //Instead if should be: "We detected a SIM in Slot 1", otherwise show "We detected a MTN Sim in Slot 1"
+    //Instead it should be: "We detected a SIM in Slot 1", otherwise show "We detected a MTN SIM in Slot 1"
     val actualOperatorName = simInfo?.operatorName ?: ""
     val displayedNetworkName = if((actualOperatorName).contains("No service")) "" else actualOperatorName
 
