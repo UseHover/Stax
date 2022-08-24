@@ -54,7 +54,7 @@ data class Attributes(
 	val username: String,
 
 	@SerializedName("marketing_opted_in")
-	val marketingOptedIn: Boolean
+	val marketingOptedIn: Boolean 
 )
 
 /**
