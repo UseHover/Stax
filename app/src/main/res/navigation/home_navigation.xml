@@ -49,6 +49,8 @@
         android:id="@+id/action_global_TxnDetailsFragment"
         app:destination="@id/transactionDetailsFragment" />
 
+    <action android:id="@+id/action_global_RewardsFragment"
+        app:destination="@+id/rewardsFragment" />
 
     <fragment
         android:id="@+id/navigation_home"
@@ -422,5 +424,10 @@
             app:destination="@id/paybillFragment"
             app:popUpTo="@id/paybillFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/rewardsFragment"
+        android:name="com.hover.stax.presentation.rewards.RewardsFragment"
+        android:label="RewardsFragment" />
 
 </navigation>

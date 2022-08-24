@@ -26,6 +26,7 @@ import com.hover.stax.ui.theme.StaxTheme
 fun GuideCard(message: String, buttonString: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
+            .padding(horizontal = 16.dp)
             .shadow(elevation = 0.dp)
             .background(shape = RoundedCornerShape(5.dp), color = StaxCardBlue)
     ) {

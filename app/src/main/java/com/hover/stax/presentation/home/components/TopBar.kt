@@ -3,10 +3,7 @@ package com.hover.stax.presentation.home.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 
 @Composable
-fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, onClickedSettingsIcon: () -> Unit) {
+fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, onClickedSettingsIcon: () -> Unit, onClickedRewards: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -40,6 +37,17 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
                 MaterialTheme.typography.button
             )
         }
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_rewards),
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .clickable(onClick = onClickedRewards)
+                .size(25.dp),
+        )
+        
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_10)))
 
         Image(
             painter = painterResource(id = R.drawable.ic_settings),

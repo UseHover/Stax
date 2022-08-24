@@ -34,7 +34,8 @@ data class HomeClickFunctions(
     val onRequestMoneyClicked: () -> Unit,
     val onClickedTC: () -> Unit,
     val onClickedAddNewAccount: () -> Unit,
-    val onClickedSettingsIcon: () -> Unit
+    val onClickedSettingsIcon: () -> Unit,
+    val onClickedRewards: () -> Unit
 )
 
 interface FinancialTipClickInterface {
@@ -59,7 +60,14 @@ fun HomeScreen(
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
-                topBar = { TopBar(title = R.string.nav_home, isInternetConnected = hasNetwork, homeClickFunctions.onClickedSettingsIcon) },
+                topBar = {
+                    TopBar(
+                        title = R.string.nav_home,
+                        isInternetConnected = hasNetwork,
+                        homeClickFunctions.onClickedSettingsIcon,
+                        homeClickFunctions.onClickedRewards
+                    )
+                },
                 content = {
                     LazyColumn {
                         if (homeState.bonuses.isNotEmpty() && accounts.isNotEmpty())
@@ -153,14 +161,15 @@ fun HomeScreenPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(title = R.string.nav_home, isInternetConnected = false) {}
+                    TopBar(title = R.string.nav_home, isInternetConnected = false, {}, {})
                 },
                 content = { padding ->
                     LazyColumn(modifier = Modifier.padding(padding), content = {
                         item {
                             GuideCard(
                                 message = stringResource(id = R.string.beginners_guide_airtime),
-                                buttonString = stringResource(id = R.string.check_airtime_balance)) {}
+                                buttonString = stringResource(id = R.string.check_airtime_balance)
+                            ) {}
                         }
 
                         item {
