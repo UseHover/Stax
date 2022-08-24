@@ -22,11 +22,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.hover.stax.R
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.presentation.bounties.BountyViewModel
+import com.hover.stax.presentation.bounties.CODE_ALL_COUNTRIES
 import com.yariksoffice.lingver.Lingver
 import java.util.*
 
@@ -127,5 +129,72 @@ private fun countryCodeToEmoji(countryCode: String): String {
         String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
     } catch (e: Exception) {
         ""
+    }
+}
+
+@Preview
+@Composable
+fun CountryDropdownPreview() {
+    val countryCodes = listOf("KE, UG, TZ, ET, ZA")
+    var expanded by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf(CODE_ALL_COUNTRIES) }
+    var textFieldSize by remember { mutableStateOf(Size.Zero) }
+
+    val icon = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
+
+    Column(Modifier.padding(10.dp)) {
+        OutlinedTextField(
+            value = selected,
+            onValueChange = { selected = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    textFieldSize = coordinates.size.toSize()
+                },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.select_country),
+                    style = MaterialTheme.typography.body2,
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    icon,
+                    "contentDescription",
+                    Modifier.clickable { expanded = !expanded },
+                    tint = Color.White
+                )
+            },
+            readOnly = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedLabelColor = colorResource(id = R.color.stax_state_blue),
+                unfocusedBorderColor = Color.White,
+                focusedBorderColor = colorResource(id = R.color.stax_state_blue),
+                unfocusedLabelColor = Color.White
+            )
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
+        ) {
+            countryCodes.forEach { countryCode ->
+                DropdownMenuItem(onClick = {
+                    selected = countryCode
+                    expanded = false
+                }) {
+                    Text(text = getCountryString(countryCode, LocalContext.current))
+                }
+            }
+        }
+
+        Text(
+            modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.margin_10)),
+            text = stringResource(id = R.string.filtering_in_progress),
+            style = MaterialTheme.typography.body2,
+            color = colorResource(id = R.color.stax_state_blue)
+        )
     }
 }

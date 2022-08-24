@@ -788,4 +788,9 @@
     <string name="uxcam_session_url">uxcam_session_url</string>
     <string name="transaction_history">Transaction History</string>
 
+    <!-- Rewards -->
+    <string name="beginners_guide_title">Beginner\'s Guide</string>
+    <string name="beginners_guide_airtime">Welcome to Stax! Check your airtime balance to see what Stax can do and earn 100 reward points</string>
+    <string name="check_airtime_balance">Check Airtime Balance</string>
+
 </resources>

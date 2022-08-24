@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
@@ -156,6 +157,12 @@ fun HomeScreenPreview() {
                 },
                 content = { padding ->
                     LazyColumn(modifier = Modifier.padding(padding), content = {
+                        item {
+                            GuideCard(
+                                message = stringResource(id = R.string.beginners_guide_airtime),
+                                buttonString = stringResource(id = R.string.check_airtime_balance)) {}
+                        }
+
                         item {
                             BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
                                 onClickedTC = {},

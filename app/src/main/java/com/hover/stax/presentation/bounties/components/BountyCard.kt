@@ -14,6 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hover.stax.R
 import com.hover.stax.domain.model.Bounty
@@ -89,5 +91,47 @@ private fun getBountyState(bounty: Bounty): BountyItemState {
             BountyItemState(color = R.color.pending_brown, msg = R.string.bounty_pending_short_desc, icon = R.drawable.ic_warning, isOpen = true, bountySelectEvent = BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid))
         else ->
             BountyItemState(color = R.color.colorSurface, isOpen = true, bountySelectEvent = BountySelectEvent.ViewBountyDetail(bounty))
+    }
+}
+
+
+@Preview
+@Composable
+fun BountyCardPreview() {
+    val margin13 = dimensionResource(id = R.dimen.margin_13)
+    val margin8 = dimensionResource(id = R.dimen.margin_8)
+
+    Column(
+        modifier = Modifier
+            .background(color = colorResource(id = R.color.colorSurface))
+            .padding(vertical = margin8)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = margin13),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Check Balance",
+                modifier = Modifier
+                    .padding(top = margin8, bottom = margin8, end = margin13),
+                style = MaterialTheme.typography.body1
+            )
+
+            Text(
+                text = "USD $1",
+                modifier = Modifier
+                    .padding(top = margin8, bottom = margin8),
+                style = MaterialTheme.typography.body1,
+                fontWeight = FontWeight.Medium
+            )
+        }
+
+        SpannableImageTextView(
+            drawable = R.drawable.ic_error,
+            stringRes = R.string.bounty_transaction_failed,
+            modifier = Modifier.padding(start = margin8, end = margin13, top = 5.dp, bottom = dimensionResource(id = R.dimen.margin_10)),
+        )
     }
 }
