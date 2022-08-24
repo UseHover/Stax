@@ -34,6 +34,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.sdk.permissions.PermissionHelper
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.permissions.PermissionUtils
@@ -100,7 +101,7 @@ fun SimScreen(
                             Timber.i("Status: Detected empty sims")
                             item {
                                 if(hasGratedSimPermission(context)) NoticeText(stringRes = R.string.simpage_empty_sims)
-                                else showGrantPermissionContent(simScreenClickFunctions.onClickedAddNewAccount)
+                                else ShowGrantPermissionContent(simScreenClickFunctions.onClickedAddNewAccount)
                             }
                         }
 
@@ -121,7 +122,7 @@ fun SimScreen(
                                     )
                                 } else {
                                     Timber.i("Status: Detected unsupported ${presentSim.operatorName}")
-                                    UnSupportedSim(networkName = presentSim.operatorName,
+                                    UnSupportedSim(simInfo = presentSim,
                                         slotId = visibleSlotIdx,
                                         context = LocalContext.current)
                                 }
@@ -191,7 +192,7 @@ private fun SimScreenPreview() {
                                 balanceTapListener = null
                             )
                         } else {
-                            UnSupportedSim(networkName = account.name,
+                            UnSupportedSim(simInfo = null,
                                 slotId = 2,
                                 context = LocalContext.current)
                         }
@@ -228,7 +229,7 @@ private fun NoticeText(@StringRes stringRes: Int) {
 }
 
 @Composable
-private fun showGrantPermissionContent( onClickedAddNewAccount: () -> Unit ) {
+private fun ShowGrantPermissionContent( onClickedAddNewAccount: () -> Unit ) {
     Column {
         NoticeText(stringRes = R.string.simpage_permission_alert)
         LinkSimCard(
@@ -239,8 +240,19 @@ private fun showGrantPermissionContent( onClickedAddNewAccount: () -> Unit ) {
 }
 
 @Composable
-private fun UnSupportedSim(networkName:String, slotId: Int, context: Context) {
+private fun UnSupportedSim(simInfo: SimInfo?, slotId: Int, context: Context) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
+    var emailBody = ""
+    if(simInfo !=null) {
+        emailBody = stringResource(id = R.string.sim_card_support_request_emailBody,
+            simInfo.osReportedHni ?: "Null",
+            simInfo.operatorName ?: "Null",
+            simInfo.networkOperator ?: "Null",
+            simInfo.countryIso ?: "Null")
+    }
+
+    val actualOperatorName = simInfo?.operatorName ?: ""
+    val displayedNetworkName = if((actualOperatorName).contains("No service")) "" else actualOperatorName
 
     Box(
         modifier = Modifier
@@ -255,14 +267,14 @@ private fun UnSupportedSim(networkName:String, slotId: Int, context: Context) {
                 .padding(size13)
         ) {
             Text(
-                text = HtmlCompat.fromHtml(stringResource( id = (R.string.unsupported_simcard_info), networkName, slotId),
+                text = HtmlCompat.fromHtml(stringResource( id = (R.string.unsupported_simcard_info), displayedNetworkName, slotId),
                     HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
                 modifier = Modifier.padding(all = size13),
                 style = MaterialTheme.typography.body1
             )
 
             Button(
-                onClick = { Utils.openUrl(R.string.stax_support_email_mailTo, context) },
+                onClick = { Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody) },
                 modifier = Modifier
                     .padding(top = size13)
                     .shadow(elevation = 0.dp),
