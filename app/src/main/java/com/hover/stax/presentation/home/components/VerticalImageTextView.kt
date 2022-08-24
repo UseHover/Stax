@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
+import com.hover.stax.ui.theme.BrightBlue
 
 @Composable
 fun VerticalImageTextView(
@@ -28,7 +29,6 @@ fun VerticalImageTextView(
     onItemClick: () -> Unit
 ) {
     val size24 = dimensionResource(id = R.dimen.margin_24)
-    val blue = colorResource(id = R.color.stax_state_blue)
 
     Column(
         modifier = Modifier
@@ -41,7 +41,7 @@ fun VerticalImageTextView(
             modifier = Modifier
                 .clip(CircleShape)
                 .size(48.dp)
-                .background(blue),
+                .background(BrightBlue),
             contentAlignment = Alignment.Center
         ) {
             Image(
