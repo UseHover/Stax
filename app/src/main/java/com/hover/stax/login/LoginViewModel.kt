@@ -69,7 +69,7 @@ class LoginViewModel(application: Application, private val userRepo: UserRepo, p
                         }
 
                     val result = loginNetworking.uploadUserToStax(userJson)
-                    Timber.e("Uploading user to stax came back: ${result.code}")
+                    Timber.e("Uploading user to stax came back: ${result.code} ${result.message}")
 
                     if (result.code in 200..299) {
                         Timber.e(result.body.toString())
