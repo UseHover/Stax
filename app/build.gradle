@@ -39,12 +39,12 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.hover.stax"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 175
         versionName "1.12.17"
 
@@ -145,7 +145,7 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.ui:ui-viewbinding:$compose_version"
-    implementation 'androidx.compose.runtime:runtime-livedata:1.3.0-alpha02'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.3.0-alpha03'
     implementation 'com.google.accompanist:accompanist-drawablepainter:0.25.1'
 
     //logging
