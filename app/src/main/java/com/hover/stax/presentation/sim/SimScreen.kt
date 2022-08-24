@@ -1,11 +1,13 @@
 package com.hover.stax.presentation.sim
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,15 +29,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.TopBar
 import com.hover.stax.ui.theme.*
 import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
 
@@ -44,6 +50,10 @@ data class SimScreenClickFunctions(
     val onClickedSettingsIcon: () -> Unit,
     val onClickedBuyAirtime: () -> Unit
 )
+
+private fun hasNotGratedSimPermission(context: Context) = !PermissionUtils.hasContactPermission(context)
+                    ||
+        !PermissionUtils.hasSmsPermission(context)
 
 @Composable
 fun SimScreen(
@@ -55,6 +65,7 @@ fun SimScreen(
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
 
     val loading = simUiState.loading
+    val context = LocalContext.current
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -79,9 +90,15 @@ fun SimScreen(
                             PageTitle()
                         }
 
-                        if (!loading && simUiState.telecomAccounts.isEmpty()) {
+                        if(loading) {
                             item {
-                                GrantPermissionText()
+                                NoticeText(stringRes = R.string.loading)
+                            }
+                        }
+
+                       else if (hasNotGratedSimPermission(context)) {
+                            item {
+                                NoticeText(stringRes = R.string.simpage_permission_alert)
                             }
 
                             item {
@@ -89,30 +106,33 @@ fun SimScreen(
                                     id = R.string.link_sim_to_stax,
                                     onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount
                                 )
-
                             }
                         }
 
-                        if (simUiState.telecomAccounts.isNotEmpty() && simUiState.presentSims.isNotEmpty()) {
-                            itemsIndexed(simUiState.presentSims) { index, presentSim ->
+                        else if(simUiState.presentSims.isEmpty()) {
+                            item {
+                                NoticeText(stringRes = R.string.simpage_empty_sims)
+                            }
+                        }
+
+                        else {
+                            items(simUiState.presentSims) { presentSim ->
                                 val simAccount = simUiState.telecomAccounts.find { it.subscriptionId == presentSim.subscriptionId }
+                                val visibleSlotIdx = presentSim.slotIdx + 1
 
                                 if (simAccount != null) {
                                     val bonus = simUiState.bonuses.firstOrNull()
-
                                     SimItem(
-                                        simIndex = presentSim.slotIdx + 1,
+                                        simIndex = visibleSlotIdx,
                                         account = simAccount,
                                         bonus = ((bonus?.bonusPercent ?: 0.0) * 100).toInt(),
                                         onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime,
                                         balanceTapListener = balanceTapListener
                                     )
                                 } else {
-                                    LinkSimCard(
-                                        id = R.string.link_nth_sim_to_stax,
-                                        stringArg = intToNthWord(index),
-                                        onClickedLinkSimCard = simScreenClickFunctions.onClickedAddNewAccount
-                                    )
+                                    UnSupportedSim(networkName = presentSim.networkOperatorName,
+                                        slotId = visibleSlotIdx,
+                                        context = LocalContext.current)
                                 }
                             }
                         }
@@ -124,7 +144,7 @@ fun SimScreen(
 
 @Preview
 @Composable
-fun SimScreenPreview() {
+private fun SimScreenPreview() {
     val accounts = listOf(
         Account("Telecom").apply {
             id = 1
@@ -133,8 +153,8 @@ fun SimScreenPreview() {
             latestBalanceTimestamp = 123
         },
         Account("Safaricom").apply {
-            id = 2
-            subscriptionId = 2
+            id = -1
+            subscriptionId = -3
             latestBalance = "NGN 500"
             latestBalanceTimestamp = 2345
         }
@@ -158,7 +178,7 @@ fun SimScreenPreview() {
 
                     if (accounts.isEmpty())
                         item {
-                            GrantPermissionText()
+                            NoticeText(stringRes = R.string.simpage_permission_alert)
                         }
 
                     accounts.let {
@@ -180,9 +200,9 @@ fun SimScreenPreview() {
                                 balanceTapListener = null
                             )
                         } else {
-                            LinkSimCard(id = R.string.link_nth_sim_to_stax,
-                                stringArg = intToNthWord(index),
-                                onClickedLinkSimCard = { })
+                            UnSupportedSim(networkName = account.name,
+                                slotId = 2,
+                                context = LocalContext.current)
                         }
                     }
                 }
@@ -192,7 +212,7 @@ fun SimScreenPreview() {
 }
 
 @Composable
-fun PageTitle() {
+private fun PageTitle() {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Text(
         text = stringResource(id = R.string.your_linked_sim),
@@ -202,12 +222,12 @@ fun PageTitle() {
 }
 
 @Composable
-fun GrantPermissionText() {
+private fun NoticeText(@StringRes stringRes: Int) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     val size34 = dimensionResource(id = R.dimen.margin_34)
 
     Text(
-        text = stringResource(id = R.string.simpage_permission_alert),
+        text = stringResource(id = stringRes),
         modifier = Modifier
             .padding(vertical = size13, horizontal = size34)
             .fillMaxWidth(),
@@ -217,7 +237,53 @@ fun GrantPermissionText() {
 }
 
 @Composable
-fun SimItem(
+private fun UnSupportedSim(networkName:String, slotId: Int, context: Context) {
+    val size13 = dimensionResource(id = R.dimen.margin_13)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = size13)
+            .shadow(elevation = 0.dp)
+            .border(width = 1.dp, color = DarkGray, shape = RoundedCornerShape(5.dp))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(size13)
+        ) {
+            Text(
+                text = HtmlCompat.fromHtml(stringResource( id = (R.string.unsupported_simcard_info), networkName, slotId),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
+                modifier = Modifier.padding(all = size13),
+                style = MaterialTheme.typography.body1
+            )
+
+            Button(
+                onClick = { Utils.openUrl(R.string.stax_support_email_mailTo, context) },
+                modifier = Modifier
+                    .padding(top = size13)
+                    .shadow(elevation = 0.dp),
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = BrightBlue,
+                    contentColor = ColorPrimary
+                )
+            ) {
+                Text(
+                    text = stringResource(id = R.string.email_support),
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+        }
+        }
+}
+
+@Composable
+private fun SimItem(
     simIndex: Int,
     account: Account,
     bonus: Int,
@@ -316,7 +382,7 @@ fun SimItem(
 }
 
 @Composable
-fun SimItemTopRow(simIndex: Int, account: Account, balanceTapListener: BalanceTapListener?) {
+private fun SimItemTopRow(simIndex: Int, account: Account, balanceTapListener: BalanceTapListener?) {
     val size34 = dimensionResource(id = R.dimen.margin_34)
 
     Row {
@@ -368,7 +434,7 @@ fun SimItemTopRow(simIndex: Int, account: Account, balanceTapListener: BalanceTa
 }
 
 @Composable
-fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit, stringArg: String = "") {
+private fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit, stringArg: String = "") {
     OutlinedButton(
         onClick = onClickedLinkSimCard,
         modifier = Modifier
@@ -392,17 +458,3 @@ fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit, stringArg:
         )
     }
 }
-
-private fun intToNthWord(digit: Int): String = nthWord[digit]
-val nthWord = arrayOf(
-    "first",
-    "second",
-    "third",
-    "fourth",
-    "fifth",
-    "sixth",
-    "seventh",
-    "eighth",
-    "ninth",
-    "tenth",
-)

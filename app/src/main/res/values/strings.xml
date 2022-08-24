@@ -182,12 +182,13 @@
 
     <!-- SIM CARD -->
     <string name="simpage_permission_alert">Grant Stax permission to show your services available in your location and transaction history</string>
+    <string name="simpage_empty_sims">You\'ve granted necessary permissions, but it seems your do not have a SIM card on this device yet.\n\n Try re-inserting your SIM card, if this did not work, please contact our support team under the settings page of this app.</string>
     <string name="sim_index">Sim %1$d</string>
     <string name="airtime_balance_holder">Airtime balance: %1$s</string>
     <string name="as_of">As of %1$s</string>
     <string name="buy_airitme_with_discount">Buy airtime with %1$s or more bonus</string>
     <string name="not_yet_checked">Not yet checked</string>
-
+    <string name="unsupported_simcard_info"><![CDATA[ We detected your <font color="#39CBFC"> %1$s </font> SIM card in your slot %2$d, but do not yet support it.<br/><br/>Please reach out to our support so we can integrate with it.]]></string>
 
     <string name="search">Search</string>
     <string name="no_accounts_found_desc"><![CDATA[ It looks like "<b><font color="#39CBFC"> %1$s </font> </b>" has not been listed on Stax yet or its an invalid entry.<br/>Try searching for something else.]]></string>
