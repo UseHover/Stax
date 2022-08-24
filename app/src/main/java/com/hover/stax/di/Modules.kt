@@ -119,7 +119,7 @@ val networkModule = module {
         }.build()
 
         Retrofit.Builder()
-            .baseUrl(androidContext().resources.getString(R.string.api_url))
+            .baseUrl(androidContext().resources.getString(R.string.root_url))
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
