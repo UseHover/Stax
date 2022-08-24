@@ -1,6 +1,8 @@
 package com.hover.stax.di
 
+import com.hover.sdk.api.Hover
 import com.hover.sdk.database.HoverRoomDatabase
+import com.hover.stax.R
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
@@ -12,6 +14,7 @@ import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
+import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.*
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.repository.*
@@ -48,12 +51,16 @@ import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.user.UserRepo
 import kotlinx.coroutines.Dispatchers
+import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
     viewModelOf(::FaqViewModel)
@@ -101,6 +108,23 @@ val dataModule = module(createdAtStart = true) {
 
 val networkModule = module {
     singleOf(::LoginNetworking)
+
+    single<StaxApi> {
+        val okHttpClient = OkHttpClient().newBuilder().addInterceptor { chain ->
+            val request = chain.request()
+            val builder = request.newBuilder().header("Authorization", "Token token=${Hover.getApiKey(androidContext())}")
+
+            val newRequest = builder.build()
+            chain.proceed(newRequest)
+        }.build()
+
+        Retrofit.Builder()
+            .baseUrl(androidContext().resources.getString(R.string.api_url))
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(StaxApi::class.java)
+    }
 }
 
 val repositories = module {
