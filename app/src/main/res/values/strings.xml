@@ -792,5 +792,9 @@
     <string name="beginners_guide_title">Beginner\'s Guide</string>
     <string name="beginners_guide_airtime">Welcome to Stax! Check your airtime balance to see what Stax can do and earn 100 reward points</string>
     <string name="check_airtime_balance">Check Airtime Balance</string>
+    <string name="stax_points">Stax Points</string>
+    <string name="redeem">Redeem</string>
+    <string name="recent_points_earned">Recent Points Earned</string>
+    <string name="nav_earn">Earn</string>
 
 </resources>

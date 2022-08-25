@@ -13,5 +13,7 @@ val StaxStateRed = Color(0xFFF32345)
 val DarkGray = Color(0xFF777777)
 val mainBackground = Color(0xFF1E2329)
 val StaxCardBlue = Color(0xFF4464F6)
+val TextColorDark = Color(0xFF1E2329)
+
 
 
