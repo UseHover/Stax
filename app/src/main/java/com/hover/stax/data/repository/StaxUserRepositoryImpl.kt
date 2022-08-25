@@ -13,18 +13,14 @@ class StaxUserRepositoryImpl(private val staxApi: StaxApi, private val userRepo:
 
     override suspend fun uploadUser(userUploadDto: UserUploadDto): StaxUser {
         val userDto = staxApi.uploadUserToStax(userUploadDto)
-        val user = userDto.toStaxUser()
-        userRepo.saveUser(user)
 
-        return user
+        return userDto.toStaxUser().also { userRepo.saveUser(it) }
     }
 
     override suspend fun updateUser(email: String, userUpdateDto: UserUpdateDto): StaxUser {
         val userDto = staxApi.updateUser(email, userUpdateDto)
-        val user = userDto.toStaxUser()
-        userRepo.saveUser(user)
 
-        return user
+        return userDto.toStaxUser().also { userRepo.saveUser(it) }
     }
 
     override val staxUser: Flow<StaxUser>
