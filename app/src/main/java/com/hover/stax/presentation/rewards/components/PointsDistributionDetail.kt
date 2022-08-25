@@ -19,7 +19,7 @@ fun PointsDistributionDetail(actionList: List<RewardActions>) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         actionList.forEach {
-            RewardItem(points = it.points, action = it.action)
+            ActionItem(points = it.points, action = it.action) {} //TODO add click listeners for each action
         }
     }
 }
