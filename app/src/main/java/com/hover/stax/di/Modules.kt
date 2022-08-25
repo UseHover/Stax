@@ -138,6 +138,7 @@ val repositories = module {
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
+    singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
 }
 
 val useCases = module {
