@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.welcome
+package com.hover.stax.presentation.welcome
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,7 +27,7 @@ class WelcomeFragment : Fragment() {
     private lateinit var subtitle: String
     private lateinit var buttonText: String
 
-    private val args:  WelcomeFragmentArgs by navArgs()
+    private val args: com.hover.stax.onboarding.welcome.WelcomeFragmentArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = ComposeView(requireContext()).apply {
         id = R.id.welcomeFragment
