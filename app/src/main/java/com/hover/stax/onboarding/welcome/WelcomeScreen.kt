@@ -2,11 +2,15 @@ package com.hover.stax.onboarding.welcome
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 import com.hover.stax.ui.theme.BrightBlue
@@ -31,10 +35,10 @@ fun WelcomeHeader(title: String, desc: String) {
 }
 
 @Composable
-fun FeatureCard(title: String, desc: String, iconRes: Int) {
-    Row(modifier = Modifier.padding(top = 10.dp)) {
+fun FeatureCard(feature: Feature) {
+    Row(modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.margin_10))) {
         Image(
-            painter = painterResource(id = iconRes),
+            painter = painterResource(id = feature.iconRes),
             contentDescription = null,
             modifier = Modifier.size(40.dp)
         )
@@ -43,14 +47,14 @@ fun FeatureCard(title: String, desc: String, iconRes: Int) {
 
         Column {
             Text(
-                text = title,
+                text = feature.title,
                 style = MaterialTheme.typography.h3
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = desc,
+                text = feature.desc,
                 style = MaterialTheme.typography.body1
             )
         }
@@ -78,6 +82,7 @@ fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> 
 
 @Composable
 fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onClick: (() -> Unit)) {
+    val features = getFeatures()
 
     StaxTheme {
         Surface(
@@ -88,31 +93,16 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
                 modifier = Modifier.padding(21.dp),
                 content = { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
+                        
                         WelcomeHeader(
-                            title = introTitle,
-                            desc = introDesc
+                            title = stringResource(R.string.welcome_title_one),
+                            desc = stringResource(R.string.welcome_sub_one)
                         )
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_16)))
 
-                        Column {
-                            FeatureCard(
-                                title = stringResource(R.string.intro_feature_one_title),
-                                desc = stringResource(R.string.intro_feature_one_desc),
-                                iconRes = R.drawable.ic_automated
-                            )
-
-                            FeatureCard(
-                                title = stringResource(R.string.intro_feature_two_title),
-                                desc = stringResource(R.string.intro_feature_two_desc),
-                                iconRes = R.drawable.ic_control
-                            )
-
-                            FeatureCard(
-                                title = stringResource(R.string.intro_feature_three_title),
-                                desc = stringResource(R.string.intro_feature_three_desc),
-                                iconRes = R.drawable.ic_safe
-                            )
+                        features.forEach {
+                            FeatureCard(it)
                         }
                     }
                 },
@@ -123,3 +113,63 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
         }
     }
 }
+
+@Preview
+@Composable
+fun WelcomeScreenPreview() {
+    val features = getFeatures()
+
+    StaxTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+            Scaffold(
+                modifier = Modifier.padding(24.dp),
+                content = { innerPadding ->
+                    Column(modifier = Modifier.padding(innerPadding)) {
+
+                        WelcomeHeader(
+                            title = stringResource(R.string.welcome_title_one),
+                            desc = stringResource(R.string.welcome_sub_one)
+                        )
+
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_16)))
+
+                        features.forEach {
+                            FeatureCard(it)
+                        }
+                    }
+                },
+                bottomBar = {
+                    ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = { })
+                }
+            )
+        }
+    }
+}
+
+data class Feature(val title: String, val desc: String, val iconRes: Int)
+
+@Composable
+fun getFeatures(): List<Feature> = listOf(
+    Feature(
+        title = stringResource(R.string.intro_feature_one_title),
+        desc = stringResource(R.string.intro_feature_one_desc),
+        iconRes = R.drawable.ic_automated
+    ),
+    Feature(
+        title = stringResource(R.string.intro_feature_two_title),
+        desc = stringResource(R.string.intro_feature_two_desc),
+        iconRes = R.drawable.ic_control
+    ),
+    Feature(
+        title = stringResource(R.string.intro_feature_three_title),
+        desc = stringResource(R.string.intro_feature_three_desc),
+        iconRes = R.drawable.ic_safe
+    )
+)
+
+
+
+
