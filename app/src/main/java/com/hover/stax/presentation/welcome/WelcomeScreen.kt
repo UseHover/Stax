@@ -1,6 +1,8 @@
 package com.hover.stax.presentation.welcome
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -8,17 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 import com.hover.stax.presentation.welcome.components.ContinueButton
 import com.hover.stax.presentation.welcome.components.FeatureCard
+import com.hover.stax.presentation.welcome.components.GoogleSignInButton
 import com.hover.stax.presentation.welcome.components.WelcomeHeader
 import com.hover.stax.ui.theme.StaxTheme
 
 
 @Composable
-fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onClick: (() -> Unit)) {
+fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onClickContinue: () -> Unit, onClickSignIn: () -> Unit) {
     val features = getFeatures()
 
     StaxTheme {
@@ -29,7 +33,10 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
             Scaffold(
                 modifier = Modifier.padding(21.dp),
                 content = { innerPadding ->
-                    Column(modifier = Modifier.padding(innerPadding)) {
+                    Column(modifier = Modifier
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState(), true)
+                    ) {
 
                         WelcomeHeader(
                             title = stringResource(R.string.welcome_title_one),
@@ -44,14 +51,22 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
                     }
                 },
                 bottomBar = {
-                    ContinueButton(text = buttonText, onClick = onClick)
+                    Column {
+                        GoogleSignInButton { onClickSignIn() }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        ContinueButton(text = buttonText, onClick = onClickContinue)
+                    }
                 }
             )
         }
     }
 }
 
-@Preview
+@Preview(device = Devices.NEXUS_5)
+@Preview(device = Devices.NEXUS_6)
+@Preview(device = Devices.DEFAULT)
 @Composable
 fun WelcomeScreenPreview() {
     val features = getFeatures()
@@ -64,8 +79,11 @@ fun WelcomeScreenPreview() {
             Scaffold(
                 modifier = Modifier.padding(24.dp),
                 content = { innerPadding ->
-                    Column(modifier = Modifier.padding(innerPadding)) {
-
+                    Column(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .verticalScroll(rememberScrollState(), true)
+                    ) {
                         WelcomeHeader(
                             title = stringResource(R.string.welcome_title_one),
                             desc = stringResource(R.string.welcome_sub_one)
@@ -79,7 +97,13 @@ fun WelcomeScreenPreview() {
                     }
                 },
                 bottomBar = {
-                    ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = { })
+                    Column {
+                        GoogleSignInButton {}
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = { })
+                    }
                 }
             )
         }
