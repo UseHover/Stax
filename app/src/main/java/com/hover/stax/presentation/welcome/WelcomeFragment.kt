@@ -74,12 +74,12 @@ class WelcomeFragment : Fragment() {
         1 -> {
             title = getString(R.string.welcome_title_one)
             subtitle = getString(R.string.welcome_sub_one)
-            buttonText = getString(R.string.btn_continue)
+            buttonText = getString(R.string.explore_btn_text)
         }
         2 -> {
             title = getString(R.string.welcome_title_two)
             subtitle = getString(R.string.welcome_sub_two)
-            buttonText = getString(R.string.btn_continue)
+            buttonText = getString(R.string.explore_btn_text)
         }
         3 -> {
             title = getString(R.string.welcome_title_three)
@@ -89,7 +89,7 @@ class WelcomeFragment : Fragment() {
         else -> {
             title = getString(R.string.welcome_title_one)
             subtitle = getString(R.string.welcome_sub_one)
-            buttonText = getString(R.string.btn_continue)
+            buttonText = getString(R.string.explore_btn_text)
         }
     }
 
