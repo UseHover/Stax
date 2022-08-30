@@ -3,6 +3,7 @@ package com.hover.stax.domain.model
 import androidx.annotation.NonNull
 import androidx.room.*
 import com.hover.stax.channels.Channel
+import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
 import kotlin.random.Random
@@ -108,8 +109,8 @@ data class Account(
             return Account(name!!).apply {
                 id = accountId!!
                 simSubscriptionId = Random(2).nextInt()
-                latestBalance = "NGN ${Random(4).nextInt()}"
-                latestBalanceTimestamp = Random(5).nextLong()
+                latestBalance = "Not yet checked"
+                latestBalanceTimestamp = now()
             }
         }
     }

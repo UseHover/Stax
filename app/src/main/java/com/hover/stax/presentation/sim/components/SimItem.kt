@@ -197,9 +197,22 @@ internal fun SimItemsPreview() {
 			Scaffold(topBar = {
 				TopBar(title = R.string.nav_home, isInternetConnected = false, {})
 			}, content = { innerPadding ->
-				val paddingModifier = Modifier.padding(innerPadding)
-				Column {
+				Column(modifier = Modifier.padding(innerPadding)) {
+					SimItem(
+						simIndex = 1 ,
+						account = Account.generateDummy("Dummy Account", 1),
+						bonus = 1,
+						secondaryClickItem = { },
+						balanceTapListener = null
+					)
 
+					SimItem(
+						simIndex = 1 ,
+						account = Account.generateDummy("MTN Nigeria"),
+						bonus = 1,
+						secondaryClickItem = { },
+						balanceTapListener = null
+					)
 				}
 			})
 		}
