@@ -13,16 +13,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
-import com.hover.stax.presentation.home.TopBar
+import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.transactions.TransactionHistoryFragmentDirections
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.RequestServiceDialog
@@ -71,10 +73,12 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
     @Composable
     private fun Toolbar() {
         val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-        TopBar(title = R.string.library_cardhead, isInternetConnected = hasNetwork) {
-            findNavController().navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings())
-        }
+        TopBar(title = R.string.library_cardhead, isInternetConnected = hasNetwork,
+            { navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings()) },
+            { navigate(TransactionHistoryFragmentDirections.actionGlobalRewardsFragment()) })
     }
+
+    private fun navigate(navDirections: NavDirections) = NavUtil.navigate(findNavController(), navDirections)
 
     private fun setObservers() {
         with(viewModel) {

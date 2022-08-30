@@ -2,6 +2,7 @@ package com.hover.stax.login
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -16,7 +17,7 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.hover.AbstractHoverCallerActivity
-import com.hover.stax.presentation.bounties.BountyEmailFragmentDirections
+import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -79,7 +80,12 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
         }
     }
 
-    fun signIn() = startActivityForResult(loginViewModel.signInClient.signInIntent, LOGIN_REQUEST)
+    fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
+//        startActivityForResult(loginViewModel.signInClient.signInIntent, LOGIN_REQUEST)
+
+    private val loginForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) loginViewModel.signIntoGoogle(result.data)
+    }
 
     private fun checkForUpdates() {
         if (BuildConfig.DEBUG) {
@@ -123,7 +129,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            LOGIN_REQUEST -> if (resultCode == RESULT_OK) loginViewModel.signIntoGoogle(data)
+//            LOGIN_REQUEST -> if (resultCode == RESULT_OK) loginViewModel.signIntoGoogle(data)
             UPDATE_REQUEST_CODE -> if (resultCode != RESULT_OK) {
                 Timber.e("Update flow failed. Result code : $resultCode")
                 checkForUpdates()
@@ -133,7 +139,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
 
     override fun googleLoginSuccessful() {
         if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST)
-            BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment()
+            BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
     }
 
     override fun googleLoginFailed() {

@@ -58,7 +58,7 @@
     </fragment>
     <fragment
             android:id="@+id/welcomeFragment"
-            android:name="com.hover.stax.onboarding.welcome.WelcomeFragment"
+            android:name="com.hover.stax.presentation.welcome.WelcomeFragment"
             android:label="IntroFragment">
         <argument
                 android:name="salutation"

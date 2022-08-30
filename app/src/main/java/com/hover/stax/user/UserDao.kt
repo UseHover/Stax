@@ -7,17 +7,17 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao {
 
     @Query("SELECT * FROM stax_users LIMIT 1")
-    fun getUserAsync(): Flow<StaxUser?>
+    fun getUserAsync(): Flow<StaxUser>
 
     @Query("SELECT * FROM stax_users LIMIT 1")
-    fun getUser(): StaxUser?
+    suspend fun getUser(): StaxUser?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(user: StaxUser)
+    suspend fun insert(user: StaxUser)
 
     @Update
-    fun update(user: StaxUser)
+    suspend fun update(user: StaxUser)
 
     @Delete
-    fun delete(user: StaxUser)
+    suspend fun delete(user: StaxUser)
 }

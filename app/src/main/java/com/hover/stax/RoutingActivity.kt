@@ -76,7 +76,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             }
         }
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             initAmplitude()
             logPushNotificationIfRequired()
             initHover()

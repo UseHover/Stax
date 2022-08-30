@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.databinding.FragmentBountyEmailBinding
+import com.hover.stax.databinding.FragmentBountyApplicationBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.settings.SettingsFragment
@@ -19,16 +19,16 @@ import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class BountyEmailFragment : Fragment(), View.OnClickListener {
+class BountyApplicationFragment : Fragment(), View.OnClickListener {
 
-    private var _binding: FragmentBountyEmailBinding? = null
+    private var _binding: FragmentBountyApplicationBinding? = null
     private val binding get() = _binding!!
     private var dialog: StaxDialog? = null
     private lateinit var networkMonitor: NetworkMonitor
     private val loginViewModel: LoginViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
+        _binding = FragmentBountyApplicationBinding.inflate(inflater, container, false)
         networkMonitor = NetworkMonitor(requireContext())
         return binding.root
     }
@@ -55,15 +55,15 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
                 btnSignIn.visibility = View.GONE
                 joinMappers.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener(this@BountyEmailFragment)
+                    setOnClickListener(this@BountyApplicationFragment)
                 }
             }
-            staxUser != null && staxUser.isMapper -> NavUtil.navigate(findNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
+            staxUser != null && staxUser.isMapper -> NavUtil.navigate(findNavController(), BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment())
             else -> {
                 joinMappers.visibility = View.GONE
                 btnSignIn.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener(this@BountyEmailFragment)
+                    setOnClickListener(this@BountyApplicationFragment)
                 }
             }
         }
@@ -104,7 +104,7 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun complete() = NavUtil.navigate(findNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
+    private fun complete() = NavUtil.navigate(findNavController(), BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment())
 
     private fun showError(message: String) {
         updateProgress(-1)

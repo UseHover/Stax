@@ -5,10 +5,10 @@
     <string name="app_name" translatable="false">Stax</string>
     <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
     <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
-    <string name="root_url" translatable="false">https://www.usehover.com</string>
-    <string name="api_url" translatable="false">https://www.usehover.com/api</string>
-    <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
-    <string name="users_endpoint" translatable="false">/stax_users</string>
+<!--    <string name="root_url" translatable="false">https://www.usehover.com</string>-->
+<!--    <string name="api_url" translatable="false">https://www.usehover.com/api</string>-->
+<!--    <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>-->
+<!--    <string name="users_endpoint" translatable="false">/stax_users</string>-->
 
     <string name="referee_endpoint" translatable="false">/set_referee</string>
     <string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>

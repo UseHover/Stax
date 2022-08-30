@@ -57,6 +57,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
         fun onClickedAddNewAccount() = (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
         fun onClickedTermsAndConditions() = Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
         fun onClickedSettingsIcon() = navigateTo(HomeFragmentDirections.toSettingsFragment())
+        fun onClickedRewards() = navigateTo(HomeFragmentDirections.actionGlobalRewardsFragment())
 
         return HomeClickFunctions(
             onSendMoneyClicked = { onSendMoneyClicked() },
@@ -66,7 +67,8 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
             onRequestMoneyClicked = { onRequestMoneyClicked() },
             onClickedAddNewAccount = { onClickedAddNewAccount() },
             onClickedTC = { onClickedTermsAndConditions() },
-            onClickedSettingsIcon = { onClickedSettingsIcon() }
+            onClickedSettingsIcon = { onClickedSettingsIcon() },
+            onClickedRewards = { onClickedRewards() }
         )
     }
 
