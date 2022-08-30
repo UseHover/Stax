@@ -39,9 +39,12 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.TopBar
+import com.hover.stax.presentation.sim.components.LinkSimCard
+import com.hover.stax.presentation.sim.components.SimItem
 import com.hover.stax.ui.theme.*
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.isAbsolutelyEmpty
 import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
@@ -116,14 +119,12 @@ fun SimScreen(
                                         simIndex = visibleSlotIdx,
                                         account = simAccount,
                                         bonus = ((bonus?.bonusPercent ?: 0.0) * 100).toInt(),
-                                        onClickedBuyAirtime = simScreenClickFunctions.onClickedBuyAirtime,
+                                        secondaryClickItem = simScreenClickFunctions.onClickedBuyAirtime,
                                         balanceTapListener = balanceTapListener
                                     )
                                 } else {
                                     Timber.i("Status: Detected unsupported ${presentSim.operatorName}")
-                                    UnSupportedSim(simInfo = presentSim,
-                                        slotId = visibleSlotIdx,
-                                        context = LocalContext.current)
+                                    UnSupportedSim(simInfo = presentSim, slotId = visibleSlotIdx, context = LocalContext.current )
                                 }
                             }
                         }
@@ -137,19 +138,8 @@ fun SimScreen(
 @Composable
 private fun SimScreenPreview() {
     val accounts = listOf(
-        Account("Telecom").apply {
-            id = 1
-            simSubscriptionId = 1
-            latestBalance = "NGN 200"
-            latestBalanceTimestamp = 123
-        },
-        Account("Safaricom").apply {
-            id = -1
-            simSubscriptionId = -3
-            latestBalance = "NGN 500"
-            latestBalanceTimestamp = 2345
-        }
-    )
+        Account.generateDummy(),
+        Account.generateDummy("Safaricom", -1))
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -187,7 +177,7 @@ private fun SimScreenPreview() {
                                 simIndex = 1,
                                 account = account,
                                 bonus = (0.05 * 100).toInt(),
-                                onClickedBuyAirtime = { },
+                                secondaryClickItem = { },
                                 balanceTapListener = null
                             )
                         } else {
@@ -240,237 +230,30 @@ private fun ShowGrantPermissionContent( onClickedAddNewAccount: () -> Unit ) {
 
 @Composable
 private fun UnSupportedSim(simInfo: SimInfo?, slotId: Int, context: Context) {
-    val size13 = dimensionResource(id = R.dimen.margin_13)
+    var displayedNetworkName = ""
     var emailBody = ""
-    if(simInfo !=null) {
+    simInfo?.let {
+        displayedNetworkName = if(it.operatorName.isAbsolutelyEmpty() || it.operatorName.contains("No service"))
+            stringResource(id = R.string.unknown)
+        else it.operatorName
+
         emailBody = stringResource(id = R.string.sim_card_support_request_emailBody,
-            simInfo.osReportedHni ?: "Null",
-            simInfo.operatorName ?: "Null",
-            simInfo.networkOperator ?: "Null",
-            simInfo.countryIso ?: "Null")
+            it.osReportedHni ?: "Null",
+            it.operatorName ?: "Null",
+            it.networkOperator ?: "Null",
+            it.countryIso ?: "Null")
     }
 
-    //Sometimes operator name comes in as : No service,
-    //We don't want user to see: "We detected a No service SIM in slot 1..."
-    //Instead it should be: "We detected a SIM in Slot 1", otherwise show "We detected a MTN SIM in Slot 1"
-    val actualOperatorName = simInfo?.operatorName ?: ""
-    val displayedNetworkName = if((actualOperatorName).contains("No service")) "" else actualOperatorName
+    SimItem(
+        simIndex = slotId,
+        account = Account.generateDummy(displayedNetworkName),
+        bonus = 0,
+        secondaryClickItem = { Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody) },
+        balanceTapListener = null
+    )
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = size13)
-            .shadow(elevation = 0.dp)
-            .border(width = 1.dp, color = DarkGray, shape = RoundedCornerShape(5.dp))
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(size13)
-        ) {
-            Text(
-                text = HtmlCompat.fromHtml(stringResource( id = (R.string.unsupported_simcard_info), displayedNetworkName, slotId),
-                    HtmlCompat.FROM_HTML_MODE_COMPACT).toString(),
-                modifier = Modifier.padding(all = size13),
-                style = MaterialTheme.typography.body1
-            )
-
-            Button(
-                onClick = { Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody) },
-                modifier = Modifier
-                    .padding(top = size13)
-                    .shadow(elevation = 0.dp),
-                shape = MaterialTheme.shapes.medium,
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = BrightBlue,
-                    contentColor = ColorPrimary
-                )
-            ) {
-                Text(
-                    text = stringResource(id = R.string.email_support),
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            }
-
-        }
-        }
 }
 
-@Composable
-private fun SimItem(
-    simIndex: Int,
-    account: Account,
-    bonus: Int,
-    onClickedBuyAirtime: () -> Unit,
-    balanceTapListener: BalanceTapListener?
-) {
 
-    val size13 = dimensionResource(id = R.dimen.margin_13)
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = size13)
-            .shadow(elevation = 0.dp)
-            .border(width = 1.dp, color = DarkGray, shape = RoundedCornerShape(5.dp))
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(size13)
-        ) {
-            SimItemTopRow(
-                simIndex = simIndex,
-                account = account,
-                balanceTapListener = balanceTapListener
-            )
-            Column {
-                val notYetChecked = stringResource(id = R.string.not_yet_checked)
-                Text(
-                    text = stringResource(
-                        id = R.string.airtime_balance_holder,
-                        account.latestBalance ?: notYetChecked
-                    ),
-                    color = TextGrey,
-                    modifier = Modifier.padding(top = size13),
-                    style = MaterialTheme.typography.body1
-                )
 
-                Text(
-                    text = stringResource(
-                        id = R.string.as_of,
-                        DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)
-                    ),
-                    color = TextGrey,
-                    modifier = Modifier.padding(bottom = 26.dp),
-                    style = MaterialTheme.typography.body1
-                )
-
-                OutlinedButton(
-                    onClick = onClickedBuyAirtime,
-                    modifier = Modifier
-                        .padding(bottom = 6.dp)
-                        .shadow(elevation = 0.dp)
-                        .wrapContentWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    border = BorderStroke(width = 0.5.dp, color = DarkGray),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = ColorSurface,
-                        contentColor = OffWhite
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(all = 5.dp)
-                    ) {
-                        var buyAirtimeLabel = stringResource(id = R.string.nav_airtime)
-                        if (bonus > 0) {
-                            val bonusPercent = bonus.toString().plus("%")
-                            buyAirtimeLabel =
-                                stringResource(
-                                    id = R.string.buy_airitme_with_discount,
-                                    bonusPercent
-                                )
-                        }
-                        Text(
-                            text = buyAirtimeLabel,
-                            style = MaterialTheme.typography.button,
-                            modifier = Modifier.padding(end = 5.dp),
-                            textAlign = TextAlign.Start,
-                            fontSize = 14.sp
-                        )
-
-                        Spacer(modifier = Modifier.width(3.dp))
-
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_bonus),
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SimItemTopRow(simIndex: Int, account: Account, balanceTapListener: BalanceTapListener?) {
-    val size34 = dimensionResource(id = R.dimen.margin_34)
-
-    Row {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).data(account.logoUrl)
-                .crossfade(true).diskCachePolicy(CachePolicy.ENABLED).build(),
-            contentDescription = "",
-            placeholder = painterResource(id = R.drawable.img_placeholder),
-            error = painterResource(id = R.drawable.img_placeholder),
-            modifier = Modifier
-                .size(size34)
-                .clip(CircleShape)
-                .align(Alignment.CenterVertically),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 13.dp)
-        ) {
-            Text(text = account.name, style = MaterialTheme.typography.body1)
-            Text(
-                text = stringResource(id = R.string.sim_index, simIndex),
-                color = TextGrey,
-                style = MaterialTheme.typography.body2
-            )
-        }
-
-        Button(
-            onClick = { balanceTapListener?.onTapBalanceRefresh(account) },
-            modifier = Modifier
-                .weight(1f)
-                .shadow(elevation = 0.dp),
-            shape = MaterialTheme.shapes.medium,
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = BrightBlue,
-                contentColor = ColorPrimary
-            )
-        ) {
-            Text(
-                text = stringResource(id = R.string.check_balance_capitalized),
-                style = MaterialTheme.typography.body2,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
-private fun LinkSimCard(@StringRes id: Int, onClickedLinkSimCard: () -> Unit, stringArg: String = "") {
-    OutlinedButton(
-        onClick = onClickedLinkSimCard,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 13.dp)
-            .shadow(elevation = 0.dp),
-        shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(width = 0.5.dp, color = DarkGray),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = ColorSurface,
-            contentColor = OffWhite
-        )
-    ) {
-        Text(
-            text = stringResource(id = id, stringArg),
-            style = MaterialTheme.typography.button,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 5.dp, bottom = 5.dp),
-            textAlign = TextAlign.Center
-        )
-    }
-}

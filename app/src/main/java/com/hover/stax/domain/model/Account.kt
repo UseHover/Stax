@@ -5,6 +5,7 @@ import androidx.room.*
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
+import kotlin.random.Random
 
 const val PLACEHOLDER = " placeholder"
 const val ACCOUNT_NAME: String = "account_name"
@@ -101,4 +102,15 @@ data class Account(
     }
 
     override fun compareTo(other: Account): Int = toString().compareTo(other.toString())
+
+    companion object {
+        fun generateDummy(name: String? = "Dummy account", accountId: Int? = -1) : Account {
+            return Account(name!!).apply {
+                id = accountId!!
+                simSubscriptionId = Random(2).nextInt()
+                latestBalance = "NGN ${Random(4).nextInt()}"
+                latestBalanceTimestamp = Random(5).nextLong()
+            }
+        }
+    }
 }
