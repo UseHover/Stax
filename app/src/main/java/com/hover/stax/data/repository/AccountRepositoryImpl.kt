@@ -37,11 +37,11 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         }
     }
 
-    override suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean) {
+    override suspend fun createAccount(channel: Channel, simSubscriptionId: Int, isDefault: Boolean) {
         val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
         val account = Account(
             accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, subscriptionId = subscriptionId
+            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = simSubscriptionId
         )
 
         channel.selected = true
@@ -81,8 +81,9 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         }
     }
 
-    override fun getTelecomAccounts(subscriberIds: IntArray): Flow<List<Account>> {
-        return accountRepo.getTelecomAccounts(subscriberIds)
+    override fun getTelecomAccounts(simSubscriptionIds: IntArray): Flow<List<Account>> {
+        return accountRepo.
+        getTelecomAccounts(simSubscriptionIds)
     }
 
     private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()

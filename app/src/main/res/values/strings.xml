@@ -30,7 +30,7 @@
     <string name="nav_home">Home</string>
     <string name="nav_balance_and_history">Balance and history</string>
     <string name="nav_balances">Balances</string>
-    <string name="nav_sim">SIM</string>
+    <string name="nav_sim">SIMs</string>
 
     <string name="nav_history">History</string>
     <string name="nav_get_paid">Get Paid</string>
@@ -178,7 +178,7 @@
     <string name="add_accounts_to_stax">Add accounts to Stax</string>
     <string name="link_sim_to_stax">Link your SIM cards to Stax</string>
     <string name="link_nth_sim_to_stax">Link your %1$s SIM card</string>
-    <string name="your_linked_sim">Your linked SIM cards</string>
+    <string name="your_sim_cards">Your SIM cards</string>
 
     <!-- SIM CARD -->
     <string name="simpage_permission_alert">Grant Stax permission to show your services available in your location and transaction history</string>

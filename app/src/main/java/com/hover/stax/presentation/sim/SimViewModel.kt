@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class SimViewModel(
     private val presentSimUseCase: GetPresentSimUseCase,
@@ -59,7 +58,7 @@ class SimViewModel(
     }
 
     private fun getSimsHavingNoTelecomAccount(accounts: List<Account>, sims: List<SimInfo>): List<SimInfo> {
-        return sims.filter { accounts.find { account -> account.subscriptionId == it.subscriptionId } == null }
+        return sims.filter { accounts.find { account -> account.simSubscriptionId == it.subscriptionId } == null }
     }
 
     private fun fetchBonuses() = viewModelScope.launch {

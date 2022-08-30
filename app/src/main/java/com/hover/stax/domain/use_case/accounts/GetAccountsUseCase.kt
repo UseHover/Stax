@@ -8,6 +8,6 @@ class GetAccountsUseCase(private val accountsRepository: AccountRepository) {
 
     val accounts: Flow<List<Account>> = accountsRepository.fetchAccounts
 
-    fun telecomAccounts(subscriberIds: IntArray) : Flow<List<Account>> = accountsRepository.getTelecomAccounts(subscriberIds)
+    fun telecomAccounts(simSubscriptionIds: IntArray) : Flow<List<Account>> = accountsRepository.getTelecomAccounts(simSubscriptionIds)
 
 }

@@ -33,7 +33,6 @@ import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.hover.sdk.permissions.PermissionHelper
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
@@ -107,7 +106,7 @@ fun SimScreen(
 
                         else {
                             items(simUiState.presentSims) { presentSim ->
-                                val simAccount = simUiState.telecomAccounts.find { it.subscriptionId == presentSim.subscriptionId }
+                                val simAccount = simUiState.telecomAccounts.find { it.simSubscriptionId == presentSim.subscriptionId }
                                 val visibleSlotIdx = presentSim.slotIdx + 1
 
                                 if (simAccount != null) {
@@ -140,13 +139,13 @@ private fun SimScreenPreview() {
     val accounts = listOf(
         Account("Telecom").apply {
             id = 1
-            subscriptionId = 1
+            simSubscriptionId = 1
             latestBalance = "NGN 200"
             latestBalanceTimestamp = 123
         },
         Account("Safaricom").apply {
             id = -1
-            subscriptionId = -3
+            simSubscriptionId = -3
             latestBalance = "NGN 500"
             latestBalanceTimestamp = 2345
         }
@@ -207,7 +206,7 @@ private fun SimScreenPreview() {
 private fun PageTitle() {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Text(
-        text = stringResource(id = R.string.your_linked_sim),
+        text = stringResource(id = R.string.your_sim_cards),
         modifier = Modifier.padding(vertical = size13),
         style = MaterialTheme.typography.button
     )

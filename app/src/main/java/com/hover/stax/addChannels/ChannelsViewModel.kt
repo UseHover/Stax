@@ -190,7 +190,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
             val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER) //ensures uniqueness of name due to db constraints
             Account(
                 accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, subscriptionId = -1
+                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, simSubscriptionId = -1
             )
         }.onEach {
             logChoice(it)
