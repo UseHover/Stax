@@ -138,7 +138,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
     }
 
     override fun googleLoginSuccessful() {
-        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST)
+        if (loginViewModel.staxUser.value?.isMapper == true)
             BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
     }
 

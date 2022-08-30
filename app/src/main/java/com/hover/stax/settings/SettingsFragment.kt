@@ -254,10 +254,6 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    companion object {
-        const val SHOW_BOUNTY_LIST = 100
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
 

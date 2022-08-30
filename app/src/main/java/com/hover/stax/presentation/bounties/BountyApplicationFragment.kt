@@ -51,16 +51,16 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
 
     private fun initUI(staxUser: StaxUser?) = with(binding) {
         when {
-            staxUser != null && !staxUser.isMapper -> {
+            staxUser != null -> {
                 btnSignIn.visibility = View.GONE
-                joinMappers.apply {
+                signedInDetails.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener(this@BountyApplicationFragment)
+                    text = getString(R.string.signed_in_as, staxUser.email)
                 }
             }
             staxUser != null && staxUser.isMapper -> NavUtil.navigate(findNavController(), BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment())
             else -> {
-                joinMappers.visibility = View.GONE
+                signedInDetails.visibility = View.GONE
                 btnSignIn.apply {
                     visibility = View.VISIBLE
                     setOnClickListener(this@BountyApplicationFragment)
@@ -71,10 +71,7 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
-            when (v.id) {
-                R.id.btnSignIn -> startGoogleSignIn()
-                R.id.joinMappers -> joinMappers()
-            }
+                startGoogleSignIn()
         } else {
             showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
         }
@@ -84,12 +81,6 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
         logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
         updateProgress(0)
         (activity as MainActivity).signIn()
-        loginViewModel.postGoogleAuthNav.value = SettingsFragment.SHOW_BOUNTY_LIST
-    }
-
-    private fun joinMappers() {
-        updateProgress(0)
-        loginViewModel.joinMappers()
     }
 
     private fun updateProgress(progress: Int) = with(binding.progressIndicator) {

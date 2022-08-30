@@ -36,8 +36,6 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
 
-    val postGoogleAuthNav = MutableLiveData<Int>()
-
     init {
         getUser()
     }
@@ -83,8 +81,6 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
         if (account != null) uploadUserToStax(account.email!!, account.displayName!!, account.idToken!!)
         else Timber.e("No account found")
     }
-
-    fun joinMappers() = staxUser.value?.email?.let { updateUser(UserUpdateDto(UpdateDto(isMapper = true, email = it))) }
 
     fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { updateUser(UserUpdateDto(UpdateDto(marketingOptedIn = optIn, email = it))) }
 

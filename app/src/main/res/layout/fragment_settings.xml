@@ -23,7 +23,6 @@
 
         <include
                 android:id="@+id/bounty_card"
-                android:visibility="gone"
                 layout="@layout/settings_card_bounties" />
 
 
