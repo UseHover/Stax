@@ -63,6 +63,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.hover.stax.data.local.auth.AuthRepo
 
 val appModule = module {
     viewModelOf(::FaqViewModel)
@@ -106,6 +107,7 @@ val dataModule = module(createdAtStart = true) {
     singleOf(::UserRepo)
     singleOf(::BonusRepo)
     singleOf(::ParserRepo)
+    singleOf(::AuthRepo)
 }
 
 val networkModule = module {
@@ -148,6 +150,7 @@ val repositories = module {
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
     singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
+    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
 }
 
 val useCases = module {

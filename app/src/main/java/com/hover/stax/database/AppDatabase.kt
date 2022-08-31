@@ -14,6 +14,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.data.local.auth.AuthDao
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantDao
 import com.hover.stax.paybill.Paybill
@@ -26,20 +27,22 @@ import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDao
 import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.data.local.user.UserDao
+import com.hover.stax.domain.model.TokenInfo
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @Database(
     entities = [
-        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class
+        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class, TokenInfo::class
     ],
-    version = 42,
+    version = 43,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
         AutoMigration(from = 38, to = 39),
         AutoMigration(from = 40, to = 41),
-        AutoMigration(from = 41, to = 42)
+        AutoMigration(from = 41, to = 42),
+        AutoMigration(from = 42, to = 43)
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -63,6 +66,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 
     abstract fun bonusDao(): BonusDao
+
+    abstract fun authDao(): AuthDao
 
     companion object {
 
