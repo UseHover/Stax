@@ -4,10 +4,25 @@ import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,10 +44,16 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.TopBar
-import com.hover.stax.ui.theme.*
+import com.hover.stax.ui.theme.BrightBlue
+import com.hover.stax.ui.theme.ColorPrimary
+import com.hover.stax.ui.theme.ColorSurface
+import com.hover.stax.ui.theme.DarkGray
+import com.hover.stax.ui.theme.OffWhite
+import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.ui.theme.TextGrey
 import com.hover.stax.utils.DateUtils
 
-private fun isSimSupportedAccount(accountId: Int) : Boolean = accountId >=0
+private fun isSimSupportedAccount(accountId: Int): Boolean = accountId >= 0
 
 @Composable
 internal fun SimItem(
@@ -57,16 +78,13 @@ internal fun SimItem(
 				.padding(size13)
 		) {
 			SimItemTopRow(
-				simIndex = simIndex,
-				account = account,
-				balanceTapListener = balanceTapListener
+				simIndex = simIndex, account = account, balanceTapListener = balanceTapListener
 			)
 			Column {
 				val notYetChecked = stringResource(id = R.string.not_yet_checked)
 				Text(
 					text = stringResource(
-						id = R.string.airtime_balance_holder,
-						account.latestBalance ?: notYetChecked
+						id = R.string.airtime_balance_holder, account.latestBalance ?: notYetChecked
 					),
 					color = TextGrey,
 					modifier = Modifier.padding(top = size13),
@@ -83,6 +101,17 @@ internal fun SimItem(
 					style = MaterialTheme.typography.body1
 				)
 
+				if (!isSimSupportedAccount(account.id)) {
+					Text(
+						text = stringResource(
+							id = R.string.unsupported_sim_info
+						),
+						color = TextGrey,
+						modifier = Modifier.padding(bottom = 7.dp),
+						style = MaterialTheme.typography.body2
+					)
+				}
+
 				OutlinedButton(
 					onClick = secondaryClickItem,
 					modifier = Modifier
@@ -92,8 +121,7 @@ internal fun SimItem(
 					shape = MaterialTheme.shapes.medium,
 					border = BorderStroke(width = 0.5.dp, color = DarkGray),
 					colors = ButtonDefaults.buttonColors(
-						backgroundColor = ColorSurface,
-						contentColor = OffWhite
+						backgroundColor = ColorSurface, contentColor = OffWhite
 					)
 				) {
 					Row(
@@ -109,7 +137,7 @@ internal fun SimItem(
 							fontSize = 14.sp
 						)
 
-						if(isSimSupportedAccount(account.id)) {
+						if (isSimSupportedAccount(account.id)) {
 							Spacer(modifier = Modifier.width(3.dp))
 
 							Image(
@@ -125,10 +153,10 @@ internal fun SimItem(
 	}
 }
 
-private fun getSecondaryButtonLabel(accountId : Int, bonus: Int, context: Context) : String {
+private fun getSecondaryButtonLabel(accountId: Int, bonus: Int, context: Context): String {
 	var label = context.getString(R.string.email_support)
-	if(isSimSupportedAccount(accountId)) {
-		label = context.getString( R.string.nav_airtime)
+	if (isSimSupportedAccount(accountId)) {
+		label = context.getString(R.string.nav_airtime)
 		if (bonus > 0) {
 			val bonusPercent = bonus.toString().plus("%")
 			label = context.getString(R.string.buy_airitme_with_discount, bonusPercent)
@@ -138,13 +166,17 @@ private fun getSecondaryButtonLabel(accountId : Int, bonus: Int, context: Contex
 }
 
 @Composable
-private fun SimItemTopRow(simIndex: Int, account: Account, balanceTapListener: BalanceTapListener?) {
+private fun SimItemTopRow(
+	simIndex: Int,
+	account: Account,
+	balanceTapListener: BalanceTapListener?
+) {
 	val size34 = dimensionResource(id = R.dimen.margin_34)
 
 	Row {
 		AsyncImage(
-			model = ImageRequest.Builder(LocalContext.current).data(account.logoUrl)
-				.crossfade(true).diskCachePolicy(CachePolicy.ENABLED).build(),
+			model = ImageRequest.Builder(LocalContext.current).data(account.logoUrl).crossfade(true)
+				.diskCachePolicy(CachePolicy.ENABLED).build(),
 			contentDescription = "",
 			placeholder = painterResource(id = R.drawable.img_placeholder),
 			error = painterResource(id = R.drawable.img_placeholder),
@@ -168,30 +200,41 @@ private fun SimItemTopRow(simIndex: Int, account: Account, balanceTapListener: B
 			)
 		}
 
-		Button(
-			onClick = { balanceTapListener?.onTapBalanceRefresh(account) },
-			modifier = Modifier
-				.weight(1f)
-				.shadow(elevation = 0.dp),
-			shape = MaterialTheme.shapes.medium,
-			colors = ButtonDefaults.buttonColors(
-				backgroundColor = BrightBlue,
-				contentColor = ColorPrimary
-			)
-		) {
+		if (isSimSupportedAccount(account.id)) {
+			Button(
+				onClick = { balanceTapListener?.onTapBalanceRefresh(account) },
+				modifier = Modifier
+					.weight(1f)
+					.shadow(elevation = 0.dp),
+				shape = MaterialTheme.shapes.medium,
+				colors = ButtonDefaults.buttonColors(
+					backgroundColor = BrightBlue, contentColor = ColorPrimary
+				)
+			) {
+				Text(
+					text = stringResource(id = R.string.check_balance_capitalized),
+					style = MaterialTheme.typography.body2,
+					modifier = Modifier.fillMaxWidth(),
+					textAlign = TextAlign.Center
+				)
+			}
+		} else {
 			Text(
-				text = stringResource(id = if(isSimSupportedAccount(account.id)) R.string.check_balance_capitalized else R.string.unsupported),
+				text = stringResource(id = R.string.unsupported),
 				style = MaterialTheme.typography.body2,
-				modifier = Modifier.fillMaxWidth(),
-				textAlign = TextAlign.Center
+				modifier = Modifier
+					.weight(1f)
+					.align(Alignment.CenterVertically),
+				textAlign = TextAlign.End
 			)
 		}
+
 	}
 }
 
 @Composable
 @Preview
-internal fun SimItemsPreview() {
+private fun SimItemsPreview() {
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Scaffold(topBar = {
@@ -199,7 +242,7 @@ internal fun SimItemsPreview() {
 			}, content = { innerPadding ->
 				Column(modifier = Modifier.padding(innerPadding)) {
 					SimItem(
-						simIndex = 1 ,
+						simIndex = 1,
 						account = Account.generateDummy("Dummy Account", 1),
 						bonus = 1,
 						secondaryClickItem = { },
@@ -207,7 +250,7 @@ internal fun SimItemsPreview() {
 					)
 
 					SimItem(
-						simIndex = 1 ,
+						simIndex = 1,
 						account = Account.generateDummy("MTN Nigeria"),
 						bonus = 1,
 						secondaryClickItem = { },
