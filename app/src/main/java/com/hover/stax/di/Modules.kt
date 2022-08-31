@@ -166,7 +166,7 @@ val useCases = module {
     factoryOf(::TipsUseCase)
 
     factoryOf(::GetChannelBountiesUseCase)
-    factoryOf(::GetPresentSimsUseCase)
+    factoryOf(::GetPresentSimUseCase)
 
     factoryOf(::StaxUserUseCase)
 }

@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
-import com.hover.stax.presentation.home.TopBar
 import com.hover.stax.ui.theme.ColorSurface
 import com.hover.stax.ui.theme.DarkGray
 import com.hover.stax.ui.theme.OffWhite
