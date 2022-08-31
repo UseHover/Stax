@@ -1,12 +1,11 @@
 package com.hover.stax.data.repository
 
 import android.content.Context
+import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.data.local.auth.AuthRepo
 import com.hover.stax.data.remote.StaxApi
-import com.hover.stax.data.remote.dto.authorization.TokenRefreshRequest
-import com.hover.stax.data.remote.dto.authorization.TokenRequest
-import com.hover.stax.data.remote.dto.authorization.toTokenInfo
+import com.hover.stax.data.remote.dto.authorization.*
 import com.hover.stax.domain.model.TokenInfo
 import com.hover.stax.domain.repository.AuthRepository
 
@@ -14,6 +13,17 @@ private const val AUTHORIZATION = "authorization_code"
 private const val REFRESH = "refresh_token"
 
 class AuthRepositoryImpl(private val authRepo: AuthRepo, private val staxApi: StaxApi, private val context: Context) : AuthRepository {
+
+    override suspend fun authorizeClient(idToken: String): AuthResponse {
+        val authRequest = AuthRequest(
+            redirectUri = context.getString(R.string.redirect_uri),
+            clientId = context.getString(R.string.client_uid),
+            token = idToken,
+            staxUser = StaxUser(Hover.getDeviceId(context))
+        )
+
+        return staxApi.authorize(authRequest)
+    }
 
     override suspend fun fetchTokenInfo(code: String): TokenInfo {
         val tokenRequest = TokenRequest(

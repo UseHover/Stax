@@ -11,8 +11,11 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class TokenAuthenticator(private val authRepository: AuthRepository) : Authenticator, KoinComponent {
+class TokenAuthenticator() : Authenticator, KoinComponent {
+
+    private val authRepository: AuthRepository by inject()
 
     override fun authenticate(route: Route?, response: Response): Request? {
         val tokenInfo: TokenInfo? = getTokenInfo()

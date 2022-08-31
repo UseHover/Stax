@@ -8,8 +8,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.Response
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class TokenInterceptor(private val authRepository: AuthRepository) : Interceptor {
+class TokenInterceptor : Interceptor, KoinComponent {
+
+    private val authRepository: AuthRepository by inject()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = getTokenInfo()?.accessToken ?: ""
