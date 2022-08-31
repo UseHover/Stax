@@ -494,7 +494,7 @@
     <string name="privacy_policy_label">By using Stax App, you\'ve read our privacy policy and agree to the terms of service. Click to read</string>
     <string name="dialog_confirm_logout_header">Confirm Logout</string>
     <string name="logout_out_success">Logout successful</string>
-    <string name="dialog_confirm_logout_desc">"Are you sure you want to logout?"</string>
+    <string name="dialog_confirm_logout_desc">Are you sure you want to logout?</string>
 
     <string name="name_label">Enter your full name</string>
     <string name="phone_label">Enter your phone number</string>
@@ -796,5 +796,9 @@
     <string name="redeem">Redeem</string>
     <string name="recent_points_earned">Recent Points Earned</string>
     <string name="nav_earn">Earn</string>
+
+    <string name="welcome">Welcome to Stax %1$s</string>
+    <string name="welcome_back">Welcome back to Stax %1$s</string>
+    <string name="signed_in_message">You are already signed in to Stax</string>
 
 </resources>

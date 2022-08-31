@@ -2,6 +2,7 @@ package com.hover.stax.di
 
 import com.hover.sdk.api.Hover
 import com.hover.sdk.database.HoverRoomDatabase
+import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountsViewModel
@@ -26,11 +27,11 @@ import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.channels.GetPresentSimsUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
+import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
-import com.hover.stax.login.LoginNetworking
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.merchants.MerchantViewModel
@@ -52,6 +53,7 @@ import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.user.UserRepo
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
@@ -107,20 +109,27 @@ val dataModule = module(createdAtStart = true) {
 }
 
 val networkModule = module {
-    singleOf(::LoginNetworking)
+//    singleOf(::LoginNetworking)
 
     single<StaxApi> {
-        val okHttpClient = OkHttpClient().newBuilder().addInterceptor { chain ->
-            val request = chain.request()
-            val builder = request.newBuilder().header("Authorization", "Token token=${Hover.getApiKey(androidContext())}")
+        val loggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
-            val newRequest = builder.build()
-            chain.proceed(newRequest)
-        }.build()
+        val okHttpClient = OkHttpClient()
+            .newBuilder()
+            .addInterceptor { chain ->
+                val request = chain.request()
+                val builder = request.newBuilder().header("Authorization", "Token token=${Hover.getApiKey(androidContext())}")
+
+                val newRequest = builder.build()
+                chain.proceed(newRequest)
+            }
+
+        if (BuildConfig.DEBUG)
+            okHttpClient.addInterceptor(loggingInterceptor)
 
         Retrofit.Builder()
             .baseUrl(androidContext().resources.getString(R.string.root_url))
-            .client(okHttpClient)
+            .client(okHttpClient.build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(StaxApi::class.java)
@@ -138,6 +147,7 @@ val repositories = module {
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
+    singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
 }
 
 val useCases = module {
@@ -152,4 +162,6 @@ val useCases = module {
 
     factoryOf(::GetChannelBountiesUseCase)
     factoryOf(::GetPresentSimsUseCase)
+
+    factoryOf(::StaxUserUseCase)
 }

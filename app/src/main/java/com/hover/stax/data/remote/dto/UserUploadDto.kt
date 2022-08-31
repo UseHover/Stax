@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName
 /**
  * Builds the user object used to create a user on Stax
  */
-data class UserRequestDto(
+data class UserUploadDto(
 
 	@SerializedName("stax_user")
-	val staxUser: UserDto
+	val staxUser: UploadDto
 )
 
-data class UserDto(
+data class UploadDto(
 
 	@SerializedName("device_id")
 	val deviceId: String,
