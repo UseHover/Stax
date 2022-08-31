@@ -608,7 +608,7 @@
     <string name="bounty_msg">Stax will pay you USD $1 - $5 to go through a USSD flow.</string>
     <string name="get_started">Get started</string>
     <string name="bounty_email_stage_title">Welcome to Money Mapper</string>
-    <string name="bounty_email_stage_desc1">Stax wants to make USSD easier to use for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Money Mappers have the opportunity to earn USD $1 - $5 for every USSD transaction you successfully complete. Please follow the instructions below to apply.</string>
+    <string name="bounty_email_stage_desc1">Stax wants to make USSD easier to use for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Money Mappers have the opportunity to earn USD $1 - $5 for every USSD transaction successfully completed. Please follow the instructions below to apply.</string>
     <string name="bounty_email_stage_desc2"><![CDATA[<html><b>1.</b> Sign in below with your Google account. <br><br> <b>2.</b> Visit <font color=#FFFFFF><u><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">form link</a></u></font> and fill out the form. <br><br> <b>3.</b> You will receive an email notification when your application is accepted. <br><br> <b>4.</b> Come back to this screen to find the list of bounties and start earning money!</html>]]></string>
     <string name="signed_in_as">Signed into Google account %1$s</string>
     <string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
