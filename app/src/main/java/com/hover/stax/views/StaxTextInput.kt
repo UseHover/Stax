@@ -97,7 +97,6 @@ class StaxTextInput(context: Context, attrs: AttributeSet) : AbstractStatefulInp
         editText?.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN && listener != null) {
                 listener.onClick(this)
-                true
             }
             false
         }

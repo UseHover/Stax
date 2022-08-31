@@ -5,8 +5,8 @@ import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.data.remote.dto.toStaxUser
 import com.hover.stax.domain.repository.StaxUserRepository
-import com.hover.stax.user.StaxUser
-import com.hover.stax.user.UserRepo
+import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.data.local.user.UserRepo
 import kotlinx.coroutines.flow.Flow
 
 class StaxUserRepositoryImpl(private val staxApi: StaxApi, private val userRepo: UserRepo) : StaxUserRepository {

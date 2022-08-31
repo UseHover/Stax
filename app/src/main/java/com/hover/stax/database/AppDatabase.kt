@@ -24,8 +24,8 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDao
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDao
-import com.hover.stax.user.StaxUser
-import com.hover.stax.user.UserDao
+import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.data.local.user.UserDao
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

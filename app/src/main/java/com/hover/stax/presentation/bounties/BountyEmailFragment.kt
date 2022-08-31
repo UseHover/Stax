@@ -12,7 +12,7 @@ import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.settings.SettingsFragment
-import com.hover.stax.user.StaxUser
+import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
