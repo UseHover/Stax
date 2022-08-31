@@ -1,30 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
-    <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
-    <string name="app_name" translatable="false">Stax</string>
-    <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
-    <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
-<!--    <string name="root_url" translatable="false">https://www.usehover.com</string>-->
-<!--    <string name="api_url" translatable="false">https://www.usehover.com/api</string>-->
-<!--    <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>-->
-<!--    <string name="users_endpoint" translatable="false">/stax_users</string>-->
-
-    <string name="referee_endpoint" translatable="false">/set_referee</string>
-    <string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
-    <string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
-    <string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
-    <string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
-    <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
-    <string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
-    <string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
-    <string name="privacy_policy_link" translatable="false">https://docs.usehover.com/staxpolicy</string>
-    <string name="default_notification_channel_id">app.hover.stax</string>
-
-    <string name="channels_json_staging" translatable="false">channels-staging.json</string>
-    <string name="channels_json_prod" translatable="false">channels-prod.json</string>
-    <string name="stax_handle" translatable="false">\@joinstax</string>
-
     <string name="nav_home">Mana</string>
     <string name="nav_balance_and_history">Madaallii fi seenaa</string>
     <string name="nav_balances">Madaallii</string>
