@@ -4,15 +4,15 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.repository.ChannelRepository
 
 private const val MAX_LOOKUP_COUNT = 40
 
-class ChannelRepositoryImpl(val channelRepo: ChannelRepo) : ChannelRepository {
+class ChannelRepositoryImpl(val channelRepo: ChannelRepo,val simRepo: SimRepo) : ChannelRepository {
 
-    override val presentSims: List<SimInfo>
-        get() = channelRepo.presentSims
+    override suspend fun presentSims(): List<SimInfo> = simRepo.getPresentSims()
 
     override suspend fun getChannelsByIds(ids: List<Int>): List<Channel> = channelRepo.getChannelsByIds(ids)
 

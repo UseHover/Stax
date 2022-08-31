@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import timber.log.Timber;
 
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {
+    public static final String BANK_TYPE = "bank", TELECOM_TYPE = "telecom", MOBILE_MONEY = "mmo";
 
     @PrimaryKey
     @NonNull
@@ -58,6 +60,10 @@ public class Channel implements Comparable<Channel> {
     @NonNull
     @ColumnInfo(name = "secondary_color_hex")
     public String secondaryColorHex;
+
+    @NonNull
+    @ColumnInfo(name = "institution_type", defaultValue = BANK_TYPE)
+    public String institutionType;
 
     // Dont use the below, it needs to be removed
     @NonNull
@@ -121,6 +127,7 @@ public class Channel implements Comparable<Channel> {
             institutionId = jsonObject.getInt("institution_id");
             primaryColorHex = jsonObject.getString("primary_color_hex");
             secondaryColorHex = jsonObject.getString("secondary_color_hex");
+            institutionType = jsonObject.getString("institution_type");
         } catch (JSONException e) {
             Timber.d(e.getLocalizedMessage());
         }

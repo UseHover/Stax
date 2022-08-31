@@ -26,6 +26,10 @@
         app:destination="@id/tipsFragment" />
 
     <action
+        android:id="@+id/action_global_NavigationSIM"
+        app:destination="@id/navigation_sim_fragment" />
+
+    <action
         android:id="@+id/action_global_NavigationHome"
         app:destination="@id/navigation_home" />
 
@@ -90,6 +94,7 @@
 
     </fragment>
 
+
     <fragment
         android:id="@+id/navigation_history"
         android:name="com.hover.stax.transactions.TransactionHistoryFragment"
@@ -107,10 +112,26 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_sim_fragment"
+        android:name="com.hover.stax.presentation.sim.SimFragment"
+        android:label="@string/nav_sim">
+
+        <action
+            android:id="@+id/to_SettingsFragment"
+            app:destination="@+id/navigation_settings" />
+
+        <action
+            android:id="@+id/to_TransferFragment"
+            app:destination="@+id/navigation_transfer" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_linkAccount"
         android:name="com.hover.stax.addChannels.AddChannelsFragment"
         android:label="@string/nav_link_account"
         tools:layout="@layout/fragment_add_channels">
+
         <action
             android:id="@+id/action_navigation_linkAccount_to_navigation_home"
             app:destination="@id/navigation_home"
@@ -120,7 +141,7 @@
             android:id="@+id/linkAccountDL"
             android:autoVerify="true"
             app:mimeType="text/plain"
-            app:uri="stax.me/linkaccount" />
+            app:uri="stax.me/linkaccount?{isForTelecom}" />
     </fragment>
 
 

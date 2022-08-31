@@ -25,7 +25,7 @@ import com.hover.stax.domain.use_case.accounts.SetDefaultAccountUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.domain.use_case.channels.GetPresentSimsUseCase
+import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.faq.FaqViewModel
@@ -36,6 +36,7 @@ import com.hover.stax.login.LoginViewModel
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.merchants.MerchantViewModel
 import com.hover.stax.paybill.PaybillRepo
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.presentation.bounties.BountyViewModel
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
@@ -48,6 +49,7 @@ import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
+import com.hover.stax.presentation.sim.SimViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.user.UserRepo
@@ -88,6 +90,7 @@ val appModule = module {
     viewModelOf(::BonusViewModel)
 
     viewModelOf(::HomeViewModel)
+    viewModelOf(::SimViewModel)
 }
 
 val dataModule = module(createdAtStart = true) {
@@ -106,6 +109,7 @@ val dataModule = module(createdAtStart = true) {
     singleOf(::UserRepo)
     singleOf(::BonusRepo)
     singleOf(::ParserRepo)
+    singleOf(::SimRepo)
 }
 
 val networkModule = module {
@@ -141,9 +145,10 @@ val repositories = module {
         Dispatchers.IO
     }
 
-    single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(named("CoroutineDispatcher"))) }
+    single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
+    single<SimRepository> { SimRepositoryImpl(get()) }
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }

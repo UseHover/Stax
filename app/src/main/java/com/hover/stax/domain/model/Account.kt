@@ -1,9 +1,12 @@
 package com.hover.stax.domain.model
 
+import androidx.annotation.NonNull
 import androidx.room.*
 import com.hover.stax.channels.Channel
+import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
+import kotlin.random.Random
 
 const val PLACEHOLDER = " placeholder"
 const val ACCOUNT_NAME: String = "account_name"
@@ -28,6 +31,10 @@ data class Account(
         @ColumnInfo
         var institutionId: Int?,
 
+        @NonNull
+        @ColumnInfo(name = "institution_type", defaultValue = Channel.BANK_TYPE)
+        var institutionType: String,
+
         @JvmField
         @ColumnInfo
         var countryAlpha2: String?,
@@ -42,17 +49,22 @@ data class Account(
         val secondaryColorHex: String,
 
         @ColumnInfo(defaultValue = "0")
-        var isDefault: Boolean = false
+        var isDefault: Boolean = false,
+
+        @NonNull
+        @ColumnInfo(name = "sim_subscription_id", defaultValue = "-1")
+        var simSubscriptionId: Int = -1
+
 ) : Comparable<Account> {
 
     constructor(name: String, channel: Channel) : this(
-            name, name, channel.logoUrl, "", channel.institutionId, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex
+            name, name, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex
     )
 
     constructor(name: String) : this(name, primaryColor = "#292E35")
 
     constructor(name: String, primaryColor: String) : this(
-            name, alias = name, logoUrl = "", accountNo = "", institutionId = -1, countryAlpha2 = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
+            name, alias = name, logoUrl = "", accountNo = "", institutionId = -1, institutionType = "", countryAlpha2 = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
     )
 
     @PrimaryKey(autoGenerate = true)
@@ -91,4 +103,15 @@ data class Account(
     }
 
     override fun compareTo(other: Account): Int = toString().compareTo(other.toString())
+
+    companion object {
+        fun generateDummy(name: String? = "Dummy account", accountId: Int? = -1) : Account {
+            return Account(name!!).apply {
+                id = accountId!!
+                simSubscriptionId = Random(2).nextInt()
+                latestBalance = "Not yet checked"
+                latestBalanceTimestamp = now()
+            }
+        }
+    }
 }

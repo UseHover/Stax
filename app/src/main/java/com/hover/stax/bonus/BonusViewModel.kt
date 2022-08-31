@@ -9,6 +9,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.domain.model.Bonus
+import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) : ViewModel() {
+class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo,private val presentSimUseCase: GetPresentSimUseCase) : ViewModel() {
 
     private val _bonusList = MutableStateFlow(BonusList())
     val bonusList = _bonusList.asStateFlow()
@@ -54,7 +55,7 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo) 
     }
 
     private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
-        val simHnis = channelRepo.presentSims.map { it.osReportedHni }
+        val simHnis = presentSimUseCase().map { it.osReportedHni }
         val bonusChannels = channelRepo.getChannelsByIds(bonuses.map { it.purchaseChannel })
 
         val toSave = bonuses.filter { bonusChannels.map { channel -> channel.id }.contains(it.purchaseChannel) }
