@@ -4,10 +4,10 @@ import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.ActionApi
 import com.hover.stax.R
-import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.domain.repository.AccountRepository
@@ -15,13 +15,11 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
+class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
 
     private val context: Context by inject()
 
@@ -32,7 +30,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         val defaultAccount = accountRepo.getDefaultAccountAsync()
 
         val accounts = channels.mapIndexed { index, channel ->
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER )//placeholder alias for easier identification later
+            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER)//placeholder alias for easier identification later
             Account(
                 accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.countryAlpha2,
                 channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0
@@ -54,11 +52,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
             val defaultAccount = accounts.first { it.id == account.id }.also { it.isDefault = true }
 
-            withContext(coroutineDispatcher) {
-                launch {
-                    accountRepo.update(listOf(current!!, defaultAccount))
-                }
-            }
+            accountRepo.update(listOf(current!!, defaultAccount))
         }
     }
 

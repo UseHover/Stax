@@ -3,10 +3,7 @@ package com.hover.stax.data.remote
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.authorization.AuthRequest
-import com.hover.stax.data.remote.dto.authorization.AuthResponse
-import com.hover.stax.data.remote.dto.authorization.TokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenResponse
+import com.hover.stax.data.remote.dto.authorization.*
 import retrofit2.http.*
 
 interface StaxApi {
@@ -19,6 +16,9 @@ interface StaxApi {
 
     @POST("stax_api/token")
     suspend fun fetchToken(@Body tokenRequest: TokenRequest): TokenResponse
+
+    @POST("stax_api/token")
+    suspend fun refreshToken(@Body refreshRequest: TokenRefreshRequest): TokenResponse
 
     /**
      * User methods

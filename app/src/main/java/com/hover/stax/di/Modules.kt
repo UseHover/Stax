@@ -1,6 +1,5 @@
 package com.hover.stax.di
 
-import com.hover.sdk.api.Hover
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
@@ -12,9 +11,11 @@ import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.local.auth.AuthRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
+import com.hover.stax.data.local.user.UserRepo
 import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.*
 import com.hover.stax.database.AppDatabase
@@ -50,7 +51,8 @@ import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.data.local.user.UserRepo
+import com.hover.stax.utils.network.TokenAuthenticator
+import com.hover.stax.utils.network.TokenInterceptor
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -63,7 +65,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.hover.stax.data.local.auth.AuthRepo
 
 val appModule = module {
     viewModelOf(::FaqViewModel)
@@ -118,13 +119,8 @@ val networkModule = module {
 
         val okHttpClient = OkHttpClient()
             .newBuilder()
-            .addInterceptor { chain ->
-                val request = chain.request()
-                val builder = request.newBuilder().header("Authorization", "Token token=${Hover.getApiKey(androidContext())}")
-
-                val newRequest = builder.build()
-                chain.proceed(newRequest)
-            }
+            .authenticator(TokenAuthenticator(get()))
+            .addInterceptor(TokenInterceptor(get()))
 
         if (BuildConfig.DEBUG)
             okHttpClient.addInterceptor(loggingInterceptor)
@@ -144,7 +140,7 @@ val repositories = module {
     }
 
     single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(named("CoroutineDispatcher"))) }
-    single<AccountRepository> { AccountRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
+    single<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
