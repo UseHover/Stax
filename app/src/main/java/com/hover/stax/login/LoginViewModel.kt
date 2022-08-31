@@ -19,13 +19,14 @@ import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.domain.use_case.auth.AuthUseCase
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class LoginViewModel(application: Application, private val staxUserUseCase: StaxUserUseCase) : AndroidViewModel(application) {
+class LoginViewModel(application: Application, private val staxUserUseCase: StaxUserUseCase, private val authUseCase: AuthUseCase) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient
 
@@ -56,6 +57,19 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
             Timber.e(e, "Google sign in failed")
             onError((getApplication() as Context).getString(R.string.login_google_err))
         }
+    }
+
+    private fun authorizeClient(token: String) {
+        authUseCase.authorize(token).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    Timber.d("Stax login successful ${result.data?.accessToken}")
+                    progress.postValue(100)
+                }
+                is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
+                is Resource.Loading -> progress.value = 66
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun uploadUserToStax(email: String, username: String, token: String) {
@@ -104,8 +118,10 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
         googleUser.postValue(signInAccount)
 
         progress.value = 33
-        if (signInAccount.email != null && signInAccount.displayName != null)
-            uploadUserToStax(signInAccount.email!!, signInAccount.displayName!!, idToken)
+
+        authorizeClient(idToken)
+//        if (signInAccount.email != null && signInAccount.displayName != null)
+//            uploadUserToStax(signInAccount.email!!, signInAccount.displayName!!, idToken)
     }
 
     fun userIsNotSet(): Boolean = staxUser.value == null

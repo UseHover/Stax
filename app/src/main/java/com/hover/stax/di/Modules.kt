@@ -23,6 +23,7 @@ import com.hover.stax.domain.repository.*
 import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.SetDefaultAccountUseCase
+import com.hover.stax.domain.use_case.auth.AuthUseCase
 import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
@@ -112,15 +113,13 @@ val dataModule = module(createdAtStart = true) {
 }
 
 val networkModule = module {
-//    singleOf(::LoginNetworking)
-
     single<StaxApi> {
         val loggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
         val okHttpClient = OkHttpClient()
             .newBuilder()
-            .authenticator(TokenAuthenticator(get()))
-            .addInterceptor(TokenInterceptor(get()))
+            .authenticator(TokenAuthenticator())
+            .addInterceptor(TokenInterceptor())
 
         if (BuildConfig.DEBUG)
             okHttpClient.addInterceptor(loggingInterceptor)
@@ -140,9 +139,9 @@ val repositories = module {
     }
 
     single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(named("CoroutineDispatcher"))) }
-    single<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
 
+    singleOf(::AccountRepositoryImpl) { bind<AccountRepository>() }
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
     singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
@@ -163,4 +162,5 @@ val useCases = module {
     factoryOf(::GetPresentSimsUseCase)
 
     factoryOf(::StaxUserUseCase)
+    factoryOf(::AuthUseCase)
 }

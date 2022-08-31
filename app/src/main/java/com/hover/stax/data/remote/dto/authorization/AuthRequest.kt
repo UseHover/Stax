@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName
 data class AuthRequest(
 
 	@field:SerializedName("scope")
-	val scope: String,
+	val scope: String = "write",
 
 	@field:SerializedName("response_type")
-	val responseType: String,
+	val responseType: String = "code",
 
 	@field:SerializedName("redirect_uri")
 	val redirectUri: String,
