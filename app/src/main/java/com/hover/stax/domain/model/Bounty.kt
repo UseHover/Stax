@@ -17,23 +17,28 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
     fun isLastTransactionFailed(): Boolean = if (transactionCount == 0) false else transactions.last().status == Transaction.FAILED
 
     fun generateDescription(c: Context): String = when (action.transaction_type) {
-        HoverAction.AIRTIME -> c.getString(R.string.descrip_bounty_airtime,
-                if (action.isOnNetwork) c.getString(R.string.onnet_choice) else c.getString(R.string.descrip_bounty_offnet, action.to_institution_name))
+        HoverAction.AIRTIME -> c.getString(R.string.descrip_bounty_airtime, getNetworkString(c))
         HoverAction.P2P -> c.getString(R.string.descrip_bounty_p2p, getP2pRecipientString(c))
         HoverAction.ME2ME -> c.getString(R.string.descrip_bounty_me2me, action.to_institution_name)
         HoverAction.BILL -> c.getString(R.string.descrip_bounty_bill, if (action.isOnNetwork) "" else c.getString(R.string.descrip_bounty_c2b_b, action.to_institution_name))
         HoverAction.MERCHANT -> c.getString(R.string.descrip_bounty_merchant, c.getString(R.string.bounty_merchant_any))
+        HoverAction.DATA -> c.getString(R.string.descrip_bounty_data, getNetworkString(c))
         else -> c.getString(R.string.check_balance)
     }
 
     fun getInstructions(c: Context): String = when (action.transaction_type) {
-        HoverAction.AIRTIME -> c.getString(R.string.bounty_airtime_explain,
-                if (action.isOnNetwork) c.getString(R.string.onnet_choice) else c.getString(R.string.descrip_bounty_offnet, action.to_institution_name))
+        HoverAction.AIRTIME -> c.getString(R.string.bounty_airtime_explain, getNetworkString(c))
         HoverAction.P2P -> c.getString(R.string.bounty_p2p_explain, getP2pRecipientString(c))
         HoverAction.ME2ME -> c.getString(R.string.bounty_me2me_explain, action.to_institution_name)
         HoverAction.BILL -> c.getString(R.string.bounty_bill_explain, if (action.isOnNetwork) c.getString(R.string.bounty_bill_any) else action.to_institution_name)
         HoverAction.MERCHANT -> c.getString(R.string.bounty_merchant_explain, c.getString(R.string.bounty_merchant_any))
+        HoverAction.DATA -> c.getString(R.string.bounty_data_explain, getNetworkString(c))
         else -> c.getString(R.string.bounty_balance_explain)
+    }
+
+    private fun getNetworkString(c: Context): String {
+        return if (action.isOnNetwork) c.getString(R.string.onnet_choice)
+            else c.getString(R.string.descrip_bounty_offnet, action.to_institution_name)
     }
 
     private fun getP2pRecipientString(c: Context): String {

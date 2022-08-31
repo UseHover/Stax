@@ -594,6 +594,8 @@
     <string name="signed_in_as">Signed into Google account %1$s</string>
     <string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
     <string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
+    <string name="descrip_bounty_data">Buy data for yourself %1$s</string>
+    <string name="bounty_data_explain">Buy data for yourself %1$s</string>
     <string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
     <string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
     <string name="descrip_bounty_offnet">on %1$s</string>
