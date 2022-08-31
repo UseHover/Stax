@@ -76,7 +76,7 @@ class SettingsFragment : Fragment() {
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        if (loginViewModel.userIsNotSet()) loginViewModel.uploadLastUser()
+//        if (loginViewModel.userIsNotSet()) loginViewModel.uploadLastUser()
     }
 
     private fun setUpManagePermissions(){

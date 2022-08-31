@@ -13,6 +13,7 @@ class StaxUserUseCase(private val staxUserRepository: StaxUserRepository) {
 
     val user = staxUserRepository.staxUser
 
+    @Deprecated("Use the method in auth use case instead")
     fun uploadUser(userUploadDto: UserUploadDto): Flow<Resource<StaxUser>> = flow {
         try {
             emit(Resource.Loading())

@@ -54,7 +54,10 @@ data class Attributes(
 	val username: String,
 
 	@SerializedName("marketing_opted_in")
-	val marketingOptedIn: Boolean 
+	val marketingOptedIn: Boolean,
+
+	@SerializedName("total_points")
+	val totalPoints: Int
 )
 
 /**
@@ -68,6 +71,7 @@ fun StaxUserDto.toStaxUser(): StaxUser {
 		isMapper = data.attributes.isVerifiedMapper,
 		marketingOptedIn = data.attributes.marketingOptedIn,
 		transactionCount = data.attributes.transactionCount,
-		bountyTotal = data.attributes.bountyTotal
+		bountyTotal = data.attributes.bountyTotal,
+		totalPoints = data.attributes.totalPoints,
 	)
 }
