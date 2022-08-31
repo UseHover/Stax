@@ -9,3 +9,4 @@ class GetBonusesUseCase(repository: BonusRepository) {
     val bonusList: Flow<List<Bonus>> = repository.bonusList
 
 }
+

@@ -4,8 +4,10 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.repository.AccountRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetAccountsUseCase(accountsRepository: AccountRepository) {
+class GetAccountsUseCase(private val accountsRepository: AccountRepository) {
 
     val accounts: Flow<List<Account>> = accountsRepository.fetchAccounts
+
+    fun telecomAccounts(simSubscriptionIds: IntArray) : Flow<List<Account>> = accountsRepository.getTelecomAccounts(simSubscriptionIds)
 
 }
