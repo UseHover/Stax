@@ -5,13 +5,13 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyApplicationBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginViewModel
-import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.user.StaxUser
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
@@ -37,7 +37,11 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
-        binding.instructions.movementMethod = LinkMovementMethod.getInstance()
+        binding.instructions.apply {
+            text = HtmlCompat.fromHtml(getString(R.string.bounty_email_stage_desc2), HtmlCompat.FROM_HTML_MODE_LEGACY)
+            movementMethod = LinkMovementMethod.getInstance()
+        }
+
         startObservers()
     }
 
@@ -71,7 +75,7 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
-                startGoogleSignIn()
+            startGoogleSignIn()
         } else {
             showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
         }
