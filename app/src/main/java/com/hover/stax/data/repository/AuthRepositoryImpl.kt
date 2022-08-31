@@ -6,6 +6,7 @@ import com.hover.stax.R
 import com.hover.stax.data.local.auth.AuthRepo
 import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.remote.dto.authorization.*
+import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.domain.model.TokenInfo
 import com.hover.stax.domain.repository.AuthRepository
 
@@ -19,7 +20,7 @@ class AuthRepositoryImpl(private val authRepo: AuthRepo, private val staxApi: St
             redirectUri = context.getString(R.string.redirect_uri),
             clientId = context.getString(R.string.client_uid),
             token = idToken,
-            staxUser = StaxUser(Hover.getDeviceId(context))
+            deviceInfo = DeviceInfo(Hover.getDeviceId(context))
         )
 
         return staxApi.authorize(authRequest)

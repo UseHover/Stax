@@ -24,5 +24,8 @@ data class StaxUser(
 
     val transactionCount: Int,
 
-    val bountyTotal: Int
+    val bountyTotal: Int,
+
+    @ColumnInfo(defaultValue = "0")
+    val totalPoints: Int
 )

@@ -14,7 +14,7 @@ data class AuthRequest(
 	val redirectUri: String,
 
 	@field:SerializedName("stax_user")
-	val staxUser: StaxUser,
+	val deviceInfo: DeviceInfo,
 
 	@field:SerializedName("client_id")
 	val clientId: String,
@@ -23,7 +23,7 @@ data class AuthRequest(
 	val token: String
 )
 
-data class StaxUser(
+data class DeviceInfo(
 
 	@field:SerializedName("device_id")
 	val deviceId: String

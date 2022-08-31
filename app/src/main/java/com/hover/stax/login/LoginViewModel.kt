@@ -61,7 +61,7 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
         authUseCase.authorize(token).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    Timber.d("Stax login successful ${result.data?.accessToken}")
+                    Timber.d("Stax login successful ${result.data?.username}")
                     progress.postValue(100)
                 }
                 is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
@@ -70,31 +70,31 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
         }.launchIn(viewModelScope)
     }
 
-    private fun uploadUserToStax(email: String, username: String, token: String) {
-        if (staxUser.value == null) {
-            Timber.e("Uploading user to stax")
+//    private fun uploadUserToStax(email: String, username: String, token: String) {
+//        if (staxUser.value == null) {
+//            Timber.e("Uploading user to stax")
+//
+//            val userDto = UploadDto(Hover.getDeviceId(getApplication()), email, username, token)
+//            val requestDto = UserUploadDto(userDto)
+//
+//            staxUserUseCase.uploadUser(requestDto).onEach { result ->
+//                when (result) {
+//                    is Resource.Success -> {
+//                        Timber.d("User uploaded to stax successfully ${result.data?.id}")
+//                        progress.postValue(100)
+//                    }
+//                    is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
+//                    is Resource.Loading -> progress.value = 66
+//                }
+//            }.launchIn(viewModelScope)
+//        }
+//    }
 
-            val userDto = UploadDto(Hover.getDeviceId(getApplication()), email, username, token)
-            val requestDto = UserUploadDto(userDto)
-
-            staxUserUseCase.uploadUser(requestDto).onEach { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        Timber.d("User uploaded to stax successfully ${result.data?.id}")
-                        progress.postValue(100)
-                    }
-                    is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
-                    is Resource.Loading -> progress.value = 66
-                }
-            }.launchIn(viewModelScope)
-        }
-    }
-
-    fun uploadLastUser() {
-        val account = GoogleSignIn.getLastSignedInAccount(getApplication())
-        if (account != null) uploadUserToStax(account.email!!, account.displayName!!, account.idToken!!)
-        else Timber.e("No account found")
-    }
+//    fun uploadLastUser() {
+//        val account = GoogleSignIn.getLastSignedInAccount(getApplication())
+//        if (account != null) uploadUserToStax(account.email!!, account.displayName!!, account.idToken!!)
+//        else Timber.e("No account found")
+//    }
 
     fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { updateUser(UserUpdateDto(UpdateDto(marketingOptedIn = optIn, email = it))) }
 
@@ -116,8 +116,6 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
         progress.value = 33
 
         authorizeClient(idToken)
-//        if (signInAccount.email != null && signInAccount.displayName != null)
-//            uploadUserToStax(signInAccount.email!!, signInAccount.displayName!!, idToken)
     }
 
     fun userIsNotSet(): Boolean = staxUser.value == null
