@@ -1,7 +1,7 @@
 package com.hover.stax.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.hover.stax.user.StaxUser
+import com.hover.stax.domain.model.StaxUser
 
 /**
  * Response returned from the server when a user logs in or updates their details.

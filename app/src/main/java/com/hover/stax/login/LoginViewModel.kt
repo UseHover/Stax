@@ -18,7 +18,7 @@ import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
-import com.hover.stax.user.StaxUser
+import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
