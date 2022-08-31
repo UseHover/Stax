@@ -70,10 +70,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun startBackgroundProcesses() {
         with(channelsViewModel) {
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
-            allChannels.observe(this@RoutingActivity) {
-                if (it.isEmpty())
-                    workManager.enqueue(ImportChannelsWorker.channelsImportRequest())
-            }
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -196,11 +192,12 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startWorkers() {
-        startChannelWorker(workManager)
+        startChannelWorkers(workManager)
         startScheduleWorker(workManager)
     }
 
-    private fun startChannelWorker(wm: WorkManager) {
+    private fun startChannelWorkers(wm: WorkManager) {
+        wm.enqueue(ImportChannelsWorker.channelsImportRequest())
         wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil())
     }
 

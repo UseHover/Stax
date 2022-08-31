@@ -19,6 +19,7 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginViewModel
@@ -209,7 +210,6 @@ class SettingsFragment : Fragment() {
             SettingsFragmentDirections.actionNavigationSettingsToBountyEmailFragment()
         else
             SettingsFragmentDirections.actionNavigationSettingsToBountyListFragment()
-
         NavUtil.navigate(findNavController(), navDirection)
     }
 
