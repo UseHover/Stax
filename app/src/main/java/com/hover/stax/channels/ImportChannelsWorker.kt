@@ -35,7 +35,8 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
     }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        if (channelDao!!.channels.isEmpty()) {
+        Timber.i("Attempting to import channels from json file")
+        if (channelDao!!.allDataCount == 0 || channelDao!!.publishedTelecomDataCount == 0) {
             initNotification()
 
             parseChannelJson()?.let {
@@ -47,6 +48,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
                 Result.success()
             } ?: Timber.e("Error importing channels"); Result.retry()
         } else {
+            Timber.i("DB is either on par or has more updates compared to json file")
             Result.failure()
         }
     }
@@ -89,9 +91,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
         setForeground(getForegroundInfo())
     } catch (e: IllegalArgumentException) {
         Timber.e(e)
-    } /*catch (f: ForegroundServiceStartNotAllowedException) {
-        Timber.e(f)
-    }*/
+    }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

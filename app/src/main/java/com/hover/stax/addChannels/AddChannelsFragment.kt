@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -29,6 +30,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
+import com.hover.stax.transfers.TransferFragmentArgs
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -62,7 +64,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
-
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
 
@@ -88,35 +89,27 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
         bonusViewModel.getBonusList()
         startObservers()
-
         setFabListener()
     }
 
     private fun startObservers() = with(channelsViewModel) {
-        val channelsObserver = object: Observer<List<Channel>> {
-            override fun onChanged(t: List<Channel>?) {
-                t?.let { loadFilteredChannels(it) }
-            }
-        }
+        val channelsObserver =
+            Observer<List<Channel>> { t -> t?.let {
+                loadFilteredChannels(it)
+            } }
 
-        val simsObserver = object: Observer<List<SimInfo>> {
-            override fun onChanged(t: List<SimInfo>?) {
-                Timber.v("Loaded ${t?.size} sims")
-            }
-        }
+        val simsObserver =
+            Observer<List<SimInfo>> { t -> Timber.v("Loaded ${t?.size} sims") }
 
-        val countryListObserver = object: Observer<List<String>> {
-            override fun onChanged(t: List<String>?) {
-                Timber.v("Loaded ${t?.size} hnis")
-            }
-        }
+        val countryListObserver =
+            Observer<List<String>> { t -> Timber.v("Loaded ${t?.size} hnis") }
 
         channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
         sims.observe(viewLifecycleOwner, simsObserver)
         simCountryList.observe(viewLifecycleOwner, countryListObserver)
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        filteredChannels.observe(viewLifecycleOwner, channelsObserver)
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
+        filteredChannels.observe(viewLifecycleOwner, channelsObserver)
     }
 
     private fun fillUpChannelLists() {

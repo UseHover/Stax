@@ -145,6 +145,56 @@
       }
     },
     {
+      "id": "555057",
+      "type": "channel",
+      "attributes": {
+        "id": 555057,
+        "name": "Safaricom Prepay",
+        "notes": null,
+        "description": null,
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902"
+        ],
+        "primary_color_hex": "#39B54A",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*100#",
+        "sms_senders": [
+          "Safaricom"
+        ],
+        "languages": "en",
+        "first_menu_id": 474889,
+        "institution_id": 573732,
+        "institution_type": "mmo",
+        "world_operator_ids": [
+          2172
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:37:58Z",
+        "updated_at": "2022-07-25T17:00:02Z",
+        "cost": "unknown",
+        "menus_count": 39,
+        "custom_actions_count": 178,
+        "channel_actions_count": 3,
+        "transactions_count": 8,
+        "pending_percent": "unknown",
+        "bounties_count": 3,
+        "open_bounties_count": 3,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZU09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d9824d3caa5d9799109fab40f1b088968a13b2d6/test-logo",
+        "institution_facts": [],
+        "institution_contacts": []
+      }
+    },
+    {
       "id": "593855",
       "type": "channel",
       "attributes": {
@@ -5486,6 +5536,66 @@
       }
     },
     {
+      "id": "176838",
+      "type": "channel",
+      "attributes": {
+        "id": 176838,
+        "name": "MTN Data",
+        "notes": null,
+        "description": "",
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62130"
+        ],
+        "primary_color_hex": "#FFCB05",
+        "secondary_color_hex": "#00678F",
+        "transport_type": null,
+        "root_code": "*131#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 844015,
+        "institution_id": 253946,
+        "institution_type": "telecom",
+        "world_operator_ids": [
+          2341
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2022-01-31T17:35:32Z",
+        "updated_at": "2022-07-22T23:18:45Z",
+        "cost": "unknown",
+        "menus_count": 2,
+        "custom_actions_count": 0,
+        "channel_actions_count": 2,
+        "transactions_count": 13,
+        "pending_percent": "unknown",
+        "bounties_count": 2,
+        "open_bounties_count": 1,
+        "currency": "NGN",
+        "operators": [
+          [
+            "MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaWNFIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--95cef6a2fd88338889f6ae35b361c9b306410ee6/test-logo",
+        "institution_facts": [
+          {
+            "id": 17,
+            "institution_id": 253946,
+            "channel_id": 176838,
+            "founded": null,
+            "website": null,
+            "headquarters": null,
+            "swift_code": null,
+            "created_at": "2022-07-20T17:02:06Z",
+            "updated_at": "2022-07-20T17:02:06Z"
+          }
+        ],
+        "institution_contacts": []
+      }
+    },
+    {
       "id": "186092",
       "type": "channel",
       "attributes": {
@@ -5643,54 +5753,6 @@
           ]
         ],
         "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYzA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2852f71ad148a443873f826c70d1e02eed4ec632/test-logo",
-        "institution_facts": [],
-        "institution_contacts": []
-      }
-    },
-    {
-      "id": "176838",
-      "type": "channel",
-      "attributes": {
-        "id": 176838,
-        "name": "Check Data Balance (MTN)",
-        "notes": null,
-        "description": null,
-        "country_alpha2": "ng",
-        "hni_list": [
-          "62130"
-        ],
-        "primary_color_hex": "#FFCB05",
-        "secondary_color_hex": "#00678F",
-        "transport_type": null,
-        "root_code": "*131*4#",
-        "sms_senders": [],
-        "languages": "en",
-        "first_menu_id": null,
-        "institution_id": 253946,
-        "institution_type": "telecom",
-        "world_operator_ids": [
-          2341
-        ],
-        "bookmarked": true,
-        "published": false,
-        "created_at": "2022-01-31T17:35:32Z",
-        "updated_at": "2022-03-14T17:46:40Z",
-        "cost": "unknown",
-        "menus_count": 0,
-        "custom_actions_count": 0,
-        "channel_actions_count": 1,
-        "transactions_count": 11,
-        "pending_percent": "unknown",
-        "bounties_count": 1,
-        "open_bounties_count": 1,
-        "currency": "NGN",
-        "operators": [
-          [
-            "MTN",
-            null
-          ]
-        ],
-        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaWNFIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--95cef6a2fd88338889f6ae35b361c9b306410ee6/test-logo",
         "institution_facts": [],
         "institution_contacts": []
       }
@@ -18351,7 +18413,7 @@
         "menus_count": 74,
         "custom_actions_count": 21,
         "channel_actions_count": 26,
-        "transactions_count": 1661,
+        "transactions_count": 1663,
         "pending_percent": "unknown",
         "bounties_count": 23,
         "open_bounties_count": 6,
@@ -28531,7 +28593,7 @@
         "menus_count": 70,
         "custom_actions_count": 212,
         "channel_actions_count": 39,
-        "transactions_count": 519506,
+        "transactions_count": 519559,
         "pending_percent": "unknown",
         "bounties_count": 27,
         "open_bounties_count": 6,
@@ -42774,7 +42836,7 @@
       "type": "channel",
       "attributes": {
         "id": 150796,
-        "name": "Safaricom",
+        "name": "Safaricom Data",
         "notes": null,
         "description": "Safaricom Kenya",
         "country_alpha2": "ke",
@@ -42796,9 +42858,9 @@
         "bookmarked": true,
         "published": false,
         "created_at": "2022-02-17T13:34:18Z",
-        "updated_at": "2022-04-13T08:04:27Z",
+        "updated_at": "2022-07-25T16:54:48Z",
         "cost": "unknown",
-        "menus_count": 3,
+        "menus_count": 4,
         "custom_actions_count": 0,
         "channel_actions_count": 1,
         "transactions_count": 6,
@@ -43475,11 +43537,11 @@
       }
     },
     {
-      "id": "718959",
+      "id": "497588",
       "type": "channel",
       "attributes": {
-        "id": 718959,
-        "name": "Check Airtime Balance (MTN)",
+        "id": 497588,
+        "name": "MTN NG Airtime balance",
         "notes": null,
         "description": null,
         "country_alpha2": "ng",
@@ -43500,13 +43562,61 @@
         ],
         "bookmarked": true,
         "published": false,
-        "created_at": "2022-01-31T17:33:50Z",
-        "updated_at": "2022-03-14T17:44:33Z",
+        "created_at": "2022-07-18T12:40:03Z",
+        "updated_at": "2022-07-18T12:40:03Z",
         "cost": "unknown",
         "menus_count": 0,
         "custom_actions_count": 0,
         "channel_actions_count": 1,
-        "transactions_count": 7,
+        "transactions_count": 0,
+        "pending_percent": "unknown",
+        "bounties_count": 1,
+        "open_bounties_count": 1,
+        "currency": "NGN",
+        "operators": [
+          [
+            "MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaWNFIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--95cef6a2fd88338889f6ae35b361c9b306410ee6/test-logo",
+        "institution_facts": [],
+        "institution_contacts": []
+      }
+    },
+    {
+      "id": "718959",
+      "type": "channel",
+      "attributes": {
+        "id": 718959,
+        "name": "MTN Airtime balance",
+        "notes": null,
+        "description": null,
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62130"
+        ],
+        "primary_color_hex": "#FFCB05",
+        "secondary_color_hex": "#00678F",
+        "transport_type": null,
+        "root_code": "*556#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 815044,
+        "institution_id": 253946,
+        "institution_type": "telecom",
+        "world_operator_ids": [
+          2341
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2022-01-31T17:33:50Z",
+        "updated_at": "2022-07-22T23:38:46Z",
+        "cost": "unknown",
+        "menus_count": 2,
+        "custom_actions_count": 0,
+        "channel_actions_count": 1,
+        "transactions_count": 8,
         "pending_percent": "unknown",
         "bounties_count": 1,
         "open_bounties_count": 1,
@@ -59099,7 +59209,7 @@
         "menus_count": 28,
         "custom_actions_count": 10,
         "channel_actions_count": 25,
-        "transactions_count": 1331,
+        "transactions_count": 1335,
         "pending_percent": "unknown",
         "bounties_count": 17,
         "open_bounties_count": 3,
@@ -66224,7 +66334,7 @@
         "menus_count": 38,
         "custom_actions_count": 27,
         "channel_actions_count": 25,
-        "transactions_count": 20876,
+        "transactions_count": 20886,
         "pending_percent": "unknown",
         "bounties_count": 17,
         "open_bounties_count": 2,
@@ -67765,7 +67875,7 @@
         "menus_count": 25,
         "custom_actions_count": 0,
         "channel_actions_count": 6,
-        "transactions_count": 723,
+        "transactions_count": 726,
         "pending_percent": "unknown",
         "bounties_count": 2,
         "open_bounties_count": 0,
@@ -69261,6 +69371,6 @@
     }
   ],
   "meta": {
-    "count": 1003
+    "count": 1005
   }
 }

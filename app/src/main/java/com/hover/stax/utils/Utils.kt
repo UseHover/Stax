@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
@@ -183,10 +184,14 @@ object Utils {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(subject: String, context: Context) {
+    fun openEmail(@StringRes subject: Int, context: Context, body : String? = "") {
+        openEmail(context.getString(subject), context, body)
+    }
+
+    fun openEmail(subject: String, context: Context, body : String? ="") {
         val intent = Intent(Intent.ACTION_VIEW)
         val senderEmail = context.getString(R.string.stax_support_email)
-        intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject")
+        intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject&body=$body")
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {

@@ -3,6 +3,7 @@ package com.hover.stax.data.repository
 import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.ActionApi
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.accounts.AccountRepo
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import timber.log.Timber
 
 class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
 
@@ -26,22 +28,26 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     override val fetchAccounts: Flow<List<Account>>
         get() = accountRepo.getAccounts()
 
-    override suspend fun createAccounts(channels: List<Channel>): List<Long> {
+    override suspend fun createAccounts(channels: List<Channel>) {
         val defaultAccount = accountRepo.getDefaultAccountAsync()
-
-        val accounts = channels.mapIndexed { index, channel ->
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER)//placeholder alias for easier identification later
-            Account(
-                accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0
-            )
-        }.onEach {
-            logChoice(it)
-            ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, context)
+        channels.mapIndexed { index, channel ->
+            createAccount(channel, -1, defaultAccount == null && index == 0)
         }
+    }
 
-        channels.onEach { it.selected = true }.also { channelRepo.update(it) }
-        return accountRepo.insert(accounts)
+    override suspend fun createAccount(channel: Channel, simSubscriptionId: Int, isDefault: Boolean) {
+        val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
+        val account = Account(
+            accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
+            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = simSubscriptionId
+        )
+
+        channel.selected = true
+        channelRepo.update(channel)
+        accountRepo.insert(account)
+
+        logChoice(account)
+        ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
     }
 
     override suspend fun setDefaultAccount(account: Account) {
@@ -54,6 +60,24 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
             accountRepo.update(listOf(current!!, defaultAccount))
         }
+    }
+
+    override suspend fun createTelecomAccounts(sims: List<SimInfo>) {
+        val telecomChannels = channelRepo.publishedTelecomChannels()
+        Timber.i("all published Telecom channels in  is: ${telecomChannels.size}")
+
+        sims.forEach { sim ->
+            val channel = telecomChannels.firstOrNull { it.hniList.contains(sim.osReportedHni) }
+            channel?.let {
+                Timber.i("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
+                createAccount(it, sim.subscriptionId, false)
+            }
+        }
+    }
+
+    override fun getTelecomAccounts(simSubscriptionIds: IntArray): Flow<List<Account>> {
+        return accountRepo.
+        getTelecomAccounts(simSubscriptionIds)
     }
 
     private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()

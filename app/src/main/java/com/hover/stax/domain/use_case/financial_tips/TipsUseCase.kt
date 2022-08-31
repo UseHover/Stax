@@ -19,7 +19,7 @@ class TipsUseCase(private val financialTipsRepository: FinancialTipsRepository) 
         }
     }
 
-    fun getDismissedTipId(): String? = financialTipsRepository.getDismissedTipId()
+    fun getDismissedTipId() : String? = financialTipsRepository.getDismissedTipId()
 
     fun dismissTip(id: String) {
         financialTipsRepository.dismissTip(id)
