@@ -8,7 +8,6 @@ import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
@@ -87,7 +86,6 @@ val appModule = module {
     viewModelOf(::PaybillViewModel)
     viewModelOf(::MerchantViewModel)
     viewModelOf(::RequestDetailViewModel)
-    viewModelOf(::BonusViewModel)
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::SimViewModel)
@@ -145,7 +143,7 @@ val repositories = module {
         Dispatchers.IO
     }
 
-    single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
+    single<BonusRepository> { BonusRepositoryImpl(get(), get()) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
     single<SimRepository> { SimRepositoryImpl(get()) }
