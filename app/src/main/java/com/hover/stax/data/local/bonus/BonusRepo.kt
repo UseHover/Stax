@@ -21,5 +21,5 @@ class BonusRepo(val db: AppDatabase) {
 
     fun delete() = dao.deleteAll()
 
-    fun updateBonuses(bonuses: List<Bonus>) = dao.deleteAndSave(bonuses)
+    fun update(bonuses: List<Bonus>) = dao.deleteAndSave(bonuses)
 }

@@ -21,7 +21,7 @@ import com.hover.stax.domain.repository.*
 import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.SetDefaultAccountUseCase
-import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
+import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
@@ -155,7 +155,7 @@ val repositories = module {
 
 val useCases = module {
     factoryOf(::GetBonusesUseCase)
-    factoryOf(::FetchBonusUseCase)
+    factoryOf(::RefreshBonusUseCase)
 
     factoryOf(::GetAccountsUseCase)
     factoryOf(::SetDefaultAccountUseCase)

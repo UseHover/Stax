@@ -17,7 +17,7 @@ class BonusRepositoryImpl(
 	override suspend fun refreshBonuses() {
 		StaxFirebase().fetchBonuses().addOnSuccessListener { snapshot ->
 				val allBonuses = snapshot.map { Bonus(it) }
-				bonusRepo.updateBonuses(allBonuses)
+				bonusRepo.update(allBonuses)
 				Timber.e("Saved ${allBonuses.size} bonuses")
 			}.addOnFailureListener {
 				Timber.e("Error fetching bonuses: ${it.localizedMessage}")

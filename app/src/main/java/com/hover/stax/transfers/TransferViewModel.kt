@@ -10,6 +10,7 @@ import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.domain.model.BonusList
+import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.requests.Request
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.ScheduleRepo
@@ -27,7 +28,7 @@ import timber.log.Timber
 const val STAX_PREFIX = "stax_airtime_prefix"
 private const val KE_PREFIX = "0"
 
-class TransferViewModel(application: Application, private val bonusRepo: BonusRepo, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+class TransferViewModel(application: Application, private val getBonusesUseCase: GetBonusesUseCase, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     private val _bonusList = MutableStateFlow(BonusList())
     val bonusList = _bonusList.asStateFlow()
@@ -127,7 +128,9 @@ class TransferViewModel(application: Application, private val bonusRepo: BonusRe
     }
 
     private fun collectBonusList() = viewModelScope.launch(Dispatchers.IO) {
-        bonusRepo.bonuses.collect { items -> _bonusList.update { _bonusList.value.copy(bonuses = items) } }
+        getBonusesUseCase.bonusList.collect { items ->
+            _bonusList.update { _bonusList.value.copy(bonuses = items) }
+        }
     }
 
     override fun reset() {

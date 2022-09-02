@@ -10,7 +10,7 @@ internal class StaxFirebase {
 	private val settings = firestoreSettings { isPersistenceEnabled = true }
 	private val db = Firebase.firestore.also { it.firestoreSettings = settings }
 
-	suspend fun fetchBonuses() : Task<QuerySnapshot> {
+	fun fetchBonuses() : Task<QuerySnapshot> {
 		return db.collection("bonuses").get()
 	}
 }
