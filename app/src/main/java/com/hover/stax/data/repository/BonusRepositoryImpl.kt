@@ -1,6 +1,5 @@
 package com.hover.stax.data.repository
 
-import com.google.firebase.firestore.QuerySnapshot
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.remote.StaxFirebase
@@ -16,14 +15,11 @@ class BonusRepositoryImpl(
 ) : BonusRepository {
 
 	override suspend fun refreshBonuses() {
-		Timber.i("Bonus: Called on refresh bonuses")
-		val firebaseOperation = StaxFirebase().fetchBonuses()
-		if (firebaseOperation.isComplete && firebaseOperation.isSuccessful) {
-			val allBonuses = firebaseOperation.result.map { Bonus(it) }
+		try {
+			val allBonuses = StaxFirebase().fetchBonuses().documents.map { Bonus(it) }
 			bonusRepo.update(allBonuses)
-			Timber.i("Bonus: Saved ${allBonuses.size} bonuses")
-		} else if (firebaseOperation.isComplete && !firebaseOperation.isSuccessful) {
-			Timber.e("Bonus: Error fetching bonuses: ${firebaseOperation.exception?.localizedMessage}")
+		} catch (e: Exception) {
+			Timber.e("Bonus: Error fetching bonuses: ${e.localizedMessage}")
 		}
 	}
 

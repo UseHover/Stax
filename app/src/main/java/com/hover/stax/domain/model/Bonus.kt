@@ -3,6 +3,7 @@ package com.hover.stax.domain.model
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QueryDocumentSnapshot
 
 @Entity(
@@ -14,6 +15,9 @@ data class Bonus(
     @ColumnInfo(name = "user_channel")
     val userChannel: Int,
 
+    @ColumnInfo(name = "purchase_channel")
+    val purchaseChannel: Int,
+
     @ColumnInfo(name = "bonus_percent")
     val bonusPercent: Double,
 
@@ -22,21 +26,17 @@ data class Bonus(
     @ColumnInfo(name = "hni_list", defaultValue = "0")
     @NonNull
     val hniList: String,
-
-    @Deprecated("hniList is now being used to filter which bonus is being displayed," +
-            " but it might have a usefulness later")
-    @ColumnInfo(name = "purchase_channel")
-    val purchaseChannel: Int,
 ) {
     override fun toString(): String {
         return message
     }
 
-    constructor(document: QueryDocumentSnapshot) : this(
-        document.data["user_channel"].toString().toInt(),
-        document.data["bonus_percent"].toString().toDouble(),
-        document.data["message"].toString(),
-        document.data["hniList"].toString(), document.data["purchase_channel"].toString().toInt())
+    constructor(document: DocumentSnapshot) : this(
+        document["user_channel"].toString().toInt(),
+        document["purchase_channel"].toString().toInt(),
+        document["bonus_percent"].toString().toDouble(),
+        document["message"].toString(),
+        document["hniList"].toString())
 }
 
 data class BonusList(val bonuses: List<Bonus> = emptyList())
