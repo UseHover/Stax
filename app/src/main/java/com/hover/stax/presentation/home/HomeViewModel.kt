@@ -10,6 +10,7 @@ import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,7 @@ class HomeViewModel(
         getDismissedFinancialTips()
     }
 
-    private fun refreshBonuses() = viewModelScope.launch {
+    private fun refreshBonuses() = viewModelScope.launch(Dispatchers.IO) {
         refreshBonusUseCase.invoke()
     }
 
