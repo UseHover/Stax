@@ -18,7 +18,10 @@ data class Bonus(
     @ColumnInfo(name = "bonus_percent")
     val bonusPercent: Double,
 
-    val message: String
+    val message: String,
+
+    @ColumnInfo(name = "hni_list")
+    val hniList: String
 ) {
     override fun toString(): String {
         return message
