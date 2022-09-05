@@ -1,7 +1,7 @@
 package com.hover.stax.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.hover.stax.user.StaxUser
+import com.hover.stax.domain.model.StaxUser
 
 /**
  * Response returned from the server when a user logs in or updates their details.
@@ -54,7 +54,10 @@ data class Attributes(
 	val username: String,
 
 	@SerializedName("marketing_opted_in")
-	val marketingOptedIn: Boolean 
+	val marketingOptedIn: Boolean,
+
+	@SerializedName("total_points")
+	val totalPoints: Int
 )
 
 /**
@@ -68,6 +71,7 @@ fun StaxUserDto.toStaxUser(): StaxUser {
 		isMapper = data.attributes.isVerifiedMapper,
 		marketingOptedIn = data.attributes.marketingOptedIn,
 		transactionCount = data.attributes.transactionCount,
-		bountyTotal = data.attributes.bountyTotal
+		bountyTotal = data.attributes.bountyTotal,
+		totalPoints = data.attributes.totalPoints,
 	)
 }

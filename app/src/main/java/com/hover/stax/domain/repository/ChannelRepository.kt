@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ChannelRepository {
 
-    val presentSims: List<SimInfo>
+    suspend fun presentSims(): List<SimInfo>
 
     suspend fun getChannelsByIds(ids: List<Int>): List<Channel>
 

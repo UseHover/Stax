@@ -14,6 +14,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.data.local.auth.AuthDao
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantDao
 import com.hover.stax.paybill.Paybill
@@ -24,22 +25,24 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDao
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDao
-import com.hover.stax.user.StaxUser
-import com.hover.stax.user.UserDao
+import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.data.local.user.UserDao
+import com.hover.stax.domain.model.TokenInfo
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @Database(
     entities = [
-        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class
+        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class, TokenInfo::class
     ],
-    version = 42,
+    version = 43,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
         AutoMigration(from = 38, to = 39),
         AutoMigration(from = 40, to = 41),
-        AutoMigration(from = 41, to = 42)
+        AutoMigration(from = 41, to = 42),
+        AutoMigration(from = 43, to = 44)
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -63,6 +66,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 
     abstract fun bonusDao(): BonusDao
+
+    abstract fun authDao(): AuthDao
 
     companion object {
 
@@ -208,11 +213,17 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_stax_transactions_uuid` ON `stax_transactions` (`uuid`)")
         }
 
+        private val M42_43 = Migration(42, 43) { database -> //accounts table changes
+            database.execSQL("ALTER TABLE channels ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
+            database.execSQL("ALTER TABLE accounts ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
+            database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "stax.db")
                     .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40)
+                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43)
                     .build()
                 INSTANCE = instance
 

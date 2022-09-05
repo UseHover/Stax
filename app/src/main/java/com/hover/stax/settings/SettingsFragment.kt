@@ -19,6 +19,7 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginViewModel
@@ -76,7 +77,6 @@ class SettingsFragment : Fragment() {
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        if (loginViewModel.userIsNotSet()) loginViewModel.uploadLastUser()
     }
 
     private fun setUpManagePermissions(){
@@ -120,22 +120,20 @@ class SettingsFragment : Fragment() {
 
     private fun setUpAccountDetails() {
         loginViewModel.staxUser.observe(viewLifecycleOwner) { staxUser ->
-            staxUser?.let {
-                binding.staxSupport.marketingOptIn.isChecked = it.marketingOptedIn
+            if (staxUser == null) binding.accountCard.accountCard.visibility = GONE
+            else {
+                binding.staxSupport.marketingOptIn.isChecked = staxUser.marketingOptedIn
+                if (staxUser.isMapper) binding.bountyCard.root.visibility = VISIBLE
 
-                if (optInMarketing && !it.marketingOptedIn) {
+                if (optInMarketing && !staxUser.marketingOptedIn) {
                     marketingOptIn(true)
                     optInMarketing = false
                 }
-            }
 
-            with(binding.accountCard) {
-                if (staxUser != null) {
+                with(binding.accountCard) {
                     accountCard.visibility = VISIBLE
                     loggedInAccount.text = getString(R.string.logged_in_as, staxUser.username)
                     accountCard.setOnClickListener { showLogoutConfirmDialog() }
-                } else {
-                    accountCard.visibility = GONE
                 }
             }
         }
@@ -209,7 +207,6 @@ class SettingsFragment : Fragment() {
             SettingsFragmentDirections.actionNavigationSettingsToBountyEmailFragment()
         else
             SettingsFragmentDirections.actionNavigationSettingsToBountyListFragment()
-
         NavUtil.navigate(findNavController(), navDirection)
     }
 
@@ -253,10 +250,6 @@ class SettingsFragment : Fragment() {
             if (it == 100)
                 binding.staxSupport.contactCard.hideProgressIndicator()
         }
-    }
-
-    companion object {
-        const val SHOW_BOUNTY_LIST = 100
     }
 
     override fun onDestroyView() {

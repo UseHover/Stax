@@ -1,4 +1,4 @@
-package com.hover.stax.user
+package com.hover.stax.domain.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -24,5 +24,8 @@ data class StaxUser(
 
     val transactionCount: Int,
 
-    val bountyTotal: Int
+    val bountyTotal: Int,
+
+    @ColumnInfo(defaultValue = "0")
+    val totalPoints: Int
 )

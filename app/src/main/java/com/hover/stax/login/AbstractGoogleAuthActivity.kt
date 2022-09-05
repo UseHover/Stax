@@ -17,7 +17,7 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.hover.AbstractHoverCallerActivity
-import com.hover.stax.presentation.bounties.BountyEmailFragmentDirections
+import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -81,7 +81,6 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
     }
 
     fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
-//        startActivityForResult(loginViewModel.signInClient.signInIntent, LOGIN_REQUEST)
 
     private val loginForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) loginViewModel.signIntoGoogle(result.data)
@@ -129,7 +128,6 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-//            LOGIN_REQUEST -> if (resultCode == RESULT_OK) loginViewModel.signIntoGoogle(data)
             UPDATE_REQUEST_CODE -> if (resultCode != RESULT_OK) {
                 Timber.e("Update flow failed. Result code : $resultCode")
                 checkForUpdates()
@@ -138,8 +136,8 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
     }
 
     override fun googleLoginSuccessful() {
-        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST)
-            BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment()
+        if (loginViewModel.staxUser.value?.isMapper == true)
+            BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
     }
 
     override fun googleLoginFailed() {
@@ -147,7 +145,6 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
     }
 
     companion object {
-        const val LOGIN_REQUEST = 4000
         const val DAYS_FOR_FLEXIBLE_UPDATE = 3
         const val UPDATE_REQUEST_CODE = 90
     }

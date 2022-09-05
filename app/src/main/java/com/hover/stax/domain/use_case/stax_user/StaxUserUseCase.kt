@@ -4,7 +4,7 @@ import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.StaxUserRepository
-import com.hover.stax.user.StaxUser
+import com.hover.stax.domain.model.StaxUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -13,6 +13,7 @@ class StaxUserUseCase(private val staxUserRepository: StaxUserRepository) {
 
     val user = staxUserRepository.staxUser
 
+    @Deprecated("Use the method in auth use case instead")
     fun uploadUser(userUploadDto: UserUploadDto): Flow<Resource<StaxUser>> = flow {
         try {
             emit(Resource.Loading())

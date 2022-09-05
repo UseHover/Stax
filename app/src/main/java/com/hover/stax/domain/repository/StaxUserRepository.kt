@@ -2,7 +2,7 @@ package com.hover.stax.domain.repository
 
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.user.StaxUser
+import com.hover.stax.domain.model.StaxUser
 import kotlinx.coroutines.flow.Flow
 
 interface StaxUserRepository {
