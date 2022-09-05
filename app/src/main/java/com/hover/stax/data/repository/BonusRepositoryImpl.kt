@@ -16,7 +16,9 @@ class BonusRepositoryImpl(
 
 	override suspend fun refreshBonuses() {
 		try {
-			val allBonuses = StaxFirebase().fetchBonuses().documents.map { Bonus(it) }
+			val staxFirebase = StaxFirebase()
+			clearCacheIfRequired(staxFirebase) // To forces users to fetch new data online if the cached ones does not contains HNI
+			val allBonuses = staxFirebase.fetchBonuses().documents.map { Bonus(it) }
 			bonusRepo.update(allBonuses)
 		} catch (e: Exception) {
 			Timber.e("Bonus: Error fetching bonuses: ${e.localizedMessage}")
@@ -35,6 +37,11 @@ class BonusRepositoryImpl(
 
 	override suspend fun getBonusByUserChannel(channelId: Int): Bonus? {
 		return bonusRepo.getBonusByUserChannel(channelId)
+	}
+
+	private suspend fun clearCacheIfRequired(staxFirebase: StaxFirebase) {
+		val validLocalBonuses = bonusRepo.bonusCountWithHni()
+		if(validLocalBonuses == 0)  staxFirebase.clearPersistence()
 	}
 
 	private fun simSupportedBonuses(simHnis: List<String>, bonuses: List<Bonus>): List<Bonus> {

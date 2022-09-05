@@ -13,6 +13,8 @@ class BonusRepo(val db: AppDatabase) {
 
     fun save(bonuses: List<Bonus>) = dao.insertAll(bonuses)
 
+    suspend fun bonusCountWithHni() = dao.bonusCountWithHnis()
+
     fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus? = dao.getBonusByPurchaseChannel(purchaseChannelId)
 
     fun getBonusByUserChannel(userChannelId: Int): Bonus? = dao.getBonusByUserChannel(userChannelId)
