@@ -513,7 +513,7 @@
     <string name="privacy_policy_label">By using Stax App, you\'ve read our privacy policy and agree to the terms of service. Click to read</string>
     <string name="dialog_confirm_logout_header">Confirm Logout</string>
     <string name="logout_out_success">Logout successful</string>
-    <string name="dialog_confirm_logout_desc">"Are you sure you want to logout?"</string>
+    <string name="dialog_confirm_logout_desc">Are you sure you want to logout?</string>
 
     <string name="name_label">Enter your full name</string>
     <string name="phone_label">Enter your phone number</string>
@@ -607,11 +607,14 @@
     <string name="bounty_title">💸 Money Mapper</string>
     <string name="bounty_msg">Stax will pay you USD $1 - $5 to go through a USSD flow.</string>
     <string name="get_started">Get started</string>
-    <string name="bounty_email_stage_title">🗺️ MAP USSD FLOWS</string>
-    <string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. As a Money Mapper, you have the opportunity to earn USD $1 - $5 for every USSD transaction you successfully complete. We have listed all of the USSD requests (bounties) we currently need on the next page. We add new bounties often!</string>
-    <string name="bounty_email_stage_desc2"><b>1.</b> Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the USSD transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Sit tight and wait for feedback on the status of your bounty submission. Please note that payments for successful bounties are made every 2nd and 4th week of the month.</string>
+    <string name="bounty_email_stage_title">Welcome to Money Mapper</string>
+    <string name="bounty_email_stage_desc1">Stax wants to make USSD easier to use for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Money Mappers have the opportunity to earn USD $1 - $5 for every USSD transaction successfully completed. Please follow the instructions below to apply.</string>
+    <string name="bounty_email_stage_desc2"><![CDATA[<html><b>1.</b> Sign in below with your Google account. <br><br> <b>2.</b> Visit <font color=#FFFFFF><u><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">form link</a></u></font> and fill out the form. <br><br> <b>3.</b> You will receive an email notification when your application is accepted. <br><br> <b>4.</b> Come back to this screen to find the list of bounties and start earning money!</html>]]></string>
+    <string name="signed_in_as">Signed into Google account %1$s</string>
     <string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
     <string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
+    <string name="descrip_bounty_data">Buy data for yourself %1$s</string>
+    <string name="bounty_data_explain">Buy data for yourself %1$s</string>
     <string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
     <string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
     <string name="descrip_bounty_offnet">on %1$s</string>
@@ -766,7 +769,6 @@
     <string name="btn_update">Update</string>
 
     <string name="btn_not_now">Not Now</string>
-    <string name="join_mappers">Become A Mapper</string>
 
     <!-- marketing login prompt dialog -->
     <string name="login_dialog_title">Sign In</string>
@@ -806,5 +808,18 @@
     <string name="def_account_update_msg">Default account successfully updated to %1$s.</string>
     <string name="uxcam_session_url">uxcam_session_url</string>
     <string name="transaction_history">Transaction History</string>
+
+    <!-- Rewards -->
+    <string name="beginners_guide_title">Beginner\'s Guide</string>
+    <string name="beginners_guide_airtime">Welcome to Stax! Check your airtime balance to see what Stax can do and earn 100 reward points</string>
+    <string name="check_airtime_balance">Check Airtime Balance</string>
+    <string name="stax_points">Stax Points</string>
+    <string name="redeem">Redeem</string>
+    <string name="recent_points_earned">Recent Points Earned</string>
+    <string name="nav_earn">Earn</string>
+
+    <string name="welcome">Welcome to Stax %1$s</string>
+    <string name="welcome_back">Welcome back to Stax %1$s</string>
+    <string name="signed_in_message">You are already signed in to Stax</string>
 
 </resources>

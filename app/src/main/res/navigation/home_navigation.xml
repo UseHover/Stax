@@ -53,6 +53,8 @@
         android:id="@+id/action_global_TxnDetailsFragment"
         app:destination="@id/transactionDetailsFragment" />
 
+    <action android:id="@+id/action_global_RewardsFragment"
+        app:destination="@+id/rewardsFragment" />
 
     <fragment
         android:id="@+id/navigation_home"
@@ -360,15 +362,15 @@
 
     <fragment
         android:id="@+id/bountyEmailFragment"
-        android:name="com.hover.stax.presentation.bounties.BountyEmailFragment"
+        android:name="com.hover.stax.presentation.bounties.BountyApplicationFragment"
         android:label="@string/nav_bounty"
         android:tag="@string/nav_bounty"
-        tools:layout="@layout/fragment_bounty_email">
+        tools:layout="@layout/fragment_bounty_application">
         <action
-            android:id="@+id/action_bountyEmailFragment_to_bountyListFragment"
+            android:id="@+id/action_bountyApplicationFragment_to_bountyListFragment"
             app:destination="@id/bountyListFragment" />
         <action
-            android:id="@+id/action_bountyEmailFragment_to_navigation_settings"
+            android:id="@+id/action_bountyApplicationFragment_to_navigation_settings"
             app:destination="@id/navigation_settings"
             app:popUpTo="@id/navigation_settings"
             app:popUpToInclusive="true" />
@@ -443,5 +445,10 @@
             app:destination="@id/paybillFragment"
             app:popUpTo="@id/paybillFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/rewardsFragment"
+        android:name="com.hover.stax.presentation.rewards.RewardsFragment"
+        android:label="RewardsFragment" />
 
 </navigation>

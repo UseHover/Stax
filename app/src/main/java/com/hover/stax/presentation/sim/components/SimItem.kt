@@ -43,7 +43,7 @@ import coil.request.ImageRequest
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.presentation.home.BalanceTapListener
-import com.hover.stax.presentation.home.TopBar
+import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.ColorPrimary
 import com.hover.stax.ui.theme.ColorSurface
@@ -238,7 +238,7 @@ private fun SimItemsPreview() {
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Scaffold(topBar = {
-				TopBar(title = R.string.nav_home, isInternetConnected = false, {})
+				TopBar(title = R.string.nav_home, isInternetConnected = false, {}, {})
 			}, content = { innerPadding ->
 				Column(modifier = Modifier.padding(innerPadding)) {
 					SimItem(

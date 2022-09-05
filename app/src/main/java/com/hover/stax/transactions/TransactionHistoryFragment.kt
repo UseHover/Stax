@@ -8,10 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionCardHistoryBinding
-import com.hover.stax.presentation.home.TopBar
+import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
@@ -55,10 +56,14 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
     @Composable
     private fun Toolbar() {
         val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-        TopBar(title = R.string.nav_history, isInternetConnected = hasNetwork) {
-            findNavController().navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings())
-        }
+        TopBar(
+            title = R.string.nav_history, isInternetConnected = hasNetwork,
+            { navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings()) },
+            { navigate(TransactionHistoryFragmentDirections.actionGlobalRewardsFragment()) }
+        )
     }
+
+    private fun navigate(navDirections: NavDirections) = NavUtil.navigate(findNavController(), navDirections)
 
     private fun initRecyclerView() {
         binding.transactionsRecycler.apply {

@@ -72,7 +72,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
         }
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             initAmplitude()
             logPushNotificationIfRequired()
             initHover()
