@@ -14,14 +14,14 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
+import com.hover.stax.domain.use_case.sims.SimUseCase
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class BountyViewModel(private val simsUseCase: GetPresentSimUseCase, private val bountiesUseCase: GetChannelBountiesUseCase, val application: Application) : ViewModel() {
+class BountyViewModel(private val simsUseCase: SimUseCase, private val bountiesUseCase: GetChannelBountiesUseCase, val application: Application) : ViewModel() {
 
     private val _countryList = MutableStateFlow<List<String>>(emptyList())
     val countryList = _countryList.asStateFlow()

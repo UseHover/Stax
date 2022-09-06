@@ -100,7 +100,7 @@ fun SimScreen(
                             }
                         }
 
-                        else if(simUiState.presentSims.isEmpty()) {
+                        else if(simUiState.sims.isEmpty()) {
                             Timber.i("Status: Detected empty sims")
                             item {
                                 if(hasGratedSimPermission(context)) NoticeText(stringRes = R.string.simpage_empty_sims)
@@ -109,7 +109,7 @@ fun SimScreen(
                         }
 
                         else {
-                            items(simUiState.presentSims) { presentSim ->
+                            items(simUiState.sims.sortedBy { it.slotIdx }) { presentSim ->
                                 val simAccount = simUiState.telecomAccounts.find { it.simSubscriptionId == presentSim.subscriptionId }
                                 val visibleSlotIdx = presentSim.slotIdx + 1
 

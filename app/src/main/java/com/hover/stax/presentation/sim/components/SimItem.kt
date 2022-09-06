@@ -81,27 +81,30 @@ internal fun SimItem(
 				simIndex = simIndex, account = account, balanceTapListener = balanceTapListener
 			)
 			Column {
-				val notYetChecked = stringResource(id = R.string.not_yet_checked)
-				Text(
-					text = stringResource(
-						id = R.string.airtime_balance_holder, account.latestBalance ?: notYetChecked
-					),
-					color = TextGrey,
-					modifier = Modifier.padding(top = size13),
-					style = MaterialTheme.typography.body1
-				)
+				if (isSimSupportedAccount(account.id)) {
+					val notYetChecked = stringResource(id = R.string.not_yet_checked)
+					Text(
+						text = stringResource(
+							id = R.string.airtime_balance_holder,
+							account.latestBalance ?: notYetChecked
+						),
+						color = TextGrey,
+						modifier = Modifier.padding(top = size13),
+						style = MaterialTheme.typography.body1
+					)
 
-				Text(
-					text = stringResource(
-						id = R.string.as_of,
-						DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)
-					),
-					color = TextGrey,
-					modifier = Modifier.padding(bottom = 26.dp),
-					style = MaterialTheme.typography.body1
-				)
+					Text(
+						text = stringResource(
+							id = R.string.as_of,
+							DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)
+						),
+						color = TextGrey,
+						modifier = Modifier.padding(bottom = 26.dp),
+						style = MaterialTheme.typography.body1
+					)
+				}
 
-				if (!isSimSupportedAccount(account.id)) {
+				else {
 					Text(
 						text = stringResource(
 							id = R.string.unsupported_sim_info
@@ -242,8 +245,8 @@ private fun SimItemsPreview() {
 			}, content = { innerPadding ->
 				Column(modifier = Modifier.padding(innerPadding)) {
 					SimItem(
-						simIndex = 1,
-						account = Account.generateDummy("Dummy Account", 1),
+						simIndex = 2,
+						account = Account.generateDummy("Safaricom", 1),
 						bonus = 1,
 						secondaryClickItem = { },
 						balanceTapListener = null
@@ -252,6 +255,14 @@ private fun SimItemsPreview() {
 					SimItem(
 						simIndex = 1,
 						account = Account.generateDummy("MTN Nigeria"),
+						bonus = 1,
+						secondaryClickItem = { },
+						balanceTapListener = null
+					)
+
+					SimItem(
+						simIndex = -1,
+						account = Account.generateDummy("Airtel"),
 						bonus = 1,
 						secondaryClickItem = { },
 						balanceTapListener = null

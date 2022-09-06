@@ -82,8 +82,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     }
 
     override fun getTelecomAccounts(simSubscriptionIds: IntArray): Flow<List<Account>> {
-        return accountRepo.
-        getTelecomAccounts(simSubscriptionIds)
+        return accountRepo.getTelecomAccounts(simSubscriptionIds)
     }
 
     private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()

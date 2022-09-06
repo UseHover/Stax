@@ -21,7 +21,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.PLACEHOLDER
-import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
+import com.hover.stax.domain.use_case.sims.SimUseCase
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -36,7 +36,7 @@ import org.json.JSONObject
 //TODO: Refactor this class, and note the comment in the createAccounts(channels: List<Channel>) method
 //Todo created by Tobi, 11th of August, 2022.
 class ChannelsViewModel(application: Application, val repo: ChannelRepo,
-                        val presentSimUseCase: GetPresentSimUseCase,
+                        val presentSimUseCase: SimUseCase,
                         val accountRepo: AccountRepo,
                         val actionRepo: ActionRepo,
                         private val bonusRepo: BonusRepo) : AndroidViewModel(application),

@@ -7,7 +7,7 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
-import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
+import com.hover.stax.domain.use_case.sims.SimUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SimViewModel(
-    private val presentSimUseCase: GetPresentSimUseCase,
+    private val simUseCase: SimUseCase,
     private val getAccountsUseCase: GetAccountsUseCase,
     private val createAccountsUseCase: CreateAccountsUseCase,
     private val bonusUseCase: GetBonusesUseCase
@@ -31,13 +31,13 @@ class SimViewModel(
     private fun fetchData() {
         _simUiState.update { it.copy(loading = true) }
 
-        fetchPresentSims()
+        fetchSims()
         fetchBonuses()
     }
 
-    private fun fetchPresentSims() = viewModelScope.launch {
-        presentSimUseCase.presentSims.collect { sims ->
-            _simUiState.update { it.copy(presentSims = sims) }
+    private fun fetchSims() = viewModelScope.launch {
+        simUseCase.allSims.collect { sims ->
+            _simUiState.update { it.copy(sims = sims) }
 
             setTelecomAccounts(sims.map { it.subscriptionId }.toIntArray())
         }
@@ -47,7 +47,7 @@ class SimViewModel(
         getAccountsUseCase.telecomAccounts(subIds).collect { accounts ->
             _simUiState.update { it.copy(loading = false, telecomAccounts = accounts) }
 
-            createAccountForSimsIfRequired(accounts, simUiState.value.presentSims)
+            createAccountForSimsIfRequired(accounts, simUiState.value.sims)
         }
     }
 
