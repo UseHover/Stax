@@ -6,30 +6,32 @@ import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: ActionRepo, private val channelRepo: ChannelRepo) : ViewModel() {
 
     private val allNonBountyTransaction: LiveData<List<StaxTransaction>> = repo.allNonBountyTransactions
-    var transactionHistory: MediatorLiveData<List<TransactionHistory>> = MediatorLiveData()
+    var transactionHistoryItem: MediatorLiveData<List<TransactionHistoryItem>> = MediatorLiveData()
     private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
 
     init {
-        transactionHistory.addSource(allNonBountyTransaction, this::getTransactionHistory)
+        transactionHistoryItem.addSource(allNonBountyTransaction, this::getTransactionHistory)
         staxTransactions = repo.completeAndPendingTransferTransactions!!
         appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
     }
 
     private fun getTransactionHistory(transactions: List<StaxTransaction>) {
         viewModelScope.launch(Dispatchers.IO) {
-            val history = mutableListOf<TransactionHistory>()
+            val history = mutableListOf<TransactionHistoryItem>()
             for(transaction in transactions) {
                 val action = actionRepo.getAction(transaction.action_id)
-                val institutionType = channelRepo.getChannelByInstitution(action?.from_institution_id ?: 0)?.institutionType ?: "nuller"
-                history.add(TransactionHistory(transaction, action, institutionType))
+                var institutionName = ""
+                action?.let {
+                    institutionName = action.from_institution_name
+                }
+                history.add(TransactionHistoryItem(transaction, action, institutionName))
             }
-            transactionHistory.postValue(history)
+            transactionHistoryItem.postValue(history)
         }
     }
 
@@ -48,4 +50,4 @@ class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: Act
     }
 }
 
-data class TransactionHistory(val staxTransaction: StaxTransaction, val action: HoverAction?, val institutionType: String)
+data class TransactionHistoryItem(val staxTransaction: StaxTransaction, val action: HoverAction?, val institutionName: String)

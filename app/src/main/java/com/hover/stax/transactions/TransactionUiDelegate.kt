@@ -52,13 +52,13 @@ interface TransactionUiDelegate {
         return str
     }
 
-    fun shortStatusExplain(action: HoverAction?, institutionType: String, c: Context): String {
+    fun shortStatusExplain(action: HoverAction?, institutionName: String, c: Context): String {
         if (transaction.isRecorded) return getRecordedStatusDetail(c)
         return when {
             transaction.status == Transaction.FAILED -> shortFailureMessage(action, c)
-            transaction.status == Transaction.PENDING -> c.getString(R.string.pending_cardhead_with_isntType, institutionType)
+            transaction.status == Transaction.PENDING -> c.getString(R.string.pending_cardhead_with_isntType, institutionName)
             transaction.status == Transaction.SUCCEEDED && transaction.balance.isNullOrEmpty() -> c.getString(R.string.successful_label)
-            else -> c.getString(R.string.new_balance, institutionType, transaction.balance)
+            else -> c.getString(R.string.new_balance, institutionName, transaction.balance)
         }
     }
 

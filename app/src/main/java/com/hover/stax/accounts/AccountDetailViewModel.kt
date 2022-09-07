@@ -9,7 +9,7 @@ import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.transactions.StaxTransaction
-import com.hover.stax.transactions.TransactionHistory
+import com.hover.stax.transactions.TransactionHistoryItem
 import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
     var account: LiveData<Account> = MutableLiveData()
     var channel: LiveData<Channel> = MutableLiveData()
     private var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
-    var transactionHistory : MediatorLiveData<List<TransactionHistory>> = MediatorLiveData()
+    var transactionHistoryItem : MediatorLiveData<List<TransactionHistoryItem>> = MediatorLiveData()
     var actions: LiveData<List<HoverAction>> = MutableLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
     var feesThisYear: LiveData<Double> = MutableLiveData()
@@ -38,7 +38,7 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         actions = Transformations.switchMap(id, actionRepo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
-        transactionHistory.addSource(transactions, this::getTransactionHistory)
+        transactionHistoryItem.addSource(transactions, this::getTransactionHistory)
     }
 
     fun setAccount(accountId: Int) = id.postValue(accountId)
@@ -64,13 +64,13 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         viewModelScope.launch(Dispatchers.IO) {
             val history = transactions.asSequence().map {
                 val action = actionRepo.getAction(it.action_id)
-                var institutionType = ""
+                var institutionName = ""
                 action?.let {
-                    institutionType = channelRepo.getChannel(action.id)?.institutionType ?: ""
+                    institutionName = action.from_institution_name
                 }
-                TransactionHistory(it, action, institutionType)
+                TransactionHistoryItem(it, action, institutionName)
             }.toList()
-            transactionHistory.postValue(history)
+            transactionHistoryItem.postValue(history)
         }
     }
 
@@ -98,8 +98,6 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
                 channel.selected = true
                 channelsToUpdate.add(channel)
             }
-
         channelRepo.update(channelsToUpdate.toList())
-
     }
 }
