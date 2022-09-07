@@ -283,7 +283,7 @@
     <string name="descrip_transfer_sent">%1$s maallaqa gara %2$s ergu</string>
     <string name="descrip_transfer_received">%1$s irraa maallaqa argate</string>
     <string name="descrip_fetch_accounts">herrega %1$s irraa fide</string>
-    <string name="descrip_bill_paid">kaffaltii %1$s kaffalu</string>
+    <string name="descrip_bill_paid">kaffaltii %1$s kaffalu %2$s at %3$s</string>
     <string name="descrip_recorded">Kutaa USSD %1$s irratti galmaa\'e</string>
     <string name="descrip_airtime_sched">Yeroo qilleensaa %1$s waliin %2$s bitadhu</string>
 
@@ -375,7 +375,7 @@
     <string name="stax_id_label">ID Istaaksii</string>
     <string name="session_cardhead">Ergaawwan</string>
     <string name="view_full_details">Bal\'ina isaa guutuu ilaalaa</string>
-    <string name="new_balance">Hafnaan haaraa %1$s</string>
+    <string name="new_balance">Hafnaan %1$s haaraa %2$s</string>
 
     <!-- Canceling -->
     <string name="cancelfuture_head">Daldala gara fuula duraatti taasifamu haquu</string>

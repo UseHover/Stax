@@ -14,6 +14,9 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE institution_type == 'telecom' AND published = 1")
     suspend fun publishedTelecomChannels(): List<Channel>
 
+    @Query("SELECT * FROM channels WHERE institution_id = :fromInstitutionId AND published = 1")
+    suspend fun getChannelByInstitution(fromInstitutionId: Int) : Channel?
+
     @get:Query("SELECT * FROM channels WHERE institution_type != 'telecom' ORDER BY name ASC")
     val allChannels: LiveData<List<Channel>>
 
