@@ -107,9 +107,9 @@ object Utils {
 
     @JvmStatic
     fun formatAmount(number: String?): String {
-        return when {
-            number == "0" -> "0,000"
-            number == null -> "--"
+        return when (number) {
+            "0" -> "0,000"
+            null -> "--"
             else -> try {
                 formatAmount(getAmount(number))
             } catch (e: Exception) {
@@ -122,7 +122,7 @@ object Utils {
     fun formatAmount(number: Double?): String {
         return try {
             val formatter = DecimalFormat("#,##0.00")
-            formatter.maximumFractionDigits = 0
+            formatter.maximumFractionDigits = 3
             formatter.format(number)
         } catch (e: Exception) {
             number.toString()
