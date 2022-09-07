@@ -81,7 +81,6 @@ fun HomeScreen(
                                             homeState.bonuses.first()
                                         )
                                     })
-
                             }
 
                         if (accounts.isEmpty())

@@ -3,9 +3,12 @@ package com.hover.stax.database
 import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
+import androidx.room.DeleteColumn
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountDao
 import com.hover.stax.domain.model.Bonus
@@ -33,16 +36,18 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class
     ],
-    version = 43,
+    version = 44,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
         AutoMigration(from = 38, to = 39),
         AutoMigration(from = 40, to = 41),
-        AutoMigration(from = 41, to = 42)
+        AutoMigration(from = 41, to = 42),
         //Manual migration for 42_43
+        AutoMigration(from = 43, to = 44)
     ]
 )
+
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun channelDao(): ChannelDao
@@ -214,6 +219,7 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("ALTER TABLE accounts ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
             database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
         }
+
 
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
