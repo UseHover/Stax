@@ -122,7 +122,7 @@ object Utils {
     fun formatAmount(number: Double?): String {
         return try {
             val formatter = DecimalFormat("#,##0.00")
-            formatter.maximumFractionDigits = 3
+            formatter.maximumFractionDigits = 2
             formatter.format(number)
         } catch (e: Exception) {
             number.toString()

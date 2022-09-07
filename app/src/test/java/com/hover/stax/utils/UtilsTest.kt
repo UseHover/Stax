@@ -20,6 +20,6 @@ class UtilsTest {
 		Assert.assertEquals("43.00", variation1Result)
 		Assert.assertEquals("43.10", variation2Result)
 		Assert.assertEquals(variation3Input.toString(), variation3Result)
-		Assert.assertEquals(variation4Input.toString(), variation4Result)
+		Assert.assertEquals("43.99", variation4Result)
 	}
 }
