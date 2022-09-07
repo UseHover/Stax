@@ -29,13 +29,13 @@ class TransactionHistoryAdapter(private val selectListener: SelectListener) : Li
         holder.binding.liHeader.visibility = if (shouldShowDate(t, position)) View.VISIBLE else View.GONE
         holder.binding.liHeader.text = humanFriendlyDate(t.initiated_at)
         holder.itemView.setOnClickListener { selectListener.viewTransactionDetail(t.uuid) }
-        setStatus(t, history.action, holder)
+        setStatus(t, history.action, history.institutionType, holder)
     }
 
-    private fun setStatus(t: StaxTransaction, a: HoverAction?, holder: HistoryViewHolder) {
+    private fun setStatus(t: StaxTransaction, a: HoverAction?, institutionType: String, holder: HistoryViewHolder) {
         holder.binding.liAmount.alpha = (if (t.status == Transaction.FAILED) 0.54 else 1.0).toFloat()
         holder.binding.transactionItemLayout.setBackgroundColor(ContextCompat.getColor(holder.binding.root.context, t.getBackgroundColor()))
-        holder.binding.liDetail.text = t.shortStatusExplain(a, holder.itemView.context)
+        holder.binding.liDetail.text = t.shortStatusExplain(a, institutionType, holder.itemView.context)
         holder.binding.liDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(t.getIcon(), 0, 0, 0)
     }
 

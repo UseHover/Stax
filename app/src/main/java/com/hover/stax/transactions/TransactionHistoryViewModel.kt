@@ -3,10 +3,12 @@ package com.hover.stax.transactions
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: ActionRepo) : ViewModel() {
+class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: ActionRepo, private val channelRepo: ChannelRepo) : ViewModel() {
 
     private val allNonBountyTransaction: LiveData<List<StaxTransaction>> = repo.allNonBountyTransactions
     var transactionHistory: MediatorLiveData<List<TransactionHistory>> = MediatorLiveData()
@@ -21,10 +23,12 @@ class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: Act
 
     private fun getTransactionHistory(transactions: List<StaxTransaction>) {
         viewModelScope.launch(Dispatchers.IO) {
-            val history = transactions.asSequence().map {
-                val action = actionRepo.getAction(it.action_id)
-                TransactionHistory(it, action)
-            }.toList()
+            val history = mutableListOf<TransactionHistory>()
+            for(transaction in transactions) {
+                val action = actionRepo.getAction(transaction.action_id)
+                val institutionType = channelRepo.getChannelByInstitution(action?.from_institution_id ?: 0)?.institutionType ?: "nuller"
+                history.add(TransactionHistory(transaction, action, institutionType))
+            }
             transactionHistory.postValue(history)
         }
     }
@@ -44,4 +48,4 @@ class TransactionHistoryViewModel(val repo: TransactionRepo, val actionRepo: Act
     }
 }
 
-data class TransactionHistory(val staxTransaction: StaxTransaction, val action: HoverAction?)
+data class TransactionHistory(val staxTransaction: StaxTransaction, val action: HoverAction?, val institutionType: String)

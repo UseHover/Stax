@@ -149,7 +149,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun updateHeader(transaction: StaxTransaction) = with(binding.transactionHeader) {
         binding.transactionDetailsCard.setTitle(HoverAction.getHumanFriendlyType(requireContext(), transaction.transaction_type))
         if (shouldShowNewBalance(transaction)) {
-            mainMessage.text = getString(R.string.new_balance, transaction.displayBalance)
+            mainMessage.text = getString(R.string.new_balance, "", transaction.displayBalance)
         }
         statusText.text = transaction.title(requireContext())
         statusIcon.setImageResource(transaction.getIcon())
@@ -163,7 +163,7 @@ class TransactionDetailsFragment : Fragment() {
         detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
         typeValue.text = transaction.toString(requireContext())
         viewModel.action.value?.let {
-            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, requireContext())
+            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, "", requireContext())
         }
 
         statusValue.apply {
@@ -184,7 +184,6 @@ class TransactionDetailsFragment : Fragment() {
         transaction.transaction_type
         binding.transactionHeader.mainMessage.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
         binding.statusInfo.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
-//        binding.statusInfo.failureInfo.visibility = if (transaction.isSuccessful) GONE else VISIBLE //TODO root visibility is gone, test impact of this
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.paidWithRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
@@ -203,7 +202,7 @@ class TransactionDetailsFragment : Fragment() {
         viewModel.transaction.value?.let {
             val msg = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
             binding.statusInfo.longDescription.text = HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            binding.details.categoryValue.text = it.shortStatusExplain(action, requireContext())
+            binding.details.categoryValue.text = it.shortStatusExplain(action,"", requireContext())
             if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
         }

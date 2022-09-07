@@ -64,7 +64,11 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         viewModelScope.launch(Dispatchers.IO) {
             val history = transactions.asSequence().map {
                 val action = actionRepo.getAction(it.action_id)
-                TransactionHistory(it, action)
+                var institutionType = ""
+                action?.let {
+                    institutionType = channelRepo.getChannel(action.id)?.institutionType ?: ""
+                }
+                TransactionHistory(it, action, institutionType)
             }.toList()
             transactionHistory.postValue(history)
         }
