@@ -38,6 +38,7 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
             )
         }
 
+        /* TODO: Uncomment onces we are ready for rewards feature.
         Image(
             painter = painterResource(id = R.drawable.ic_rewards),
             contentDescription = null,
@@ -45,7 +46,7 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
                 .align(Alignment.CenterVertically)
                 .clickable(onClick = onClickedRewards)
                 .size(25.dp),
-        )
+        ) */
         
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_10)))
 
