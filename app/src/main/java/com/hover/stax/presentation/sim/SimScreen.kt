@@ -36,6 +36,7 @@ import coil.request.ImageRequest
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.Bonus
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.components.TopBar
@@ -114,17 +115,15 @@ fun SimScreen(
                                 val visibleSlotIdx = presentSim.slotIdx + 1
 
                                 if (simAccount != null) {
-                                    Timber.i("Status: Detected a supported sim")
-                                    val bonus = simUiState.bonuses.firstOrNull()
+                                    val bonus = getSimBonusPercent(simUiState.bonuses, presentSim.osReportedHni)
                                     SimItem(
                                         simIndex = visibleSlotIdx,
                                         account = simAccount,
-                                        bonus = ((bonus?.bonusPercent ?: 0.0) * 100).toInt(),
+                                        bonusPercent = ((bonus?.bonusPercent ?: 0.0) * 100).toInt(),
                                         secondaryClickItem = simScreenClickFunctions.onClickedBuyAirtime,
                                         balanceTapListener = balanceTapListener
                                     )
                                 } else {
-                                    Timber.i("Status: Detected unsupported ${presentSim.operatorName}")
                                     UnSupportedSim(simInfo = presentSim, slotId = visibleSlotIdx, context = LocalContext.current )
                                 }
                             }
@@ -133,6 +132,10 @@ fun SimScreen(
                 })
         }
     }
+}
+
+private fun getSimBonusPercent(bonuses: List<Bonus>, simHni: String) : Bonus? {
+    return bonuses.find { it.hniList.contains(simHni) }
 }
 
 @Preview
@@ -177,7 +180,7 @@ private fun SimScreenPreview() {
                             SimItem(
                                 simIndex = 1,
                                 account = account,
-                                bonus = (0.05 * 100).toInt(),
+                                bonusPercent = (0.05 * 100).toInt(),
                                 secondaryClickItem = { },
                                 balanceTapListener = null
                             )
@@ -248,7 +251,7 @@ private fun UnSupportedSim(simInfo: SimInfo?, slotId: Int, context: Context) {
     SimItem(
         simIndex = slotId,
         account = Account.generateDummy(displayedNetworkName),
-        bonus = 0,
+        bonusPercent = 0,
         secondaryClickItem = { Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody) },
         balanceTapListener = null
     )
