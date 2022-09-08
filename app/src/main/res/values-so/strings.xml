@@ -283,7 +283,7 @@
     <string name="descrip_transfer_sent">%1$s U dir lacag %2$s</string>
     <string name="descrip_transfer_received">Ka qaado lacag %1$s</string>
     <string name="descrip_fetch_accounts">Koontooyinka laga soo jiiday %1$s</string>
-    <string name="descrip_bill_paid">Biil %1$s bixinta</string>
+    <string name="descrip_bill_paid">Biil %1$s bixinta %2$s at %3$s</string>
     <string name="descrip_recorded">Fadhiga USSD ayaa la duubay %1$s</string>
     <string name="descrip_airtime_sched">Ku iibso waqtiga hawada %1$s uu hel %2$s</string>
 
@@ -375,7 +375,7 @@
     <string name="stax_id_label">ID-ga STax</string>
     <string name="session_cardhead">fariimaha.</string>
     <string name="view_full_details">Daalaco dhamaan macluumaadka</string>
-    <string name="new_balance">Hadhaaga cusub %1$s</string>
+    <string name="new_balance">Hadhaaga %1$s cusub %2$s</string>
 
     <!-- Canceling -->
     <string name="cancelfuture_head">Tirtir dhamaan dhaqdhaqaaqa mustaqbalka.</string>

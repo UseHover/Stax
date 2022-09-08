@@ -49,7 +49,6 @@ data class StaxTransaction(
 
 	@ColumnInfo(name = "updated_at", defaultValue = "CURRENT_TIMESTAMP")
 	var updated_at: Long,
-
 ) : Comparable<StaxTransaction>, TransactionUiDelegate {
 
 	@PrimaryKey(autoGenerate = true)

@@ -8,7 +8,6 @@ import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
@@ -22,7 +21,7 @@ import com.hover.stax.domain.repository.*
 import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.SetDefaultAccountUseCase
-import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
+import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
@@ -87,7 +86,6 @@ val appModule = module {
     viewModelOf(::PaybillViewModel)
     viewModelOf(::MerchantViewModel)
     viewModelOf(::RequestDetailViewModel)
-    viewModelOf(::BonusViewModel)
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::SimViewModel)
@@ -145,7 +143,7 @@ val repositories = module {
         Dispatchers.IO
     }
 
-    single<BonusRepository> { BonusRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
+    single<BonusRepository> { BonusRepositoryImpl(get(), get()) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
     single<SimRepository> { SimRepositoryImpl(get()) }
@@ -157,7 +155,7 @@ val repositories = module {
 
 val useCases = module {
     factoryOf(::GetBonusesUseCase)
-    factoryOf(::FetchBonusUseCase)
+    factoryOf(::RefreshBonusUseCase)
 
     factoryOf(::GetAccountsUseCase)
     factoryOf(::SetDefaultAccountUseCase)

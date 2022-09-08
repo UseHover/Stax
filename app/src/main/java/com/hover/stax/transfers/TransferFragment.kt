@@ -16,7 +16,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
@@ -27,14 +26,11 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
-    private val bonusViewModel: BonusViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
     private val channelsViewModel: ChannelsViewModel by viewModel()
 
@@ -66,8 +62,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         super.onViewCreated(view, savedInstanceState)
 
         init(binding.root)
-
-        bonusViewModel.getBonusList()
 
         startObservers(binding.root)
         startListeners()
@@ -208,7 +202,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun observeAccountsEvent() {
         collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return@collectLifecycleFlow
+            val bonus = transferViewModel.bonusList.value.bonuses.firstOrNull() ?: return@collectLifecycleFlow
             accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
         }
     }
@@ -339,7 +333,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun showBonusBanner(actions: List<HoverAction>) {
         if (args.transactionType == HoverAction.AIRTIME) {
-            val bonus = bonusViewModel.bonusList.value.bonuses.firstOrNull() ?: return
+            val bonus = transferViewModel.bonusList.value.bonuses.firstOrNull() ?: return
 
             with(binding.bonusLayout) {
                 cardBonus.visibility = View.VISIBLE
