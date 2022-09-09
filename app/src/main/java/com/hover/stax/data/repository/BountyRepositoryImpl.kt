@@ -1,8 +1,6 @@
 package com.hover.stax.data.repository
 
-import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.local.actions.ActionRepo
@@ -19,16 +17,6 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
 
     override val bountyActions: List<HoverAction>
         get() = actionRepo.bounties
-
-    override fun isSimPresent(bounty: Bounty, sims: List<SimInfo>): Boolean {
-        if (sims.isEmpty()) return false
-
-        sims.forEach { simInfo ->
-            for (i in 0 until bounty.action.hni_list.length()) if (bounty.action.hni_list.optString(i) == simInfo.osReportedHni) return true
-        }
-
-        return false
-    }
 
     override fun getCountryList(): Flow<List<String>> = channelFlow {
         launch(coroutineDispatcher) {

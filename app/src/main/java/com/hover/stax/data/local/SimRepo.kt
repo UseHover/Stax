@@ -15,7 +15,4 @@ class SimRepo(val db: HoverRoomDatabase) {
 	fun getAll(): List<SimInfo> = dao.all
 
 	fun getPresentSims(): List<SimInfo> = dao.present
-
-	fun getPresentSimsLive() : LiveData<List<SimInfo>> = dao.presentLive
-
 }

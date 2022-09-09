@@ -6,10 +6,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.channels.Channel
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.domain.model.Bonus
-import com.hover.stax.domain.use_case.sims.SimUseCase
 import com.hover.stax.utils.toHni
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo,private val presentSimUseCase: SimUseCase) : ViewModel() {
+class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo,private val simRepo: SimRepo) : ViewModel() {
 
     private val _bonusList = MutableStateFlow(BonusList())
     val bonusList = _bonusList.asStateFlow()
@@ -55,7 +55,7 @@ class BonusViewModel(val repo: BonusRepo, private val channelRepo: ChannelRepo,p
     }
 
     private fun saveBonuses(bonuses: List<Bonus>) = viewModelScope.launch(Dispatchers.IO) {
-        val simHnis = presentSimUseCase().map { it.osReportedHni }
+        val simHnis = simRepo.getPresentSims().map { it.osReportedHni }
         val bonusChannels = channelRepo.getChannelsByIds(bonuses.map { it.purchaseChannel })
 
         val toSave = bonuses.filter { bonusChannels.map { channel -> channel.id }.contains(it.purchaseChannel) }

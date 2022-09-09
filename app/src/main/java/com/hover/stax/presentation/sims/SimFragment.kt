@@ -1,4 +1,4 @@
-package com.hover.stax.presentation.sim
+package com.hover.stax.presentation.sims
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -103,15 +103,4 @@ data class Account(
     }
 
     override fun compareTo(other: Account): Int = toString().compareTo(other.toString())
-
-    companion object {
-        fun generateDummy(name: String? = "Dummy account", accountId: Int? = -1) : Account {
-            return Account(name!!).apply {
-                id = accountId!!
-                simSubscriptionId = Random(2).nextInt()
-                latestBalance = "Not yet checked"
-                latestBalanceTimestamp = now()
-            }
-        }
-    }
 }

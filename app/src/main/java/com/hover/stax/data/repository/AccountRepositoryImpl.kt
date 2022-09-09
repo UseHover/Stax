@@ -30,18 +30,11 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     override val fetchAccounts: Flow<List<Account>>
         get() = accountRepo.getAccounts()
 
-    override suspend fun createAccounts(channels: List<Channel>) {
-        val defaultAccount = accountRepo.getDefaultAccountAsync()
-        channels.mapIndexed { index, channel ->
-            createAccount(channel, -1, defaultAccount == null && index == 0)
-        }
-    }
-
-    override suspend fun createAccount(channel: Channel, simSubscriptionId: Int, isDefault: Boolean) {
+    override suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean): Account {
         val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
         val account = Account(
             accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = simSubscriptionId
+            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = subscriptionId
         )
 
         channel.selected = true
@@ -50,39 +43,23 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
         logChoice(account)
         ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
+        return account
     }
 
-    override suspend fun setDefaultAccount(account: Account) {
-        fetchAccounts.collect { accounts ->
-            val current = accounts.firstOrNull { it.isDefault }?.also {
-                it.isDefault = false
-            }
-
-            val defaultAccount = accounts.first { it.id == account.id }.also { it.isDefault = true }
-
-            withContext(coroutineDispatcher) {
-                launch {
-                    accountRepo.update(listOf(current!!, defaultAccount))
-                }
-            }
+    override suspend fun createAccount(sim: SimInfo): Account {
+        Timber.e("Creating account for SIM")
+        var account = Account("Unknown")
+        val channel = channelRepo.getTelecom(sim.osReportedHni)
+        Timber.e("Found telecom channel: ${channel?.name} having country code: ${channel?.countryAlpha2}")
+        channel?.let {
+            Timber.e("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
+            account = createAccount(it, sim.subscriptionId, false)
         }
+        return account
     }
 
-    override suspend fun createTelecomAccounts(sims: List<SimInfo>) {
-        val telecomChannels = channelRepo.publishedTelecomChannels()
-        Timber.i("all published Telecom channels in  is: ${telecomChannels.size}")
-
-        sims.forEach { sim ->
-            val channel = telecomChannels.firstOrNull { it.hniList.contains(sim.osReportedHni) }
-            channel?.let {
-                Timber.i("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
-                createAccount(it, sim.subscriptionId, false)
-            }
-        }
-    }
-
-    override fun getTelecomAccounts(simSubscriptionIds: IntArray): Flow<List<Account>> {
-        return accountRepo.getTelecomAccounts(simSubscriptionIds)
+    override suspend fun getAccountBySim(subscriptionId: Int): Account? {
+        return accountRepo.getAccountBySim(subscriptionId)
     }
 
     private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
