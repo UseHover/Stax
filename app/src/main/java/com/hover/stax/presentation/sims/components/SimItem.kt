@@ -85,16 +85,14 @@ internal fun SimItem(
 			)
 		}
 
-		SecondaryButton(
-			getSecondaryButtonLabel(simWithAccount.account, -1, LocalContext.current),
-			null,
-			onClick = { selectAction(simWithAccount, context) })
+		if (simWithAccount.account.channelId == -1) {
+			SecondaryButton(context.getString(R.string.email_support),null,
+				onClick = { email(simWithAccount, context) })
+		}
+//		else // FIXME: check if airtime action exists, check for bonus
+//			SecondaryButton(context.getString(R.string.nav_airtime),null,
+//				onClick = { buyAirtime(simWithAccount, context) })
 	}
-}
-
-private fun selectAction(simWithAccount: SimWithAccount, context: Context) {
-	if (simWithAccount.account.channelId == -1) email(simWithAccount, context)
-//	else buyAirtime(context: Context)
 }
 
 private fun email(simWithAccount: SimWithAccount, context: Context) {
@@ -109,16 +107,13 @@ private fun email(simWithAccount: SimWithAccount, context: Context) {
 	Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody)
 }
 
-private fun getSecondaryButtonLabel(account: Account, bonus: Int, context: Context): String {
-	var label = context.getString(R.string.email_support)
+private fun buyAirtime(account: Account, bonus: Int, context: Context) {
 	if (account.channelId != -1) {
-		label = context.getString(R.string.nav_airtime)
 		if (bonus > 0) {
 			val bonusPercent = bonus.toString().plus("%")
-			label = context.getString(R.string.buy_airitme_with_discount, bonusPercent)
+//			label = context.getString(R.string.buy_airitme_with_discount, bonusPercent)
 		}
 	}
-	return label
 }
 
 @Composable
