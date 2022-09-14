@@ -122,7 +122,10 @@ public class Channel implements Comparable<Channel> {
             countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
             currency = jsonObject.getString("currency");
             hniList = jsonObject.getString("hni_list");
+
             published = jsonObject.getBoolean("published");
+            if (id == 555057)
+                Timber.e("555057 Published? %b", published);
             logoUrl = rootUrl + jsonObject.getString("logo_url");
             institutionId = jsonObject.getInt("institution_id");
             primaryColorHex = jsonObject.getString("primary_color_hex");

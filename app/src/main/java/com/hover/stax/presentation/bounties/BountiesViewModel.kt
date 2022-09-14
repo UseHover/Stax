@@ -85,8 +85,8 @@ class BountyViewModel(private val simRepo: SimRepo, private val bountiesUseCase:
 
     fun isSimPresent(bounty: Bounty): Boolean = bountiesUseCase.isSimPresent(bounty, sims.value)
 
-    fun handleBountyEvent(bountySelectEvent: BountySelectEvent) = viewModelScope.launch {
-        onBountySelectEvent.send(bountySelectEvent)
+    fun handleBountyEvent(bountySelectEvent: BountySelectEvent?) = viewModelScope.launch {
+        bountySelectEvent?.let { onBountySelectEvent.send(bountySelectEvent) }
     }
 
     override fun onCleared() {

@@ -19,13 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +31,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -46,19 +39,15 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.use_case.sims.SimWithAccount
+import com.hover.stax.presentation.components.StaxButton
+import com.hover.stax.presentation.components.TapListener
 import com.hover.stax.presentation.home.BalanceTapListener
-import com.hover.stax.presentation.home.components.TopBar
-import com.hover.stax.presentation.sims.SimViewModel
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.ColorPrimary
-import com.hover.stax.ui.theme.ColorSurface
 import com.hover.stax.ui.theme.DarkGray
-import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.ui.theme.TextGrey
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
-import org.koin.androidx.compose.getViewModel
 
 @Composable
 internal fun SimItem(
@@ -79,11 +68,10 @@ internal fun SimItem(
 				.fillMaxWidth()
 				.padding(size13)
 		) {
-			SimItemTopRow(
-				simIndex = simWithAccount.sim.slotIdx, account = simWithAccount.account, balanceTapListener = balanceTapListener
-			)
+			val context = LocalContext.current
+			SimItemTopRow(simWithAccount, balanceTapListener = balanceTapListener)
 			Column {
-				if (simWithAccount.account != null) {
+				if (simWithAccount.account.channelId != -1) {
 					val notYetChecked = stringResource(id = R.string.not_yet_checked)
 					Text(
 						text = stringResource(
@@ -91,19 +79,20 @@ internal fun SimItem(
 							simWithAccount.account.latestBalance ?: notYetChecked
 						),
 						color = TextGrey,
-						modifier = Modifier.padding(top = size13),
 						style = MaterialTheme.typography.body1
 					)
 
-					Text(
-						text = stringResource(
-							id = R.string.as_of,
-							DateUtils.humanFriendlyDateTime(simWithAccount.account.latestBalanceTimestamp)
-						),
-						color = TextGrey,
-						modifier = Modifier.padding(bottom = 26.dp),
-						style = MaterialTheme.typography.body1
-					)
+					if (simWithAccount.account.latestBalance != null) {
+						Text(
+							text = stringResource(
+								id = R.string.as_of,
+								DateUtils.humanFriendlyDateTime(simWithAccount.account.latestBalanceTimestamp)
+							),
+							color = TextGrey,
+							modifier = Modifier.padding(bottom = 26.dp),
+							style = MaterialTheme.typography.body1
+						)
+					}
 				}
 
 				else {
@@ -117,63 +106,34 @@ internal fun SimItem(
 					)
 				}
 
-				OutlinedButton(
-					onClick = {
-//						emailInfo(sim, LocalContext.current)
-					},
-					modifier = Modifier
-						.padding(bottom = 6.dp)
-						.shadow(elevation = 0.dp)
-						.wrapContentWidth(),
-					shape = MaterialTheme.shapes.medium,
-					border = BorderStroke(width = 0.5.dp, color = DarkGray),
-					colors = ButtonDefaults.buttonColors(
-						backgroundColor = ColorSurface, contentColor = OffWhite
-					)
-				) {
-					Row(
-						modifier = Modifier
-							.wrapContentWidth()
-							.padding(all = 5.dp)
-					) {
-						Text(
-							text = getSecondaryButtonLabel(simWithAccount.account, -1, LocalContext.current),
-							style = MaterialTheme.typography.button,
-							modifier = Modifier.padding(end = 5.dp),
-							textAlign = TextAlign.Start,
-							fontSize = 14.sp
-						)
-
-						if (simWithAccount.account != null) {
-							Spacer(modifier = Modifier.width(3.dp))
-
-							Image(
-								painter = painterResource(id = R.drawable.ic_bonus),
-								contentDescription = null,
-								modifier = Modifier.size(18.dp)
-							)
-						}
-					}
-				}
+				StaxButton(getSecondaryButtonLabel(simWithAccount.account, -1, LocalContext.current),
+					null,
+					onClick = { selectAction(simWithAccount, context) })
 			}
 		}
 	}
 }
 
-private fun emailInfo(simInfo: SimInfo, context: Context) {
-	val displayedNetworkName = (simInfo.operatorName ?: simInfo.networkOperator) ?: "Unknown"
-	val emailBody = context.getString(R.string.sim_card_support_request_emailBody,
-		simInfo.osReportedHni ?: "Null",
-		simInfo.operatorName ?: displayedNetworkName,
-		simInfo.networkOperator ?: "Null",
-		simInfo.countryIso ?: "Null")
+private fun selectAction(simWithAccount: SimWithAccount, context: Context) {
+	if (simWithAccount.account.channelId == -1) email(simWithAccount, context)
+//	else buyAirtime(context: Context)
+}
+
+private fun email(simWithAccount: SimWithAccount, context: Context) {
+	val emailBody = context.getString(
+		R.string.sim_card_support_request_emailBody,
+		simWithAccount.sim.osReportedHni ?: "Null",
+		simWithAccount.sim.operatorName ?: simWithAccount.account.name,
+		simWithAccount.sim.networkOperator ?: "Null",
+		simWithAccount.sim.countryIso ?: "Null"
+	)
 
 	Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody)
 }
 
-private fun getSecondaryButtonLabel(account: Account?, bonus: Int, context: Context): String {
+private fun getSecondaryButtonLabel(account: Account, bonus: Int, context: Context): String {
 	var label = context.getString(R.string.email_support)
-	if (account != null) {
+	if (account.channelId != -1) {
 		label = context.getString(R.string.nav_airtime)
 		if (bonus > 0) {
 			val bonusPercent = bonus.toString().plus("%")
@@ -185,15 +145,14 @@ private fun getSecondaryButtonLabel(account: Account?, bonus: Int, context: Cont
 
 @Composable
 private fun SimItemTopRow(
-	simIndex: Int,
-	account: Account?,
+	simWithAccount: SimWithAccount,
 	balanceTapListener: BalanceTapListener?
 ) {
 	val size34 = dimensionResource(id = R.dimen.margin_34)
 
-	Row {
+	Row(modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13))) {
 		AsyncImage(
-			model = ImageRequest.Builder(LocalContext.current).data(account?.logoUrl).crossfade(true)
+			model = ImageRequest.Builder(LocalContext.current).data(simWithAccount.account.logoUrl).crossfade(true)
 				.diskCachePolicy(CachePolicy.ENABLED).build(),
 			contentDescription = "",
 			placeholder = painterResource(id = R.drawable.img_placeholder),
@@ -210,17 +169,17 @@ private fun SimItemTopRow(
 				.weight(1f)
 				.padding(horizontal = 13.dp)
 		) {
-			Text(text = account?.name ?: "Unknown", style = MaterialTheme.typography.body1)
+			Text(text = simWithAccount.account.name, style = MaterialTheme.typography.body1)
 			Text(
-				text = stringResource(id = R.string.sim_index, simIndex),
+				text = getSimSlot(simWithAccount.sim, LocalContext.current),
 				color = TextGrey,
 				style = MaterialTheme.typography.body2
 			)
 		}
 
-		if (account != null) {
+		if (simWithAccount.account.channelId != -1) {
 			Button(
-				onClick = { balanceTapListener?.onTapBalanceRefresh(account) },
+				onClick = { balanceTapListener?.onTapBalanceRefresh(simWithAccount.account) },
 				modifier = Modifier
 					.weight(1f)
 					.shadow(elevation = 0.dp),
@@ -248,6 +207,13 @@ private fun SimItemTopRow(
 		}
 
 	}
+}
+
+private fun getSimSlot(simInfo: SimInfo, context: Context): String {
+	return if (simInfo.slotIdx >= 0)
+		context.getString(R.string.sim_index, simInfo.slotIdx + 1)
+	else
+		context.getString(R.string.not_present)
 }
 
 //@Composable

@@ -11,7 +11,7 @@ interface ChannelDao {
     @get:Query("SELECT * FROM channels WHERE published = 1 AND institution_type != 'telecom' ORDER BY isFavorite DESC, name ASC")
     val publishedNonTelecomChannels: LiveData<List<Channel>>
 
-    @Query("SELECT * FROM channels WHERE institution_type == 'telecom' AND :hni IN (hni_list)")
+    @Query("SELECT * FROM channels WHERE published = 1 AND institution_type = 'telecom' AND hni_list LIKE '%' || :hni || '%'")
     suspend fun getTelecom(hni: String): Channel?
 
     @get:Query("SELECT * FROM channels WHERE institution_type != 'telecom' ORDER BY name ASC")
@@ -28,9 +28,6 @@ interface ChannelDao {
 
     @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode ORDER BY name ASC")
     fun getChannels(countryCode: String): List<Channel>
-
-//    @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode AND id IN (:channel_ids) ORDER BY name ASC")
-//    fun getChannels(countryCode: String, channel_ids: IntArray): LiveData<List<Channel>>
 
     @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode AND id IN (:channel_ids) ORDER BY name ASC")
     fun getChannels(countryCode: String, channel_ids: IntArray): List<Channel>
@@ -57,9 +54,6 @@ interface ChannelDao {
 
     @get:Query("SELECT COUNT(id) FROM channels WHERE institution_type == 'telecom' AND published = 1")
     val publishedTelecomDataCount: Int
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(vararg channels: Channel?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(channel: Channel?)

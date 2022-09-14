@@ -12,13 +12,13 @@ import timber.log.Timber
 
 data class SimWithAccount(
     val sim: SimInfo,
-    val account: Account?
+    val account: Account
 )
 
 class ListSimsUseCase(
     private val simRepo: SimRepo,
     private val accountRepository: AccountRepository,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default) {
+    private val defaultDispatcher: CoroutineDispatcher) {
 
     suspend operator fun invoke(): List<SimWithAccount> =
         withContext(defaultDispatcher) {
@@ -26,10 +26,13 @@ class ListSimsUseCase(
             Timber.e("found ${sims.size} sims. Loading accounts")
             val result: MutableList<SimWithAccount> = mutableListOf()
             for (sim in sims) {
+                Timber.e("looking for accounts for $sim")
                 var account = accountRepository.getAccountBySim(sim.subscriptionId)
                 Timber.e("loaded ${account?.name} account")
                 if (account == null)
                     account = accountRepository.createAccount(sim)
+                Timber.e("using ${account.name} account")
+                Timber.e("adding simwithaccount for sim ${sim.slotIdx}")
                 result.add(SimWithAccount(sim, account))
             }
             result

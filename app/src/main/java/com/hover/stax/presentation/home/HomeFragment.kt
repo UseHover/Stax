@@ -135,10 +135,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     }
 
     override fun onTapBalanceRefresh(account: Account?) {
-        if (account != null) {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
-            balancesViewModel.requestBalance(account)
-        }
+        balancesViewModel.requestBalance(account)
     }
 
     override fun onTapBalanceDetail(accountId: Int) {

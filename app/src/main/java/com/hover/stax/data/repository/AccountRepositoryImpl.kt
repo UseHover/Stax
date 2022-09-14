@@ -32,30 +32,34 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
     override suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean): Account {
         val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
-        val account = Account(
-            accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = subscriptionId
-        )
-
         channel.selected = true
         channelRepo.update(channel)
+        val account = generateAccountFromChannel(accountName, channel, isDefault, subscriptionId)
         accountRepo.insert(account)
-
         logChoice(account)
+        ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
+
+        return account
+    }
+
+    private fun generateAccountFromChannel(name: String, channel: Channel, isDefault: Boolean, simSubscriptionId: Int): Account {
+        return Account(
+            name, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
+            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = simSubscriptionId
+        )
+    }
+
+    override suspend fun createAccount(sim: SimInfo): Account {
+        var account = Account(generateSimBasedName(sim))
+        channelRepo.getTelecom(sim.osReportedHni)?.let {
+            account = generateAccountFromChannel(account.name, it, false, sim.subscriptionId)
+        }
         ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
         return account
     }
 
-    override suspend fun createAccount(sim: SimInfo): Account {
-        Timber.e("Creating account for SIM")
-        var account = Account("Unknown")
-        val channel = channelRepo.getTelecom(sim.osReportedHni)
-        Timber.e("Found telecom channel: ${channel?.name} having country code: ${channel?.countryAlpha2}")
-        channel?.let {
-            Timber.e("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
-            account = createAccount(it, sim.subscriptionId, false)
-        }
-        return account
+    private fun generateSimBasedName(sim: SimInfo): String {
+        return sim.operatorName ?: sim.networkOperatorName ?: "Unknown"
     }
 
     override suspend fun getAccountBySim(subscriptionId: Int): Account? {
