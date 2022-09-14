@@ -16,5 +16,7 @@ val StaxCardBlue = Color(0xFF4464F6)
 val TextColorDark = Color(0xFF1E2329)
 val NavGrey = Color(0xFF3F444A)
 
+val Border = Color(0xFF535457)
+
 
 
