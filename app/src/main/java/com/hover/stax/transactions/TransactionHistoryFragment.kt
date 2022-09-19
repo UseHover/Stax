@@ -56,11 +56,7 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
     @Composable
     private fun Toolbar() {
         val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-        TopBar(
-            title = R.string.nav_history, isInternetConnected = hasNetwork,
-            { navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings()) },
-            { navigate(TransactionHistoryFragmentDirections.actionGlobalRewardsFragment()) }
-        )
+        TopBar(title = R.string.nav_history, isInternetConnected = hasNetwork, {})
     }
 
     private fun navigate(navDirections: NavDirections) = NavUtil.navigate(findNavController(), navDirections)

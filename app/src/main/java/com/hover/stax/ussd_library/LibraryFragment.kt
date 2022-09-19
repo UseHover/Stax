@@ -73,9 +73,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
     @Composable
     private fun Toolbar() {
         val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-        TopBar(title = R.string.library_cardhead, isInternetConnected = hasNetwork,
-            { navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings()) },
-            { navigate(TransactionHistoryFragmentDirections.actionGlobalRewardsFragment()) })
+        TopBar(title = R.string.library_cardhead, isInternetConnected = hasNetwork, {})
     }
 
     private fun navigate(navDirections: NavDirections) = NavUtil.navigate(findNavController(), navDirections)

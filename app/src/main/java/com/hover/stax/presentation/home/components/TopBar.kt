@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 
 @Composable
-fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, onClickedSettingsIcon: () -> Unit, onClickedRewards: () -> Unit) {
+fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boolean, navTo: (Int) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +43,7 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .clickable(onClick = onClickedRewards)
+                .clickable(onClick = { navTo(R.id.rewardsFragment) })
                 .size(25.dp),
         )
         
@@ -54,7 +54,7 @@ fun TopBar(@StringRes title: Int = R.string.app_name, isInternetConnected: Boole
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .clickable(onClick = onClickedSettingsIcon)
+                .clickable(onClick = { navTo(R.id.action_global_NavigationSettings) })
                 .size(30.dp),
         )
     }

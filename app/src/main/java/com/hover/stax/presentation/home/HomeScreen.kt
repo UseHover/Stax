@@ -64,8 +64,7 @@ fun HomeScreen(
                     TopBar(
                         title = R.string.nav_home,
                         isInternetConnected = hasNetwork,
-                        homeClickFunctions.onClickedSettingsIcon,
-                        homeClickFunctions.onClickedRewards
+                        {}
                     )
                 },
                 content = {
@@ -161,7 +160,7 @@ fun HomeScreenPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(title = R.string.nav_home, isInternetConnected = false, {}, {})
+                    TopBar(title = R.string.nav_home, isInternetConnected = false, {})
                 },
                 content = { padding ->
                     LazyColumn(modifier = Modifier.padding(padding), content = {

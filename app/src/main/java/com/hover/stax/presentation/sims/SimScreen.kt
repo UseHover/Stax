@@ -18,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
+import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.BalanceTapListener
@@ -31,18 +33,13 @@ import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
 
-data class SimScreenClickFunctions(
-    val onClickedAddNewAccount: () -> Unit,
-    val onClickedSettingsIcon: () -> Unit,
-    val onClickedBuyAirtime: () -> Unit
-)
-
 private fun hasGratedSimPermission(context: Context) = PermissionUtils.hasContactPermission(context) && PermissionUtils.hasSmsPermission(context)
 
 @Composable
 fun SimScreen(
-    simScreenClickFunctions: SimScreenClickFunctions,
-    balanceTapListener: BalanceTapListener,
+    refreshBalance: (Account) -> Unit,
+    buyAirtime: (Account) -> Unit,
+    navTo: (dest: Int) -> Unit,
     simViewModel: SimViewModel = getViewModel()
 ) {
     val sims by simViewModel.sims.collectAsState()
@@ -54,49 +51,40 @@ fun SimScreen(
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(
-                        title = R.string.your_sim_cards,
-                        isInternetConnected = hasNetwork,
-                        simScreenClickFunctions.onClickedSettingsIcon,
-                        {}
-                    )
-                },
-                content = { innerPadding ->
-                    val paddingModifier = Modifier.padding(innerPadding)
+                    TopBar(title = R.string.your_sim_cards, isInternetConnected = hasNetwork, navTo)
+                }
+            ) { innerPadding ->
+                val paddingModifier = Modifier.padding(innerPadding)
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(horizontal = dimensionResource(id = R.dimen.margin_13))
-                            .then(paddingModifier)
-                    ) {
-                        if (simViewModel.loading) {
-                            Timber.i("Status: Loading")
-                            item {
-                                NoticeText(stringRes = R.string.loading)
-                            }
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(horizontal = dimensionResource(id = R.dimen.margin_13))
+                        .then(paddingModifier)
+                ) {
+                    if (simViewModel.loading) {
+                        item {
+                            NoticeText(stringRes = R.string.loading)
+                        }
+                    } else if (sims.isEmpty()) {
+                        item {
+                            if (hasGratedSimPermission(context)) NoticeText(stringRes = R.string.simpage_empty_sims)
+                            else ShowGrantPermissionContent()
+                        }
+                    } else {
+                        val comparator = Comparator { s1: SimWithAccount, s2: SimWithAccount ->
+                            return@Comparator if (s1.sim.slotIdx == -1) { 1 }
+                            else if (s2.sim.slotIdx == -1) { -1 }
+                            else { s1.sim.slotIdx - s2.sim.slotIdx }
                         }
 
-                        else if (sims.isEmpty()) {
-                            Timber.i("Status: Detected empty sims")
-                            item {
-                                if (hasGratedSimPermission(context)) NoticeText(stringRes = R.string.simpage_empty_sims)
-                                else ShowGrantPermissionContent(simScreenClickFunctions.onClickedAddNewAccount)
-                            }
-                        }
-
-                        else {
-                            items(sims.sortedBy { it.sim.slotIdx }) { sim ->
-                                Timber.i("Status: Detected a supported sim")
-//                                val bonus = simUiState.bonuses.firstOrNull()
-                                SimItem(
-                                    simWithAccount = sim,
-//                                    secondaryClickItem = simScreenClickFunctions.onClickedBuyAirtime,
-                                    balanceTapListener = balanceTapListener
-                                )
-                            }
+                        items(sims.sortedWith(comparator)) { sim ->
+                            // Don't show removed SIM cards that we don't support, it is confusing
+                            if (sim.account.channelId != -1 || sim.sim.slotIdx != -1)
+                                SimItem(sim, refreshBalance, buyAirtime)
                         }
                     }
-                })
+                }
+            }
         }
     }
 }
@@ -107,7 +95,7 @@ private fun SimScreenPreview(@PreviewParameter(SampleSimInfoProvider::class) sim
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(topBar = {
-                TopBar(title = R.string.your_sim_cards, isInternetConnected = false, {}, {})
+                TopBar(title = R.string.your_sim_cards, isInternetConnected = false, {})
             }, content = { innerPadding ->
                 val paddingModifier = Modifier.padding(innerPadding)
 
@@ -125,7 +113,7 @@ private fun SimScreenPreview(@PreviewParameter(SampleSimInfoProvider::class) sim
                     sims.let {
                         if (it.isEmpty()) {
                             item {
-                                LinkSimCard(id = R.string.link_sim_to_stax, onClickedLinkSimCard = { })
+                                LinkSimCard(id = R.string.link_sim_to_stax)
                             }
                         }
                     }
@@ -133,7 +121,7 @@ private fun SimScreenPreview(@PreviewParameter(SampleSimInfoProvider::class) sim
                     itemsIndexed(sims) { index, sim ->
                         SimItem(
                             simWithAccount = sim,
-                            balanceTapListener = null
+                            { }, { }
                         )
                     }
                 }
@@ -158,13 +146,10 @@ private fun NoticeText(@StringRes stringRes: Int) {
 }
 
 @Composable
-private fun ShowGrantPermissionContent( onClickedAddNewAccount: () -> Unit ) {
+private fun ShowGrantPermissionContent() {
     Column {
         NoticeText(stringRes = R.string.simpage_permission_alert)
-        LinkSimCard(
-            id = R.string.link_sim_to_stax,
-            onClickedLinkSimCard = onClickedAddNewAccount
-        )
+        LinkSimCard(id = R.string.link_sim_to_stax)
     }
 }
 

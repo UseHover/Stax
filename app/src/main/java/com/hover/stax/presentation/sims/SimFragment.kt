@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
@@ -27,16 +28,14 @@ class SimFragment : Fragment(), BalanceTapListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         ComposeView(requireContext()).apply {
             AnalyticsUtil.logAnalyticsEvent(
-                getString(
-                    R.string.visit_screen,
-                    getString(R.string.visit_sim)
-                ), requireContext()
+                getString(R.string.visit_screen, getString(R.string.visit_sim)), requireContext()
             )
 
             setContent {
                 SimScreen(
-                    simScreenClickFunctions = getSimScreenClickFunctions(),
-                    balanceTapListener = this@SimFragment
+                    refreshBalance = { acct -> balancesViewModel.requestBalance(acct) },
+                    buyAirtime = { navigateTo(getTransferDirection(HoverAction.AIRTIME)) },
+                    navTo = { dest -> navigateTo(dest) }
                 )
             }
         }
@@ -64,21 +63,13 @@ class SimFragment : Fragment(), BalanceTapListener {
         (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 
-    private fun getSimScreenClickFunctions(): SimScreenClickFunctions {
-        fun onClickedAddNewAccount() = NavHelper(requireActivity() as MainActivity).requestBasicPerms()
-        fun onClickedSettingsIcon() = navigateTo(SimFragmentDirections.toSettingsFragment())
-        fun onBuyAirtimeClicked() = navigateTo(getTransferDirection(HoverAction.AIRTIME))
-
-        return SimScreenClickFunctions(onClickedAddNewAccount = { onClickedAddNewAccount() },
-            onClickedSettingsIcon = { onClickedSettingsIcon() },
-            onClickedBuyAirtime = { onBuyAirtimeClicked() })
-    }
-
     private fun getTransferDirection(type: String, channelId: String? = null): NavDirections {
         return SimFragmentDirections.toTransferFragment(type).also {
             if (channelId != null) it.channelId = channelId
         }
     }
+
+    private fun navigateTo(dest: Int) = findNavController().navigate(dest)
 
     private fun navigateTo(navDirections: NavDirections) =
         (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)

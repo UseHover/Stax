@@ -45,12 +45,13 @@ import com.hover.stax.utils.Utils
 @Composable
 internal fun SimItem(
 	simWithAccount: SimWithAccount,
-	balanceTapListener: BalanceTapListener?
+	refreshBalance: (Account) -> Unit,
+	buyAirtime: (Account) -> Unit
 ) {
 	StaxCard {
 		val context = LocalContext.current
 
-		SimItemTopRow(simWithAccount, balanceTapListener = balanceTapListener)
+		SimItemTopRow(simWithAccount, refreshBalance)
 		if (simWithAccount.account.channelId != -1) {
 			val notYetChecked = stringResource(id = R.string.not_yet_checked)
 
@@ -89,9 +90,9 @@ internal fun SimItem(
 			SecondaryButton(context.getString(R.string.email_support),null,
 				onClick = { email(simWithAccount, context) })
 		}
-//		else // FIXME: check if airtime action exists, check for bonus
-//			SecondaryButton(context.getString(R.string.nav_airtime),null,
-//				onClick = { buyAirtime(simWithAccount, context) })
+		else
+			SecondaryButton(context.getString(R.string.nav_airtime),null,
+				onClick = { buyAirtime(simWithAccount.account) })
 	}
 }
 
@@ -107,19 +108,10 @@ private fun email(simWithAccount: SimWithAccount, context: Context) {
 	Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody)
 }
 
-private fun buyAirtime(account: Account, bonus: Int, context: Context) {
-	if (account.channelId != -1) {
-		if (bonus > 0) {
-			val bonusPercent = bonus.toString().plus("%")
-//			label = context.getString(R.string.buy_airitme_with_discount, bonusPercent)
-		}
-	}
-}
-
 @Composable
 private fun SimItemTopRow(
 	simWithAccount: SimWithAccount,
-	balanceTapListener: BalanceTapListener?
+	refreshBalance: (Account) -> Unit,
 ) {
 	val size34 = dimensionResource(id = R.dimen.margin_34)
 
@@ -153,9 +145,9 @@ private fun SimItemTopRow(
 			)
 		}
 
-		if (simWithAccount.account.channelId != -1) {
+		if (simWithAccount.balanceAction != null) {
 			PrimaryButton(stringResource(id = R.string.check_balance_capitalized), null,
-				onClick = { balanceTapListener?.onTapBalanceRefresh(simWithAccount.account) }
+				onClick = { refreshBalance(simWithAccount.account) }
 			)
 		} else {
 			DisabledButton(stringResource(id = R.string.unsupported), null) { }

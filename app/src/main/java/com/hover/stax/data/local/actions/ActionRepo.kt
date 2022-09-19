@@ -25,6 +25,10 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
         return actionDao.getFirstLiveAction(channelId, type)
     }
 
+    fun getFirstAction(channelId: Int, type: String): HoverAction? {
+        return actionDao.getFirstAction(channelId, type)
+    }
+
     fun getTransferActions(channelId: Int): List<HoverAction> {
         return actionDao.getTransferActions(channelId)
     }
