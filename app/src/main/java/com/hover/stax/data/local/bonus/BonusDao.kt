@@ -10,6 +10,9 @@ interface BonusDao {
     @get:Query("SELECT * FROM bonuses")
     val bonuses: Flow<List<Bonus>>
 
+    @Query("SELECT COUNT(user_channel) FROM bonuses WHERE hni_list != '0'")
+    suspend fun bonusCountWithHnis(): Int
+
     @Query("SELECT * FROM bonuses WHERE purchase_channel = :purchaseChannelId")
     fun getBonusByPurchaseChannel(purchaseChannelId: Int): Bonus?
 

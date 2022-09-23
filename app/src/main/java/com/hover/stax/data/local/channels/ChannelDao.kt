@@ -14,6 +14,9 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE published = 1 AND institution_type = 'telecom' AND hni_list LIKE '%' || :hni || '%'")
     suspend fun getTelecom(hni: String): Channel?
 
+    @Query("SELECT * FROM channels WHERE institution_id = :fromInstitutionId AND published = 1")
+    suspend fun getChannelByInstitution(fromInstitutionId: Int) : Channel?
+
     @get:Query("SELECT * FROM channels WHERE institution_type != 'telecom' ORDER BY name ASC")
     val allChannels: LiveData<List<Channel>>
 

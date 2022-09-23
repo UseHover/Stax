@@ -12,7 +12,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
@@ -28,7 +27,6 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
@@ -87,8 +85,8 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
 
     private fun observeForBonus() {
         collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            if (bonusViewModel.bonusList.value.bonuses.isNotEmpty())
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonusList.value.bonuses.first().userChannel.toString()))
+            if ( homeViewModel.homeState.value.bonuses.isNotEmpty())
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.homeState.value.bonuses.first().userChannel.toString()))
         }
     }
 

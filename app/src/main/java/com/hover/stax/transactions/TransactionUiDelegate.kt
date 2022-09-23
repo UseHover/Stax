@@ -8,6 +8,7 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.transactionDetails.UssdCallResponse
 import com.hover.stax.utils.Utils
+import timber.log.Timber
 
 interface TransactionUiDelegate {
     val transaction: StaxTransaction
@@ -51,13 +52,13 @@ interface TransactionUiDelegate {
         return str
     }
 
-    fun shortStatusExplain(action: HoverAction?, c: Context): String {
+    fun shortStatusExplain(action: HoverAction?, institutionName: String, c: Context): String {
         if (transaction.isRecorded) return getRecordedStatusDetail(c)
         return when {
             transaction.status == Transaction.FAILED -> shortFailureMessage(action, c)
-            transaction.status == Transaction.PENDING -> c.getString(R.string.pending_cardhead)
+            transaction.status == Transaction.PENDING -> c.getString(R.string.pending_cardhead_with_isntType, institutionName)
             transaction.status == Transaction.SUCCEEDED && transaction.balance.isNullOrEmpty() -> c.getString(R.string.successful_label)
-            else -> c.getString(R.string.new_balance, transaction.balance)
+            else -> c.getString(R.string.new_balance, institutionName, transaction.balance)
         }
     }
 
