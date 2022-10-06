@@ -36,15 +36,15 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class
     ],
-    version = 44,
+    version = 45,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
         AutoMigration(from = 38, to = 39),
         AutoMigration(from = 40, to = 41),
         AutoMigration(from = 41, to = 42),
-        //Manual migration for 42_43
-        AutoMigration(from = 43, to = 44)
+        AutoMigration(from = 43, to = 44),
+        AutoMigration(from = 44, to = 45)
     ]
 )
 
@@ -215,8 +215,6 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private val M42_43 = Migration(42, 43) { database -> //accounts table changes
-            database.execSQL("ALTER TABLE channels ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
-            database.execSQL("ALTER TABLE accounts ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
             database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
         }
 
