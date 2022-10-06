@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -23,16 +26,12 @@ class WelcomeFragment : Fragment() {
     private lateinit var buttonText: String
 
     private var dialog: StaxDialog? = null
-
-    private val args: WelcomeFragmentArgs by navArgs()
     private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         ComposeView(requireContext()).apply {
             id = R.id.welcomeFragment
-
-            setGreetings(args.salutation)
-
+            setGreetings()
             setContent {
                 WelcomeScreen(title, subtitle, buttonText, { onClickGetStarted() }, { onClickLogin() })
             }
@@ -47,7 +46,7 @@ class WelcomeFragment : Fragment() {
 
     private fun onClickGetStarted() {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_getstarted), requireActivity())
-        (requireActivity() as OnBoardingActivity).checkPermissionsAndNavigate()
+        NavUtil.navigate(findNavController(), WelcomeFragmentDirections.toInteractiveOnboardingFragment())
     }
 
     private fun onClickLogin() {
@@ -70,27 +69,10 @@ class WelcomeFragment : Fragment() {
         }
     }
 
-    private fun setGreetings(greeting: Int) = when (greeting) {
-        1 -> {
-            title = getString(R.string.welcome_title_one)
-            subtitle = getString(R.string.welcome_sub_one)
-            buttonText = getString(R.string.explore_btn_text)
-        }
-        2 -> {
+    private fun setGreetings()  {
             title = getString(R.string.welcome_title_two)
             subtitle = getString(R.string.welcome_sub_two)
             buttonText = getString(R.string.explore_btn_text)
-        }
-        3 -> {
-            title = getString(R.string.welcome_title_three)
-            subtitle = getString(R.string.welcome_sub_two)
-            buttonText = getString(R.string.explore_btn_text)
-        }
-        else -> {
-            title = getString(R.string.welcome_title_one)
-            subtitle = getString(R.string.welcome_sub_one)
-            buttonText = getString(R.string.explore_btn_text)
-        }
     }
 
     private fun showError(message: String) {

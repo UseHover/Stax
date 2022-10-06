@@ -41,12 +41,15 @@ internal class InteractiveTutorialFragment : Fragment() {
     }
 
     private fun setContinueClick() = binding.continueBtn.setOnClickListener {
-        val variation = if (isNoneApply()) 3 else 2
         logOptionsSelected()
-        NavUtil.navigate(findNavController(), InteractiveTutorialFragmentDirections.actionInteractiveTutorialFragmentToWelcomeFragment(variation))
+        (requireActivity() as OnBoardingActivity).checkPermissionsAndNavigate()
     }
 
     private fun logOptionsSelected() {
+        if(isNoneApply()) AnalyticsUtil.logAnalyticsEvent(getString(R.string.none_apply), requireActivity())
+        else logCheckBoxSelections()
+    }
+    private fun logCheckBoxSelections() {
         val checkBox1 = binding.variant2Checkbox1
         val checkBox2 = binding.variant2Checkbox2
         val checkBox3 = binding.variant2Checkbox3

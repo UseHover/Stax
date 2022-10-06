@@ -9,13 +9,10 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -23,22 +20,17 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
-import com.hover.stax.accounts.AccountsAdapter
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
-import com.hover.stax.transfers.TransferFragmentArgs
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 const val CHANNELS_REFRESHED = "has_refreshed_channels"
@@ -46,7 +38,6 @@ const val CHANNELS_REFRESHED = "has_refreshed_channels"
 class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
-    private val bonusViewModel: BonusViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
@@ -87,7 +78,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         setUpCountryChoice()
         setSearchInputWatcher()
 
-        bonusViewModel.getBonusList()
         startObservers()
         setFabListener()
     }
@@ -98,15 +88,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
                 loadFilteredChannels(it)
             } }
 
-        val simsObserver =
-            Observer<List<SimInfo>> { t -> Timber.v("Loaded ${t?.size} sims") }
-
-        val countryListObserver =
-            Observer<List<String>> { t -> Timber.v("Loaded ${t?.size} hnis") }
-
         channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
-        sims.observe(viewLifecycleOwner, simsObserver)
-        simCountryList.observe(viewLifecycleOwner, countryListObserver)
+        sims.observe(viewLifecycleOwner) { Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} sims") }
+        simCountryList.observe(viewLifecycleOwner) {
+            Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} hnis") }
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
         filteredChannels.observe(viewLifecycleOwner, channelsObserver)

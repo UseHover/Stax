@@ -59,7 +59,7 @@ private fun isSimSupportedAccount(accountId: Int): Boolean = accountId >= 0
 internal fun SimItem(
 	simIndex: Int,
 	account: Account,
-	bonus: Int,
+	bonusPercent: Int,
 	secondaryClickItem: () -> Unit,
 	balanceTapListener: BalanceTapListener?
 ) {
@@ -130,14 +130,14 @@ internal fun SimItem(
 							.padding(all = 5.dp)
 					) {
 						Text(
-							text = getSecondaryButtonLabel(account.id, bonus, LocalContext.current),
+							text = getSecondaryButtonLabel(account.id, bonusPercent, LocalContext.current),
 							style = MaterialTheme.typography.button,
 							modifier = Modifier.padding(end = 5.dp),
 							textAlign = TextAlign.Start,
 							fontSize = 14.sp
 						)
 
-						if (isSimSupportedAccount(account.id)) {
+						if (isSimSupportedAccount(account.id) && bonusPercent > 0) {
 							Spacer(modifier = Modifier.width(3.dp))
 
 							Image(
@@ -244,7 +244,7 @@ private fun SimItemsPreview() {
 					SimItem(
 						simIndex = 1,
 						account = Account.generateDummy("Dummy Account", 1),
-						bonus = 1,
+						bonusPercent = 1,
 						secondaryClickItem = { },
 						balanceTapListener = null
 					)
@@ -252,7 +252,7 @@ private fun SimItemsPreview() {
 					SimItem(
 						simIndex = 1,
 						account = Account.generateDummy("MTN Nigeria"),
-						bonus = 1,
+						bonusPercent = 1,
 						secondaryClickItem = { },
 						balanceTapListener = null
 					)

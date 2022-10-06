@@ -16,13 +16,11 @@ class ChannelRepo(db: AppDatabase) {
 
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
 
-    fun getChannel(id: Int): Channel? {
-        return channelDao.getChannel(id)
-    }
+    fun getChannel(id: Int): Channel? { return channelDao.getChannel(id) }
 
-    fun getLiveChannel(id: Int): LiveData<Channel> {
-        return channelDao.getLiveChannel(id)
-    }
+    fun getLiveChannel(id: Int): LiveData<Channel> { return channelDao.getLiveChannel(id) }
+
+    suspend fun getChannelByInstitution(institutionId : Int) : Channel? = channelDao.getChannelByInstitution(institutionId)
 
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 

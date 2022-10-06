@@ -65,7 +65,6 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     override suspend fun createTelecomAccounts(sims: List<SimInfo>) {
         val telecomChannels = channelRepo.publishedTelecomChannels()
         Timber.i("all published Telecom channels in  is: ${telecomChannels.size}")
-
         sims.forEach { sim ->
             val channel = telecomChannels.firstOrNull { it.hniList.contains(sim.osReportedHni) }
             channel?.let {
