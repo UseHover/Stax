@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.onboarding.OnBoardingActivity
@@ -21,19 +19,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WelcomeFragment : Fragment() {
 
-    private lateinit var title: String
-    private lateinit var subtitle: String
-    private lateinit var buttonText: String
-
     private var dialog: StaxDialog? = null
     private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         ComposeView(requireContext()).apply {
             id = R.id.welcomeFragment
-            setGreetings()
+            val buttonText = getString(R.string.explore_btn_text)
             setContent {
-                WelcomeScreen(title, subtitle, buttonText, { onClickGetStarted() }, { onClickLogin() })
+                WelcomeScreen(buttonText, { onClickGetStarted() }, { onClickLogin() }, showExploreButton = false)
             }
         }
 
@@ -67,12 +61,6 @@ class WelcomeFragment : Fragment() {
                 onClickGetStarted()
             }
         }
-    }
-
-    private fun setGreetings()  {
-            title = getString(R.string.welcome_title_two)
-            subtitle = getString(R.string.welcome_sub_two)
-            buttonText = getString(R.string.explore_btn_text)
     }
 
     private fun showError(message: String) {
