@@ -215,6 +215,8 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private val M42_43 = Migration(42, 43) { database -> //accounts table changes
+            database.execSQL("ALTER TABLE channels ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
+            database.execSQL("ALTER TABLE accounts ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
             database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
         }
 
