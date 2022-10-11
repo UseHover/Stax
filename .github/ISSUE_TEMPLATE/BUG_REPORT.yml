@@ -46,7 +46,7 @@ body:
       description: add a link to any screenshots or screen recordings for this issue. Use a Google Drive file if your video contains sensitive information.
       required: false
   - type: input
-    id: device_type
+    id: device
     attributes:
       label: Device name
       description: What is the make and model of your mobile device?
