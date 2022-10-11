@@ -11,7 +11,7 @@ body:
     id: description
     attributes:
       label: Description
-      description: A clear and concise description of what the bug is. Be sure to add as much information about the bug so that anyone picking up the story understands what the issue is.
+      description: A clear and concise description of what the bug is. Be sure to add as much information about the bug so that anyone picking up the story understands what the issue is. Attach screenshots and/or screen recording videos to help us understand.
   - type: textarea
     id: repro_steps
     attributes:
@@ -37,7 +37,7 @@ body:
     id: url
     attributes:
       label: Link to screenshots/screen recordings
-      description: add a link to any screenshots or screen recordings for this issue. Use a Google Drive file if your video contains sensitive information.
+      description: Paste a link to any screenshots or screen recordings for this issue. Use a Google Drive file if your video contains sensitive information.
   - type: input
     id: device
     attributes:
