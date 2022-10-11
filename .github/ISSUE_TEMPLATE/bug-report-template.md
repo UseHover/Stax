@@ -19,11 +19,11 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-****Current behavior*
-Tell us what you are seeing
+**Current behavior**
+Tell us what you are seeing and how it is different from the expected result.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Screenshots/Screen recordings**
+If applicable, add screenshots to help explain your problem. We recommend using XRecorder to make screen recordings. Upload the video to Google Drive and add the link here if your video includes any sensitive information.
 
 **Device name:** 
 **OS version:** 
