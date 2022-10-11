@@ -25,25 +25,27 @@ body:
         2. On homescreen tap Check Balance for M-Pesa account
         3. Enter PIN
         4. Wait for transaction to complete
-    validations:
       required: true
   - type: textarea
     id: expected_result
     attributes:
       label: Expected result
       description: A clear and concise description of what you expected to happen.
+    validations:
       required: true
   - type: textarea
     id: actual_result
     attributes:
       label: Actual result
       description: Tell us actually happened and how it is different from the expected result.
+    validations:
       required: true
   - type: input
     id: url
     attributes:
       label: Link to screenshots/screen recordings
       description: add a link to any screenshots or screen recordings for this issue. Use a Google Drive file if your video contains sensitive information.
+    validations:
       required: false
   - type: input
     id: device
@@ -59,7 +61,7 @@ body:
       label: Android OS
       description: What version of Android OS are you using?
       placeholder: ex. 8.1.0
-     validations:
+    validations:
       required: true
   - type: dropdown
     id: sim
@@ -68,11 +70,12 @@ body:
       options:
       - Dual SIM (Default)
       - Single SIM (Edge)
-     validations:
+    validations:
       required: true
   - type: input
     id: user
     attributes:
       label: Stax device ID or email address
       description: Please copy and paste your Stax device ID or the email address you used to login to Stax here
+    validations:
       required: true
