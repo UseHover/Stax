@@ -23,21 +23,16 @@ body:
         2. On homescreen tap Check Balance for M-Pesa account
         3. Enter PIN
         4. Wait for transaction to complete
-      required: true
   - type: textarea
     id: expected_result
     attributes:
       label: Expected result
       description: A clear and concise description of what you expected to happen.
-    validations:
-      required: true
   - type: textarea
     id: actual_result
     attributes:
       label: Actual result
       description: Tell us actually happened and how it is different from the expected result.
-    validations:
-      required: true
   - type: input
     id: url
     attributes:
@@ -49,8 +44,6 @@ body:
       label: Device name
       description: What is the make and model of your mobile device?
       placeholder: ex. Samsung Galaxy Note
-    validations:
-      required: true
   - type: input
     id: android
     attributes:
