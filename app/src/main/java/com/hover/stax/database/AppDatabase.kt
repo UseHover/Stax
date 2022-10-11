@@ -214,17 +214,11 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_stax_transactions_uuid` ON `stax_transactions` (`uuid`)")
         }
 
-        private val M42_43 = Migration(42, 43) { database -> //accounts table changes
-            database.execSQL("ALTER TABLE channels ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
-            database.execSQL("ALTER TABLE accounts ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
-            database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
-        }
-
-
-
-
-        /* When using fallbackToDestructiveMigrationFrom
+        /* By using fallbackToDestructiveMigrationFrom for v42,
+        It drops the V42 table, and creates a new one for v43, hence, no need for migration.
+        This was done because of this conversation: https://hoverup.slack.com/archives/C0DREGYA2/p1665476265215879
         */
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "stax.db")
@@ -237,7 +231,5 @@ abstract class AppDatabase : RoomDatabase() {
                 instance
             }
         }
-
-        val VERSION_BEFORE_42_JSON_ERROR = 43
     }
 }
