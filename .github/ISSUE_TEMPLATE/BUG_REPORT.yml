@@ -50,15 +50,13 @@ body:
       label: Android OS
       description: What version of Android OS are you using?
       placeholder: ex. 8.1.0
-    validations:
-      required: true
   - type: dropdown
     id: sim
     attributes:
       label: Is your phone dual SIM or single SIM?
       options:
-      - Dual SIM (Default)
-      - Single SIM (Edge)
+      - Dual SIM
+      - Single SIM
     validations:
       required: true
   - type: input
