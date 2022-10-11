@@ -223,12 +223,14 @@ abstract class AppDatabase : RoomDatabase() {
 
 
 
+        /* When using fallbackToDestructiveMigrationFrom
+        */
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "stax.db")
                     .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                    .fallbackToDestructiveMigrationFrom(VERSION_BEFORE_42_JSON_ERROR)
-                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43)
+                    .fallbackToDestructiveMigrationFrom(42)
+                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40)
                     .build()
                 INSTANCE = instance
 
