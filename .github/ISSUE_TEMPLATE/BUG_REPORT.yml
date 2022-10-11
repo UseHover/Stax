@@ -45,8 +45,6 @@ body:
     attributes:
       label: Link to screenshots/screen recordings
       description: add a link to any screenshots or screen recordings for this issue. Use a Google Drive file if your video contains sensitive information.
-    validations:
-      required: false
   - type: input
     id: device
     attributes:
