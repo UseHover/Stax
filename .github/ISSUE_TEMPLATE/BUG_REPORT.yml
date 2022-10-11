@@ -1,0 +1,78 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report to help us improve Stax! Please fill in all fields to the best of your ability.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is. Be sure to add as much information about the bug so that anyone picking up the story understands what the issue is.
+    validations:
+      required: true
+  - type: textarea
+    id: repro_steps
+    attributes:
+      label: Steps to reproduce
+      description: List down all the steps you took to reproduce the issue, even if you think those steps are obvious to everyone. The point here is to give as much guidance to reproduce the bug as possible. Remember you should write this as if the person who will see the steps is completely new to Stax.
+      placeholder: |
+        ex.
+        1. Open Stax app
+        2. On homescreen tap Check Balance for M-Pesa account
+        3. Enter PIN
+        4. Wait for transaction to complete
+    validations:
+      required: true
+  - type: textarea
+    id: expected_result
+    attributes:
+      label: Expected result
+      description: A clear and concise description of what you expected to happen.
+      required: true
+  - type: textarea
+    id: actual_result
+    attributes:
+      label: Actual result
+      description: Tell us actually happened and how it is different from the expected result.
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Link to screenshots/screen recordings
+      description: add a link to any screenshots or screen recordings for this issue. Use a Google Drive file if your video contains sensitive information.
+      required: false
+  - type: input
+    id: device_type
+    attributes:
+      label: Device name
+      description: What is the make and model of your mobile device?
+      placeholder: ex. Samsung Galaxy Note
+    validations:
+      required: true
+  - type: input
+    id: android_os
+    attributes:
+      label: Android OS
+      description: What version of Android OS are you using?
+      placeholder: ex. 8.1.0
+     validations:
+      required: true
+  - type: dropdown
+    id: dual_sim
+    attributes:
+      label: Is your phone dual SIM or single SIM?
+      options:
+      - Dual SIM (Default)
+      - Single SIM (Edge)
+     validations:
+      required: true
+  - type: input
+    id: user
+    attributes:
+      label: Stax device ID or email address
+      description: Please copy and paste your Stax device ID or the email address you used to login to Stax here
+      required: true
