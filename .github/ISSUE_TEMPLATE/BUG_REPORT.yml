@@ -32,7 +32,7 @@ body:
     id: actual_result
     attributes:
       label: Actual result
-      description: Tell us actually happened and how it is different from the expected result.
+      description: Tell us what actually happened and how it was different from the expected result. Attach screenshots and/or screenrecordings if helpful.
   - type: input
     id: url
     attributes:
