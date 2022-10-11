@@ -54,7 +54,7 @@ body:
     validations:
       required: true
   - type: input
-    id: android_os
+    id: android
     attributes:
       label: Android OS
       description: What version of Android OS are you using?
@@ -62,7 +62,7 @@ body:
      validations:
       required: true
   - type: dropdown
-    id: dual_sim
+    id: sim
     attributes:
       label: Is your phone dual SIM or single SIM?
       options:
