@@ -12,8 +12,6 @@ body:
     attributes:
       label: Description
       description: A clear and concise description of what the bug is. Be sure to add as much information about the bug so that anyone picking up the story understands what the issue is.
-    validations:
-      required: true
   - type: textarea
     id: repro_steps
     attributes:
