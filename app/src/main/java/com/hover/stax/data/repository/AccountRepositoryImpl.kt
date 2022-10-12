@@ -96,6 +96,6 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         } catch (ignored: Exception) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.new_channel_selected), args, context)
+        AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.new_sim_channel), args, context)
     }
 }
