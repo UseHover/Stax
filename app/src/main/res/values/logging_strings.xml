@@ -32,6 +32,7 @@
 
 	<string name="selected_language" translatable="false">Selected language</string>
 	<string name="new_channel_selected" translatable="false">Added channel</string>
+	<string name="new_sim_channel" translatable="false">Added sim channel</string>
 	<string name="added_channel_id" translatable="false">channel_id</string>
 	<string name="link_encryptfail" translatable="false">Error creating encrypted Stax payment link</string>
 	<string name="sms_sent_success" translatable="false">Detected SMS sent</string>

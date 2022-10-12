@@ -436,7 +436,6 @@
     <string name="toast_confirm_acctremoved">Koontada si guul leh ayaa meesha looga saaray</string>
     <string name="toast_confirm_pinupdate">Lambar sireedka waa la xafiday</string>
     <string name="language_cardhead">Luuqadda</string>
-    <string name="app_version_and_device_id">Nooca App-ka: %1$s\nVersion code:%2$s\nDevice ID: %3$s</string>
     <string name="disclaimer">Dhammaan magacyada alaabooyinka, sumadaha, iyo sumadaha ganacsiga waa hanti ay leeyihiin milkiilayaashooda. Isticmaalku ma tilmaamayo ku-xidhnaanshiyaha.
 </string>
 

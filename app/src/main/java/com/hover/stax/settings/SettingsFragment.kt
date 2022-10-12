@@ -9,27 +9,20 @@ import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
-import com.hover.stax.home.MainActivity
+import com.hover.stax.domain.model.Account
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 const val TEST_MODE = "test_mode"
 
@@ -117,7 +110,8 @@ class SettingsFragment : Fragment() {
         val deviceId = Hover.getDeviceId(requireContext())
         val appVersion: String = BuildConfig.VERSION_NAME
         val versionCode: String = BuildConfig.VERSION_CODE.toString()
-        binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId)
+        val configVersion: String = com.hover.sdk.utils.Utils.getConfigVersion(requireContext())
+        binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, configVersion, deviceId)
     }
 
     private fun setUpAccountDetails() {
