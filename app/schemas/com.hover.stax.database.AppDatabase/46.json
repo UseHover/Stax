@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 45,
-    "identityHash": "70040b5d46cd942b551942be194c4f46",
+    "version": 46,
+    "identityHash": "dd7f3db11384cd704ff2e79e44c3cbfe",
     "entities": [
       {
         "tableName": "channels",
@@ -646,14 +646,13 @@
         },
         "indices": [
           {
-            "name": "index_accounts_name_sim_subscription_id",
+            "name": "index_accounts_id",
             "unique": true,
             "columnNames": [
-              "name",
-              "sim_subscription_id"
+              "id"
             ],
             "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_accounts_name_sim_subscription_id` ON `${TABLE_NAME}` (`name`, `sim_subscription_id`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_accounts_id` ON `${TABLE_NAME}` (`id`)"
           },
           {
             "name": "index_accounts_channelId",
@@ -1015,7 +1014,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '70040b5d46cd942b551942be194c4f46')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dd7f3db11384cd704ff2e79e44c3cbfe')"
     ]
   }
 }

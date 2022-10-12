@@ -36,7 +36,7 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class
     ],
-    version = 45,
+    version = 46,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
@@ -217,13 +217,16 @@ abstract class AppDatabase : RoomDatabase() {
         private val M42_43 = Migration(42, 43) { database -> //accounts table changes
             database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
         }
+        private val M45_46 = Migration(45, 46) { database -> //accounts table indices changes
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_sim_subscription_id ON accounts (sim_subscription_id)")
+        }
 
 
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "stax.db")
                     .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43)
+                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43, M45_46)
                     .build()
                 INSTANCE = instance
 

@@ -15,7 +15,7 @@ const val ACCOUNT_ID: String = "account_id"
 @Entity(
         tableName = "accounts",
         foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])],
-        indices = [Index(value = ["name"], unique = true)]
+        indices = [Index(value = ["name", "sim_subscription_id"], unique = true)]
 )
 data class Account(
         val name: String,
