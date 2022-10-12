@@ -111,6 +111,7 @@ fun SimScreen(
 
                         else {
                             items(simUiState.presentSims) { presentSim ->
+                                Timber.i("SIM slot ${presentSim.slotIdx} has subscriptionId: ${presentSim.subscriptionId}")
                                 val simAccount = simUiState.telecomAccounts.find { it.simSubscriptionId == presentSim.subscriptionId }
                                 val visibleSlotIdx = presentSim.slotIdx + 1
 

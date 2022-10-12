@@ -12,6 +12,7 @@ import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -37,19 +38,16 @@ class SimViewModel(
     }
 
     private fun fetchPresentSims() = viewModelScope.launch {
-        presentSimUseCase.presentSims.collect { sims ->
+        presentSimUseCase.presentSims.collectLatest { sims ->
             _simUiState.update { it.copy(presentSims = sims) }
-
             setTelecomAccounts(sims.map { it.subscriptionId }.toIntArray())
         }
     }
 
-    private fun setTelecomAccounts(subIds: IntArray) = viewModelScope.launch {
-        getAccountsUseCase.telecomAccounts(subIds).collect { accounts ->
-            _simUiState.update { it.copy(loading = false, telecomAccounts = accounts) }
-
-            createAccountForSimsIfRequired(accounts, simUiState.value.presentSims)
-        }
+    private fun setTelecomAccounts(subIds: IntArray) = viewModelScope.launch(Dispatchers.IO) {
+        val accounts = getAccountsUseCase.telecomAccounts(subIds)
+        _simUiState.update { it.copy(loading = false, telecomAccounts = accounts) }
+        createAccountForSimsIfRequired(accounts, simUiState.value.presentSims)
     }
 
     private suspend fun createAccountForSimsIfRequired(telecomAccounts: List<Account>, presentSims: List<SimInfo>) = viewModelScope.launch(Dispatchers.IO) {
