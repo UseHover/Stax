@@ -16,5 +16,5 @@ interface AccountRepository {
 
     suspend fun createTelecomAccounts(sims: List<SimInfo>)
 
-    fun getTelecomAccounts(simSubscriptionIds: IntArray) : List<Account>
+    fun collectTelecomAccounts() : Flow<List<Account>>
 }

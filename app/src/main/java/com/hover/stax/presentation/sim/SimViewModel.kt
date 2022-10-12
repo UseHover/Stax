@@ -2,9 +2,6 @@ package com.hover.stax.presentation.sim
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hover.sdk.sims.SimInfo
-import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
 import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
@@ -15,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SimViewModel(
     private val presentSimUseCase: GetPresentSimUseCase,
@@ -27,37 +25,31 @@ class SimViewModel(
     val simUiState = _simUiState.asStateFlow()
 
     init {
-        fetchData()
-    }
-
-    private fun fetchData() {
         _simUiState.update { it.copy(loading = true) }
-
-        fetchPresentSims()
+        collectPresentSims()
+        saveTelecomAccounts()
+        collectTelecomAccounts()
         fetchBonuses()
     }
 
-    private fun fetchPresentSims() = viewModelScope.launch {
+    private fun collectPresentSims() = viewModelScope.launch {
         presentSimUseCase.presentSims.collectLatest { sims ->
-            _simUiState.update { it.copy(presentSims = sims) }
-            setTelecomAccounts(sims.map { it.subscriptionId }.toIntArray())
+            _simUiState.update { it.copy(presentSims = sims,) }
+        }
+    }
+    private fun saveTelecomAccounts() = viewModelScope.launch(Dispatchers.IO) {
+        simUiState.collectLatest {
+            createAccountsUseCase.createTelecomAccounts(it.presentSims)
         }
     }
 
-    private fun setTelecomAccounts(subIds: IntArray) = viewModelScope.launch(Dispatchers.IO) {
-        val accounts = getAccountsUseCase.telecomAccounts(subIds)
-        _simUiState.update { it.copy(loading = false, telecomAccounts = accounts) }
-        createAccountForSimsIfRequired(accounts, simUiState.value.presentSims)
-    }
-
-    private suspend fun createAccountForSimsIfRequired(telecomAccounts: List<Account>, presentSims: List<SimInfo>) = viewModelScope.launch(Dispatchers.IO) {
-        getSimsHavingNoTelecomAccount(telecomAccounts, presentSims).also {
-            createAccountsUseCase.createTelecomAccounts(it)
+    private fun collectTelecomAccounts() = viewModelScope.launch {
+        getAccountsUseCase.telecomAccounts().collectLatest { accounts ->
+            accounts.forEach{
+                Timber.i("Collected telecom account with simSubscription: ${it.simSubscriptionId} and name ${it.name}")
+            }
+            _simUiState.update { it.copy(loading = false, telecomAccounts = accounts) }
         }
-    }
-
-    private fun getSimsHavingNoTelecomAccount(accounts: List<Account>, sims: List<SimInfo>): List<SimInfo> {
-        return sims.filter { accounts.find { account -> account.simSubscriptionId == it.subscriptionId } == null }
     }
 
     private fun fetchBonuses() = viewModelScope.launch {

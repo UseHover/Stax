@@ -40,13 +40,13 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
     override suspend fun createAccount(channel: Channel, simSubscriptionId: Int, isDefault: Boolean) {
         val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
         val account = Account(
-            accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
+            accountName, channel.name, channel.logoUrl, channel.accountNo, channel.institutionId, channel.institutionType, channel.countryAlpha2,
             channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = simSubscriptionId
         )
 
         channel.selected = true
         channelRepo.update(channel)
-        accountRepo.insert(account)
+        accountRepo.update(account)
 
         logChoice(account)
         ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
@@ -74,15 +74,13 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         sims.forEach { sim ->
             val channel = telecomChannels.firstOrNull { it.hniList.contains(sim.osReportedHni) }
             channel?.let {
-                Timber.i("Found telecom channel: ${it.name} having country code: ${it.countryAlpha2}")
+                Timber.i("For SIM in slot ${sim.slotIdx + 1}, with subscriptionId ${sim.subscriptionId} we found telecom channel: ${it.name} ")
                 createAccount(it, sim.subscriptionId, false)
             }
         }
     }
 
-    override fun getTelecomAccounts(simSubscriptionIds: IntArray): List<Account> {
-        return accountRepo.getTelecomAccounts(simSubscriptionIds)
-    }
+    override fun collectTelecomAccounts(): Flow<List<Account>> =  accountRepo.collectTelecomAccounts()
 
     private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
