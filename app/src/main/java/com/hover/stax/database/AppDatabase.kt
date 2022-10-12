@@ -218,7 +218,7 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL(
                 "CREATE TABLE IF NOT EXISTS `channels_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, " +
                         "`currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0," +
-                        "`secondary_color_hex` TEXT NOT NULL, institution_type TEXT DEFAULT 'bank', `selected` INTEGER NOT NULL DEFAULT 0,`defaultAccount` INTEGER NOT NULL DEFAULT 0," +
+                        "`secondary_color_hex` TEXT NOT NULL, institution_type TEXT NOT NULL DEFAULT 'bank', `selected` INTEGER NOT NULL DEFAULT 0,`defaultAccount` INTEGER NOT NULL DEFAULT 0," +
                         "`isFavorite` INTEGER NOT NULL DEFAULT 0, `pin` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER DEFAULT CURRENT_TIMESTAMP, `account_no` TEXT)",
             )
 
