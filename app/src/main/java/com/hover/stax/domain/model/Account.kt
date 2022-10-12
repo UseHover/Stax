@@ -18,8 +18,11 @@ const val ACCOUNT_ID: String = "account_id"
         indices = [Index(value = ["name", "sim_subscription_id"], unique = true)]
 )
 data class Account(
+
+        @ColumnInfo(name = "name")
         val name: String,
 
+        @ColumnInfo(name = "alias")
         var alias: String,
 
         @ColumnInfo(name = "logo_url")
@@ -70,6 +73,7 @@ data class Account(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
+    @ColumnInfo(name= "latestBalance")
     var latestBalance: String? = null
 
     @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")

@@ -44,7 +44,8 @@ import java.util.concurrent.Executors
         AutoMigration(from = 40, to = 41),
         AutoMigration(from = 41, to = 42),
         AutoMigration(from = 43, to = 44),
-        AutoMigration(from = 44, to = 45)
+        AutoMigration(from = 44, to = 45),
+      //  AutoMigration(from = 45, to = 46, )
     ]
 )
 
@@ -218,7 +219,7 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
         }
         private val M45_46 = Migration(45, 46) { database -> //accounts table indices changes
-            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_sim_subscription_id ON accounts (sim_subscription_id)")
+            database.execSQL("CREATE UNIQUE INDEX index_accounts_name_sim_subscription_id ON accounts (name, sim_subscription_id)")
         }
 
 
