@@ -214,17 +214,31 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_stax_transactions_uuid` ON `stax_transactions` (`uuid`)")
         }
 
-        /* By using fallbackToDestructiveMigrationFrom for v42,
-        It drops the V42 table, and creates a new one for v43, hence, no need for migration.
-        This was done because of this conversation: https://hoverup.slack.com/archives/C0DREGYA2/p1665476265215879
-        */
+        private val M42_43 = Migration(42, 43) { database -> //accounts table changes
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS `channels_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, " +
+                        "`currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0," +
+                        "`secondary_color_hex` TEXT NOT NULL, institution_type TEXT DEFAULT 'bank', `selected` INTEGER NOT NULL DEFAULT 0,`defaultAccount` INTEGER NOT NULL DEFAULT 0," +
+                        "`isFavorite` INTEGER NOT NULL DEFAULT 0, `pin` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER DEFAULT CURRENT_TIMESTAMP, `account_no` TEXT)",
+            )
+
+            database.execSQL(
+                "INSERT INTO channels_new (id, name, country_alpha2, root_code, currency, hni_list, logo_url, institution_id, primary_color_hex, published, secondary_color_hex, selected, defaultAccount, isFavorite, pin, latestBalance, latestBalanceTimestamp, account_no)" +
+                        " SELECT id, name, country_alpha2, root_code, currency, hni_list, logo_url, institution_id, primary_color_hex, published, secondary_color_hex, selected, defaultAccount, isFavorite, pin, latestBalance, latestBalanceTimestamp, account_no FROM channels"
+            )
+            database.execSQL("DROP TABLE channels")
+            database.execSQL("ALTER TABLE channels_new RENAME TO channels")
+
+
+            database.execSQL("ALTER TABLE accounts ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
+            database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
+        }
 
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "stax.db")
                     .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                    .fallbackToDestructiveMigrationFrom(42)
-                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40)
+                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43)
                     .build()
                 INSTANCE = instance
 
