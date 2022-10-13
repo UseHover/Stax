@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.sims.SimInfo
@@ -50,7 +51,15 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        refreshChannelsIfRequired()
+        refreshChannels()
+    }
+
+    private fun refreshChannels() {
+        val wm = WorkManager.getInstance(requireContext())
+        wm.beginUniqueWork(
+            UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP,
+            UpdateChannelsWorker.makeWork()
+        ).enqueue()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -213,21 +222,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     override fun clickedChannel(channel: Channel) {
         AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
-    }
-
-    //channels will be loaded only once after install then deferred to weekly.
-    private fun refreshChannelsIfRequired() {
-        if (!Utils.getBoolean(CHANNELS_REFRESHED, requireActivity())) {
-            Timber.i("Reloading channels")
-            val wm = WorkManager.getInstance(requireContext())
-            wm.beginUniqueWork(
-                UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP,
-                UpdateChannelsWorker.makeWork()
-            ).enqueue()
-
-            Utils.saveBoolean(CHANNELS_REFRESHED, true, requireActivity())
-            return
-        }
     }
 
     override fun onDestroyView() {

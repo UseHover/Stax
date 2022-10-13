@@ -86,7 +86,7 @@ class SimFragment : Fragment(), BalanceTapListener {
     override fun onTapBalanceRefresh(account: Account?) {
         if (account != null) {
             AnalyticsUtil.logAnalyticsEvent(
-                getString(R.string.refresh_sim_airtime_balance),
+                getString(R.string.refresh_balance),
                 requireContext()
             )
             balancesViewModel.requestBalance(account)
