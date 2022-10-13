@@ -39,12 +39,8 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
     override suspend fun createAccount(channel: Channel, simSubscriptionId: Int, isDefault: Boolean) {
         val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
-        val account = Account(
-            accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = simSubscriptionId
-        )
+        val account = Account(accountName, channel, isDefault, simSubscriptionId)
 
-        channel.selected = true
         channelRepo.update(channel)
         accountRepo.insert(account)
 
