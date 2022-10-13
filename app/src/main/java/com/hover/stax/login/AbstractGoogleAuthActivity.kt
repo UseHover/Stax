@@ -92,8 +92,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
             val updateInfoTask = updateManager.appUpdateInfo
 
             updateInfoTask.addOnSuccessListener { updateInfo ->
-                val updateType = if ((updateInfo.clientVersionStalenessDays()
-                        ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE
+                val updateType = if ((updateInfo.clientVersionStalenessDays() ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE
                 ) AppUpdateType.FLEXIBLE
                 else AppUpdateType.IMMEDIATE
 
