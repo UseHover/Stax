@@ -59,16 +59,16 @@ body:
       - Single SIM
     validations:
       required: true
-   - type: dropdown
+  - type: dropdown
     id: telco
     attributes:
-      label: Which Telco are you using?
+      label: Which telco are you testing from?
       options:
       - Safaricom
       - Airtel
       - Telcom
       - Equitel
-    validations:
+     validations:
       required: true
   - type: input
     id: user
