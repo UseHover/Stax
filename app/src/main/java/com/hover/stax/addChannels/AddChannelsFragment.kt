@@ -97,15 +97,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
                 loadFilteredChannels(it)
             } }
 
-        val simsObserver =
-            Observer<List<SimInfo>> { t -> Timber.v("Loaded ${t?.size} sims") }
-
-        val countryListObserver =
-            Observer<List<String>> { t -> Timber.v("Loaded ${t?.size} hnis") }
-
         channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
-        sims.observe(viewLifecycleOwner, simsObserver)
-        simCountryList.observe(viewLifecycleOwner, countryListObserver)
+        sims.observe(viewLifecycleOwner) { Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} sims") }
+        simCountryList.observe(viewLifecycleOwner) {
+            Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} hnis") }
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
         filteredChannels.observe(viewLifecycleOwner, channelsObserver)
@@ -176,7 +171,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            updateAdapter(channels.filterNot { it.selected })
+            updateAdapter(channels)
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
             binding.errorText.visibility = GONE

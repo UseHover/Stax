@@ -19,9 +19,14 @@ import java.text.DecimalFormat
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"
+    private const val SDK_PREFS = "_hoversdk";
 
     private fun getSharedPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE)
+    }
+
+    fun getSdkPrefs(context: Context): SharedPreferences {
+        return context.getSharedPreferences(getPackage(context) + SDK_PREFS, Context.MODE_PRIVATE)
     }
 
     fun saveString(key: String?, value: String?, c: Context) {

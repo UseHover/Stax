@@ -20,9 +20,6 @@ interface ChannelDao {
     @get:Query("SELECT * FROM channels WHERE institution_type != 'telecom' ORDER BY name ASC")
     val allChannels: LiveData<List<Channel>>
 
-    @Query("SELECT * FROM channels WHERE selected = :selected AND institution_type != 'telecom' ORDER BY defaultAccount DESC, name ASC")
-    fun getSelected(selected: Boolean): LiveData<List<Channel>>
-
     @Query("SELECT * FROM channels WHERE id IN (:channel_ids) ORDER BY name ASC")
     fun getChannelsByIds(channel_ids: List<Int>): List<Channel>
 
@@ -43,14 +40,6 @@ interface ChannelDao {
 
     @get:Query("SELECT * FROM channels")
     val channels: List<Channel>
-
-    @Transaction
-    @Query("SELECT * FROM channels where selected = 1 AND institution_type != 'telecom' ORDER BY name ASC")
-    fun getChannelsAndAccounts(): List<ChannelWithAccounts>
-
-    @Transaction
-    @Query("SELECT * FROM channels where id = :id ORDER BY name ASC")
-    fun getChannelAndAccounts(id: Int): ChannelWithAccounts?
 
     @get:Query("SELECT COUNT(id) FROM channels")
     val allDataCount: Int

@@ -57,8 +57,8 @@ data class Account(
 
 ) : Comparable<Account> {
 
-    constructor(name: String, channel: Channel) : this(
-            name, name, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex
+    constructor(name: String, channel: Channel, isDefault: Boolean, simSubscriptionId: Int) : this(
+        name, name, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault, simSubscriptionId
     )
 
     constructor(name: String) : this(name, primaryColor = "#292E35")

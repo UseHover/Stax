@@ -60,7 +60,7 @@ internal class NonInteractiveTutorialFragment : Fragment() {
     }
 
     private fun setContinueClick() = binding.continueBtn.setOnClickListener {
-        NavUtil.navigate(findNavController(), NonInteractiveTutorialFragmentDirections.actionNoCheckboxOnboardingFragmentToWelcomeFragment(3))
+        (requireActivity() as OnBoardingActivity).checkPermissionsAndNavigate()
     }
 
     override fun onDestroyView() {

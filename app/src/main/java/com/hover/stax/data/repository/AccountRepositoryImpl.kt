@@ -32,9 +32,9 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
 
     override suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean): Account {
         val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
-        channel.selected = true
+        val account = Account(accountName, channel, isDefault, subscriptionId)
+
         channelRepo.update(channel)
-        val account = generateAccountFromChannel(accountName, channel, isDefault, subscriptionId)
         accountRepo.insert(account)
         logChoice(account)
         ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
@@ -42,17 +42,10 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         return account
     }
 
-    private fun generateAccountFromChannel(name: String, channel: Channel, isDefault: Boolean, simSubscriptionId: Int): Account {
-        return Account(
-            name, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-            channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault = isDefault, simSubscriptionId = simSubscriptionId
-        )
-    }
-
     override suspend fun createAccount(sim: SimInfo): Account {
         var account = Account(generateSimBasedName(sim))
         channelRepo.getTelecom(sim.osReportedHni)?.let {
-            account = generateAccountFromChannel(account.name, it, false, sim.subscriptionId)
+            account = Account(account.name, it, false, sim.subscriptionId)
         }
         ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
         return account
@@ -77,6 +70,6 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         } catch (ignored: Exception) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.new_channel_selected), args, context)
+        AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.new_sim_channel), args, context)
     }
 }

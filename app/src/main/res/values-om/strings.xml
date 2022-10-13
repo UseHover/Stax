@@ -436,7 +436,6 @@
     <string name="toast_confirm_acctremoved">Account milkaa\'inaan haqameera</string>
     <string name="toast_confirm_pinupdate">Pin fayye</string>
     <string name="language_cardhead">Afaan</string>
-    <string name="app_version_and_device_id">Gosa appii: %1$s\nKoodii gosa:%2$s\nID meeshaa: %3$s</string>
     <string name="disclaimer">Maqaaleen oomishaalee, maqaawwan daldalaa, fi mallattoon daldalaa hundi qabeenya abbootii qabeenyaa isaaniiti. Fayyadamni walitti hidhamiinsa hin agarsiisu.</string>
 
     <string name="learn_stax_cardhead">Barachuu</string>

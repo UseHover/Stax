@@ -75,14 +75,6 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
     }
 
     fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
-        val channelsToUpdate = mutableSetOf<Channel>()
-
-        if (repo.getAccountsByChannel(account.channelId).size == 1) {
-            val channel = channelRepo.getChannel(account.channelId)!!
-            channel.selected = false
-            channelsToUpdate.add(channel)
-        }
-
         repo.delete(account)
         transactionRepo.deleteAccountTransactions(account.id)
 
@@ -93,11 +85,6 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
             accounts.firstOrNull()?.let {
                 it.isDefault = true
                 repo.update(it)
-
-                val channel = channelRepo.getChannel(it.channelId)!!
-                channel.selected = true
-                channelsToUpdate.add(channel)
             }
-        channelRepo.update(channelsToUpdate.toList())
     }
 }
