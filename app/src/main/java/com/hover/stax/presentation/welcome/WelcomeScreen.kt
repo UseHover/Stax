@@ -22,7 +22,7 @@ import com.hover.stax.ui.theme.StaxTheme
 
 
 @Composable
-fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onClickContinue: () -> Unit, onClickSignIn: () -> Unit) {
+fun WelcomeScreen(buttonText: String, onClickContinue: () -> Unit, onClickSignIn: () -> Unit, showExploreButton : Boolean) {
     val features = getFeatures()
 
     StaxTheme {
@@ -54,9 +54,10 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
                     Column {
                         GoogleSignInButton { onClickSignIn() }
 
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        ContinueButton(text = buttonText, onClick = onClickContinue)
+                        if(showExploreButton) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ContinueButton(text = buttonText, onClick = onClickContinue)
+                        }
                     }
                 }
             )
@@ -70,6 +71,7 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
 @Composable
 fun WelcomeScreenPreview() {
     val features = getFeatures()
+    val showExploreButton = false
 
     StaxTheme {
         Surface(
@@ -100,9 +102,10 @@ fun WelcomeScreenPreview() {
                     Column {
                         GoogleSignInButton {}
 
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = { })
+                        if(showExploreButton) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = { })
+                        }
                     }
                 }
             )
