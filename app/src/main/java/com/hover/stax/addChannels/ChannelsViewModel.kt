@@ -188,17 +188,13 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
 
         val accounts = channels.mapIndexed { index, channel ->
             val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER) //ensures uniqueness of name due to db constraints
-            Account(
-                accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, simSubscriptionId = -1
-            )
+            Account(accountName, channel, defaultAccount == null && index == 0, -1)
         }.onEach {
             logChoice(it)
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
         }
 
         val accountIds = accountRepo.insert(accounts)
-        channels.onEach { it.selected = true }.also { repo.update(it) }
 
         //Refactoring tip: This is currently the only difference when compared with the function in AccountRepositoryImpl.
         promptBalanceCheck(accountIds.first().toInt())

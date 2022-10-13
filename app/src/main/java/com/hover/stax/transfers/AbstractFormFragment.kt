@@ -123,7 +123,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun onboard(account: Account) {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance), requireContext())
         balancesViewModel.requestBalance(account)
     }
 

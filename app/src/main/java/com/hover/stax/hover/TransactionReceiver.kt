@@ -182,7 +182,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
         val accounts = ArrayList<Account>()
         while (matcher.find()) {
-            val newAccount = Account(matcher.group(1)!!, channel!!)
+            val newAccount = Account(matcher.group(1)!!, channel!!, false, -1) // FIXME: Need to match this with other accounts to get the right SIM?
             accounts.add(newAccount)
         }
 

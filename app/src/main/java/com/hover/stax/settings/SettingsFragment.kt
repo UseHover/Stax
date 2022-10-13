@@ -110,7 +110,7 @@ class SettingsFragment : Fragment() {
         val deviceId = Hover.getDeviceId(requireContext())
         val appVersion: String = BuildConfig.VERSION_NAME
         val versionCode: String = BuildConfig.VERSION_CODE.toString()
-        val configVersion: String = com.hover.sdk.utils.Utils.getConfigVersion(requireContext())
+        val configVersion: String? = Utils.getSdkPrefs(requireContext()).getString("channel_actions_schema_version", "")
         binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, configVersion, deviceId)
     }
 
