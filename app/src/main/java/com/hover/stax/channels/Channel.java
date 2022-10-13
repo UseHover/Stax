@@ -79,14 +79,16 @@ public class Channel implements Comparable<Channel> {
 
     @ColumnInfo(name = "pin")
     public String pin;
+
     @ColumnInfo(name = "latestBalance")
     public String latestBalance;
+
     @ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
     public Long latestBalanceTimestamp;
+
     @ColumnInfo(name = "account_no")
     public String accountNo;
-//    @Ignore
-//    public String spentThisMonth, spentDifferenceToLastMonth;
+
 
     public Channel() {
     }

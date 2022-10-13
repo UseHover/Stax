@@ -215,9 +215,24 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private val M42_43 = Migration(42, 43) { database -> //accounts table changes
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS `channels_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, " +
+                        "`currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0," +
+                        "`secondary_color_hex` TEXT NOT NULL, institution_type TEXT NOT NULL DEFAULT 'bank', `selected` INTEGER NOT NULL DEFAULT 0,`defaultAccount` INTEGER NOT NULL DEFAULT 0," +
+                        "`isFavorite` INTEGER NOT NULL DEFAULT 0, `pin` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER DEFAULT CURRENT_TIMESTAMP, `account_no` TEXT)",
+            )
+
+            database.execSQL(
+                "INSERT INTO channels_new (id, name, country_alpha2, root_code, currency, hni_list, logo_url, institution_id, primary_color_hex, published, secondary_color_hex, selected, defaultAccount, isFavorite, pin, latestBalance, latestBalanceTimestamp, account_no)" +
+                        " SELECT id, name, country_alpha2, root_code, currency, hni_list, logo_url, institution_id, primary_color_hex, published, secondary_color_hex, selected, defaultAccount, isFavorite, pin, latestBalance, latestBalanceTimestamp, account_no FROM channels"
+            )
+            database.execSQL("DROP TABLE channels")
+            database.execSQL("ALTER TABLE channels_new RENAME TO channels")
+
+
+            database.execSQL("ALTER TABLE accounts ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
             database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
         }
-
 
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
