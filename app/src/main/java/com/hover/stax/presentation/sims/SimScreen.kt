@@ -43,7 +43,6 @@ fun SimScreen(
     simViewModel: SimViewModel = getViewModel()
 ) {
     val sims by simViewModel.sims.collectAsState()
-    val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
 
     val context = LocalContext.current
 
@@ -51,7 +50,7 @@ fun SimScreen(
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(title = R.string.your_sim_cards, isInternetConnected = hasNetwork, navTo)
+                    TopBar(title = R.string.your_sim_cards, navTo)
                 }
             ) { innerPadding ->
                 val paddingModifier = Modifier.padding(innerPadding)
@@ -95,7 +94,7 @@ private fun SimScreenPreview(@PreviewParameter(SampleSimInfoProvider::class) sim
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(topBar = {
-                TopBar(title = R.string.your_sim_cards, isInternetConnected = false, {})
+                TopBar(title = R.string.your_sim_cards, {})
             }, content = { innerPadding ->
                 val paddingModifier = Modifier.padding(innerPadding)
 

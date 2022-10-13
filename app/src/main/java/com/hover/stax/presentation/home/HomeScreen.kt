@@ -49,7 +49,8 @@ fun HomeScreen(
     homeClickFunctions: HomeClickFunctions,
     balanceTapListener: BalanceTapListener,
     tipInterface: FinancialTipClickInterface,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    navTo: (dest: Int) -> Unit,
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
@@ -60,13 +61,7 @@ fun HomeScreen(
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
-                topBar = {
-                    TopBar(
-                        title = R.string.nav_home,
-                        isInternetConnected = hasNetwork,
-                        {}
-                    )
-                },
+                topBar = { TopBar(title = R.string.nav_home, navTo) },
                 content = {
                     LazyColumn {
                         if (homeState.bonuses.isNotEmpty() && accounts.isNotEmpty())
@@ -159,7 +154,7 @@ fun HomeScreenPreview() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(title = R.string.nav_home, isInternetConnected = false, {})
+                    TopBar(title = R.string.nav_home, {})
                 },
                 content = { padding ->
                     LazyColumn(modifier = Modifier.padding(padding), content = {
