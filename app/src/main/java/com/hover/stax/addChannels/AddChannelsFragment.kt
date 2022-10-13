@@ -162,7 +162,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            updateAdapter(channels.filterNot { it.selected })
+            updateAdapter(channels)
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
             binding.errorText.visibility = GONE

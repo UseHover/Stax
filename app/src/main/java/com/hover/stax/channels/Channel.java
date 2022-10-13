@@ -22,6 +22,7 @@ public class Channel implements Comparable<Channel> {
     @PrimaryKey
     @NonNull
     public int id;
+
     @NonNull
     @ColumnInfo(name = "name")
     public String name;
@@ -65,33 +66,11 @@ public class Channel implements Comparable<Channel> {
     @ColumnInfo(name = "institution_type", defaultValue = BANK_TYPE)
     public String institutionType;
 
-    // Dont use the below, it needs to be removed
-    @NonNull
-    @ColumnInfo(name = "selected", defaultValue = "0")
-    public boolean selected;
-    @NonNull
-    @ColumnInfo(name = "defaultAccount", defaultValue = "0")
-    public boolean defaultAccount;
-
     @NonNull
     @ColumnInfo(name = "isFavorite", defaultValue = "0")
     public boolean isFavorite;
 
-    @ColumnInfo(name = "pin")
-    public String pin;
-
-    @ColumnInfo(name = "latestBalance")
-    public String latestBalance;
-
-    @ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
-    public Long latestBalanceTimestamp;
-
-    @ColumnInfo(name = "account_no")
-    public String accountNo;
-
-
-    public Channel() {
-    }
+    public Channel() {}
 
     public Channel(int _id, String addChannel) {
         this.id = _id;
@@ -100,20 +79,6 @@ public class Channel implements Comparable<Channel> {
 
     public Channel(JSONObject jsonObject, String rootUrl) {
         update(jsonObject, rootUrl);
-    }
-
-    public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
-        ArrayList<Channel> selected_list = new ArrayList<>();
-        ArrayList<Channel> sorted_list = new ArrayList<>();
-        for (Channel c : channels) {
-            if (c.selected) selected_list.add(c);
-            else sorted_list.add(c);
-        }
-        Collections.sort(selected_list);
-        Collections.sort(sorted_list);
-        if (showSelected)
-            sorted_list.addAll(0, selected_list);
-        return sorted_list;
     }
 
     Channel update(JSONObject jsonObject, String rootUrl) {
