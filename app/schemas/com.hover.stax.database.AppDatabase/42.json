@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 42,
-    "identityHash": "a25697b83a3e9330a87e0df6448dc1df",
+    "identityHash": "62fe5e083b149f16ffcf8f2278853ab6",
     "entities": [
       {
         "tableName": "channels",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, `currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0, `secondary_color_hex` TEXT NOT NULL, `institution_type` TEXT DEFAULT 'bank', `selected` INTEGER NOT NULL DEFAULT 0, `defaultAccount` INTEGER NOT NULL DEFAULT 0, `isFavorite` INTEGER NOT NULL DEFAULT 0, `pin` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER DEFAULT CURRENT_TIMESTAMP, `account_no` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, `currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0, `secondary_color_hex` TEXT NOT NULL, `selected` INTEGER NOT NULL DEFAULT 0, `defaultAccount` INTEGER NOT NULL DEFAULT 0, `isFavorite` INTEGER NOT NULL DEFAULT 0, `pin` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER DEFAULT CURRENT_TIMESTAMP, `account_no` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -74,13 +74,6 @@
             "columnName": "secondary_color_hex",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "institutionType",
-            "columnName": "institution_type",
-            "affinity": "TEXT",
-            "notNull": false,
-            "defaultValue": "'bank'"
           },
           {
             "fieldPath": "selected",
@@ -993,7 +986,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a25697b83a3e9330a87e0df6448dc1df')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '62fe5e083b149f16ffcf8f2278853ab6')"
     ]
   }
 }
