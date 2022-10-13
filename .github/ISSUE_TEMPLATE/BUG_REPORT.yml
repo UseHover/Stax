@@ -59,6 +59,16 @@ body:
       - Single SIM
     validations:
       required: true
+  - type: dropdown
+    id: telco
+    attributes:
+      label: Which telco are you using for this test?
+      options:
+      - Safaricom
+      - Airtel
+      - Telkom
+    validations:
+      required: true
   - type: input
     id: user
     attributes:
