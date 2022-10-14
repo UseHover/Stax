@@ -23,35 +23,30 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
 
-class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
+class AccountRepositoryImpl(val accountRepo: AccountRepo, private val channelRepo: ChannelRepo, val actionRepo: ActionRepo) :
+    AccountRepository, PushNotificationTopicsInterface, KoinComponent {
 
     private val context: Context by inject()
 
     override val fetchAccounts: Flow<List<Account>>
         get() = accountRepo.getAccounts()
 
-    override suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean): Account {
-        val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else PLACEHOLDER //placeholder alias for easier identification later
-        val account = Account(accountName, channel, isDefault, subscriptionId)
-
-        channelRepo.update(channel)
-        accountRepo.insert(account)
-        logChoice(account)
-        ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
-
-        return account
-    }
-
     override suspend fun createAccount(sim: SimInfo): Account {
-        var account = Account(generateSimBasedName(sim))
+        var account = Account(generateSimBasedName(sim), generateSimBasedAlias(sim))
         channelRepo.getTelecom(sim.osReportedHni)?.let {
             account = Account(account.name, it, false, sim.subscriptionId)
+            accountRepo.insert(account)
         }
+        logChoice(account)
         ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
         return account
     }
 
     private fun generateSimBasedName(sim: SimInfo): String {
+        return (sim.operatorName ?: sim.networkOperatorName ?: "") + "-" + sim.subscriptionId.toString()
+    }
+
+    private fun generateSimBasedAlias(sim: SimInfo): String {
         return sim.operatorName ?: sim.networkOperatorName ?: "Unknown"
     }
 

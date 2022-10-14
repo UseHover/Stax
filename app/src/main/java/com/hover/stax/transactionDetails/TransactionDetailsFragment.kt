@@ -186,7 +186,7 @@ class TransactionDetailsFragment : Fragment() {
         binding.statusInfo.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
-        binding.details.paidWithRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
+        binding.details.paidWithRow.visibility = if (transaction.isRecorded || transaction.amount == null) GONE else VISIBLE
         if (transaction.isRecorded) binding.details.recipInstitutionRow.visibility = GONE
         binding.details.amountRow.visibility = if (transaction.amount != null) VISIBLE else GONE
         binding.details.feeRow.visibility = if (transaction.fee == null) GONE else VISIBLE

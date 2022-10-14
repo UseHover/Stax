@@ -23,8 +23,6 @@ class AccountRepo(db: AppDatabase) {
 
     fun getDefaultAccount(): Account? = accountDao.getDefaultAccount()
 
-    suspend fun getDefaultAccountAsync(): Account? = accountDao.getDefaultAccountAsync()
-
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
     fun getLiveAccount(id: Int?): LiveData<Account> = accountDao.getLiveAccount(id)

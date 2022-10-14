@@ -61,10 +61,10 @@ data class Account(
         name, name, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault, simSubscriptionId
     )
 
-    constructor(name: String) : this(name, primaryColor = "#292E35")
+    constructor(name: String) : this(name, name)
 
-    constructor(name: String, primaryColor: String) : this(
-            name, alias = name, logoUrl = "", accountNo = "", institutionId = -1, institutionType = "", countryAlpha2 = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
+    constructor(name: String, alias: String) : this(
+            name, alias = alias, logoUrl = "", accountNo = "", institutionId = -1, institutionType = "", countryAlpha2 = "", channelId = -1, primaryColorHex = "#292E35", secondaryColorHex = "#1E232A"
     )
 
     @PrimaryKey(autoGenerate = true)

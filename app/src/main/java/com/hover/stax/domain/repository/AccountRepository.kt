@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.Flow
 interface AccountRepository {
     val fetchAccounts: Flow<List<Account>>
 
-    suspend fun createAccount(channel: Channel, subscriptionId: Int, isDefault: Boolean): Account
-
     suspend fun createAccount(sim: SimInfo): Account
 
     suspend fun getAccountBySim(subscriptionId: Int): Account?
