@@ -4,20 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.sdk.actions.HoverAction
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
-import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getBonusesUseCase: GetBonusesUseCase,
-    private val refreshBonusUseCase: RefreshBonusUseCase,
     private val accountsRepo: AccountRepository,
+    private val actionRepo: ActionRepo,
     private val tipsUseCase: TipsUseCase
 ) : ViewModel() {
 
@@ -28,7 +26,6 @@ class HomeViewModel(
     val accounts: LiveData<List<Account>> = _accounts
 
     init {
-        refreshBonuses()
         fetchData()
     }
 
@@ -39,13 +36,20 @@ class HomeViewModel(
         getDismissedFinancialTips()
     }
 
-    private fun refreshBonuses() = viewModelScope.launch(Dispatchers.IO) {
-        refreshBonusUseCase.invoke()
+    private fun getBonusList() = viewModelScope.launch {
+        bonusListToFlow().collect { bonusList ->
+            if (bonusList is Resource.Success)
+                _homeState.update { it.copy(bonuses = bonusList.data ?: emptyList()) }
+        }
     }
 
-    private fun getBonusList() = viewModelScope.launch {
-        getBonusesUseCase.bonusList.collect { bonusList ->
-            _homeState.update { it.copy(bonuses = bonusList) }
+    private fun bonusListToFlow(): Flow<Resource<List<HoverAction>>> = flow {
+        try {
+            emit(Resource.Loading())
+
+            emit(Resource.Success(actionRepo.bonusActions))
+        } catch (e: Exception) {
+            emit(Resource.Error("Error fetching tips"))
         }
     }
 

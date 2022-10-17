@@ -11,15 +11,12 @@ import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.*
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.repository.*
-import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
-import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.sims.ListSimsUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
@@ -102,7 +99,6 @@ val dataModule = module(createdAtStart = true) {
     singleOf(::PaybillRepo)
     singleOf(::MerchantRepo)
     singleOf(::UserRepo)
-    singleOf(::BonusRepo)
     singleOf(::ParserRepo)
     singleOf(::SimRepo)
 }
@@ -140,7 +136,6 @@ val repositories = module {
         Dispatchers.IO
     }
 
-    single<BonusRepository> { BonusRepositoryImpl(get(), get()) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
 
@@ -154,9 +149,6 @@ val useCases = module {
         Dispatchers.IO
     }
     single { ListSimsUseCase(get(), get(), get(), get(named("CoroutineDispatcher"))) }
-
-    factoryOf(::GetBonusesUseCase)
-    factoryOf(::RefreshBonusUseCase)
 
     factoryOf(::TipsUseCase)
 

@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.presentation.home.components.*
 import com.hover.stax.ui.theme.StaxTheme
@@ -66,7 +66,7 @@ fun HomeScreen(
                     LazyColumn {
                         if (homeState.bonuses.isNotEmpty() && accounts.isNotEmpty())
                             item {
-                                BonusCard(message = homeState.bonuses.first().message,
+                                BonusCard(message = homeState.bonuses.first().bonus_message,
                                     onClickedTC = homeClickFunctions.onClickedTC,
                                     onClickedTopUp = {
                                         clickedOnBonus(
@@ -127,12 +127,12 @@ fun HomeScreen(
     }
 }
 
-private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: Bonus) {
+private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: HoverAction) {
     AnalyticsUtil.logAnalyticsEvent(
         context.getString(R.string.clicked_bonus_airtime_banner),
         context
     )
-    channelsViewModel.validateAccounts(bonus.userChannel)
+    channelsViewModel.payWith(bonus.channel_id)
 }
 
 private fun showKEFeatures(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }

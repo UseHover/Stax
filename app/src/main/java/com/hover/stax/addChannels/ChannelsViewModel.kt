@@ -16,7 +16,6 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
@@ -38,8 +37,7 @@ import org.json.JSONObject
 class ChannelsViewModel(application: Application, val repo: ChannelRepo,
                         val simRepo: SimRepo,
                         val accountRepo: AccountRepo,
-                        val actionRepo: ActionRepo,
-                        private val bonusRepo: BonusRepo) : AndroidViewModel(application),
+                        val actionRepo: ActionRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -167,7 +165,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
-    fun validateAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun payWith(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val accounts = accountRepo.getAccountsByChannel(channelId)
 
         if (accounts.isEmpty())
@@ -227,17 +225,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     private fun runFilter(channels: List<Channel>, value: String?) {
-        filterBonusChannels(channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) })
-    }
-
-    private fun filterBonusChannels(channels: List<Channel>) = viewModelScope.launch {
-        bonusRepo.bonuses.collect { list ->
-            val ids = list.map { it.purchaseChannel }
-            filteredChannels.value = if (ids.isEmpty())
-                channels
-            else
-                channels.filterNot { ids.contains(it.id) }
-        }
+        filteredChannels.value = channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) }
     }
 
     fun updateChannel(channel: Channel) {

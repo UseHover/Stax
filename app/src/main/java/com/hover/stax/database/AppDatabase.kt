@@ -3,16 +3,11 @@ package com.hover.stax.database
 import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
-import androidx.room.DeleteColumn
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountDao
-import com.hover.stax.domain.model.Bonus
-import com.hover.stax.data.local.bonus.BonusDao
 import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
@@ -34,9 +29,9 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [
-        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class
+        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class
     ],
-    version = 46,
+    version = 47,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
@@ -66,8 +61,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun merchantDao(): MerchantDao
 
     abstract fun userDao(): UserDao
-
-    abstract fun bonusDao(): BonusDao
 
     companion object {
 
@@ -250,11 +243,15 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("ALTER TABLE channels_new RENAME TO channels")
         }
 
+        private val M46_47 = Migration(46, 47) { database ->
+            database.execSQL("DROP TABLE bonuses")
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "stax.db")
                     .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43, M44_45, M45_46)
+                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43, M44_45, M45_46, M46_47)
                     .build()
                 INSTANCE = instance
 

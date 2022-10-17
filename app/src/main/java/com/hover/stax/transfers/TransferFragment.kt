@@ -42,8 +42,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
 
-    private var hasBonus = false
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
@@ -72,7 +70,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         args.accountId?.let { accountsViewModel.setActiveAccount(Integer.parseInt(it)) }
         args.amount?.let { binding.editCard.amountInput.setText(it) }
         args.contactId?.let { transferViewModel.setContact(it) }
-        args.channelId?.let { channelsViewModel.validateAccounts(Integer.parseInt(it)) }
+        args.channelId?.let { channelsViewModel.payWith(Integer.parseInt(it)) }
     }
 
     override fun init(root: View) {
@@ -123,7 +121,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
-        observeAccountsEvent()
     }
 
     private fun observeActiveAccount() {
@@ -140,6 +137,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             it?.let {
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
+                showBonusBanner(it, accountsViewModel.channelActions.value)
             }
         }
     }
@@ -147,7 +145,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeActions() {
         accountsViewModel.channelActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
-            showBonusBanner(it)
+            showBonusBanner(actionSelectViewModel.activeAction.value, it)
         }
 
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
@@ -200,13 +198,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeAccountsEvent() {
-        collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            val bonus = transferViewModel.bonusList.value.bonuses.firstOrNull() ?: return@collectLifecycleFlow
-            accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
-        }
-    }
-
     private fun startListeners() {
         setAmountInputListener()
         setContactInputListener()
@@ -252,7 +243,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun getExtras(): HashMap<String, String> {
-        val extras = transferViewModel.wrapExtras(hasBonus)
+        val extras = transferViewModel.wrapExtras(actionSelectViewModel.activeAction.value!!)
         extras.putAll(actionSelectViewModel.wrapExtras())
         return extras
     }
@@ -331,30 +322,28 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun showBonusBanner(actions: List<HoverAction>) {
+    private fun showBonusBanner(selected: HoverAction?, actions: List<HoverAction>?) {
         if (args.transactionType == HoverAction.AIRTIME) {
-            val bonus = transferViewModel.bonusList.value.bonuses.firstOrNull() ?: return
+            if (actions?.any { a -> a.bonus_percent > 0 } != true) return
 
             with(binding.bonusLayout) {
-                cardBonus.visibility = View.VISIBLE
                 learnMore.movementMethod = LinkMovementMethod.getInstance()
 
-                hasBonus = actions.map { it.channel_id }.contains(bonus.userChannel)
-
-                if (hasBonus) {
+                if (selected != null && selected.bonus_percent > 0) {
                     title.text = getString(R.string.congratulations)
-                    message.text = getString(R.string.valid_account_bonus_msg)
+                    message.text = selected.bonus_message
                     cta.visibility = View.GONE
                 } else {
+                    val bonus = actions.first { a -> a.bonus_percent > 0 }
                     title.text = getString(R.string.get_extra_airtime)
-                    message.text = getString(R.string.invalid_account_bonus_msg)
+                    message.text = bonus.bonus_message
                     cta.apply {
                         visibility = View.VISIBLE
-                        text = getString(R.string.top_up_with_mpesa)
+                        text = getString(R.string.top_up_with, bonus.from_institution_name)
 
                         setOnClickListener {
                             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                            channelsViewModel.validateAccounts(bonus.userChannel)
+                            channelsViewModel.payWith(bonus.channel_id)
                         }
                     }
                 }
@@ -364,11 +353,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
-
-        if (!isEditing)
-            binding.bonusLayout.cardBonus.visibility = View.GONE
-        else
-            showBonusBanner(actionSelectViewModel.filteredActions.value ?: emptyList())
+        binding.bonusLayout.cardBonus.visibility = if (isEditing) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {
