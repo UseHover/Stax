@@ -14,7 +14,8 @@ data class SimWithAccount(
     val sim: SimInfo,
     val account: Account,
     val balanceAction: HoverAction?,
-    val airtimeAction: HoverAction?
+    val airtimeAction: HoverAction?,
+    val bonus: Int = 0
 )
 
 class ListSimsUseCase(
