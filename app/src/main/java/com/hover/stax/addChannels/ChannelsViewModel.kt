@@ -231,7 +231,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     private fun filterBonusChannels(channels: List<Channel>) = viewModelScope.launch {
-        bonusRepo.bonuses.collect { list ->
+        bonusRepo.collectBonuses.collect { list ->
             val ids = list.map { it.purchaseChannel }
             filteredChannels.value = if (ids.isEmpty())
                 channels
