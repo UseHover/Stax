@@ -34,7 +34,7 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, private val channelRep
     override suspend fun createAccount(sim: SimInfo): Account {
         var account = Account(generateSimBasedName(sim), generateSimBasedAlias(sim))
         channelRepo.getTelecom(sim.osReportedHni)?.let {
-            account = Account(account.name, it, false, sim.subscriptionId)
+            account = Account(account.name, account.alias, it, false, sim.subscriptionId)
             accountRepo.insert(account)
         }
         logChoice(account)

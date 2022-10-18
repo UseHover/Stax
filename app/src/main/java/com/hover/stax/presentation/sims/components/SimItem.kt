@@ -88,7 +88,7 @@ internal fun SimItem(
 
 		if (simWithAccount.account.channelId == -1) {
 			SecondaryButton(context.getString(R.string.email_support),null,
-				onClick = { email(simWithAccount, context) })
+				onClick = { emailStax(simWithAccount, context) })
 		}
 		else
 			SecondaryButton(context.getString(R.string.nav_airtime),null,
@@ -96,7 +96,7 @@ internal fun SimItem(
 	}
 }
 
-private fun email(simWithAccount: SimWithAccount, context: Context) {
+private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
 	val emailBody = context.getString(
 		R.string.sim_card_support_request_emailBody,
 		simWithAccount.sim.osReportedHni ?: "Null",
