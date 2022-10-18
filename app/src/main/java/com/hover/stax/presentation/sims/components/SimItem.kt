@@ -54,12 +54,9 @@ internal fun SimItem(
 		SimItemTopRow(simWithAccount, refreshBalance)
 		if (simWithAccount.account.channelId != -1) {
 			val notYetChecked = stringResource(id = R.string.not_yet_checked)
-
+			val latestBalance = Utils.formatAmount(simWithAccount.account.latestBalance ?: notYetChecked)
 			Text(
-				text = stringResource(
-					id = R.string.airtime_balance_holder,
-					simWithAccount.account.latestBalance ?: notYetChecked
-				),
+				text = stringResource(id = R.string.airtime_balance_holder, latestBalance),
 				color = TextGrey,
 				style = MaterialTheme.typography.body1
 			)
