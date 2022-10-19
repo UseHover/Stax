@@ -45,9 +45,7 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
         return actionDao.getActions(channelIds, recipientInstitutionId, HoverAction.P2P)
     }
 
-    val bountyActions: LiveData<List<HoverAction>>
-        get() = actionDao.bountyActions
+    val bountyActions: LiveData<List<HoverAction>> get() = actionDao.bountyActions
 
-    val bounties: List<HoverAction>
-        get() = actionDao.bounties
+    val bounties: List<HoverAction> get() = actionDao.bounties
 }

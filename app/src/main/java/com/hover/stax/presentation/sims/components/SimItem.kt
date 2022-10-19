@@ -54,12 +54,9 @@ internal fun SimItem(
 		SimItemTopRow(simWithAccount, refreshBalance)
 		if (simWithAccount.account.channelId != -1) {
 			val notYetChecked = stringResource(id = R.string.not_yet_checked)
-
+			val latestBalance = Utils.formatAmount(simWithAccount.account.latestBalance ?: notYetChecked)
 			Text(
-				text = stringResource(
-					id = R.string.airtime_balance_holder,
-					simWithAccount.account.latestBalance ?: notYetChecked
-				),
+				text = stringResource(id = R.string.airtime_balance_holder, latestBalance),
 				color = TextGrey,
 				style = MaterialTheme.typography.body1
 			)
@@ -88,15 +85,32 @@ internal fun SimItem(
 
 		if (simWithAccount.account.channelId == -1) {
 			SecondaryButton(context.getString(R.string.email_support),null,
-				onClick = { email(simWithAccount, context) })
+				onClick = { emailStax(simWithAccount, context) })
 		}
-		else
-			SecondaryButton(context.getString(R.string.nav_airtime),null,
+		else {
+			val bonus = simWithAccount.bonus
+			SecondaryButton(
+				getAirtimeButtonLabel(bonus, context), getAirtimeButtonIcon(bonus),
 				onClick = { buyAirtime(simWithAccount.account) })
+		}
 	}
 }
+private fun getAirtimeButtonLabel(bonus: Int, context: Context) : String {
+	var label = context.getString(R.string.nav_airtime)
+	if (bonus > 0) {
+		val bonusPercent = bonus.toString().plus("%")
+		label = context.getString(R.string.buy_airitme_with_discount, bonusPercent)
+	}
+	return label
+}
 
-private fun email(simWithAccount: SimWithAccount, context: Context) {
+private fun getAirtimeButtonIcon(bonus: Int) : Int? {
+	var icon : Int? = null
+	if (bonus > 0) { icon = R.drawable.ic_bonus }
+	return icon
+}
+
+private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
 	val emailBody = context.getString(
 		R.string.sim_card_support_request_emailBody,
 		simWithAccount.sim.osReportedHni ?: "Null",

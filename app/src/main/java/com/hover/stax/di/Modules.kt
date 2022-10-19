@@ -153,7 +153,7 @@ val useCases = module {
     single(named("CoroutineDispatcher")) {
         Dispatchers.IO
     }
-    single { ListSimsUseCase(get(), get(), get(), get(named("CoroutineDispatcher"))) }
+    single { ListSimsUseCase(get(), get(), get(), get(), get(named("CoroutineDispatcher"))) }
 
     factoryOf(::GetBonusesUseCase)
     factoryOf(::RefreshBonusUseCase)
