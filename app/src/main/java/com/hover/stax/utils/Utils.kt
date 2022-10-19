@@ -141,6 +141,17 @@ object Utils {
         } catch (e: NumberFormatException) { return null }
     }
 
+    @JvmStatic
+    fun formatPercent(number: Double): String {
+        return try {
+            val formatter = DecimalFormat("##0")
+            formatter.maximumFractionDigits = 0
+            formatter.format(number * 100)
+        } catch (e: Exception) {
+            number.toString()
+        }
+    }
+
     fun usingDebugVariant(c: Context): Boolean {
         return getBuildConfigValue(c, "DEBUG") as Boolean
     }

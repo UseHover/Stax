@@ -66,19 +66,11 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
 
     private fun initToolbar() {
         binding.toolbar.setContent {
-            StaxTheme { Toolbar() }
+            StaxTheme { TopBar(title = R.string.library_cardhead) { dest -> navigateTo(dest) } }
         }
     }
 
-    @Composable
-    private fun Toolbar() {
-        val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-        TopBar(title = R.string.library_cardhead, isInternetConnected = hasNetwork,
-            { navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings()) },
-            { navigate(TransactionHistoryFragmentDirections.actionGlobalRewardsFragment()) })
-    }
-
-    private fun navigate(navDirections: NavDirections) = NavUtil.navigate(findNavController(), navDirections)
+    private fun navigateTo(dest: Int) = findNavController().navigate(dest)
 
     private fun setObservers() {
         with(viewModel) {

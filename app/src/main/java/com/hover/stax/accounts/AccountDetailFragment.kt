@@ -184,10 +184,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun onTapBalanceRefresh(account: Account?) {
-        account?.let {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance), requireContext())
-            balancesViewModel.requestBalance(account)
-        }
+        balancesViewModel.requestBalance(account)
     }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {

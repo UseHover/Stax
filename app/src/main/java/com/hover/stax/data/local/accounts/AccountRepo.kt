@@ -13,6 +13,8 @@ class AccountRepo(db: AppDatabase) {
 
     fun getAllLiveAccounts(): LiveData<List<Account>> = accountDao.getLiveAccounts()
 
+    fun getAccountBySim(simSubscriptionId: Int) : Account? = accountDao.getAccountBySim(simSubscriptionId)
+
     fun getTelecomAccounts(simSubscriptionIds: IntArray) : Flow<List<Account>> = accountDao.getAccountsBySubscribedSim(simSubscriptionIds)
 
     fun getAccountsCount(): Int = accountDao.getDataCount()
@@ -20,8 +22,6 @@ class AccountRepo(db: AppDatabase) {
     fun getAccountsByChannel(channelId: Int): List<Account> = accountDao.getAccountsByChannel(channelId)
 
     fun getDefaultAccount(): Account? = accountDao.getDefaultAccount()
-
-    suspend fun getDefaultAccountAsync(): Account? = accountDao.getDefaultAccountAsync()
 
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 

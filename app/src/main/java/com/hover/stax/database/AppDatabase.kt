@@ -3,12 +3,9 @@ package com.hover.stax.database
 import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
-import androidx.room.DeleteColumn
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountDao
 import com.hover.stax.domain.model.Bonus

@@ -74,10 +74,10 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         loadActions(account, type.value!!)
     }
 
-    private fun loadActions(account: Account, t: String) = viewModelScope.launch(Dispatchers.IO) {
+    private fun loadActions(account: Account, type: String) = viewModelScope.launch(Dispatchers.IO) {
         channelActions.postValue(
-            if (t == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
-            else actionRepo.getActions(account.channelId, t)
+            if (type == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
+            else actionRepo.getActions(account.channelId, type)
         )
     }
 
