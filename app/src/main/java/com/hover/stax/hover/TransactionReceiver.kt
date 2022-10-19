@@ -137,10 +137,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private fun updateRequests(intent: Intent) {
         if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.RECEIVE) {
             requestRepo.requests.forEach {
-                if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(
-                        it.amount
-                            ?: "00"
-                    ) == Utils.getAmount(getAmount(intent)!!)
+                if (it.requestee_ids.contains(contact!!.id) && Utils.amountToDouble(it.amount) == Utils.amountToDouble(getAmount(intent)!!)
                 ) {
                     it.matched_transaction_uuid = intent.getStringExtra(TransactionContract.COLUMN_UUID)
                     requestRepo.update(it)

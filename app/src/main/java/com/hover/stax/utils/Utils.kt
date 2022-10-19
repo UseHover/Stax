@@ -113,10 +113,10 @@ object Utils {
     @JvmStatic
     fun formatAmount(number: String?): String {
         return when (number) {
-            "0" -> "0,000"
+            "0" -> "00"
             null -> "--"
             else -> try {
-                formatAmount(getAmount(number))
+                formatAmount(amountToDouble(number))
             } catch (e: Exception) {
                 number
             }
@@ -135,8 +135,10 @@ object Utils {
     }
 
     @JvmStatic
-    fun getAmount(amount: String): Double {
-        return amount.replace(",".toRegex(), "").toDouble()
+    fun amountToDouble(amount: String?): Double? {
+        try {
+            return amount?.replace(",".toRegex(), "")?.toDouble()
+        } catch (e: NumberFormatException) { return null }
     }
 
     fun usingDebugVariant(c: Context): Boolean {
