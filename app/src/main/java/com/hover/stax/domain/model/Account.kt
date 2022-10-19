@@ -62,7 +62,7 @@ data class Account(
         name = name, alias = alias, logoUrl = "", accountNo = "", institutionId = -1, institutionType = "", countryAlpha2 = "", channelId = -1, primaryColorHex = "#292E35", secondaryColorHex = "#1E232A"
     )
     constructor(name: String, channel: Channel, isDefault: Boolean, simSubscriptionId: Int) : this(
-        name, name, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault, simSubscriptionId
+        name, name, channel, isDefault, simSubscriptionId
     )
     constructor(name: String, alias: String, channel: Channel, isDefault: Boolean, simSubscriptionId: Int) : this(
         name, alias, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault, simSubscriptionId

@@ -17,7 +17,7 @@ data class SimWithAccount(
     val account: Account,
     val balanceAction: HoverAction?,
     val airtimeAction: HoverAction?,
-    val bonus: Int
+    val bonus: Double
 )
 
 class ListSimsUseCase(
@@ -43,7 +43,7 @@ class ListSimsUseCase(
                 balanceAct = actionRepository.getFirstAction(account.channelId, HoverAction.BALANCE)
                 airtimeAct = actionRepository.getFirstAction(account.channelId, HoverAction.AIRTIME)
             }
-            result.add(SimWithAccount(sim, account, balanceAct, airtimeAct, (bonus ?: 0) as Int))
+            result.add(SimWithAccount(sim, account, balanceAct, airtimeAct, (bonus ?: 0.toDouble())))
         }
         result
     }

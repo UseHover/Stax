@@ -95,16 +95,15 @@ internal fun SimItem(
 		}
 	}
 }
-private fun getAirtimeButtonLabel(bonus: Int, context: Context) : String {
+private fun getAirtimeButtonLabel(bonus: Double, context: Context) : String {
 	var label = context.getString(R.string.nav_airtime)
 	if (bonus > 0) {
-		val bonusPercent = bonus.toString().plus("%")
-		label = context.getString(R.string.buy_airitme_with_discount, bonusPercent)
+		label = context.getString(R.string.buy_airitme_bonus, Utils.formatPercent(bonus))
 	}
 	return label
 }
 
-private fun getAirtimeButtonIcon(bonus: Int) : Int? {
+private fun getAirtimeButtonIcon(bonus: Double) : Int? {
 	var icon : Int? = null
 	if (bonus > 0) { icon = R.drawable.ic_bonus }
 	return icon
