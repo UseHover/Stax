@@ -1,6 +1,7 @@
 package com.hover.stax.transactionDetails
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -152,11 +153,12 @@ class TransactionDetailsFragment : Fragment() {
             mainMessage.text = getString(R.string.new_balance, "", transaction.displayBalance)
         }
         statusText.text = transaction.title(requireContext())
+        if (statusText.text.toString().length > 9) { statusText.gravity = Gravity.START }
         statusIcon.setImageResource(transaction.getIcon())
     }
 
     private fun shouldShowNewBalance(transaction: StaxTransaction): Boolean {
-        return !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
+        return !transaction.balance.isNullOrEmpty() && transaction.isSuccessful && transaction.transaction_type != HoverAction.BALANCE
     }
 
     private fun updateDetails(transaction: StaxTransaction) = with(binding.details) {
@@ -174,7 +176,7 @@ class TransactionDetailsFragment : Fragment() {
         recipientValue.setTitle(transaction.counterpartyNo)
         amountValue.text = transaction.getSignedAmount(transaction.amount)
         transaction.fee?.let { binding.details.feeValue.text = Utils.formatAmount(it.toString()) }
-        newBalanceValue.text = Utils.formatAmount(transaction.balance.toString())
+        newBalanceValue.text = Utils.formatAmount(transaction.balance)
         recipientLabel.text = getString(transaction.getRecipientLabel())
         confirmCodeCopy.content.text = transaction.confirm_code
         detailsStaxUuid.content.text = transaction.uuid

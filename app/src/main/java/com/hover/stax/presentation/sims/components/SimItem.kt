@@ -2,12 +2,7 @@ package com.hover.stax.presentation.sims.components
 
 import android.content.Context
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -54,21 +49,20 @@ internal fun SimItem(
 		SimItemTopRow(simWithAccount, refreshBalance)
 		if (simWithAccount.account.channelId != -1) {
 			val notYetChecked = stringResource(id = R.string.not_yet_checked)
-			val latestBalance = Utils.formatAmount(simWithAccount.account.latestBalance ?: notYetChecked)
 			Text(
-				text = stringResource(id = R.string.airtime_balance_holder, latestBalance),
+				text = simWithAccount.account.latestBalance ?: notYetChecked,
 				color = TextGrey,
 				style = MaterialTheme.typography.body1
 			)
 
 			if (simWithAccount.account.latestBalance != null) {
+				Spacer(modifier = Modifier.height(13.dp))
 				Text(
 					text = stringResource(
 						id = R.string.as_of,
 						DateUtils.humanFriendlyDateTime(simWithAccount.account.latestBalanceTimestamp)
 					),
 					color = TextGrey,
-					modifier = Modifier.padding(bottom = 26.dp),
 					style = MaterialTheme.typography.body1
 				)
 			}
@@ -78,10 +72,11 @@ internal fun SimItem(
 					id = R.string.unsupported_sim_info
 				),
 				color = TextGrey,
-				modifier = Modifier.padding(bottom = 7.dp),
 				style = MaterialTheme.typography.body2
 			)
 		}
+
+		Spacer(modifier = Modifier.height(32.dp))
 
 		if (simWithAccount.account.channelId == -1) {
 			SecondaryButton(context.getString(R.string.email_support),null,
@@ -126,8 +121,6 @@ private fun SimItemTopRow(
 	simWithAccount: SimWithAccount,
 	refreshBalance: (Account) -> Unit,
 ) {
-	val size34 = dimensionResource(id = R.dimen.margin_34)
-
 	Row(modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),
 		verticalAlignment = Alignment.CenterVertically
 
@@ -139,7 +132,7 @@ private fun SimItemTopRow(
 			placeholder = painterResource(id = R.drawable.img_placeholder),
 			error = painterResource(id = R.drawable.img_placeholder),
 			modifier = Modifier
-				.size(size34)
+				.size(dimensionResource(id = R.dimen.margin_34))
 				.clip(CircleShape)
 				.align(Alignment.CenterVertically),
 			contentScale = ContentScale.Crop
