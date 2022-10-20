@@ -28,6 +28,8 @@
     <string name="channels_json_prod" translatable="false">channels-prod.json</string>
     <string name="stax_handle" translatable="false">\@joinstax</string>
 
+    <string name="hsdk_app_name_literal">*Stax#</string>
+
     <string name="nav_home">Home</string>
     <string name="nav_balance_and_history">Balance and history</string>
     <string name="nav_balances">Balances</string>
@@ -227,8 +229,10 @@
     <string name="permissions_title">Permissions needed</string>
     <string name="permissions_basic_title">Grant us phone and SMS permission.</string>
     <string name="perms_basic_desc">To find all your various accounts and detect transactions on those accounts, allow Stax access to your phone and SMSs.</string>
-    <string name="permissions_overlay_desc">These permissions allow Stax to dial USSD codes on your behalf and create an overlay that shows you the transaction progress.</string>
-    <string name="permissions_accessibility_desc">In order to provide you with the ability to check your balance, transfer money or buy airtime, Stax needs your display and accessibility permission</string>
+    <string name="permissions_overlay_path">Tap Settings > Apps > Appear on top > Stax</string>
+    <string name="permissions_overlay_desc">This allows Stax to show you the transaction progress.</string>
+    <string name="permissions_accessibility_path">Tap Settings > Accessibility > Installed Services > Stax</string>
+    <string name="permissions_accessibility_desc">This allows Stax to run USSD sessions at your command.</string>
     <string name="app_permissions">App permissions</string>
     <string name="manage_permissions_title">Manage permissions</string>
     <string name="perm_calls_title">Calls</string>
@@ -244,7 +248,7 @@
     <string name="permission_support_desc">We need phone permissions to generate your support ID</string>
     <string name="nav_sim_permission">Grant SIM permission</string>
     <string name="perm_dialoghead">One last thing…</string>
-    <string name="perm_dialogbody">Stax needs 2 permissions to %1$s.</string>
+    <string name="perm_dialogbody">To %1$s please allow Stax to show an overlay.</string>
     <string name="use_ussd">use USSD</string>
     <string name="buy_airtime">buy airtime</string>
     <string name="check_balance">check balance</string>
@@ -252,9 +256,10 @@
     <string name="send_money">send money</string>
     <string name="send_money_to">send money to</string>
     <string name="move_money">move money</string>
-    <string name="perm_accessibiltiy_dialogbody">Stax needs accessibility permission to %1$s</string>
-    <string name="perm_progress1">Step 1 of 2: Display permission</string>
+    <string name="perm_accessibiltiy_dialogbody">To %1$s please allow Stax to use Accessibility Services.</string>
+    <string name="perm_progress1">Step 1 of 2: Overlay permission</string>
     <string name="perm_progress2">Step 2 of 2: Accessibility permission</string>
+    <string name="perm_progress_no_steps">Please grant accessibility permission</string>
     <string name="perm_cta1">Show settings</string>
     <string name="perm_cta2">Show settings again</string>
 
