@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 class GetBonusesUseCase(repository: BonusRepository) {
 
-    val bonusList: Flow<List<Bonus>> = repository.bonusList
+    val bonusList: Flow<List<Bonus>> = repository.collectBonusList
 
 }
 

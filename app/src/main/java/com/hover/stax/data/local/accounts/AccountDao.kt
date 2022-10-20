@@ -17,6 +17,9 @@ interface AccountDao {
     @Query("SELECT * FROM accounts WHERE sim_subscription_id IN (:sim_subscriptionIds)")
     fun getAccountsBySubscribedSim(sim_subscriptionIds: IntArray): Flow<List<Account>>
 
+    @Query("SELECT * FROM accounts WHERE institution_type = 'telecom' AND sim_subscription_id = (:subscriptionId)")
+    fun getAccountBySim(subscriptionId: Int): Account?
+
     @Query("SELECT * FROM accounts WHERE channelId = :channelId AND institution_type != 'telecom' ORDER BY alias ASC")
     fun getAccountsByChannel(channelId: Int): List<Account>
 
@@ -31,9 +34,6 @@ interface AccountDao {
 
     @Query("SELECT * FROM accounts where id = :id")
     fun getAccount(id: Int): Account?
-
-    @Query("SELECT * FROM accounts where name = :name")
-    fun getAccount(name: String): Account?
 
     @Query("SELECT * FROM accounts where id = :id")
     fun getLiveAccount(id: Int?): LiveData<Account>

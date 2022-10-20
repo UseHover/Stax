@@ -3,6 +3,7 @@ package com.hover.stax.channels
 import android.content.Context
 import androidx.work.*
 import com.hover.stax.R
+import com.hover.stax.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit
 class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
 
     private val client = OkHttpClient()
+    private val channelDao = AppDatabase.getInstance(context).channelDao()
 
     override fun doWork(): Result {
         Timber.e("Updating channels")
@@ -25,7 +27,7 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
                 val channelsJson = downloadChannels(url)
                 if (channelsJson != null) {
                     val data: JSONArray = channelsJson.getJSONArray("data")
-                    ChannelUtil.updateChannels(data, applicationContext)
+                    Channel.load(data, channelDao, applicationContext)
                     Timber.e("Successfully Updated channels")
                     Result.success()
                 } else {

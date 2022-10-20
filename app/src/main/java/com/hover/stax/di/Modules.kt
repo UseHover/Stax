@@ -18,13 +18,10 @@ import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.*
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.repository.*
-import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
-import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
-import com.hover.stax.domain.use_case.accounts.SetDefaultAccountUseCase
-import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
+import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
+import com.hover.stax.domain.use_case.sims.ListSimsUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.faq.FaqViewModel
@@ -48,7 +45,7 @@ import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.presentation.sim.SimViewModel
+import com.hover.stax.presentation.sims.SimViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.user.UserRepo
@@ -144,9 +141,8 @@ val repositories = module {
     }
 
     single<BonusRepository> { BonusRepositoryImpl(get(), get()) }
-    single<AccountRepository> { AccountRepositoryImpl(get(), get(), get(), get(named("CoroutineDispatcher"))) }
+    single<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
-    single<SimRepository> { SimRepositoryImpl(get()) }
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
@@ -154,17 +150,17 @@ val repositories = module {
 }
 
 val useCases = module {
+    single(named("CoroutineDispatcher")) {
+        Dispatchers.IO
+    }
+    single { ListSimsUseCase(get(), get(), get(), get(), get(named("CoroutineDispatcher"))) }
+
     factoryOf(::GetBonusesUseCase)
     factoryOf(::RefreshBonusUseCase)
-
-    factoryOf(::GetAccountsUseCase)
-    factoryOf(::SetDefaultAccountUseCase)
-    factoryOf(::CreateAccountsUseCase)
 
     factoryOf(::TipsUseCase)
 
     factoryOf(::GetChannelBountiesUseCase)
-    factoryOf(::GetPresentSimUseCase)
 
     factoryOf(::StaxUserUseCase)
 }

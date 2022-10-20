@@ -15,6 +15,7 @@
 
     <TextView
             android:id="@+id/status_text"
+            android:layout_marginHorizontal="@dimen/margin_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_16"

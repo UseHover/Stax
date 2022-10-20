@@ -57,14 +57,15 @@ data class Account(
 
 ) : Comparable<Account> {
 
-    constructor(name: String, channel: Channel, isDefault: Boolean, simSubscriptionId: Int) : this(
-        name, name, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault, simSubscriptionId
+    constructor(name: String) : this(name, name)
+    constructor(name: String, alias: String) : this(
+        name = name, alias = alias, logoUrl = "", accountNo = "", institutionId = -1, institutionType = "", countryAlpha2 = "", channelId = -1, primaryColorHex = "#292E35", secondaryColorHex = "#1E232A"
     )
-
-    constructor(name: String) : this(name, primaryColor = "#292E35")
-
-    constructor(name: String, primaryColor: String) : this(
-            name, alias = name, logoUrl = "", accountNo = "", institutionId = -1, institutionType = "", countryAlpha2 = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
+    constructor(name: String, channel: Channel, isDefault: Boolean, simSubscriptionId: Int) : this(
+        name, name, channel, isDefault, simSubscriptionId
+    )
+    constructor(name: String, alias: String, channel: Channel, isDefault: Boolean, simSubscriptionId: Int) : this(
+        name, alias, channel.logoUrl, "", channel.institutionId, channel.institutionType, channel.countryAlpha2, channel.id, channel.primaryColorHex, channel.secondaryColorHex, isDefault, simSubscriptionId
     )
 
     @PrimaryKey(autoGenerate = true)
@@ -103,15 +104,4 @@ data class Account(
     }
 
     override fun compareTo(other: Account): Int = toString().compareTo(other.toString())
-
-    companion object {
-        fun generateDummy(name: String? = "Dummy account", accountId: Int? = -1) : Account {
-            return Account(name!!).apply {
-                id = accountId!!
-                simSubscriptionId = Random(2).nextInt()
-                latestBalance = "Not yet checked"
-                latestBalanceTimestamp = now()
-            }
-        }
-    }
 }

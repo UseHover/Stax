@@ -25,11 +25,16 @@ class BonusRepositoryImpl(
 		}
 	}
 
-	override val bonusList: Flow<List<Bonus>>
+	override val collectBonusList: Flow<List<Bonus>>
 		get() = channelFlow {
 			val simHniList = simRepo.getPresentSims().map { it.osReportedHni }
-			bonusRepo.bonuses.collect { send(simSupportedBonuses(simHniList, it)) }
+			bonusRepo.collectBonuses.collect { send(simSupportedBonuses(simHniList, it)) }
 		}
+	override suspend fun bonusList(): List<Bonus> {
+		val simHniList = simRepo.getPresentSims().map { it.osReportedHni }
+		val bonuses = bonusRepo.bonuses()
+		return  simSupportedBonuses(simHniList, bonuses)
+	}
 
 	override suspend fun saveBonuses(bonusList: List<Bonus>) {
 		return bonusRepo.save(bonusList)

@@ -1,10 +1,16 @@
 package com.hover.stax.channels;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.hover.stax.R;
+import com.hover.stax.data.local.channels.ChannelDao;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,11 +83,21 @@ public class Channel implements Comparable<Channel> {
         this.name = addChannel;
     }
 
-    public Channel(JSONObject jsonObject, String rootUrl) {
-        update(jsonObject, rootUrl);
+    public Channel(JSONObject jsonObject, Context context) {
+        update(jsonObject, context);
     }
 
-    Channel update(JSONObject jsonObject, String rootUrl) {
+    public static void load(JSONArray data, ChannelDao channelDao, Context context) {
+        for (int j = 0; j < data.length(); j++) {
+            Channel channel = channelDao.getChannel(data.optJSONObject(j).optJSONObject("attributes").optInt("id"));
+            if (channel == null) {
+                channel = new Channel(data.optJSONObject(j).optJSONObject("attributes"), context);
+                channelDao.insert(channel);
+            } else channelDao.update(channel.update(data.optJSONObject(j).optJSONObject("attributes"), context));
+        }
+    }
+
+    Channel update(JSONObject jsonObject, Context context) {
         try {
             id = jsonObject.getInt("id");
             name = jsonObject.getString("name");
@@ -90,7 +106,7 @@ public class Channel implements Comparable<Channel> {
             currency = jsonObject.getString("currency");
             hniList = jsonObject.getString("hni_list");
             published = jsonObject.getBoolean("published");
-            logoUrl = rootUrl + jsonObject.getString("logo_url");
+            logoUrl = context.getString(R.string.root_url) + jsonObject.getString("logo_url");
             institutionId = jsonObject.getInt("institution_id");
             primaryColorHex = jsonObject.getString("primary_color_hex");
             secondaryColorHex = jsonObject.getString("secondary_color_hex");
