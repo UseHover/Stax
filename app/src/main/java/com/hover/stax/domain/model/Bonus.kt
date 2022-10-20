@@ -19,7 +19,7 @@ data class Bonus(
     val purchaseChannel: Int,
 
     @ColumnInfo(name = "bonus_percent")
-    val bonusPercent: Double = 0.toDouble(),
+    val bonusPercent: Double,
 
     val message: String,
 
