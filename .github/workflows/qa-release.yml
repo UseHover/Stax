@@ -48,7 +48,7 @@ jobs:
       # Run the assembleRelease gradle command to start the build process for our buildVariant
       - name: Assemble QA Bundle
         id: buildBundle
-        uses: eskatos/gradle-command-action@v2.3.2
+        uses: gradle/gradle-command-action@v2.3.2
         with:
           # Can be overridden with the desired gradle version
           gradle-version: 7.3.3
