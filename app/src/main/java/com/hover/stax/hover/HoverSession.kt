@@ -83,7 +83,7 @@ class HoverSession private constructor(b: Builder) {
         val action: HoverAction
         val extras: JSONObject
         var requestCode: Int
-        var finalScreenTime = 4000
+        var finalScreenTime = 0
 
         constructor(a: HoverAction?, c: Account, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
             fragment = frag
