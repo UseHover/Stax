@@ -33,8 +33,6 @@ import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
 
-private fun hasGratedSimPermission(context: Context) = PermissionUtils.hasContactPermission(context) && PermissionUtils.hasSmsPermission(context)
-
 @Composable
 fun SimScreen(
     refreshBalance: (Account) -> Unit,
@@ -60,14 +58,15 @@ fun SimScreen(
                         .padding(horizontal = dimensionResource(id = R.dimen.margin_13))
                         .then(paddingModifier)
                 ) {
-                    if (simViewModel.loading) {
-                        item {
-                            NoticeText(stringRes = R.string.loading)
-                        }
-                    } else if (sims.isEmpty()) {
-                        item {
-                            if (hasGratedSimPermission(context)) NoticeText(stringRes = R.string.simpage_empty_sims)
-                            else ShowGrantPermissionContent()
+                    if (sims.isEmpty()) {
+                        if (PermissionUtils.hasPhonePermission(context)) {
+                            item {
+                                NoticeText(stringRes = R.string.loading)
+                            }
+                        } else {
+                            item {
+                                ShowGrantPermissionContent()
+                            }
                         }
                     } else {
                         val comparator = Comparator { s1: SimWithAccount, s2: SimWithAccount ->
