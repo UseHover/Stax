@@ -69,6 +69,10 @@ object PermissionUtils {
         return Build.VERSION.SDK_INT < 23 || has(arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS), c)
     }
 
+    fun hasPhonePermission(c: Context?): Boolean {
+        return Build.VERSION.SDK_INT < 23 || has(arrayOf(Manifest.permission.READ_PHONE_STATE), c)
+    }
+
     fun showInformativeBasicPermissionDialog(permissionMessage: Int, posListener: View.OnClickListener?, negListener: View.OnClickListener?, activity: Activity) {
         logAnalyticsEvent(activity.getString(R.string.perms_basic_dialog), activity)
         if (permissionMessage > 0) {

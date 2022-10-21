@@ -21,7 +21,6 @@ class SimViewModel(private val listSimsUseCase: ListSimsUseCase, val application
 
     private val _sims = MutableStateFlow<List<SimWithAccount>>(emptyList())
     val sims = _sims.asStateFlow()
-    var loading = true
     private var simReceiver: BroadcastReceiver? = null
 
     init {
@@ -47,6 +46,5 @@ class SimViewModel(private val listSimsUseCase: ListSimsUseCase, val application
     private fun fetchSims() = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("Loading sims")
         _sims.update { listSimsUseCase() }
-        loading = false
     }
 }
