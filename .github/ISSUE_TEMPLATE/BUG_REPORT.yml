@@ -2,11 +2,32 @@ name: Bug Report
 description: File a bug report
 title: "[Bug]: "
 labels: ["bug", "triage"]
+
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report to help us improve Stax! Please fill in all fields to the best of your ability.
+  - type: dropdown
+    id: Severity
+    attributes:
+      label: What is the severity of the bug?
+      options:
+      - Minor
+      - Major
+      - Crush
+    validations:
+      required: true
+      
+- type: dropdown
+    id: Priority
+    attributes:
+      label: What is the priority?
+      options:
+      - Low
+      - High
+    validations:
+      required: true
   - type: textarea
     id: description
     attributes:
