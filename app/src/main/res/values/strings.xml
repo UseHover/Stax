@@ -575,6 +575,14 @@
     <string name="logout">Logout</string>
     <string name="logged_in_as">Logged in as %1$s</string>
 
+    <string name="appinfo_cardhead">App info</string>
+    <string name="appinfo_desc">Show app information</string>
+    <string name="appinfo_desc2">Device id, app and config version</string>
+    <string name="device_id_info">Device ID: %1$s</string>
+    <string name="app_version_info">App version: %1$s</string>
+    <string name="config_info">Config version: %1$s</string>
+    <string name="version_code_info">Version code: %1$s</string>
+
     <!-- System auth check -->
     <string name="auth_title">Authenticate with Stax</string>
     <string name="auth_descrip">Authenticate with your fingerprint</string>
