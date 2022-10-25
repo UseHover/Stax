@@ -1,14 +1,15 @@
-name: Bug Report
+name: Bug report
 description: File a bug report
 title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
   - type: markdown
+    id: welcome
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report to help us improve Stax! Please fill in all fields to the best of your ability.
   - type: dropdown
-    id: Severity
+    id: severity
     attributes:
       label: What is the severity of the bug?
       options:
