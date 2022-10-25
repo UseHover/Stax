@@ -15,7 +15,7 @@ body:
       options:
       - Minor
       - Major
-      - Crush
+      - Crash
     validations:
       required: true
       
@@ -24,8 +24,11 @@ body:
     attributes:
       label: What is the priority?
       options:
-      - Low
-      - High
+      - P0 (Urgent)
+      - P1 (High)
+      - P2 (Medium)
+      - P3 (Low)
+      - P4 (Wishlist)
     validations:
       required: true
   - type: textarea
@@ -71,6 +74,14 @@ body:
       label: Android OS
       description: What version of Android OS are you using?
       placeholder: ex. 8.1.0
+  - type: input
+    id: app_version
+    attributes:
+      label: App version
+      description: What version of Stax are you using? This can be found at the bottom of your Settings screen.
+      placeholder: ex. 1.15.0
+    validations:
+      required: true
   - type: dropdown
     id: sim
     attributes:
