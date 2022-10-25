@@ -34,6 +34,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
 
         setupNavigation()
         navigateNextScreen()
+        setGoogleLoginInterface(this)
     }
 
     private fun setupNavigation() {
@@ -45,7 +46,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
 
     private fun navigateNextScreen() {
         if (hasPassedOnboarding()) checkPermissionsAndNavigate()
-        else NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalInteractiveOnboardingVariant())
+        else NavUtil.navigate(navController, OnboardingNavigationDirections.toWelcomeFragment())
     }
 
     fun checkPermissionsAndNavigate() {

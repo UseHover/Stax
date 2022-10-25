@@ -1,6 +1,7 @@
 package com.hover.stax.transactionDetails
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -73,13 +76,29 @@ class TransactionDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         startObservers()
         setListeners()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+    }
+
+    private val backPressedCallback = object: OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            handleBackNavigation()
+        }
     }
 
     private fun setListeners() {
-        binding.transactionDetailsCard.setOnClickIcon { findNavController().popBackStack() }
+        binding.transactionDetailsCard.setOnClickIcon { handleBackNavigation() }
+
         binding.transactionHeader.viewLogText.setOnClickListener { showUSSDLog() }
         with(binding.details.detailsStaxUuid.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
         with(binding.details.confirmCodeCopy.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
+    }
+
+    private fun handleBackNavigation(){
+        val isBounty = viewModel.transaction.value?.isRecorded ?: false
+
+        if (isBounty) findNavController().popBackStack()
+        else NavUtil.navigate(findNavController(), TransactionDetailsFragmentDirections.actionTxnDetailsFragmentToNavigationHistory())
     }
 
     private fun showUSSDLog() {
@@ -93,7 +112,7 @@ class TransactionDetailsFragment : Fragment() {
                 t?.let { Timber.e("Updating transaction messages ${t.uuid}") }
             }
         }
-        
+
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
         contact.observe(viewLifecycleOwner) { updateRecipient(it) }
@@ -104,7 +123,7 @@ class TransactionDetailsFragment : Fragment() {
         bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
 
 
-        val observer = object: Observer<Boolean> {
+        val observer = object : Observer<Boolean> {
             override fun onChanged(t: Boolean?) {
                 Timber.i("Expecting sms $t")
                 action.value?.let { a -> updateAction(a) }
@@ -131,21 +150,22 @@ class TransactionDetailsFragment : Fragment() {
     private fun updateHeader(transaction: StaxTransaction) = with(binding.transactionHeader) {
         binding.transactionDetailsCard.setTitle(HoverAction.getHumanFriendlyType(requireContext(), transaction.transaction_type))
         if (shouldShowNewBalance(transaction)) {
-            mainMessage.text = getString(R.string.new_balance, transaction.displayBalance)
+            mainMessage.text = getString(R.string.new_balance, "", transaction.displayBalance)
         }
         statusText.text = transaction.title(requireContext())
+        if (statusText.text.toString().length > 9) { statusText.gravity = Gravity.START }
         statusIcon.setImageResource(transaction.getIcon())
     }
 
     private fun shouldShowNewBalance(transaction: StaxTransaction): Boolean {
-        return !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
+        return !transaction.balance.isNullOrEmpty() && transaction.isSuccessful && transaction.transaction_type != HoverAction.BALANCE
     }
 
     private fun updateDetails(transaction: StaxTransaction) = with(binding.details) {
         detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
         typeValue.text = transaction.toString(requireContext())
         viewModel.action.value?.let {
-            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, requireContext())
+            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, "", requireContext())
         }
 
         statusValue.apply {
@@ -156,7 +176,7 @@ class TransactionDetailsFragment : Fragment() {
         recipientValue.setTitle(transaction.counterpartyNo)
         amountValue.text = transaction.getSignedAmount(transaction.amount)
         transaction.fee?.let { binding.details.feeValue.text = Utils.formatAmount(it.toString()) }
-        newBalanceValue.text = Utils.formatAmount(transaction.balance.toString())
+        newBalanceValue.text = Utils.formatAmount(transaction.balance)
         recipientLabel.text = getString(transaction.getRecipientLabel())
         confirmCodeCopy.content.text = transaction.confirm_code
         detailsStaxUuid.content.text = transaction.uuid
@@ -166,10 +186,9 @@ class TransactionDetailsFragment : Fragment() {
         transaction.transaction_type
         binding.transactionHeader.mainMessage.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
         binding.statusInfo.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
-//        binding.statusInfo.failureInfo.visibility = if (transaction.isSuccessful) GONE else VISIBLE //TODO root visibility is gone, test impact of this
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
-        binding.details.paidWithRow.visibility = if (transaction.isRecorded) GONE else VISIBLE
+        binding.details.paidWithRow.visibility = if (transaction.isRecorded || transaction.amount == null) GONE else VISIBLE
         if (transaction.isRecorded) binding.details.recipInstitutionRow.visibility = GONE
         binding.details.amountRow.visibility = if (transaction.amount != null) VISIBLE else GONE
         binding.details.feeRow.visibility = if (transaction.fee == null) GONE else VISIBLE
@@ -185,7 +204,7 @@ class TransactionDetailsFragment : Fragment() {
         viewModel.transaction.value?.let {
             val msg = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
             binding.statusInfo.longDescription.text = HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            binding.details.categoryValue.text = it.shortStatusExplain(action, requireContext())
+            binding.details.categoryValue.text = it.shortStatusExplain(action,"", requireContext())
             if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
         }

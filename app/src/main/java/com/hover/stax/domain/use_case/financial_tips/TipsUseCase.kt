@@ -1,11 +1,10 @@
 package com.hover.stax.domain.use_case.financial_tips
 
-import androidx.compose.runtime.mutableStateOf
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.FinancialTipsRepository
-import kotlinx.coroutines.flow.*
-import timber.log.Timber
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TipsUseCase(private val financialTipsRepository: FinancialTipsRepository) {
 
@@ -21,6 +20,7 @@ class TipsUseCase(private val financialTipsRepository: FinancialTipsRepository) 
     }
 
     fun getDismissedTipId() : String? = financialTipsRepository.getDismissedTipId()
+
     fun dismissTip(id: String) {
         financialTipsRepository.dismissTip(id)
     }

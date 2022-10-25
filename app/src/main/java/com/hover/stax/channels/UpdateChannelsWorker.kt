@@ -3,6 +3,7 @@ package com.hover.stax.channels
 import android.content.Context
 import androidx.work.*
 import com.hover.stax.R
+import com.hover.stax.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -15,20 +16,24 @@ import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class UpdateChannelsWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
 
     private val client = OkHttpClient()
+    private val channelDao = AppDatabase.getInstance(context).channelDao()
 
-    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-            try {
+    override fun doWork(): Result {
+        Timber.e("Updating channels")
+        return try {
                 val channelsJson = downloadChannels(url)
-                channelsJson?.let {
-                    val data: JSONArray = it.getJSONArray("data")
-                    ChannelUtil.updateChannels(data, applicationContext)
+                if (channelsJson != null) {
+                    val data: JSONArray = channelsJson.getJSONArray("data")
+                    Channel.load(data, channelDao, applicationContext)
+                    Timber.e("Successfully Updated channels")
                     Result.success()
+                } else {
+                    Timber.e("Failed to update channels")
+                    Result.failure()
                 }
-
-                Result.failure()
             } catch (e: JSONException) {
                 Result.failure()
             } catch (e: NullPointerException) {
@@ -38,7 +43,7 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Corouti
             }
     }
 
-    private val url get() = applicationContext.getString(R.string.api_url).plus(applicationContext.getString(R.string.channels_endpoint))
+    private val url get() = applicationContext.getString(R.string.maathai_api_url).plus(applicationContext.getString(R.string.channels_endpoint))
 
     private fun downloadChannels(url: String): JSONObject? {
         val request: Request = Request.Builder().url(url).build()

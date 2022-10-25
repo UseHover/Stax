@@ -51,21 +51,12 @@
 
 
         <include
+            android:id="@+id/appInfoCard"
+            layout="@layout/settings_app_details_card" />
+
+        <include
                 android:id="@+id/accountCard"
                 layout="@layout/settings_account_card" />
-
-
-        <TextView
-                android:id="@+id/stax_and_device_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_13"
-                android:layout_marginTop="@dimen/margin_13"
-                android:layout_marginBottom="@dimen/margin_13"
-                android:lineSpacingExtra="2sp"
-                android:text="@string/disclaimer"
-                android:textColor="@color/darkGrey"
-                android:textSize="@dimen/text_13" />
 
         <TextView
                 android:id="@+id/disclaimer"

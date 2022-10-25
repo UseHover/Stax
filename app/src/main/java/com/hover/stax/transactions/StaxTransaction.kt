@@ -2,7 +2,6 @@ package com.hover.stax.transactions
 
 import android.content.Context
 import com.hover.stax.utils.DateUtils.now
-import com.hover.stax.utils.Utils.getAmount
 import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
 import android.content.Intent
@@ -49,7 +48,6 @@ data class StaxTransaction(
 
 	@ColumnInfo(name = "updated_at", defaultValue = "CURRENT_TIMESTAMP")
 	var updated_at: Long,
-
 ) : Comparable<StaxTransaction>, TransactionUiDelegate {
 
 	@PrimaryKey(autoGenerate = true)
@@ -126,8 +124,8 @@ data class StaxTransaction(
 	private fun parseExtras(extras: HashMap<String, String>?) {
 		if (extras == null) return
 		Timber.e("Extras %s", extras.keys)
-		if (extras.containsKey(HoverAction.AMOUNT_KEY)) amount = getAmount(extras[HoverAction.AMOUNT_KEY]!!)
-		if (extras.containsKey(FEE_KEY)) fee = getAmount(extras[FEE_KEY]!!)
+		if (extras.containsKey(HoverAction.AMOUNT_KEY)) amount = Utils.amountToDouble(extras[HoverAction.AMOUNT_KEY]!!)
+		if (extras.containsKey(FEE_KEY)) fee =  Utils.amountToDouble(extras[FEE_KEY]!!)
 		if (extras.containsKey(CONFIRM_CODE_KEY)) confirm_code = extras[CONFIRM_CODE_KEY]
 		if (extras.containsKey(HoverAction.BALANCE)) balance = extras[HoverAction.BALANCE]
 		if (extras.containsKey(ACCOUNT_ID)) accountId = extras[ACCOUNT_ID]!!.toInt()

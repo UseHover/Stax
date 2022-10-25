@@ -9,11 +9,10 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.ActivityMainBinding
-import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.requests.RequestSenderInterface
@@ -33,7 +32,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     private val transferViewModel: TransferViewModel by viewModel()
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
-    private val bonusViewModel: BonusViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -50,8 +48,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         checkForFragmentDirection(intent)
         observeForAppReview()
         setGoogleLoginInterface(this)
-
-        bonusViewModel.fetchBonuses()
     }
 
     override fun onNewIntent(intent: Intent?) {

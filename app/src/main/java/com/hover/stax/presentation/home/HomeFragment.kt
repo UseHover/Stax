@@ -12,7 +12,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
@@ -21,7 +20,6 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener {
@@ -29,7 +27,6 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val bonusViewModel: BonusViewModel by sharedViewModel()
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
@@ -58,6 +55,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
         fun onClickedAddNewAccount() = (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
         fun onClickedTermsAndConditions() = Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
         fun onClickedSettingsIcon() = navigateTo(HomeFragmentDirections.toSettingsFragment())
+        fun onClickedRewards() = navigateTo(HomeFragmentDirections.actionGlobalRewardsFragment())
 
         return HomeClickFunctions(
             onSendMoneyClicked = { onSendMoneyClicked() },
@@ -67,7 +65,8 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
             onRequestMoneyClicked = { onRequestMoneyClicked() },
             onClickedAddNewAccount = { onClickedAddNewAccount() },
             onClickedTC = { onClickedTermsAndConditions() },
-            onClickedSettingsIcon = { onClickedSettingsIcon() }
+            onClickedSettingsIcon = { onClickedSettingsIcon() },
+            onClickedRewards = { onClickedRewards() }
         )
     }
 
@@ -79,14 +78,16 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
                 homeClickFunctions = getHomeClickFunctions(),
                 tipInterface = this@HomeFragment,
                 balanceTapListener = this@HomeFragment,
-                homeViewModel = homeViewModel
+                homeViewModel = homeViewModel,
+                navTo = { dest -> navigateTo(dest) }
             )
         }
     }
 
     private fun observeForBonus() {
         collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            navigateTo(getTransferDirection(HoverAction.AIRTIME, bonusViewModel.bonusList.value.bonuses.first().userChannel.toString()))
+            if ( homeViewModel.homeState.value.bonuses.isNotEmpty())
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.homeState.value.bonuses.first().userChannel.toString()))
         }
     }
 
@@ -127,15 +128,15 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 
+    private fun navigateTo(dest: Int) = findNavController().navigate(dest)
+
     override fun onTipClicked(tipId: String?) {
-        NavUtil.navigate(findNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tipId))
+        val destination = HomeFragmentDirections.actionNavigationHomeToWellnessFragment().apply { setTipId(tipId) }
+        NavUtil.navigate(findNavController(), destination)
     }
 
     override fun onTapBalanceRefresh(account: Account?) {
-        if (account != null) {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
-            balancesViewModel.requestBalance(account)
-        }
+        balancesViewModel.requestBalance(account)
     }
 
     override fun onTapBalanceDetail(accountId: Int) {

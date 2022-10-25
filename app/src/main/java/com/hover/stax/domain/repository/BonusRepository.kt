@@ -6,15 +6,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface BonusRepository {
 
-    suspend fun fetchBonuses()
+    suspend fun refreshBonuses()
 
-    val bonusList: Flow<List<Bonus>>
+    val collectBonusList: Flow<List<Bonus>>
+    suspend fun bonusList(): List<Bonus>
 
     suspend fun saveBonuses(bonusList: List<Bonus>)
-
-    suspend fun getBonusChannels(bonusList: List<Bonus>): List<Channel>
-
-    suspend fun getBonusByPurchaseChannel(channelId: Int): Bonus?
 
     suspend fun getBonusByUserChannel(channelId: Int): Bonus?
 }

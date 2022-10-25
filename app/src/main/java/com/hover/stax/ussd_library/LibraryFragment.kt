@@ -13,16 +13,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
-import com.hover.stax.presentation.home.TopBar
+import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.transactions.TransactionHistoryFragmentDirections
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.RequestServiceDialog
@@ -64,23 +66,17 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
 
     private fun initToolbar() {
         binding.toolbar.setContent {
-            StaxTheme { Toolbar() }
+            StaxTheme { TopBar(title = R.string.library_cardhead) { dest -> navigateTo(dest) } }
         }
     }
 
-    @Composable
-    private fun Toolbar() {
-        val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-        TopBar(title = R.string.library_cardhead, isInternetConnected = hasNetwork) {
-            findNavController().navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings())
-        }
-    }
+    private fun navigateTo(dest: Int) = findNavController().navigate(dest)
 
     private fun setObservers() {
         with(viewModel) {
             channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
-            sims.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} sims") }
-            simCountryList.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} hnis") }
+            sims.observe(viewLifecycleOwner) { Timber.e("${this@LibraryFragment.javaClass.simpleName} Loaded ${it?.size} sims") }
+            simCountryList.observe(viewLifecycleOwner) { Timber.e("${this@LibraryFragment.javaClass.simpleName} Loaded ${it?.size} hnis") }
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
             countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
         }

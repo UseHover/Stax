@@ -8,6 +8,9 @@ import com.hover.stax.R
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.data.local.bonus.BonusRepo
+import com.hover.stax.domain.model.BonusList
+import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.requests.Request
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.ScheduleRepo
@@ -16,19 +19,29 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 const val STAX_PREFIX = "stax_airtime_prefix"
 private const val KE_PREFIX = "0"
 
-class TransferViewModel(application: Application, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+class TransferViewModel(application: Application, private val getBonusesUseCase: GetBonusesUseCase, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+
+    private val _bonusList = MutableStateFlow(BonusList())
+    val bonusList = _bonusList.asStateFlow()
 
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
 
     val isLoading = MutableLiveData(false)
+
+    init {
+    	collectBonusList()
+    }
 
     fun setAmount(a: String?) = amount.postValue(a)
 
@@ -111,6 +124,12 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
                 sc.lastUsedTimestamp = DateUtils.now()
                 contactRepo.save(sc)
             }
+        }
+    }
+
+    private fun collectBonusList() = viewModelScope.launch(Dispatchers.IO) {
+        getBonusesUseCase.bonusList.collect { items ->
+            _bonusList.update { _bonusList.value.copy(bonuses = items) }
         }
     }
 

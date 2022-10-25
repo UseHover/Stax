@@ -491,8 +491,6 @@
 
     <string name="language_cardhead">ቋንቋ</string>
 
-    <string name="app_version_and_device_id">የመተግበሪያ ስሪት ፦ %1$s የስሪት ኮድ ፦ %2$s የመሣሪያ መታወቂያ ፦ %3$s</string>
-
     <string name="disclaimer">ሁሉም የምርት ስሞች ፣ የምርት ስሞች እና የንግድ ምልክቶች የየባለቤቶቻቸው ንብረት ናቸው። አጠቃቀም ቁርኝት አያመለክትም።</string>
 
     <string name="twitter" translatable="false">Twitter</string>

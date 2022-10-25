@@ -12,16 +12,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
+import com.hover.stax.data.remote.dto.UpdateDto
+import com.hover.stax.data.remote.dto.UploadDto
+import com.hover.stax.data.remote.dto.UserUpdateDto
+import com.hover.stax.data.remote.dto.UserUploadDto
+import com.hover.stax.domain.model.Resource
+import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.user.StaxUser
-import com.hover.stax.user.UserRepo
 import com.hover.stax.utils.AnalyticsUtil
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import timber.log.Timber
-import java.io.IOException
 
-class LoginViewModel(application: Application, private val userRepo: UserRepo, private val loginNetworking: LoginNetworking) : AndroidViewModel(application) {
+class LoginViewModel(application: Application, private val staxUserUseCase: StaxUserUseCase) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient
 
@@ -32,14 +36,12 @@ class LoginViewModel(application: Application, private val userRepo: UserRepo, p
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
 
-    val postGoogleAuthNav = MutableLiveData<Int>()
-
     init {
         getUser()
     }
 
     private fun getUser() = viewModelScope.launch {
-        userRepo.user.collect { staxUser.postValue(it) }
+        staxUserUseCase.user.collect { staxUser.value = it }
     }
 
     fun signIntoGoogle(data: Intent?) {
@@ -54,104 +56,52 @@ class LoginViewModel(application: Application, private val userRepo: UserRepo, p
         }
     }
 
-    private fun uploadUserToStax(email: String?, username: String?, token: String?) {
+    private fun uploadUserToStax(email: String, username: String, token: String) {
         if (staxUser.value == null) {
             Timber.e("Uploading user to stax")
-            progress.value = 66
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    val userJson = JSONObject()
-                        .apply {
-                            put("email", email)
-                            put("username", username)
-                            put("device_id", Hover.getDeviceId(getApplication()))
-                            put("token", token)
-                        }
 
-                    val result = loginNetworking.uploadUserToStax(userJson)
-                    Timber.e("Uploading user to stax came back: ${result.code}")
+            val userDto = UploadDto(Hover.getDeviceId(getApplication()), email, username, token)
+            val requestDto = UserUploadDto(userDto)
 
-                    if (result.code in 200..299) {
-                        Timber.e(result.body.toString())
-                        onSuccess(
-                            JSONObject(result.body!!.string())
-                        )
-                    } else onError(getString(R.string.upload_user_error))
-                } catch (e: IOException) {
-                    onError((getApplication() as Context).getString(R.string.upload_user_error))
+            staxUserUseCase.uploadUser(requestDto).onEach { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        Timber.d("User uploaded to stax successfully ${result.data?.id}")
+                        progress.postValue(100)
+                    }
+                    is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
+                    is Resource.Loading -> progress.value = 66
                 }
-            }
+            }.launchIn(viewModelScope)
         }
     }
 
     fun uploadLastUser() {
         val account = GoogleSignIn.getLastSignedInAccount(getApplication())
-        if (account != null) uploadUserToStax(account.email, account.displayName!!, account.idToken)
+        if (account != null) uploadUserToStax(account.email!!, account.displayName!!, account.idToken!!)
         else Timber.e("No account found")
     }
 
-    fun joinMappers() {
-        updateUser(JSONObject().apply {
-            put("is_mapper", true)
-        })
-    }
+    fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { updateUser(UserUpdateDto(UpdateDto(marketingOptedIn = optIn, email = it))) }
 
-    fun optInMarketing(optIn: Boolean) {
-        updateUser(JSONObject().apply {
-            put("marketing_opted_in", optIn)
-        })
-    }
-
-    private fun updateUser(data: JSONObject) = viewModelScope.launch(Dispatchers.IO) {
-        progress.postValue(50)
-        staxUser.value?.email?.let {
-            Timber.e("Email to update: $it")
-            try {
-                val result = loginNetworking.updateUser(it, data.put("email", it))
-                Timber.e("Updating stax user: ${result.code}")
-
-                if (result.code in 200..299) {
-                    val response = result.body!!.string()
-                    Timber.e(response)
-                    onSuccess(JSONObject(response))
-                    progress.postValue(100)
-                } else onError(getString(R.string.upload_user_error), true)
-            } catch (e: IOException) {
-                onError(getString(R.string.upload_user_error), true)
+    private fun updateUser(data: UserUpdateDto) = staxUserUseCase.updateUser(data.staxUser.email, data).onEach { result ->
+        when (result) {
+            is Resource.Success -> {
+                Timber.d("User updated successfully")
+                progress.postValue(100)
             }
+            is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
+            is Resource.Loading -> progress.value = 66
         }
-    }
-
-    private fun onSuccess(json: JSONObject) {
-        Timber.e(json.toString())
-        saveResponseData(json)
-    }
+    }.launchIn(viewModelScope)
 
     private fun setUser(signInAccount: GoogleSignInAccount, idToken: String) {
         Timber.e("setting user: %s", signInAccount.email)
         googleUser.postValue(signInAccount)
 
         progress.value = 33
-        uploadUserToStax(signInAccount.email, signInAccount.displayName, idToken)
-    }
-
-    private fun saveResponseData(json: JSONObject?) = viewModelScope.launch(Dispatchers.IO) {
-        json?.let {
-            val attributes = it.getJSONObject("data").getJSONObject("attributes")
-            with(attributes) {
-                val user = StaxUser(
-                    getInt("id"),
-                    getString("username"),
-                    getString("email"),
-                    getBoolean("is_mapper"),
-                    getBoolean("marketing_opted_in"),
-                    getInt("transaction_count"),
-                    getInt("bounty_total")
-                )
-
-                userRepo.saveUser(user)
-            }
-        }
+        if (signInAccount.email != null && signInAccount.displayName != null)
+            uploadUserToStax(signInAccount.email!!, signInAccount.displayName!!, idToken)
     }
 
     fun userIsNotSet(): Boolean = staxUser.value == null
@@ -182,8 +132,8 @@ class LoginViewModel(application: Application, private val userRepo: UserRepo, p
         progress.postValue(-1)
     }
 
-    private fun removeUser() = viewModelScope.launch(Dispatchers.IO) {
-        staxUser.value?.let { userRepo.deleteUser(it) }
+    private fun removeUser() = viewModelScope.launch {
+        staxUser.value?.let { staxUserUseCase.deleteUser(it) }
     }
 
     private fun getString(id: Int): String {

@@ -7,26 +7,18 @@ import com.hover.sdk.sims.SimInfoDao
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.AppDatabase
 
-class ChannelRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
+class ChannelRepo(db: AppDatabase) {
 
-    private val simDao: SimInfoDao = sdkDb.simDao()
     private val channelDao: ChannelDao = db.channelDao()
 
-    // SIMs
-    val presentSims: List<SimInfo>
-        get() = simDao.present
+    val publishedNonTelecomChannels: LiveData<List<Channel>> = channelDao.publishedNonTelecomChannels
+    suspend fun getTelecom(hni: String) : Channel? = channelDao.getTelecom(hni)
 
-    val publishedChannels: LiveData<List<Channel>> = channelDao.publishedChannels
+    fun getChannel(id: Int): Channel? { return channelDao.getChannel(id) }
 
-    val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
+    fun getLiveChannel(id: Int): LiveData<Channel> { return channelDao.getLiveChannel(id) }
 
-    fun getChannel(id: Int): Channel? {
-        return channelDao.getChannel(id)
-    }
-
-    fun getLiveChannel(id: Int): LiveData<Channel> {
-        return channelDao.getLiveChannel(id)
-    }
+    suspend fun getChannelByInstitution(institutionId : Int) : Channel? = channelDao.getChannelByInstitution(institutionId)
 
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 

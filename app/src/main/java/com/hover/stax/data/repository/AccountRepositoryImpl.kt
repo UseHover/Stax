@@ -3,11 +3,12 @@ package com.hover.stax.data.repository
 import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.ActionApi
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.domain.repository.AccountRepository
@@ -20,46 +21,37 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import timber.log.Timber
 
-class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo, private val coroutineDispatcher: CoroutineDispatcher) : AccountRepository, PushNotificationTopicsInterface, KoinComponent {
+class AccountRepositoryImpl(val accountRepo: AccountRepo, private val channelRepo: ChannelRepo, val actionRepo: ActionRepo) :
+    AccountRepository, PushNotificationTopicsInterface, KoinComponent {
 
     private val context: Context by inject()
 
     override val fetchAccounts: Flow<List<Account>>
         get() = accountRepo.getAccounts()
 
-    override suspend fun createAccounts(channels: List<Channel>): List<Long> {
-        val defaultAccount = accountRepo.getDefaultAccountAsync()
-
-        val accounts = channels.mapIndexed { index, channel ->
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER )//placeholder alias for easier identification later
-            Account(
-                accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0
-            )
-        }.onEach {
-            logChoice(it)
-            ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, context)
+    override suspend fun createAccount(sim: SimInfo): Account {
+        var account = Account(generateSimBasedName(sim), generateSimBasedAlias(sim))
+        channelRepo.getTelecom(sim.osReportedHni)?.let {
+            account = Account(account.name, account.alias, it, false, sim.subscriptionId)
+            accountRepo.insert(account)
         }
-
-        channels.onEach { it.selected = true }.also { channelRepo.update(it) }
-        return accountRepo.insert(accounts)
+        logChoice(account)
+        ActionApi.scheduleActionConfigUpdate(account.countryAlpha2, 24, context)
+        return account
     }
 
-    override suspend fun setDefaultAccount(account: Account) {
-        fetchAccounts.collect { accounts ->
-            val current = accounts.firstOrNull { it.isDefault }?.also {
-                it.isDefault = false
-            }
+    private fun generateSimBasedName(sim: SimInfo): String {
+        return (sim.operatorName ?: sim.networkOperatorName ?: "") + "-" + sim.subscriptionId.toString()
+    }
 
-            val defaultAccount = accounts.first { it.id == account.id }.also { it.isDefault = true }
+    private fun generateSimBasedAlias(sim: SimInfo): String {
+        return sim.operatorName ?: sim.networkOperatorName ?: "Unknown"
+    }
 
-            withContext(coroutineDispatcher) {
-                launch {
-                    accountRepo.update(listOf(current!!, defaultAccount))
-                }
-            }
-        }
+    override suspend fun getAccountBySim(subscriptionId: Int): Account? {
+        return accountRepo.getAccountBySim(subscriptionId)
     }
 
     private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
@@ -73,6 +65,6 @@ class AccountRepositoryImpl(val accountRepo: AccountRepo, val channelRepo: Chann
         } catch (ignored: Exception) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.new_channel_selected), args, context)
+        AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.new_sim_channel), args, context)
     }
 }

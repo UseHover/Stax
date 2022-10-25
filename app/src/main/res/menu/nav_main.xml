@@ -7,6 +7,11 @@
             android:title="@string/nav_home" />
 
     <item
+        android:id="@+id/navigation_sim"
+        android:icon="@drawable/ic_sim_card_24"
+        android:title="@string/nav_sim" />
+
+    <item
             android:id="@+id/navigation_history"
             android:icon="@drawable/ic_baseline_history_24"
             android:title="@string/nav_history" />

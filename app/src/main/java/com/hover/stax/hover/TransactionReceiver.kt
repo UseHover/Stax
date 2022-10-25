@@ -118,16 +118,16 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
     private fun getBizNo(intent: Intent): String? {
         val inExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as java.util.HashMap<String, String>?
-        if (inExtras != null && inExtras.containsKey(BUSINESS_NO))
-            return inExtras[BUSINESS_NO]
-        else return null
+        return if (inExtras != null && inExtras.containsKey(BUSINESS_NO))
+            inExtras[BUSINESS_NO]
+        else null
     }
 
     private fun getBizName(intent: Intent): String? {
         val outExtras = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as java.util.HashMap<String, String>?
-        if (outExtras != null && outExtras.containsKey(BUSINESS_NAME))
-            return outExtras[BUSINESS_NAME]?.replace(".", "") // MPESA adds a gramatically incorrect period which isn't easily fixable with a regex
-        else return null
+        return if (outExtras != null && outExtras.containsKey(BUSINESS_NAME))
+            outExtras[BUSINESS_NAME]?.replace(".", "") // MPESA adds a gramatically incorrect period which isn't easily fixable with a regex
+        else null
     }
 
     private fun updateTransaction(intent: Intent, c: Context) {
@@ -137,10 +137,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private fun updateRequests(intent: Intent) {
         if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.RECEIVE) {
             requestRepo.requests.forEach {
-                if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(
-                        it.amount
-                            ?: "00"
-                    ) == Utils.getAmount(getAmount(intent)!!)
+                if (it.requestee_ids.contains(contact!!.id) && Utils.amountToDouble(it.amount) == Utils.amountToDouble(getAmount(intent)!!)
                 ) {
                     it.matched_transaction_uuid = intent.getStringExtra(TransactionContract.COLUMN_UUID)
                     requestRepo.update(it)
@@ -182,7 +179,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
         val accounts = ArrayList<Account>()
         while (matcher.find()) {
-            val newAccount = Account(matcher.group(1)!!, channel!!)
+            val newAccount = Account(matcher.group(1)!!, channel!!, false, -1) // FIXME: Need to match this with other accounts to get the right SIM?
             accounts.add(newAccount)
         }
 

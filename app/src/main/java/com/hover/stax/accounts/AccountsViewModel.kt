@@ -2,10 +2,7 @@ package com.hover.stax.accounts
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
@@ -77,10 +74,10 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         loadActions(account, type.value!!)
     }
 
-    private fun loadActions(account: Account, t: String) = viewModelScope.launch(Dispatchers.IO) {
+    private fun loadActions(account: Account, type: String) = viewModelScope.launch(Dispatchers.IO) {
         channelActions.postValue(
-            if (t == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
-            else actionRepo.getActions(account.channelId, t)
+            if (type == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
+            else actionRepo.getActions(account.channelId, type)
         )
     }
 

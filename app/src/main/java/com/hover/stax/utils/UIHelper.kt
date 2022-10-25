@@ -72,30 +72,11 @@ object UIHelper {
         return linearLayoutManager
     }
 
-    fun getColor(hex: String?, isBackground: Boolean, c: Context?): Int {
-        return try {
-            Color.parseColor(hex)
-        } catch (e: IllegalArgumentException) {
-            ContextCompat.getColor(c!!, if (isBackground) R.color.offWhite else R.color.brightBlue)
-        }
-    }
-
     fun setFullscreenView(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             activity.window.setDecorFitsSystemWindows(false)
         } else {
             activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
-    }
-
-    fun setTextUnderline(textView: TextView, cs: String?) {
-        val content = SpannableString(cs)
-        content.setSpan(UnderlineSpan(), 0, content.length, 0)
-        content.setSpan(Typeface.BOLD, 0, content.length, 0)
-        try {
-            textView.text = content
-        } catch (e: Exception) {
-            Timber.e(e)
         }
     }
 

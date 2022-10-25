@@ -1,11 +1,14 @@
 package com.hover.stax.transactions
 
 import android.content.Context
+import android.text.Html
+import androidx.core.text.HtmlCompat
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.transactionDetails.UssdCallResponse
 import com.hover.stax.utils.Utils
+import timber.log.Timber
 
 interface TransactionUiDelegate {
     val transaction: StaxTransaction
@@ -49,13 +52,13 @@ interface TransactionUiDelegate {
         return str
     }
 
-    fun shortStatusExplain(action: HoverAction?, c: Context): String {
+    fun shortStatusExplain(action: HoverAction?, institutionName: String, c: Context): String {
         if (transaction.isRecorded) return getRecordedStatusDetail(c)
         return when {
             transaction.status == Transaction.FAILED -> shortFailureMessage(action, c)
-            transaction.status == Transaction.PENDING -> c.getString(R.string.pending_cardhead)
+            transaction.status == Transaction.PENDING -> c.getString(R.string.pending_cardhead_with_isntType, institutionName)
             transaction.status == Transaction.SUCCEEDED && transaction.balance.isNullOrEmpty() -> c.getString(R.string.successful_label)
-            else -> c.getString(R.string.new_balance, transaction.balance)
+            else -> c.getString(R.string.new_balance, institutionName, transaction.balance)
         }
     }
 
@@ -69,11 +72,13 @@ interface TransactionUiDelegate {
     }
 
     private fun getRecordedStatusDetail(c: Context): String {
-        return c.getString(when (transaction.status) {
+        val msg = c.getString(when (transaction.status) {
             Transaction.FAILED -> R.string.bounty_transaction_failed
             Transaction.PENDING -> R.string.bounty_flow_pending_dialog_msg
             else -> R.string.flow_done_desc
         })
+
+        return HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
     }
 
     private fun shortFailureMessage(a: HoverAction?, c: Context): String {
@@ -133,5 +138,5 @@ interface TransactionUiDelegate {
     }
 
     val displayBalance: String
-        get() = Utils.formatAmount(transaction.balance)
+        get() = if (Utils.amountToDouble(transaction.balance) != null) Utils.formatAmount(transaction.balance) else transaction.balance.toString()
 }

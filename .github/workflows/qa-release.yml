@@ -20,7 +20,7 @@ jobs:
 
       # Checkout the repository so that the job can access it
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
 
       # Set up our gradle properties for access by the Android build
@@ -38,22 +38,20 @@ jobs:
 
       # Set up JDK 1.8 for use
       - name: set up JDK 1.8
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          # Specific java version to run
+          # Specify a supported distribution and java version to run
+          distribution: 'zulu'
           java-version: 11
 
 
       # Run the assembleRelease gradle command to start the build process for our buildVariant
       - name: Assemble QA Bundle
         id: buildBundle
-        uses: eskatos/gradle-command-action@v1.3.3
+        uses: gradle/gradle-build-action@v2
         with:
           # Can be overridden with the desired gradle version
           gradle-version: 7.3.3
-          wrapper-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
           # Specifies the gradle command to be run, can be replaced with any desired task
           arguments: bundleRelease
 

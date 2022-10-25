@@ -9,34 +9,29 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
-import com.hover.stax.accounts.AccountsAdapter
-import com.hover.stax.bonus.BonusViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 const val CHANNELS_REFRESHED = "has_refreshed_channels"
@@ -44,7 +39,6 @@ const val CHANNELS_REFRESHED = "has_refreshed_channels"
 class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
-    private val bonusViewModel: BonusViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
@@ -57,12 +51,19 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        refreshChannelsIfRequired()
+        refreshChannels()
+    }
+
+    private fun refreshChannels() {
+        val wm = WorkManager.getInstance(requireContext())
+        wm.beginUniqueWork(
+            UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP,
+            UpdateChannelsWorker.makeWork()
+        ).enqueue()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
-
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
 
@@ -86,37 +87,23 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         setUpCountryChoice()
         setSearchInputWatcher()
 
-        bonusViewModel.getBonusList()
         startObservers()
-
         setFabListener()
     }
 
     private fun startObservers() = with(channelsViewModel) {
-        val channelsObserver = object: Observer<List<Channel>> {
-            override fun onChanged(t: List<Channel>?) {
-                t?.let { loadFilteredChannels(it) }
-            }
-        }
-
-        val simsObserver = object: Observer<List<SimInfo>> {
-            override fun onChanged(t: List<SimInfo>?) {
-                Timber.v("Loaded ${t?.size} sims")
-            }
-        }
-
-        val countryListObserver = object: Observer<List<String>> {
-            override fun onChanged(t: List<String>?) {
-                Timber.v("Loaded ${t?.size} hnis")
-            }
-        }
+        val channelsObserver =
+            Observer<List<Channel>> { t -> t?.let {
+                loadFilteredChannels(it)
+            } }
 
         channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
-        sims.observe(viewLifecycleOwner, simsObserver)
-        simCountryList.observe(viewLifecycleOwner, countryListObserver)
+        sims.observe(viewLifecycleOwner) { Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} sims") }
+        simCountryList.observe(viewLifecycleOwner) {
+            Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} hnis") }
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        filteredChannels.observe(viewLifecycleOwner, channelsObserver)
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
+        filteredChannels.observe(viewLifecycleOwner, channelsObserver)
     }
 
     private fun fillUpChannelLists() {
@@ -184,7 +171,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.channelsListCard.hideProgressIndicator()
 
         if (channels.isNotEmpty()) {
-            updateAdapter(channels.filterNot { it.selected })
+            updateAdapter(channels)
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
             binding.errorText.visibility = GONE
@@ -235,21 +222,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     override fun clickedChannel(channel: Channel) {
         AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
-    }
-
-    //channels will be loaded only once after install then deferred to weekly.
-    private fun refreshChannelsIfRequired() {
-        if (!Utils.getBoolean(CHANNELS_REFRESHED, requireActivity())) {
-            Timber.i("Reloading channels")
-            val wm = WorkManager.getInstance(requireContext())
-            wm.beginUniqueWork(
-                UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP,
-                UpdateChannelsWorker.makeWork()
-            ).enqueue()
-
-            Utils.saveBoolean(CHANNELS_REFRESHED, true, requireActivity())
-            return
-        }
     }
 
     override fun onDestroyView() {

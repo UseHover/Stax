@@ -11,17 +11,17 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.countries.CountryAdapter
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.domain.use_case.channels.GetPresentSimsUseCase
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private val bountiesUseCase: GetChannelBountiesUseCase, val application: Application) : ViewModel() {
+class BountyViewModel(private val simRepo: SimRepo, private val bountiesUseCase: GetChannelBountiesUseCase, val application: Application) : ViewModel() {
 
     private val _countryList = MutableStateFlow<List<String>>(emptyList())
     val countryList = _countryList.asStateFlow()
@@ -47,19 +47,9 @@ class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private va
             }
         }
 
-        loadBountyData()
-    }
-
-    private fun loadBountyData() {
         loadSims()
         loadCountryList()
         loadBounties()
-    }
-
-    private fun loadCountryList() = viewModelScope.launch {
-        bountiesUseCase.getChannelList().collect { codes ->
-            _countryList.update { codes }
-        }
     }
 
     private fun loadSims() {
@@ -73,7 +63,13 @@ class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private va
     }
 
     private fun fetchSims() = viewModelScope.launch(Dispatchers.IO) {
-        _sims.update { simsUseCase.presentSims }
+        _sims.update { simRepo.getPresentSims() }
+    }
+
+    private fun loadCountryList() = viewModelScope.launch {
+        bountiesUseCase.getChannelList().collect { codes ->
+            _countryList.update { codes }
+        }
     }
 
     fun loadBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES) {
@@ -87,10 +83,10 @@ class BountyViewModel(private val simsUseCase: GetPresentSimsUseCase, private va
         }.launchIn(viewModelScope)
     }
 
-    fun isSimPresent(bounty: Bounty): Boolean = simsUseCase.simPresent(bounty, sims.value)
+    fun isSimPresent(bounty: Bounty): Boolean = bountiesUseCase.isSimPresent(bounty, sims.value)
 
-    fun handleBountyEvent(bountySelectEvent: BountySelectEvent) = viewModelScope.launch {
-        onBountySelectEvent.send(bountySelectEvent)
+    fun handleBountyEvent(bountySelectEvent: BountySelectEvent?) = viewModelScope.launch {
+        bountySelectEvent?.let { onBountySelectEvent.send(bountySelectEvent) }
     }
 
     override fun onCleared() {

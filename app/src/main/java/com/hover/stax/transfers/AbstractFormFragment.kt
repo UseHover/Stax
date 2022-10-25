@@ -118,13 +118,8 @@ abstract class AbstractFormFragment : Fragment() {
             .setDialogTitle(R.string.finish_adding_title)
             .setDialogMessage(getString(R.string.finish_adding_desc, account.alias))
             .setNegButton(R.string.btn_cancel, null)
-            .setPosButton(R.string.connect_cta) { onboard(account) }
+            .setPosButton(R.string.connect_cta) { balancesViewModel.requestBalance(account) }
         dialog.showIt()
-    }
-
-    private fun onboard(account: Account) {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
-        balancesViewModel.requestBalance(account)
     }
 
     fun setInputState(hasFocus: Boolean, input: StaxTextInput, errors: String?) {

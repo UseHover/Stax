@@ -7,14 +7,14 @@ class UserRepo(db: AppDatabase) {
 
     private val userDao = db.userDao()
 
-    val user: Flow<StaxUser?> = userDao.getUserAsync()
+    val user: Flow<StaxUser> = userDao.getUserAsync()
 
-    fun saveUser(user: StaxUser) {
+    suspend fun saveUser(user: StaxUser) {
         if (userDao.getUser() == null)
             userDao.insert(user)
         else
             userDao.update(user)
     }
 
-    fun deleteUser(user: StaxUser) = userDao.delete(user)
+    suspend fun deleteUser(user: StaxUser) = userDao.delete(user)
 }

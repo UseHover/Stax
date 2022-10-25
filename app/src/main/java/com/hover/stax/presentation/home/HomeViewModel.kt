@@ -6,17 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.Resource
-import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
-import com.hover.stax.domain.use_case.bonus.FetchBonusUseCase
+import com.hover.stax.domain.repository.AccountRepository
+import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getBonusesUseCase: GetBonusesUseCase,
-    private val fetchBonusUseCase: FetchBonusUseCase,
-    private val getAccountsUseCase: GetAccountsUseCase,
+    private val refreshBonusUseCase: RefreshBonusUseCase,
+    private val accountsRepo: AccountRepository,
     private val tipsUseCase: TipsUseCase
 ) : ViewModel() {
 
@@ -27,7 +28,7 @@ class HomeViewModel(
     val accounts: LiveData<List<Account>> = _accounts
 
     init {
-        fetchBonuses()
+        refreshBonuses()
         fetchData()
     }
 
@@ -38,8 +39,8 @@ class HomeViewModel(
         getDismissedFinancialTips()
     }
 
-    private fun fetchBonuses() = viewModelScope.launch {
-        fetchBonusUseCase()
+    private fun refreshBonuses() = viewModelScope.launch(Dispatchers.IO) {
+        refreshBonusUseCase.invoke()
     }
 
     private fun getBonusList() = viewModelScope.launch {
@@ -49,7 +50,7 @@ class HomeViewModel(
     }
 
     private fun getAccounts() = viewModelScope.launch {
-        getAccountsUseCase.accounts.collect { accounts ->
+        accountsRepo.fetchAccounts.collect { accounts ->
             _homeState.update { it.copy(accounts = accounts) }
             _accounts.postValue(accounts)
         }

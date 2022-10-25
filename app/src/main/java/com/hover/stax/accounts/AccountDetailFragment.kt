@@ -162,7 +162,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
             }
 
-            transactionHistory.observe(viewLifecycleOwner) {
+            transactionHistoryItem.observe(viewLifecycleOwner) {
                 binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
                 transactionsAdapter!!.submitList(it)
             }
@@ -184,10 +184,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun onTapBalanceRefresh(account: Account?) {
-        account?.let {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
-            balancesViewModel.requestBalance(account)
-        }
+        balancesViewModel.requestBalance(account)
     }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {

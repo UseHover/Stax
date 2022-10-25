@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
@@ -18,9 +19,14 @@ import java.text.DecimalFormat
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"
+    private const val SDK_PREFS = "_hoversdk";
 
     private fun getSharedPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE)
+    }
+
+    fun getSdkPrefs(context: Context): SharedPreferences {
+        return context.getSharedPreferences(getPackage(context) + SDK_PREFS, Context.MODE_PRIVATE)
     }
 
     fun saveString(key: String?, value: String?, c: Context) {
@@ -106,11 +112,11 @@ object Utils {
 
     @JvmStatic
     fun formatAmount(number: String?): String {
-        return when {
-            number == "0" -> "0,000"
-            number == null -> "--"
+        return when (number) {
+            "0" -> "00"
+            null -> "--"
             else -> try {
-                formatAmount(getAmount(number))
+                formatAmount(amountToDouble(number))
             } catch (e: Exception) {
                 number
             }
@@ -121,7 +127,7 @@ object Utils {
     fun formatAmount(number: Double?): String {
         return try {
             val formatter = DecimalFormat("#,##0.00")
-            formatter.maximumFractionDigits = 0
+            formatter.maximumFractionDigits = 2
             formatter.format(number)
         } catch (e: Exception) {
             number.toString()
@@ -129,8 +135,21 @@ object Utils {
     }
 
     @JvmStatic
-    fun getAmount(amount: String): Double {
-        return amount.replace(",".toRegex(), "").toDouble()
+    fun amountToDouble(amount: String?): Double? {
+        try {
+            return amount?.replace(",".toRegex(), "")?.toDouble()
+        } catch (e: NumberFormatException) { return null }
+    }
+
+    @JvmStatic
+    fun formatPercent(number: Double): String {
+        return try {
+            val formatter = DecimalFormat("##0")
+            formatter.maximumFractionDigits = 0
+            formatter.format(number * 100)
+        } catch (e: Exception) {
+            number.toString()
+        }
     }
 
     fun usingDebugVariant(c: Context): Boolean {
@@ -191,10 +210,14 @@ object Utils {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(subject: String, context: Context) {
+    fun openEmail(@StringRes subject: Int, context: Context, body : String? = "") {
+        openEmail(context.getString(subject), context, body)
+    }
+
+    fun openEmail(subject: String, context: Context, body : String? ="") {
         val intent = Intent(Intent.ACTION_VIEW)
         val senderEmail = context.getString(R.string.stax_support_email)
-        intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject")
+        intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject&body=$body")
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {

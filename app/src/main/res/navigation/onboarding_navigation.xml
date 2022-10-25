@@ -3,18 +3,27 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/onboarding_navigation"
-        app:startDestination="@+id/interactiveOnboardingFragment">
+        app:startDestination="@+id/welcomeFragment">
 
-    <action android:id="@+id/action_global_InteractiveOnboardingVariant"
-            app:destination="@id/interactiveOnboardingFragment"/>
+    <action
+        android:id="@+id/to_welcomeFragment"
+        app:destination="@id/welcomeFragment" />
 
-    <action android:id="@+id/action_global_SignInVariantFragment"
-            app:destination="@id/interactiveOnboardingFragment"/>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.hover.stax.presentation.welcome.WelcomeFragment"
+        android:label="IntroFragment">
+
+        <action
+            android:id="@+id/to_interactiveOnboardingFragment"
+            app:destination="@id/interactiveOnboardingFragment" />
+
+    </fragment>
 
     <fragment
             android:id="@+id/interactiveOnboardingFragment"
             android:name="com.hover.stax.onboarding.interactiveVariant.InteractiveOnboardingVariant"
-            android:label="@string/onboarding_v1_slide2_title"
+            android:label="@string/onboarding_v1_slide1_title"
             tools:layout="@layout/fragment_interactive_onboarding">
         <action
                 android:id="@+id/action_interactiveOnboardingFragment_to_interactiveTutorialFragment"
@@ -27,48 +36,17 @@
     <fragment
             android:id="@+id/checkboxOnboardingFragment"
             android:name="com.hover.stax.onboarding.interactiveVariant.InteractiveTutorialFragment"
-            android:label="@string/onboarding_v1_slide2_title"
-            tools:layout="@layout/fragment_interactive_tutorial">
-        <action
-                android:id="@+id/action_checkBoxOnboardingFragment_to_interactiveOnboardingFragment"
-                app:destination="@id/interactiveOnboardingFragment"
-                app:popUpTo="@id/interactiveOnboardingFragment"
-                app:popUpToInclusive="true" />
-        <action
-                android:id="@+id/action_interactiveTutorialFragment_to_welcomeFragment"
-                app:destination="@id/welcomeFragment" />
-    </fragment>
+            android:label="@string/onboarding_v1_slide1_title"
+            tools:layout="@layout/fragment_interactive_tutorial"/>
 
     <fragment
             android:id="@+id/noCheckBoxOnboardingFragment"
             android:name="com.hover.stax.onboarding.interactiveVariant.NonInteractiveTutorialFragment"
-            android:label="@string/onboarding_v1_slide2_title"
+            android:label="@string/onboarding_v1_slide1_title"
             tools:layout="@layout/fragment_non_interactive_tutorial">
-        <action
-                android:id="@+id/action_noCheckBoxOnboardingFragment_to_interactiveOnboardingFragment"
-                app:destination="@id/interactiveOnboardingFragment"
-                app:popUpTo="@id/interactiveOnboardingFragment"
-                app:popUpToInclusive="true" />
-        <action
-                android:id="@+id/action_noCheckboxOnboardingFragment_to_welcomeFragment"
-                app:destination="@id/welcomeFragment" />
         <argument
                 android:name="question_type"
                 app:argType="integer" />
-    </fragment>
-    <fragment
-            android:id="@+id/welcomeFragment"
-            android:name="com.hover.stax.onboarding.welcome.WelcomeFragment"
-            android:label="IntroFragment">
-        <argument
-                android:name="salutation"
-                app:argType="integer" />
-        <action
-                android:id="@+id/action_introFragment_to_noCheckBoxOnboardingFragment"
-                app:destination="@id/noCheckBoxOnboardingFragment" />
-        <action
-                android:id="@+id/action_introFragment_to_checkBoxOnboardingFragment"
-                app:destination="@id/checkboxOnboardingFragment" />
     </fragment>
 
 </navigation>

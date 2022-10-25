@@ -39,14 +39,14 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 32
-        versionCode 174
-        versionName "1.12.16"
+        versionCode 193
+        versionName "1.16.4"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -102,7 +102,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion '1.3.0'
     }
 
     packagingOptions {
@@ -121,7 +121,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Google
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
@@ -145,7 +145,7 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.ui:ui-viewbinding:$compose_version"
-    implementation 'androidx.compose.runtime:runtime-livedata:1.3.0-alpha02'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.3.0-alpha03'
     implementation 'com.google.accompanist:accompanist-drawablepainter:0.25.1'
 
     //logging
@@ -172,7 +172,13 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
-    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+    //networking
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation 'com.google.code.gson:gson:2.9.1'
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.53'
     implementation "com.github.YarikSOffice:lingver:1.3.0"
 
@@ -198,7 +204,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // Hover SDK
-    def sdk_version = "2.0.0-stax-1.12.14-pro"
+    def sdk_version = "2.0.0-stax-1.16.2-pro"
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation project(":hover.sdk")
     debugImplementation 'com.android.volley:volley:1.2.1'

@@ -8,10 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionCardHistoryBinding
-import com.hover.stax.presentation.home.TopBar
+import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
@@ -48,17 +49,11 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
 
     private fun initToolbar() {
         binding.toolbar.setContent {
-            StaxTheme { Toolbar() }
+            StaxTheme { TopBar(title = R.string.nav_history) { dest -> navigateTo(dest) } }
         }
     }
 
-    @Composable
-    private fun Toolbar() {
-        val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
-        TopBar(title = R.string.nav_history, isInternetConnected = hasNetwork) {
-            findNavController().navigate(TransactionHistoryFragmentDirections.actionGlobalNavigationSettings())
-        }
-    }
+    private fun navigateTo(dest: Int) = findNavController().navigate(dest)
 
     private fun initRecyclerView() {
         binding.transactionsRecycler.apply {
@@ -69,7 +64,7 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
     }
 
     private fun observeTransactionActionPair() {
-        viewModel.transactionHistory.observe(viewLifecycleOwner) {
+        viewModel.transactionHistoryItem.observe(viewLifecycleOwner) {
             binding.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
             transactionsAdapter!!.submitList(it)
         }
