@@ -16,7 +16,7 @@ body:
       - Major
       - Crash
     validations:
-      required: true    
+      required: true
 - type: dropdown
     id: Priority
     attributes:
