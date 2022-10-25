@@ -1,8 +1,7 @@
-name: Bug Report
-description: File a bug report
+name: "Bug Report"
+description: "File a bug report"
 title: "[Bug]: "
 labels: ["bug", "triage"]
-
 body:
   - type: markdown
     attributes:
@@ -17,8 +16,7 @@ body:
       - Major
       - Crush
     validations:
-      required: true
-      
+      required: true    
 - type: dropdown
     id: Priority
     attributes:
