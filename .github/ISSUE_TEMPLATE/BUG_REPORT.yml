@@ -15,8 +15,6 @@ body:
       - Minor
       - Major
       - Crash
-    validations:
-      required: true
 - type: dropdown
     id: Priority
     attributes:
@@ -27,8 +25,6 @@ body:
       - P2 (Medium)
       - P3 (Low)
       - P4 (Wishlist)
-    validations:
-      required: true
   - type: textarea
     id: description
     attributes:
@@ -78,8 +74,6 @@ body:
       label: App version
       description: What version of Stax are you using? This can be found at the bottom of your Settings screen.
       placeholder: ex. 1.15.0
-    validations:
-      required: true
   - type: dropdown
     id: sim
     attributes:
@@ -87,8 +81,6 @@ body:
       options:
       - Dual SIM
       - Single SIM
-    validations:
-      required: true
   - type: dropdown
     id: telco
     attributes:
