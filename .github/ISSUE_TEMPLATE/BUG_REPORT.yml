@@ -1,31 +1,12 @@
 name: Bug Report
 description: File a bug report
-title: "[Bug]"
+title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
   - type: markdown
-    id: welcome
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report to help us improve Stax! Please fill in all fields to the best of your ability.
-  - type: dropdown
-    id: severity
-    attributes:
-      label: What is the severity of the bug?
-      options:
-      - Minor
-      - Major
-      - Crash
-- type: dropdown
-    id: Priority
-    attributes:
-      label: What is the priority?
-      options:
-      - P0 (Urgent)
-      - P1 (High)
-      - P2 (Medium)
-      - P3 (Low)
-      - P4 (Wishlist)
   - type: textarea
     id: description
     attributes:
@@ -69,12 +50,6 @@ body:
       label: Android OS
       description: What version of Android OS are you using?
       placeholder: ex. 8.1.0
-  - type: input
-    id: app_version
-    attributes:
-      label: App version
-      description: What version of Stax are you using? This can be found at the bottom of your Settings screen.
-      placeholder: ex. 1.15.0
   - type: dropdown
     id: sim
     attributes:
@@ -82,6 +57,8 @@ body:
       options:
       - Dual SIM
       - Single SIM
+    validations:
+      required: true
   - type: dropdown
     id: telco
     attributes:
@@ -90,8 +67,12 @@ body:
       - Safaricom
       - Airtel
       - Telkom
+    validations:
+      required: true
   - type: input
     id: user
     attributes:
       label: Stax device ID or email address
       description: Please copy and paste your Stax device ID or the email address you used to login to Stax here
+    validations:
+      required: true
