@@ -90,12 +90,8 @@ body:
       - Safaricom
       - Airtel
       - Telkom
-    validations:
-      required: true
   - type: input
     id: user
     attributes:
       label: Stax device ID or email address
       description: Please copy and paste your Stax device ID or the email address you used to login to Stax here
-    validations:
-      required: true
