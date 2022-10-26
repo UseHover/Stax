@@ -5,12 +5,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/account_cardhead">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSurface"
+        >
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorSurface"
+            android:background="?attr/selectableItemBackground"
             android:orientation="vertical"
+            android:id="@+id/accountLayout"
             android:paddingHorizontal="@dimen/margin_13"
             android:paddingTop="@dimen/margin_16"
             android:paddingBottom="@dimen/margin_16">
@@ -30,5 +36,6 @@
                 android:textColor="@color/grey"
                 android:textSize="14sp" />
     </LinearLayout>
+    </FrameLayout>
 
 </com.hover.stax.views.StaxCardView>
