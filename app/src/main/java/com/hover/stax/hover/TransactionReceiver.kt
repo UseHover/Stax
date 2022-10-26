@@ -20,6 +20,7 @@ import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.transactions.TransactionRepo
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,12 +47,12 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private var contact: StaxContact? = null
 
     override fun onReceive(context: Context, intent: Intent?) {
-        intent?.let {
+        if (intent != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
 
-                actionId?.let {
-                    action = actionRepo.getAction(it)
+                if (actionId != null) {
+                    action = actionRepo.getAction(actionId)
 
                     //added null check to prevent npe whenever action is null
                     action?.let { a ->
@@ -64,8 +65,12 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                         updateBusinesses(intent)
                         updateRequests(intent)
                     }
+                } else {
+                    AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no action ID", context)
                 }
             }
+        } else {
+            AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no intent", context)
         }
     }
 

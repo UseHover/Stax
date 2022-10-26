@@ -72,12 +72,12 @@ class TransactionRepo(db: AppDatabase) {
                     t = transactionDao.getTransaction(t.uuid)
                 } else {
                     AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
-                    t.update(intent, action, contact, c)
+                    t.update(intent, contact)
                     transactionDao.update(t)
                 }
                 Timber.e("save t with uuid: %s", t?.uuid)
             } catch (e: Exception) {
-                Timber.e(e, "error")
+                AnalyticsUtil.logErrorAndReportToFirebase(TransactionRepo::class.java.simpleName, e.message, e)
             }
         }
     }
