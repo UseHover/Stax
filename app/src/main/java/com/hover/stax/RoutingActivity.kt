@@ -121,7 +121,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun initRemoteConfigs() {
-        val configSettings = FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds().build()
+        val configSettings = FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(30).build()
         remoteConfig.apply {
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
