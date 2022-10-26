@@ -8,7 +8,6 @@ import com.hover.stax.R
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.domain.model.BonusList
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.requests.Request
@@ -25,7 +24,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-const val STAX_PREFIX = "stax_airtime_prefix"
+const val STAX_AIRTIME_PREFIX = "stax_airtime_prefix"
 private const val KE_PREFIX = "0"
 
 class TransferViewModel(application: Application, private val getBonusesUseCase: GetBonusesUseCase, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
@@ -104,7 +103,7 @@ class TransferViewModel(application: Application, private val getBonusesUseCase:
         return extras
     }
 
-    private val staxPrefix get() = Utils.getString(STAX_PREFIX, getApplication())
+    private val staxPrefix get() = Utils.getString(STAX_AIRTIME_PREFIX, getApplication())
 
     fun load(encryptedString: String) = viewModelScope.launch {
         isLoading.postValue(true)

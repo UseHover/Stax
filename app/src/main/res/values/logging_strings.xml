@@ -163,4 +163,6 @@
 
 	<string name="clicked_bonus_airtime_banner" translatable="false">Clicked bonus airtime banner</string>
 
+	<string name="app_force_update_status" translatable="false">Force update status is %1$s</string>
+
 </resources>

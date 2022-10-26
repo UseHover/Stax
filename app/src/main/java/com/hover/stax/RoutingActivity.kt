@@ -32,14 +32,13 @@ import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.transfers.STAX_PREFIX
+import com.hover.stax.transfers.STAX_AIRTIME_PREFIX
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.uxcam.OnVerificationListener
 import com.uxcam.UXCam
 import com.uxcam.datamodel.UXConfig
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
@@ -49,6 +48,7 @@ import timber.log.Timber
 const val FRAGMENT_DIRECT = "fragment_direct"
 const val FROM_FCM = "from_notification"
 
+
 class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
@@ -56,22 +56,32 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private lateinit var workManager: WorkManager
     private var hasAccounts = false
 
+    private lateinit var forceUpdateManager : StaxForceUpdateManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
         splashScreen.setKeepOnScreenCondition { true }
-
-        remoteConfig = FirebaseRemoteConfig.getInstance()
         workManager = WorkManager.getInstance(this)
+        forceUpdateManager = StaxForceUpdateManager(this@RoutingActivity)
+        observeAccounts()
         startBackgroundProcesses()
+        loadAppConfig()
     }
 
-    private fun startBackgroundProcesses() {
+    override fun onResume() {
+        super.onResume()
+       forceUpdateManager.registerListener()
+    }
+
+    private fun observeAccounts() {
         with(channelsViewModel) {
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
         }
+    }
 
+    private fun startBackgroundProcesses() {
         lifecycleScope.launch {
             initAmplitude()
             logPushNotificationIfRequired()
@@ -93,7 +103,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
         }
 
-        initRemoteConfigs()
     }
 
     private fun updateBannerSessionCounter() {
@@ -120,23 +129,43 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         Hover.setPermissionActivity(PERM_ACTIVITY, this)
     }
 
-    private fun initRemoteConfigs() {
+    private fun loadAppConfig() {
+        remoteConfig = getFirebaseRemoteConfig()
+        remoteConfig.fetchAndActivate().addOnCompleteListener {
+            saveAirtimePrefix()
+            val forcedVersion =  remoteConfig.getString(StaxForceUpdateManager.FORCED_VERSION).toInt()
+            Timber.i("forced version is: $forcedVersion, while build version is ${BuildConfig.VERSION_CODE}")
+            if(BuildConfig.VERSION_CODE < forcedVersion) {
+                logAppUpdateStatus(StaxForceUpdateManager.NEEDS_UPDATE)
+                forceUpdateManager.runImmediateAppUpdate()
+            }
+            else {
+                logAppUpdateStatus(StaxForceUpdateManager.OPTIMAL)
+                validateUser()
+            }
+        }.addOnFailureListener {
+            logAppUpdateStatus(StaxForceUpdateManager.COULD_NOT_CHECK)
+            validateUser()
+        }
+    }
+    private fun logAppUpdateStatus(appStatus: String) {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.app_force_update_status,
+            appStatus), this@RoutingActivity)
+    }
+
+    private fun getFirebaseRemoteConfig() : FirebaseRemoteConfig {
         val configSettings = FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(30).build()
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
         remoteConfig.apply {
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
-            fetchAndActivate().addOnCompleteListener {
-                fetchConfigs(remoteConfig)
-                validateUser()
-            }.addOnFailureListener {
-                validateUser()
-            }
         }
+        return remoteConfig
     }
 
-    private fun fetchConfigs(remoteConfig: FirebaseRemoteConfig) {
-        val staxPrefix = remoteConfig.getString(STAX_PREFIX)
-        Utils.saveString(STAX_PREFIX, staxPrefix, this)
+    private fun saveAirtimePrefix() {
+        val staxPrefix = remoteConfig.getString(STAX_AIRTIME_PREFIX)
+        Utils.saveString(STAX_AIRTIME_PREFIX, staxPrefix, this)
     }
 
     private fun initUxCam() {
@@ -265,6 +294,11 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
         startActivity(intent)
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        forceUpdateManager.unregisterListener()
     }
 
     override fun onAuthError(error: String) = runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_auth)) }
