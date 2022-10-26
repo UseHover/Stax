@@ -25,6 +25,16 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private var highlightedAccount: Account? = null
 
+    val target = object : CustomTarget<Drawable>() {
+        override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+            autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
+        }
+
+        override fun onLoadCleared(placeholder: Drawable?) {
+            autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
+        }
+    }
+
     init {
         getAttrs(context, attributeSet)
     }
@@ -54,22 +64,11 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun setDropdownValue(account: Account?) {
-        account?.let {
-            autoCompleteTextView.setText(it.alias, false)
-
-            val target = object : CustomTarget<Drawable>() {
-                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                    autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
-                }
-            }
-
+        if (account != null) {
             UIHelper.loadImage(context, account.logoUrl, target)
+            autoCompleteTextView.setText(account.alias, false)
             highlightedAccount = account
-        }
+        } else { UIHelper.loadImage(context, null, target)}
     }
 
     private fun updateChoices(accounts: List<Account>) {
