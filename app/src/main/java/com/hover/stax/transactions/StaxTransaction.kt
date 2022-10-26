@@ -112,7 +112,7 @@ data class StaxTransaction(
 		}
 	}
 
-	fun update(data: Intent, action: HoverAction, contact: StaxContact, context: Context) {
+	fun update(data: Intent, contact: StaxContact) {
 		status = data.getStringExtra(TransactionContract.COLUMN_STATUS)!!
 		if (hasExtra(data, TransactionContract.COLUMN_CATEGORY))
 			category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY)!!
