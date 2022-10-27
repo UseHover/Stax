@@ -155,7 +155,7 @@ class SettingsFragment : Fragment() {
                 with(binding.accountCard) {
                     accountCard.visibility = VISIBLE
                     loggedInAccount.text = getString(R.string.logged_in_as, staxUser.username)
-                    accountCard.setOnClickListener { showLogoutConfirmDialog() }
+                    accountLayout.setOnClickListener { showLogoutConfirmDialog() }
                 }
             }
         }
