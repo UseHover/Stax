@@ -9,7 +9,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorSurface"
-            android:paddingHorizontal="@dimen/margin_13"
             android:orientation="vertical">
 
         <TextView
@@ -19,6 +18,7 @@
                 android:background="?selectableItemBackground"
                 android:text="@string/financial_wellness_tips"
                 android:paddingTop="@dimen/margin_16"
+                android:paddingHorizontal="@dimen/margin_13"
                 android:paddingBottom="@dimen/margin_16"
                 android:textSize="@dimen/text_16" />
 
@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_16"
                 android:paddingBottom="@dimen/margin_16"
+                android:paddingHorizontal="@dimen/margin_13"
                 android:background="?selectableItemBackground"
                 android:text="@string/stax_features"
                 android:textSize="@dimen/text_16"

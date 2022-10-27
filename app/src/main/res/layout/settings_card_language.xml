@@ -5,10 +5,10 @@
         android:layout_height="wrap_content"
         app:title="@string/language_cardhead">
 
-    <LinearLayout
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/margin_21"
+
             android:background="@color/colorSurface">
 
         <TextView
@@ -16,8 +16,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:layout_marginHorizontal="@dimen/margin_13"
+                android:paddingVertical="@dimen/margin_21"
+                android:paddingHorizontal="@dimen/margin_16"
                 android:textSize="@dimen/text_16" />
-    </LinearLayout>
+    </FrameLayout>
 
 </com.hover.stax.views.StaxCardView>

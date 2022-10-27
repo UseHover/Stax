@@ -15,10 +15,11 @@
         android:drawablePadding="@dimen/margin_10"
         android:text="@string/app_version_info"
         android:textSize="@dimen/text_16"
-        android:textColor="@color/offWhite"
-        android:paddingBottom="8dp"
-        android:paddingTop="24dp"
-        app:drawableEndCompat="@drawable/ic_copy" />
+        android:textColor="@color/grey"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_8"
+        app:drawableEndCompat="@drawable/ic_copy_grey" />
 
     <TextView
         android:id="@+id/device_id_info"
@@ -28,10 +29,10 @@
         android:drawablePadding="@dimen/margin_10"
         android:text="@string/device_id_info"
         android:textSize="@dimen/text_16"
-        android:textColor="@color/offWhite"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        app:drawableEndCompat="@drawable/ic_copy" />
+        android:textColor="@color/grey"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="@dimen/margin_16"
+        app:drawableEndCompat="@drawable/ic_copy_grey" />
 
 
     <TextView
@@ -42,10 +43,10 @@
         android:drawablePadding="@dimen/margin_10"
         android:text="@string/config_info"
         android:textSize="@dimen/text_16"
-        android:textColor="@color/offWhite"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        app:drawableEndCompat="@drawable/ic_copy" />
+        android:textColor="@color/grey"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="@dimen/margin_16"
+        app:drawableEndCompat="@drawable/ic_copy_grey" />
 
     <TextView
         android:id="@+id/version_code_info"
@@ -55,10 +56,10 @@
         android:drawablePadding="@dimen/margin_10"
         android:text="@string/version_code_info"
         android:textSize="@dimen/text_16"
-        android:textColor="@color/offWhite"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        app:drawableEndCompat="@drawable/ic_copy" />
+        android:textColor="@color/grey"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="@dimen/margin_16"
+        app:drawableEndCompat="@drawable/ic_copy_grey" />
 
 
 </LinearLayout>
