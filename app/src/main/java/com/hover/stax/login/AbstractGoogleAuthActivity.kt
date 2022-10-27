@@ -50,10 +50,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 			//if an in-app update is already running, resume the update
 			if (updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
 				updateManager.startUpdateFlowForResult(
-					updateInfo,
-					AppUpdateType.IMMEDIATE,
-					this,
-					UPDATE_REQUEST_CODE
+					updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE
 				)
 			}
 		}
@@ -132,8 +129,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 			}
 			setActionTextColor(
 				ContextCompat.getColor(
-					this@AbstractGoogleAuthActivity,
-					R.color.stax_state_blue
+					this@AbstractGoogleAuthActivity, R.color.stax_state_blue
 				)
 			)
 			show()
