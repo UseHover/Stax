@@ -29,7 +29,7 @@ class AccountsAdapter(var accounts: List<Account>) : RecyclerView.Adapter<Accoun
     inner class ViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun setAccount(account: Account) {
-            binding.serviceItemNameId.text = account.alias
+            binding.serviceItemNameId.text = account.userAlias
 
             GlideApp.with(binding.root.context)
                 .load(account.logoUrl)

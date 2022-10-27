@@ -200,7 +200,7 @@ class SettingsFragment : Fragment() {
             a
         }
 
-        spinner.setText(defaultAccount?.alias, false)
+        spinner.setText(defaultAccount?.userAlias, false)
         spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) accountsViewModel.setDefaultAccount(accounts[pos]) }
     }
 

@@ -108,7 +108,7 @@ private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
 	val emailBody = context.getString(
 		R.string.sim_card_support_request_emailBody,
 		simWithAccount.sim.osReportedHni ?: "Null",
-		simWithAccount.sim.operatorName ?: simWithAccount.account.alias,
+		simWithAccount.sim.operatorName ?: simWithAccount.account.userAlias,
 		simWithAccount.sim.networkOperator ?: "Null",
 		simWithAccount.sim.countryIso ?: "Null"
 	)
@@ -128,7 +128,7 @@ private fun SimItemTopRow(
 		AsyncImage(
 			model = ImageRequest.Builder(LocalContext.current).data(simWithAccount.account.logoUrl).crossfade(true)
 				.diskCachePolicy(CachePolicy.ENABLED).build(),
-			contentDescription = simWithAccount.account.alias + " logo",
+			contentDescription = simWithAccount.account.userAlias + " logo",
 			placeholder = painterResource(id = R.drawable.img_placeholder),
 			error = painterResource(id = R.drawable.img_placeholder),
 			modifier = Modifier
@@ -143,7 +143,7 @@ private fun SimItemTopRow(
 				.padding(horizontal = 13.dp)
 				.weight(1f)
 		) {
-			Text(text = simWithAccount.account.alias, style = MaterialTheme.typography.body1)
+			Text(text = simWithAccount.account.userAlias, style = MaterialTheme.typography.body1)
 			Text(
 				text = getSimSlot(simWithAccount.sim, LocalContext.current),
 				color = TextGrey,

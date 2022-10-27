@@ -50,7 +50,7 @@ class HomeViewModel(
     }
 
     private fun getAccounts() = viewModelScope.launch {
-        accountsRepo.fetchAccounts.collect { accounts ->
+        accountsRepo.addedAccounts.collect { accounts ->
             _homeState.update { it.copy(accounts = accounts) }
             _accounts.postValue(accounts)
         }

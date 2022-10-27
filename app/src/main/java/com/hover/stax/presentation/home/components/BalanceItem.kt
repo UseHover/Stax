@@ -54,7 +54,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
             )
 
             Text(
-                text = staxAccount.alias,
+                text = staxAccount.userAlias,
                 style = MaterialTheme.typography.body2,
                 modifier = Modifier
                     .weight(1f)

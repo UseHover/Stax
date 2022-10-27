@@ -66,7 +66,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private fun setDropdownValue(account: Account?) {
         if (account != null) {
             UIHelper.loadImage(context, account.logoUrl, target)
-            autoCompleteTextView.setText(account.alias, false)
+            autoCompleteTextView.setText(account.userAlias, false)
             highlightedAccount = account
         } else { UIHelper.loadImage(context, null, target)}
     }

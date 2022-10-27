@@ -139,7 +139,6 @@ data class StaxTransaction(
 		val amountStr = Utils.formatAmount(amount)
 		return when(transaction_type) {
 			HoverAction.RECEIVE -> c.getString(R.string.descrip_transfer_received, contact!!.shortName())
-			HoverAction.FETCH_ACCOUNTS -> c.getString(R.string.descrip_fetch_accounts, action.from_institution_name)
 			HoverAction.BALANCE -> c.getString(R.string.descrip_balance, action.from_institution_name)
 			HoverAction.AIRTIME -> c.getString(R.string.descrip_airtime_sent, amountStr,
 			if (contact == null) c.getString(R.string.self_choice) else contact.shortName())

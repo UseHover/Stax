@@ -6,7 +6,7 @@ import com.hover.stax.channels.Channel
 import kotlinx.coroutines.flow.Flow
 
 interface AccountRepository {
-    val fetchAccounts: Flow<List<Account>>
+    val addedAccounts: Flow<List<Account>>
 
     suspend fun createAccount(sim: SimInfo): Account
 
