@@ -11,12 +11,9 @@ import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener
-import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
 import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
-import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.InstallStatus.DOWNLOADED
-import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import com.hover.stax.BuildConfig
@@ -59,10 +56,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 			//if an in-app update is already running, resume the update
 			if (updateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
 				updateManager.startUpdateFlowForResult(
-					updateInfo,
-                    IMMEDIATE,
-					this,
-					UPDATE_REQUEST_CODE
+					updateInfo, IMMEDIATE, this, UPDATE_REQUEST_CODE
 				)
 			}
 		}
@@ -96,22 +90,25 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 		}
 
 	private fun checkForUpdates() {
-			val updateInfoTask = updateManager.appUpdateInfo
+		val updateInfoTask = updateManager.appUpdateInfo
 
-            updateInfoTask.addOnSuccessListener { updateInfo ->
-				val updateType = getUpdateType(updateInfo)
-				if (updateInfo.updateAvailability() == UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(updateType)) {
-                    logAppUpdate(STARTED)
-                    requestUpdate(updateInfo, updateType)
-                }
-				else {
-                    Timber.i("No new update available")
-                }
+		updateInfoTask.addOnSuccessListener { updateInfo ->
+			val updateType = getUpdateType(updateInfo)
+			if (updateInfo.updateAvailability() == UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(
+					updateType
+				)
+			) {
+				logAppUpdate(STARTED)
+				requestUpdate(updateInfo, updateType)
+			} else {
+				Timber.i("No new update available")
 			}
+		}
 	}
-    private fun logAppUpdate(status: String) {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.force_update_status, status), this)
-    }
+
+	private fun logAppUpdate(status: String) {
+		AnalyticsUtil.logAnalyticsEvent(getString(R.string.force_update_status, status), this)
+	}
 
 	private fun getUpdateType(updateInfo: AppUpdateInfo): Int {
 		val isGracePeriod =
@@ -147,8 +144,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 			}
 			setActionTextColor(
 				ContextCompat.getColor(
-					this@AbstractGoogleAuthActivity,
-					R.color.stax_state_blue
+					this@AbstractGoogleAuthActivity, R.color.stax_state_blue
 				)
 			)
 			show()
@@ -160,12 +156,11 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 		when (requestCode) { //
 			UPDATE_REQUEST_CODE -> if (resultCode == RESULT_OK) {
 				logAppUpdate(COMPLETED)
+			} else {
+				Timber.e("Update flow failed. Result code : $resultCode")
+				logAppUpdate(FAILED)
+				checkForUpdates()
 			}
-            else {
-                Timber.e("Update flow failed. Result code : $resultCode")
-                logAppUpdate(FAILED)
-                checkForUpdates()
-            }
 		}
 	}
 
@@ -180,8 +175,8 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 	companion object {
 		const val DAYS_FOR_FLEXIBLE_UPDATE = 3
 		const val UPDATE_REQUEST_CODE = 90
-        const val STARTED = "STARTED"
-        const val COMPLETED = "COMPLETED"
-        const val FAILED = "FAILED"
+		const val STARTED = "STARTED"
+		const val COMPLETED = "COMPLETED"
+		const val FAILED = "FAILED"
 	}
 }
