@@ -178,24 +178,21 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
         while (matcher.find()) {
             try {
-                if (IntRange(1, 8).contains(Integer.valueOf(matcher.group(1)!!))) { // Navigation options like back are usually 0 or 00 or 9 and above
+                val accounts = accountRepo.getAccountsByChannel(channel!!.id)
+                if (accounts.any { it.institutionAccountName == matcher.group(2)!! }) { break }
 
-                    val accounts = accountRepo.getAccountsByChannel(channel!!.id)
-                    if (accounts.any { it.institutionAccountName == matcher.group(2)!! }) { break }
-
-                    val a = if (account != null && account!!.institutionAccountName == null) {
-                        account!!
-                    } else if (accounts.any { it.institutionAccountName == null }) {
-                        accounts.first { it.institutionAccountName == null }
-                    } else {
-                        Account(matcher.group(2)!!, channel!!, false, account?.simSubscriptionId ?: -1)
-                    }
-
-                    a.institutionAccountName = matcher.group(2)!!
-                    if (a.institutionName == a.userAlias) a.userAlias = matcher.group(2)!!
-
-                    accountRepo.saveAccount(a)
+                val a = if (account != null && account!!.institutionAccountName == null) {
+                    account!!
+                } else if (accounts.any { it.institutionAccountName == null }) {
+                    accounts.first { it.institutionAccountName == null }
+                } else {
+                    Account(matcher.group(2)!!, channel!!, false, account?.simSubscriptionId ?: -1)
                 }
+
+                a.institutionAccountName = matcher.group(2)!!
+                if (a.institutionName == a.userAlias) a.userAlias = matcher.group(2)!!
+
+                accountRepo.saveAccount(a)
             } catch (e: Exception) { AnalyticsUtil.logErrorAndReportToFirebase(TransactionReceiver::class.java.simpleName, "Failed to parse account list from USSD", e)}
         }
     }
