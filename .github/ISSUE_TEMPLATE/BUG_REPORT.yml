@@ -67,6 +67,7 @@ body:
       - Safaricom
       - Airtel
       - Telkom
+      - Equitel
     validations:
       required: true
   - type: input
