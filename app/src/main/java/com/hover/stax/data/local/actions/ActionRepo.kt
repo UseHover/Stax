@@ -37,10 +37,6 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
         return actionDao.getActions(channelId, type)
     }
 
-    fun getActions(channelIds: IntArray?, type: String?): List<HoverAction> {
-        return actionDao.getActions(channelIds, type)
-    }
-
     fun getActions(channelIds: IntArray?, recipientInstitutionId: Int): List<HoverAction> {
         return actionDao.getActions(channelIds, recipientInstitutionId, HoverAction.P2P)
     }

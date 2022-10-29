@@ -29,21 +29,11 @@ class AccountRepo(db: AppDatabase) {
 
     fun getAccounts(): Flow<List<Account>> = accountDao.getAccounts()
 
-    private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
-
-    fun saveAccounts(accounts: List<Account>) {
-        accounts.forEach { account ->
-            val acct = getAccount(account.name, account.channelId)
-
-            try {
-                if (acct == null) {
-                    accountDao.insert(account)
-                } else {
-                    accountDao.update(account)
-                }
-            } catch (e: Exception) {
-                AnalyticsUtil.logErrorAndReportToFirebase(TAG, "failed to insert/update account", e)
-            }
+    fun saveAccount(account: Account) {
+        if (account.id == 0) {
+            accountDao.insert(account)
+        } else {
+            accountDao.update(account)
         }
     }
 
@@ -56,10 +46,6 @@ class AccountRepo(db: AppDatabase) {
     suspend fun update(accounts: List<Account>) = accountDao.updateAll(accounts)
 
     fun delete(account: Account) = accountDao.delete(account)
-
-    fun deleteAccount(channelId: Int, name: String) {
-        accountDao.delete(channelId, name)
-    }
 
     companion object {
         private val TAG = AccountRepo::class.java.simpleName

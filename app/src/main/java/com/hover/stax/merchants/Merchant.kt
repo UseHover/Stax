@@ -44,9 +44,10 @@ data class Merchant(
 			append(")")
 	}
 
+//	FIXME: Is this actually used?
 	override fun equals(other: Any?): Boolean {
-		if (other !is Account) return false
-		return id == other.id || other.name == other.name
+		if (other !is Merchant) return false
+		return id == other.id || (channelId == other.channelId && tillNo == tillNo)
 	}
 
 	override fun compareTo(other: Merchant): Int = tillNo.compareTo(other.tillNo)

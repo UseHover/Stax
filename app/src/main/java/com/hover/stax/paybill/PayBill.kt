@@ -61,9 +61,10 @@ data class Paybill(
         append(")")
     }
 
+    // FIXME: is this actually used?
     override fun equals(other: Any?): Boolean {
-        if (other !is Account) return false
-        return id == other.id || other.name == other.name
+        if (other !is Paybill) return false
+        return id == other.id || (channelId == other.channelId && businessNo == other.businessNo) // FIXME: should be institution id not channel id
     }
 
     override fun compareTo(other: Paybill): Int = toString().compareTo(other.toString())

@@ -21,7 +21,6 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.local.SimRepo
-import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -187,8 +186,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         val defaultAccount = accountRepo.getDefaultAccount()
 
         val accounts = channels.mapIndexed { index, channel ->
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER) //ensures uniqueness of name due to db constraints
-            Account(accountName, channel, defaultAccount == null && index == 0, -1)
+            Account(channel, defaultAccount == null && index == 0, -1)
         }.onEach {
             logChoice(it)
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
@@ -207,8 +205,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
             accountChannel.send(it)
         }
     }
-
-    private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
     fun updateSearch(value: String) {
         filterQuery.value = value
