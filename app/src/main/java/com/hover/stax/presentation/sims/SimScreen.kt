@@ -1,6 +1,5 @@
 package com.hover.stax.presentation.sims
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,7 +9,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -18,22 +16,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.presentation.sims.components.LinkSimCard
 import com.hover.stax.presentation.sims.components.SampleSimInfoProvider
 import com.hover.stax.presentation.sims.components.SimItem
 import com.hover.stax.ui.theme.*
-import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
-
-private fun hasGratedSimPermission(context: Context) = PermissionUtils.hasContactPermission(context) && PermissionUtils.hasSmsPermission(context)
 
 @Composable
 fun SimScreen(
@@ -60,14 +52,15 @@ fun SimScreen(
                         .padding(horizontal = dimensionResource(id = R.dimen.margin_13))
                         .then(paddingModifier)
                 ) {
-                    if (simViewModel.loading) {
-                        item {
-                            NoticeText(stringRes = R.string.loading)
-                        }
-                    } else if (sims.isEmpty()) {
-                        item {
-                            if (hasGratedSimPermission(context)) NoticeText(stringRes = R.string.simpage_empty_sims)
-                            else ShowGrantPermissionContent()
+                    if (sims.isEmpty()) {
+                        if (PermissionUtils.hasPhonePermission(context)) {
+                            item {
+                                NoticeText(stringRes = R.string.loading)
+                            }
+                        } else {
+                            item {
+                                ShowGrantPermissionContent()
+                            }
                         }
                     } else {
                         val comparator = Comparator { s1: SimWithAccount, s2: SimWithAccount ->

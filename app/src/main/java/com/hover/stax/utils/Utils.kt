@@ -113,10 +113,10 @@ object Utils {
     @JvmStatic
     fun formatAmount(number: String?): String {
         return when (number) {
-            "0" -> "0,000"
+            "0" -> "00"
             null -> "--"
             else -> try {
-                formatAmount(getAmount(number))
+                formatAmount(amountToDouble(number))
             } catch (e: Exception) {
                 number
             }
@@ -135,8 +135,21 @@ object Utils {
     }
 
     @JvmStatic
-    fun getAmount(amount: String): Double {
-        return amount.replace(",".toRegex(), "").toDouble()
+    fun amountToDouble(amount: String?): Double? {
+        try {
+            return amount?.replace(",".toRegex(), "")?.toDouble()
+        } catch (e: NumberFormatException) { return null }
+    }
+
+    @JvmStatic
+    fun formatPercent(number: Int): String {
+        return try {
+            val formatter = DecimalFormat("##0")
+            formatter.maximumFractionDigits = 0
+            formatter.format(number * 100)
+        } catch (e: Exception) {
+            number.toString()
+        }
     }
 
     fun usingDebugVariant(c: Context): Boolean {

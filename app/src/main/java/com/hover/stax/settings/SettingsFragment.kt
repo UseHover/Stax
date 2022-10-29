@@ -6,6 +6,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
@@ -40,6 +41,7 @@ class SettingsFragment : Fragment() {
     private var dialog: StaxDialog? = null
 
     private var optInMarketing: Boolean = false
+    private var appInfoVisible = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -106,12 +108,36 @@ class SettingsFragment : Fragment() {
         selectLangBtn.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToLanguageSelectFragment()) }
     }
 
+    private fun getAppInfoVisibility() : Int {
+        return if(appInfoVisible) GONE
+        else VISIBLE
+    }
+
     private fun setupAppVersionInfo() {
+        binding.appInfoCard.appInfoDesc.setOnClickListener{
+            with(binding.appInfoCard.details) {
+                this.appInfo.visibility = getAppInfoVisibility()
+                appInfoVisible = !appInfoVisible
+            }
+        }
+
         val deviceId = Hover.getDeviceId(requireContext())
         val appVersion: String = BuildConfig.VERSION_NAME
         val versionCode: String = BuildConfig.VERSION_CODE.toString()
         val configVersion: String? = Utils.getSdkPrefs(requireContext()).getString("channel_actions_schema_version", "")
-        binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, configVersion, deviceId)
+        with(binding.appInfoCard.details) {
+            this.appVersionInfo.text = getString(R.string.app_version_info, appVersion)
+            this.appVersionInfo.setOnClickListener{Utils.copyToClipboard(appVersion, requireContext())}
+
+            this.configVersionInfo.text = getString(R.string.config_info, configVersion)
+            this.configVersionInfo.setOnClickListener{Utils.copyToClipboard(configVersion, requireContext())}
+
+            this.versionCodeInfo.text = getString(R.string.version_code_info, versionCode)
+            this.versionCodeInfo.setOnClickListener{Utils.copyToClipboard(versionCode, requireContext())}
+
+            this.deviceIdInfo.text = getString(R.string.device_id_info, deviceId)
+            this.deviceIdInfo.setOnClickListener{Utils.copyToClipboard(deviceId, requireContext())}
+        }
     }
 
     private fun setUpAccountDetails() {
@@ -129,7 +155,7 @@ class SettingsFragment : Fragment() {
                 with(binding.accountCard) {
                     accountCard.visibility = VISIBLE
                     loggedInAccount.text = getString(R.string.logged_in_as, staxUser.username)
-                    accountCard.setOnClickListener { showLogoutConfirmDialog() }
+                    accountLayout.setOnClickListener { showLogoutConfirmDialog() }
                 }
             }
         }
@@ -174,7 +200,7 @@ class SettingsFragment : Fragment() {
             a
         }
 
-        spinner.setText(defaultAccount?.alias, false)
+        spinner.setText(defaultAccount?.userAlias, false)
         spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) accountsViewModel.setDefaultAccount(accounts[pos]) }
     }
 

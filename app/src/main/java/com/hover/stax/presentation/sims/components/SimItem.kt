@@ -2,12 +2,7 @@ package com.hover.stax.presentation.sims.components
 
 import android.content.Context
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -54,24 +49,20 @@ internal fun SimItem(
 		SimItemTopRow(simWithAccount, refreshBalance)
 		if (simWithAccount.account.channelId != -1) {
 			val notYetChecked = stringResource(id = R.string.not_yet_checked)
-
 			Text(
-				text = stringResource(
-					id = R.string.airtime_balance_holder,
-					simWithAccount.account.latestBalance ?: notYetChecked
-				),
+				text = simWithAccount.account.latestBalance ?: notYetChecked,
 				color = TextGrey,
 				style = MaterialTheme.typography.body1
 			)
 
 			if (simWithAccount.account.latestBalance != null) {
+				Spacer(modifier = Modifier.height(13.dp))
 				Text(
 					text = stringResource(
 						id = R.string.as_of,
 						DateUtils.humanFriendlyDateTime(simWithAccount.account.latestBalanceTimestamp)
 					),
 					color = TextGrey,
-					modifier = Modifier.padding(bottom = 26.dp),
 					style = MaterialTheme.typography.body1
 				)
 			}
@@ -81,26 +72,43 @@ internal fun SimItem(
 					id = R.string.unsupported_sim_info
 				),
 				color = TextGrey,
-				modifier = Modifier.padding(bottom = 7.dp),
 				style = MaterialTheme.typography.body2
 			)
 		}
 
+		Spacer(modifier = Modifier.height(32.dp))
+
 		if (simWithAccount.account.channelId == -1) {
 			SecondaryButton(context.getString(R.string.email_support),null,
-				onClick = { email(simWithAccount, context) })
+				onClick = { emailStax(simWithAccount, context) })
 		}
-		else
-			SecondaryButton(context.getString(R.string.nav_airtime),null,
+		else {
+			val bonus = simWithAccount.airtimeActions?.first { it.bonus_percent > 0 }?.bonus_percent
+			SecondaryButton(
+				getAirtimeButtonLabel(bonus, context), getAirtimeButtonIcon(bonus),
 				onClick = { buyAirtime(simWithAccount.account) })
+		}
 	}
 }
+private fun getAirtimeButtonLabel(bonus: Int?, context: Context) : String {
+	var label = context.getString(R.string.nav_airtime)
+	if (bonus != null) {
+		label = context.getString(R.string.buy_airitme_bonus, Utils.formatPercent(bonus))
+	}
+	return label
+}
 
-private fun email(simWithAccount: SimWithAccount, context: Context) {
+private fun getAirtimeButtonIcon(bonus: Int?) : Int? {
+	var icon : Int? = null
+	if (bonus != null) { icon = R.drawable.ic_bonus }
+	return icon
+}
+
+private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
 	val emailBody = context.getString(
 		R.string.sim_card_support_request_emailBody,
 		simWithAccount.sim.osReportedHni ?: "Null",
-		simWithAccount.sim.operatorName ?: simWithAccount.account.alias,
+		simWithAccount.sim.operatorName ?: simWithAccount.account.userAlias,
 		simWithAccount.sim.networkOperator ?: "Null",
 		simWithAccount.sim.countryIso ?: "Null"
 	)
@@ -113,8 +121,6 @@ private fun SimItemTopRow(
 	simWithAccount: SimWithAccount,
 	refreshBalance: (Account) -> Unit,
 ) {
-	val size34 = dimensionResource(id = R.dimen.margin_34)
-
 	Row(modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),
 		verticalAlignment = Alignment.CenterVertically
 
@@ -122,11 +128,11 @@ private fun SimItemTopRow(
 		AsyncImage(
 			model = ImageRequest.Builder(LocalContext.current).data(simWithAccount.account.logoUrl).crossfade(true)
 				.diskCachePolicy(CachePolicy.ENABLED).build(),
-			contentDescription = simWithAccount.account.alias + " logo",
+			contentDescription = simWithAccount.account.userAlias + " logo",
 			placeholder = painterResource(id = R.drawable.img_placeholder),
 			error = painterResource(id = R.drawable.img_placeholder),
 			modifier = Modifier
-				.size(size34)
+				.size(dimensionResource(id = R.dimen.margin_34))
 				.clip(CircleShape)
 				.align(Alignment.CenterVertically),
 			contentScale = ContentScale.Crop
@@ -137,7 +143,7 @@ private fun SimItemTopRow(
 				.padding(horizontal = 13.dp)
 				.weight(1f)
 		) {
-			Text(text = simWithAccount.account.alias, style = MaterialTheme.typography.body1)
+			Text(text = simWithAccount.account.userAlias, style = MaterialTheme.typography.body1)
 			Text(
 				text = getSimSlot(simWithAccount.sim, LocalContext.current),
 				color = TextGrey,

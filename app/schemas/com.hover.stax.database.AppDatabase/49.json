@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 47,
-    "identityHash": "eece2fa9fa5ef8d9dbdd43c89ce58acb",
+    "version": 49,
+    "identityHash": "c17953f926b4437ed5cd4a9d5ca7e8d3",
     "entities": [
       {
         "tableName": "channels",
@@ -502,7 +502,7 @@
       },
       {
         "tableName": "accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `institutionId` INTEGER, `institution_type` TEXT NOT NULL DEFAULT 'bank', `countryAlpha2` TEXT, `channelId` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `institutionAccountName` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `institutionId` INTEGER NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `countryAlpha2` TEXT, `channelId` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `institutionAccountName` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "institutionName",
@@ -532,7 +532,7 @@
             "fieldPath": "institutionId",
             "columnName": "institutionId",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "institutionType",
@@ -931,58 +931,12 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "bonuses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_channel` INTEGER NOT NULL, `purchase_channel` INTEGER NOT NULL, `bonus_percent` REAL NOT NULL, `message` TEXT NOT NULL, `hni_list` TEXT NOT NULL DEFAULT '0', PRIMARY KEY(`user_channel`, `purchase_channel`))",
-        "fields": [
-          {
-            "fieldPath": "userChannel",
-            "columnName": "user_channel",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "purchaseChannel",
-            "columnName": "purchase_channel",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "bonusPercent",
-            "columnName": "bonus_percent",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "message",
-            "columnName": "message",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hniList",
-            "columnName": "hni_list",
-            "affinity": "TEXT",
-            "notNull": true,
-            "defaultValue": "'0'"
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "user_channel",
-            "purchase_channel"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eece2fa9fa5ef8d9dbdd43c89ce58acb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c17953f926b4437ed5cd4a9d5ca7e8d3')"
     ]
   }
 }

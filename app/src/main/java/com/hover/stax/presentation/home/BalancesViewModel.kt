@@ -13,7 +13,6 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 
 import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.utils.AnalyticsUtil
 
 import kotlinx.coroutines.Dispatchers
@@ -58,10 +57,10 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo, va
     }
 
     private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
-        if(account == null) return@launch
+        if (account == null) return@launch
 
         val channelId = account.channelId
-        val action = actionRepo.getActions(channelId, if (account.name.contains(PLACEHOLDER)) HoverAction.FETCH_ACCOUNTS else HoverAction.BALANCE).firstOrNull()
+        val action = actionRepo.getFirstAction(channelId, HoverAction.BALANCE)
         action?.let { _balanceAction.emit(action) } ?: run { _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action)) }
     }
 

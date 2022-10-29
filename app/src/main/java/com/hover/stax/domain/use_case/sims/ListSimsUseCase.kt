@@ -1,6 +1,7 @@
 package com.hover.stax.domain.use_case.sims
 
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.actions.ActionRepo
@@ -14,7 +15,7 @@ data class SimWithAccount(
     val sim: SimInfo,
     val account: Account,
     val balanceAction: HoverAction?,
-    val airtimeAction: HoverAction?
+    val airtimeActions: List<HoverAction>?
 )
 
 class ListSimsUseCase(
@@ -29,16 +30,16 @@ class ListSimsUseCase(
         for (sim in sims) {
             var account = accountRepository.getAccountBySim(sim.subscriptionId)
             var balanceAct: HoverAction? = null
-            var airtimeAct: HoverAction? = null
+            var airtimeActs: List<HoverAction>? = null
 
             if (account == null)
                 account = accountRepository.createAccount(sim)
 
             if (account.channelId != -1) {
                 balanceAct = actionRepository.getFirstAction(account.channelId, HoverAction.BALANCE)
-                airtimeAct = actionRepository.getFirstAction(account.channelId, HoverAction.AIRTIME)
+                airtimeActs = actionRepository.getActionsByRecipientInsitution(account.institutionId, HoverAction.AIRTIME)
             }
-            result.add(SimWithAccount(sim, account, balanceAct, airtimeAct))
+            result.add(SimWithAccount(sim, account, balanceAct, airtimeActs))
         }
         result
     }

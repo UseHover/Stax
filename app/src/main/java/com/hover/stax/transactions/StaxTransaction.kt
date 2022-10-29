@@ -2,7 +2,6 @@ package com.hover.stax.transactions
 
 import android.content.Context
 import com.hover.stax.utils.DateUtils.now
-import com.hover.stax.utils.Utils.getAmount
 import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
 import android.content.Intent
@@ -113,7 +112,7 @@ data class StaxTransaction(
 		}
 	}
 
-	fun update(data: Intent, action: HoverAction, contact: StaxContact, context: Context) {
+	fun update(data: Intent, contact: StaxContact) {
 		status = data.getStringExtra(TransactionContract.COLUMN_STATUS)!!
 		if (hasExtra(data, TransactionContract.COLUMN_CATEGORY))
 			category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY)!!
@@ -125,8 +124,8 @@ data class StaxTransaction(
 	private fun parseExtras(extras: HashMap<String, String>?) {
 		if (extras == null) return
 		Timber.e("Extras %s", extras.keys)
-		if (extras.containsKey(HoverAction.AMOUNT_KEY)) amount = getAmount(extras[HoverAction.AMOUNT_KEY]!!)
-		if (extras.containsKey(FEE_KEY)) fee = getAmount(extras[FEE_KEY]!!)
+		if (extras.containsKey(HoverAction.AMOUNT_KEY)) amount = Utils.amountToDouble(extras[HoverAction.AMOUNT_KEY]!!)
+		if (extras.containsKey(FEE_KEY)) fee =  Utils.amountToDouble(extras[FEE_KEY]!!)
 		if (extras.containsKey(CONFIRM_CODE_KEY)) confirm_code = extras[CONFIRM_CODE_KEY]
 		if (extras.containsKey(HoverAction.BALANCE)) balance = extras[HoverAction.BALANCE]
 		if (extras.containsKey(ACCOUNT_ID)) accountId = extras[ACCOUNT_ID]!!.toInt()
@@ -140,7 +139,6 @@ data class StaxTransaction(
 		val amountStr = Utils.formatAmount(amount)
 		return when(transaction_type) {
 			HoverAction.RECEIVE -> c.getString(R.string.descrip_transfer_received, contact!!.shortName())
-			HoverAction.FETCH_ACCOUNTS -> c.getString(R.string.descrip_fetch_accounts, action.from_institution_name)
 			HoverAction.BALANCE -> c.getString(R.string.descrip_balance, action.from_institution_name)
 			HoverAction.AIRTIME -> c.getString(R.string.descrip_airtime_sent, amountStr,
 			if (contact == null) c.getString(R.string.self_choice) else contact.shortName())
