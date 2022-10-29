@@ -44,7 +44,7 @@ android {
     defaultConfig {
         applicationId "com.hover.stax"
         minSdk 21
-        targetSdk 33
+        targetSdk 32
         versionCode 195
         versionName "1.17.0"
 
