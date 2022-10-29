@@ -32,7 +32,7 @@ class HoverSession private constructor(b: Builder) {
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
         .apply {
             setEnvironment(if (Utils.getBoolean(TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
-            extra(ACCOUNT_NAME, account.name)
+            extra(ACCOUNT_NAME, account.getAccountNameExtra())
             private_extra(ACCOUNT_ID, account.id.toString())
             request(b.action.public_id)
             setHeader(getMessage(b.action, b.activity))
@@ -64,7 +64,6 @@ class HoverSession private constructor(b: Builder) {
         return when (a.transaction_type) {
             HoverAction.BALANCE -> c.getString(R.string.balance_msg, a.from_institution_name)
             HoverAction.AIRTIME -> c.getString(R.string.airtime_msg)
-            HoverAction.FETCH_ACCOUNTS -> c.getString(R.string.fetch_accounts)
             else -> c.getString(R.string.transfer_msg)
         }
     }

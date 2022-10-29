@@ -212,8 +212,8 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun updateAccount(account: Account) {
-        binding.details.paidWithValue.text = account.name
-        binding.details.feeLabel.text = getString(R.string.transaction_fee, account.name)
+        binding.details.paidWithValue.text = account.userAlias
+        binding.details.feeLabel.text = getString(R.string.transaction_fee, account.institutionName)
     }
 
     private fun updateMessages(ussdCallResponses: List<UssdCallResponse>?) {

@@ -56,7 +56,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
 
         viewModel.account.observe(viewLifecycleOwner) {
             binding.summaryCard.requesterAccountRow.visibility = if (it != null) View.VISIBLE else View.GONE
-            it?.let { (view.findViewById(R.id.requesterValue) as Stax2LineItem).setTitle(it.name)  }
+            it?.let { (view.findViewById(R.id.requesterValue) as Stax2LineItem).setTitle(it.userAlias)  }
         }
 
         viewModel.request.observe(viewLifecycleOwner) {

@@ -50,7 +50,7 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
 
     fun updateAccountName(newName: String) = viewModelScope.launch(Dispatchers.IO) {
         val a = account.value!!
-        a.alias = newName
+        a.userAlias = newName
         repo.update(a)
     }
 

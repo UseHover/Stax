@@ -116,7 +116,7 @@ abstract class AbstractFormFragment : Fragment() {
     private fun askToCheckBalance(account: Account) {
         val dialog = StaxDialog(layoutInflater)
             .setDialogTitle(R.string.finish_adding_title)
-            .setDialogMessage(getString(R.string.finish_adding_desc, account.alias))
+            .setDialogMessage(getString(R.string.finish_adding_desc, account.userAlias))
             .setNegButton(R.string.btn_cancel, null)
             .setPosButton(R.string.connect_cta) { balancesViewModel.requestBalance(account) }
         dialog.showIt()
