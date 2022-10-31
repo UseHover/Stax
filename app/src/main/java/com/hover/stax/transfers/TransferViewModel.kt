@@ -80,6 +80,7 @@ class TransferViewModel(application: Application, private val getBonusesUseCase:
     private fun setNote(n: String?) = note.postValue(n)
 
     fun amountErrorsCheck(customRegex: String? = null): String? {
+        Timber.i("Custom regex is $customRegex")
         return if (!customRegex.isNullOrEmpty() && amount.value!!.matches(customRegex.toRegex())) null
         else if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
         else getString(R.string.amount_fielderror)
