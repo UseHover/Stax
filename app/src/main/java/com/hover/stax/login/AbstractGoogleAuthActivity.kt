@@ -29,7 +29,7 @@ import timber.log.Timber
 const val FORCED_VERSION = "force_update_app_version"
 
 abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
-    StaxGoogleLoginInterface {
+        StaxGoogleLoginInterface {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
@@ -56,7 +56,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
             //if an in-app update is already running, resume the update
             if (updateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                 updateManager.startUpdateFlowForResult(
-                    updateInfo, IMMEDIATE, this, UPDATE_REQUEST_CODE
+                        updateInfo, IMMEDIATE, this, UPDATE_REQUEST_CODE
                 )
             }
         }
@@ -68,7 +68,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 
     private fun initGoogleAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.google_server_client_id)).requestEmail().build()
+                .requestIdToken(getString(R.string.google_server_client_id)).requestEmail().build()
         loginViewModel.signInClient = GoogleSignIn.getClient(this, gso)
     }
 
@@ -85,13 +85,13 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
     fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
 
     private val loginForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                loginViewModel.signIntoGoogle(result.data)
-            } else {
-                staxGoogleLoginInterface.googleLoginFailed()
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    loginViewModel.signIntoGoogle(result.data)
+                } else {
+                    staxGoogleLoginInterface.googleLoginFailed()
+                }
             }
-        }
 
     private fun checkForUpdates() {
         val updateInfoTask = updateManager.appUpdateInfo
@@ -99,8 +99,8 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
         updateInfoTask.addOnSuccessListener { updateInfo ->
             val updateType = getUpdateType(updateInfo)
             if (updateInfo.updateAvailability() == UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(
-                    updateType
-                )
+                            updateType
+                    )
             ) {
                 logAppUpdate(STARTED)
                 requestUpdate(updateInfo, updateType)
@@ -116,7 +116,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 
     private fun getUpdateType(updateInfo: AppUpdateInfo): Int {
         val isGracePeriod =
-            (updateInfo.clientVersionStalenessDays() ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE
+                (updateInfo.clientVersionStalenessDays() ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE
         val mustForceUpdate = BuildConfig.VERSION_CODE < Utils.getInt(FORCED_VERSION, this)
         return if (mustForceUpdate || !isGracePeriod) IMMEDIATE
         else FLEXIBLE
@@ -135,21 +135,21 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
 
     private fun showSnackbarForCompleteUpdate() {
         Snackbar.make(
-            findViewById(R.id.home_root),
-            getString(R.string.update_downloaded),
-            Snackbar.LENGTH_INDEFINITE
+                findViewById(R.id.home_root),
+                getString(R.string.update_downloaded),
+                Snackbar.LENGTH_INDEFINITE
         ).apply {
             setAction(getString(R.string.restart)) {
                 updateManager.completeUpdate(); installListener?.let {
                 updateManager.unregisterListener(
-                    it
+                        it
                 )
             }
             }
             setActionTextColor(
-                ContextCompat.getColor(
-                    this@AbstractGoogleAuthActivity, R.color.stax_state_blue
-                )
+                    ContextCompat.getColor(
+                            this@AbstractGoogleAuthActivity, R.color.stax_state_blue
+                    )
             )
             show()
         }
