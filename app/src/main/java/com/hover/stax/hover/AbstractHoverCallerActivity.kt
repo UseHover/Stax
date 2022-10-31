@@ -52,7 +52,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
     private fun getAccountNameExtra(account: Account, action: HoverAction): HashMap<String, String>? {
         if (action.requiredParams.contains(ACCOUNT_NAME)) {
             val extras = HashMap<String, String>()
-            extras[ACCOUNT_NAME] =
+            extras[ACCOUNT_NAME] = account.getAccountNameExtra()
             return extras
         }
         return null
