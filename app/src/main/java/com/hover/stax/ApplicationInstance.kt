@@ -43,7 +43,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(appModule + dataModule + networkModule + useCases + repositories)
+            modules(appModule + dataModule + networkModule + ktorModule + datastoreModule + useCases + repositories)
         }
     }
 
