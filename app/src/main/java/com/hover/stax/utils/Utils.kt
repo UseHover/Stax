@@ -3,7 +3,6 @@ package com.hover.stax.utils
 import android.Manifest
 import android.app.Activity
 import android.content.*
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -11,7 +10,6 @@ import androidx.annotation.StringRes
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
