@@ -79,8 +79,9 @@ class TransferViewModel(application: Application, private val getBonusesUseCase:
 
     private fun setNote(n: String?) = note.postValue(n)
 
-    fun amountErrors(): String? {
-        return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
+    fun amountErrorsCheck(customRegex: String? = null): String? {
+        return if (!customRegex.isNullOrEmpty() && amount.value!!.matches(customRegex.toRegex())) null
+        else if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
         else getString(R.string.amount_fielderror)
     }
 
