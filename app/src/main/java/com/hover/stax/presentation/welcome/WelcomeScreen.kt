@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
+import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.welcome.components.ContinueButton
 import com.hover.stax.presentation.welcome.components.FeatureCard
 import com.hover.stax.presentation.welcome.components.GoogleSignInButton
@@ -22,7 +23,7 @@ import com.hover.stax.ui.theme.StaxTheme
 
 
 @Composable
-fun WelcomeScreen(buttonText: String, onClickContinue: () -> Unit, onClickSignIn: () -> Unit, showExploreButton : Boolean) {
+fun WelcomeScreen(onClickContinue: () -> Unit, onClickSignIn: () -> Unit, showExploreButton : Boolean) {
     val features = getFeatures()
 
     StaxTheme {
@@ -56,7 +57,7 @@ fun WelcomeScreen(buttonText: String, onClickContinue: () -> Unit, onClickSignIn
 
                         if(showExploreButton) {
                             Spacer(modifier = Modifier.height(10.dp))
-                            ContinueButton(text = buttonText, onClick = onClickContinue)
+                            ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = onClickContinue)
                         }
                     }
                 }
@@ -71,7 +72,7 @@ fun WelcomeScreen(buttonText: String, onClickContinue: () -> Unit, onClickSignIn
 @Composable
 fun WelcomeScreenPreview() {
     val features = getFeatures()
-    val showExploreButton = false
+    val showExploreButton = true
 
     StaxTheme {
         Surface(

@@ -25,9 +25,8 @@ class WelcomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         ComposeView(requireContext()).apply {
             id = R.id.welcomeFragment
-            val buttonText = getString(R.string.explore_btn_text)
             setContent {
-                WelcomeScreen(buttonText, { onClickGetStarted() }, { onClickLogin() }, showExploreButton = true)
+                WelcomeScreen({ onClickGetStarted() }, { onClickLogin() }, showExploreButton = true)
             }
         }
 

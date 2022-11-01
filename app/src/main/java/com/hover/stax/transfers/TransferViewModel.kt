@@ -63,8 +63,11 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
 
     private fun setNote(n: String?) = note.postValue(n)
 
-    fun amountErrors(): String? {
-        return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
+    fun amountErrors(a: HoverAction?): String? {
+        val regex = a?.getStepByVar(HoverAction.AMOUNT_KEY)?.optString("valid_response_regex")
+        Timber.i("Custom regex is $regex")
+        return if (!regex.isNullOrEmpty() && amount.value!!.matches(regex.toRegex())) null
+        else if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
         else getString(R.string.amount_fielderror)
     }
 

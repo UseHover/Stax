@@ -49,15 +49,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         runSession(account, action, null, account.id)
     }
 
-    private fun getAccountNameExtra(account: Account, action: HoverAction): HashMap<String, String>? {
-        if (action.requiredParams.contains(ACCOUNT_NAME)) {
-            val extras = HashMap<String, String>()
-            extras[ACCOUNT_NAME] =
-            return extras
-        }
-        return null
-    }
-
     fun runSession(account: Account, action: HoverAction, extras: HashMap<String, String>?, requestCode: Int) {
         val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity, requestCode)
         if (!extras.isNullOrEmpty()) hsb.extras(extras)

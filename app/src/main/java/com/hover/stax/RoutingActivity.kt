@@ -26,6 +26,7 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.PERM_ACTIVITY
 import com.hover.stax.inapp_banner.BannerUtils
+import com.hover.stax.login.FORCED_VERSION
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
@@ -124,11 +125,17 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
+                cacheConfigs(remoteConfig)
                 validateUser()
             }.addOnFailureListener {
                 validateUser()
             }
         }
+    }
+
+    private fun cacheConfigs(remoteConfig: FirebaseRemoteConfig) {
+        val forcedVersion = remoteConfig.getString(FORCED_VERSION)
+        Utils.saveInt(FORCED_VERSION, forcedVersion.toInt(), this)
     }
 
     private fun initUxCam() {

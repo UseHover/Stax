@@ -66,16 +66,16 @@ private fun contentColor(type: Int): Color {
 }
 
 @Composable
-fun PrimaryButton(text: String, icon: Int?, onClick: () -> Unit) {
+fun PrimaryButton(text: String, icon: Int? = null, onClick: () -> Unit) {
 	StaxButton(text = text, icon = icon, onClick = onClick, PRIMARY)
 }
 
 @Composable
-fun SecondaryButton(text: String, icon: Int?, onClick: () -> Unit) {
+fun SecondaryButton(text: String, icon: Int? = null, onClick: () -> Unit) {
 	StaxButton(text = text, icon = icon, onClick = onClick, SECONDARY)
 }
 
 @Composable
-fun DisabledButton(text: String, icon: Int?, onClick: () -> Unit) {
+fun DisabledButton(text: String, icon: Int? = null, onClick: () -> Unit) {
 	StaxButton(text = text, icon = icon, onClick = onClick, DISABLED)
 }

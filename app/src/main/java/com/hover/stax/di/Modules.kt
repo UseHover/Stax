@@ -1,5 +1,8 @@
 package com.hover.stax.di
 
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.chuckerteam.chucker.api.RetentionManager
 import com.hover.sdk.api.Hover
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.BuildConfig
@@ -9,17 +12,22 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.contacts.ContactRepo
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.remote.StaxApi
-import com.hover.stax.data.repository.*
+import com.hover.stax.data.repository.AccountRepositoryImpl
+import com.hover.stax.data.repository.BountyRepositoryImpl
+import com.hover.stax.data.repository.ChannelRepositoryImpl
+import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
+import com.hover.stax.data.repository.StaxUserRepositoryImpl
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.repository.*
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.domain.use_case.sims.ListSimsUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
+import com.hover.stax.domain.use_case.sims.ListSimsUseCase
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -29,12 +37,12 @@ import com.hover.stax.login.LoginViewModel
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.merchants.MerchantViewModel
 import com.hover.stax.paybill.PaybillRepo
-import com.hover.stax.data.local.SimRepo
 import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.presentation.bounties.BountyViewModel
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.presentation.home.HomeViewModel
+import com.hover.stax.presentation.sims.SimViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestDetailViewModel
 import com.hover.stax.requests.RequestRepo
@@ -42,7 +50,6 @@ import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.presentation.sims.SimViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.user.UserRepo
@@ -107,20 +114,37 @@ val networkModule = module {
 //    singleOf(::LoginNetworking)
 
     single<StaxApi> {
-        val loggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+        val loggingInterceptor =
+            HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
         val okHttpClient = OkHttpClient()
             .newBuilder()
             .addInterceptor { chain ->
                 val request = chain.request()
-                val builder = request.newBuilder().header("Authorization", "Token token=${Hover.getApiKey(androidContext())}")
+                val builder = request.newBuilder()
+                    .header("Authorization", "Token token=${Hover.getApiKey(androidContext())}")
 
                 val newRequest = builder.build()
                 chain.proceed(newRequest)
             }
 
+        val chuckerCollector = ChuckerCollector(
+            context = androidContext(),
+            showNotification = true,
+            retentionPeriod = RetentionManager.Period.ONE_HOUR
+        )
+
+        val chuckerInterceptor = ChuckerInterceptor.Builder(androidContext())
+            .collector(chuckerCollector)
+            .maxContentLength(250000L)
+            .redactHeaders(emptySet())
+            .alwaysReadResponseBody(false)
+            .build()
+
         if (BuildConfig.DEBUG)
             okHttpClient.addInterceptor(loggingInterceptor)
+
+        okHttpClient.addInterceptor(chuckerInterceptor)
 
         Retrofit.Builder()
             .baseUrl(androidContext().resources.getString(R.string.root_url))
