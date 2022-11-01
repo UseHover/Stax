@@ -3,7 +3,6 @@ package com.hover.stax.utils
 import android.Manifest
 import android.app.Activity
 import android.content.*
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager

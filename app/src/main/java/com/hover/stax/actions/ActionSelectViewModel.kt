@@ -5,14 +5,18 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.actions.HoverAction.*
+import com.hover.sdk.actions.HoverAction.ACCOUNT_KEY
+import com.hover.sdk.actions.HoverAction.AMOUNT_KEY
+import com.hover.sdk.actions.HoverAction.NOTE_KEY
+import com.hover.sdk.actions.HoverAction.PHONE_KEY
+import com.hover.sdk.actions.HoverAction.PIN_KEY
 import com.hover.stax.R
 import com.hover.stax.domain.model.ACCOUNT_NAME
-import java.util.LinkedHashMap
+import org.json.JSONException
 
 const val RECIPIENT_INSTITUTION = "recipientInstitution"
+
 
 class ActionSelectViewModel(application: Application) : AndroidViewModel(application) {
 
