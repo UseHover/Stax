@@ -25,8 +25,10 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
+import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -217,7 +219,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         binding.editCard.amountInput.apply {
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
-                setInputState(hasFocus, this, transferViewModel.amountErrors())
+                setInputState(hasFocus, this, transferViewModel.amountErrors(actionSelectViewModel.activeAction.value))
             }
         }
     }
@@ -277,7 +279,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val accountError = accountsViewModel.errorCheck()
         payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val amountError = transferViewModel.amountErrors()
+        val amountError = transferViewModel.amountErrors(actionSelectViewModel.activeAction.value)
         binding.editCard.amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val actionError = actionSelectViewModel.errorCheck()
