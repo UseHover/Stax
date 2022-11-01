@@ -219,7 +219,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         binding.editCard.amountInput.apply {
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
-                setInputState(hasFocus, this, transferViewModel.amountErrorsCheck())
+                setInputState(hasFocus, this, transferViewModel.amountErrors(actionSelectViewModel.activeAction.value))
             }
         }
     }
@@ -279,7 +279,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val accountError = accountsViewModel.errorCheck()
         payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val amountError = transferViewModel.amountErrorsCheck(actionSelectViewModel.getAmountValidationRegex())
+        val amountError = transferViewModel.amountErrors(actionSelectViewModel.activeAction.value)
         binding.editCard.amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val actionError = actionSelectViewModel.errorCheck()

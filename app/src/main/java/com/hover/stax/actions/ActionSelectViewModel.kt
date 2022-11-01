@@ -46,17 +46,6 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
         return if (activeAction.value == null) (getApplication() as Context).getString(R.string.action_fielderror) else null
     }
 
-    fun getAmountValidationRegex(): String? {
-        val action = activeAction.value
-        return if (action != null) {
-            try {
-                action.extractCustomStep(AMOUNT_KEY, "valid_response_regex") as String
-            } catch (e: JSONException) {
-                null
-            }
-        } else null
-    }
-
     private fun initNonStandardVariables(action: HoverAction?) {
         action?.let {
             val variableMap = LinkedHashMap<String, String>()
