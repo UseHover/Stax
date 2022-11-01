@@ -226,13 +226,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         val recipientError = requestViewModel.requesteeErrors()
         requesteeInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-//        requestViewModel.activeAccount.value?.let {
-//            if (!requestViewModel.isValidAccount()) {
-//                payWithDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-//                return false
-//            }
-//        }
-
         return accountError == null && requesterAcctNoError == null && recipientError == null
     }
 
