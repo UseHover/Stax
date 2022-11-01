@@ -138,5 +138,5 @@ interface TransactionUiDelegate {
     }
 
     val displayBalance: String
-        get() = Utils.formatAmount(transaction.balance)
+        get() = if (Utils.amountToDouble(transaction.balance) != null) Utils.formatAmount(transaction.balance) else transaction.balance.toString()
 }

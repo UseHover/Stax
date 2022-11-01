@@ -8,7 +8,6 @@ import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.schedules.Schedule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -74,10 +73,10 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         loadActions(account, type.value!!)
     }
 
-    private fun loadActions(account: Account, t: String) = viewModelScope.launch(Dispatchers.IO) {
+    private fun loadActions(account: Account, type: String) = viewModelScope.launch(Dispatchers.IO) {
         channelActions.postValue(
-            if (t == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
-            else actionRepo.getActions(account.channelId, t)
+            if (type == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
+            else actionRepo.getActions(account.channelId, type)
         )
     }
 
@@ -101,7 +100,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         }
     }
 
-    fun isValidAccount(): Boolean = !activeAccount.value!!.name.contains(PLACEHOLDER)
+    fun isValidAccount(): Boolean = activeAccount.value?.latestBalance != null || activeAccount.value?.institutionType != "bank"
 
     fun view(s: Schedule) {
         setType(s.type)
@@ -126,7 +125,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             a.isDefault = true
             repo.update(a)
 
-            accountUpdateChannel.send((getApplication() as Context).getString(R.string.def_account_update_msg, account.alias))
+            accountUpdateChannel.send((getApplication() as Context).getString(R.string.def_account_update_msg, account.userAlias))
         }
     }
 

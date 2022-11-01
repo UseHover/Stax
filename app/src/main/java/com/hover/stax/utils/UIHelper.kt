@@ -96,7 +96,7 @@ object UIHelper {
         .circleCrop()
         .into(this)
 
-    fun loadImage(context: Context, url: String, target: CustomTarget<Drawable>) = GlideApp.with(context)
+    fun loadImage(context: Context, url: String?, target: CustomTarget<Drawable>) = GlideApp.with(context)
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()

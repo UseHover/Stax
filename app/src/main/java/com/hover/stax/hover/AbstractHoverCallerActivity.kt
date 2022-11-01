@@ -8,6 +8,7 @@ import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.ACCOUNT_NAME
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.home.NavHelper
 import com.hover.stax.notifications.PushNotificationTopicsInterface
@@ -27,7 +28,6 @@ const val SCHEDULED = "SCHEDULED"
 const val TRANSFER_REQUEST = 203
 const val SCHEDULE_REQUEST = 204
 const val REQUEST_REQUEST = 301
-const val FETCH_ACCOUNT_REQUEST = 205
 const val BOUNTY_REQUEST = 207
 const val FEE_REQUEST = 208
 
@@ -46,7 +46,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
     }
 
     fun runSession(account: Account, action: HoverAction) {
-        runSession(account, action, null, account.id) // Constants.REQUEST_REQUEST
+        runSession(account, action, null, account.id)
     }
 
     fun runSession(account: Account, action: HoverAction, extras: HashMap<String, String>?, requestCode: Int) {
@@ -64,11 +64,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         }
         AnalyticsUtil.logAnalyticsEvent(event, data, this)
         Timber.e(event)
-    }
-
-    private fun getRequestCode(transactionType: String): Int {
-        return if (transactionType == HoverAction.FETCH_ACCOUNTS) FETCH_ACCOUNT_REQUEST
-        else TRANSFER_REQUEST
     }
 
     fun makeRegularCall(a: HoverAction, analytics: Int) {

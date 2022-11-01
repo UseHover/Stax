@@ -60,6 +60,8 @@
                     android:text="@string/pending_callout"
                     android:textColor="@color/offWhite"
                     android:textSize="@dimen/text_13"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     app:drawableStartCompat="@drawable/ic_info" />
 
         </LinearLayout>

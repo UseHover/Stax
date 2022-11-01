@@ -13,13 +13,13 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.transactions.TransactionRepo
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,26 +46,30 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private var contact: StaxContact? = null
 
     override fun onReceive(context: Context, intent: Intent?) {
-        intent?.let {
+        if (intent != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
 
-                actionId?.let {
-                    action = actionRepo.getAction(it)
+                if (actionId != null) {
+                    action = actionRepo.getAction(actionId)
 
                     //added null check to prevent npe whenever action is null
                     action?.let { a ->
                         channel = channelRepo.getChannel(a.channel_id)
 
-                        createAccounts(intent)
-                        updateBalance(intent)
                         updateContacts(intent)
                         updateTransaction(intent, context.applicationContext)
+                        updateBalance(intent)
+                        updateAccounts(intent)
                         updateBusinesses(intent)
                         updateRequests(intent)
                     }
+                } else {
+                    AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no action ID", context)
                 }
             }
+        } else {
+            AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no intent", context)
         }
     }
 
@@ -137,10 +141,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private fun updateRequests(intent: Intent) {
         if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.RECEIVE) {
             requestRepo.requests.forEach {
-                if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(
-                        it.amount
-                            ?: "00"
-                    ) == Utils.getAmount(getAmount(intent)!!)
+                if (it.requestee_ids.contains(contact!!.id) && Utils.amountToDouble(it.amount) == Utils.amountToDouble(getAmount(intent)!!)
                 ) {
                     it.matched_transaction_uuid = intent.getStringExtra(TransactionContract.COLUMN_UUID)
                     requestRepo.update(it)
@@ -161,43 +162,41 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         extras[HoverAction.AMOUNT_KEY]
     else null
 
-    private fun createAccounts(intent: Intent) {
+    private fun updateAccounts(intent: Intent) {
         if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
             if (parsedVariables.containsKey("userAccountList")) {
-                val accounts = accountRepo.getAllAccounts().toMutableList()
-                val parsedAccounts = parseAccounts(parsedVariables["userAccountList"]!!)
-
-                removePlaceholders(parsedAccounts, accounts.map { it.channelId }.toIntArray())
-
-                accountRepo.saveAccounts(parseAccounts(parsedVariables["userAccountList"]!!))
+                parseAccounts(parsedVariables["userAccountList"]!!)
             }
         }
     }
 
-    private fun parseAccounts(accountList: String): List<Account> {
-        val pattern = Pattern.compile("^[\\d]{1,2}[>):.\\s]+(.+)\$", Pattern.MULTILINE)
-        val matcher = pattern.matcher(accountList)
+    private fun parseAccounts(ussdAccountList: String) {
+        val pattern = Pattern.compile("^([\\d]{1,2})[>):.\\s]+(.+)\$", Pattern.MULTILINE)
+        val matcher = pattern.matcher(ussdAccountList)
 
-        val accounts = ArrayList<Account>()
         while (matcher.find()) {
-            val newAccount = Account(matcher.group(1)!!, channel!!)
-            accounts.add(newAccount)
-        }
+            try {
+                if (IntRange(1, 8).contains(Integer.valueOf(matcher.group(1)!!))) { // Navigation options like back are usually 0 or 00 or 9 and above
 
-        if (accountRepo.getDefaultAccount() == null && accounts.isNotEmpty())
-            accounts.first().isDefault = true
+                    val accounts = accountRepo.getAccountsByChannel(channel!!.id)
+                    if (accounts.any { it.institutionAccountName == matcher.group(2)!! }) { break }
 
-        return accounts
-    }
+                    val a = if (account != null && account!!.institutionAccountName == null) {
+                        account!!
+                    } else if (accounts.any { it.institutionAccountName == null }) {
+                        accounts.first { it.institutionAccountName == null }
+                    } else {
+                        Account(matcher.group(2)!!, channel!!, false, account?.simSubscriptionId ?: -1)
+                    }
 
-    private fun removePlaceholders(parsedAccounts: List<Account>, savedAccounts: IntArray) {
-        parsedAccounts.forEach {
-            if (savedAccounts.contains(it.channelId)) {
-                Timber.e("Removing ${it.channelId} from ${it.name}")
-                accountRepo.deleteAccount(it.channelId, it.name.plus(PLACEHOLDER))
-            }
+                    a.institutionAccountName = matcher.group(2)!!
+                    if (a.institutionName == a.userAlias) a.userAlias = matcher.group(2)!!
+
+                    accountRepo.saveAccount(a)
+                }
+            } catch (e: Exception) { AnalyticsUtil.logErrorAndReportToFirebase(TransactionReceiver::class.java.simpleName, "Failed to parse account list from USSD", e)}
         }
     }
 }

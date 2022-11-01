@@ -20,8 +20,7 @@ import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.domain.model.PLACEHOLDER
-import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -36,7 +35,7 @@ import org.json.JSONObject
 //TODO: Refactor this class, and note the comment in the createAccounts(channels: List<Channel>) method
 //Todo created by Tobi, 11th of August, 2022.
 class ChannelsViewModel(application: Application, val repo: ChannelRepo,
-                        val presentSimUseCase: GetPresentSimUseCase,
+                        val simRepo: SimRepo,
                         val accountRepo: AccountRepo,
                         val actionRepo: ActionRepo,
                         private val bonusRepo: BonusRepo) : AndroidViewModel(application),
@@ -83,7 +82,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     private fun loadSims() {
-        viewModelScope.launch(Dispatchers.IO) { sims.postValue(presentSimUseCase.invoke()) }
+        viewModelScope.launch(Dispatchers.IO) { sims.postValue(simRepo.getPresentSims()) }
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(getApplication())
@@ -97,7 +96,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         simReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 viewModelScope.launch {
-                    sims.postValue(presentSimUseCase.invoke())
+                    sims.postValue(simRepo.getPresentSims())
                 }
             }
         }
@@ -187,18 +186,13 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         val defaultAccount = accountRepo.getDefaultAccount()
 
         val accounts = channels.mapIndexed { index, channel ->
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER) //ensures uniqueness of name due to db constraints
-            Account(
-                accountName, channel.name, channel.logoUrl, channel.accountNo, channel.id, channel.institutionType, channel.countryAlpha2,
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null && index == 0, simSubscriptionId = -1
-            )
+            Account(channel, defaultAccount == null && index == 0, -1)
         }.onEach {
             logChoice(it)
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
         }
 
         val accountIds = accountRepo.insert(accounts)
-        channels.onEach { it.selected = true }.also { repo.update(it) }
 
         //Refactoring tip: This is currently the only difference when compared with the function in AccountRepositoryImpl.
         promptBalanceCheck(accountIds.first().toInt())
@@ -211,8 +205,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
             accountChannel.send(it)
         }
     }
-
-    private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
     fun updateSearch(value: String) {
         filterQuery.value = value
@@ -235,7 +227,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     private fun filterBonusChannels(channels: List<Channel>) = viewModelScope.launch {
-        bonusRepo.bonuses.collect { list ->
+        bonusRepo.collectBonuses.collect { list ->
             val ids = list.map { it.purchaseChannel }
             filteredChannels.value = if (ids.isEmpty())
                 channels

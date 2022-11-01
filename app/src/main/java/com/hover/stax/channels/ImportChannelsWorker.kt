@@ -20,15 +20,9 @@ import org.koin.core.component.inject
 import timber.log.Timber
 import java.io.IOException
 
-class ImportChannelsWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params), KoinComponent {
+class ImportChannelsWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
-    private var channelDao: ChannelDao? = null
-
-    private val db: AppDatabase by inject()
-
-    init {
-        channelDao = db.channelDao()
-    }
+    private val channelDao = AppDatabase.getInstance(context).channelDao()
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(NOTIFICATION_ID, createNotification())
@@ -42,7 +36,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
             parseChannelJson()?.let {
                 val channelsJson = JSONObject(it)
                 val data: JSONArray = channelsJson.getJSONArray("data")
-                ChannelUtil.updateChannels(data, applicationContext)
+                Channel.load(data, channelDao, applicationContext)
 
                 Timber.i("Channels imported successfully")
                 Result.success()

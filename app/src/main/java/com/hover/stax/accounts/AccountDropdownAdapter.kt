@@ -39,7 +39,7 @@ class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : Ar
     inner class ViewHolder(val binding: StaxSpinnerItemWithLogoBinding) {
 
         fun setAccount(account: Account) {
-            binding.serviceItemNameId.text = account.alias
+            binding.serviceItemNameId.text = account.userAlias
 
             if (account.logoUrl.isEmpty())
                 binding.serviceItemImageId.loadImage(binding.root.context, R.drawable.ic_add)

@@ -1,6 +1,8 @@
 package com.hover.stax.domain.use_case.bounties
 
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.countries.CountryAdapter
+import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.BountyRepository
@@ -39,6 +41,16 @@ class GetChannelBountiesUseCase(private val channelRepository: ChannelRepository
         }
 
         return channelBounties.await()
+    }
+
+    fun isSimPresent(bounty: Bounty, sims: List<SimInfo>): Boolean {
+        if (sims.isEmpty()) return false
+
+        sims.forEach { simInfo ->
+            for (i in 0 until bounty.action.hni_list.length()) if (bounty.action.hni_list.optString(i) == simInfo.osReportedHni) return true
+        }
+
+        return false
     }
 
     fun getChannelList(): Flow<List<String>> = bountyRepository.getCountryList()

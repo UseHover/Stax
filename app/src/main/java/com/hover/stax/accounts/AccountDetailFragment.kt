@@ -18,7 +18,6 @@ import com.hover.stax.R
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.PLACEHOLDER
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
@@ -87,7 +86,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            toggleButtonHighlight(binding.manageCard.nicknameInput, binding.manageCard.nicknameSaveBtn, charSequence.toString(), viewModel.account.value?.alias)
+            toggleButtonHighlight(binding.manageCard.nicknameInput, binding.manageCard.nicknameSaveBtn, charSequence.toString(), viewModel.account.value?.userAlias)
         }
     }
 
@@ -110,7 +109,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun updateNickname() {
-        validateInput(binding.manageCard.nicknameInput, viewModel.account.value?.alias, R.string.account_name_error, viewModel::updateAccountName)
+        validateInput(binding.manageCard.nicknameInput, viewModel.account.value?.userAlias, R.string.account_name_error, viewModel::updateAccountName)
     }
 
     private fun updateAccountNumber() {
@@ -138,16 +137,18 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         with(viewModel) {
             account.observe(viewLifecycleOwner) {
                 it?.let { acct ->
-                    binding.amountsCard.setTitle(acct.alias)
+                    binding.amountsCard.setTitle(acct.userAlias)
+                    if (acct.userAlias != acct.institutionName)
+                        binding.amountsCard.setSubtitle(acct.institutionName)
                     if (acct.latestBalance != null) {
                         binding.balanceCard.balanceAmount.text = acct.latestBalance
                         binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
-                    binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.detailsCard.officialName.text = if(acct.name.contains(PLACEHOLDER)) acct.alias else acct.name
+                    binding.feesDescription.text = getString(R.string.fees_label, acct.institutionName)
+                    binding.detailsCard.officialName.text = acct.userAlias
 
-                    binding.manageCard.nicknameInput.setText(acct.alias, false)
+                    binding.manageCard.nicknameInput.setText(acct.userAlias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
                     binding.manageCard.removeAcctBtn.setOnClickListener { setUpRemoveAccount(acct) }
 
@@ -156,8 +157,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
             }
 
             channel.observe(viewLifecycleOwner) { c ->
-                if (account.value != null && account.value!!.alias != c.name)
-                    binding.amountsCard.setSubtitle(c.name)
                 binding.detailsCard.shortcodeBtn.text = getString(R.string.dial_btn, c.rootCode)
                 binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
             }
@@ -184,10 +183,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun onTapBalanceRefresh(account: Account?) {
-        account?.let {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
-            balancesViewModel.requestBalance(account)
-        }
+        balancesViewModel.requestBalance(account)
     }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {
@@ -200,7 +196,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun setUpRemoveAccount(account: Account) {
         dialog = StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.alias))
+                .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.userAlias))
                 .setDialogMessage(R.string.removeaccount_msg)
                 .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
                 .setNegButton(R.string.btn_cancel, null)

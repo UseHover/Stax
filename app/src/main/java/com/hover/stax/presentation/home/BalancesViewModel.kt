@@ -2,6 +2,7 @@ package com.hover.stax.presentation.home
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +13,7 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 
 import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.PLACEHOLDER
+import com.hover.stax.utils.AnalyticsUtil
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -38,16 +39,28 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo, va
         getAccounts()
     }
 
-    fun requestBalance(account: Account) {
-        userRequestedBalanceAccount.value = account
-        startBalanceActionFor(userRequestedBalanceAccount.value)
+    fun requestBalance(account: Account?) {
+        if (account == null) {
+            AnalyticsUtil.logAnalyticsEvent(
+                (getApplication() as Context).getString(R.string.refresh_balance_failed),
+                getApplication()
+            )
+            Toast.makeText(getApplication(), R.string.refresh_balance_failed, Toast.LENGTH_LONG).show()
+        } else {
+            AnalyticsUtil.logAnalyticsEvent(
+                (getApplication() as Context).getString(R.string.refresh_balance),
+                getApplication()
+            )
+            userRequestedBalanceAccount.value = account
+            startBalanceActionFor(userRequestedBalanceAccount.value)
+        }
     }
 
     private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
-        if(account == null) return@launch
+        if (account == null) return@launch
 
         val channelId = account.channelId
-        val action = actionRepo.getActions(channelId, if (account.name.contains(PLACEHOLDER)) HoverAction.FETCH_ACCOUNTS else HoverAction.BALANCE).firstOrNull()
+        val action = actionRepo.getFirstAction(channelId, HoverAction.BALANCE)
         action?.let { _balanceAction.emit(action) } ?: run { _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action)) }
     }
 

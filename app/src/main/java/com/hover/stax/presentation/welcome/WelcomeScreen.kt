@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
+import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.welcome.components.ContinueButton
 import com.hover.stax.presentation.welcome.components.FeatureCard
 import com.hover.stax.presentation.welcome.components.GoogleSignInButton
@@ -22,7 +23,7 @@ import com.hover.stax.ui.theme.StaxTheme
 
 
 @Composable
-fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onClickContinue: () -> Unit, onClickSignIn: () -> Unit) {
+fun WelcomeScreen(onClickContinue: () -> Unit, onClickSignIn: () -> Unit, showExploreButton : Boolean) {
     val features = getFeatures()
 
     StaxTheme {
@@ -54,9 +55,10 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
                     Column {
                         GoogleSignInButton { onClickSignIn() }
 
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        ContinueButton(text = buttonText, onClick = onClickContinue)
+                        if(showExploreButton) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = onClickContinue)
+                        }
                     }
                 }
             )
@@ -70,6 +72,7 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
 @Composable
 fun WelcomeScreenPreview() {
     val features = getFeatures()
+    val showExploreButton = true
 
     StaxTheme {
         Surface(
@@ -100,9 +103,10 @@ fun WelcomeScreenPreview() {
                     Column {
                         GoogleSignInButton {}
 
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = { })
+                        if(showExploreButton) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = { })
+                        }
                     }
                 }
             )

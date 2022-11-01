@@ -3,12 +3,9 @@ package com.hover.stax.database
 import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
-import androidx.room.DeleteColumn
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountDao
 import com.hover.stax.domain.model.Bonus
@@ -38,7 +35,7 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class, Bonus::class, TokenInfo::class
     ],
-    version = 45,
+    version = 47,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
@@ -46,7 +43,7 @@ import java.util.concurrent.Executors
         AutoMigration(from = 40, to = 41),
         AutoMigration(from = 41, to = 42),
         AutoMigration(from = 43, to = 44),
-        AutoMigration(from = 44, to = 45)
+        AutoMigration(from = 46, to = 47)
     ]
 )
 
@@ -219,15 +216,52 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private val M42_43 = Migration(42, 43) { database -> //accounts table changes
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS `channels_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, " +
+                        "`currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0," +
+                        "`secondary_color_hex` TEXT NOT NULL, institution_type TEXT NOT NULL DEFAULT 'bank', `selected` INTEGER NOT NULL DEFAULT 0,`defaultAccount` INTEGER NOT NULL DEFAULT 0," +
+                        "`isFavorite` INTEGER NOT NULL DEFAULT 0, `pin` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER DEFAULT CURRENT_TIMESTAMP, `account_no` TEXT)",
+            )
+
+            database.execSQL(
+                "INSERT INTO channels_new (id, name, country_alpha2, root_code, currency, hni_list, logo_url, institution_id, primary_color_hex, published, secondary_color_hex, selected, defaultAccount, isFavorite, pin, latestBalance, latestBalanceTimestamp, account_no)" +
+                        " SELECT id, name, country_alpha2, root_code, currency, hni_list, logo_url, institution_id, primary_color_hex, published, secondary_color_hex, selected, defaultAccount, isFavorite, pin, latestBalance, latestBalanceTimestamp, account_no FROM channels"
+            )
+            database.execSQL("DROP TABLE channels")
+            database.execSQL("ALTER TABLE channels_new RENAME TO channels")
+
+
+            database.execSQL("ALTER TABLE accounts ADD COLUMN institution_type TEXT NOT NULL DEFAULT 'bank'")
             database.execSQL("ALTER TABLE accounts ADD COLUMN sim_subscription_id INTEGER NOT NULL DEFAULT -1")
         }
 
+        private val M44_45: Migration = Migration(44, 45) {}
+
+        private val M45_46 = Migration(45, 46) { database ->
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS `channels_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, " +
+                        "`currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0," +
+                        "`secondary_color_hex` TEXT NOT NULL, institution_type TEXT NOT NULL DEFAULT 'bank', `isFavorite` INTEGER NOT NULL DEFAULT 0)",
+            )
+
+            database.execSQL(
+                "INSERT INTO channels_new (id, name, country_alpha2, root_code, currency, hni_list, logo_url, institution_id, primary_color_hex, published, secondary_color_hex, isFavorite)" +
+                        " SELECT id, name, country_alpha2, root_code, currency, hni_list, logo_url, institution_id, primary_color_hex, published, secondary_color_hex, isFavorite FROM channels"
+            )
+            database.execSQL("DROP TABLE channels")
+            database.execSQL("ALTER TABLE channels_new RENAME TO channels")
+        }
+
+        private val M47_48 = Migration(47, 48) { database ->
+            database.execSQL("DROP INDEX index_accounts_name")
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_name_sim_subscription_id ON accounts(name, sim_subscription_id)")
+        }
 
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "stax.db")
                     .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43)
+                    .addMigrations(M23_24, M24_25, M25_26, M26_27, M27_28, M28_29, M29_30, M30_31, M31_32, M32_33, M33_34, M34_35, M35_36, M39_40, M42_43, M44_45, M45_46, M47_48)
                     .build()
                 INSTANCE = instance
 

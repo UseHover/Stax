@@ -83,14 +83,6 @@ fun BountiesPreview() {
     }
 }
 
-data class BountyItemState(
-    @ColorRes val color: Int = 0,
-    @StringRes val msg: Int = 0,
-    @DrawableRes val icon: Int = 0,
-    val isOpen: Boolean = true,
-    val bountySelectEvent: BountySelectEvent? = null
-)
-
 sealed class BountySelectEvent {
     data class ViewTransactionDetail(val uuid: String) : BountySelectEvent()
     data class ViewBountyDetail(val bounty: Bounty) : BountySelectEvent()

@@ -32,7 +32,7 @@ class PermissionsFragment : DialogFragment() {
 
         dialog = StaxPermissionDialog(requireActivity())
             .setDialogTitle(R.string.perm_dialoghead)
-            .setDialogMessage(getString(R.string.perm_dialogbody, arguments?.getString(REASON)))
+//            .setDialogMessage(getString(R.string.perm_dialogbody, arguments?.getString(REASON)))
             .setNegButton(R.string.btn_cancel) { cancel() }
             .setPosButton(R.string.perm_cta1) { requestOverlay() }
             .highlightPos() as StaxPermissionDialog
@@ -93,9 +93,10 @@ class PermissionsFragment : DialogFragment() {
         animateToStep2()
         dialog?.let {
             with(it) {
-                view.findViewById<View>(R.id.progress_text).visibility = View.GONE
+                (view.findViewById<View>(R.id.progress_text) as TextView).text = getString(R.string.perm_progress_no_steps)
+                (view.findViewById<View>(R.id.progress_text) as TextView).textSize = 16f
                 view.findViewById<View>(R.id.progress_indicator).visibility = View.GONE
-                setDialogMessage(getString(R.string.perm_accessibiltiy_dialogbody, arguments?.getString(REASON)))
+//                setDialogMessage(getString(R.string.perm_accessibiltiy_dialogbody, arguments?.getString(REASON)))
                 setPosButton(R.string.perm_cta1) { requestAccessibility() }
             }
         }
@@ -109,6 +110,8 @@ class PermissionsFragment : DialogFragment() {
                 animateProgressTo(81)
                 (view.findViewById<View>(R.id.progress_text) as TextView).text = getString(R.string.perm_progress2)
                 (view.findViewById<View>(R.id.perm_message) as TextView).text = getString(R.string.permissions_accessibility_desc)
+                setHelperIcon(R.drawable.ic_accessibility)
+                setPath(R.string.permissions_accessibility_path)
                 view.findViewById<View>(R.id.overlay_example).visibility = View.GONE
                 view.findViewById<View>(R.id.accessibility_example).visibility = View.VISIBLE
                 setPosButton(R.string.perm_cta2) { requestAccessibility() }

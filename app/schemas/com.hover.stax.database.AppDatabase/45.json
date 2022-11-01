@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 45,
-    "identityHash": "7e6409062ee20e7a1c369b85ec7c5757",
+    "identityHash": "3ff0ec14ddb5ef444155ed236f229f5c",
     "entities": [
       {
         "tableName": "channels",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, `currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0, `secondary_color_hex` TEXT NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `selected` INTEGER NOT NULL DEFAULT 0, `defaultAccount` INTEGER NOT NULL DEFAULT 0, `isFavorite` INTEGER NOT NULL DEFAULT 0, `pin` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER DEFAULT CURRENT_TIMESTAMP, `account_no` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `country_alpha2` TEXT NOT NULL, `root_code` TEXT, `currency` TEXT NOT NULL, `hni_list` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `institution_id` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `published` INTEGER NOT NULL DEFAULT 0, `secondary_color_hex` TEXT NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `isFavorite` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -83,50 +83,11 @@
             "defaultValue": "'bank'"
           },
           {
-            "fieldPath": "selected",
-            "columnName": "selected",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
-          },
-          {
-            "fieldPath": "defaultAccount",
-            "columnName": "defaultAccount",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
-          },
-          {
             "fieldPath": "isFavorite",
             "columnName": "isFavorite",
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "0"
-          },
-          {
-            "fieldPath": "pin",
-            "columnName": "pin",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "latestBalance",
-            "columnName": "latestBalance",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "latestBalanceTimestamp",
-            "columnName": "latestBalanceTimestamp",
-            "affinity": "INTEGER",
-            "notNull": false,
-            "defaultValue": "CURRENT_TIMESTAMP"
-          },
-          {
-            "fieldPath": "accountNo",
-            "columnName": "account_no",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -908,7 +869,7 @@
       },
       {
         "tableName": "stax_users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `email` TEXT NOT NULL, `isMapper` INTEGER NOT NULL DEFAULT 0, `marketingOptedIn` INTEGER NOT NULL DEFAULT 0, `transactionCount` INTEGER NOT NULL, `bountyTotal` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `email` TEXT NOT NULL, `isMapper` INTEGER NOT NULL DEFAULT 0, `marketingOptedIn` INTEGER NOT NULL DEFAULT 0, `transactionCount` INTEGER NOT NULL, `bountyTotal` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -953,13 +914,6 @@
             "columnName": "bountyTotal",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "totalPoints",
-            "columnName": "totalPoints",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -1016,68 +970,12 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "token_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `accessToken` TEXT NOT NULL, `refreshToken` TEXT NOT NULL, `scope` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `tokenType` TEXT NOT NULL, `expiresIn` INTEGER NOT NULL, PRIMARY KEY(`id`))",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "accessToken",
-            "columnName": "accessToken",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "refreshToken",
-            "columnName": "refreshToken",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "scope",
-            "columnName": "scope",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "createdAt",
-            "columnName": "createdAt",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "tokenType",
-            "columnName": "tokenType",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "expiresIn",
-            "columnName": "expiresIn",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e6409062ee20e7a1c369b85ec7c5757')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3ff0ec14ddb5ef444155ed236f229f5c')"
     ]
   }
 }

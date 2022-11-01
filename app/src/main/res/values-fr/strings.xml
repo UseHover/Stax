@@ -522,8 +522,6 @@
 
     <string name="language_cardhead">Langue</string>
 
-    <string name="app_version_and_device_id">Version de l\'application: %1$s Code de version:%2$s ID de l\'appareil: %3$s</string>
-
     <string name="disclaimer">Tous les noms de produits, marques et marques déposées appartiennent à leurs propriétaires respectifs. L\'utilisation n\'implique pas d\'affiliation.</string>
 
     <string name="twitter" translatable="false">Twitter</string>

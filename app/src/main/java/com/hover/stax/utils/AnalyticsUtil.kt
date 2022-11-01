@@ -18,7 +18,7 @@ import java.util.*
 
 object AnalyticsUtil {
 	@JvmStatic
-	fun logErrorAndReportToFirebase(tag: String, message: String, e: Exception?) {
+	fun logErrorAndReportToFirebase(tag: String, message: String?, e: Exception?) {
 		Timber.e(e, message)
 		if (BuildConfig.BUILD_TYPE == "release") {
 			if (e != null) FirebaseCrashlytics.getInstance().recordException(e)

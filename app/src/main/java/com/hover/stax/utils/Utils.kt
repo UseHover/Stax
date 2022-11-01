@@ -3,7 +3,6 @@ package com.hover.stax.utils
 import android.Manifest
 import android.app.Activity
 import android.content.*
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -19,9 +18,14 @@ import java.text.DecimalFormat
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"
+    private const val SDK_PREFS = "_hoversdk";
 
     private fun getSharedPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE)
+    }
+
+    fun getSdkPrefs(context: Context): SharedPreferences {
+        return context.getSharedPreferences(getPackage(context) + SDK_PREFS, Context.MODE_PRIVATE)
     }
 
     fun saveString(key: String?, value: String?, c: Context) {
@@ -100,10 +104,10 @@ object Utils {
     @JvmStatic
     fun formatAmount(number: String?): String {
         return when (number) {
-            "0" -> "0,000"
+            "0" -> "00"
             null -> "--"
             else -> try {
-                formatAmount(getAmount(number))
+                formatAmount(amountToDouble(number))
             } catch (e: Exception) {
                 number
             }
@@ -122,8 +126,21 @@ object Utils {
     }
 
     @JvmStatic
-    fun getAmount(amount: String): Double {
-        return amount.replace(",".toRegex(), "").toDouble()
+    fun amountToDouble(amount: String?): Double? {
+        try {
+            return amount?.replace(",".toRegex(), "")?.toDouble()
+        } catch (e: NumberFormatException) { return null }
+    }
+
+    @JvmStatic
+    fun formatPercent(number: Double): String {
+        return try {
+            val formatter = DecimalFormat("##0")
+            formatter.maximumFractionDigits = 0
+            formatter.format(number * 100)
+        } catch (e: Exception) {
+            number.toString()
+        }
     }
 
     fun usingDebugVariant(c: Context): Boolean {

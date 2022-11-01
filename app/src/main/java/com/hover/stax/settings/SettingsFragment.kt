@@ -6,30 +6,24 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
-import com.hover.stax.home.MainActivity
+import com.hover.stax.domain.model.Account
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 const val TEST_MODE = "test_mode"
 
@@ -47,6 +41,7 @@ class SettingsFragment : Fragment() {
     private var dialog: StaxDialog? = null
 
     private var optInMarketing: Boolean = false
+    private var appInfoVisible = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -111,11 +106,36 @@ class SettingsFragment : Fragment() {
         selectLangBtn.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToLanguageSelectFragment()) }
     }
 
+    private fun getAppInfoVisibility() : Int {
+        return if(appInfoVisible) GONE
+        else VISIBLE
+    }
+
     private fun setupAppVersionInfo() {
+        binding.appInfoCard.appInfoDesc.setOnClickListener{
+            with(binding.appInfoCard.details) {
+                this.appInfo.visibility = getAppInfoVisibility()
+                appInfoVisible = !appInfoVisible
+            }
+        }
+
         val deviceId = Hover.getDeviceId(requireContext())
         val appVersion: String = BuildConfig.VERSION_NAME
         val versionCode: String = BuildConfig.VERSION_CODE.toString()
-        binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId)
+        val configVersion: String? = Utils.getSdkPrefs(requireContext()).getString("channel_actions_schema_version", "")
+        with(binding.appInfoCard.details) {
+            this.appVersionInfo.text = getString(R.string.app_version_info, appVersion)
+            this.appVersionInfo.setOnClickListener{Utils.copyToClipboard(appVersion, requireContext())}
+
+            this.configVersionInfo.text = getString(R.string.config_info, configVersion)
+            this.configVersionInfo.setOnClickListener{Utils.copyToClipboard(configVersion, requireContext())}
+
+            this.versionCodeInfo.text = getString(R.string.version_code_info, versionCode)
+            this.versionCodeInfo.setOnClickListener{Utils.copyToClipboard(versionCode, requireContext())}
+
+            this.deviceIdInfo.text = getString(R.string.device_id_info, deviceId)
+            this.deviceIdInfo.setOnClickListener{Utils.copyToClipboard(deviceId, requireContext())}
+        }
     }
 
     private fun setUpAccountDetails() {
@@ -133,7 +153,7 @@ class SettingsFragment : Fragment() {
                 with(binding.accountCard) {
                     accountCard.visibility = VISIBLE
                     loggedInAccount.text = getString(R.string.logged_in_as, staxUser.username)
-                    accountCard.setOnClickListener { showLogoutConfirmDialog() }
+                    accountLayout.setOnClickListener { showLogoutConfirmDialog() }
                 }
             }
         }
@@ -178,7 +198,7 @@ class SettingsFragment : Fragment() {
             a
         }
 
-        spinner.setText(defaultAccount?.alias, false)
+        spinner.setText(defaultAccount?.userAlias, false)
         spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) accountsViewModel.setDefaultAccount(accounts[pos]) }
     }
 

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.Resource
-import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
+import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
 import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val getBonusesUseCase: GetBonusesUseCase,
     private val refreshBonusUseCase: RefreshBonusUseCase,
-    private val getAccountsUseCase: GetAccountsUseCase,
+    private val accountsRepo: AccountRepository,
     private val tipsUseCase: TipsUseCase
 ) : ViewModel() {
 
@@ -50,7 +50,7 @@ class HomeViewModel(
     }
 
     private fun getAccounts() = viewModelScope.launch {
-        getAccountsUseCase.accounts.collect { accounts ->
+        accountsRepo.addedAccounts.collect { accounts ->
             _homeState.update { it.copy(accounts = accounts) }
             _accounts.postValue(accounts)
         }
