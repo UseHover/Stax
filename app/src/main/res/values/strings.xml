@@ -115,7 +115,7 @@
     <string name="intro_feature_two_desc">Manage and spend from all your banks and mobile money accounts from Stax.</string>
     <string name="intro_feature_three_title">Safer by design</string>
     <string name="intro_feature_three_desc">We leveraged Android\'s built in security designs to keep your information secure at all times.</string>
-    <string name="explore_btn_text">Explore Stax</string>
+    <string name="explore_btn_text">Continue without sign in</string>
 
     <string name="does_stax_charge_fees">Does Stax charge fees?</string>
     <string name="what_does_stax_do">What does Stax do?</string>
