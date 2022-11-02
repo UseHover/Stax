@@ -797,10 +797,9 @@
     <string name="bonus_airtime_applied">Bonus airtime will be applied.</string>
     <string name="top_up">Top Up</string>
     <string name="bonus_amount_label">Bonus Amount</string>
-    <string name="bonus_placeholder">Get 3% bonus when you buy airtime with Stax.</string>
-    <string name="valid_account_bonus_msg">You\’ll get credited at least 3% bonus airtime immediately after a successful purchase of Ksh 50 or more airtime.</string>
-    <string name="invalid_account_bonus_msg">Use your MPESA to buy airtime now and get instant 3%+ bonus.</string>
+    <string name="bonus_placeholder">Use this other service and get X% bonus airtime</string>
     <string name="top_up_with">Top up using %1$s</string>
+    <string name="you_are_getting_extra_airtime">You will get %1$d%% bonus airtime</string>
     <string name="congratulations">Congratulations</string>
     <string name="get_extra_airtime">Get Extra Airtime</string>
     <string name="learn_more"><a href="https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/">T&amp;Cs apply</a></string>

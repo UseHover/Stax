@@ -326,16 +326,19 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun showBonusBanner(selected: HoverAction?, actions: List<HoverAction>?) {
         if (args.transactionType == HoverAction.AIRTIME) {
-            if (actions?.any { a -> a.bonus_percent > 0 } != true) return
 
             with(binding.bonusLayout) {
                 learnMore.movementMethod = LinkMovementMethod.getInstance()
 
                 if (selected != null && selected.bonus_percent > 0) {
+                    cardBonus.visibility = View.VISIBLE
                     title.text = getString(R.string.congratulations)
-                    message.text = selected.bonus_message
+                    message.text = getString(R.string.you_are_getting_extra_airtime, selected.bonus_percent)
                     cta.visibility = View.GONE
+                } else if (actions?.any { a -> a.bonus_percent > 0 } != true) {
+                    cardBonus.visibility = View.GONE
                 } else {
+                    cardBonus.visibility = View.VISIBLE
                     val bonus = actions.first { a -> a.bonus_percent > 0 }
                     title.text = getString(R.string.get_extra_airtime)
                     message.text = bonus.bonus_message

@@ -91,15 +91,13 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
     }
 
     private fun generateRecipientAccount(action: HoverAction): String {
-        return if (action.bonus_percent > 0) {
-            var prefix = action.getVarValue(HoverAction.ACCOUNT_KEY)
-            if (prefix == null) { prefix = "STAX#" } // FIXME: This is required because we don't have a way to specify prefix when account var needs to be required
-            if (action.requiresRecipient())
-                prefix += PhoneHelper.normalizeNumberByCountry(
+        return if (action.bonus_percent > 0 && action.getStepByVar("account").has("prefix")) {
+            val prefix = action.getStepByVar("account").optString("prefix")
+            if (action.isPhoneBased)
+                prefix + PhoneHelper.normalizeNumberByCountry(
                     contact.value!!.accountNumber, action.country_alpha2, action.to_country_alpha2
                 )
-            else prefix += "1"
-            prefix
+            else prefix + contact.value!!.accountNumber
         } else contact.value!!.accountNumber
     }
 
