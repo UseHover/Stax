@@ -13,51 +13,51 @@ import okhttp3.Route
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class TokenAuthenticator() : Authenticator, KoinComponent {
-
-    private val authRepository: AuthRepository by inject()
-
-    override fun authenticate(route: Route?, response: Response): Request? {
-        val tokenInfo: TokenInfo? = getTokenInfo()
-
-        if (!requestHasAccessToken(response.request) || tokenInfo == null) {
-            return null
-        }
-
-        synchronized(this) {
-            val newAccessToken = getTokenInfo()?.accessToken
-
-            //token has been refreshed in another thread
-            if (tokenInfo.accessToken != newAccessToken) {
-                return rebuildRequest(response.request, newAccessToken!!)
-            }
-
-            //refresh token
-            val refreshedTokenInfo = refreshToken()
-            return rebuildRequest(response.request, refreshedTokenInfo.accessToken)
-        }
-
-    }
-
-    private fun getTokenInfo(): TokenInfo? = runBlocking {
-        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
-            authRepository.getTokenInfo()
-        }
-    }
-
-    private fun refreshToken(): TokenInfo = runBlocking {
-        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
-            authRepository.refreshTokenInfo()
-        }
-    }
-
-    private fun requestHasAccessToken(request: Request): Boolean {
-        val header = request.header("Authorization")
-        return header != null && header.startsWith("Bearer ")
-    }
-
-    private fun rebuildRequest(request: Request, newAccessToken: String): Request = request.newBuilder()
-        .header("Authorization", "Bearer $newAccessToken")
-        .build()
-
-}
+//class TokenAuthenticator() : Authenticator, KoinComponent {
+//
+//    private val authRepository: AuthRepository by inject()
+//
+//    override fun authenticate(route: Route?, response: Response): Request? {
+//        val tokenInfo: TokenInfo? = getTokenInfo()
+//
+//        if (!requestHasAccessToken(response.request) || tokenInfo == null) {
+//            return null
+//        }
+//
+//        synchronized(this) {
+//            val newAccessToken = getTokenInfo()?.accessToken
+//
+//            //token has been refreshed in another thread
+//            if (tokenInfo.accessToken != newAccessToken) {
+//                return rebuildRequest(response.request, newAccessToken!!)
+//            }
+//
+//            //refresh token
+//            val refreshedTokenInfo = refreshToken()
+//            return rebuildRequest(response.request, refreshedTokenInfo.accessToken)
+//        }
+//
+//    }
+//
+//    private fun getTokenInfo(): TokenInfo? = runBlocking {
+//        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+//            authRepository.getTokenInfo()
+//        }
+//    }
+//
+//    private fun refreshToken(): TokenInfo = runBlocking {
+//        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+//            authRepository.refreshTokenInfo()
+//        }
+//    }
+//
+//    private fun requestHasAccessToken(request: Request): Boolean {
+//        val header = request.header("Authorization")
+//        return header != null && header.startsWith("Bearer ")
+//    }
+//
+//    private fun rebuildRequest(request: Request, newAccessToken: String): Request = request.newBuilder()
+//        .header("Authorization", "Bearer $newAccessToken")
+//        .build()
+//
+//}
