@@ -8,8 +8,10 @@ import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.observer.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.flow.firstOrNull
@@ -32,9 +34,14 @@ class KtorClientFactory(
             )
         }
 
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
+        }
+
         install(ResponseObserver) {
             onResponse { response ->
-                Timber.d("HTTP status:", "${response.status.value}")
+                Timber.d("HTTP status:", "$response")
             }
         }
 
