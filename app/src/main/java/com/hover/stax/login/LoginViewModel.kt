@@ -10,23 +10,30 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
-import com.hover.sdk.api.Hover
 import com.hover.stax.R
+import com.hover.stax.data.remote.DataResult
 import com.hover.stax.data.remote.dto.UpdateDto
-import com.hover.stax.data.remote.dto.UploadDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.domain.model.Resource
-import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.use_case.auth.AuthUseCase
+import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
+import com.hover.stax.preferences.DefaultTokenProvider
+import com.hover.stax.preferences.TokenProvider
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class LoginViewModel(application: Application, private val staxUserUseCase: StaxUserUseCase, private val authUseCase: AuthUseCase) : AndroidViewModel(application) {
+class LoginViewModel(
+    application: Application,
+    private val staxUserUseCase: StaxUserUseCase,
+    private val authUseCase: AuthUseCase,
+    private val authRepository: AuthRepository,
+    private val tokenProvider: TokenProvider
+) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient
 
@@ -57,17 +64,32 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
         }
     }
 
-    private fun authorizeClient(token: String) {
-        authUseCase.authorize(token).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    Timber.d("Stax login successful ${result.data?.username}")
-                    progress.postValue(100)
-                }
-                is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
-                is Resource.Loading -> progress.value = 66
+    private fun authorizeClient(token: String) = viewModelScope.launch {
+        when (val response = authRepository.authorizeClient(token)) {
+            is DataResult.Loading -> progress.value = 66
+            is DataResult.Success -> {
+                Timber.d("Stax authorization successful ${response.data.status}")
+                fetchAuthToken(response.data.redirectUri.code)
             }
-        }.launchIn(viewModelScope)
+            is DataResult.Error -> onError(
+                response.error?.localizedMessage ?: getString(R.string.upload_user_error), false
+            )
+        }
+    }
+
+    private fun fetchAuthToken(code: String) = viewModelScope.launch {
+        when (val response = authRepository.fetchTokenInfo(code)) {
+            is DataResult.Loading -> progress.value = 66
+            is DataResult.Success -> {
+                Timber.d("Stax auth successful ${response.data.tokenType}")
+                progress.postValue(100)
+                tokenProvider.update(DefaultTokenProvider.ACCESS_TOKEN, response.data.accessToken)
+                tokenProvider.update(DefaultTokenProvider.REFRESH_TOKEN, response.data.refreshToken)
+            }
+            is DataResult.Error -> onError(
+                response.error?.localizedMessage ?: getString(R.string.upload_user_error), false
+            )
+        }
     }
 
 //    private fun uploadUserToStax(email: String, username: String, token: String) {
@@ -96,21 +118,33 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
 //        else Timber.e("No account found")
 //    }
 
-    fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { updateUser(UserUpdateDto(UpdateDto(marketingOptedIn = optIn, email = it))) }
+    fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let {
+        updateUser(
+            UserUpdateDto(
+                UpdateDto(
+                    marketingOptedIn = optIn,
+                    email = it
+                )
+            )
+        )
+    }
 
-    private fun updateUser(data: UserUpdateDto) = staxUserUseCase.updateUser(data.staxUser.email, data).onEach { result ->
-        when (result) {
-            is Resource.Success -> {
-                Timber.d("User updated successfully")
-                progress.postValue(100)
+    private fun updateUser(data: UserUpdateDto) =
+        staxUserUseCase.updateUser(data.staxUser.email, data).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    Timber.d("User updated successfully")
+                    progress.postValue(100)
+                }
+                is Resource.Error -> onError(
+                    result.message ?: getString(R.string.upload_user_error), false
+                )
+                is Resource.Loading -> progress.value = 66
             }
-            is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
-            is Resource.Loading -> progress.value = 66
-        }
-    }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope)
 
     private fun setUser(signInAccount: GoogleSignInAccount, idToken: String) {
-        Timber.e("setting user: %s", signInAccount.email)
+        Timber.d("setting user: %s", signInAccount.email)
         googleUser.postValue(signInAccount)
 
         progress.value = 33
@@ -128,7 +162,11 @@ class LoginViewModel(application: Application, private val staxUserUseCase: Stax
             error.postValue(message)
         } else {
             signInClient.signOut().addOnCompleteListener {
-                AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
+                AnalyticsUtil.logErrorAndReportToFirebase(
+                    LoginViewModel::class.java.simpleName,
+                    message,
+                    null
+                )
                 AnalyticsUtil.logAnalyticsEvent(message, getApplication())
 
                 removeUser()
