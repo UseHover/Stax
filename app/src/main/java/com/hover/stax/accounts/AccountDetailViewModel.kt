@@ -25,7 +25,6 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
     var channel: LiveData<Channel> = MutableLiveData()
     private var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     var transactionHistoryItem : MediatorLiveData<List<TransactionHistoryItem>> = MediatorLiveData()
-    var actions: LiveData<List<HoverAction>> = MutableLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
     var feesThisYear: LiveData<Double> = MutableLiveData()
 
@@ -35,7 +34,6 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         account = Transformations.switchMap(id, repo::getLiveAccount)
         channel = Transformations.switchMap(account) { it?.let { channelRepo.getLiveChannel(it.channelId) } }
         transactions = Transformations.switchMap(account) { it?.let { transactionRepo.getAccountTransactions(it) } }
-        actions = Transformations.switchMap(id, actionRepo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
         transactionHistoryItem.addSource(transactions, this::getTransactionHistory)

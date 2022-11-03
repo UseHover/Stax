@@ -12,6 +12,7 @@ import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomeViewModel(
     private val accountsRepo: AccountRepository,
@@ -22,41 +23,38 @@ class HomeViewModel(
     private val _homeState = MutableStateFlow(HomeState())
     val homeState = _homeState.asStateFlow()
 
-    private val _accounts = MutableLiveData<List<Account>>()
-    val accounts: LiveData<List<Account>> = _accounts
-
     init {
         fetchData()
     }
 
     private fun fetchData() {
-        getBonusList()
         getAccounts()
         getFinancialTips()
         getDismissedFinancialTips()
     }
 
-    private fun getBonusList() = viewModelScope.launch {
-        bonusListToFlow().collect { bonusList ->
+    private fun getAccounts() = viewModelScope.launch {
+        accountsRepo.addedAccounts.collect { accounts ->
+            _homeState.update { it.copy(accounts = accounts) }
+            getBonusList(accounts.map { it.countryAlpha2!! }.toTypedArray())
+        }
+    }
+
+    private fun getBonusList(countries: Array<String>) = viewModelScope.launch {
+        bonusListToFlow(countries).collect { bonusList ->
             if (bonusList is Resource.Success)
                 _homeState.update { it.copy(bonuses = bonusList.data ?: emptyList()) }
         }
     }
 
-    private fun bonusListToFlow(): Flow<Resource<List<HoverAction>>> = flow {
+    private fun bonusListToFlow(countries: Array<String>): Flow<Resource<List<HoverAction>>> = flow {
+        Timber.e("Looking for bounties from: ${countries.contentToString()}")
         try {
             emit(Resource.Loading())
 
-            emit(Resource.Success(actionRepo.bonusActions))
+            emit(Resource.Success(actionRepo.getBonusActionsByCountry(countries)))
         } catch (e: Exception) {
             emit(Resource.Error("Error fetching tips"))
-        }
-    }
-
-    private fun getAccounts() = viewModelScope.launch {
-        accountsRepo.addedAccounts.collect { accounts ->
-            _homeState.update { it.copy(accounts = accounts) }
-            _accounts.postValue(accounts)
         }
     }
 

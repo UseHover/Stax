@@ -38,7 +38,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
 
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill_list)), requireActivity())
         updatePaybills(paybillViewModel.savedPaybills.value)
-        updateActions(accountsViewModel.channelActions.value)
+        updateActions(accountsViewModel.institutionActions.value)
         startListeners()
         startObservers()
     }
@@ -53,7 +53,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
 
     private fun startObservers() {
         paybillViewModel.savedPaybills.observe(viewLifecycleOwner) { updatePaybills(it) }
-        accountsViewModel.channelActions.observe(viewLifecycleOwner) { updateActions(it) }
+        accountsViewModel.institutionActions.observe(viewLifecycleOwner) { updateActions(it) }
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
             it?.let { paybillViewModel.selectPaybill(it) }

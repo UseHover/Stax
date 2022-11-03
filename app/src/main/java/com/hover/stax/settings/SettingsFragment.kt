@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
@@ -65,7 +64,7 @@ class SettingsFragment : Fragment() {
 
         binding.bountyCard.getStartedWithBountyButton.setOnClickListener { startBounties() }
 
-        collectLifecycleFlow(accountsViewModel.accountUpdateMsg) {
+        collectLifecycleFlow(accountsViewModel.defaultUpdateMsg) {
             UIHelper.flashAndReportMessage(requireActivity(), it)
         }
     }
@@ -201,7 +200,11 @@ class SettingsFragment : Fragment() {
         }
 
         spinner.setText(defaultAccount?.userAlias, false)
-        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) accountsViewModel.setDefaultAccount(accounts[pos]) }
+        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ ->
+            if (pos != -1) {
+                accountsViewModel.setDefaultAccount(accounts[pos])
+            }
+        }
     }
 
     private fun setUpEnableTestMode() {

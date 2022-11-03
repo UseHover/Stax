@@ -145,7 +145,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     }
 
     private fun observeActions() {
-        accountsViewModel.channelActions.observe(viewLifecycleOwner) {
+        accountsViewModel.institutionActions.observe(viewLifecycleOwner) {
             val err = accountsViewModel.errorCheck()
             payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         }
@@ -263,7 +263,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     override fun onSubmitForm() {
         with(accountsViewModel) {
-            val actions = channelActions.value
+            val actions = institutionActions.value
             val account = activeAccount.value
             val activeAction = actionSelectViewModel.activeAction.value
 

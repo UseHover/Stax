@@ -23,12 +23,9 @@ import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
-import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -139,15 +136,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             it?.let {
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
-                showBonusBanner(it, accountsViewModel.channelActions.value)
+                updateBonusBanner(it, accountsViewModel.bonusActions.value)
             }
         }
     }
 
     private fun observeActions() {
-        accountsViewModel.channelActions.observe(viewLifecycleOwner) {
+        accountsViewModel.institutionActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
-            showBonusBanner(actionSelectViewModel.activeAction.value, it)
+        }
+
+        accountsViewModel.bonusActions.observe(viewLifecycleOwner) {
+            updateBonusBanner(actionSelectViewModel.activeAction.value, it)
         }
 
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
@@ -324,7 +324,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun showBonusBanner(selected: HoverAction?, actions: List<HoverAction>?) {
+    private fun updateBonusBanner(selected: HoverAction?, actions: List<HoverAction>?) {
         if (args.transactionType == HoverAction.AIRTIME) {
 
             with(binding.bonusLayout) {
@@ -337,7 +337,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                     cta.visibility = View.GONE
                 } else if (actions?.any { a -> a.bonus_percent > 0 } != true) {
                     cardBonus.visibility = View.GONE
-                } else {
+                } else if (transferViewModel.isEditing.value == true){
                     cardBonus.visibility = View.VISIBLE
                     val bonus = actions.first { a -> a.bonus_percent > 0 }
                     title.text = getString(R.string.get_extra_airtime)
@@ -351,14 +351,14 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                             channelsViewModel.payWith(bonus.channel_id)
                         }
                     }
-                }
+                } else { cardBonus.visibility = View.GONE }
             }
         }
     }
 
     override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
-        binding.bonusLayout.cardBonus.visibility = if (isEditing) View.VISIBLE else View.GONE
+        updateBonusBanner(actionSelectViewModel.activeAction.value, accountsViewModel.bonusActions.value)
     }
 
     override fun onDestroyView() {

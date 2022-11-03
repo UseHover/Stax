@@ -37,7 +37,7 @@ class ListSimsUseCase(
 
             if (account.channelId != -1) {
                 balanceAct = actionRepository.getFirstAction(account.channelId, HoverAction.BALANCE)
-                airtimeActs = actionRepository.getActionsByRecipientInsitution(account.institutionId, HoverAction.AIRTIME)
+                airtimeActs = actionRepository.getActionsByRecipientInstitution(account.institutionId, account.countryAlpha2!!, HoverAction.AIRTIME)
             }
             result.add(SimWithAccount(sim, account, balanceAct, airtimeActs))
         }

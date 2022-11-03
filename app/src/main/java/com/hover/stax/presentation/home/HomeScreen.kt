@@ -53,9 +53,7 @@ fun HomeScreen(
     navTo: (dest: Int) -> Unit,
 ) {
     val homeState by homeViewModel.homeState.collectAsState()
-    val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = false)
     val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
-    val accounts by homeViewModel.accounts.observeAsState(initial = emptyList())
     val context = LocalContext.current
 
     StaxTheme {
@@ -64,7 +62,7 @@ fun HomeScreen(
                 topBar = { TopBar(title = R.string.nav_home, navTo) },
                 content = {
                     LazyColumn {
-                        if (homeState.bonuses.isNotEmpty() && accounts.isNotEmpty())
+                        if (homeState.bonuses.isNotEmpty() && homeState.accounts.isNotEmpty())
                             item {
                                 BonusCard(message = homeState.bonuses.first().bonus_message,
                                     onClickedTC = homeClickFunctions.onClickedTC,
@@ -77,7 +75,7 @@ fun HomeScreen(
                                     })
                             }
 
-                        if (accounts.isEmpty())
+                        if (homeState.accounts.isEmpty())
                             item {
                                 EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
                             }
@@ -93,14 +91,14 @@ fun HomeScreen(
                             )
                         }
 
-                        if (accounts.isNotEmpty())
+                        if (homeState.accounts.isNotEmpty())
                             item {
                                 BalanceHeader(
                                     onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
                                 )
                             }
 
-                        items(accounts) { account ->
+                        items(homeState.accounts) { account ->
                             BalanceItem(
                                 staxAccount = account,
                                 context = context,

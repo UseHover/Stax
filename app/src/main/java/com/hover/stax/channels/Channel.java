@@ -102,7 +102,7 @@ public class Channel implements Comparable<Channel> {
             id = jsonObject.getInt("id");
             name = jsonObject.getString("name");
             rootCode = jsonObject.getString("root_code");
-            countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
+            countryAlpha2 = jsonObject.getString("country_alpha2");
             currency = jsonObject.getString("currency");
             hniList = jsonObject.getString("hni_list");
             published = jsonObject.getBoolean("published");
@@ -118,12 +118,12 @@ public class Channel implements Comparable<Channel> {
     }
 
     public String getUssdName() {
-        return name + " - " + rootCode + " - " + countryAlpha2;
+        return name + " - " + rootCode + " - " + countryAlpha2.toUpperCase();
     }
 
     @Override
     public String toString() {
-        return name + " " + countryAlpha2;
+        return name + " " + countryAlpha2.toUpperCase();
     }
 
     @Override

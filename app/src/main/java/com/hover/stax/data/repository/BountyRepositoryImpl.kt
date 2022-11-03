@@ -22,7 +22,7 @@ class BountyRepositoryImpl(val actionRepo: ActionRepo, private val coroutineDisp
         launch(coroutineDispatcher) {
             val actions = bountyActions
             val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
-            actions.asSequence().map { it.country_alpha2.uppercase() }.distinct().sorted().toCollection(countryCodes)
+            actions.asSequence().map { it.country_alpha2 }.distinct().sorted().toCollection(countryCodes)
             send(countryCodes)
         }
     }

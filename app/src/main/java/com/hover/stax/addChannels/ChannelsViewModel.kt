@@ -31,8 +31,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-//TODO: Refactor this class, and note the comment in the createAccounts(channels: List<Channel>) method
-//Todo created by Tobi, 11th of August, 2022.
 class ChannelsViewModel(application: Application, val repo: ChannelRepo,
                         val simRepo: SimRepo,
                         val accountRepo: AccountRepo,
@@ -192,7 +190,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
 
         val accountIds = accountRepo.insert(accounts)
 
-        //Refactoring tip: This is currently the only difference when compared with the function in AccountRepositoryImpl.
         promptBalanceCheck(accountIds.first().toInt())
     }
 
@@ -213,7 +210,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     fun updateCountry(code: String) {
-        countryChoice.postValue(code.uppercase())
+        countryChoice.postValue(code.lowercase())
     }
 
     private fun updateCountryChannels(channels: List<Channel>?) {

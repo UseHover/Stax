@@ -111,7 +111,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                 }
             }
 
-            channelActions.observe(lifecycleOwner) {
+            institutionActions.observe(lifecycleOwner) {
                 setState(it, viewModel)
             }
         }

@@ -24,10 +24,10 @@ class ChannelRepo(db: AppDatabase) {
 
     fun getChannelsByIdsAsync(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
-    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): List<Channel> = channelDao.getChannels(countryCode, channelIds)
+    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): List<Channel> = channelDao.getChannels(countryCode.lowercase(), channelIds)
 
     fun getChannelsByCountry(countryCode: String): List<Channel> {
-        return channelDao.getChannels(countryCode.uppercase())
+        return channelDao.getChannels(countryCode.lowercase())
     }
 
     fun update(channel: Channel) = channelDao.update(channel)

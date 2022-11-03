@@ -68,7 +68,7 @@ class MerchantFragment : AbstractFormFragment() {
 	}
 
 	private fun observeActions() {
-		accountsViewModel.channelActions.observe(viewLifecycleOwner) {
+		accountsViewModel.institutionActions.observe(viewLifecycleOwner) {
 			actionSelectViewModel.setActions(it)
 		}
 
