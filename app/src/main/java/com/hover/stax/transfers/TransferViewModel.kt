@@ -81,10 +81,9 @@ class TransferViewModel(application: Application, private val getBonusesUseCase:
 
     fun amountErrors(a: HoverAction?): String? {
         val regex = a?.getStepByVar(HoverAction.AMOUNT_KEY)?.optString("valid_response_regex")
-        Timber.i("Custom regex is $regex")
-        return if (!regex.isNullOrEmpty() && amount.value!!.matches(regex.toRegex())) null
-        else if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
-        else getString(R.string.amount_fielderror)
+        return if ((amount.value.isNullOrEmpty() || !amount.value!!.matches("[\\d.]+".toRegex()) || amount.value!!.matches("[0]+".toRegex())) ||
+                (!regex.isNullOrEmpty() && !amount.value!!.matches(regex.toRegex()))) getString(R.string.amount_fielderror)
+        else null
     }
 
     fun recipientErrors(a: HoverAction?): String? {
