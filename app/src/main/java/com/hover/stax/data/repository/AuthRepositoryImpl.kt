@@ -3,17 +3,22 @@ package com.hover.stax.data.repository
 import android.content.Context
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
-import com.hover.stax.data.local.auth.AuthRepo
-import com.hover.stax.data.remote.AuthApi
 import com.hover.stax.data.remote.DataResult
-import com.hover.stax.data.remote.NAuthRequest
-import com.hover.stax.data.remote.NAuthResponse
-import com.hover.stax.data.remote.NStaxUser
-import com.hover.stax.data.remote.NTokenRefresh
-import com.hover.stax.data.remote.NTokenRequest
-import com.hover.stax.data.remote.NTokenResponse
-import com.hover.stax.domain.model.TokenInfo
+import com.hover.stax.data.remote.auth.StaxApi
+import com.hover.stax.data.remote.dto.StaxUserDto
+import com.hover.stax.data.remote.dto.UserUpdateDto
+import com.hover.stax.data.remote.dto.UserUploadDto
+import com.hover.stax.data.remote.dto.authorization.NAuthRequest
+import com.hover.stax.data.remote.dto.authorization.NAuthResponse
+import com.hover.stax.data.remote.dto.authorization.NRevokeTokenRequest
+import com.hover.stax.data.remote.dto.authorization.NStaxUser
+import com.hover.stax.data.remote.dto.authorization.NTokenRefresh
+import com.hover.stax.data.remote.dto.authorization.NTokenRequest
+import com.hover.stax.data.remote.dto.authorization.NTokenResponse
 import com.hover.stax.domain.repository.AuthRepository
+import com.hover.stax.preferences.DefaultTokenProvider
+import com.hover.stax.preferences.TokenProvider
+import kotlinx.coroutines.flow.firstOrNull
 
 private const val AUTHORIZATION = "authorization_code"
 private const val REFRESH = "refresh_token"
@@ -22,8 +27,8 @@ private const val SCOPE = "write"
 
 class AuthRepositoryImpl(
     private val context: Context,
-    private val authApi: AuthApi,
-    private val authRepo: AuthRepo
+    private val staxApi: StaxApi,
+    private val tokenProvider: TokenProvider
 ) : AuthRepository {
 
     override suspend fun authorizeClient(idToken: String): DataResult<NAuthResponse> {
@@ -38,7 +43,7 @@ class AuthRepositoryImpl(
             token = idToken,
         )
 
-        return authApi.authorize(authRequest)
+        return staxApi.authorize(authRequest)
     }
 
     override suspend fun fetchTokenInfo(code: String): DataResult<NTokenResponse> {
@@ -50,24 +55,37 @@ class AuthRepositoryImpl(
             redirectUri = context.getString(R.string.redirect_uri)
         )
 
-        return authApi.fetchToken(tokenRequest)
+        return staxApi.fetchToken(tokenRequest)
     }
 
     override suspend fun refreshTokenInfo(): DataResult<NTokenResponse> {
         val tokenRequest = NTokenRefresh(
             clientId = context.getString(R.string.client_uid),
             clientSecret = context.getString(R.string.client_secret),
-            refreshToken = authRepo.getTokenInfo()!!.refreshToken,
+            refreshToken = tokenProvider.fetch(DefaultTokenProvider.REFRESH_TOKEN).firstOrNull()
+                .toString(),
             grantType = REFRESH,
             redirectUri = context.getString(R.string.redirect_uri),
         )
 
-        return authApi.refreshToken(tokenRequest)
+        return staxApi.refreshToken(tokenRequest)
     }
 
-    override suspend fun getTokenInfo(): TokenInfo? = authRepo.getTokenInfo()
+    override suspend fun revokeToken(): DataResult<NTokenResponse> {
+        val revokeToken = NRevokeTokenRequest(
+            clientId = context.getString(R.string.client_uid),
+            clientSecret = context.getString(R.string.client_secret),
+            token = tokenProvider.fetch(DefaultTokenProvider.ACCESS_TOKEN).firstOrNull().toString()
+        )
 
-    override suspend fun saveTokenInfo(tokenInfo: TokenInfo) = authRepo.saveTokenInfo(tokenInfo)
+        return staxApi.revokeToken(revokeToken)
+    }
 
-    override suspend fun deleteTokenInfo() = authRepo.deleteTokenInfo()
+    override suspend fun uploadUserToStax(userDTO: UserUploadDto): DataResult<StaxUserDto> =
+        staxApi.uploadUserToStax(userDTO = userDTO)
+
+    override suspend fun updateUser(email: String, userDTO: UserUpdateDto): DataResult<StaxUserDto>  = staxApi.updateUser(
+        email = email,
+        userDTO = userDTO
+    )
 }

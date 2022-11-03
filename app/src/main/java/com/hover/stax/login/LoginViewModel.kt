@@ -10,8 +10,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
+import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.data.remote.DataResult
+import com.hover.stax.data.remote.dto.UploadDto
+import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.data.remote.dto.UpdateDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.domain.model.Resource
@@ -64,84 +67,104 @@ class LoginViewModel(
         }
     }
 
-    private fun authorizeClient(token: String) = viewModelScope.launch {
-        when (val response = authRepository.authorizeClient(token)) {
-            is DataResult.Loading -> progress.value = 66
-            is DataResult.Success -> {
-                Timber.d("Stax authorization successful ${response.data.status}")
-                fetchAuthToken(response.data.redirectUri.code)
+    private fun authorizeClient(token: String, signInAccount: GoogleSignInAccount) =
+        viewModelScope.launch {
+            when (val response = authRepository.authorizeClient(token)) {
+                is DataResult.Loading -> progress.value = 66
+                is DataResult.Success -> {
+                    Timber.d("Stax authorization successful ${response.data.status}")
+                    fetchAuthToken(
+                        code = response.data.redirectUri.code,
+                        signInAccount = signInAccount
+                    )
+                }
+                is DataResult.Error -> onError(
+                    message = response.error?.localizedMessage ?: getString(R.string.upload_user_error),
+                    isUpdate = false
+                )
             }
-            is DataResult.Error -> onError(
-                response.error?.localizedMessage ?: getString(R.string.upload_user_error), false
-            )
         }
-    }
 
-    private fun fetchAuthToken(code: String) = viewModelScope.launch {
-        when (val response = authRepository.fetchTokenInfo(code)) {
-            is DataResult.Loading -> progress.value = 66
-            is DataResult.Success -> {
-                Timber.d("Stax auth successful ${response.data.tokenType}")
-                progress.postValue(100)
-                tokenProvider.update(DefaultTokenProvider.ACCESS_TOKEN, response.data.accessToken)
-                tokenProvider.update(DefaultTokenProvider.REFRESH_TOKEN, response.data.refreshToken)
+    private fun fetchAuthToken(code: String, signInAccount: GoogleSignInAccount) =
+        viewModelScope.launch {
+            when (val response = authRepository.fetchTokenInfo(code)) {
+                is DataResult.Loading -> progress.value = 66
+                is DataResult.Success -> {
+                    Timber.d("Stax auth successful ${response.data.tokenType}")
+                    progress.postValue(100)
+                    tokenProvider.update(
+                        key = DefaultTokenProvider.ACCESS_TOKEN,
+                        token = response.data.accessToken
+                    )
+                    tokenProvider.update(
+                        key = DefaultTokenProvider.REFRESH_TOKEN,
+                        token = response.data.refreshToken
+                    )
+                    uploadUserToStax(
+                        email = signInAccount.email,
+                        username = signInAccount.displayName,
+                        token = response.data.accessToken
+                    )
+                }
+                is DataResult.Error -> onError(
+                    message = response.error?.localizedMessage ?: getString(R.string.upload_user_error),
+                    isUpdate = false
+                )
             }
-            is DataResult.Error -> onError(
-                response.error?.localizedMessage ?: getString(R.string.upload_user_error), false
-            )
         }
-    }
 
-//    private fun uploadUserToStax(email: String, username: String, token: String) {
-//        if (staxUser.value == null) {
-//            Timber.e("Uploading user to stax")
-//
-//            val userDto = UploadDto(Hover.getDeviceId(getApplication()), email, username, token)
-//            val requestDto = UserUploadDto(userDto)
-//
-//            staxUserUseCase.uploadUser(requestDto).onEach { result ->
-//                when (result) {
-//                    is Resource.Success -> {
-//                        Timber.d("User uploaded to stax successfully ${result.data?.id}")
-//                        progress.postValue(100)
-//                    }
-//                    is Resource.Error -> onError(result.message ?: getString(R.string.upload_user_error), false)
-//                    is Resource.Loading -> progress.value = 66
-//                }
-//            }.launchIn(viewModelScope)
-//        }
-//    }
+    private fun uploadUserToStax(email: String?, username: String?, token: String) =
+        viewModelScope.launch {
 
-//    fun uploadLastUser() {
-//        val account = GoogleSignIn.getLastSignedInAccount(getApplication())
-//        if (account != null) uploadUserToStax(account.email!!, account.displayName!!, account.idToken!!)
-//        else Timber.e("No account found")
-//    }
+            if (email != null && username != null)
 
-    fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let {
+                when (val response = authRepository.uploadUserToStax(
+                    UserUploadDto(
+                        UploadDto(
+                            deviceId = Hover.getDeviceId(getApplication()),
+                            email = email,
+                            username = username,
+                            token = token
+                        )
+                    )
+                )) {
+                    is DataResult.Loading -> progress.value = 66
+                    is DataResult.Success -> {
+                        Timber.d("User uploaded to stax successfully ${response.data.data.id}")
+                        progress.postValue(100)
+                    }
+                    is DataResult.Error -> onError(
+                        message = response.error?.localizedMessage ?: getString(R.string.upload_user_error),
+                        isUpdate = false
+                    )
+                }
+        }
+
+    fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { email ->
         updateUser(
-            UserUpdateDto(
+            email = email,
+            data = UserUpdateDto(
                 UpdateDto(
                     marketingOptedIn = optIn,
-                    email = it
+                    email = email
                 )
             )
         )
     }
 
-    private fun updateUser(data: UserUpdateDto) =
-        staxUserUseCase.updateUser(data.staxUser.email, data).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    Timber.d("User updated successfully")
-                    progress.postValue(100)
-                }
-                is Resource.Error -> onError(
-                    result.message ?: getString(R.string.upload_user_error), false
-                )
-                is Resource.Loading -> progress.value = 66
+    private fun updateUser(email: String, data: UserUpdateDto) = viewModelScope.launch {
+        when(val response = authRepository.updateUser(email, data)) {
+            is DataResult.Loading -> progress.value = 66
+            is DataResult.Success -> {
+                Timber.d("User updated successfully")
+                progress.postValue(100)
             }
-        }.launchIn(viewModelScope)
+            is DataResult.Error -> onError(
+                message = response.error?.localizedMessage ?: getString(R.string.upload_user_error),
+                isUpdate = false
+            )
+        }
+    }
 
     private fun setUser(signInAccount: GoogleSignInAccount, idToken: String) {
         Timber.d("setting user: %s", signInAccount.email)
@@ -149,7 +172,7 @@ class LoginViewModel(
 
         progress.value = 33
 
-        authorizeClient(idToken)
+        authorizeClient(token = idToken, signInAccount = signInAccount)
     }
 
     fun userIsNotSet(): Boolean = staxUser.value == null

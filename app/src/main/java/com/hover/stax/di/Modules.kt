@@ -16,13 +16,11 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.auth.AuthRepo
 import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.local.user.UserRepo
-import com.hover.stax.data.remote.AuthApi
-import com.hover.stax.data.remote.StaxApi
+import com.hover.stax.data.remote.auth.StaxApi
 import com.hover.stax.data.repository.AccountRepositoryImpl
 import com.hover.stax.data.repository.AuthRepositoryImpl
 import com.hover.stax.data.repository.BonusRepositoryImpl
@@ -76,7 +74,6 @@ import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.utils.network.TokenInterceptor
 import io.ktor.client.engine.android.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -135,7 +132,6 @@ val dataModule = module(createdAtStart = true) {
     singleOf(::UserRepo)
     singleOf(::BonusRepo)
     singleOf(::ParserRepo)
-    singleOf(::AuthRepo)
     singleOf(::SimRepo)
 }
 
@@ -145,7 +141,7 @@ val ktorModule = module {
             connectTimeout = 10_000
         })
     }
-    single { AuthApi(get()) }
+//    single { StaxApi(get()) }
 }
 
 val datastoreModule = module {
@@ -174,7 +170,7 @@ val networkModule = module {
         val okHttpClient = OkHttpClient()
             .newBuilder()
 //            .authenticator(TokenAuthenticator())
-            .addInterceptor(TokenInterceptor())
+//            .addInterceptor(TokenInterceptor())
 
         if (BuildConfig.DEBUG)
             okHttpClient.addInterceptor(loggingInterceptor)

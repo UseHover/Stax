@@ -1,10 +1,11 @@
 package com.hover.stax.domain.repository
 
 import com.hover.stax.data.remote.DataResult
-import com.hover.stax.data.remote.NAuthResponse
-import com.hover.stax.data.remote.NTokenResponse
-import com.hover.stax.data.remote.dto.authorization.AuthResponse
-import com.hover.stax.domain.model.TokenInfo
+import com.hover.stax.data.remote.dto.StaxUserDto
+import com.hover.stax.data.remote.dto.UserUpdateDto
+import com.hover.stax.data.remote.dto.UserUploadDto
+import com.hover.stax.data.remote.dto.authorization.NAuthResponse
+import com.hover.stax.data.remote.dto.authorization.NTokenResponse
 
 interface AuthRepository {
 
@@ -14,9 +15,9 @@ interface AuthRepository {
 
     suspend fun refreshTokenInfo(): DataResult<NTokenResponse>
 
-    suspend fun getTokenInfo(): TokenInfo?
+    suspend fun revokeToken(): DataResult<NTokenResponse>
 
-    suspend fun saveTokenInfo(tokenInfo: TokenInfo)
+    suspend fun uploadUserToStax(userDTO: UserUploadDto): DataResult<StaxUserDto>
 
-    suspend fun deleteTokenInfo()
+    suspend fun updateUser(email: String, userDTO: UserUpdateDto): DataResult<StaxUserDto>
 }
