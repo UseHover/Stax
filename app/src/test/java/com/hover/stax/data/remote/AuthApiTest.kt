@@ -7,6 +7,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.appmattus.kotlinfixture.kotlinFixture
+import com.hover.stax.data.remote.auth.StaxApi
+import com.hover.stax.data.remote.dto.authorization.NAuthRequest
+import com.hover.stax.data.remote.dto.authorization.NAuthResponse
 import com.hover.stax.ktor.KtorClientFactory
 import com.hover.stax.ktor.ServerError
 import com.hover.stax.preferences.DefaultTokenProvider
@@ -48,7 +51,7 @@ class AuthApiTest {
             delay(500)
             respondError(HttpStatusCode.InternalServerError)
         }
-        val api = AuthApi(httpClient.create(mockEngine))
+        val api = StaxApi(httpClient.create(mockEngine))
         runBlocking { api.authorize(authRequest) }
     }
 
@@ -58,12 +61,18 @@ class AuthApiTest {
         val authResponse: NAuthResponse = fixture()
         val mockEngine = MockEngine {
             respond(
-                content = """{"message": "Success"}""",
+                content = """{
+    "redirect_url" {
+        "code" : "76233958-77a5-43fc-9b3f-ca2d0d0ce54f",
+        "action" : "896fa22f-d273-475b-80ee-e7553d9f9a15"
+    },
+    "status" : "152b1eff-f55a-4b57-9f45-0eaf5314d3c5"
+}""",
                 status = HttpStatusCode.OK,
                 headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        val api = AuthApi(httpClient.create(mockEngine))
+        val api = StaxApi(httpClient.create(mockEngine))
         runBlocking {
             val response = api.authorize(authRequest)
             MatcherAssert.assertThat(response, `is`(authResponse))
