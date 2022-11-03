@@ -25,7 +25,6 @@ import timber.log.Timber
 
 const val SCHEDULED = "SCHEDULED"
 
-const val TRANSFER_REQUEST = 203
 const val SCHEDULE_REQUEST = 204
 const val REQUEST_REQUEST = 301
 const val BOUNTY_REQUEST = 207
@@ -41,7 +40,9 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         hsb.run()
         updatePushNotifGroupStatus()
     } catch (e: Exception) {
+        Timber.e(e)
         runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.error_running_action)) }
+        AnalyticsUtil.logErrorAndReportToFirebase(hsb.action.public_id, getString(R.string.error_running_action), e)
         createLog(hsb, "Failed Actions")
     }
 
