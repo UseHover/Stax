@@ -4,7 +4,7 @@ import android.content.Context
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.data.remote.DataResult
-import com.hover.stax.data.remote.auth.StaxApi
+import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto

@@ -20,7 +20,7 @@ import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.local.user.UserRepo
-import com.hover.stax.data.remote.auth.StaxApi
+import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.AccountRepositoryImpl
 import com.hover.stax.data.repository.AuthRepositoryImpl
 import com.hover.stax.data.repository.BonusRepositoryImpl

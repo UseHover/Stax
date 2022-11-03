@@ -1,6 +1,5 @@
-package com.hover.stax.data.remote.auth
+package com.hover.stax.data.remote
 
-import com.hover.stax.data.remote.DataResult
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
@@ -70,7 +69,7 @@ class StaxApi(
     suspend fun getRewardPoints(email: String): DataResult<StaxUserDto> =
         dataResultSafeApiCall {
             client.post {
-                url("${BASE_URL}/api/rewards/reward_points/$email")
+                url("$BASE_URL/api/rewards/reward_points/$email")
             }.body()
         }
 

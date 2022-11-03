@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.appmattus.kotlinfixture.kotlinFixture
-import com.hover.stax.data.remote.auth.StaxApi
 import com.hover.stax.data.remote.dto.authorization.NAuthRequest
 import com.hover.stax.data.remote.dto.authorization.NAuthResponse
 import com.hover.stax.ktor.KtorClientFactory
