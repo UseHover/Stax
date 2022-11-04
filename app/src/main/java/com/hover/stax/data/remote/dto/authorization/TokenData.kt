@@ -1,18 +1,16 @@
 package com.hover.stax.data.remote.dto.authorization
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TokenData(
-
-	@field:SerializedName("iss")
-	val iss: String,
-
-	@field:SerializedName("iat")
-	val iat: Int,
-
-	@field:SerializedName("user")
-	val user: String,
-
-	@field:SerializedName("jti")
-	val jti: String
+    @SerialName("iss")
+    val iss: String,
+    @SerialName("iat")
+    val iat: Int,
+    @SerialName("user")
+    val user: String,
+    @SerialName("jti")
+    val jti: String
 )

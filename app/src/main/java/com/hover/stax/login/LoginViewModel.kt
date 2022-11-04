@@ -13,27 +13,22 @@ import com.google.android.gms.common.api.ApiException
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.data.remote.DataResult
-import com.hover.stax.data.remote.dto.UploadDto
-import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.data.remote.dto.UpdateDto
+import com.hover.stax.data.remote.dto.UploadDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.domain.model.Resource
+import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.domain.repository.AuthRepository
-import com.hover.stax.domain.use_case.auth.AuthUseCase
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.preferences.DefaultTokenProvider
 import com.hover.stax.preferences.TokenProvider
 import com.hover.stax.utils.AnalyticsUtil
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class LoginViewModel(
     application: Application,
     private val staxUserUseCase: StaxUserUseCase,
-    private val authUseCase: AuthUseCase,
     private val authRepository: AuthRepository,
     private val tokenProvider: TokenProvider
 ) : AndroidViewModel(application) {
@@ -79,7 +74,8 @@ class LoginViewModel(
                     )
                 }
                 is DataResult.Error -> onError(
-                    message = response.error?.localizedMessage ?: getString(R.string.upload_user_error),
+                    message = response.error?.localizedMessage
+                        ?: getString(R.string.upload_user_error),
                     isUpdate = false
                 )
             }
@@ -107,7 +103,8 @@ class LoginViewModel(
                     )
                 }
                 is DataResult.Error -> onError(
-                    message = response.error?.localizedMessage ?: getString(R.string.upload_user_error),
+                    message = response.error?.localizedMessage
+                        ?: getString(R.string.upload_user_error),
                     isUpdate = false
                 )
             }
@@ -134,7 +131,8 @@ class LoginViewModel(
                         progress.postValue(100)
                     }
                     is DataResult.Error -> onError(
-                        message = response.error?.localizedMessage ?: getString(R.string.upload_user_error),
+                        message = response.error?.localizedMessage
+                            ?: getString(R.string.upload_user_error),
                         isUpdate = false
                     )
                 }
@@ -153,7 +151,7 @@ class LoginViewModel(
     }
 
     private fun updateUser(email: String, data: UserUpdateDto) = viewModelScope.launch {
-        when(val response = authRepository.updateUser(email, data)) {
+        when (val response = authRepository.updateUser(email, data)) {
             is DataResult.Loading -> progress.value = 66
             is DataResult.Success -> {
                 Timber.d("User updated successfully")

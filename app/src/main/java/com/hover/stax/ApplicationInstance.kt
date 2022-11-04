@@ -43,7 +43,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(appModule + dataModule + networkModule + ktorModule + datastoreModule + useCases + repositories)
+            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories)
         }
     }
 
@@ -79,7 +79,6 @@ class ApplicationInstance : Application() {
             start(this@ApplicationInstance)
         }
     }
-
 
     companion object {
         val txnDetailsRetryCounter: MutableMap<String, Int> by Delegates.observable(HashMap()) { _, _, _ -> }

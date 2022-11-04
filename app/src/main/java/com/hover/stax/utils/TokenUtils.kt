@@ -1,12 +1,12 @@
 package com.hover.stax.utils
 
-
 import android.util.Base64
-import com.google.gson.Gson
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.authorization.TokenData
 import com.hover.stax.data.remote.dto.toStaxUser
 import com.hover.stax.domain.model.StaxUser
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import timber.log.Timber
 import java.io.UnsupportedEncodingException
 
@@ -17,9 +17,8 @@ object TokenUtils {
         return try {
             val split = token.split(".")
 
-            val gson = Gson()
-            val tokenData = gson.fromJson(getJson(split[1]), TokenData::class.java)
-            val userDto = gson.fromJson(tokenData.user, StaxUserDto::class.java)
+            val tokenData = Json.decodeFromString<TokenData>(split[1]) // can we use .last() ???
+            val userDto = Json.decodeFromString<StaxUserDto>(tokenData.user)
 
             return userDto.toStaxUser()
         } catch (e: UnsupportedEncodingException) {
