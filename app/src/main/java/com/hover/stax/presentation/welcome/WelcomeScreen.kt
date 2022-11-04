@@ -21,7 +21,6 @@ import com.hover.stax.presentation.welcome.components.GoogleSignInButton
 import com.hover.stax.presentation.welcome.components.WelcomeHeader
 import com.hover.stax.ui.theme.StaxTheme
 
-
 @Composable
 fun WelcomeScreen(onClickContinue: () -> Unit, onClickSignIn: () -> Unit, showExploreButton : Boolean) {
     val features = getFeatures()
