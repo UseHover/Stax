@@ -18,7 +18,7 @@ suspend fun <T : Any> dataResultSafeApiCall(
         is ServerResponseException, is NoTransformationFoundException -> {
             DataResult.Error(ServerError(exception))
         }
-        is ConnectTimeoutException, is NetworkError -> {
+        is ConnectTimeoutException -> {
             DataResult.Error(NetworkError())
         }
         else -> {
