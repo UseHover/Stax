@@ -50,6 +50,22 @@ body:
       label: Android OS
       description: What version of Android OS are you using?
       placeholder: ex. 8.1.0
+  - type: input
+    id: appVersion
+    attributes:
+      label: App version
+      description: What version of the app are you using?
+      placeholder: ex. 1.17.3
+    validations:
+      required: true
+  - type: input
+    id: configVersion
+    attributes:
+      label: Config version
+      description: What version of the config are you using?
+      placeholder: ex. 20221107062504
+    validations:
+      required: true
   - type: dropdown
     id: sim
     attributes:
