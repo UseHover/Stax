@@ -211,7 +211,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startHoverActionWorker(wm: WorkManager) {
-        wm.enqueue(ActionsImportWorker.actionsImportRequest())
+        wm.enqueue(ActionsImportWorker.startRequest())
     }
 
     private fun chooseNavigation(intent: Intent) {
