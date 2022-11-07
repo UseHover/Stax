@@ -61,9 +61,6 @@ class BalancesViewModel(application: Application, val actionRepo: ActionRepo, va
         if (account == null) return@launch
 
         val channelId = account.channelId
-        Timber.i("Selected channel id is: $channelId")
-        val allOfflineActions = actionRepo.all
-        Timber.i("All offline action size is ${allOfflineActions.size}")
         val action = actionRepo.getFirstAction(channelId, HoverAction.BALANCE)
         action?.let { _balanceAction.emit(action) } ?: run { _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action)) }
     }
