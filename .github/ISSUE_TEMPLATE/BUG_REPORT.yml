@@ -54,7 +54,7 @@ body:
     id: appVersion
     attributes:
       label: App version
-      description: What version of the app are you using?
+      description: What version of the app are you using? - Get this from the settings screen under App info
       placeholder: ex. 1.17.3
     validations:
       required: true
@@ -62,7 +62,7 @@ body:
     id: configVersion
     attributes:
       label: Config version
-      description: What version of the config are you using?
+      description: What version of the config are you using? - Get this from the settings screen under App info
       placeholder: ex. 20221107062504
     validations:
       required: true
