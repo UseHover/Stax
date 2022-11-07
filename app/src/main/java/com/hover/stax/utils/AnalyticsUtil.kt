@@ -94,7 +94,11 @@ object AnalyticsUtil {
 	}
 
 	private fun strippedForFireAnalytics(firebaseEventLog: String): String {
-		val newValue = firebaseEventLog.replace(" ", "_").replace(",", "_")
+		val newValue = firebaseEventLog
+			.replace(", ", "_")
+			.replace(".", "_")
+			.replace(" ", "_")
+
 		Timber.v("Logging event: $newValue")
 		return newValue.lowercase()
 	}

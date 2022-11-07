@@ -30,7 +30,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         Timber.i("Attempting to import channels from json file")
-        if (channelDao!!.allDataCount == 0 || channelDao!!.publishedTelecomDataCount == 0) {
+        if (channelDao.allDataCount == 0 || channelDao.publishedTelecomDataCount == 0) {
             initNotification()
 
             parseChannelJson()?.let {

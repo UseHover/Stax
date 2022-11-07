@@ -751,6 +751,7 @@
     <string name="ussd_lib">Dial USSD</string>
 
     <string name="error_running_action">Sorry, this service integration is broken.</string>
+    <string name="error_running_action_log">service integration broken</string>
     <string name="toast_err_tag">toast_err_notif</string>
     <string name="error_still_loading">Please wait a moment and try again.</string>
 

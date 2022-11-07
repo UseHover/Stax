@@ -18,6 +18,7 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.hover.sdk.actions.ActionsImportWorker
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.stax.addChannels.ChannelsViewModel
@@ -195,6 +196,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startWorkers() {
+        startHoverActionWorker(workManager)
         startChannelWorkers(workManager)
         startScheduleWorker(workManager)
     }
@@ -206,6 +208,10 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun startScheduleWorker(wm: WorkManager) {
         wm.enqueueUniquePeriodicWork(ScheduleWorker::class.java.simpleName, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil())
+    }
+
+    private fun startHoverActionWorker(wm: WorkManager) {
+        wm.enqueue(ActionsImportWorker.actionsImportRequest())
     }
 
     private fun chooseNavigation(intent: Intent) {
