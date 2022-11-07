@@ -94,9 +94,9 @@ object AnalyticsUtil {
 	}
 
 	private fun strippedForFireAnalytics(firebaseEventLog: String): String {
-		val newValue = firebaseEventLog.replace(" ", "_").lowercase()
+		val newValue = firebaseEventLog.replace(" ", "_").replace(",", "_")
 		Timber.v("Logging event: $newValue")
-		return newValue
+		return newValue.lowercase()
 	}
 
 	private fun convertJSONObjectToBundle(args: JSONObject): Bundle {
