@@ -49,14 +49,8 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
 
     private fun parseChannelJson(): String? {
         var channelsString: String? = null
-
-        val fileToUse = if (BuildConfig.DEBUG)
-            applicationContext.getString(R.string.channels_json_staging)
-        else
-            applicationContext.getString(R.string.channels_json_prod)
-
         try {
-            val inputStream = applicationContext.assets.open(fileToUse)
+            val inputStream = applicationContext.assets.open("channels.json")
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)

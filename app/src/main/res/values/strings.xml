@@ -24,8 +24,6 @@
     <string name="default_notification_channel_id">app.hover.stax</string>
     <string name="terms_and_condition_url">https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/</string>
 
-    <string name="channels_json_staging" translatable="false">channels-staging.json</string>
-    <string name="channels_json_prod" translatable="false">channels-prod.json</string>
     <string name="stax_handle" translatable="false">\@joinstax</string>
 
     <string name="hsdk_app_name_literal">*Stax#</string>

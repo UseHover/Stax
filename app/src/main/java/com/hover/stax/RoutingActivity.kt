@@ -196,7 +196,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startWorkers() {
-        startHoverActionWorker(workManager)
         startChannelWorkers(workManager)
         startScheduleWorker(workManager)
     }
@@ -208,10 +207,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun startScheduleWorker(wm: WorkManager) {
         wm.enqueueUniquePeriodicWork(ScheduleWorker::class.java.simpleName, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil())
-    }
-
-    private fun startHoverActionWorker(wm: WorkManager) {
-        wm.enqueue(ActionsImportWorker.startRequest())
     }
 
     private fun chooseNavigation(intent: Intent) {
