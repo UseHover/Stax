@@ -22,7 +22,12 @@ import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.preferences.DefaultTokenProvider
 import com.hover.stax.preferences.TokenProvider
+import com.hover.stax.presentation.welcome.data.LoginUiState
 import com.hover.stax.utils.AnalyticsUtil
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -45,6 +50,18 @@ class LoginViewModel(
     init {
         getUser()
     }
+
+//    val loginUiState: StateFlow<LoginUiState> = combine(
+//
+//    ) {
+//        authorize, authToken, fetchstaxUser - >
+//        val authorize:
+//    }.stateIn(
+//        scope = viewModelScope,
+//       initialValue = LoginUiState(
+//
+//       )
+//    )
 
     private fun getUser() = viewModelScope.launch {
         staxUserUseCase.user.collect { staxUser.value = it }
@@ -74,7 +91,7 @@ class LoginViewModel(
                     )
                 }
                 is DataResult.Error -> onError(
-                    message = response.error?.localizedMessage
+                    message = response.exception?.localizedMessage
                         ?: getString(R.string.upload_user_error),
                     isUpdate = false
                 )
@@ -103,7 +120,7 @@ class LoginViewModel(
                     )
                 }
                 is DataResult.Error -> onError(
-                    message = response.error?.localizedMessage
+                    message = response.exception?.localizedMessage
                         ?: getString(R.string.upload_user_error),
                     isUpdate = false
                 )
@@ -131,7 +148,7 @@ class LoginViewModel(
                         progress.postValue(100)
                     }
                     is DataResult.Error -> onError(
-                        message = response.error?.localizedMessage
+                        message = response.exception?.localizedMessage
                             ?: getString(R.string.upload_user_error),
                         isUpdate = false
                     )
@@ -158,7 +175,7 @@ class LoginViewModel(
                 progress.postValue(100)
             }
             is DataResult.Error -> onError(
-                message = response.error?.localizedMessage ?: getString(R.string.upload_user_error),
+                message = response.exception?.localizedMessage ?: getString(R.string.upload_user_error),
                 isUpdate = false
             )
         }

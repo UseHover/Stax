@@ -15,6 +15,7 @@ import com.hover.stax.data.remote.dto.authorization.NStaxUser
 import com.hover.stax.data.remote.dto.authorization.NTokenRefresh
 import com.hover.stax.data.remote.dto.authorization.NTokenRequest
 import com.hover.stax.data.remote.dto.authorization.NTokenResponse
+import com.hover.stax.data.retry.RetryPolicy
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.preferences.DefaultTokenProvider
 import com.hover.stax.preferences.TokenProvider
@@ -28,7 +29,8 @@ private const val SCOPE = "write"
 class AuthRepositoryImpl(
     private val context: Context,
     private val staxApi: StaxApi,
-    private val tokenProvider: TokenProvider
+    private val tokenProvider: TokenProvider,
+    private val retryPolicy: RetryPolicy
 ) : AuthRepository {
 
     override suspend fun authorizeClient(idToken: String): DataResult<NAuthResponse> {
