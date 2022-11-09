@@ -18,20 +18,19 @@ import com.hover.stax.actions.ActionSelect
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
+import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.hover.FEE_REQUEST
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLifecycleFlow
+import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
+import com.hover.stax.views.StaxTextInput
 import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
+class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
     private lateinit var transferViewModel: TransferViewModel
     private val channelsViewModel: ChannelsViewModel by viewModel()
@@ -288,9 +287,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         binding.editCard.contactSelect.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
+        val nonstandardErrors = validateNonStandardVars()
 
-        return accountError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
+        return accountError == null && actionError == null && amountError == null && recipientError == null && nonstandardErrors
     }
 
     override fun onContactSelected(contact: StaxContact) {
@@ -303,10 +302,49 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun updateNonStandardInputs(variables: LinkedHashMap<String, String>) {
-        val recyclerView = binding.editCard.nonStandardVariableRecyclerView
-        nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, recyclerView)
-        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        recyclerView.adapter = nonStandardVariableAdapter
+        val listView = binding.editCard.nonStandardVariables
+        var index = 0
+        for ((k, v) in variables) {
+            if (listView.findViewWithTag<StaxTextInput>(k) == null)
+                createVariableInput(k, v, listView)
+            index++
+        }
+    }
+
+    private fun createVariableInput(key: String, value: String, parent: ViewGroup) {
+        val binding = InputItemBinding.inflate(LayoutInflater.from(context), parent, true)
+        val inputTextWatcher: TextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence,i: Int,i1: Int,i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                nonStandardVarUpdate(key, charSequence.toString())
+            }
+        }
+
+        binding.variableInput.addTextChangedListener(inputTextWatcher)
+        binding.variableInput.setHint(key.splitCamelCase())
+        binding.variableInput.tag = key
+        binding.variableInput.setText(value)
+    }
+
+
+    fun nonStandardVarUpdate(key: String, value: String) {
+        actionSelectViewModel.updateNonStandardVariables(key, value)
+    }
+
+    private fun validateNonStandardVars(): Boolean {
+        if (!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
+            for ((k, v) in actionSelectViewModel.nonStandardVariables.value!!) {
+                if (v.isNullOrEmpty()) {
+                    binding.editCard.nonStandardVariables.findViewWithTag<StaxTextInput>(k)
+                        .setState(getString(R.string.enterValue_non_template_error, k.lowercase()), AbstractStatefulInput.ERROR)
+                    return false
+                } else
+                    binding.editCard.nonStandardVariables.findViewWithTag<StaxTextInput>(k)
+                        .setState(null, AbstractStatefulInput.SUCCESS)
+            }
+        }
+        return true
     }
 
     private fun updateNonStandardSummary(variables: LinkedHashMap<String, String>) {
@@ -378,9 +416,5 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
-    }
-
-    override fun nonStandardVarUpdate(key: String, value: String) {
-        actionSelectViewModel.updateNonStandardVariables(key, value)
     }
 }
