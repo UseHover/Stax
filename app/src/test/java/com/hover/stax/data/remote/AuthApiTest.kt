@@ -37,7 +37,7 @@ class AuthApiTest {
     private var testDataStore: DataStore<Preferences> = mockk(relaxed = true)
 
     @Test(expected = ServerResponseException::class)
-    fun `test ServerError is thrown when a server exception occurs`() {
+    fun `test server error is thrown when a server exception occurs`() {
         val authRequest = fixture<AuthRequest>()
         val mockEngine = MockEngine {
             delay(500)
@@ -173,7 +173,7 @@ class AuthApiTest {
     }
 
     @Test(expected = ServerResponseException::class)
-    fun `test ServerError is thrown when a server exception occurs during user upload`() {
+    fun `test server error is thrown when a server exception occurs during user upload`() {
         val userDTO = fixture<UserUploadDto>()
         val mockEngine = MockEngine {
             delay(500)
