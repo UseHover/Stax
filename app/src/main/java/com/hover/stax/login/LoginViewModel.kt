@@ -20,6 +20,7 @@ import com.hover.stax.data.remote.dto.toStaxUser
 import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
+import com.hover.stax.preferences.DefaultTokenProvider
 import com.hover.stax.preferences.TokenProvider
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,16 +67,24 @@ class LoginViewModel(
 
     private fun loginUser(token: String, signInAccount: GoogleSignInAccount) = viewModelScope.launch {
         try {
-            val auth = authRepository.authorizeClient(token)
-            val tokenInfo = authRepository.fetchTokenInfo(auth.redirectUri.code)
+            val authorization = authRepository.authorizeClient(token)
+            val response = authRepository.fetchTokenInfo(authorization.redirectUri.code)
             val user = authRepository.uploadUserToStax(UserUploadDto(
                     UploadDto(
                             deviceId = Hover.getDeviceId(getApplication()),
                             email = signInAccount.email!!,
                             username = signInAccount.displayName!!,
-                            token = tokenInfo.accessToken
+                            token = response.accessToken
                     )
             ))
+            tokenProvider.update(
+                    key = DefaultTokenProvider.ACCESS_TOKEN,
+                    token = response.accessToken
+            )
+            tokenProvider.update(
+                    key = DefaultTokenProvider.REFRESH_TOKEN,
+                    token = response.refreshToken
+            )
             staxUserUseCase.saveUser(user.toStaxUser())
             _loginState.value = LoginScreenUiState(LoginUiState.Success)
         } catch (e: Exception) {

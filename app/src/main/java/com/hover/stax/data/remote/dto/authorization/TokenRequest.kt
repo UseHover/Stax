@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NTokenRequest(
+data class TokenRequest(
     @SerialName("client_id")
     val clientId: String,
     @SerialName("client_secret")
@@ -18,7 +18,7 @@ data class NTokenRequest(
 )
 
 @Serializable
-data class NTokenRefresh(
+data class TokenRefresh(
     @SerialName("client_id")
     val clientId: String,
     @SerialName("client_secret")
@@ -32,7 +32,7 @@ data class NTokenRefresh(
 )
 
 @Serializable
-data class NRevokeTokenRequest(
+data class RevokeTokenRequest(
     @SerialName("client_id")
     val clientId: String,
     @SerialName("client_secret")
@@ -42,7 +42,7 @@ data class NRevokeTokenRequest(
 )
 
 @Serializable
-data class NTokenResponse(
+data class TokenResponse(
     @SerialName("access_token")
     val accessToken: String,
     @SerialName("refresh_token")

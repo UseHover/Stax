@@ -3,40 +3,39 @@ package com.hover.stax.data.remote
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.authorization.NAuthRequest
-import com.hover.stax.data.remote.dto.authorization.NAuthResponse
-import com.hover.stax.data.remote.dto.authorization.NRevokeTokenRequest
-import com.hover.stax.data.remote.dto.authorization.NTokenRefresh
-import com.hover.stax.data.remote.dto.authorization.NTokenRequest
-import com.hover.stax.data.remote.dto.authorization.NTokenResponse
+import com.hover.stax.data.remote.dto.authorization.AuthRequest
+import com.hover.stax.data.remote.dto.authorization.AuthResponse
+import com.hover.stax.data.remote.dto.authorization.RevokeTokenRequest
+import com.hover.stax.data.remote.dto.authorization.TokenRefresh
+import com.hover.stax.data.remote.dto.authorization.TokenRequest
+import com.hover.stax.data.remote.dto.authorization.TokenResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import kotlinx.coroutines.flow.Flow
 
 class StaxApi(
     private val client: HttpClient
 ) {
 
-    suspend fun authorize(authRequest: NAuthRequest): NAuthResponse =
+    suspend fun authorize(authRequest: AuthRequest): AuthResponse =
             client.post {
                 url("${BASE_URL}authorize")
                 setBody(authRequest)
             }.body()
 
-    suspend fun fetchToken(tokenRequest: NTokenRequest): NTokenResponse =
+    suspend fun fetchToken(tokenRequest: TokenRequest): TokenResponse =
             client.post {
                 url("${BASE_URL}token")
                 setBody(tokenRequest)
             }.body()
 
-    suspend fun refreshToken(tokenRefresh: NTokenRefresh): NTokenResponse =
+    suspend fun refreshToken(tokenRefresh: TokenRefresh): TokenResponse =
             client.post {
                 url("${BASE_URL}token")
                 setBody(tokenRefresh)
             }.body()
 
-    suspend fun revokeToken(revokeToken: NRevokeTokenRequest): NTokenResponse =
+    suspend fun revokeToken(revokeToken: RevokeTokenRequest): TokenResponse =
             client.post {
                 url("${BASE_URL}revoke")
                 setBody(revokeToken)
