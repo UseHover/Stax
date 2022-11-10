@@ -31,7 +31,7 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class
     ],
-    version = 49,
+    version = 50,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
@@ -39,7 +39,8 @@ import java.util.concurrent.Executors
         AutoMigration(from = 40, to = 41),
         AutoMigration(from = 41, to = 42),
         AutoMigration(from = 43, to = 44),
-        AutoMigration(from = 46, to = 47)
+        AutoMigration(from = 46, to = 47),
+        AutoMigration(from = 49, to = 50)
     ]
 )
 
@@ -245,7 +246,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private val M47_48 = Migration(47, 48) { database ->
-            database.execSQL("DROP INDEX index_accounts_name")
+            database.execSQL("DROP INDEX IF EXISTS index_accounts_name")
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_name_sim_subscription_id ON accounts(name, sim_subscription_id)")
         }
 
