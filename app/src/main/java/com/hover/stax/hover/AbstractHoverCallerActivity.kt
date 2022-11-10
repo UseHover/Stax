@@ -143,6 +143,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     private fun updatePushNotifGroupStatus(a: HoverAction) {
         joinAllBountiesGroup(this)
-        joinBountyCountryGroup(a.country_alpha2.uppercase(), this)
+        joinBountyCountryGroup(a.country_alpha2, this)
     }
 }

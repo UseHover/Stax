@@ -83,24 +83,24 @@ internal fun SimItem(
 				onClick = { emailStax(simWithAccount, context) })
 		}
 		else {
-			val bonus = simWithAccount.bonus
+			val bonus = simWithAccount.airtimeActions?.first { it.bonus_percent > 0 }?.bonus_percent
 			SecondaryButton(
 				getAirtimeButtonLabel(bonus, context), getAirtimeButtonIcon(bonus),
 				onClick = { buyAirtime(simWithAccount.account) })
 		}
 	}
 }
-private fun getAirtimeButtonLabel(bonus: Double, context: Context) : String {
+private fun getAirtimeButtonLabel(bonus: Int?, context: Context) : String {
 	var label = context.getString(R.string.nav_airtime)
-	if (bonus > 0) {
+	if (bonus != null) {
 		label = context.getString(R.string.buy_airitme_bonus, Utils.formatPercent(bonus))
 	}
 	return label
 }
 
-private fun getAirtimeButtonIcon(bonus: Double) : Int? {
+private fun getAirtimeButtonIcon(bonus: Int?) : Int? {
 	var icon : Int? = null
-	if (bonus > 0) { icon = R.drawable.ic_bonus }
+	if (bonus != null) { icon = R.drawable.ic_bonus }
 	return icon
 }
 

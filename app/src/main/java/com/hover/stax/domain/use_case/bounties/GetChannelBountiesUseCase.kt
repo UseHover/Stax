@@ -53,5 +53,5 @@ class GetChannelBountiesUseCase(private val channelRepository: ChannelRepository
         return false
     }
 
-    fun getChannelList(): Flow<List<String>> = bountyRepository.getCountryList()
+    fun getCountryList(): Flow<List<String>> = bountyRepository.getCountryList()
 }

@@ -120,7 +120,6 @@ class TransactionDetailsFragment : Fragment() {
         account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
         hoverTransaction.observe(viewLifecycleOwner, txnObserver)
         messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
-        bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
 
 
         val observer = object : Observer<Boolean> {
@@ -207,8 +206,16 @@ class TransactionDetailsFragment : Fragment() {
             binding.details.categoryValue.text = it.shortStatusExplain(action,"", requireContext())
             if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
+            showBonusAmount(it.amount, action)
         }
         binding.statusInfo.institutionLogo.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo)
+
+    }
+
+    private fun showBonusAmount(amount: Double?, action: HoverAction) = with(binding.details) {
+        bonusRow.visibility = if (amount != null && amount > 0 && action.bonus_percent > 0) VISIBLE else GONE
+        if (amount != null)
+            bonusAmount.text = (amount * action.bonus_percent/100).toString()
     }
 
     private fun updateAccount(account: Account) {
@@ -343,18 +350,6 @@ class TransactionDetailsFragment : Fragment() {
         }
 
         bottomSheetBehavior.state = updatedState
-    }
-
-
-    private fun showBonusAmount(amount: Int) = with(binding.details) {
-        val txn = viewModel.transaction.value
-
-        if (amount > 0 && (txn != null && txn.isSuccessful)) {
-            bonusRow.visibility = VISIBLE
-            bonusAmount.text = amount.toString()
-        } else {
-            bonusRow.visibility = GONE
-        }
     }
 
     override fun onDestroyView() {

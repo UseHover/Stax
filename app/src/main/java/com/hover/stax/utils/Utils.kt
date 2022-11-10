@@ -141,11 +141,11 @@ object Utils {
     }
 
     @JvmStatic
-    fun formatPercent(number: Double): String {
+    fun formatPercent(number: Int): String {
         return try {
             val formatter = DecimalFormat("##0")
             formatter.maximumFractionDigits = 0
-            formatter.format(number * 100)
+            formatter.format(number)
         } catch (e: Exception) {
             number.toString()
         }

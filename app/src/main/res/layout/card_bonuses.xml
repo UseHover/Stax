@@ -7,7 +7,8 @@
         android:layout_marginHorizontal="@dimen/margin_13"
         app:cardElevation="0dp"
         app:cardBackgroundColor="@color/cardViewColor"
-        app:cardCornerRadius="@dimen/radius">
+        app:cardCornerRadius="@dimen/radius"
+        android:visibility="gone" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -33,7 +34,7 @@
                 android:layout_marginStart="@dimen/margin_16"
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_marginEnd="@dimen/margin_16"
-                android:text="@string/invalid_account_bonus_msg"
+                android:text="@string/bonus_placeholder"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16"
                 app:layout_constraintBottom_toTopOf="@id/learnMore"

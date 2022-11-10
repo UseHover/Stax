@@ -31,7 +31,7 @@ interface PushNotificationTopicsInterface {
     }
 
     fun joinBountyCountryGroup(countryCode: String?, c: Context) {
-        setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_bounty_in_country, countryCode))
+        setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_bounty_in_country, countryCode?.uppercase()))
     }
 
     fun joinChannelGroup(channelId: Int, c: Context) {

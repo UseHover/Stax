@@ -16,7 +16,6 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
@@ -32,13 +31,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-//TODO: Refactor this class, and note the comment in the createAccounts(channels: List<Channel>) method
-//Todo created by Tobi, 11th of August, 2022.
 class ChannelsViewModel(application: Application, val repo: ChannelRepo,
                         val simRepo: SimRepo,
                         val accountRepo: AccountRepo,
-                        val actionRepo: ActionRepo,
-                        private val bonusRepo: BonusRepo) : AndroidViewModel(application),
+                        val actionRepo: ActionRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -166,7 +162,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
-    fun validateAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun payWith(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val accounts = accountRepo.getAccountsByChannel(channelId)
 
         if (accounts.isEmpty())
@@ -194,7 +190,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
 
         val accountIds = accountRepo.insert(accounts)
 
-        //Refactoring tip: This is currently the only difference when compared with the function in AccountRepositoryImpl.
         promptBalanceCheck(accountIds.first().toInt())
     }
 
@@ -215,7 +210,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     fun updateCountry(code: String) {
-        countryChoice.postValue(code.uppercase())
+        countryChoice.postValue(code.lowercase())
     }
 
     private fun updateCountryChannels(channels: List<Channel>?) {
@@ -223,17 +218,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     private fun runFilter(channels: List<Channel>, value: String?) {
-        filterBonusChannels(channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) })
-    }
-
-    private fun filterBonusChannels(channels: List<Channel>) = viewModelScope.launch {
-        bonusRepo.collectBonuses.collect { list ->
-            val ids = list.map { it.purchaseChannel }
-            filteredChannels.value = if (ids.isEmpty())
-                channels
-            else
-                channels.filterNot { ids.contains(it.id) }
-        }
+        filteredChannels.value = channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) }
     }
 
     fun updateChannel(channel: Channel) {
