@@ -105,18 +105,12 @@ class LoginViewModel(
     }
 
     private fun updateUser(email: String, data: UserUpdateDto) = viewModelScope.launch {
-//        when (val response = authRepository.updateUser(email, data)) {
-//            is DataResult.Loading -> progress.value = 66
-//            is DataResult.Success -> {
-//                Timber.d("User updated successfully")
-//                progress.postValue(100)
-//            }
-//            is DataResult.Error -> onError(
-//                    message = response.exception?.localizedMessage
-//                            ?: getString(R.string.upload_user_error),
-//                    isUpdate = false
-//            )
-//        }
+        try {
+            authRepository.updateUser(email, data)
+            _loginState.value = LoginScreenUiState(LoginUiState.Success)
+        } catch (e: Exception) {
+            _loginState.value = LoginScreenUiState(LoginUiState.Error)
+        }
     }
 
     private fun setUser(signInAccount: GoogleSignInAccount, idToken: String) {

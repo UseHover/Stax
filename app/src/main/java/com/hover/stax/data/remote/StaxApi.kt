@@ -35,11 +35,11 @@ class StaxApi(
                 setBody(tokenRefresh)
             }.body()
 
-    suspend fun revokeToken(revokeToken: RevokeTokenRequest): TokenResponse =
+    suspend fun revokeToken(revokeToken: RevokeTokenRequest) =
             client.post {
                 url("${BASE_URL}revoke")
                 setBody(revokeToken)
-            }.body()
+            }
 
     suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto =
             client.post {

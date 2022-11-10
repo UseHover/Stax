@@ -70,21 +70,19 @@ class AuthRepositoryImpl(
         return staxApi.refreshToken(tokenRequest)
     }
 
-    override suspend fun revokeToken(): TokenResponse {
+    override suspend fun revokeToken() {
         val revokeToken = RevokeTokenRequest(
                 clientId = context.getString(R.string.client_uid),
                 clientSecret = context.getString(R.string.client_secret),
                 token = tokenProvider.fetch(DefaultTokenProvider.ACCESS_TOKEN).firstOrNull().toString()
         )
 
-        return staxApi.revokeToken(revokeToken)
+        staxApi.revokeToken(revokeToken)
     }
 
     override suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto =
             staxApi.uploadUserToStax(userDTO = userDTO)
 
-    override suspend fun updateUser(email: String, userDTO: UserUpdateDto): StaxUserDto = staxApi.updateUser(
-            email = email,
-            userDTO = userDTO
-    )
+    override suspend fun updateUser(email: String, userDTO: UserUpdateDto): StaxUserDto =
+            staxApi.updateUser(email = email, userDTO = userDTO)
 }
