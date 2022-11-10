@@ -34,7 +34,7 @@ constructor(val context: Context) {
     fun stopNetworkCallback() = try {
         cm.unregisterNetworkCallback(connectivityManagerCallback)
     } catch (ignored: Exception) {
-        Timber.e("Network callback already unregistered.")
+        Timber.d("Network callback already unregistered.")
     }
 
     private val connectivityManagerCallback = object : ConnectivityManager.NetworkCallback() {

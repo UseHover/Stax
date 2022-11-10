@@ -24,8 +24,6 @@
     <string name="default_notification_channel_id">app.hover.stax</string>
     <string name="terms_and_condition_url">https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/</string>
 
-    <string name="channels_json_staging" translatable="false">channels-staging.json</string>
-    <string name="channels_json_prod" translatable="false">channels-prod.json</string>
     <string name="stax_handle" translatable="false">\@joinstax</string>
 
     <string name="hsdk_app_name_literal">*Stax#</string>
@@ -751,6 +749,7 @@
     <string name="ussd_lib">Dial USSD</string>
 
     <string name="error_running_action">Sorry, this service integration is broken.</string>
+    <string name="error_running_action_log">service integration broken</string>
     <string name="toast_err_tag">toast_err_notif</string>
     <string name="error_still_loading">Please wait a moment and try again.</string>
 

@@ -8,7 +8,7 @@ import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
 import kotlin.random.Random
 
-const val ACCOUNT_NAME: String = "account_name"
+const val ACCOUNT_NAME: String = "accountName"
 const val ACCOUNT_ID: String = "account_id"
 
 @Entity(
