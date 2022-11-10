@@ -5,18 +5,27 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.collectAsState
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyApplicationBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginViewModel
-import com.hover.stax.user.StaxUser
+import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.login.LoginScreenUiState
+import com.hover.stax.login.LoginUiState
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class BountyApplicationFragment : Fragment(), View.OnClickListener {
@@ -47,7 +56,7 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
 
     private fun startObservers() {
         with(loginViewModel) {
-            progress.observe(viewLifecycleOwner) { updateProgress(it) }
+            updateLoginProgress(loginState)
             error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
             staxUser.observe(viewLifecycleOwner) { initUI(it) }
         }
@@ -87,6 +96,7 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
         (activity as MainActivity).signIn()
     }
 
+    // TODO - delete me
     private fun updateProgress(progress: Int) = with(binding.progressIndicator) {
         when (progress) {
             0 -> show()
@@ -96,6 +106,23 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
                 complete()
             }
             else -> setProgressCompat(progress, true)
+        }
+    }
+
+    private fun updateLoginProgress(loginState: StateFlow<LoginScreenUiState>) = with(binding.progressIndicator) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loginState.collect {
+                    when(it.loginState) {
+                        LoginUiState.Loading -> show()
+                        LoginUiState.Error -> hide()
+                        LoginUiState.Success -> {
+                            hide()
+                            complete()
+                        }
+                    }
+                }
+            }
         }
     }
 

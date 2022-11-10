@@ -28,7 +28,7 @@ data class Attributes(
     @SerialName("bounty_total")
     val bountyTotal: Int,
     @SerialName("referee_id")
-    val refereeId: Int,
+    val refereeId: Int?,
     @SerialName("devices")
     val devices: List<String>,
     @SerialName("transaction_count")

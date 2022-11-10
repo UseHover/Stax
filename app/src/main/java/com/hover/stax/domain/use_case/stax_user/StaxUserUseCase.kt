@@ -33,5 +33,7 @@ class StaxUserUseCase(private val staxUserRepository: StaxUserRepository) {
 //        }
 //    }
 
+    suspend fun saveUser(user: StaxUser) = staxUserRepository.saveUser(user)
+
     suspend fun deleteUser(user: StaxUser) = staxUserRepository.deleteUser(user)
 }

@@ -9,18 +9,25 @@ import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.domain.model.Account
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
-import com.hover.stax.domain.model.Account
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
+import com.hover.stax.login.LoginScreenUiState
+import com.hover.stax.login.LoginUiState
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -40,7 +47,6 @@ class SettingsFragment : Fragment() {
     private var dialog: StaxDialog? = null
 
     private var optInMarketing: Boolean = false
-    private var appInfoVisible = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -64,15 +70,13 @@ class SettingsFragment : Fragment() {
 
         binding.bountyCard.getStartedWithBountyButton.setOnClickListener { startBounties() }
 
-        collectLifecycleFlow(accountsViewModel.defaultUpdateMsg) {
+        collectLifecycleFlow(accountsViewModel.accountUpdateMsg) {
             UIHelper.flashAndReportMessage(requireActivity(), it)
         }
     }
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        if (loginViewModel.userIsNotSet()) loginViewModel.uploadLastUser()
-        else if (loginViewModel.staxUser.value?.isMapper == true) binding.bountyCard.root.visibility = VISIBLE
     }
 
     private fun setUpManagePermissions(){
@@ -107,36 +111,11 @@ class SettingsFragment : Fragment() {
         selectLangBtn.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToLanguageSelectFragment()) }
     }
 
-    private fun getAppInfoVisibility() : Int {
-        return if(appInfoVisible) GONE
-        else VISIBLE
-    }
-
     private fun setupAppVersionInfo() {
-        binding.appInfoCard.appInfoDesc.setOnClickListener{
-            with(binding.appInfoCard.details) {
-                this.appInfo.visibility = getAppInfoVisibility()
-                appInfoVisible = !appInfoVisible
-            }
-        }
-
         val deviceId = Hover.getDeviceId(requireContext())
         val appVersion: String = BuildConfig.VERSION_NAME
         val versionCode: String = BuildConfig.VERSION_CODE.toString()
-        val configVersion: String? = Utils.getSdkPrefs(requireContext()).getString("channel_actions_schema_version", "")
-        with(binding.appInfoCard.details) {
-            this.appVersionInfo.text = getString(R.string.app_version_info, appVersion)
-            this.appVersionInfo.setOnClickListener{Utils.copyToClipboard(appVersion, requireContext())}
-
-            this.configVersionInfo.text = getString(R.string.config_info, configVersion)
-            this.configVersionInfo.setOnClickListener{Utils.copyToClipboard(configVersion, requireContext())}
-
-            this.versionCodeInfo.text = getString(R.string.version_code_info, versionCode)
-            this.versionCodeInfo.setOnClickListener{Utils.copyToClipboard(versionCode, requireContext())}
-
-            this.deviceIdInfo.text = getString(R.string.device_id_info, deviceId)
-            this.deviceIdInfo.setOnClickListener{Utils.copyToClipboard(deviceId, requireContext())}
-        }
+        binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId)
     }
 
     private fun setUpAccountDetails() {
@@ -154,7 +133,7 @@ class SettingsFragment : Fragment() {
                 with(binding.accountCard) {
                     accountCard.visibility = VISIBLE
                     loggedInAccount.text = getString(R.string.logged_in_as, staxUser.username)
-                    accountLayout.setOnClickListener { showLogoutConfirmDialog() }
+                    accountCard.setOnClickListener { showLogoutConfirmDialog() }
                 }
             }
         }
@@ -199,12 +178,8 @@ class SettingsFragment : Fragment() {
             a
         }
 
-        spinner.setText(defaultAccount?.userAlias, false)
-        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ ->
-            if (pos != -1) {
-                accountsViewModel.setDefaultAccount(accounts[pos])
-            }
-        }
+        spinner.setText(defaultAccount?.alias, false)
+        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) accountsViewModel.setDefaultAccount(accounts[pos]) }
     }
 
     private fun setUpEnableTestMode() {
@@ -271,9 +246,20 @@ class SettingsFragment : Fragment() {
         binding.staxSupport.contactCard.showProgressIndicator()
         loginViewModel.optInMarketing(optedIn)
 
-        loginViewModel.progress.observe(viewLifecycleOwner) {
-            if (it == 100)
-                binding.staxSupport.contactCard.hideProgressIndicator()
+        updateLoginProgress(loginViewModel.loginState)
+    }
+
+    private fun updateLoginProgress(loginState: StateFlow<LoginScreenUiState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loginState.collect {
+                    when(it.loginState) {
+                        LoginUiState.Loading -> {}
+                        LoginUiState.Error -> {}
+                        LoginUiState.Success -> { binding.staxSupport.contactCard.hideProgressIndicator() }
+                    }
+                }
+            }
         }
     }
 

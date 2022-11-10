@@ -12,30 +12,26 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
-import com.hover.stax.data.remote.DataResult
 import com.hover.stax.data.remote.dto.UpdateDto
 import com.hover.stax.data.remote.dto.UploadDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
+import com.hover.stax.data.remote.dto.toStaxUser
 import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
-import com.hover.stax.preferences.DefaultTokenProvider
 import com.hover.stax.preferences.TokenProvider
-import com.hover.stax.presentation.welcome.data.LoginUiState
 import com.hover.stax.utils.AnalyticsUtil
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class LoginViewModel(
-    application: Application,
-    private val staxUserUseCase: StaxUserUseCase,
-    private val authRepository: AuthRepository,
-    private val tokenProvider: TokenProvider
+        application: Application,
+        private val staxUserUseCase: StaxUserUseCase,
+        private val authRepository: AuthRepository,
+        private val tokenProvider: TokenProvider
 ) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient
@@ -44,31 +40,20 @@ class LoginViewModel(
     var staxUser = MutableLiveData<StaxUser?>()
         private set
 
-    var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
+
+    private val _loginState = MutableStateFlow(LoginScreenUiState(LoginUiState.Loading))
+    val loginState = _loginState.asStateFlow()
 
     init {
         getUser()
     }
-
-//    val loginUiState: StateFlow<LoginUiState> = combine(
-//
-//    ) {
-//        authorize, authToken, fetchstaxUser - >
-//        val authorize:
-//    }.stateIn(
-//        scope = viewModelScope,
-//       initialValue = LoginUiState(
-//
-//       )
-//    )
 
     private fun getUser() = viewModelScope.launch {
         staxUserUseCase.user.collect { staxUser.value = it }
     }
 
     fun signIntoGoogle(data: Intent?) {
-        progress.value = 25
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         try {
             val account = task.getResult(ApiException::class.java)!!
@@ -79,115 +64,56 @@ class LoginViewModel(
         }
     }
 
-    private fun authorizeClient(token: String, signInAccount: GoogleSignInAccount) =
-        viewModelScope.launch {
-            when (val response = authRepository.authorizeClient(token)) {
-                is DataResult.Loading -> progress.value = 66
-                is DataResult.Success -> {
-                    Timber.d("Stax authorization successful ${response.data.status}")
-                    fetchAuthToken(
-                        code = response.data.redirectUri.code,
-                        signInAccount = signInAccount
-                    )
-                }
-                is DataResult.Error -> onError(
-                    message = response.exception?.localizedMessage
-                        ?: getString(R.string.upload_user_error),
-                    isUpdate = false
-                )
-            }
-        }
-
-    private fun fetchAuthToken(code: String, signInAccount: GoogleSignInAccount) =
-        viewModelScope.launch {
-            when (val response = authRepository.fetchTokenInfo(code)) {
-                is DataResult.Loading -> progress.value = 66
-                is DataResult.Success -> {
-                    Timber.d("Stax auth successful ${response.data.tokenType}")
-                    progress.postValue(100)
-                    tokenProvider.update(
-                        key = DefaultTokenProvider.ACCESS_TOKEN,
-                        token = response.data.accessToken
-                    )
-                    tokenProvider.update(
-                        key = DefaultTokenProvider.REFRESH_TOKEN,
-                        token = response.data.refreshToken
-                    )
-                    uploadUserToStax(
-                        email = signInAccount.email,
-                        username = signInAccount.displayName,
-                        token = response.data.accessToken
-                    )
-                }
-                is DataResult.Error -> onError(
-                    message = response.exception?.localizedMessage
-                        ?: getString(R.string.upload_user_error),
-                    isUpdate = false
-                )
-            }
-        }
-
-    private fun uploadUserToStax(email: String?, username: String?, token: String) =
-        viewModelScope.launch {
-
-            if (email != null && username != null)
-
-                when (val response = authRepository.uploadUserToStax(
-                    UserUploadDto(
-                        UploadDto(
+    private fun loginUser(token: String, signInAccount: GoogleSignInAccount) = viewModelScope.launch {
+        try {
+            val auth = authRepository.authorizeClient(token)
+            val tokenInfo = authRepository.fetchTokenInfo(auth.redirectUri.code)
+            val user = authRepository.uploadUserToStax(UserUploadDto(
+                    UploadDto(
                             deviceId = Hover.getDeviceId(getApplication()),
-                            email = email,
-                            username = username,
-                            token = token
-                        )
+                            email = signInAccount.email!!,
+                            username = signInAccount.displayName!!,
+                            token = tokenInfo.accessToken
                     )
-                )) {
-                    is DataResult.Loading -> progress.value = 66
-                    is DataResult.Success -> {
-                        Timber.d("User uploaded to stax successfully ${response.data.data.id}")
-                        progress.postValue(100)
-                    }
-                    is DataResult.Error -> onError(
-                        message = response.exception?.localizedMessage
-                            ?: getString(R.string.upload_user_error),
-                        isUpdate = false
-                    )
-                }
+            ))
+            staxUserUseCase.saveUser(user.toStaxUser())
+            _loginState.value = LoginScreenUiState(LoginUiState.Success)
+        } catch (e: Exception) {
+            _loginState.value = LoginScreenUiState(LoginUiState.Error)
         }
+    }
 
     fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { email ->
         updateUser(
-            email = email,
-            data = UserUpdateDto(
-                UpdateDto(
-                    marketingOptedIn = optIn,
-                    email = email
+                email = email,
+                data = UserUpdateDto(
+                        UpdateDto(
+                                marketingOptedIn = optIn,
+                                email = email
+                        )
                 )
-            )
         )
     }
 
     private fun updateUser(email: String, data: UserUpdateDto) = viewModelScope.launch {
-        when (val response = authRepository.updateUser(email, data)) {
-            is DataResult.Loading -> progress.value = 66
-            is DataResult.Success -> {
-                Timber.d("User updated successfully")
-                progress.postValue(100)
-            }
-            is DataResult.Error -> onError(
-                message = response.exception?.localizedMessage ?: getString(R.string.upload_user_error),
-                isUpdate = false
-            )
-        }
+//        when (val response = authRepository.updateUser(email, data)) {
+//            is DataResult.Loading -> progress.value = 66
+//            is DataResult.Success -> {
+//                Timber.d("User updated successfully")
+//                progress.postValue(100)
+//            }
+//            is DataResult.Error -> onError(
+//                    message = response.exception?.localizedMessage
+//                            ?: getString(R.string.upload_user_error),
+//                    isUpdate = false
+//            )
+//        }
     }
 
     private fun setUser(signInAccount: GoogleSignInAccount, idToken: String) {
         Timber.d("setting user: %s", signInAccount.email)
         googleUser.postValue(signInAccount)
-
-        progress.value = 33
-
-        authorizeClient(token = idToken, signInAccount = signInAccount)
+        loginUser(token = idToken, signInAccount = signInAccount)
     }
 
     fun userIsNotSet(): Boolean = staxUser.value == null
@@ -196,20 +122,18 @@ class LoginViewModel(
     private fun onError(message: String, isUpdate: Boolean = false) {
         Timber.e(message)
         if (isUpdate) {
-            progress.postValue(-1)
             error.postValue(message)
         } else {
             signInClient.signOut().addOnCompleteListener {
                 AnalyticsUtil.logErrorAndReportToFirebase(
-                    LoginViewModel::class.java.simpleName,
-                    message,
-                    null
+                        LoginViewModel::class.java.simpleName,
+                        message,
+                        null
                 )
                 AnalyticsUtil.logAnalyticsEvent(message, getApplication())
 
                 removeUser()
 
-                progress.postValue(-1)
                 error.postValue(message)
             }
         }
@@ -218,8 +142,6 @@ class LoginViewModel(
     fun silentSignOut() = signInClient.signOut().addOnCompleteListener {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.logout), getApplication())
         removeUser()
-
-        progress.postValue(-1)
     }
 
     private fun removeUser() = viewModelScope.launch {
