@@ -1,11 +1,11 @@
 package com.hover.stax.data.remote
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
-import androidx.test.core.app.ApplicationProvider
+import com.appmattus.kotlinfixture.decorator.nullability.NeverNullStrategy
+import com.appmattus.kotlinfixture.decorator.nullability.nullabilityStrategy
+import com.appmattus.kotlinfixture.decorator.optional.NeverOptionalStrategy
+import com.appmattus.kotlinfixture.decorator.optional.optionalStrategy
 import com.appmattus.kotlinfixture.kotlinFixture
 import com.google.common.truth.Truth.assertThat
 import com.hover.stax.data.remote.dto.Attributes
@@ -19,41 +19,26 @@ import com.hover.stax.data.remote.dto.authorization.TokenRequest
 import com.hover.stax.data.remote.dto.authorization.TokenResponse
 import com.hover.stax.ktor.KtorClientFactory
 import com.hover.stax.preferences.DefaultTokenProvider
-import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
+import io.mockk.mockk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.koin.core.context.GlobalContext.stopKoin
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@Config(manifest = Config.NONE)
-@RunWith(RobolectricTestRunner::class)
 class AuthApiTest {
 
-    private val fixture = kotlinFixture()
-    private lateinit var testDataStore: DataStore<Preferences>
-
-    @Before
-    fun setup() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        testDataStore = PreferenceDataStoreFactory.create(produceFile = { context.preferencesDataStoreFile("test") })
+    private val fixture = kotlinFixture {
+        nullabilityStrategy(NeverNullStrategy)
+        optionalStrategy(NeverOptionalStrategy)
     }
 
-    @After
-    fun reset() {
-        stopKoin()
-    }
+    private var testDataStore: DataStore<Preferences> = mockk(relaxed = true)
 
     @Test(expected = ServerResponseException::class)
     fun `test ServerError is thrown when a server exception occurs`() {
-        val authRequest: AuthRequest = fixture()
+        val authRequest = fixture<AuthRequest>()
         val mockEngine = MockEngine {
             delay(500)
             respondError(HttpStatusCode.InternalServerError)
@@ -66,7 +51,7 @@ class AuthApiTest {
 
     @Test
     fun `test authorization is successful when google token is correct`() {
-        val authRequest: AuthRequest = fixture()
+        val authRequest = fixture<AuthRequest>()
         val authResponse = AuthResponse(
                 redirectUri = RedirectUri(
                         code = "76233958-77a5-43fc-9b3f-ca2d0d0ce54f",
@@ -95,7 +80,7 @@ class AuthApiTest {
 
     @Test
     fun `test token request is successful when authorization code is correct`() {
-        val tokenRequest: TokenRequest = fixture()
+        val tokenRequest = fixture<TokenRequest>()
         val tokenResponse = TokenResponse(
                 accessToken = "76233958-77a5-43fc-9b3f-ca2d0d0ce54f",
                 refreshToken = "152b1eff-f55a-4b57-9f45-0eaf5314d3c5",
@@ -126,7 +111,7 @@ class AuthApiTest {
 
     @Test
     fun `test upload user is successful when passing correct user details`() {
-        val userDTO: UserUploadDto = fixture()
+        val userDTO = fixture<UserUploadDto>()
         val staxUserDto = StaxUserDto(
                 data = Data(
                         attributes = Attributes(
@@ -189,7 +174,7 @@ class AuthApiTest {
 
     @Test(expected = ServerResponseException::class)
     fun `test ServerError is thrown when a server exception occurs during user upload`() {
-        val userDTO: UserUploadDto = fixture()
+        val userDTO = fixture<UserUploadDto>()
         val mockEngine = MockEngine {
             delay(500)
             respondError(HttpStatusCode.InternalServerError)
