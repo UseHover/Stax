@@ -24,8 +24,6 @@
     <string name="default_notification_channel_id">app.hover.stax</string>
     <string name="terms_and_condition_url">https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/</string>
 
-    <string name="channels_json_staging" translatable="false">channels-staging.json</string>
-    <string name="channels_json_prod" translatable="false">channels-prod.json</string>
     <string name="stax_handle" translatable="false">\@joinstax</string>
 
     <string name="hsdk_app_name_literal">*Stax#</string>
@@ -751,6 +749,7 @@
     <string name="ussd_lib">Dial USSD</string>
 
     <string name="error_running_action">Sorry, this service integration is broken.</string>
+    <string name="error_running_action_log">service integration broken</string>
     <string name="toast_err_tag">toast_err_notif</string>
     <string name="error_still_loading">Please wait a moment and try again.</string>
 
@@ -797,10 +796,9 @@
     <string name="bonus_airtime_applied">Bonus airtime will be applied.</string>
     <string name="top_up">Top Up</string>
     <string name="bonus_amount_label">Bonus Amount</string>
-    <string name="bonus_placeholder">Get 3% bonus when you buy airtime with Stax.</string>
-    <string name="valid_account_bonus_msg">You\’ll get credited at least 3% bonus airtime immediately after a successful purchase of Ksh 50 or more airtime.</string>
-    <string name="invalid_account_bonus_msg">Use your MPESA to buy airtime now and get instant 3%+ bonus.</string>
-    <string name="top_up_with_mpesa">Top up using Mpesa</string>
+    <string name="bonus_placeholder">Use this other service and get X% bonus airtime</string>
+    <string name="top_up_with">Top up using %1$s</string>
+    <string name="you_are_getting_extra_airtime">You will get %1$d%% bonus airtime</string>
     <string name="congratulations">Congratulations</string>
     <string name="get_extra_airtime">Get Extra Airtime</string>
     <string name="learn_more"><a href="https://stax.me/blog/airtime-bonuses-for-staxxers-in-kenya/">T&amp;Cs apply</a></string>

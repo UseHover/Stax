@@ -22,16 +22,15 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
     private val channelDao = AppDatabase.getInstance(context).channelDao()
 
     override fun doWork(): Result {
-        Timber.e("Updating channels")
         return try {
                 val channelsJson = downloadChannels(url)
                 if (channelsJson != null) {
                     val data: JSONArray = channelsJson.getJSONArray("data")
                     Channel.load(data, channelDao, applicationContext)
-                    Timber.e("Successfully Updated channels")
+                    Timber.v("Successfully Updated channels")
                     Result.success()
                 } else {
-                    Timber.e("Failed to update channels")
+                    Timber.d("Failed to update channels")
                     Result.failure()
                 }
             } catch (e: JSONException) {

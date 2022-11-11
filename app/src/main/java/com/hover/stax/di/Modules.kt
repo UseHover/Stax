@@ -15,25 +15,16 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.AccountRepositoryImpl
-import com.hover.stax.data.repository.BonusRepositoryImpl
 import com.hover.stax.data.repository.BountyRepositoryImpl
 import com.hover.stax.data.repository.ChannelRepositoryImpl
 import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
 import com.hover.stax.data.repository.StaxUserRepositoryImpl
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.domain.repository.BonusRepository
-import com.hover.stax.domain.repository.BountyRepository
-import com.hover.stax.domain.repository.ChannelRepository
-import com.hover.stax.domain.repository.FinancialTipsRepository
-import com.hover.stax.domain.repository.StaxUserRepository
-import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
-import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
+import com.hover.stax.domain.repository.*
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import com.hover.stax.domain.use_case.sims.ListSimsUseCase
@@ -115,7 +106,6 @@ val dataModule = module(createdAtStart = true) {
     singleOf(::PaybillRepo)
     singleOf(::MerchantRepo)
     singleOf(::UserRepo)
-    singleOf(::BonusRepo)
     singleOf(::ParserRepo)
     singleOf(::SimRepo)
 }
@@ -170,7 +160,6 @@ val repositories = module {
         Dispatchers.IO
     }
 
-    single<BonusRepository> { BonusRepositoryImpl(get(), get()) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
 
@@ -183,10 +172,7 @@ val useCases = module {
     single(named("CoroutineDispatcher")) {
         Dispatchers.IO
     }
-    single { ListSimsUseCase(get(), get(), get(), get(), get(named("CoroutineDispatcher"))) }
-
-    factoryOf(::GetBonusesUseCase)
-    factoryOf(::RefreshBonusUseCase)
+    single { ListSimsUseCase(get(), get(), get(), get(named("CoroutineDispatcher"))) }
 
     factoryOf(::TipsUseCase)
 

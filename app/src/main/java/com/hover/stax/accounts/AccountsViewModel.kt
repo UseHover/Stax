@@ -26,18 +26,20 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     val activeAccount = MutableLiveData<Account?>()
 
     private var type = MutableLiveData<String>()
-    val channelActions = MediatorLiveData<List<HoverAction>>()
+    val institutionActions = MediatorLiveData<List<HoverAction>>()
+    val bonusActions = MediatorLiveData<List<HoverAction>>()
 
-    private val accountUpdateChannel = Channel<String>()
-    val accountUpdateMsg = accountUpdateChannel.receiveAsFlow()
+    private val _defaultUpdateMsg = Channel<String>()
+    val defaultUpdateMsg = _defaultUpdateMsg.receiveAsFlow()
 
     init {
         fetchAccounts()
 
-        channelActions.apply {
+        institutionActions.apply {
             addSource(activeAccount, this@AccountsViewModel::loadActions)
             addSource(type, this@AccountsViewModel::loadActions)
         }
+        bonusActions.addSource(activeAccount, this@AccountsViewModel::loadBonuses)
     }
 
     private fun fetchAccounts() = viewModelScope.launch {
@@ -74,24 +76,27 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
     private fun loadActions(account: Account, type: String) = viewModelScope.launch(Dispatchers.IO) {
-        channelActions.postValue(
-            if (type == HoverAction.P2P) actionRepo.getTransferActions(account.channelId)
-            else actionRepo.getActions(account.channelId, type)
+        institutionActions.postValue(
+            if (type == HoverAction.P2P) actionRepo.getTransferActions(account.institutionId!!, account.countryAlpha2!!)
+            else actionRepo.getActions(account.institutionId!!, account.countryAlpha2!!, type)
         )
+    }
+
+    private fun loadBonuses(account: Account?) {
+        if (account?.countryAlpha2 == null || type.value.isNullOrEmpty()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            bonusActions.postValue(
+                actionRepo.getBonusActionsByCountryAndType(account.countryAlpha2!!, type.value!!)
+            )
+        }
     }
 
     fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accountList.value.accounts.find { it.id == accountId }) }
 
-    fun setActiveAccountFromChannel(userChannelId: Int) = viewModelScope.launch {
-        repo.getAccounts().collect { accounts ->
-            activeAccount.postValue(accounts.firstOrNull { it.channelId == userChannelId })
-        }
-    }
-
     fun errorCheck(): String? {
         return when {
             activeAccount.value == null -> (getApplication() as Context).getString(R.string.channels_error_noselect)
-            channelActions.value.isNullOrEmpty() -> (getApplication() as Context).getString(
+            institutionActions.value.isNullOrEmpty() -> (getApplication() as Context).getString(
                 R.string.no_actions_fielderror,
                 HoverAction.getHumanFriendlyType(getApplication(), type.value)
             )
@@ -125,7 +130,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             a.isDefault = true
             repo.update(a)
 
-            accountUpdateChannel.send((getApplication() as Context).getString(R.string.def_account_update_msg, account.userAlias))
+            _defaultUpdateMsg.send((getApplication() as Context).getString(R.string.def_account_update_msg, account.userAlias))
         }
     }
 

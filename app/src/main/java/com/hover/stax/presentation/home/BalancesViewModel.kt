@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class BalancesViewModel(application: Application, val actionRepo: ActionRepo, val accountRepo: AccountRepo) : AndroidViewModel(application) {
 

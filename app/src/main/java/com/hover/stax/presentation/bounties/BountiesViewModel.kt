@@ -67,7 +67,7 @@ class BountyViewModel(private val simRepo: SimRepo, private val bountiesUseCase:
     }
 
     private fun loadCountryList() = viewModelScope.launch {
-        bountiesUseCase.getChannelList().collect { codes ->
+        bountiesUseCase.getCountryList().collect { codes ->
             _countryList.update { codes }
         }
     }

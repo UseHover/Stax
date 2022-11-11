@@ -14,15 +14,18 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
+import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.presentation.components.StaxCard
 
 @Composable
 fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Unit) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     val size10 = dimensionResource(id = R.dimen.margin_10)
 
-    Card(modifier = Modifier.padding(all = size13), elevation = 2.dp) {
+    StaxCard {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,4 +67,10 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    BonusCard(message = "Get some bonus when you do some thing", {}, {})
 }

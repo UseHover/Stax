@@ -18,20 +18,20 @@ import com.hover.stax.actions.ActionSelect
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
+import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
-import org.json.JSONException
+import com.hover.stax.utils.*
+import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
-class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
+class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
     private lateinit var transferViewModel: TransferViewModel
     private val channelsViewModel: ChannelsViewModel by viewModel()
@@ -43,8 +43,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
-
-    private var hasBonus = false
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +72,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         args.accountId?.let { accountsViewModel.setActiveAccount(Integer.parseInt(it)) }
         args.amount?.let { binding.editCard.amountInput.setText(it) }
         args.contactId?.let { transferViewModel.setContact(it) }
-        args.channelId?.let { channelsViewModel.validateAccounts(Integer.parseInt(it)) }
+        args.channelId?.let { channelsViewModel.payWith(Integer.parseInt(it)) }
     }
 
     override fun init(root: View) {
@@ -125,7 +123,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
-        observeAccountsEvent()
     }
 
     private fun observeActiveAccount() {
@@ -142,14 +139,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             it?.let {
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
+                updateBonusBanner(it, accountsViewModel.bonusActions.value)
             }
         }
     }
 
     private fun observeActions() {
-        accountsViewModel.channelActions.observe(viewLifecycleOwner) {
+        accountsViewModel.institutionActions.observe(viewLifecycleOwner) {
             actionSelectViewModel.setActions(it)
-            showBonusBanner(it)
+        }
+
+        accountsViewModel.bonusActions.observe(viewLifecycleOwner) {
+            updateBonusBanner(actionSelectViewModel.activeAction.value, it)
         }
 
         actionSelectViewModel.filteredActions.observe(viewLifecycleOwner) {
@@ -202,13 +203,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun observeAccountsEvent() {
-        collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            val bonus = transferViewModel.bonusList.value.bonuses.firstOrNull() ?: return@collectLifecycleFlow
-            accountsViewModel.setActiveAccountFromChannel(bonus.userChannel)
-        }
-    }
-
     private fun startListeners() {
         setAmountInputListener()
         setContactInputListener()
@@ -254,7 +248,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun getExtras(): HashMap<String, String> {
-        val extras = transferViewModel.wrapExtras(hasBonus)
+        val extras = transferViewModel.wrapExtras(actionSelectViewModel.activeAction.value!!)
         extras.putAll(actionSelectViewModel.wrapExtras())
         return extras
     }
@@ -288,9 +282,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         binding.editCard.contactSelect.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
+        val nonstandardErrors = validateNonStandardVars()
 
-        return accountError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
+        return accountError == null && actionError == null && amountError == null && recipientError == null && nonstandardErrors
     }
 
     override fun onContactSelected(contact: StaxContact) {
@@ -303,10 +297,49 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun updateNonStandardInputs(variables: LinkedHashMap<String, String>) {
-        val recyclerView = binding.editCard.nonStandardVariableRecyclerView
-        nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, recyclerView)
-        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        recyclerView.adapter = nonStandardVariableAdapter
+        val listView = binding.editCard.nonStandardVariables
+        var index = 0
+        for ((k, v) in variables) {
+            if (listView.findViewWithTag<StaxTextInput>(k) == null)
+                createVariableInput(k, v, listView)
+            index++
+        }
+    }
+
+    private fun createVariableInput(key: String, value: String, parent: ViewGroup) {
+        val binding = InputItemBinding.inflate(LayoutInflater.from(context), parent, true)
+        val inputTextWatcher: TextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence,i: Int,i1: Int,i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                nonStandardVarUpdate(key, charSequence.toString())
+            }
+        }
+
+        binding.variableInput.addTextChangedListener(inputTextWatcher)
+        binding.variableInput.setHint(key.splitCamelCase())
+        binding.variableInput.tag = key
+        binding.variableInput.setText(value)
+    }
+
+
+    fun nonStandardVarUpdate(key: String, value: String) {
+        actionSelectViewModel.updateNonStandardVariables(key, value)
+    }
+
+    private fun validateNonStandardVars(): Boolean {
+        if (!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
+            for ((k, v) in actionSelectViewModel.nonStandardVariables.value!!) {
+                if (v.isNullOrEmpty()) {
+                    binding.editCard.nonStandardVariables.findViewWithTag<StaxTextInput>(k)
+                        .setState(getString(R.string.enterValue_non_template_error, k.lowercase()), AbstractStatefulInput.ERROR)
+                    return false
+                } else
+                    binding.editCard.nonStandardVariables.findViewWithTag<StaxTextInput>(k)
+                        .setState(null, AbstractStatefulInput.SUCCESS)
+            }
+        }
+        return true
     }
 
     private fun updateNonStandardSummary(variables: LinkedHashMap<String, String>) {
@@ -333,44 +366,41 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun showBonusBanner(actions: List<HoverAction>) {
+    private fun updateBonusBanner(selected: HoverAction?, actions: List<HoverAction>?) {
         if (args.transactionType == HoverAction.AIRTIME) {
-            val bonus = transferViewModel.bonusList.value.bonuses.firstOrNull() ?: return
 
             with(binding.bonusLayout) {
-                cardBonus.visibility = View.VISIBLE
                 learnMore.movementMethod = LinkMovementMethod.getInstance()
 
-                hasBonus = actions.map { it.channel_id }.contains(bonus.userChannel)
-
-                if (hasBonus) {
+                if (selected != null && selected.bonus_percent > 0) {
+                    cardBonus.visibility = View.VISIBLE
                     title.text = getString(R.string.congratulations)
-                    message.text = getString(R.string.valid_account_bonus_msg)
+                    message.text = getString(R.string.you_are_getting_extra_airtime, selected.bonus_percent)
                     cta.visibility = View.GONE
-                } else {
+                } else if (actions?.any { a -> a.bonus_percent > 0 } != true) {
+                    cardBonus.visibility = View.GONE
+                } else if (transferViewModel.isEditing.value == true){
+                    cardBonus.visibility = View.VISIBLE
+                    val bonus = actions.first { a -> a.bonus_percent > 0 }
                     title.text = getString(R.string.get_extra_airtime)
-                    message.text = getString(R.string.invalid_account_bonus_msg)
+                    message.text = bonus.bonus_message
                     cta.apply {
                         visibility = View.VISIBLE
-                        text = getString(R.string.top_up_with_mpesa)
+                        text = getString(R.string.top_up_with, bonus.from_institution_name)
 
                         setOnClickListener {
                             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                            channelsViewModel.validateAccounts(bonus.userChannel)
+                            channelsViewModel.payWith(bonus.channel_id)
                         }
                     }
-                }
+                } else { cardBonus.visibility = View.GONE }
             }
         }
     }
 
     override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
-
-        if (!isEditing)
-            binding.bonusLayout.cardBonus.visibility = View.GONE
-        else
-            showBonusBanner(actionSelectViewModel.filteredActions.value ?: emptyList())
+        updateBonusBanner(actionSelectViewModel.activeAction.value, accountsViewModel.bonusActions.value)
     }
 
     override fun onDestroyView() {
@@ -378,9 +408,5 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
-    }
-
-    override fun nonStandardVarUpdate(key: String, value: String) {
-        actionSelectViewModel.updateNonStandardVariables(key, value)
     }
 }

@@ -32,8 +32,6 @@ const val FEE_REQUEST = 208
 
 abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificationTopicsInterface {
 
-    private val balancesViewModel: BalancesViewModel by viewModel()
-
     lateinit var navHelper: NavHelper
 
     private fun runAction(hsb: HoverSession.Builder) = try {
@@ -42,7 +40,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
     } catch (e: Exception) {
         Timber.e(e)
         runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.error_running_action)) }
-        AnalyticsUtil.logErrorAndReportToFirebase(hsb.action.public_id, getString(R.string.error_running_action), e)
+        AnalyticsUtil.logErrorAndReportToFirebase(hsb.action.public_id, getString(R.string.error_running_action_log), e)
         createLog(hsb, "Failed Actions")
     }
 
@@ -145,6 +143,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     private fun updatePushNotifGroupStatus(a: HoverAction) {
         joinAllBountiesGroup(this)
-        joinBountyCountryGroup(a.country_alpha2.uppercase(), this)
+        joinBountyCountryGroup(a.country_alpha2, this)
     }
 }

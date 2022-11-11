@@ -18,6 +18,7 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.hover.sdk.actions.ActionsImportWorker
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.stax.addChannels.ChannelsViewModel
@@ -33,14 +34,12 @@ import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.transfers.STAX_PREFIX
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.uxcam.OnVerificationListener
 import com.uxcam.UXCam
 import com.uxcam.datamodel.UXConfig
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
@@ -136,9 +135,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun cacheConfigs(remoteConfig: FirebaseRemoteConfig) {
-        val staxPrefix = remoteConfig.getString(STAX_PREFIX)
         val forcedVersion = remoteConfig.getString(FORCED_VERSION)
-        Utils.saveString(STAX_PREFIX, staxPrefix, this)
         Utils.saveInt(FORCED_VERSION, forcedVersion.toInt(), this)
     }
 

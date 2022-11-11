@@ -17,31 +17,29 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
         return actionDao.getLiveAction(public_id)
     }
 
-    fun getChannelActions(channelId: Int): LiveData<List<HoverAction>> {
-        return actionDao.getLiveChannelActions(channelId)
-    }
-
-    fun getFirstLiveAction(channelId: Int, type: String): LiveData<HoverAction?> {
-        return actionDao.getFirstLiveAction(channelId, type)
-    }
-
     fun getFirstAction(channelId: Int, type: String): HoverAction? {
         return actionDao.getFirstAction(channelId, type)
     }
 
-    fun getTransferActions(channelId: Int): List<HoverAction> {
-        return actionDao.getTransferActions(channelId)
+    fun getTransferActions(institutionId: Int, countryCode: String): List<HoverAction> {
+        return actionDao.getTransferActions(institutionId, countryCode)
     }
 
-    fun getActions(channelId: Int, type: String?): List<HoverAction> {
-        return actionDao.getActions(channelId, type)
+    fun getActions(institutionId: Int, countryCode: String, type: String?): List<HoverAction> {
+        return actionDao.getActions(institutionId, countryCode, type)
     }
 
-    fun getActions(channelIds: IntArray?, recipientInstitutionId: Int): List<HoverAction> {
-        return actionDao.getActions(channelIds, recipientInstitutionId, HoverAction.P2P)
+    fun getActionsByRecipientInstitution(recipientInstitutionId: Int, countryCode: String, type: String): List<HoverAction> {
+        return actionDao.getActionsByRecipientInsitution(recipientInstitutionId, countryCode, type)
     }
 
-    val bountyActions: LiveData<List<HoverAction>> get() = actionDao.bountyActions
+    fun getBonusActionsByCountry(countries: Array<String>): List<HoverAction> {
+        return actionDao.getBonusActions(countries)
+    }
+
+    fun getBonusActionsByCountryAndType(country: String, type: String): List<HoverAction> {
+        return actionDao.getBonusActionsByType(country, type)
+    }
 
     val bounties: List<HoverAction> get() = actionDao.bounties
 }

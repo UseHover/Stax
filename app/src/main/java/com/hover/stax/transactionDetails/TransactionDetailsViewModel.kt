@@ -9,7 +9,6 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.stax.domain.model.Account
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.parser.ParserRepo
@@ -25,7 +24,7 @@ import kotlin.math.floor
 
 class TransactionDetailsViewModel(
     application: Application, val repo: TransactionRepo, val actionRepo: ActionRepo, val contactRepo: ContactRepo, val accountRepo: AccountRepo,
-    private val bonusRepo: BonusRepo, private val parserRepo: ParserRepo, private val merchantRepo: MerchantRepo
+    private val parserRepo: ParserRepo, private val merchantRepo: MerchantRepo
 ) : AndroidViewModel(application) {
 
     val transaction = MutableLiveData<StaxTransaction>()
@@ -46,7 +45,6 @@ class TransactionDetailsViewModel(
         action = Transformations.switchMap(transaction) { getLiveAction(it) }
         contact = Transformations.switchMap(transaction) { getLiveContact(it) }
         merchant = Transformations.switchMap(transaction) { getLiveMerchant(it) }
-        bonusAmt.addSource(transaction, this::getBonusAmount)
 
         messages.apply {
             addSource(transaction) { loadMessages(it) }
@@ -131,18 +129,6 @@ class TransactionDetailsViewModel(
         transaction?.let {
             val hasSMSParser = parserRepo.hasSMSParser(transaction.action_id)
             if (transaction.isPending) isExpectingSMS.postValue(hasSMSParser)
-        }
-    }
-
-    private fun getBonusAmount(staxTransaction: StaxTransaction?) = viewModelScope.launch(Dispatchers.IO) {
-        staxTransaction?.let {
-            val bonus = bonusRepo.getBonusByPurchaseChannel(staxTransaction.channel_id)
-
-            if (bonus != null && staxTransaction.amount != null) {
-                val bonusAmount = floor(bonus.bonusPercent.times(staxTransaction.amount!!))
-                bonusAmt.postValue(bonusAmount.toInt())
-            } else
-                bonusAmt.postValue(0)
         }
     }
 }
