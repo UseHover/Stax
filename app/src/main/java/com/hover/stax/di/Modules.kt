@@ -14,36 +14,16 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.local.user.UserRepo
 import com.hover.stax.data.remote.StaxApi
-import com.hover.stax.data.repository.AccountRepositoryImpl
-import com.hover.stax.data.repository.AuthRepositoryImpl
-import com.hover.stax.data.repository.BonusRepositoryImpl
-import com.hover.stax.data.repository.BountyRepositoryImpl
-import com.hover.stax.data.repository.ChannelRepositoryImpl
-import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
-import com.hover.stax.data.repository.SimRepositoryImpl
-import com.hover.stax.data.repository.StaxUserRepositoryImpl
+import com.hover.stax.data.repository.*
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.domain.repository.AuthRepository
-import com.hover.stax.domain.repository.BonusRepository
-import com.hover.stax.domain.repository.BountyRepository
-import com.hover.stax.domain.repository.ChannelRepository
-import com.hover.stax.domain.repository.FinancialTipsRepository
-import com.hover.stax.domain.repository.SimRepository
-import com.hover.stax.domain.repository.StaxUserRepository
-import com.hover.stax.domain.use_case.accounts.CreateAccountsUseCase
-import com.hover.stax.domain.use_case.accounts.GetAccountsUseCase
-import com.hover.stax.domain.use_case.accounts.SetDefaultAccountUseCase
-import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
-import com.hover.stax.domain.use_case.bonus.RefreshBonusUseCase
+import com.hover.stax.domain.repository.*
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
-import com.hover.stax.domain.use_case.sims.GetPresentSimUseCase
+import com.hover.stax.domain.use_case.sims.ListSimsUseCase
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -61,7 +41,7 @@ import com.hover.stax.presentation.bounties.BountyViewModel
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.presentation.home.HomeViewModel
-import com.hover.stax.presentation.sim.SimViewModel
+import com.hover.stax.presentation.sims.SimViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestDetailViewModel
 import com.hover.stax.requests.RequestRepo
@@ -123,7 +103,6 @@ val dataModule = module(createdAtStart = true) {
     singleOf(::PaybillRepo)
     singleOf(::MerchantRepo)
     singleOf(::UserRepo)
-    singleOf(::BonusRepo)
     singleOf(::ParserRepo)
     singleOf(::SimRepo)
 
@@ -163,29 +142,25 @@ val repositories = module {
 
     single<TokenProvider> { DefaultTokenProvider(get()) }
 
-    single<BonusRepository> { BonusRepositoryImpl(get(), get()) }
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
-    single<SimRepository> { SimRepositoryImpl(get()) }
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
     singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
+
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
 }
 
 val useCases = module {
-    factoryOf(::GetBonusesUseCase)
-    factoryOf(::RefreshBonusUseCase)
-
-    factoryOf(::GetAccountsUseCase)
-    factoryOf(::SetDefaultAccountUseCase)
-    factoryOf(::CreateAccountsUseCase)
+    single(named("CoroutineDispatcher")) {
+        Dispatchers.IO
+    }
+    single { ListSimsUseCase(get(), get(), get(), get(named("CoroutineDispatcher"))) }
 
     factoryOf(::TipsUseCase)
 
     factoryOf(::GetChannelBountiesUseCase)
-    factoryOf(::GetPresentSimUseCase)
 
     factoryOf(::StaxUserUseCase)
 }
