@@ -29,10 +29,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class LoginViewModel(
-        application: Application,
-        private val staxUserUseCase: StaxUserUseCase,
-        private val authRepository: AuthRepository,
-        private val tokenProvider: TokenProvider
+    application: Application,
+    private val staxUserUseCase: StaxUserUseCase,
+    private val authRepository: AuthRepository,
+    private val tokenProvider: TokenProvider
 ) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient

@@ -7,5 +7,5 @@ sealed interface LoginUiState {
 }
 
 data class LoginScreenUiState(
-        val loginState: LoginUiState
+    val loginState: LoginUiState
 )
