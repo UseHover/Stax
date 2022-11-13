@@ -9,7 +9,6 @@ data class TokenRequest(
     val clientId: String,
     @SerialName("client_secret")
     val clientSecret: String,
-    @SerialName("code")
     val code: String,
     @SerialName("grant_type")
     val grantType: String,
@@ -37,7 +36,6 @@ data class RevokeTokenRequest(
     val clientId: String,
     @SerialName("client_secret")
     val clientSecret: String,
-    @SerialName("token")
     val token: String
 )
 
@@ -46,8 +44,7 @@ data class TokenResponse(
     @SerialName("access_token")
     val accessToken: String,
     @SerialName("refresh_token")
-    val refreshToken: String,
-    @SerialName("scope")
+    val refreshToken: String? = null,
     val scope: String,
     @SerialName("created_at")
     val createdAt: Int,

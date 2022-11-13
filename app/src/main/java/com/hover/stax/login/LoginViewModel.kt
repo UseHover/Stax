@@ -83,7 +83,7 @@ class LoginViewModel(
             )
             tokenProvider.update(
                     key = DefaultTokenProvider.REFRESH_TOKEN,
-                    token = response.refreshToken
+                    token = response.refreshToken.toString()
             )
             staxUserUseCase.saveUser(user.toStaxUser())
             _loginState.value = LoginScreenUiState(LoginUiState.Success)

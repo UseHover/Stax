@@ -8,18 +8,9 @@ import com.appmattus.kotlinfixture.decorator.optional.NeverOptionalStrategy
 import com.appmattus.kotlinfixture.decorator.optional.optionalStrategy
 import com.appmattus.kotlinfixture.kotlinFixture
 import com.google.common.truth.Truth.assertThat
-import com.hover.stax.data.remote.dto.Attributes
-import com.hover.stax.data.remote.dto.Data
-import com.hover.stax.data.remote.dto.StaxUserDto
-import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.authorization.AuthRequest
-import com.hover.stax.data.remote.dto.authorization.AuthResponse
-import com.hover.stax.data.remote.dto.authorization.RedirectUri
-import com.hover.stax.data.remote.dto.authorization.RevokeTokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenRefresh
-import com.hover.stax.data.remote.dto.authorization.TokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenResponse
+import com.hover.stax.data.remote.dto.*
+import com.hover.stax.data.remote.dto.authorization.*
+import com.hover.stax.ktor.EnvironmentProvider
 import com.hover.stax.ktor.KtorClientFactory
 import com.hover.stax.preferences.DefaultTokenProvider
 import io.ktor.client.engine.mock.*
@@ -39,6 +30,7 @@ class AuthApiTest {
     }
 
     private var testDataStore: DataStore<Preferences> = mockk(relaxed = true)
+    private var environmentProvider: EnvironmentProvider = mockk(relaxed = true)
 
     @Test(expected = ServerResponseException::class)
     fun `test server error is thrown when a server exception occurs`() {
@@ -48,7 +40,12 @@ class AuthApiTest {
             respondError(HttpStatusCode.InternalServerError)
         }
 
-        val api = StaxApi(KtorClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine))
+        val api = StaxApi(
+            KtorClientFactory(
+                DefaultTokenProvider(testDataStore),
+                environmentProvider
+            ).create(mockEngine), environmentProvider
+        )
 
         runBlocking { api.authorize(authRequest) }
     }
@@ -57,11 +54,11 @@ class AuthApiTest {
     fun `test authorization is successful when google token is correct`() {
         val authRequest = fixture<AuthRequest>()
         val authResponse = AuthResponse(
-                redirectUri = RedirectUri(
-                        code = "76233958-77a5-43fc-9b3f-ca2d0d0ce54f",
-                        action = "896fa22f-d273-475b-80ee-e7553d9f9a15"
-                ),
-                status = "152b1eff-f55a-4b57-9f45-0eaf5314d3c5"
+            redirectUri = RedirectUri(
+                code = "76233958-77a5-43fc-9b3f-ca2d0d0ce54f",
+                action = "896fa22f-d273-475b-80ee-e7553d9f9a15"
+            ),
+            status = "152b1eff-f55a-4b57-9f45-0eaf5314d3c5"
         )
         val response = """{
             "redirect_uri" : {
@@ -72,10 +69,19 @@ class AuthApiTest {
         }""".trimIndent()
 
         val mockEngine = MockEngine {
-            respond(content = response, status = HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
+            respond(
+                content = response,
+                status = HttpStatusCode.OK,
+                headersOf(HttpHeaders.ContentType, "application/json")
+            )
         }
 
-        val api = StaxApi(KtorClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine))
+        val api = StaxApi(
+            KtorClientFactory(
+                DefaultTokenProvider(testDataStore),
+                environmentProvider
+            ).create(mockEngine), environmentProvider
+        )
 
         val actual = runBlocking { api.authorize(authRequest) }
 
@@ -86,12 +92,12 @@ class AuthApiTest {
     fun `test token request is successful when authorization code is correct`() {
         val tokenRequest = fixture<TokenRequest>()
         val tokenResponse = TokenResponse(
-                accessToken = "eyJpc3MiOiJTdGF4IE1vYmlsZSIsImlhdCI6MTY2MTc4NTkxMSwianRpIjoiZDFiYmEwZGItOWNiOC00OWUxLWEzNTItODk3NzYxMDhjYWZkIiwidXNlciI6IntcImRhdGFcIjp7X",
-                refreshToken = "A3_rBRCZUtL3i0h-y2_HWtw1icW9ZUaeH9Fq7R42GXg",
-                scope = "write",
-                createdAt = 1661785911,
-                tokenType = "Bearer",
-                expiresIn = 7200
+            accessToken = "eyJpc3MiOiJTdGF4IE1vYmlsZSIsImlhdCI6MTY2MTc4NTkxMSwianRpIjoiZDFiYmEwZGItOWNiOC00OWUxLWEzNTItODk3NzYxMDhjYWZkIiwidXNlciI6IntcImRhdGFcIjp7X",
+            refreshToken = "A3_rBRCZUtL3i0h-y2_HWtw1icW9ZUaeH9Fq7R42GXg",
+            scope = "write",
+            createdAt = 1661785911,
+            tokenType = "Bearer",
+            expiresIn = 7200
         )
         val response = """{
                 "access_token" : "eyJpc3MiOiJTdGF4IE1vYmlsZSIsImlhdCI6MTY2MTc4NTkxMSwianRpIjoiZDFiYmEwZGItOWNiOC00OWUxLWEzNTItODk3NzYxMDhjYWZkIiwidXNlciI6IntcImRhdGFcIjp7X",
@@ -103,43 +109,21 @@ class AuthApiTest {
         }""".trimIndent()
 
         val mockEngine = MockEngine {
-            respond(content = response, status = HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
+            respond(
+                content = response,
+                status = HttpStatusCode.OK,
+                headersOf(HttpHeaders.ContentType, "application/json")
+            )
         }
 
-        val api = StaxApi(KtorClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine))
+        val api = StaxApi(
+            KtorClientFactory(
+                DefaultTokenProvider(testDataStore),
+                environmentProvider
+            ).create(mockEngine), environmentProvider
+        )
 
         val actual = runBlocking { api.fetchToken(tokenRequest) }
-
-        assertThat(actual).isEqualTo(tokenResponse)
-    }
-
-    @Test
-    fun `test token refresh is successful when refresh token is correct`() {
-        val tokenRefresh = fixture<TokenRefresh>()
-        val tokenResponse = TokenResponse(
-                accessToken = "eyJpc3MiOiJTdGF4IE1vYmlsZSIsImlhdCI6MTY2MTc4NTkxMSwianRpIjoiZDFiYmEwZGItOWNiOC00OWUxLWEzNTItODk3NzYxMDhjYWZkIiwidXNlciI6IntcImRhdGFcIjp7X",
-                refreshToken = "A3_rBRCZUtL3i0h-y2_HWtw1icW9ZUaeH9Fq7R42GXg",
-                scope = "write",
-                createdAt = 1661785911,
-                tokenType = "Bearer",
-                expiresIn = 7200
-        )
-        val response = """{
-                "access_token" : "eyJpc3MiOiJTdGF4IE1vYmlsZSIsImlhdCI6MTY2MTc4NTkxMSwianRpIjoiZDFiYmEwZGItOWNiOC00OWUxLWEzNTItODk3NzYxMDhjYWZkIiwidXNlciI6IntcImRhdGFcIjp7X",
-                "refresh_token" : "A3_rBRCZUtL3i0h-y2_HWtw1icW9ZUaeH9Fq7R42GXg",
-                "scope" : "write",
-                "created_at" : 1661785911,
-                "token_type" : "Bearer",
-                "expires_in" :  7200
-        }""".trimIndent()
-
-        val mockEngine = MockEngine {
-            respond(content = response, status = HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
-        }
-
-        val api = StaxApi(KtorClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine))
-
-        val actual = runBlocking { api.refreshToken(tokenRefresh) }
 
         assertThat(actual).isEqualTo(tokenResponse)
     }
@@ -151,10 +135,19 @@ class AuthApiTest {
         val response = """{}""".trimIndent()
 
         val mockEngine = MockEngine {
-            respond(content = response, status = HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
+            respond(
+                content = response,
+                status = HttpStatusCode.OK,
+                headersOf(HttpHeaders.ContentType, "application/json")
+            )
         }
 
-        val api = StaxApi(KtorClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine))
+        val api = StaxApi(
+            KtorClientFactory(
+                DefaultTokenProvider(testDataStore),
+                environmentProvider
+            ).create(mockEngine), environmentProvider
+        )
 
         val actual = runBlocking { api.revokeToken(tokenRevoke) }
 
@@ -165,28 +158,28 @@ class AuthApiTest {
     fun `test upload user is successful when passing correct user details`() {
         val userDTO = fixture<UserUploadDto>()
         val staxUserDto = StaxUserDto(
-                data = Data(
-                        attributes = Attributes(
-                                bountyTotal = 0,
-                                refereeId = null,
-                                devices = listOf(
-                                        "2c4d31caa083bd2d",
-                                        "36eb3bf6f050f1de",
-                                        "a326a52fbed87a5b",
-                                        "fc4f493826aa55fc"
-                                ),
-                                transactionCount = 1,
-                                createdAt = "2021-10-07T11:29:42Z",
-                                id = 686487,
-                                isVerifiedMapper = false,
-                                email = "juma@usehover.com",
-                                username = "Juma Allan",
-                                marketingOptedIn = false,
-                                totalPoints = 0
-                        ),
-                        id = "686487",
-                        type = "stax_user"
-                )
+            data = Data(
+                attributes = Attributes(
+                    bountyTotal = 0,
+                    refereeId = null,
+                    devices = listOf(
+                        "2c4d31caa083bd2d",
+                        "36eb3bf6f050f1de",
+                        "a326a52fbed87a5b",
+                        "fc4f493826aa55fc"
+                    ),
+                    transactionCount = 1,
+                    createdAt = "2021-10-07T11:29:42Z",
+                    id = 686487,
+                    isVerifiedMapper = false,
+                    email = "juma@usehover.com",
+                    username = "Juma Allan",
+                    marketingOptedIn = false,
+                    totalPoints = 0
+                ),
+                id = "686487",
+                type = "stax_user"
+            )
         )
         val response = """{
             "data": {
@@ -214,10 +207,19 @@ class AuthApiTest {
         }""".trimIndent()
 
         val mockEngine = MockEngine {
-            respond(content = response, status = HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
+            respond(
+                content = response,
+                status = HttpStatusCode.OK,
+                headersOf(HttpHeaders.ContentType, "application/json")
+            )
         }
 
-        val api = StaxApi(KtorClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine))
+        val api = StaxApi(
+            KtorClientFactory(
+                DefaultTokenProvider(testDataStore),
+                environmentProvider
+            ).create(mockEngine), environmentProvider
+        )
 
         val actual = runBlocking { api.uploadUserToStax(userDTO) }
 
@@ -232,7 +234,12 @@ class AuthApiTest {
             respondError(HttpStatusCode.InternalServerError)
         }
 
-        val api = StaxApi(KtorClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine))
+        val api = StaxApi(
+            KtorClientFactory(
+                DefaultTokenProvider(testDataStore),
+                environmentProvider
+            ).create(mockEngine), environmentProvider
+        )
 
         runBlocking { api.uploadUserToStax(userDTO) }
     }
@@ -242,28 +249,28 @@ class AuthApiTest {
         val userDTO = fixture<UserUpdateDto>()
         val email = fixture<String>()
         val staxUserDto = StaxUserDto(
-                data = Data(
-                        attributes = Attributes(
-                                bountyTotal = 0,
-                                refereeId = null,
-                                devices = listOf(
-                                        "2c4d31caa083bd2d",
-                                        "36eb3bf6f050f1de",
-                                        "a326a52fbed87a5b",
-                                        "fc4f493826aa55fc"
-                                ),
-                                transactionCount = 1,
-                                createdAt = "2021-10-07T11:29:42Z",
-                                id = 686487,
-                                isVerifiedMapper = false,
-                                email = "juma@usehover.com",
-                                username = "Juma Allan",
-                                marketingOptedIn = false,
-                                totalPoints = 0
-                        ),
-                        id = "686487",
-                        type = "stax_user"
-                )
+            data = Data(
+                attributes = Attributes(
+                    bountyTotal = 0,
+                    refereeId = null,
+                    devices = listOf(
+                        "2c4d31caa083bd2d",
+                        "36eb3bf6f050f1de",
+                        "a326a52fbed87a5b",
+                        "fc4f493826aa55fc"
+                    ),
+                    transactionCount = 1,
+                    createdAt = "2021-10-07T11:29:42Z",
+                    id = 686487,
+                    isVerifiedMapper = false,
+                    email = "juma@usehover.com",
+                    username = "Juma Allan",
+                    marketingOptedIn = false,
+                    totalPoints = 0
+                ),
+                id = "686487",
+                type = "stax_user"
+            )
         )
         val response = """{
             "data": {
@@ -291,10 +298,19 @@ class AuthApiTest {
         }""".trimIndent()
 
         val mockEngine = MockEngine {
-            respond(content = response, status = HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
+            respond(
+                content = response,
+                status = HttpStatusCode.OK,
+                headersOf(HttpHeaders.ContentType, "application/json")
+            )
         }
 
-        val api = StaxApi(KtorClientFactory(DefaultTokenProvider(testDataStore)).create(mockEngine))
+        val api = StaxApi(
+            KtorClientFactory(
+                DefaultTokenProvider(testDataStore),
+                environmentProvider
+            ).create(mockEngine), environmentProvider
+        )
 
         val actual = runBlocking { api.updateUser(email = email, userDTO = userDTO) }
 

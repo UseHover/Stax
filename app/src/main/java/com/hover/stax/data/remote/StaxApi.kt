@@ -3,12 +3,7 @@ package com.hover.stax.data.remote
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.authorization.AuthRequest
-import com.hover.stax.data.remote.dto.authorization.AuthResponse
-import com.hover.stax.data.remote.dto.authorization.RevokeTokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenRefresh
-import com.hover.stax.data.remote.dto.authorization.TokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenResponse
+import com.hover.stax.data.remote.dto.authorization.*
 import com.hover.stax.ktor.EnvironmentProvider
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -20,43 +15,37 @@ class StaxApi(
 ) {
 
     suspend fun authorize(authRequest: AuthRequest): AuthResponse =
-            client.post {
-                url("${environmentProvider.get().baseUrl}authorize")
-                setBody(authRequest)
-            }.body()
+        client.post {
+            url("${environmentProvider.get().baseUrl}authorize")
+            setBody(authRequest)
+        }.body()
 
     suspend fun fetchToken(tokenRequest: TokenRequest): TokenResponse =
-            client.post {
-                url("${environmentProvider.get().baseUrl}token")
-                setBody(tokenRequest)
-            }.body()
-
-    suspend fun refreshToken(tokenRefresh: TokenRefresh): TokenResponse =
-            client.post {
-                url("${environmentProvider.get().baseUrl}token")
-                setBody(tokenRefresh)
-            }.body()
+        client.post {
+            url("${environmentProvider.get().baseUrl}token")
+            setBody(tokenRequest)
+        }.body()
 
     suspend fun revokeToken(revokeToken: RevokeTokenRequest) =
-            client.post {
-                url("${environmentProvider.get().baseUrl}revoke")
-                setBody(revokeToken)
-            }
+        client.post {
+            url("${environmentProvider.get().baseUrl}revoke")
+            setBody(revokeToken)
+        }
 
     suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto =
-            client.post {
-                url("${environmentProvider.get().baseUrl}stax_users")
-                setBody(userDTO)
-            }.body()
+        client.post {
+            url("${environmentProvider.get().baseUrl}stax_users")
+            setBody(userDTO)
+        }.body()
 
     suspend fun updateUser(email: String, userDTO: UserUpdateDto): StaxUserDto =
-            client.post {
-                url("${environmentProvider.get().baseUrl}stax_users/$email")
-                setBody(userDTO)
-            }.body()
+        client.post {
+            url("${environmentProvider.get().baseUrl}stax_users/$email")
+            setBody(userDTO)
+        }.body()
 
     suspend fun getRewardPoints(email: String): StaxUserDto =
-            client.post {
-                url("${environmentProvider.get().baseUrl}/api/rewards/reward_points/$email")
-            }.body()
+        client.post {
+            url("${environmentProvider.get().baseUrl}/api/rewards/reward_points/$email")
+        }.body()
 }

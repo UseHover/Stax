@@ -14,7 +14,6 @@ import com.hover.stax.preferences.TokenProvider
 import kotlinx.coroutines.flow.firstOrNull
 
 private const val AUTHORIZATION = "authorization_code"
-private const val REFRESH = "refresh_token"
 private const val RESPONSE_TYPE = "code"
 private const val SCOPE = "write"
 
@@ -50,19 +49,6 @@ class AuthRepositoryImpl(
         )
 
         return staxApi.fetchToken(tokenRequest)
-    }
-
-    override suspend fun refreshTokenInfo(): TokenResponse {
-        val tokenRequest = TokenRefresh(
-            clientId = environmentProvider.get().clientId,
-            clientSecret = environmentProvider.get().clientSecret,
-            refreshToken = tokenProvider.fetch(DefaultTokenProvider.REFRESH_TOKEN).firstOrNull()
-                .toString(),
-            grantType = REFRESH,
-            redirectUri = environmentProvider.get().redirectUri
-        )
-
-        return staxApi.refreshToken(tokenRequest)
     }
 
     override suspend fun revokeToken() {

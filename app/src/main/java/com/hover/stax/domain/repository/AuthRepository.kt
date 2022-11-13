@@ -12,8 +12,6 @@ interface AuthRepository {
 
     suspend fun fetchTokenInfo(code: String): TokenResponse
 
-    suspend fun refreshTokenInfo(): TokenResponse
-
     suspend fun revokeToken()
 
     suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto

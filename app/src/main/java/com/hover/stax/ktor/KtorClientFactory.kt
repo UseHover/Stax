@@ -1,8 +1,11 @@
 package com.hover.stax.ktor
 
+import com.hover.stax.data.remote.dto.authorization.TokenRefresh
+import com.hover.stax.data.remote.dto.authorization.TokenResponse
 import com.hover.stax.preferences.DefaultTokenProvider
 import com.hover.stax.preferences.TokenProvider
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
@@ -17,8 +20,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 import timber.log.Timber
 
+private const val REFRESH = "refresh_token"
+
 class KtorClientFactory(
-    private val tokenProvider: TokenProvider
+    private val tokenProvider: TokenProvider,
+    private val environmentProvider: EnvironmentProvider
 ) {
 
     fun create(engine: HttpClientEngine) = HttpClient(engine) {
@@ -40,7 +46,7 @@ class KtorClientFactory(
 
         install(ResponseObserver) {
             onResponse { response ->
-                Timber.d("HTTP status:", "$response")
+                Timber.d("HTTP status: ", "$response")
             }
         }
 
@@ -54,7 +60,51 @@ class KtorClientFactory(
 
         install(Auth) {
             bearer {
+
                 loadTokens {
+
+                    // Load tokens from datastore
+                    val accessToken: String =
+                        tokenProvider.fetch(DefaultTokenProvider.ACCESS_TOKEN).firstOrNull()
+                            .toString()
+
+                    val refreshToken =
+                        tokenProvider.fetch(DefaultTokenProvider.REFRESH_TOKEN).firstOrNull()
+                            .toString()
+
+                    BearerTokens(accessToken, refreshToken)
+                }
+
+                refreshTokens {
+
+                    // Refresh token from API
+                    val response: TokenResponse = client.post {
+                        url("${environmentProvider.get().baseUrl}token")
+                        setBody(
+                            TokenRefresh(
+                                clientId = environmentProvider.get().clientId,
+                                clientSecret = environmentProvider.get().clientSecret,
+                                refreshToken = tokenProvider.fetch(DefaultTokenProvider.REFRESH_TOKEN)
+                                    .firstOrNull()
+                                    .toString(),
+                                grantType = REFRESH,
+                                redirectUri = environmentProvider.get().redirectUri
+                            )
+                        )
+                        markAsRefreshTokenRequest()
+                    }.body()
+
+                    // Save tokens to datastore
+                    tokenProvider.update(
+                        key = DefaultTokenProvider.ACCESS_TOKEN,
+                        token = response.accessToken
+                    )
+
+                    tokenProvider.update(
+                        key = DefaultTokenProvider.REFRESH_TOKEN,
+                        token = response.refreshToken.toString()
+                    )
+
                     // Load tokens from datastore
                     val accessToken: String =
                         tokenProvider.fetch(DefaultTokenProvider.ACCESS_TOKEN).firstOrNull()

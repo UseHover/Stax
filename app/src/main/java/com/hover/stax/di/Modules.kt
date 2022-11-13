@@ -118,7 +118,7 @@ val ktorModule = module {
     single { EnvironmentProvider(androidApplication(), get()) }
 
     single {
-        KtorClientFactory(get()).create(Android.create {
+        KtorClientFactory(get(), get()).create(Android.create {
             connectTimeout = 10_000
         })
     }
@@ -133,11 +133,11 @@ val datastoreModule = module {
             migrations = listOf(
                 SharedPreferencesMigration(
                     androidContext(),
-                    sharedPreferencesName = "stax-pref"
+                    sharedPreferencesName = "stax.datastore"
                 )
             ),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { androidContext().preferencesDataStoreFile(name = "stax-pref") }
+            produceFile = { androidContext().preferencesDataStoreFile(name = "stax.datastore") }
         )
     }
 }
