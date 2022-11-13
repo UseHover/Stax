@@ -28,6 +28,7 @@ import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
+import com.hover.stax.ktor.EnvironmentProvider
 import com.hover.stax.ktor.KtorClientFactory
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
@@ -35,7 +36,9 @@ import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.merchants.MerchantViewModel
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.paybill.PaybillViewModel
+import com.hover.stax.preferences.DefaultSharedPreferences
 import com.hover.stax.preferences.DefaultTokenProvider
+import com.hover.stax.preferences.LocalPreferences
 import com.hover.stax.preferences.TokenProvider
 import com.hover.stax.presentation.bounties.BountyViewModel
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
@@ -55,6 +58,7 @@ import io.ktor.client.engine.android.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
@@ -110,6 +114,9 @@ val dataModule = module(createdAtStart = true) {
 }
 
 val ktorModule = module {
+
+    single { EnvironmentProvider(androidApplication(), get()) }
+
     single {
         KtorClientFactory(get()).create(Android.create {
             connectTimeout = 10_000
@@ -141,6 +148,7 @@ val repositories = module {
     }
 
     single<TokenProvider> { DefaultTokenProvider(get()) }
+    single<LocalPreferences> { DefaultSharedPreferences(androidApplication()) }
 
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }

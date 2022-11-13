@@ -9,56 +9,54 @@ import com.hover.stax.data.remote.dto.authorization.RevokeTokenRequest
 import com.hover.stax.data.remote.dto.authorization.TokenRefresh
 import com.hover.stax.data.remote.dto.authorization.TokenRequest
 import com.hover.stax.data.remote.dto.authorization.TokenResponse
+import com.hover.stax.ktor.EnvironmentProvider
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 
 class StaxApi(
-    private val client: HttpClient
+    private val client: HttpClient,
+    private val environmentProvider: EnvironmentProvider
 ) {
 
     suspend fun authorize(authRequest: AuthRequest): AuthResponse =
             client.post {
-                url("${BASE_URL}authorize")
+                url("${environmentProvider.get().baseUrl}authorize")
                 setBody(authRequest)
             }.body()
 
     suspend fun fetchToken(tokenRequest: TokenRequest): TokenResponse =
             client.post {
-                url("${BASE_URL}token")
+                url("${environmentProvider.get().baseUrl}token")
                 setBody(tokenRequest)
             }.body()
 
     suspend fun refreshToken(tokenRefresh: TokenRefresh): TokenResponse =
             client.post {
-                url("${BASE_URL}token")
+                url("${environmentProvider.get().baseUrl}token")
                 setBody(tokenRefresh)
             }.body()
 
     suspend fun revokeToken(revokeToken: RevokeTokenRequest) =
             client.post {
-                url("${BASE_URL}revoke")
+                url("${environmentProvider.get().baseUrl}revoke")
                 setBody(revokeToken)
             }
 
     suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto =
             client.post {
-                url("${BASE_URL}stax_users")
+                url("${environmentProvider.get().baseUrl}stax_users")
                 setBody(userDTO)
             }.body()
 
     suspend fun updateUser(email: String, userDTO: UserUpdateDto): StaxUserDto =
             client.post {
-                url("${BASE_URL}stax_users/$email")
+                url("${environmentProvider.get().baseUrl}stax_users/$email")
                 setBody(userDTO)
             }.body()
 
     suspend fun getRewardPoints(email: String): StaxUserDto =
             client.post {
-                url("$BASE_URL/api/rewards/reward_points/$email")
+                url("${environmentProvider.get().baseUrl}/api/rewards/reward_points/$email")
             }.body()
-
-    companion object {
-        const val BASE_URL = "https://stage.usehover.com/stax_api/"
-    }
 }

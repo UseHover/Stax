@@ -3,9 +3,4 @@
 	<string name="api_url" translatable="false">https://stage.usehover.com/stax_api</string>
 	<string name="amp" public="false" translatable="false">befa4bbbaae25b13ebfe4da8ff86d26c</string>
 	<string name="tips_table" translatable="false">wellness_tips_develop</string>
-
-	<string name="client_uid" translatable="false">O7bvQSxNE-IJhxHLUK3mk3TuHOmrioLsHZNtbQB4hLI</string>
-	<string name="client_secret" translatable="false">20htHa1bQ-k0Vdb3H6yKaPYFD2Lt9EJpGq0qHoH4m14</string>
-	<string name="redirect_uri" translatable="false">urn:ietf:wg:oauth:2.0:oob</string>
-	<string name="scope">write</string>
 </resources>

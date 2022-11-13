@@ -10,6 +10,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
 import com.hover.stax.di.*
 import com.hover.stax.utils.network.NetworkMonitor
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -21,6 +22,10 @@ class ApplicationInstance : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        if (ProcessPhoenix.isPhoenixProcess(this)) {
+            return // skip initialization for Phoenix process
+        }
 
         setLocale()
         initDI()

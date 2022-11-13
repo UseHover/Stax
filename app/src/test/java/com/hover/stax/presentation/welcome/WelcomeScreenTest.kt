@@ -30,11 +30,9 @@ class WelcomeScreenTest {
         composeTestRule.setContent {
             StaxTheme {
                 WelcomeScreen(
-                    "Dummy Title",
-                    "Dummy Description",
-                    "Click Me",
                     {},
-                    {}
+                    {},
+                    true
                 )
             }
         }
