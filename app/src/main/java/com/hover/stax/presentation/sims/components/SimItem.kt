@@ -90,6 +90,7 @@ internal fun SimItem(
 		}
 	}
 }
+
 private fun getAirtimeButtonLabel(bonus: Int?, context: Context) : String {
 	var label = context.getString(R.string.nav_airtime)
 	if (bonus != null) {
