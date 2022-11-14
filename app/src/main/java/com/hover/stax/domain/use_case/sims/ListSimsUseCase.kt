@@ -15,7 +15,7 @@ data class SimWithAccount(
     val sim: SimInfo,
     val account: Account,
     val balanceAction: HoverAction?,
-    val airtimeActions: List<HoverAction>?
+    val airtimeActions: List<HoverAction> = emptyList()
 )
 
 class ListSimsUseCase(
@@ -30,7 +30,7 @@ class ListSimsUseCase(
         for (sim in sims) {
             var account = accountRepository.getAccountBySim(sim.subscriptionId)
             var balanceAct: HoverAction? = null
-            var airtimeActs: List<HoverAction>? = null
+            var airtimeActs: List<HoverAction> = emptyList()
 
             if (account == null)
                 account = accountRepository.createAccount(sim)
