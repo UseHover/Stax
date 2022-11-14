@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
@@ -36,6 +37,7 @@ import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.ui.theme.TextGrey
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
+import timber.log.Timber
 
 @Composable
 internal fun SimItem(
@@ -83,16 +85,25 @@ internal fun SimItem(
 				onClick = { emailStax(simWithAccount, context) })
 		}
 		else {
-			val bonus = simWithAccount.airtimeActions?.first { it.bonus_percent > 0 }?.bonus_percent
+			val bonus = getBonus(simWithAccount.airtimeActions)
 			SecondaryButton(
 				getAirtimeButtonLabel(bonus, context), getAirtimeButtonIcon(bonus),
 				onClick = { buyAirtime(simWithAccount.account) })
 		}
 	}
 }
-private fun getAirtimeButtonLabel(bonus: Int?, context: Context) : String {
+
+private fun getBonus(actions : List<HoverAction>) : Int {
+	var bonus = 0
+	if(actions.isNotEmpty()) {
+		bonus = actions.first { it.bonus_percent > 0 }.bonus_percent
+	}
+	return bonus
+}
+
+private fun getAirtimeButtonLabel(bonus: Int, context: Context) : String {
 	var label = context.getString(R.string.nav_airtime)
-	if (bonus != null) {
+	if (bonus > 0) {
 		label = context.getString(R.string.buy_airitme_bonus, Utils.formatPercent(bonus))
 	}
 	return label
