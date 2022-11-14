@@ -1,4 +1,4 @@
-package com.hover.stax.data.retry
+package com.hover.stax.data.remote.retry
 
 /**
  * Retry policy with exponential backoff.

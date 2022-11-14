@@ -11,41 +11,43 @@ import io.ktor.client.request.*
 
 class StaxApi(
     private val client: HttpClient,
-    private val environmentProvider: EnvironmentProvider
+    environmentProvider: EnvironmentProvider
 ) {
+
+    private val BASE_URL = environmentProvider.get().baseUrl
 
     suspend fun authorize(authRequest: AuthRequest): AuthResponse =
         client.post {
-            url("${environmentProvider.get().baseUrl}authorize")
+            url("${BASE_URL}/authorize")
             setBody(authRequest)
         }.body()
 
     suspend fun fetchToken(tokenRequest: TokenRequest): TokenResponse =
         client.post {
-            url("${environmentProvider.get().baseUrl}token")
+            url("${BASE_URL}token")
             setBody(tokenRequest)
         }.body()
 
     suspend fun revokeToken(revokeToken: RevokeTokenRequest) =
         client.post {
-            url("${environmentProvider.get().baseUrl}revoke")
+            url("${BASE_URL}revoke")
             setBody(revokeToken)
         }
 
     suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto =
         client.post {
-            url("${environmentProvider.get().baseUrl}stax_users")
+            url("${BASE_URL}stax_users")
             setBody(userDTO)
         }.body()
 
     suspend fun updateUser(email: String, userDTO: UserUpdateDto): StaxUserDto =
         client.post {
-            url("${environmentProvider.get().baseUrl}stax_users/$email")
+            url("${BASE_URL}stax_users/$email")
             setBody(userDTO)
         }.body()
 
     suspend fun getRewardPoints(email: String): StaxUserDto =
         client.post {
-            url("${environmentProvider.get().baseUrl}/api/rewards/reward_points/$email")
+            url("${BASE_URL}/api/rewards/reward_points/$email")
         }.body()
 }

@@ -1,6 +1,6 @@
 package com.hover.stax.utils
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class UtilsTest {

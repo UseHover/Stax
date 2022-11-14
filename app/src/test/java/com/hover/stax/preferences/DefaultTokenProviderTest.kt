@@ -7,13 +7,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
+import com.google.common.truth.Truth.*
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
 import org.junit.Assert.*
 import org.junit.Before
-
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -38,7 +36,7 @@ class DefaultTokenProviderTest {
         runBlocking {
             tokenProvider.update(stringPreferencesKey("access_token"), "some_random_token_here")
             val response = tokenProvider.fetch(stringPreferencesKey("access_token")).firstOrNull()
-            MatcherAssert.assertThat(response, CoreMatchers.`is`("some_random_token_here"))
+            assertThat(response).isEqualTo("some_random_token_here")
         }
     }
 
@@ -47,7 +45,7 @@ class DefaultTokenProviderTest {
         runBlocking {
             tokenProvider.update(stringPreferencesKey("refresh_token"), "some_random_token_here")
             val response = tokenProvider.fetch(stringPreferencesKey("refresh_token")).firstOrNull()
-            MatcherAssert.assertThat(response, CoreMatchers.`is`("some_random_token_here"))
+            assertThat(response).isEqualTo("some_random_token_here")
         }
     }
 }

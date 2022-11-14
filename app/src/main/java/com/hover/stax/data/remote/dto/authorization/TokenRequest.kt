@@ -38,18 +38,3 @@ data class RevokeTokenRequest(
     val clientSecret: String,
     val token: String
 )
-
-@Serializable
-data class TokenResponse(
-    @SerialName("access_token")
-    val accessToken: String,
-    @SerialName("refresh_token")
-    val refreshToken: String? = null,
-    val scope: String,
-    @SerialName("created_at")
-    val createdAt: Int,
-    @SerialName("token_type")
-    val tokenType: String,
-    @SerialName("expires_in")
-    val expiresIn: Int
-)

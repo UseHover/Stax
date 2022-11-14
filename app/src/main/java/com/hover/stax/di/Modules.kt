@@ -67,6 +67,8 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+const val TIMEOUT = 10_000
+
 val appModule = module {
     viewModelOf(::FaqViewModel)
     viewModelOf(::ActionSelectViewModel)
@@ -119,7 +121,7 @@ val ktorModule = module {
 
     single {
         KtorClientFactory(get(), get()).create(Android.create {
-            connectTimeout = 10_000
+            connectTimeout = TIMEOUT
         })
     }
 }

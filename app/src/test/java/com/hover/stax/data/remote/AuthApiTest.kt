@@ -22,7 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
-class AuthApiTest {
+class WeAuthApiTest {
 
     private val fixture = kotlinFixture {
         nullabilityStrategy(NeverNullStrategy)
@@ -31,6 +31,8 @@ class AuthApiTest {
 
     private var testDataStore: DataStore<Preferences> = mockk(relaxed = true)
     private var environmentProvider: EnvironmentProvider = mockk(relaxed = true)
+
+    private val userDTO = fixture<UserUploadDto>()
 
     @Test(expected = ServerResponseException::class)
     fun `test server error is thrown when a server exception occurs`() {
@@ -156,7 +158,6 @@ class AuthApiTest {
 
     @Test
     fun `test upload user is successful when passing correct user details`() {
-        val userDTO = fixture<UserUploadDto>()
         val staxUserDto = StaxUserDto(
             data = Data(
                 attributes = Attributes(
@@ -228,7 +229,6 @@ class AuthApiTest {
 
     @Test(expected = ServerResponseException::class)
     fun `test server error is thrown when a server exception occurs during user upload`() {
-        val userDTO = fixture<UserUploadDto>()
         val mockEngine = MockEngine {
             delay(500)
             respondError(HttpStatusCode.InternalServerError)
