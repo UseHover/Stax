@@ -42,7 +42,6 @@ timber = "com.jakewharton.timber:timber:5.0.1"
 amplitude = "com.amplitude:android-sdk:3.35.1"
 appsflyer = "com.appsflyer:af-android-sdk:6.8.0"
 installreferrer = "com.android.installreferrer:installreferrer:2.2"
-uxcam = "com.uxcam:uxcam:3.5.1"
 
 koin = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
@@ -84,7 +83,7 @@ espresso = "androidx.test.espresso:espresso-core:3.4.0"
 [bundles]
 compose = ["compose-ui", "compose-material", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist"]
 google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "splashscreen", "preference", "legacy-support"]
-logging = ["timber", "amplitude", "appsflyer", "installreferrer", "uxcam"]
+logging = ["timber", "amplitude", "appsflyer", "installreferrer"]
 koin = ["koin", "koin-compose"]
 room = ["room", "room-runtime"]
 network = ["okhttp", "okhttp-interceptor", "retrofit", "retrofit-gson", "gson", "grpc"]

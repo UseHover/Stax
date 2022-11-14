@@ -20,8 +20,8 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 200
-        versionName = "1.18.1"
+        versionCode = 199
+        versionName = "1.18.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -42,6 +42,13 @@ android {
         jvmTarget = "1.8"
     }
 
+    bundle {
+        language {
+            //Ensures all language string resources is bundled in the aab.
+            enableSplit = false
+        }
+    }
+
     buildFeatures {
         compose = true
         viewBinding = true
@@ -51,18 +58,42 @@ android {
         kotlinCompilerExtensionVersion = "1.3.0"
     }
 
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "kotlin/ranges/ranges.kotlin_builtins"
+            excludes += "kotlin/annotation/annotation.kotlin_builtins"
+            excludes += "kotlin/collections/collections.kotlin_builtins"
+            excludes += "kotlin/reflect/reflect.kotlin_builtins"
+            excludes += "kotlin/kotlin.kotlin_builtins"
+            excludes += "kotlin/internal/internal.kotlin_builtins"
+            excludes += "kotlin/coroutines/coroutines.kotlin_builtins"
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            eachDependency {
+                if ((requested.group == "org.jetbrains.kotlin") && (!requested.name.startsWith("kotlin-gradle"))) {
+                    useVersion("1.7.10")
+                }
+            }
+        }
+    }
+
+    lint {
+        disable += listOf("MissingTranslation", "ExtraTranslation")
+    }
+
     sourceSets {
         getByName("main") {
             java.srcDir("src/main/kotlin")
         }
     }
 
-    signingConfigs {
-        register("releaseConfig") {
-            keyAlias = providers.gradleProperty("keyAlias").orNull
-            keyPassword = providers.gradleProperty("keyPassword").orNull
-            storeFile = providers.gradleProperty("storeFile").orNull?.let { file(it) }
-            storePassword = providers.gradleProperty("storePassword").orNull
+    testOptions {
+        unitTests.apply {
+            isIncludeAndroidResources = true
         }
     }
 
@@ -80,30 +111,6 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("releaseConfig")
-        }
-    }
-
-    bundle {
-        language {
-            //Ensures all language string resources is bundled in the aab.
-            enableSplit = false
-        }
-    }
-
-    lint {
-        disable += listOf("MissingTranslation", "ExtraTranslation")
-    }
-
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-
-    testOptions {
-        unitTests.apply {
-            isIncludeAndroidResources = true
         }
     }
 
@@ -123,6 +130,7 @@ dependencies {
 
     //logging
     implementation(libs.bundles.logging)
+    implementation("com.uxcam:uxcam:3.4.2@aar")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:31.0.1"))
