@@ -1,16 +1,18 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.android.application") version "7.3.1" apply false
-    id("com.android.library") version "7.3.1" apply false
-    id("org.jetbrains.kotlin.android") version "1.7.10" apply false
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
-    id("io.gitlab.arturbosch.detekt") version "1.22.0"
-    id("com.diffplug.spotless") version "6.11.0"
-    id("org.jetbrains.dokka") version "1.7.20"
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.dokka)
+    kotlin("plugin.serialization") version "1.6.21"
 }
 
 buildscript {
     dependencies {
+        classpath ("com.android.tools.build:gradle:7.2.2")
         classpath ("com.google.gms:google-services:4.3.14")
         classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
         classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.0")
@@ -50,3 +52,4 @@ subprojects {
         }
     }
 }
+
