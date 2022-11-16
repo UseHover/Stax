@@ -150,7 +150,7 @@ dependencies {
 
     //logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
-    implementation 'com.uxcam:uxcam:3.4.2@aar'
+    implementation 'com.uxcam:uxcam:3.5.1'
     implementation 'com.amplitude:android-sdk:3.35.1'
     implementation 'com.appsflyer:af-android-sdk:6.8.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
