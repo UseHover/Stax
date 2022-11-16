@@ -134,6 +134,18 @@ object Utils {
     }
 
     @JvmStatic
+    fun formatAmountForUSSD(number: Double?): String {
+        return try {
+            val formatter = DecimalFormat("###0.##")
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 0
+            formatter.format(number)
+        } catch (e: Exception) {
+            number.toString()
+        }
+    }
+
+    @JvmStatic
     fun amountToDouble(amount: String?): Double? {
         try {
             return amount?.replace(",".toRegex(), "")?.toDouble()
