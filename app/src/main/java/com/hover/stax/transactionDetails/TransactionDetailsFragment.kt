@@ -303,7 +303,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun navToTransferDetail(transaction: StaxTransaction) {
         NavUtil.navigateTransfer(
             findNavController(), transaction.transaction_type,
-            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id
+            transaction.accountId.toString(), Utils.formatAmountForUSSD(transaction.amount), transaction.counterparty_id
         )
     }
 
