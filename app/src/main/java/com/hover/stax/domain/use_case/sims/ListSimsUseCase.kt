@@ -15,7 +15,7 @@ data class SimWithAccount(
     val sim: SimInfo,
     val account: Account,
     val balanceAction: HoverAction?,
-    val airtimeActions: List<HoverAction> = emptyList()
+    val airtimeActions: List<HoverAction?> = emptyList()
 )
 
 class ListSimsUseCase(

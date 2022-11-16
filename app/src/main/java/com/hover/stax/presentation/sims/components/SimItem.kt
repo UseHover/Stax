@@ -93,10 +93,10 @@ internal fun SimItem(
 	}
 }
 
-private fun getBonus(actions : List<HoverAction>) : Int {
+private fun getBonus(actions : List<HoverAction?>) : Int {
 	var bonus = 0
-	if(actions.isNotEmpty()) {
-		bonus = actions.first { it.bonus_percent > 0 }.bonus_percent
+	actions.let { action ->
+		bonus = action.firstOrNull { (it?.bonus_percent ?: 0) > 0 }?.bonus_percent ?: 0
 	}
 	return bonus
 }
