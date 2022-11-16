@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
     AccountDropdown.HighlightListener {
@@ -92,6 +93,8 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     }
 
     fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accountList.value.accounts.find { it.id == accountId }) }
+
+    fun payWith(fromInstitutionId: Int) = accountList.value.accounts.firstOrNull { it.institutionId == fromInstitutionId }?.let { activeAccount.postValue(it) }
 
     fun errorCheck(): String? {
         return when {

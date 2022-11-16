@@ -34,7 +34,7 @@ class SimFragment : Fragment(), BalanceTapListener {
             setContent {
                 SimScreen(
                     refreshBalance = { acct -> balancesViewModel.requestBalance(acct) },
-                    buyAirtime = { navigateTo(getTransferDirection(HoverAction.AIRTIME)) },
+                    buyAirtime = { navigateTo(SimFragmentDirections.toTransferFragment(HoverAction.AIRTIME)) },
                     navTo = { dest -> navigateTo(dest) }
                 )
             }
@@ -61,12 +61,6 @@ class SimFragment : Fragment(), BalanceTapListener {
 
     private fun callHover(account: Account, action: HoverAction) {
         (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
-    }
-
-    private fun getTransferDirection(type: String, channelId: String? = null): NavDirections {
-        return SimFragmentDirections.toTransferFragment(type).also {
-            if (channelId != null) it.channelId = channelId
-        }
     }
 
     private fun navigateTo(dest: Int) = findNavController().navigate(dest)

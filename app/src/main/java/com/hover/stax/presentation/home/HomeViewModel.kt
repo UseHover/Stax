@@ -36,7 +36,7 @@ class HomeViewModel(
     private fun getAccounts() = viewModelScope.launch {
         accountsRepo.addedAccounts.collect { accounts ->
             _homeState.update { it.copy(accounts = accounts) }
-            getBonusList(accounts.map { it.countryAlpha2!! }.toTypedArray())
+            getBonusList(accounts.map { it.countryAlpha2 }.toTypedArray())
         }
     }
 
