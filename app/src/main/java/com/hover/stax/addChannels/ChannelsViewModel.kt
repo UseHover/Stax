@@ -201,7 +201,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         }
     }
 
-    fun updateSearch(value: String) {
+    fun updateSearch(value: String?) {
         filterQuery.value = value
     }
 
