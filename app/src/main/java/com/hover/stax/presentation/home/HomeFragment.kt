@@ -87,7 +87,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     private fun observeForBonus() {
         collectLifecycleFlow(channelsViewModel.accountEventFlow) {
             if (homeViewModel.homeState.value.bonuses.isNotEmpty())
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.homeState.value.bonuses.first().channel_id.toString()))
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.homeState.value.bonuses.first().from_institution_id.toString()))
         }
     }
 
@@ -105,9 +105,9 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
         }
     }
 
-    private fun getTransferDirection(type: String, channelId: String? = null): NavDirections {
+    private fun getTransferDirection(type: String, institutionId: String? = null): NavDirections {
         return HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(type).also {
-            if (channelId != null) it.channelId = channelId
+            if (institutionId != null) it.institutionId = institutionId
         }
     }
 

@@ -333,7 +333,7 @@
             app:argType="string"
             app:nullable="true" />
         <argument
-            android:name="channelId"
+            android:name="institutionId"
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />

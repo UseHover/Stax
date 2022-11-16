@@ -30,7 +30,7 @@ data class Account(
         var accountNo: String?,
 
         @ColumnInfo
-        var institutionId: Int?,
+        var institutionId: Int,
 
         @NonNull
         @ColumnInfo(name = "institution_type", defaultValue = Channel.BANK_TYPE)
@@ -38,7 +38,7 @@ data class Account(
 
         @JvmField
         @ColumnInfo
-        var countryAlpha2: String?,
+        var countryAlpha2: String,
 
         @ColumnInfo(index = true)
         var channelId: Int,

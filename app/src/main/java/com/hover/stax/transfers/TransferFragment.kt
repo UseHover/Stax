@@ -15,7 +15,6 @@ import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
-import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.databinding.InputItemBinding
@@ -28,13 +27,12 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
     private lateinit var transferViewModel: TransferViewModel
-    private val channelsViewModel: ChannelsViewModel by viewModel()
 
     private val args by navArgs<TransferFragmentArgs>()
 
@@ -72,7 +70,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         args.accountId?.let { accountsViewModel.setActiveAccount(Integer.parseInt(it)) }
         args.amount?.let { binding.editCard.amountInput.setText(it) }
         args.contactId?.let { transferViewModel.setContact(it) }
-        args.channelId?.let { channelsViewModel.payWith(Integer.parseInt(it)) }
+        args.institutionId?.let { accountsViewModel.payWith(Integer.parseInt(it)) }
     }
 
     override fun init(root: View) {
@@ -390,7 +388,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
                         setOnClickListener {
                             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                            channelsViewModel.payWith(bonus.channel_id)
+                            accountsViewModel.payWith(bonus.from_institution_id)
                         }
                     }
                 } else { cardBonus.visibility = View.GONE }
