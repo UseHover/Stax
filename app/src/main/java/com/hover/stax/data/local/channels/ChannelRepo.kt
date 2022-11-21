@@ -30,9 +30,9 @@ class ChannelRepo(db: AppDatabase) {
         return channelDao.getChannels(countryCode.lowercase())
     }
 
-    fun update(channel: Channel) = channelDao.update(channel)
+    suspend fun update(channel: Channel) = channelDao.update(channel)
 
     fun insert(channel: Channel) = channelDao.insert(channel)
 
-    fun update(channels: List<Channel>) = channelDao.updateAll(channels)
+    suspend fun update(channels: List<Channel>) = channelDao.update(channels)
 }

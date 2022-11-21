@@ -2,9 +2,10 @@ package com.hover.stax.requests
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.hover.stax.data.local.BaseDao
 
 @Dao
-interface RequestDao {
+interface RequestDao : BaseDao<Request>{
 
     @get:Query("SELECT * FROM requests ORDER BY date_sent DESC")
     val all: LiveData<List<Request>>
@@ -21,12 +22,4 @@ interface RequestDao {
     @Query("SELECT * FROM requests WHERE id = :id")
     operator fun get(id: Int): Request?
 
-    @Insert
-    fun insert(request: Request?)
-
-    @Update
-    fun update(request: Request?)
-
-    @Delete
-    fun delete(request: Request?)
 }

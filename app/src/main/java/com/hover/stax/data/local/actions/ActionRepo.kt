@@ -30,7 +30,8 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
     }
 
     fun getActionsByRecipientInstitution(recipientInstitutionId: Int, countryCode: String, type: String): List<HoverAction> {
-        return actionDao.getActionsByRecipientInstitution(recipientInstitutionId, countryCode, type)
+//        return actionDao.getActionsByRecipientInstitution(recipientInstitutionId, countryCode, type)
+        return emptyList()
     }
 
     fun getBonusActionsByCountry(countries: Array<String>): List<HoverAction> {
