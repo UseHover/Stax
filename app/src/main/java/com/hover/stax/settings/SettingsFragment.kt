@@ -88,10 +88,6 @@ class SettingsFragment : Fragment() {
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        // TODO - Do I need to be here?
-//        if (loginViewModel.userIsNotSet()) loginViewModel loginViewModel.uploadLastUser()
-//        else if (loginViewModel.staxUser.value?.isMapper == true) binding.bountyCard.root.visibility =
-//            VISIBLE
     }
 
     private fun setUpManagePermissions() {

@@ -12,11 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
-import com.hover.stax.data.remote.dto.UpdateDto
-import com.hover.stax.data.remote.dto.UploadDto
-import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.toStaxUser
+import com.hover.stax.data.remote.dto.*
 import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
@@ -65,42 +61,48 @@ class LoginViewModel(
         }
     }
 
-    private fun loginUser(token: String, signInAccount: GoogleSignInAccount) = viewModelScope.launch {
-        try {
-            val authorization = authRepository.authorizeClient(token)
-            val response = authRepository.fetchTokenInfo(authorization.redirectUri.code)
-            val user = authRepository.uploadUserToStax(UserUploadDto(
-                    UploadDto(
-                            deviceId = Hover.getDeviceId(getApplication()),
-                            email = signInAccount.email!!,
-                            username = signInAccount.displayName!!,
-                            token = response.accessToken
+    private fun loginUser(token: String, signInAccount: GoogleSignInAccount) =
+        viewModelScope.launch {
+            try {
+                val authorization = authRepository.authorizeClient(token)
+                val response = authRepository.fetchTokenInfo(authorization.redirectUri.code)
+                with(tokenProvider) {
+                    update(
+                        key = DefaultTokenProvider.ACCESS_TOKEN,
+                        token = response.accessToken
                     )
-            ))
-            tokenProvider.update(
-                    key = DefaultTokenProvider.ACCESS_TOKEN,
-                    token = response.accessToken
-            )
-            tokenProvider.update(
-                    key = DefaultTokenProvider.REFRESH_TOKEN,
-                    token = response.refreshToken.toString()
-            )
-            staxUserUseCase.saveUser(user.toStaxUser())
-            _loginState.value = LoginScreenUiState(LoginUiState.Success)
-        } catch (e: Exception) {
-            _loginState.value = LoginScreenUiState(LoginUiState.Error)
+                    update(
+                        key = DefaultTokenProvider.REFRESH_TOKEN,
+                        token = response.refreshToken.toString()
+                    )
+                }.also {
+                    val user = authRepository.uploadUserToStax(
+                        UserUploadDto(
+                            UploadDto(
+                                deviceId = Hover.getDeviceId(getApplication()),
+                                email = signInAccount.email!!,
+                                username = signInAccount.displayName!!,
+                                token = response.accessToken
+                            )
+                        )
+                    )
+                    staxUserUseCase.saveUser(user.toStaxUser())
+                    _loginState.value = LoginScreenUiState(LoginUiState.Success)
+                }
+            } catch (e: Exception) {
+                _loginState.value = LoginScreenUiState(LoginUiState.Error)
+            }
         }
-    }
 
     fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { email ->
         updateUser(
-                email = email,
-                data = UserUpdateDto(
-                        UpdateDto(
-                                marketingOptedIn = optIn,
-                                email = email
-                        )
+            email = email,
+            data = UserUpdateDto(
+                UpdateDto(
+                    marketingOptedIn = optIn,
+                    email = email
                 )
+            )
         )
     }
 
@@ -129,9 +131,9 @@ class LoginViewModel(
         } else {
             signInClient.signOut().addOnCompleteListener {
                 AnalyticsUtil.logErrorAndReportToFirebase(
-                        LoginViewModel::class.java.simpleName,
-                        message,
-                        null
+                    LoginViewModel::class.java.simpleName,
+                    message,
+                    null
                 )
                 AnalyticsUtil.logAnalyticsEvent(message, getApplication())
 

@@ -18,7 +18,7 @@ class StaxApi(
 
     suspend fun authorize(authRequest: AuthRequest): AuthResponse =
         client.post {
-            url("${BASE_URL}/authorize")
+            url("${BASE_URL}authorize")
             setBody(authRequest)
         }.body()
 
@@ -48,6 +48,6 @@ class StaxApi(
 
     suspend fun getRewardPoints(email: String): StaxUserDto =
         client.post {
-            url("${BASE_URL}/api/rewards/reward_points/$email")
+            url("${BASE_URL}api/rewards/reward_points/$email")
         }.body()
 }

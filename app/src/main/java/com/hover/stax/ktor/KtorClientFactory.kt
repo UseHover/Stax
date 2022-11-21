@@ -12,13 +12,11 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
-import io.ktor.client.plugins.observer.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
-import timber.log.Timber
 
 private const val REFRESH = "refresh_token"
 
@@ -44,17 +42,11 @@ class KtorClientFactory(
             level = LogLevel.ALL
         }
 
-        install(ResponseObserver) {
-            onResponse { response ->
-                Timber.d("HTTP status: ", "$response")
-            }
-        }
+        expectSuccess = true
 
         install(DefaultRequest) {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
         }
-
-        expectSuccess = true
 
         addDefaultResponseValidation()
 
@@ -78,21 +70,22 @@ class KtorClientFactory(
                 refreshTokens {
 
                     // Refresh token from API
-                    val response: TokenResponse = client.post {
-                        url("${environmentProvider.get().baseUrl}token")
-                        setBody(
-                            TokenRefresh(
-                                clientId = environmentProvider.get().clientId,
-                                clientSecret = environmentProvider.get().clientSecret,
-                                refreshToken = tokenProvider.fetch(DefaultTokenProvider.REFRESH_TOKEN)
-                                    .firstOrNull()
-                                    .toString(),
-                                grantType = REFRESH,
-                                redirectUri = environmentProvider.get().redirectUri
+                    val response: TokenResponse =
+                        client.post {
+                            url("${environmentProvider.get().baseUrl}token")
+                            markAsRefreshTokenRequest()
+                            setBody(
+                                TokenRefresh(
+                                    clientId = environmentProvider.get().clientId,
+                                    clientSecret = environmentProvider.get().clientSecret,
+                                    refreshToken = tokenProvider.fetch(DefaultTokenProvider.REFRESH_TOKEN)
+                                        .firstOrNull()
+                                        .toString(),
+                                    grantType = REFRESH,
+                                    redirectUri = environmentProvider.get().redirectUri
+                                )
                             )
-                        )
-                        markAsRefreshTokenRequest()
-                    }.body()
+                        }.body()
 
                     // Save tokens to datastore
                     tokenProvider.update(
