@@ -107,11 +107,7 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun startObservers() = with(viewModel) {
-        val txnObserver = object : Observer<Transaction> {
-            override fun onChanged(t: Transaction?) {
-                t?.let { Timber.e("Updating transaction messages ${t.uuid}") }
-            }
-        }
+        val txnObserver = Observer<Transaction> { t -> Timber.e("Updating transaction messages ${t?.uuid}") }
 
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
