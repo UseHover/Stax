@@ -22,4 +22,12 @@ interface RequestDao : BaseDao<Request>{
     @Query("SELECT * FROM requests WHERE id = :id")
     operator fun get(id: Int): Request?
 
+    @Insert
+    fun insertRequest(request: Request?)
+
+    @Update
+    fun updateRequest(request: Request?)
+
+    @Delete
+    fun deleteRequest(request: Request?)
 }

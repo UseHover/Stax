@@ -22,8 +22,10 @@ interface ScheduleDao : BaseDao<Schedule> {
 
     @Query("SELECT * FROM schedules WHERE id = :id")
     fun get(id: Int): Schedule?
-//
-//    @Update
-//    fun update(schedule: Schedule?)
 
+    @Update
+    fun updateSchedule(schedule: Schedule?)
+
+    @Delete
+    fun deleteSchedule(schedule: Schedule?)
 }

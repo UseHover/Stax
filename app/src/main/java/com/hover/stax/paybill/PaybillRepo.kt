@@ -15,7 +15,7 @@ class PaybillRepo(db: AppDatabase) {
 
     fun save(paybill: Paybill) = paybillDao.insert(paybill)
 
-    fun update(paybill: Paybill) = paybillDao.update(paybill)
+    suspend fun update(paybill: Paybill) = paybillDao.update(paybill)
 
-    fun delete(paybill: Paybill) = paybillDao.delete(paybill)
+    suspend fun delete(paybill: Paybill) = paybillDao.delete(paybill)
 }
