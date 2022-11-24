@@ -57,15 +57,15 @@ class RequestRepo(db: AppDatabase) {
     }
 
     fun insert(request: Request?) {
-        AppDatabase.databaseWriteExecutor.execute { requestDao.insert(request) }
+        AppDatabase.databaseWriteExecutor.execute { requestDao.insertRequest(request) }
     }
 
     fun update(request: Request?) {
-        AppDatabase.databaseWriteExecutor.execute { requestDao.update(request) }
+        AppDatabase.databaseWriteExecutor.execute { requestDao.updateRequest(request) }
     }
 
     fun delete(request: Request?) {
-        AppDatabase.databaseWriteExecutor.execute { requestDao.delete(request) }
+        AppDatabase.databaseWriteExecutor.execute { requestDao.deleteRequest(request) }
     }
 
     companion object {

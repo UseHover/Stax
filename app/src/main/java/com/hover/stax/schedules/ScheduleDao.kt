@@ -2,9 +2,11 @@ package com.hover.stax.schedules
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.hover.stax.data.local.BaseDao
 
 @Dao
-interface ScheduleDao {
+interface ScheduleDao : BaseDao<Schedule> {
+
     @get:Query("SELECT * FROM schedules")
     val all: LiveData<List<Schedule>>
 
@@ -21,12 +23,9 @@ interface ScheduleDao {
     @Query("SELECT * FROM schedules WHERE id = :id")
     fun get(id: Int): Schedule?
 
-    @Insert
-    fun insert(schedule: Schedule?)
-
     @Update
-    fun update(schedule: Schedule?)
+    fun updateSchedule(schedule: Schedule?)
 
     @Delete
-    fun delete(schedule: Schedule?)
+    fun deleteSchedule(schedule: Schedule?)
 }

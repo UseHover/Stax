@@ -101,6 +101,10 @@ android {
         }
     }
 
+    sourceSets {
+        getByName("debug").assets.srcDirs(files("$projectDir/schemas"))
+    }
+
     testOptions {
         unitTests.apply {
             isIncludeAndroidResources = true
@@ -155,15 +159,16 @@ dependencies {
     // Room
     implementation(libs.bundles.room)
     kapt(libs.room.compiler)
-    androidTestImplementation(libs.room.test)
 
     // DI
     implementation(libs.bundles.koin)
 
     // Tests
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.junit.androidx)
     androidTestImplementation(libs.espresso)
+    androidTestImplementation(libs.room.test)
 
     // Hover SDK
     debugImplementation(project(":hover.sdk"))

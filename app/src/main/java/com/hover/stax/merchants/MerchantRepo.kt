@@ -18,7 +18,7 @@ class MerchantRepo(db: AppDatabase) {
 
 	fun save(merchant: Merchant) = merchantDao.insert(merchant)
 
-	fun update(merchant: Merchant) = merchantDao.update(merchant)
+	suspend fun update(merchant: Merchant) = merchantDao.update(merchant)
 
-	fun delete(merchant: Merchant) = merchantDao.delete(merchant)
+	suspend fun delete(merchant: Merchant) = merchantDao.delete(merchant)
 }
