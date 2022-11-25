@@ -20,8 +20,8 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 200
-        versionName = "1.18.1"
+        versionCode = 202
+        versionName = "1.18.3"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

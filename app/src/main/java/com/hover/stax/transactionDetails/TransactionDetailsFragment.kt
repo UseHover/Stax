@@ -117,13 +117,9 @@ class TransactionDetailsFragment : Fragment() {
         hoverTransaction.observe(viewLifecycleOwner, txnObserver)
         messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
 
-
-        val observer = object : Observer<Boolean> {
-            override fun onChanged(t: Boolean?) {
-                Timber.i("Expecting sms $t")
-                action.value?.let { a -> updateAction(a) }
-            }
-
+        val observer = Observer<Boolean> { t ->
+            Timber.i("Expecting sms $t")
+            action.value?.let { a -> updateAction(a) }
         }
         isExpectingSMS.observe(viewLifecycleOwner, observer)
     }
