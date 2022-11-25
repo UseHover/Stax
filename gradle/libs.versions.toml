@@ -1,0 +1,102 @@
+[versions]
+compose = "1.2.1"
+koin = "3.2.0"
+room = "2.4.3"
+okhttp3 = "4.10.0"
+retrofit = "2.9.0"
+glide = "4.13.2"
+
+androidGradlePlugin = "7.3.1"
+kotlin = "1.7.10"
+ktlint = "10.2.0"
+detekt = "1.18.0-RC2"
+spotless = "6.0.0"
+dokka = "1.7.10"
+serialization = "1.6.21"
+
+[libraries]
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
+compose-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+compose-viewbinding = { module = "androidx.compose.ui:ui-viewbinding", version.ref = "compose" }
+compose-livedata = "androidx.compose.runtime:runtime-livedata:1.3.0-alpha03"
+compose-accompanist = "com.google.accompanist:accompanist-drawablepainter:0.25.1"
+compose-ui-test = "androidx.compose.ui:ui-test-junit4:1.2.1"
+compose-tooling = "androidx.compose.ui:ui-tooling:1.2.1"
+
+appcompat = "androidx.appcompat:appcompat:1.5.0"
+constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
+vectordrawable = "androidx.vectordrawable:vectordrawable:1.1.0"
+navigation-fragment = "androidx.navigation:navigation-fragment-ktx:2.5.1"
+navigation-ui = "androidx.navigation:navigation-ui-ktx:2.5.1"
+lifecycle-extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
+biometric = "androidx.biometric:biometric:1.1.0"
+material = "com.google.android.material:material:1.6.1"
+viewpager = "androidx.viewpager:viewpager:1.0.0"
+recyclerview = "androidx.recyclerview:recyclerview-selection:1.1.0"
+work-runtime = "androidx.work:work-runtime-ktx:2.7.1"
+lifecycle-runtime = "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+activity-compose = "androidx.activity:activity-compose:1.5.1"
+core-ktx = "androidx.core:core-ktx:+"
+lifecycle-viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+kotlin-stdlib = "org.jetbrains.kotlin:kotlin-stdlib:1.0.0"
+lifecycle-common = "androidx.lifecycle:lifecycle-common-java8:2.5.1"
+splashscreen = "androidx.core:core-splashscreen:1.0.0"
+preference = "androidx.preference:preference-ktx:1.2.0"
+legacy-support = "androidx.legacy:legacy-support-v4:1.0.0"
+
+timber = "com.jakewharton.timber:timber:5.0.1"
+amplitude = "com.amplitude:android-sdk:3.35.1"
+appsflyer = "com.appsflyer:af-android-sdk:6.8.0"
+installreferrer = "com.android.installreferrer:installreferrer:2.2"
+uxcam = "com.uxcam:uxcam:3.5.1"
+
+koin = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+
+room = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-test = { module = "androidx.room:room-testing", version.ref = "room" }
+
+auth = "com.google.android.gms:play-services-auth:20.2.0"
+
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
+okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp3" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+gson = "com.google.code.gson:gson:2.9.1"
+grpc = "io.grpc:grpc-okhttp:1.48.1"
+chucker = "com.github.chuckerteam.chucker:library:3.5.2"
+chucker-release = "com.github.chuckerteam.chucker:library-no-op:3.5.2"
+
+libphonenumber = "com.googlecode.libphonenumber:libphonenumber:8.12.53"
+
+lingver = "com.github.YarikSOffice:lingver:1.3.0"
+
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+coil = "io.coil-kt:coil-compose:2.1.0"
+
+hover = "com.hover:android-sdk:2.0.0-stax-1.18.0-pro"
+volley = "com.android.volley:volley:1.2.1"
+play-services = "com.google.android.gms:play-services-analytics:18.0.1"
+picasso = "com.squareup.picasso:picasso:2.71828"
+sentry = "io.sentry:sentry-android:4.3.0"
+
+junit = "junit:junit:4.13.2"
+junit-androidx = "androidx.test.ext:junit:1.1.3"
+espresso = "androidx.test.espresso:espresso-core:3.4.0"
+
+[bundles]
+compose = ["compose-ui", "compose-material", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist"]
+google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "splashscreen", "preference", "legacy-support"]
+logging = ["timber", "amplitude", "appsflyer", "installreferrer", "uxcam"]
+koin = ["koin", "koin-compose"]
+room = ["room", "room-runtime"]
+network = ["okhttp", "okhttp-interceptor", "retrofit", "retrofit-gson", "gson", "grpc"]
+image = ["glide", "coil"]
+hover = ["volley", "play-services", "picasso", "sentry"]
+
+[plugins]

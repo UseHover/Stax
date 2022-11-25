@@ -2,9 +2,10 @@ package com.hover.stax.contacts
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.hover.stax.data.local.BaseDao
 
 @Dao
-interface ContactDao {
+interface ContactDao : BaseDao<StaxContact> {
     @get:Query("SELECT * FROM stax_contacts ORDER BY name, phone_number, last_used_timestamp")
     val all: LiveData<List<StaxContact>>
 
@@ -30,9 +31,7 @@ interface ContactDao {
     @Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
     fun getLive(id: String?): LiveData<StaxContact>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(contact: StaxContact?)
-
+    // Need to rework the implementation on ContactRepo
     @Update
-    fun update(contact: StaxContact?)
+    fun updateStaxContact(contact: StaxContact?)
 }

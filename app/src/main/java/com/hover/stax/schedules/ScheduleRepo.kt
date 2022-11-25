@@ -18,18 +18,14 @@ class ScheduleRepo(db: AppDatabase) {
     }
 
     fun insert(schedule: Schedule?) {
-        AppDatabase.databaseWriteExecutor.execute { scheduleDao.insert(schedule) }
+        AppDatabase.databaseWriteExecutor.execute { schedule?.let { scheduleDao.insert(schedule) } }
     }
 
     fun update(schedule: Schedule?) {
-        AppDatabase.databaseWriteExecutor.execute { scheduleDao.update(schedule) }
+        AppDatabase.databaseWriteExecutor.execute { scheduleDao.updateSchedule(schedule) }
     }
 
     fun delete(schedule: Schedule?) {
-        AppDatabase.databaseWriteExecutor.execute { scheduleDao.delete(schedule) }
-    }
-
-    companion object {
-        private val TAG = ScheduleRepo::class.java.simpleName
+        AppDatabase.databaseWriteExecutor.execute { scheduleDao.deleteSchedule(schedule) }
     }
 }

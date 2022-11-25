@@ -2,11 +2,12 @@ package com.hover.stax.data.local.accounts
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.hover.stax.data.local.BaseDao
 import com.hover.stax.domain.model.Account
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AccountDao {
+interface AccountDao : BaseDao<Account> {
 
     @Query("SELECT * FROM accounts WHERE institution_type != 'telecom' ORDER BY alias ASC")
     fun getAllAccounts(): List<Account>
@@ -49,18 +50,6 @@ interface AccountDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(accounts: List<Account>): List<Long>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(account: Account)
-
-    @Update
-    fun update(account: Account?)
-
-    @Update
-    suspend fun updateAll(accounts: List<Account>)
-
-    @Delete
-    fun delete(account: Account)
 
     @Query("DELETE FROM accounts")
     fun deleteAll()
