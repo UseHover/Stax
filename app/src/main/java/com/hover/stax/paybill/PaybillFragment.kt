@@ -267,10 +267,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             val account = activeAccount.value
             val activeAction = actionSelectViewModel.activeAction.value
 
-            val actionToRun = if (activeAction == null)
-                actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
-            else
-                actions!!.first()
+            val actionToRun = activeAction ?: actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
 
             if (!actions.isNullOrEmpty() && account != null)
                 (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun ?: actions.first(), viewModel.wrapExtras(), 0)
