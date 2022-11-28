@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.firstOrNull
 
 private const val AUTHORIZATION = "authorization_code"
 private const val RESPONSE_TYPE = "code"
-private const val SCOPE = "write"
+private const val SCOPE = "read write"
 
 class AuthRepositoryImpl(
     private val context: Context,
