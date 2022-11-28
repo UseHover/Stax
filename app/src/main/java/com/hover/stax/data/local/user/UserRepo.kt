@@ -12,7 +12,7 @@ class UserRepo(db: AppDatabase) {
 
     suspend fun saveUser(user: StaxUser) {
         if (userDao.getUser() == null)
-            userDao.insert(user)
+            userDao.insertAsync(user)
         else
             userDao.update(user)
     }

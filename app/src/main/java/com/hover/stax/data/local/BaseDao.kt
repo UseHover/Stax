@@ -18,6 +18,9 @@ interface BaseDao<T> {
     fun insert(item: T)
 
     @Insert(onConflict = REPLACE)
+    suspend fun insertAsync(item: T)
+
+    @Insert(onConflict = REPLACE)
     suspend fun insert(vararg items: T)
 
     @Insert(onConflict = REPLACE)
