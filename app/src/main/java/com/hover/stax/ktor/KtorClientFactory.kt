@@ -1,6 +1,5 @@
 package com.hover.stax.ktor
 
-import com.hover.stax.BuildConfig
 import com.hover.stax.data.remote.dto.authorization.TokenRefresh
 import com.hover.stax.data.remote.dto.authorization.TokenResponse
 import com.hover.stax.preferences.DefaultTokenProvider
@@ -47,7 +46,6 @@ class KtorClientFactory(
 
         install(DefaultRequest) {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
-            header("X-Stax-Version", BuildConfig.VERSION_NAME.toFloat())
         }
 
         addDefaultResponseValidation()

@@ -1,5 +1,6 @@
 package com.hover.stax.data.remote
 
+import com.hover.stax.BuildConfig
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
@@ -36,6 +37,7 @@ class StaxApi(
 
     suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto =
         client.post {
+            header("X-Stax-Version", BuildConfig.VERSION_NAME)
             url("${BASE_URL}stax_users")
             setBody(userDTO)
         }.body()

@@ -21,8 +21,8 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 200
-        versionName = "1.18.1"
+        versionCode = 203
+        versionName = "1.19.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -126,7 +126,7 @@ dependencies {
     implementation(libs.bundles.logging)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:31.0.1"))
+    implementation(platform("com.google.firebase:firebase-bom:31.1.0"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging")

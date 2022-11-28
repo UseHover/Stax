@@ -80,8 +80,8 @@ class LoginViewModel(
                         UserUploadDto(
                             UploadDto(
                                 deviceId = Hover.getDeviceId(getApplication()),
-                                email = signInAccount.email!!,
-                                username = signInAccount.displayName!!,
+                                email = signInAccount.email,
+                                username = signInAccount.displayName,
                                 token = response.accessToken
                             )
                         )
@@ -90,6 +90,7 @@ class LoginViewModel(
                     _loginState.value = LoginScreenUiState(LoginUiState.Success)
                 }
             } catch (e: Exception) {
+                Timber.e("Login failed $e")
                 _loginState.value = LoginScreenUiState(LoginUiState.Error)
             }
         }

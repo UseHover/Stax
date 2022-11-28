@@ -17,9 +17,9 @@ data class UploadDto(
     @SerialName("device_id")
     val deviceId: String,
     @SerialName("email")
-    val email: String,
+    val email: String?,
     @SerialName("username")
-    val username: String,
+    val username: String?,
     @SerialName("token")
     val token: String
 )
