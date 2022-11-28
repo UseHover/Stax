@@ -7,6 +7,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
     id("com.diffplug.spotless") version "6.11.0"
     id("org.jetbrains.dokka") version "1.7.20"
+    kotlin("plugin.serialization") version "1.6.21"
 }
 
 buildscript {

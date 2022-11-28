@@ -22,7 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
-class WeAuthApiTest {
+class AuthApiTest {
 
     private val fixture = kotlinFixture {
         nullabilityStrategy(NeverNullStrategy)

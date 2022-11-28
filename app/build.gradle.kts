@@ -8,6 +8,7 @@ plugins {
     id("androidx.navigation.safeargs")
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlin.android")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -20,8 +21,8 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 202
-        versionName = "1.18.3"
+        versionCode = 200
+        versionName = "1.18.1"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -101,10 +102,6 @@ android {
         }
     }
 
-    sourceSets {
-        getByName("debug").assets.srcDirs(files("$projectDir/schemas"))
-    }
-
     testOptions {
         unitTests.apply {
             isIncludeAndroidResources = true
@@ -146,10 +143,13 @@ dependencies {
 
     // Networking
     implementation(libs.bundles.network)
-    debugImplementation(libs.chucker)
-    releaseImplementation(libs.chucker.release)
+
+    implementation(libs.datastore)
+
+    implementation(libs.phoenix)
 
     implementation(libs.libphonenumber)
+
     implementation(libs.lingver)
 
     // Images
@@ -159,16 +159,17 @@ dependencies {
     // Room
     implementation(libs.bundles.room)
     kapt(libs.room.compiler)
+    androidTestImplementation(libs.room.test)
 
     // DI
     implementation(libs.bundles.koin)
 
     // Tests
-    testImplementation(libs.junit)
+    testImplementation(libs.bundles.test)
+
 
     androidTestImplementation(libs.junit.androidx)
     androidTestImplementation(libs.espresso)
-    androidTestImplementation(libs.room.test)
 
     // Hover SDK
     debugImplementation(project(":hover.sdk"))

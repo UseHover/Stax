@@ -1,7 +1,8 @@
-package com.hover.stax.user
+package com.hover.stax.data.local.user
 
 import androidx.room.*
 import com.hover.stax.data.local.BaseDao
+import com.hover.stax.domain.model.StaxUser
 import kotlinx.coroutines.flow.Flow
 
 @Dao
