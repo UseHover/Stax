@@ -11,36 +11,39 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.channels.*
+import com.hover.stax.channels.Channel
+import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
-
 import com.hover.stax.views.StaxDialog
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 const val CHANNELS_REFRESHED = "has_refreshed_channels"
 
 class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryAdapter.SelectListener {
 
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
@@ -48,12 +51,19 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        refreshChannelsIfRequired()
+        refreshChannels()
+    }
+
+    private fun refreshChannels() {
+        val wm = WorkManager.getInstance(requireContext())
+        wm.beginUniqueWork(
+            UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP,
+            UpdateChannelsWorker.makeWork()
+        ).enqueue()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
-
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
 
@@ -65,9 +75,11 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.channelsListCard.showProgressIndicator()
+        binding.channelsListCard.apply {
+            showProgressIndicator()
+            setTitle(getString(R.string.add_accounts_to_stax))
+        }
 
-        binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
         fillUpChannelLists()
         setupEmptyState()
 
@@ -75,25 +87,28 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         setUpCountryChoice()
         setSearchInputWatcher()
 
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, channelsViewModel.countryChoice.value) } }
-        channelsViewModel.sims.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} sims") }
-        channelsViewModel.simCountryList.observe(viewLifecycleOwner) { Timber.e("Loaded ${it?.size} hnis") }
-        channelsViewModel.accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
-        channelsViewModel.countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
-
+        startObservers()
         setFabListener()
     }
 
-    private fun fillUpChannelLists() {
-        binding.selectedList.apply {
-            layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
-        }
+    private fun startObservers() = with(channelsViewModel) {
+        val channelsObserver =
+            Observer<List<Channel>> { t -> t?.let {
+                loadFilteredChannels(it)
+            } }
 
+        channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
+        sims.observe(viewLifecycleOwner) { Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} sims") }
+        simCountryList.observe(viewLifecycleOwner) {
+            Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} hnis") }
+        accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
+        countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
+        filteredChannels.observe(viewLifecycleOwner, channelsObserver)
+    }
+
+    private fun fillUpChannelLists() {
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            setHasFixedSize(true)
             adapter = selectAdapter
         }
     }
@@ -114,11 +129,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun setSearchInputWatcher() {
+        channelsViewModel.updateSearch(null)
         val searchInputWatcher: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-               channelsViewModel.updateSearch(charSequence.toString())
+                channelsViewModel.updateSearch(charSequence.toString())
             }
         }
         binding.searchInput.addTextChangedListener(searchInputWatcher)
@@ -142,21 +158,21 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     private fun onSelectedLoaded(accounts: List<Account>) {
         binding.channelsListCard.hideProgressIndicator()
 
-        showSelected(!accounts.isNullOrEmpty())
-        if (!accounts.isNullOrEmpty())
-            binding.selectedList.adapter = AccountsAdapter(accounts)
+        showSelected(accounts.isNotEmpty())
+//        if (accounts.isNotEmpty())
+//            binding.selectedList.adapter = AccountsAdapter(accounts)
     }
 
     private fun showSelected(visible: Boolean) {
-        binding.selectedChannelsCard.visibility = if (visible) VISIBLE else GONE
+//        binding.selectedChannelsCard.visibility = if (visible) VISIBLE else GONE
         binding.channelsListCard.setBackButtonVisibility(if (visible) GONE else VISIBLE)
     }
 
     private fun loadFilteredChannels(channels: List<Channel>) {
         binding.channelsListCard.hideProgressIndicator()
 
-        if (!channels.isNullOrEmpty()) {
-            updateAdapter(Channel.sort(channels, false))
+        if (channels.isNotEmpty()) {
+            updateAdapter(channels)
             binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
             binding.errorText.visibility = GONE
@@ -164,7 +180,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun showEmptyState() {
-        val content = resources.getString(R.string.no_accounts_found_desc,  channelsViewModel.filterQuery.value!!)
+        val content = resources.getString(R.string.no_accounts_found_desc, channelsViewModel.filterQuery.value ?: getString(R.string.empty_channel_placeholder))
         binding.emptyState.noAccountFoundDesc.apply {
             text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
             movementMethod = LinkMovementMethod.getInstance()
@@ -175,15 +191,14 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         binding.errorText.visibility = GONE
     }
 
-
     private fun updateAdapter(channels: List<Channel>) {
-        selectAdapter.updateList(channels)
+        selectAdapter.submitList(channels)
     }
 
     private fun setError(message: Int) {
         binding.errorText.apply {
-                visibility = VISIBLE
-                text = getString(message)
+            visibility = VISIBLE
+            text = getString(message)
         }
     }
 
@@ -193,16 +208,14 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         else {
             binding.errorText.visibility = GONE
             aggregateSelectedChannels(tracker)
-            Timber.e("Navigating home now")
             findNavController().popBackStack()
-            AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
         }
     }
 
     private fun aggregateSelectedChannels(tracker: SelectionTracker<Long>) {
         val selectedChannels = mutableListOf<Channel>()
         tracker.selection.forEach { selection ->
-            selectedChannels.addAll(selectAdapter.channels.filter { it.id.toLong() == selection })
+            selectedChannels.addAll(selectAdapter.currentList.filter { it.id.toLong() == selection })
         }
 
         channelsViewModel.createAccounts(selectedChannels)
@@ -210,23 +223,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     override fun clickedChannel(channel: Channel) {
         AddChannelsFragmentDirections.actionNavigationLinkAccountToNavigationHome()
-    }
-
-    //channels will be loaded only once after install then deferred to weekly.
-    private fun refreshChannelsIfRequired() {
-        if (!Utils.getBoolean(CHANNELS_REFRESHED, requireActivity())) {
-            Timber.i("Reloading channels")
-            val wm = WorkManager.getInstance(requireContext())
-            wm.beginUniqueWork(
-                UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP,
-                UpdateChannelsWorker.makeWork()
-            ).enqueue()
-
-            Utils.saveBoolean(CHANNELS_REFRESHED, true, requireActivity())
-            return
-        }
-
-        Timber.i("Channels already reloaded")
     }
 
     override fun onDestroyView() {

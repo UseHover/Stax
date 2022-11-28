@@ -3,15 +3,12 @@ package com.hover.stax.views
 import android.app.Activity
 import android.content.Context
 import android.graphics.PorterDuff
-import android.os.Build
-import android.view.Gravity
+import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
@@ -47,9 +44,17 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
     }
 
     fun setDialogTitle(title: String?): StaxDialog {
-        mView.findViewById<LinearLayout>(R.id.header)?.let { it.visibility = View.VISIBLE }
+        mView.findViewById<LinearLayout>(R.id.transaction_header)?.let { it.visibility = View.VISIBLE }
         mView.findViewById<View?>(R.id.title)?.let { (it as TextView).text = title }
 
+        return this
+    }
+
+    fun setPath(pathStringRes: Int): StaxDialog {
+        mView.findViewById<TextView>(R.id.path_text)?.let {
+            it.visibility = View.VISIBLE
+            it.text = ctx.getString(pathStringRes)
+        }
         return this
     }
 
@@ -62,6 +67,13 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
         mView.findViewById<TextView>(R.id.message)?.let {
             it.visibility = View.VISIBLE
             it.text = message
+        }
+        return this
+    }
+
+    fun setHelperIcon(iconRes: Int): StaxDialog {
+        mView.findViewById<TextView>(R.id.perm_message)?.let {
+            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
         }
         return this
     }
@@ -85,15 +97,13 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
 
     val isDestructive: StaxDialog
         get() {
-            mView.findViewById<View>(R.id.pos_btn).background
-                    .setColorFilter(context.resources.getColor(R.color.stax_state_red), PorterDuff.Mode.SRC)
+            mView.findViewById<View>(R.id.pos_btn).background.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(context, R.color.stax_state_red), PorterDuff.Mode.SRC)
             return this
         }
 
     fun highlightPos(): StaxDialog {
         (mView.findViewById<View>(R.id.pos_btn) as Button).setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
-        mView.findViewById<View>(R.id.pos_btn).background
-                .setColorFilter(context.resources.getColor(R.color.brightBlue), PorterDuff.Mode.SRC)
+        mView.findViewById<View>(R.id.pos_btn).background.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(context, R.color.brightBlue), PorterDuff.Mode.SRC)
         return this
     }
 

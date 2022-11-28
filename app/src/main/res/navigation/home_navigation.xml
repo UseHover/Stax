@@ -1,340 +1,454 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/mainNavigation"
-        app:startDestination="@+id/navigation_home">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainNavigation"
+    app:startDestination="@+id/navigation_home">
 
     <action
-            android:id="@+id/action_global_NavigationRequest"
+        android:id="@+id/action_global_NavigationRequest"
+        app:destination="@id/navigation_request" />
+
+    <action
+        android:id="@+id/action_global_NavigationHistory"
+        app:destination="@id/navigation_history" />
+
+    <action
+        android:id="@+id/action_global_NavigationSettings"
+        app:destination="@id/navigation_settings" />
+
+    <action
+        android:id="@+id/action_global_LibraryFragment"
+        app:destination="@id/libraryFragment" />
+
+    <action
+        android:id="@+id/action_global_WellnessFragment"
+        app:destination="@id/tipsFragment" />
+
+    <action
+        android:id="@+id/action_global_NavigationSIM"
+        app:destination="@id/navigation_sim_fragment" />
+
+    <action
+        android:id="@+id/action_global_NavigationHome"
+        app:destination="@id/navigation_home" />
+
+    <action
+        android:id="@+id/action_global_TransferFragment"
+        app:destination="@id/navigation_transfer" />
+
+    <action
+        android:id="@+id/action_global_AddChannelsFragment"
+        app:destination="@id/navigation_linkAccount" />
+
+    <action
+        android:id="@+id/action_global_PaybillFragment"
+        app:destination="@id/paybillFragment" />
+
+    <action
+        android:id="@+id/action_global_MerchantFragment"
+        app:destination="@id/merchantFragment" />
+
+    <action
+        android:id="@+id/action_global_TxnDetailsFragment"
+        app:destination="@id/transactionDetailsFragment" />
+
+    <action android:id="@+id/action_global_RewardsFragment"
+        app:destination="@+id/rewardsFragment" />
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.hover.stax.presentation.home.HomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_linkAccount"
+            app:destination="@id/navigation_linkAccount" />
+        <action
+            android:id="@+id/action_navigation_home_to_accountDetailsFragment"
+            app:destination="@id/accountDetailsFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_transfer"
+            app:destination="@id/navigation_transfer" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_request"
             app:destination="@id/navigation_request" />
-
-    <action
-            android:id="@+id/action_global_NavigationSettings"
-            app:destination="@id/navigation_settings" />
-
-    <action
-            android:id="@+id/action_global_LibraryFragment"
-            app:destination="@id/libraryFragment" />
-
-    <action
-            android:id="@+id/action_global_WellnessFragment"
+        <action
+            android:id="@+id/action_navigation_home_to_paybillFragment"
+            app:destination="@id/paybillFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_merchantFragment"
+            app:destination="@id/merchantFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_wellnessFragment"
             app:destination="@id/tipsFragment" />
 
-    <action
-            android:id="@+id/action_global_NavigationBalance"
-            app:destination="@id/navigation_balance" />
+        <action
+            android:id="@+id/toSettingsFragment"
+            app:destination="@id/navigation_settings" />
+        <deepLink
+            android:id="@+id/balanceDL"
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/balance" />
 
-    <action
-            android:id="@+id/action_global_NavigationHome"
-            app:destination="@id/navigation_home" />
+    </fragment>
 
-    <action
-            android:id="@+id/action_global_TransferFragment"
-            app:destination="@id/navigation_transfer" />
 
-    <action
-            android:id="@+id/action_global_AddChannelsFragment"
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.hover.stax.transactions.TransactionHistoryFragment"
+        android:label="@string/nav_history"
+        tools:layout="@layout/transaction_card_history">
+
+        <action
+            android:id="@+id/action_history_to_transactionDetailsFragment"
+            app:destination="@id/transactionDetailsFragment" />
+        <deepLink
+            android:id="@+id/historyDL"
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/history" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_sim_fragment"
+        android:name="com.hover.stax.presentation.sims.SimFragment"
+        android:label="@string/nav_sim">
+
+        <action
+            android:id="@+id/to_SettingsFragment"
+            app:destination="@+id/navigation_settings" />
+
+        <action
+            android:id="@+id/to_TransferFragment"
+            app:destination="@+id/navigation_transfer" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_linkAccount"
+        android:name="com.hover.stax.addChannels.AddChannelsFragment"
+        android:label="@string/nav_link_account"
+        tools:layout="@layout/fragment_add_channels">
+
+        <action
+            android:id="@+id/action_navigation_linkAccount_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+        <deepLink
+            android:id="@+id/linkAccountDL"
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/linkaccount?{isForTelecom}" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_manage_permission"
+        android:name="com.hover.stax.permissions.ManagePermissionsFragment"
+        android:label="@string/manage_permissions_title"
+        tools:layout="@layout/manage_permissions_layout" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.hover.stax.settings.SettingsFragment"
+        android:label="@string/nav_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_navigation_settings_to_faqFragment"
+            app:destination="@id/faqFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_to_languageSelectFragment"
+            app:destination="@id/languageSelectFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_to_bountyEmailFragment"
+            app:destination="@id/bountyEmailFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_to_bountyListFragment"
+            app:destination="@id/bountyListFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_to_navigation_linkAccount"
             app:destination="@id/navigation_linkAccount" />
+        <action
+            android:id="@+id/action_navigation_settings_to_wellnessFragment"
+            app:destination="@id/tipsFragment" />
 
-    <action
-            android:id="@+id/action_global_PaybillFragment"
-            app:destination="@id/paybillFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_to_managePermissionFragment"
+            app:destination="@+id/navigation_manage_permission" />
 
-    <fragment
-            android:id="@+id/navigation_home"
-            android:name="com.hover.stax.home.HomeFragment"
-            android:label="@string/nav_home"
-            tools:layout="@layout/fragment_home">
-        <action
-                android:id="@+id/action_navigation_home_to_navigation_linkAccount"
-                app:destination="@id/navigation_linkAccount" />
-        <action
-                android:id="@+id/action_navigation_home_to_accountDetailsFragment"
-                app:destination="@id/accountDetailsFragment" />
-        <action
-                android:id="@+id/action_navigation_home_to_navigation_transfer"
-                app:destination="@id/navigation_transfer" />
-        <action
-                android:id="@+id/action_navigation_home_to_navigation_request"
-                app:destination="@id/navigation_request" />
-        <action
-                android:id="@+id/action_navigation_home_to_paybillFragment"
-                app:destination="@id/paybillFragment" />
-        <action
-                android:id="@+id/action_navigation_home_to_wellnessFragment"
-                app:destination="@id/tipsFragment" />
-
+        <deepLink
+            android:id="@+id/settingsDL"
+            app:mimeType="text/plain"
+            app:uri="stax.me/settings" />
     </fragment>
 
-    <fragment
-            android:id="@+id/navigation_balance"
-            android:name="com.hover.stax.balances.BalancesFragment"
-            android:label="@string/nav_balance_and_history"
-            tools:layout="@layout/fragment_balance">
-        <deepLink
-                android:id="@+id/balanceDL"
-                app:mimeType="text/plain"
-                android:autoVerify="true"
-                app:uri="stax.me/balance" />
-        <deepLink
-                android:id="@+id/historyDL"
-                app:mimeType="text/plain"
-                android:autoVerify="true"
-                app:uri="stax.me/history" />
-    </fragment>
 
     <fragment
-            android:id="@+id/navigation_linkAccount"
-            android:name="com.hover.stax.addChannels.AddChannelsFragment"
-            android:label="@string/nav_link_account"
-            tools:layout="@layout/fragment_add_channels">
-        <action
-                android:id="@+id/action_navigation_linkAccount_to_navigation_home"
-                app:destination="@id/navigation_home"
-                app:popUpTo="@id/navigation_home"
-                app:popUpToInclusive="true" />
-        <deepLink
-                android:id="@+id/linkAccountDL"
-                app:mimeType="text/plain"
-                android:autoVerify="true"
-                app:uri="stax.me/linkaccount" />
-    </fragment>
+        android:id="@+id/faqFragment"
+        android:name="com.hover.stax.faq.FaqFragment"
+        android:label="@string/FAQs"
+        tools:layout="@layout/fragment_faq" />
+
 
     <fragment
-            android:id="@+id/navigation_settings"
-            android:name="com.hover.stax.settings.SettingsFragment"
-            android:label="@string/nav_settings"
-            tools:layout="@layout/fragment_settings">
-        <action
-                android:id="@+id/action_navigation_settings_to_faqFragment"
-                app:destination="@id/faqFragment" />
-        <action
-                android:id="@+id/action_navigation_settings_to_languageSelectFragment"
-                app:destination="@id/languageSelectFragment" />
-        <action
-                android:id="@+id/action_navigation_settings_to_bountyEmailFragment"
-                app:destination="@id/bountyEmailFragment" />
-        <action
-                android:id="@+id/action_navigation_settings_to_bountyListFragment"
-                app:destination="@id/bountyListFragment" />
-        <action
-                android:id="@+id/action_navigation_settings_to_navigation_linkAccount"
-                app:destination="@id/navigation_linkAccount" />
-        <action
-                android:id="@+id/action_navigation_settings_to_wellnessFragment"
-                app:destination="@id/tipsFragment" />
-        <deepLink
-                android:id="@+id/settingsDL"
-                app:mimeType="text/plain"
-                app:uri="stax.me/settings" />
-    </fragment>
-
-    <fragment
-            android:id="@+id/faqFragment"
-            android:name="com.hover.stax.faq.FaqFragment"
-            android:label="@string/FAQs"
-            tools:layout="@layout/fragment_faq" />
-
-    <fragment
-            android:id="@+id/transactionDetailsFragment"
-            android:name="com.hover.stax.transactions.TransactionDetailsFragment"
-            android:label="TransactionDetailsFragment"
-            tools:layout="@layout/fragment_transaction">
+        android:id="@+id/transactionDetailsFragment"
+        android:name="com.hover.stax.transactionDetails.TransactionDetailsFragment"
+        android:label="TransactionDetailsFragment"
+        tools:layout="@layout/fragment_transaction">
         <argument
-                android:name="uuid"
-                app:argType="string" />
-        <action
-                android:id="@+id/action_transactionDetailsFragment_to_bountyListFragment"
-                app:destination="@id/bountyListFragment" />
-    </fragment>
-
-    <fragment
-            android:id="@+id/scheduleDetailsFragment"
-            android:name="com.hover.stax.schedules.ScheduleDetailFragment"
-            android:label="ScheduleDetailFragment"
-            tools:layout="@layout/fragment_schedule">
+            android:name="uuid"
+            app:argType="string" />
         <argument
-                android:name="id"
-                app:argType="integer" />
+            android:name="isNewTransaction"
+            app:argType="boolean" />
         <action
-                android:id="@+id/action_scheduleDetailsFragment_to_accountDetailsFragment"
-                app:destination="@id/accountDetailsFragment"
-                app:popUpTo="@id/accountDetailsFragment"
-                app:popUpToInclusive="true" />
+            android:id="@+id/action_transactionDetailsFragment_to_bountyListFragment"
+            app:destination="@id/bountyListFragment" />
+        <action
+            android:id="@+id/action_transactionDetailsFragment_to_navigation_transfer"
+            app:destination="@id/navigation_transfer" />
+        <action
+            android:id="@+id/action_txnDetailsFragment_to_navigationHome"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/transactionDetailsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_txnDetailsFragment_to_navigationHistory"
+            app:destination="@id/navigation_history"
+            app:popUpTo="@id/transactionDetailsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-            android:id="@+id/requestDetailsFragment"
-            android:name="com.hover.stax.requests.RequestDetailFragment"
-            android:label="RequestDetailFragment"
-            tools:layout="@layout/fragment_request_detail">
+        android:id="@+id/scheduleDetailsFragment"
+        android:name="com.hover.stax.schedules.ScheduleDetailFragment"
+        android:label="ScheduleDetailFragment"
+        tools:layout="@layout/fragment_schedule">
         <argument
-                android:name="id"
-                app:argType="integer" />
+            android:name="id"
+            app:argType="integer" />
         <action
-                android:id="@+id/action_requestDetailsFragment_to_accountDetailsFragment"
-                app:destination="@id/accountDetailsFragment"
-                app:popUpTo="@id/accountDetailsFragment"
-                app:popUpToInclusive="true" />
+            android:id="@+id/action_scheduleDetailsFragment_to_accountDetailsFragment"
+            app:destination="@id/accountDetailsFragment"
+            app:popUpTo="@id/accountDetailsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-            android:id="@+id/accountDetailsFragment"
-            android:name="com.hover.stax.accounts.AccountDetailFragment"
-            android:label="AccountDetailsFragment"
-            tools:layout="@layout/fragment_account">
+        android:id="@+id/requestDetailsFragment"
+        android:name="com.hover.stax.requests.RequestDetailFragment"
+        android:label="RequestDetailFragment"
+        tools:layout="@layout/fragment_request_detail">
         <argument
-                android:name="accountId"
-                app:argType="integer" />
+            android:name="id"
+            app:argType="integer" />
         <action
-                android:id="@+id/action_accountDetailsFragment_to_navigation_home"
-                app:destination="@id/navigation_home"
-                app:popUpTo="@id/navigation_home"
-                app:popUpToInclusive="true" />
-        <action
-                android:id="@+id/action_accountDetailsFragment_to_requestDetailsFragment"
-                app:destination="@id/requestDetailsFragment" />
-        <action
-                android:id="@+id/action_accountDetailsFragment_to_scheduleDetailsFragment"
-                app:destination="@id/scheduleDetailsFragment" />
+            android:id="@+id/action_requestDetailsFragment_to_accountDetailsFragment"
+            app:destination="@id/accountDetailsFragment"
+            app:popUpTo="@id/accountDetailsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-            android:id="@+id/libraryFragment"
-            android:name="com.hover.stax.ussd_library.LibraryFragment"
-            android:label="USSD Library"
-            tools:layout="@layout/fragment_library">
+        android:id="@+id/accountDetailsFragment"
+        android:name="com.hover.stax.accounts.AccountDetailFragment"
+        android:label="AccountDetailsFragment"
+        tools:layout="@layout/fragment_account">
+        <argument
+            android:name="accountId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_accountDetailsFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_accountDetailsFragment_to_requestDetailsFragment"
+            app:destination="@id/requestDetailsFragment" />
+        <action
+            android:id="@+id/action_accountDetailsFragment_to_scheduleDetailsFragment"
+            app:destination="@id/scheduleDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.hover.stax.ussd_library.LibraryFragment"
+        android:label="USSD Library"
+        tools:layout="@layout/fragment_library">
         <deepLink
-                android:id="@+id/libDL"
-                app:mimeType="text/plain"
-                android:autoVerify="true"
-                app:uri="stax.me/lib" />
+            android:id="@+id/libDL"
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/lib" />
     </fragment>
 
     <fragment
-            android:id="@+id/languageSelectFragment"
-            android:name="com.hover.stax.languages.LanguageSelectFragment"
-            android:label="LanguageSelectFragment"
-            tools:layout="@layout/fragment_language">
+        android:id="@+id/languageSelectFragment"
+        android:name="com.hover.stax.languages.LanguageSelectFragment"
+        android:label="LanguageSelectFragment"
+        tools:layout="@layout/fragment_language">
         <action
-                android:id="@+id/action_languageSelectFragment_to_navigation_settings"
-                app:destination="@id/navigation_settings"
-                app:popUpTo="@id/navigation_settings"
-                app:popUpToInclusive="true" />
-    </fragment>
-
-    <fragment
-            android:id="@+id/navigation_transfer"
-            android:name="com.hover.stax.transfers.TransferFragment"
-            android:label="@string/nav_transfer"
-            tools:layout="@layout/fragment_transfer">
-        <action
-                android:id="@+id/action_navigation_transfer_to_accountsFragment"
-                app:destination="@id/navigation_linkAccount" />
-        <action
-                android:id="@+id/action_navigation_transfer_to_navigation_home"
-                app:destination="@id/navigation_home"
-                app:popUpTo="@id/navigation_home"
-                app:popUpToInclusive="true" />
-        <argument
-                android:name="transactionType"
-                app:argType="string" />
+            android:id="@+id/action_languageSelectFragment_to_navigation_settings"
+            app:destination="@id/navigation_settings"
+            app:popUpTo="@id/navigation_settings"
+            app:popUpToInclusive="true" />
         <deepLink
-                android:id="@+id/transferDL"
-                app:mimeType="text/plain"
-                android:autoVerify="true"
-                app:uri="stax.me/transfer/{transactionType}" />
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/language" />
     </fragment>
 
     <fragment
-            android:id="@+id/navigation_request"
-            android:name="com.hover.stax.requests.NewRequestFragment"
-            android:label="@string/nav_request"
-            tools:layout="@layout/fragment_request">
+        android:id="@+id/navigation_transfer"
+        android:name="com.hover.stax.transfers.TransferFragment"
+        android:label="@string/nav_transfer"
+        tools:layout="@layout/fragment_transfer">
         <action
-                android:id="@+id/action_navigation_request_to_accountsFragment"
-                app:destination="@id/navigation_linkAccount" />
-        <deepLink
-                android:id="@+id/requestDL"
-                app:mimeType="text/plain"
-                android:autoVerify="true"
-                app:uri="stax.me/request" />
-    </fragment>
-
-    <fragment
-            android:id="@+id/bountyEmailFragment"
-            android:name="com.hover.stax.bounties.BountyEmailFragment"
-            android:label="@string/nav_bounty"
-            android:tag="@string/nav_bounty"
-            tools:layout="@layout/fragment_bounty_email">
+            android:id="@+id/action_navigation_transfer_to_accountsFragment"
+            app:destination="@id/navigation_linkAccount" />
         <action
-                android:id="@+id/action_bountyEmailFragment_to_bountyListFragment"
-                app:destination="@id/bountyListFragment" />
-        <action
-                android:id="@+id/action_bountyEmailFragment_to_navigation_settings"
-                app:destination="@id/navigation_settings"
-                app:popUpTo="@id/navigation_settings"
-                app:popUpToInclusive="true" />
-    </fragment>
-
-    <fragment
-            android:id="@+id/bountyListFragment"
-            android:name="com.hover.stax.bounties.BountyListFragment"
-            android:label="@string/nav_bounty"
-            tools:layout="@layout/bounty_card_channel">
-        <action
-                android:id="@+id/action_bountyListFragment_to_transactionDetailsFragment"
-                app:destination="@id/transactionDetailsFragment" />
-        <action
-                android:id="@+id/action_bountyListFragment_to_navigation_settings"
-                app:destination="@id/navigation_settings"
-                app:popUpTo="@id/navigation_settings"
-                app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-            android:id="@+id/tipsFragment"
-            android:name="com.hover.stax.financialTips.FinancialTipsFragment"
-            android:label="WellnessFragment">
+            android:id="@+id/action_navigation_transfer_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
         <argument
-                android:name="tipId"
-                app:argType="string"
-                app:nullable="true" />
-        <action
-                android:id="@+id/action_tipsFragment_to_navigation_home"
-                app:destination="@id/navigation_home"
-                app:popUpTo="@id/navigation_home"
-                app:popUpToInclusive="true" />
-        <deepLink
-                android:id="@+id/tipsDL"
-                app:mimeType="text/plain"
-                android:autoVerify="true"
-                app:uri="stax.me/financialTips?id={tipId}" />
-    </fragment>
-    <fragment
-            android:id="@+id/paybillFragment"
-            android:name="com.hover.stax.paybill.PaybillFragment"
-            android:label="@string/cta_paybill"
-            tools:layout="@layout/fragment_paybill">
+            android:name="transactionType"
+            app:argType="string" />
         <argument
-                android:name="updateBusiness"
-                app:argType="boolean" />
+            android:name="accountId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="amount"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="contactId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="institutionId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+
+        <deepLink
+            android:id="@+id/transferDL"
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/transfer/{transactionType}" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_request"
+        android:name="com.hover.stax.requests.NewRequestFragment"
+        android:label="@string/nav_request"
+        tools:layout="@layout/fragment_request">
         <action
-                android:id="@+id/action_paybillFragment_to_paybillListFragment"
-                app:destination="@id/paybillListFragment" />
+            android:id="@+id/action_navigation_request_to_accountsFragment"
+            app:destination="@id/navigation_linkAccount" />
+        <deepLink
+            android:id="@+id/requestDL"
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/request" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bountyEmailFragment"
+        android:name="com.hover.stax.presentation.bounties.BountyApplicationFragment"
+        android:label="@string/nav_bounty"
+        android:tag="@string/nav_bounty"
+        tools:layout="@layout/fragment_bounty_application">
         <action
-                android:id="@+id/action_paybillFragment_to_accountsFragment"
-                app:destination="@id/navigation_linkAccount" />
+            android:id="@+id/action_bountyApplicationFragment_to_bountyListFragment"
+            app:destination="@id/bountyListFragment" />
+        <action
+            android:id="@+id/action_bountyApplicationFragment_to_navigation_settings"
+            app:destination="@id/navigation_settings"
+            app:popUpTo="@id/navigation_settings"
+            app:popUpToInclusive="true" />
+        <deepLink
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/bounty" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bountyListFragment"
+        android:name="com.hover.stax.presentation.bounties.BountyListFragment"
+        android:label="@string/nav_bounty"
+        tools:layout="@layout/bounty_card_channel">
+        <action
+            android:id="@+id/action_bountyListFragment_to_transactionDetailsFragment"
+            app:destination="@id/transactionDetailsFragment" />
+        <action
+            android:id="@+id/action_bountyListFragment_to_navigation_settings"
+            app:destination="@id/navigation_settings"
+            app:popUpTo="@id/navigation_settings"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
-            android:id="@+id/paybillListFragment"
-            android:name="com.hover.stax.paybill.PaybillListFragment"
-            android:label="PaybillListFragment">
+        android:id="@+id/tipsFragment"
+        android:name="com.hover.stax.presentation.financial_tips.FinancialTipsFragment"
+        android:label="WellnessFragment">
+        <argument
+            android:name="tipId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
         <action
-                android:id="@+id/action_paybillListFragment_to_paybillFragment"
-                app:destination="@id/paybillFragment"
-                app:popUpTo="@id/paybillFragment"
-                app:popUpToInclusive="true" />
+            android:id="@+id/action_tipsFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+        <deepLink
+            android:id="@+id/tipsDL"
+            android:autoVerify="true"
+            app:mimeType="text/plain"
+            app:uri="stax.me/financialTips?id={tipId}" />
     </fragment>
+    <fragment
+        android:id="@+id/paybillFragment"
+        android:name="com.hover.stax.paybill.PaybillFragment"
+        android:label="@string/cta_paybill"
+        tools:layout="@layout/fragment_paybill">
+        <action
+            android:id="@+id/action_paybillFragment_to_paybillListFragment"
+            app:destination="@id/paybillListFragment" />
+        <action
+            android:id="@+id/action_paybillFragment_to_accountsFragment"
+            app:destination="@id/navigation_linkAccount" />
+    </fragment>
+    <fragment
+        android:id="@+id/merchantFragment"
+        android:name="com.hover.stax.merchants.MerchantFragment"
+        android:label="@string/cta_merchant"
+        tools:layout="@layout/fragment_merchant">
+        <action
+            android:id="@+id/action_merchantFragment_to_accountsFragment"
+            app:destination="@id/navigation_linkAccount" />
+    </fragment>
+    <fragment
+        android:id="@+id/paybillListFragment"
+        android:name="com.hover.stax.paybill.PaybillListFragment"
+        android:label="PaybillListFragment"
+        tools:layout="@layout/fragment_paybill_list">
+        <action
+            android:id="@+id/action_paybillListFragment_to_paybillFragment"
+            app:destination="@id/paybillFragment"
+            app:popUpTo="@id/paybillFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/rewardsFragment"
+        android:name="com.hover.stax.presentation.rewards.RewardsFragment"
+        android:label="RewardsFragment" />
 
 </navigation>

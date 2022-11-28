@@ -2,11 +2,13 @@ package com.hover.stax.paybill
 
 import androidx.room.*
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.accounts.Account
+
 import com.hover.stax.channels.Channel
+import com.hover.stax.domain.model.Account
 import javax.annotation.Nullable
 
 const val BUSINESS_NO = "businessNo"
+const val BUSINESS_NAME = "businessName"
 
 @Entity(
         tableName = "paybills",
@@ -18,8 +20,11 @@ data class Paybill(
 
         var name: String,
 
+        @ColumnInfo(name = "business_name")
+        var businessName: String?,
+
         @ColumnInfo(name = "business_no")
-        var businessNo: String,
+        var businessNo: String?,
 
         @ColumnInfo(name = "account_no")
         var accountNo: String? = null,
@@ -56,10 +61,19 @@ data class Paybill(
         append(")")
     }
 
+    // FIXME: is this actually used?
     override fun equals(other: Any?): Boolean {
-        if (other !is Account) return false
-        return id == other.id || other.name == other.name
+        if (other !is Paybill) return false
+        return id == other.id || (channelId == other.channelId && businessNo == other.businessNo) // FIXME: should be institution id not channel id
     }
 
     override fun compareTo(other: Paybill): Int = toString().compareTo(other.toString())
+
+    companion object {
+        fun extractBizNumber(action: HoverAction): String {
+            return if (action.getVarValue(BUSINESS_NO) != null)
+                action.getVarValue(BUSINESS_NO)
+            else ""
+        }
+    }
 }

@@ -8,6 +8,7 @@ import com.hover.stax.R
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
+import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 
 class RequestRepo(db: AppDatabase) {
@@ -23,45 +24,36 @@ class RequestRepo(db: AppDatabase) {
     val requests: List<Request>
         get() = requestDao.unmatched
 
-    fun getRequest(id: Int): Request {
+    fun getRequest(id: Int): Request? {
         return requestDao[id]
     }
 
-    fun decrypt(encrypted: String, c: Context): MutableLiveData<Request?> {
-        val liveRequest: MutableLiveData<Request?> = MutableLiveData()
-        liveRequest.value = null
+    fun decrypt(encrypted: String, c: Context): Request? {
+        Timber.v("decrypting link")
         val removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "")
 
         //Only old stax versions contains ( in the link
-        if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString, liveRequest)
-        else liveRequest.postValue(decryptRequest(removedBaseUrlString, c))
-
-        return liveRequest
+        return if (removedBaseUrlString.contains("("))
+            decryptRequestForOldVersions(removedBaseUrlString)
+        else decryptRequest(removedBaseUrlString, c)
     }
 
     private fun decryptRequest(param: String, c: Context): Request {
         return Request(Request.decryptBijective(param, c))
     }
 
-    private fun decryptRequestForOldVersions(param: String, ld: MutableLiveData<Request?>) {
+    private fun decryptRequestForOldVersions(param: String): Request? {
         var params = param
         try {
-            val e = Request.getEncryptionSettings().build()
+            val e = Request.encryptionSettings.build()
             if (Request.isShortLink(params)) {
                 params = Shortlink(params).expand()
             }
-            e.decryptAsync(params.replace("[(]".toRegex(), "+"), object : Encryption.Callback {
-                override fun onSuccess(result: String) {
-                    return ld.postValue(Request(result))
-                }
-
-                override fun onError(exception: Exception) {
-                    AnalyticsUtil.logErrorAndReportToFirebase(TAG, "failed link decryption", exception)
-                }
-            })
+            return Request(e.decrypt(params.replace("[(]".toRegex(), "+")))
         } catch (e: NoSuchAlgorithmException) {
             AnalyticsUtil.logErrorAndReportToFirebase(TAG, "decryption failure", e)
         }
+        return null
     }
 
     fun insert(request: Request?) {

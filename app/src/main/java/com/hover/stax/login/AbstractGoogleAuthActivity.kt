@@ -2,28 +2,64 @@ package com.hover.stax.login
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
+import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.model.InstallStatus.DOWNLOADED
+import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
+import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.hover.stax.bounties.BountyEmailFragmentDirections
-import com.hover.stax.home.AbstractHoverCallerActivity
-import com.hover.stax.settings.SettingsFragment
+import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
-abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxGoogleLoginInterface {
+const val FORCED_VERSION = "force_update_app_version"
+
+abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
+        StaxGoogleLoginInterface {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
 
+    private lateinit var updateManager: AppUpdateManager
+    private var installListener: InstallStateUpdatedListener? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initGoogleAuth()
-
         setLoginObserver()
+
+        updateManager = AppUpdateManagerFactory.create(this)
+
+        if (!BuildConfig.DEBUG) checkForUpdates()
+    }
+
+    //checks that the update has not stalled
+    override fun onResume() {
+        super.onResume()
+        if (!BuildConfig.DEBUG) updateManager.appUpdateInfo.addOnSuccessListener { updateInfo -> //if the update is downloaded but not installed, notify user to complete the update
+            if (updateInfo.installStatus() == DOWNLOADED) showSnackbarForCompleteUpdate()
+
+            //if an in-app update is already running, resume the update
+            if (updateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                updateManager.startUpdateFlowForResult(
+                        updateInfo, IMMEDIATE, this, UPDATE_REQUEST_CODE
+                )
+            }
+        }
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
@@ -32,9 +68,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
 
     private fun initGoogleAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.google_server_client_id))
-            .requestEmail()
-            .build()
+                .requestIdToken(getString(R.string.google_server_client_id)).requestEmail().build()
         loginViewModel.signInClient = GoogleSignIn.getClient(this, gso)
     }
 
@@ -43,41 +77,110 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(), StaxG
             it?.let { staxGoogleLoginInterface.googleLoginFailed() }
         }
 
-        user.observe(this@AbstractGoogleAuthActivity) {
+        googleUser.observe(this@AbstractGoogleAuthActivity) {
             it?.let { staxGoogleLoginInterface.googleLoginSuccessful() }
         }
     }
 
-    fun signIn(optInMarketing: Boolean? = false) =
-        startActivityForResult(
-            loginViewModel.signInClient.signInIntent,
-            if (optInMarketing!!) LOGIN_REQUEST_OPT_IN_MARKETING else LOGIN_REQUEST
-        )
+    fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
+
+    private val loginForResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    loginViewModel.signIntoGoogle(result.data)
+                } else {
+                    staxGoogleLoginInterface.googleLoginFailed()
+                }
+            }
+
+    private fun checkForUpdates() {
+        val updateInfoTask = updateManager.appUpdateInfo
+
+        updateInfoTask.addOnSuccessListener { updateInfo ->
+            val updateType = getUpdateType(updateInfo)
+            if (updateInfo.updateAvailability() == UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(
+                            updateType
+                    )
+            ) {
+                logAppUpdate(STARTED)
+                requestUpdate(updateInfo, updateType)
+            } else {
+                Timber.i("No new update available")
+            }
+        }
+    }
+
+    private fun logAppUpdate(status: String) {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.force_update_status, status), this)
+    }
+
+    private fun getUpdateType(updateInfo: AppUpdateInfo): Int {
+        val isGracePeriod =
+                (updateInfo.clientVersionStalenessDays() ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE
+        val mustForceUpdate = BuildConfig.VERSION_CODE < Utils.getInt(FORCED_VERSION, this)
+        return if (mustForceUpdate || !isGracePeriod) IMMEDIATE
+        else FLEXIBLE
+    }
+
+    private fun requestUpdate(updateInfo: AppUpdateInfo, updateType: Int) {
+        if (updateType == FLEXIBLE) {
+            installListener = InstallStateUpdatedListener {
+                if (it.installStatus() == DOWNLOADED) showSnackbarForCompleteUpdate()
+            }
+            updateManager.registerListener(installListener!!)
+        }
+
+        updateManager.startUpdateFlowForResult(updateInfo, updateType, this, UPDATE_REQUEST_CODE)
+    }
+
+    private fun showSnackbarForCompleteUpdate() {
+        Snackbar.make(
+                findViewById(R.id.home_root),
+                getString(R.string.update_downloaded),
+                Snackbar.LENGTH_INDEFINITE
+        ).apply {
+            setAction(getString(R.string.restart)) {
+                updateManager.completeUpdate(); installListener?.let {
+                updateManager.unregisterListener(
+                        it
+                )
+            }
+            }
+            setActionTextColor(
+                    ContextCompat.getColor(
+                            this@AbstractGoogleAuthActivity, R.color.stax_state_blue
+                    )
+            )
+            show()
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_OK) {
-            if (requestCode == LOGIN_REQUEST) {
-                val checkBox = findViewById<MaterialCheckBox>(R.id.marketingOptIn)
-                loginViewModel.signIntoGoogle(data, checkBox?.isChecked ?: false)
-            } else if (requestCode == LOGIN_REQUEST_OPT_IN_MARKETING) {
-                loginViewModel.signIntoGoogle(data, true)
+        when (requestCode) { //
+            UPDATE_REQUEST_CODE -> if (resultCode == RESULT_OK) {
+                logAppUpdate(COMPLETED)
+            } else {
+                Timber.e("Update flow failed. Result code : $resultCode")
+                logAppUpdate(FAILED)
+                checkForUpdates()
             }
         }
     }
 
     override fun googleLoginSuccessful() {
-        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST)
-            BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment()
+        if (loginViewModel.staxUser.value?.isMapper == true) BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
     }
 
     override fun googleLoginFailed() {
-        UIHelper.flashMessage(this, R.string.login_google_err)
+        UIHelper.flashAndReportMessage(this, R.string.login_google_err)
     }
 
     companion object {
-        const val LOGIN_REQUEST = 4000
-        const val LOGIN_REQUEST_OPT_IN_MARKETING = 4001
+        const val DAYS_FOR_FLEXIBLE_UPDATE = 3
+        const val UPDATE_REQUEST_CODE = 90
+        const val STARTED = "STARTED"
+        const val COMPLETED = "COMPLETED"
+        const val FAILED = "FAILED"
     }
 }

@@ -22,7 +22,6 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.database.Converters;
-import com.hover.stax.schedules.ScheduleRepo;
 import com.hover.stax.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -80,26 +79,23 @@ public class StaxContact {
     }
 
     @SuppressLint("Range")
-    public StaxContact(Intent data, Context c) {
-        Uri contactData = data.getData();
-        if (contactData != null) {
-            Cursor cur = c.getContentResolver().query(contactData, null, null, null, null);
-            if (cur != null && cur.getCount() > 0 && cur.moveToNext()) {
-                id = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.RawContacts._ID));
-                Timber.e("pulled contact with id: %s", id);
-                lookupKey = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY));
-                name = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-                thumbUri = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
+    public StaxContact(Uri contactData, Context c) {
+        Cursor cur = c.getContentResolver().query(contactData, null, null, null, null);
+        if (cur != null && cur.getCount() > 0 && cur.moveToNext()) {
+            id = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.RawContacts._ID));
+            Timber.e("pulled contact with id: %s", id);
+            lookupKey = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY));
+            name = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
+            thumbUri = cur.getString(cur.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
 
-                if (Integer.parseInt(cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    Cursor phones = c.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
-                    if (phones != null && phones.moveToNext())
-                        accountNumber = phones.getString(phones.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll(" ", "");
-                    if (phones != null) phones.close();
-                }
+            if (Integer.parseInt(cur.getString(cur.getColumnIndexOrThrow(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                Cursor phones = c.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
+                if (phones != null && phones.moveToNext())
+                    accountNumber = phones.getString(phones.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll(" ", "");
+                if (phones != null) phones.close();
             }
-            if (cur != null) cur.close();
         }
+        if (cur != null) cur.close();
     }
 
     public static String shortName(List<StaxContact> contacts, Context c) {

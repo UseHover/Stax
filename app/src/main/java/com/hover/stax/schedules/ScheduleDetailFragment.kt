@@ -104,7 +104,7 @@ class ScheduleDetailFragment : Fragment() {
                 .setNegButton(R.string.btn_back) {}
                 .setPosButton(R.string.btn_canceltrans) {
                     viewModel.deleteSchedule()
-                    UIHelper.flashMessage(requireActivity(), getString(R.string.toast_confirm_cancelfuture))
+                    UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.toast_confirm_cancelfuture))
                     findNavController().popBackStack()
                 }
                 .isDestructive
@@ -119,7 +119,7 @@ class ScheduleDetailFragment : Fragment() {
                         ScheduleWorker.makeWork()).enqueue()
 
                 if (!schedule.isScheduledForToday)
-                    UIHelper.flashMessage(requireActivity(), "Shouldn't show notification; not scheduled for today")
+                    UIHelper.flashAndReportMessage(requireActivity(), "Shouldn't show notification; not scheduled for today")
             }
         }
     }

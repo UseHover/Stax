@@ -49,7 +49,7 @@ open class RequestServiceDialog (private var ctx: Context, private var mView: Vi
 	}
 
 	private fun setTitle() {
-		mView.findViewById<LinearLayout>(R.id.header)?.let { it.visibility = View.VISIBLE }
+		mView.findViewById<LinearLayout>(R.id.transaction_header)?.let { it.visibility = View.VISIBLE }
 		mView.findViewById<View?>(R.id.title)
 			?.let { (it as TextView).text = ctx.getString(R.string.inform_stax_desc) }
 	}

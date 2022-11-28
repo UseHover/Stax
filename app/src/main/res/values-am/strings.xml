@@ -13,6 +13,10 @@
 
         <item>ስ</item>
 
+        <item>ሶማሌ</item>
+
+        <item>ኦሮምኛ</item>
+
     </string-array>
 
     <string name="btn_ok">እሺ</string>
@@ -487,8 +491,6 @@
 
     <string name="language_cardhead">ቋንቋ</string>
 
-    <string name="app_version_and_device_id">የመተግበሪያ ስሪት ፦ %1$s የስሪት ኮድ ፦ %2$s የመሣሪያ መታወቂያ ፦ %3$s</string>
-
     <string name="disclaimer">ሁሉም የምርት ስሞች ፣ የምርት ስሞች እና የንግድ ምልክቶች የየባለቤቶቻቸው ንብረት ናቸው። አጠቃቀም ቁርኝት አያመለክትም።</string>
 
     <string name="twitter" translatable="false">Twitter</string>
@@ -653,7 +655,7 @@
 
     <string name="filtering_in_progress">በማጣራት ፣ እባክዎን ይጠብቁ…</string>
 
-    <string name="country_placeholder">ሀገር</string>
+    <string name="country">ሀገር</string>
 
     <string name="country_error_nodata">አገልግሎቶችን እና አገሮችን ለመጫን እባክዎ ውሂብን ያብሩ።</string>
 

@@ -8,7 +8,7 @@
         android:layout_margin="@dimen/margin_13"
         app:cardBackgroundColor="@color/banner_permission_primary"
         app:cardCornerRadius="@dimen/radius"
-        app:cardElevation="@dimen/margin_8">
+        app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -20,8 +20,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingStart="@dimen/margin_13"
-                android:paddingEnd="@dimen/margin_13"
                 android:paddingTop="@dimen/margin_10"
+                android:paddingEnd="@dimen/margin_13"
                 android:paddingBottom="@dimen/margin_10"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -30,11 +30,11 @@
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:fontFamily="@font/brutalista_medium"
-                    android:gravity="start"
                     android:layout_marginBottom="@dimen/margin_8"
+                    android:gravity="start"
                     android:textColor="@color/banner_text"
                     android:textSize="20sp"
+                    app:fontFamily="@font/brutalista_medium"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="This is a test title" />
@@ -51,29 +51,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="This is test content" />
-        </LinearLayout>
-
-        <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/banner_secondary"
-                android:padding="@dimen/margin_10"
-                android:id="@+id/readMoreLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/contentLayout">
 
             <TextView
-                    android:id="@+id/more"
+                    android:id="@+id/readmore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_13"
                     android:drawablePadding="@dimen/margin_3"
-                    app:fontFamily="@font/brutalista_medium"
                     android:gravity="start"
                     android:text="@string/read_more"
-                    android:textColor="@color/banner_text"
+                    android:textColor="@color/brightBlue"
                     android:textSize="@dimen/text_16"
-                    app:drawableEndCompat="@drawable/ic_twotone_chevron_right_24" />
-        </FrameLayout>
+                    app:fontFamily="@font/brutalista_medium" />
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

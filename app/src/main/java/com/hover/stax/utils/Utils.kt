@@ -3,10 +3,10 @@ package com.hover.stax.utils
 import android.Manifest
 import android.app.Activity
 import android.content.*
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
@@ -14,14 +14,18 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.text.DecimalFormat
-import java.util.*
 
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"
+    private const val SDK_PREFS = "_hoversdk";
 
     private fun getSharedPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE)
+    }
+
+    fun getSdkPrefs(context: Context): SharedPreferences {
+        return context.getSharedPreferences(getPackage(context) + SDK_PREFS, Context.MODE_PRIVATE)
     }
 
     fun saveString(key: String?, value: String?, c: Context) {
@@ -107,11 +111,11 @@ object Utils {
 
     @JvmStatic
     fun formatAmount(number: String?): String {
-        return when {
-            number == "0" -> "0,000"
-            number == null -> "--"
+        return when (number) {
+            "0" -> "00"
+            null -> "--"
             else -> try {
-                formatAmount(getAmount(number))
+                formatAmount(amountToDouble(number))
             } catch (e: Exception) {
                 number
             }
@@ -119,10 +123,10 @@ object Utils {
     }
 
     @JvmStatic
-    fun formatAmount(number: Double): String {
+    fun formatAmount(number: Double?): String {
         return try {
             val formatter = DecimalFormat("#,##0.00")
-            formatter.maximumFractionDigits = 0
+            formatter.maximumFractionDigits = 2
             formatter.format(number)
         } catch (e: Exception) {
             number.toString()
@@ -130,15 +134,40 @@ object Utils {
     }
 
     @JvmStatic
-    fun getAmount(amount: String): Double {
-        return amount.replace(",".toRegex(), "").toDouble()
+    fun formatAmountForUSSD(number: Double?): String {
+        return try {
+            val formatter = DecimalFormat("###0.##")
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 0
+            formatter.format(number)
+        } catch (e: Exception) {
+            number.toString()
+        }
+    }
+
+    @JvmStatic
+    fun amountToDouble(amount: String?): Double? {
+        try {
+            return amount?.replace(",".toRegex(), "")?.toDouble()
+        } catch (e: NumberFormatException) { return null }
+    }
+
+    @JvmStatic
+    fun formatPercent(number: Int): String {
+        return try {
+            val formatter = DecimalFormat("##0")
+            formatter.maximumFractionDigits = 0
+            formatter.format(number)
+        } catch (e: Exception) {
+            number.toString()
+        }
     }
 
     fun usingDebugVariant(c: Context): Boolean {
         return getBuildConfigValue(c, "DEBUG") as Boolean
     }
 
-    private fun getBuildConfigValue(context: Context, fieldName: String?): Any? {
+    private fun getBuildConfigValue(context: Context, fieldName: String): Any? {
         try {
             val clazz = Class.forName(getPackage(context) + ".BuildConfig")
             val field = clazz.getField(fieldName)
@@ -155,16 +184,10 @@ object Utils {
         val clip = ClipData.newPlainText("Stax content", content)
         if (clipboard != null) {
             clipboard.setPrimaryClip(clip)
-            UIHelper.flashMessage(c, c.getString(R.string.copied))
+            UIHelper.flashAndReportMessage(c, c.getString(R.string.copied))
             return true
         }
         return false
-    }
-
-    fun isInternetConnected(c: Context): Boolean {
-        val cm = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = cm.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
     }
 
     fun setFirebaseMessagingTopic(topic: String?) {
@@ -198,25 +221,29 @@ object Utils {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(subject: String, context: Context) {
+    fun openEmail(@StringRes subject: Int, context: Context, body : String? = "") {
+        openEmail(context.getString(subject), context, body)
+    }
+
+    fun openEmail(subject: String, context: Context, body : String? ="") {
         val intent = Intent(Intent.ACTION_VIEW)
         val senderEmail = context.getString(R.string.stax_support_email)
-        intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject")
+        intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject&body=$body")
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
             Timber.e("Activity not found")
-            UIHelper.flashMessage(context, context.getString(R.string.email_client_not_found))
+            UIHelper.flashAndReportMessage(context, context.getString(R.string.email_client_not_found))
         }
     }
 
-    fun shareStax(activity: Activity) {
+    fun shareStax(activity: Activity, shareMessage: String? = null) {
         AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
 
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.share_msg))
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareMessage ?: activity.getString(R.string.share_msg))
         activity.startActivity(Intent.createChooser(sharingIntent, activity.getString(R.string.share_explain)))
     }
 
@@ -248,6 +275,6 @@ object Utils {
         if (PermissionUtils.has(arrayOf(Manifest.permission.CALL_PHONE), c))
             c.startActivity(dialIntent)
         else
-            UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
+            UIHelper.flashAndReportMessage(c, c.getString(R.string.enable_call_permission))
     }
 }

@@ -1,12 +1,12 @@
 package com.hover.stax.notifications
 
 import android.content.Context
-import com.hover.stax.utils.Utils.setFirebaseMessagingTopic
+import com.google.firebase.messaging.FirebaseMessaging
+import com.hover.stax.R
+import com.hover.stax.utils.Utils.alterFirebaseTopicState
 import com.hover.stax.utils.Utils.isFirebaseTopicInDefaultState
 import com.hover.stax.utils.Utils.removeFirebaseMessagingTopic
-import com.hover.stax.utils.Utils.alterFirebaseTopicState
-import com.hover.stax.R
-import com.google.firebase.messaging.FirebaseMessaging
+import com.hover.stax.utils.Utils.setFirebaseMessagingTopic
 
 interface PushNotificationTopicsInterface {
 
@@ -31,7 +31,7 @@ interface PushNotificationTopicsInterface {
     }
 
     fun joinBountyCountryGroup(countryCode: String?, c: Context) {
-        setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_bounty_in_country, countryCode))
+        setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_bounty_in_country, countryCode?.uppercase()))
     }
 
     fun joinChannelGroup(channelId: Int, c: Context) {

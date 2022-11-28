@@ -1,24 +1,25 @@
 package com.hover.stax.actions
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.ActionSelectBinding
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import timber.log.Timber
 
 
-class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), RadioGroup.OnCheckedChangeListener, Target {
+class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), RadioGroup.OnCheckedChangeListener {
+
     private var allActions: List<HoverAction>? = null
     private var uniqueInstitutions: List<HoverAction>? = null
     private var highlightedAction: HoverAction? = null
@@ -28,7 +29,6 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     private val binding get() = _binding!!
 
     init {
-        Timber.e("Initi action select. highlighted?: %s", highlightedAction?.id.toString())
         _binding = ActionSelectBinding.inflate(LayoutInflater.from(context), this, true)
         createListeners()
         visibility = GONE
@@ -41,8 +41,8 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     }
 
     fun updateActions(filteredActions: List<HoverAction>) {
-        visibility = if (filteredActions.isNullOrEmpty()) GONE else VISIBLE
-        if (filteredActions.isNullOrEmpty()) return
+        visibility = if (filteredActions.isEmpty()) GONE else VISIBLE
+        if (filteredActions.isEmpty()) return
 
         allActions = filteredActions
         if (!filteredActions.contains(highlightedAction))
@@ -51,21 +51,34 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         uniqueInstitutions = sort(filteredActions)
         val actionDropdownAdapter = ActionDropdownAdapter(uniqueInstitutions!!, context)
 
-        binding.header.setText(if (uniqueInstitutions!!.firstOrNull()?.transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
+        binding.actionHeader.setText(if (uniqueInstitutions!!.firstOrNull()?.transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
         binding.actionDropdown.visibility = if (showRecipientNetwork(uniqueInstitutions!!)) View.VISIBLE else View.GONE
         binding.actionDropdown.autoCompleteTextView.setAdapter(actionDropdownAdapter)
     }
 
     fun sort(actions: List<HoverAction>): List<HoverAction> = actions.distinctBy { it.to_institution_id }.toList()
 
-    private fun showRecipientNetwork(actions: List<HoverAction>) = actions.size > 1 || (actions.size == 1 && !actions.first().isOnNetwork)
+    private fun showRecipientNetwork(actions: List<HoverAction>): Boolean {
+        return actions.size > 1 || (actions.size == 1 && !actions.first().isOnNetwork)
+    }
 
-    fun selectRecipientNetwork(action: HoverAction) {
+   fun selectRecipientNetwork(action: HoverAction) {
         if (action == highlightedAction) return
 
         setState(null, AbstractStatefulInput.SUCCESS)
         binding.actionDropdown.autoCompleteTextView.setText(action.toString(), false)
-        UIHelper.loadPicasso(context.getString(R.string.root_url).plus(action.to_institution_logo), resources.getDimensionPixelSize(R.dimen.logoDiam), this)
+
+        val target = object : CustomTarget<Drawable>() {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(resource, null, null, null)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
+            }
+        }
+
+        UIHelper.loadImage(context, context.getString(R.string.root_url).plus(action.to_institution_logo), target)
 
         val options = getWhoMeOptions(action.to_institution_id)
         if (options.size == 1) selectOnlyOption(options.first())
@@ -73,19 +86,11 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     }
 
     private fun getWhoMeOptions(recipientInstId: Int): List<HoverAction> {
-        val options = ArrayList<HoverAction>()
-        if (allActions == null) return options
-
-        for (action in allActions!!) {
-            if (action.to_institution_id == recipientInstId && !options.contains(action))
-                options.add(action)
-        }
-
-        return options
+        return allActions?.filter { it.to_institution_id == recipientInstId } ?: emptyList()
     }
 
     private fun selectOnlyOption(option: HoverAction) {
-        binding.header.visibility = GONE
+        binding.actionHeader.visibility = GONE
         binding.isSelfRadio.visibility = GONE
         if (!option.requiresRecipient())
             setState(context.getString(R.string.self_only_money_warning), AbstractStatefulInput.INFO)
@@ -94,7 +99,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
 
     private fun createOptions(recipientInstitutionActions: List<HoverAction>) {
         val radioVisibility = if (recipientInstitutionActions.size > 1) VISIBLE else GONE
-        binding.header.visibility = radioVisibility
+        binding.actionHeader.visibility = radioVisibility
         binding.isSelfRadio.removeAllViews()
         binding.isSelfRadio.clearCheck()
         binding.isSelfRadio.visibility = radioVisibility
@@ -127,20 +132,6 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         if (checkedId == -1 || allActions.isNullOrEmpty() || allActions?.find { it.id == checkedId } == null) return
         val a = allActions!!.find { it.id == checkedId }!!
         selectAction(a)
-    }
-
-    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-        val drawable = RoundedBitmapDrawableFactory.create(context.resources, bitmap).apply { isCircular = true }
-        binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
-        binding.actionDropdown.autoCompleteTextView.invalidate()
-    }
-
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-        Timber.e(e?.localizedMessage)
-    }
-
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-        binding.actionDropdown.autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
     }
 
     interface HighlightListener {

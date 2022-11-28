@@ -22,6 +22,7 @@
             app:itemTextAppearanceInactive="@style/BottomNavViewText"
             app:itemTextColor="@drawable/selector_icon_tint"
             app:labelVisibilityMode="labeled"
+            app:backgroundTint="@color/colorBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

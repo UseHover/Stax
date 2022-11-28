@@ -5,15 +5,15 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountRepo
-import com.hover.stax.accounts.PLACEHOLDER
+import com.hover.stax.domain.model.Account
+import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -21,7 +21,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     val activeAccount = MutableLiveData<Account?>()
     val amount = MutableLiveData<String?>()
-    val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
+    private val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
     val requestee = MutableLiveData<StaxContact?>()
     var requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String?>()
@@ -68,8 +68,6 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun accountError(): String? = if (activeAccount.value != null) null else getString(R.string.accounts_error_noselect)
 
-    fun isValidAccount(): Boolean = activeAccount.value!!.name != PLACEHOLDER
-
     fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else getString(R.string.requester_number_fielderror)
 
     fun validNote(): Boolean = !note.value.isNullOrEmpty()
@@ -87,17 +85,21 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun createRequest() {
         saveContacts()
-
-        val request = Request(amount.value, note.value, requesterNumber.value, activeAccount.value!!.institutionId)
-        formulatedRequest.value = request
+        
+        activeAccount.value?.institutionId?.let {
+            val request = Request(amount.value, note.value, requesterNumber.value, it)
+            formulatedRequest.value = request
+        }
     }
 
     fun saveRequest() {
         if (formulatedRequest.value != null) {
-            val request = Request(formulatedRequest.value!!, requestee.value, getApplication())
-            repo.insert(request)
+            viewModelScope.launch(Dispatchers.IO) {
+                val r = Request(formulatedRequest.value!!, requestee.value, getApplication())
+                repo.insert(r)
 
-            finalRequests.value = listOf(request)
+                finalRequests.postValue(listOf(r))
+            }
         }
     }
 

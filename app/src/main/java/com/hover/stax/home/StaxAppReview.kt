@@ -15,11 +15,7 @@ internal object StaxAppReview {
 
     fun launchStaxReview(activity: Activity) {
         AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.visited_rating_review_screen), activity)
-
-//        if (Utils.getBoolean(Constants.APP_RATED_NATIVELY, activity))
-//            openStaxPlaystorePage(activity)
-//        else
-//            launchReviewDialog(activity)
+        launchReviewDialog(activity)
     }
 
     private fun launchReviewDialog(activity: Activity) {

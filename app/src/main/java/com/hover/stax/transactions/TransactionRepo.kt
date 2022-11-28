@@ -5,12 +5,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.AppDatabase
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +26,12 @@ class TransactionRepo(db: AppDatabase) {
 
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?
         get() = transactionDao.transactionsForAppReview
+
+    val allNonBountyTransactions: LiveData<List<StaxTransaction>>
+        get() = transactionDao.nonBountyTransactions
+
+    val bountyTransactionList: List<StaxTransaction>
+        get() = transactionDao.bountyTransactionList
 
     @SuppressLint("DefaultLocale")
     suspend fun hasTransactionLastMonth(): Boolean {
@@ -47,17 +52,19 @@ class TransactionRepo(db: AppDatabase) {
         return transactionDao.getTotalFees(accountId, year.toString())
     }
 
-    fun getTransaction(uuid: String?): StaxTransaction? {
+    private fun getTransaction(uuid: String?): StaxTransaction? {
         return transactionDao.getTransaction(uuid)
     }
 
     fun getTransactionAsync(uuid: String): Flow<StaxTransaction> = transactionDao.getTransactionAsync(uuid)
 
+    fun deleteAccountTransactions(accountId: Int) = transactionDao.deleteAccountTransactions(accountId)
+
     fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
         AppDatabase.databaseWriteExecutor.execute {
             try {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
-
+                Timber.e("Found t uuid: ${t?.uuid}")
                 if (t == null) {
                     AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true)
                     t = StaxTransaction(intent, action, contact, c)
@@ -65,12 +72,12 @@ class TransactionRepo(db: AppDatabase) {
                     t = transactionDao.getTransaction(t.uuid)
                 } else {
                     AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
-                    t.update(intent, action, contact, c)
+                    t.update(intent, contact)
                     transactionDao.update(t)
                 }
                 Timber.e("save t with uuid: %s", t?.uuid)
             } catch (e: Exception) {
-                Timber.e(e, "error")
+                AnalyticsUtil.logErrorAndReportToFirebase(TransactionRepo::class.java.simpleName, e.message, e)
             }
         }
     }

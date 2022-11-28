@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentInteractiveTutorialBinding
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.onboarding.welcome.WelcomeFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import org.json.JSONObject
@@ -43,12 +41,15 @@ internal class InteractiveTutorialFragment : Fragment() {
     }
 
     private fun setContinueClick() = binding.continueBtn.setOnClickListener {
-        val variation = if (isNoneApply()) 3 else 2
         logOptionsSelected()
-        NavUtil.navigate(findNavController(), InteractiveTutorialFragmentDirections.actionInteractiveTutorialFragmentToWelcomeFragment(variation))
+        (requireActivity() as OnBoardingActivity).checkPermissionsAndNavigate()
     }
 
     private fun logOptionsSelected() {
+        if(isNoneApply()) AnalyticsUtil.logAnalyticsEvent(getString(R.string.none_apply), requireActivity())
+        else logCheckBoxSelections()
+    }
+    private fun logCheckBoxSelections() {
         val checkBox1 = binding.variant2Checkbox1
         val checkBox2 = binding.variant2Checkbox2
         val checkBox3 = binding.variant2Checkbox3

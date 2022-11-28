@@ -13,26 +13,32 @@ import com.hover.sdk.api.ActionApi
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountRepo
-import com.hover.stax.accounts.PLACEHOLDER
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.domain.model.Account
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel as KChannel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import timber.log.Timber
 
-class ChannelsViewModel(application: Application, val repo: ChannelRepo, val accountRepo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
+class ChannelsViewModel(application: Application, val repo: ChannelRepo,
+                        val simRepo: SimRepo,
+                        val accountRepo: AccountRepo,
+                        val actionRepo: ActionRepo) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
-    val allChannels: LiveData<List<Channel>> = repo.publishedChannels
+    val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
 
     var sims = MutableLiveData<List<SimInfo>>()
     var simCountryList: LiveData<List<String>> = MutableLiveData()
@@ -40,14 +46,23 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     var countryChoice: MediatorLiveData<String> = MediatorLiveData()
     val filterQuery = MutableLiveData<String?>()
     private var countryChannels = MediatorLiveData<List<Channel>>()
-
     val filteredChannels = MediatorLiveData<List<Channel>>()
+
+    private val _channelCountryList = MediatorLiveData<List<String>>()
+    val channelCountryList: LiveData<List<String>> = _channelCountryList
+
+    private val accountCreatedEvent = MutableSharedFlow<Boolean>()
+    val accountEventFlow = accountCreatedEvent.asSharedFlow()
+
+    private val accountChannel = KChannel<Account>()
+    val accountCallback = accountChannel.receiveAsFlow()
 
     private var simReceiver: BroadcastReceiver? = null
 
     init {
         setSimBroadcastReceiver()
         loadSims()
+
         simCountryList = Transformations.map(sims, this::getCountriesAndFirebaseSubscriptions)
         countryChoice.addSource(simCountryList, this@ChannelsViewModel::onSimUpdate)
 
@@ -56,12 +71,14 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
             addSource(countryChoice, this@ChannelsViewModel::onChoiceUpdate)
         }
 
+        _channelCountryList.addSource(allChannels, this::loadChannelCountryList)
+
         filteredChannels.addSource(filterQuery, this@ChannelsViewModel::search)
         filteredChannels.addSource(countryChannels, this@ChannelsViewModel::updateCountryChannels)
     }
 
     private fun loadSims() {
-        viewModelScope.launch(Dispatchers.IO) { sims.postValue(repo.presentSims) }
+        viewModelScope.launch(Dispatchers.IO) { sims.postValue(simRepo.getPresentSims()) }
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(getApplication())
@@ -75,7 +92,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         simReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 viewModelScope.launch {
-                    sims.postValue(repo.presentSims)
+                    sims.postValue(simRepo.getPresentSims())
                 }
             }
         }
@@ -89,16 +106,23 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         updateCountryChannels(allChannels.value, countryCode)
     }
 
+    private fun loadChannelCountryList(channels: List<Channel>) = viewModelScope.launch {
+        val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
+        countryCodes.addAll(channels.map { it.countryAlpha2 }.distinct().sorted())
+
+        _channelCountryList.postValue(countryCodes)
+    }
+
     private fun onSimUpdate(countryCodes: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (!countryCodes.isNullOrEmpty()) {
+            if (countryCodes.isNotEmpty()) {
                 for (code in countryCodes) {
                     if (repo.getChannelsByCountry(code).isNotEmpty())
                         updateCountry(code)
                 }
             }
         }
-     }
+    }
 
     private fun updateCountryChannels(channels: List<Channel>?, countryCode: String?) {
         countryChannels.value = when {
@@ -126,40 +150,58 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
         }
     }
 
-    private fun logChoice(channel: Channel) {
-        joinChannelGroup(channel.id, getApplication() as Context)
+    private fun logChoice(account: Account) {
+        joinChannelGroup(account.channelId, getApplication() as Context)
         val args = JSONObject()
 
         try {
-            args.put((getApplication() as Context).getString(R.string.added_channel_id), channel.id)
+            args.put((getApplication() as Context).getString(R.string.added_channel_id), account.channelId)
         } catch (ignored: Exception) {
         }
 
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
-    @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
-    fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
-        if (accounts.value.isNullOrEmpty() && !allChannels.value?.filter{ it.selected }.isNullOrEmpty()) {
-            createAccounts(allChannels.value!!.filter{ it.selected })
-        }
+    fun payWith(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val accounts = accountRepo.getAccountsByChannel(channelId)
+
+        if (accounts.isEmpty())
+            createAccount(channelId)
+        else
+            accountCreatedEvent.emit(true)
+    }
+
+    private fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val channel = repo.getChannel(channelId)
+        channel?.let { createAccounts(listOf(it)) }
+
+        accountCreatedEvent.emit(true)
     }
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = accountRepo.getDefaultAccount()
 
-        channels.forEachIndexed { i, it ->
+        val accounts = channels.mapIndexed { index, channel ->
+            Account(channel, defaultAccount == null && index == 0, -1)
+        }.onEach {
             logChoice(it)
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
-            val accountName: String = if (getFetchAccountAction(it.id) == null) it.name else PLACEHOLDER //placeholder alias for easier identification later
-            val account = Account(accountName, it.name, it.logoUrl, it.accountNo, it.id, it.countryAlpha2, it.id, it.primaryColorHex, it.secondaryColorHex, defaultAccount == null && i == 0)
-            accountRepo.insert(account)
+        }
+
+        val accountIds = accountRepo.insert(accounts)
+
+        promptBalanceCheck(accountIds.first().toInt())
+    }
+
+    private fun promptBalanceCheck(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val account = accountRepo.getAccount(accountId)
+
+        account?.let {
+            accountChannel.send(it)
         }
     }
 
-    private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
-
-    fun updateSearch(value: String) {
+    fun updateSearch(value: String?) {
         filterQuery.value = value
     }
 
@@ -168,8 +210,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     }
 
     fun updateCountry(code: String) {
-        Timber.e("setting country to %s", code)
-        countryChoice.postValue(code.uppercase())
+        countryChoice.postValue(code.lowercase())
     }
 
     private fun updateCountryChannels(channels: List<Channel>?) {
@@ -177,13 +218,16 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
     }
 
     private fun runFilter(channels: List<Channel>, value: String?) {
-        viewModelScope.launch {
-            filteredChannels.value =
-                channels.filter { standarizeString(it.toString()).contains(standarizeString(value)) }
+        filteredChannels.value = channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) }
+    }
+
+    fun updateChannel(channel: Channel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.update(channel)
         }
     }
 
-    private fun standarizeString(value: String?) : String {
+    private fun standardizeString(value: String?): String {
         // a non null String always contains an empty string
         if (value == null) return ""
         return value.lowercase().replace(" ", "").replace("#", "").replace("-", "");
@@ -194,8 +238,8 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo, val acc
             simReceiver?.let {
                 LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(it)
             }
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
         super.onCleared()
     }
-
 }

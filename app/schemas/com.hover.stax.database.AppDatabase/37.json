@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 37,
-    "identityHash": "5fd2c2c6107f2a2f086d8f62b4a7657d",
+    "identityHash": "0f961448f268583df918c123375d4c29",
     "entities": [
       {
         "tableName": "channels",
@@ -126,7 +126,7 @@
       },
       {
         "tableName": "stax_transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT, `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `balance` TEXT, `account_id` INTEGER, `account_name` INTEGER, `note` TEXT, `counterparty` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT, `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `balance` TEXT, `account_id` INTEGER, `counterparty` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -232,18 +232,6 @@
             "fieldPath": "accountId",
             "columnName": "account_id",
             "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "accountName",
-            "columnName": "account_name",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "note",
-            "columnName": "note",
-            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -755,7 +743,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5fd2c2c6107f2a2f086d8f62b4a7657d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0f961448f268583df918c123375d4c29')"
     ]
   }
 }

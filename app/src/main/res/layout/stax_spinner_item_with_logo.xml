@@ -1,54 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:orientation="vertical">
+        android:padding="@dimen/margin_13">
 
-    <RelativeLayout
+    <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/service_item_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
+
+    <ImageView
+            android:id="@+id/service_item_image_id"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toEndOf="@id/service_item_checkbox"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_grey_circle" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/service_item_name_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_13">
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_3"
+            android:layout_toEndOf="@id/service_item_image_id"
+            android:paddingStart="@dimen/margin_13"
+            android:paddingEnd="@dimen/margin_16"
+            android:textColor="@drawable/spinner_state_selector"
+            android:textSize="@dimen/text_16" />
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/service_item_checkbox"
-                android:layout_width="wrap_content"
-                android:visibility="gone"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true" />
-
-        <ImageView
-                android:id="@+id/service_item_image_id"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:layout_toEndOf="@id/service_item_checkbox"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/ic_grey_circle" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/service_item_name_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/margin_3"
-                android:layout_toEndOf="@id/service_item_image_id"
-                android:ellipsize="marquee"
-                android:paddingStart="@dimen/margin_13"
-                android:paddingEnd="@dimen/margin_34"
-                android:singleLine="true"
-                android:textColor="@drawable/spinner_state_selector"
-                android:textSize="@dimen/text_16" />
-
-        <TextView
-                android:id="@+id/service_item_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_13"
-                android:visibility="gone" />
-    </RelativeLayout>
-</LinearLayout>
+    <TextView
+            android:id="@+id/service_item_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_13"
+            android:visibility="gone" />
+</RelativeLayout>

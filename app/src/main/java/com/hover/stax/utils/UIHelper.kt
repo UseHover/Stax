@@ -2,46 +2,67 @@ package com.hover.stax.utils
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.view.WindowInsetsController
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.hover.stax.R
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
+import com.hover.stax.domain.model.Account
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 object UIHelper {
 
     private const val INITIAL_ITEMS_FETCH = 30
 
-    fun flashMessage(context: Context, view: View?, message: String?) {
-        if (view == null) flashMessage(context, message) else showSnack(view, message)
+    fun showAndReportSnackBar(context: Context, view: View?, message: String) {
+        if (view == null) flashAndReportMessage(context, message) else showSnack(view, message)
     }
 
     private fun showSnack(view: View, message: String?) {
-        val s = Snackbar.make(view, message!!, Snackbar.LENGTH_SHORT)
+        val s = Snackbar.make(view, message!!, Snackbar.LENGTH_LONG)
         s.anchorView = view
         s.show()
+        AnalyticsUtil.logAnalyticsEvent(message, view.context)
     }
 
-    @JvmStatic
-    fun flashMessage(context: Context, message: String?) {
+    fun flashAndReportMessage(context: Context, messageRes: Int) {
+        flashAndReportMessage(context, context.getString(messageRes))
+    }
+
+    fun flashAndReportMessage(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        AnalyticsUtil.logAnalyticsEvent(message, context)
     }
 
-    fun flashMessage(context: Context, messageRes: Int) {
-        Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show()
+    fun flashAndReportError(context: Context, messageRes: Int) {
+        val message = context.getString(messageRes)
+        flashAndReportError(context, message)
+    }
+
+    fun flashAndReportError(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        AnalyticsUtil.logAnalyticsEvent(message, context)
+        AnalyticsUtil.logErrorAndReportToFirebase(context.getString(R.string.toast_err_tag), message, null)
     }
 
     fun setMainLinearManagers(context: Context?): LinearLayoutManager {
@@ -51,38 +72,6 @@ object UIHelper {
         return linearLayoutManager
     }
 
-    fun getColor(hex: String?, isBackground: Boolean, c: Context?): Int {
-        return try {
-            Color.parseColor(hex)
-        } catch (e: IllegalArgumentException) {
-            ContextCompat.getColor(c!!, if (isBackground) R.color.offWhite else R.color.brightBlue)
-        }
-    }
-
-    fun loadPicasso(url: String?, size: Int, target: Target?) {
-        Picasso.get()
-            .load(url)
-            .config(Bitmap.Config.RGB_565)
-            .resize(size, size).into(target!!)
-    }
-
-    fun loadPicasso(url: String?, imageView: ImageView?) {
-        Picasso.get().load(url).config(Bitmap.Config.RGB_565).placeholder(R.color.buttonColor).into(imageView)
-    }
-
-    fun loadPicasso(url: String?, size: Int, imageView: ImageView?) {
-        Picasso.get().load(url).config(Bitmap.Config.RGB_565).resize(size, size) .placeholder(R.color.buttonColor).into(imageView)
-    }
-
-    fun loadPicasso(resId: Int, size: Int, target: Target?) {
-        Picasso.get()
-            .load(resId)
-            .config(Bitmap.Config.RGB_565)
-            .resize(size, size).into(target!!)
-    }
-
-    fun loadPicasso(url: String, target: Target) = Picasso.get().load(url).config(Bitmap.Config.RGB_565).into(target)
-
     fun setFullscreenView(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             activity.window.setDecorFitsSystemWindows(false)
@@ -91,15 +80,45 @@ object UIHelper {
         }
     }
 
+    fun ImageView.loadImage(fragment: Fragment, url: String) = GlideApp.with(fragment)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .override(80)
+        .into(this)
 
-    fun setTextUnderline(textView: TextView, cs: String?) {
-        val content = SpannableString(cs)
-        content.setSpan(UnderlineSpan(), 0, content.length, 0)
-        content.setSpan(Typeface.BOLD, 0, content.length, 0)
-        try {
-            textView.text = content
-        } catch (e: Exception) {
-            Timber.e(e)
+    fun ImageView.loadImage(context: Context, url: String) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .override(80)
+        .into(this)
+
+    fun ImageView.loadImage(context: Context, @DrawableRes iconId: Int) = GlideApp.with(context)
+        .load(iconId)
+        .override(100)
+        .into(this)
+
+    fun ImageButton.loadImage(context: Context, url: String) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .into(this)
+
+    fun loadImage(context: Context, url: String?, target: CustomTarget<Drawable>) = GlideApp.with(context)
+        .load(url)
+        .placeholder(R.drawable.icon_bg_circle)
+        .circleCrop()
+        .override(context.resources.getDimensionPixelSize(R.dimen.logoDiam))
+        .into(target)
+
+}
+
+fun <T> Fragment.collectLifecycleFlow(flow: Flow<T>, collector: FlowCollector<T>) {
+    viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(collector)
         }
     }
 }
+

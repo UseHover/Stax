@@ -15,15 +15,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.balances.BalanceAdapter
-import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.databinding.FragmentAccountBinding
+import com.hover.stax.domain.model.Account
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
-import com.hover.stax.home.AbstractHoverCallerActivity
-import com.hover.stax.home.HomeFragmentDirections
-import com.hover.stax.home.MainActivity
+import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
@@ -36,7 +34,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
-    RequestsAdapter.SelectListener, BalanceAdapter.BalanceListener {
+    RequestsAdapter.SelectListener {
 
     private val viewModel: AccountDetailViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
@@ -72,10 +70,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun setUpBalance() {
         binding.balanceCard.root.cardElevation = 0F
-        binding.balanceCard.balanceAmount.text = " - "
         binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
         binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onTapRefresh(viewModel.account.value) }
+        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onTapBalanceRefresh(viewModel.account.value) }
     }
 
     private fun setUpManage() {
@@ -89,7 +86,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            toggleButtonHighlight(binding.manageCard.nicknameInput, binding.manageCard.nicknameSaveBtn, charSequence.toString(), viewModel.account.value?.alias)
+            toggleButtonHighlight(binding.manageCard.nicknameInput, binding.manageCard.nicknameSaveBtn, charSequence.toString(), viewModel.account.value?.userAlias)
         }
     }
 
@@ -112,7 +109,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun updateNickname() {
-        validateInput(binding.manageCard.nicknameInput, viewModel.account.value?.alias, R.string.account_name_error, viewModel::updateAccountName)
+        validateInput(binding.manageCard.nicknameInput, viewModel.account.value?.userAlias, R.string.account_name_error, viewModel::updateAccountName)
     }
 
     private fun updateAccountNumber() {
@@ -140,16 +137,18 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         with(viewModel) {
             account.observe(viewLifecycleOwner) {
                 it?.let { acct ->
-                    binding.amountsCard.setTitle(acct.alias)
+                    binding.amountsCard.setTitle(acct.userAlias)
+                    if (acct.userAlias != acct.institutionName)
+                        binding.amountsCard.setSubtitle(acct.institutionName)
                     if (acct.latestBalance != null) {
                         binding.balanceCard.balanceAmount.text = acct.latestBalance
                         binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
-                    binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.detailsCard.officialName.text = if(acct.name == PLACEHOLDER) acct.alias else acct.name
+                    binding.feesDescription.text = getString(R.string.fees_label, acct.institutionName)
+                    binding.detailsCard.officialName.text = acct.userAlias
 
-                    binding.manageCard.nicknameInput.setText(acct.alias, false)
+                    binding.manageCard.nicknameInput.setText(acct.userAlias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
                     binding.manageCard.removeAcctBtn.setOnClickListener { setUpRemoveAccount(acct) }
 
@@ -158,18 +157,14 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
             }
 
             channel.observe(viewLifecycleOwner) { c ->
-                if (account.value != null && account.value!!.alias != c.name)
-                    binding.amountsCard.setSubtitle(c.name)
                 binding.detailsCard.shortcodeBtn.text = getString(R.string.dial_btn, c.rootCode)
                 binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
             }
 
-            transactions.observe(viewLifecycleOwner) {
+            transactionHistoryItem.observe(viewLifecycleOwner) {
                 binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                transactionsAdapter!!.updateData(it, viewModel.actions.value)
+                transactionsAdapter!!.submitList(it)
             }
-
-            actions.observe(viewLifecycleOwner) { transactionsAdapter!!.updateData(viewModel.transactions.value, it) }
 
             spentThisMonth.observe(viewLifecycleOwner) {
                 binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0)
@@ -182,35 +177,26 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun observeBalanceCheck() {
-        balancesViewModel.balanceAction.observe(viewLifecycleOwner) {
+        collectLifecycleFlow(balancesViewModel.balanceAction) {
             attemptCallHover(viewModel.account.value, it)
         }
-        viewModel.account.observe(viewLifecycleOwner) {
-            attemptCallHover(it, balancesViewModel.balanceAction.value)
-        }
     }
 
-    override fun onTapRefresh(account: Account?) {
-        account?.let {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), requireContext())
-            balancesViewModel.requestBalance(account)
-        }
+    private fun onTapBalanceRefresh(account: Account?) {
+        balancesViewModel.requestBalance(account)
     }
-
-    override fun onTapDetail(accountId: Int) { }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {
         action?.let { account?.let { callHover(account, action) } }
     }
 
     private fun callHover(account: Account, action: HoverAction) {
-        balancesViewModel.requestBalance(null)
-        (requireActivity() as AbstractHoverCallerActivity).run(account, action)
+        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 
     private fun setUpRemoveAccount(account: Account) {
         dialog = StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.alias))
+                .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.userAlias))
                 .setDialogMessage(R.string.removeaccount_msg)
                 .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
                 .setNegButton(R.string.btn_cancel, null)
@@ -221,13 +207,13 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun removeAccount(account: Account) {
         viewModel.removeAccount(account)
         NavHostFragment.findNavController(this).popBackStack()
-        UIHelper.flashMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))
+        UIHelper.flashAndReportMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))
     }
 
     private fun initRecyclerViews() {
         binding.historyCard.transactionsRecycler.apply {
             layoutManager = UIHelper.setMainLinearManagers(context)
-            transactionsAdapter = TransactionHistoryAdapter(null, null, this@AccountDetailFragment)
+            transactionsAdapter = TransactionHistoryAdapter(this@AccountDetailFragment)
             adapter = transactionsAdapter
         }
 
@@ -271,7 +257,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id))
     }
 
-    override fun viewTransactionDetail(uuid: String?) = NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
+    override fun viewTransactionDetail(uuid: String?)  {
+        uuid?.let { NavUtil.showTransactionDetailsFragment(findNavController(), it) }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -280,4 +268,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
         _binding = null
     }
+
+
 }

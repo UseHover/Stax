@@ -13,7 +13,7 @@ import com.hover.stax.R
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.SCHEDULE_REQUEST
+import com.hover.stax.hover.SCHEDULE_REQUEST
 import com.hover.stax.schedules.Schedule.REQUEST_TYPE
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

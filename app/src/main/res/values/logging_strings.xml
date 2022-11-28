@@ -5,33 +5,34 @@
 	<!--	Amplitude and Firebase Analytics log events -->
 	<string name="viewing_onboarding_slide" translatable="false">Viewing slide %1$s</string>
 	<string name="clicked_getstarted">Clicked get started</string>
-	<string name="perms_basic_dialog" translatable="false">Permission - Phone and SMS: dialog shown</string>
-	<string name="perms_basic_requested" translatable="false">Permission - Phone and SMS: requested</string>
-	<string name="perms_phone_requested" translatable="false">Permission - Phone: requested</string>
-	<string name="perms_sms_requested" translatable="false">Permission - SMS: requested</string>
-	<string name="perms_basic_cancelled" translatable="false">Permission - Phone and SMS: dialog canceled</string>
-	<string name="perms_basic_granted" translatable="false">Permission - Phone and SMS: granted</string>
-	<string name="perms_phone_denied" translatable="false">Permission - Phone: denied</string>
-	<string name="perms_sms_granted" translatable="false">Permission - SMS: granted</string>
-	<string name="perms_sms_denied" translatable="false">Permission - SMS: denied</string>
-	<string name="perms_basic_denied" translatable="false">Permission - Phone and SMS: denied</string>
-	<string name="perms_overlay_dialog" translatable="false">Permission - Overlay: dialog shown</string>
-	<string name="perms_overlay_requested" translatable="false">Permission - Overlay: sent to settings</string>
-	<string name="perms_overlay_granted" translatable="false">Permission - Overlay: granted</string>
-	<string name="perms_overlay_notgranted" translatable="false">Permission - Overlay: returned to app without toggling</string>
-	<string name="perms_overlay_cancelled" translatable="false">Permission - Overlay: dialog canceled</string>
-	<string name="perms_accessibility_dialog" translatable="false">Permission - Accessibility: dialog shown</string>
-	<string name="perms_accessibility_requested" translatable="false">Permission - Accessibility: sent to settings</string>
-	<string name="perms_accessibility_granted" translatable="false">Permission - Accessibility: granted</string>
-	<string name="perms_accessibility_notgranted" translatable="false">Permission - Accessibility: returned to app without toggling</string>
-	<string name="perms_accessibility_cancelled" translatable="false">Permission - Accessibility: dialog canceled</string>
+	<string name="perms_basic_dialog" translatable="false">Permission_Phone and SMS_dialog shown</string>
+	<string name="perms_basic_requested" translatable="false">Permission_Phone and SMS_requested</string>
+	<string name="perms_phone_requested" translatable="false">Permission_Phone_requested</string>
+	<string name="perms_sms_requested" translatable="false">Permission_SMS_requested</string>
+	<string name="perms_basic_cancelled" translatable="false">Permission_Phone and SMS_dialog canceled</string>
+	<string name="perms_basic_granted" translatable="false">Permission_Phone and SMS_granted</string>
+	<string name="perms_phone_denied" translatable="false">Permission_Phone_denied</string>
+	<string name="perms_sms_granted" translatable="false">Permission_SMS_granted</string>
+	<string name="perms_sms_denied" translatable="false">Permission_SMS_denied</string>
+	<string name="perms_basic_denied" translatable="false">Permission_Phone and SMS_denied</string>
+	<string name="perms_overlay_dialog" translatable="false">Permission_Overlay_dialogshown</string>
+	<string name="perms_overlay_requested" translatable="false">Permission_Overlay_sent to settings</string>
+	<string name="perms_overlay_granted" translatable="false">Permission_Overlay_granted</string>
+	<string name="perms_overlay_notgranted" translatable="false">Permission_Overlay_returned to app without toggling</string>
+	<string name="perms_overlay_cancelled" translatable="false">Permission_Overlay_dialog canceled</string>
+	<string name="perms_accessibility_dialog" translatable="false">Permission_Accessibility_dialog shown</string>
+	<string name="perms_accessibility_requested" translatable="false">Permission_Accessibility_senttosettings</string>
+	<string name="perms_accessibility_granted" translatable="false">Permission_Accessibility_granted</string>
+	<string name="perms_accessibility_notgranted" translatable="false">Permission_Accessibility_returned to app without toggling</string>
+	<string name="perms_accessibility_cancelled" translatable="false">Permission_Accessibility_dialog canceled</string>
 
 	<string name="initializing_USSD_event_confirmed">Initializing USSD services</string>
-	<string name="displaying_in_app_banner">Displaying in-app banner: %1$d </string>
+	<string name="displaying_in_app_banner">Displaying in_app banner_ %1$d </string>
 	<string name="clicked_on_banner">Clicked on display banner</string>
 
 	<string name="selected_language" translatable="false">Selected language</string>
 	<string name="new_channel_selected" translatable="false">Added channel</string>
+	<string name="new_sim_channel" translatable="false">Added sim channel</string>
 	<string name="added_channel_id" translatable="false">channel_id</string>
 	<string name="link_encryptfail" translatable="false">Error creating encrypted Stax payment link</string>
 	<string name="sms_sent_success" translatable="false">Detected SMS sent</string>
@@ -47,24 +48,28 @@
 
 	<string name="start_load_screen" translatable="false">Visited load screen</string>
 	<string name="finish_load_screen" translatable="false">Complete load screen</string>
-	<string name="refresh_balance_single" translatable="false">Clicked refresh single balance</string>
-	<string name="refresh_balance_all" translatable="false">Clicked refresh all balances</string>
+	<string name="refresh_balance" translatable="false">Starting balance check</string>
+	<string name="refresh_balance_failed" translatable="false">Failed to start balance check, account was null</string>
 	<string name="visit_screen" translatable="false">Visited %1$s screen</string>
 	<string name="visit_onboarding" translatable="false">Onboarding</string>
 	<string name="visit_language" translatable="false">Language Choice</string>
 	<string name="visit_security" translatable="false">Security</string>
 	<string name="visit_change_pin" translatable="false">Change PIN</string>
+	<string name="visit_transaction_history">Transaction history</string>
 	<string name="visit_transaction" translatable="false">Transaction Detail</string>
 	<string name="visit_schedule" translatable="false">Schedule Detail</string>
 	<string name="visit_channel" translatable="false">Channel Detail</string>
 	<string name="visit_request_detail" translatable="false">Request Detail</string>
 	<string name="visit_new_request" translatable="false">New request</string>
 	<string name="visit_home" translatable="false">Home</string>
+	<string name="visit_sim">Sim cards</string>
 	<string name="visit_bounty_email" translatable="false">Bounty Email</string>
 	<string name="visit_bounty_list" translatable="false">Bounty List</string>
 	<string name="visit_balance_and_history" translatable="false">Balance and history</string>
 	<string name="visit_link_account" translatable="false">Link an account</string>
+	<string name="visit_link_simcard" translatable="false" >Link a sim card</string>
 	<string name="visit_paybill" translatable="false">Paybill</string>
+	<string name="visit_merchant" translatable="false">Pay merchant</string>
 	<string name="visit_paybill_list" translatable="false">Paybill List</string>
 
 	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>
@@ -152,8 +157,10 @@
 	<string name="visit_interactive" translatable="false">interactive onboarding</string>
 	<string name="clicked_skip_tutorial" translatable="false">Clicked skip tutorial</string>
 	<string name="visit_interactive_tutorial" translatable="false">interactive tutorial</string>
-	<string name="visit_non_interactive_tutorial" translatable="false">non-interactive tutorial</string>
+	<string name="visit_non_interactive_tutorial" translatable="false">noninteractive tutorial</string>
 	<string name="interacted_with_tutorial" translatable="false">Interacted with tutorial</string>
 	<string name="clicked_continue" translatable="false">Clicked continue button</string>
 
+	<string name="clicked_bonus_airtime_banner" translatable="false">Clicked bonus airtime banner</string>
+	<string name="force_update_status" translatable="false">Force update status is %1$s</string>
 </resources>

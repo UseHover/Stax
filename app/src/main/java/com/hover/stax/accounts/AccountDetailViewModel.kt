@@ -3,24 +3,28 @@ package com.hover.stax.accounts
 import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.actions.ActionRepo
-import com.hover.stax.balances.BalanceAdapter
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.domain.model.Account
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.transactions.TransactionHistoryItem
 import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
 
-class AccountDetailViewModel(val application: Application, val repo: AccountRepo, val transactionRepo: TransactionRepo, val channelRepo: ChannelRepo, val actionRepo: ActionRepo) : ViewModel() {
+class AccountDetailViewModel(val application: Application, val repo: AccountRepo, private val transactionRepo: TransactionRepo,
+                             private val channelRepo: ChannelRepo, val actionRepo: ActionRepo
+) : ViewModel() {
 
     private val id = MutableLiveData<Int>()
     var account: LiveData<Account> = MutableLiveData()
     var channel: LiveData<Channel> = MutableLiveData()
-    var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
-    var actions: LiveData<List<HoverAction>> = MutableLiveData()
+    private var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
+    var transactionHistoryItem : MediatorLiveData<List<TransactionHistoryItem>> = MediatorLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
     var feesThisYear: LiveData<Double> = MutableLiveData()
 
@@ -30,9 +34,9 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
         account = Transformations.switchMap(id, repo::getLiveAccount)
         channel = Transformations.switchMap(account) { it?.let { channelRepo.getLiveChannel(it.channelId) } }
         transactions = Transformations.switchMap(account) { it?.let { transactionRepo.getAccountTransactions(it) } }
-        actions = Transformations.switchMap(id, actionRepo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
+        transactionHistoryItem.addSource(transactions, this::getTransactionHistory)
     }
 
     fun setAccount(accountId: Int) = id.postValue(accountId)
@@ -42,38 +46,43 @@ class AccountDetailViewModel(val application: Application, val repo: AccountRepo
 
     private fun loadFeesThisYear(id: Int): LiveData<Double>? = transactionRepo.getFees(id, calendar.get(Calendar.YEAR))
 
-    fun updateAccountName(newName: String) = viewModelScope.launch {
+    fun updateAccountName(newName: String) = viewModelScope.launch(Dispatchers.IO) {
         val a = account.value!!
-        a.alias = newName
+        a.userAlias = newName
         repo.update(a)
     }
 
-    fun updateAccountNumber(newNumber: String) = viewModelScope.launch {
+    fun updateAccountNumber(newNumber: String) = viewModelScope.launch(Dispatchers.IO) {
         val a = account.value!!
         a.accountNo = newNumber
         repo.update(a)
     }
 
-    fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
-        val changeDefault = account.isDefault
-        val accounts = repo.getAllAccounts()
-
-        if (repo.getAccountsByChannel(account.channelId).size == 1) {
-            val channel = channelRepo.getChannel(account.channelId)!!
-            channel.selected = false
-            channelRepo.update(channel)
+    private fun getTransactionHistory(transactions: List<StaxTransaction>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val history = transactions.asSequence().map {
+                val action = actionRepo.getAction(it.action_id)
+                var institutionName = ""
+                action?.let {
+                    institutionName = action.from_institution_name
+                }
+                TransactionHistoryItem(it, action, institutionName)
+            }.toList()
+            transactionHistoryItem.postValue(history)
         }
+    }
 
+    fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         repo.delete(account)
+        transactionRepo.deleteAccountTransactions(account.id)
 
-        if (!accounts.isNullOrEmpty() && changeDefault)
+        val accounts = repo.getAllAccounts()
+        val changeDefault = account.isDefault
+
+        if (accounts.isNotEmpty() && changeDefault)
             accounts.firstOrNull()?.let {
                 it.isDefault = true
                 repo.update(it)
-
-                val channel = channelRepo.getChannel(it.channelId)!!
-                channel.selected = true
-                channelRepo.update(channel)
             }
     }
 }

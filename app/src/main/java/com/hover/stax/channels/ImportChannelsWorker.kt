@@ -7,9 +7,9 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import androidx.work.impl.utils.futures.SettableFuture
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.data.local.channels.ChannelDao
 import com.hover.stax.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,47 +20,37 @@ import org.koin.core.component.inject
 import timber.log.Timber
 import java.io.IOException
 
-class ImportChannelsWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params), KoinComponent {
+class ImportChannelsWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
-    private var channelDao: ChannelDao? = null
-
-    private val db: AppDatabase by inject()
-
-    init {
-        channelDao = db.channelDao()
-    }
+    private val channelDao = AppDatabase.getInstance(context).channelDao()
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(NOTIFICATION_ID, createNotification())
     }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        if (channelDao!!.channels.isEmpty()) {
+        Timber.i("Attempting to import channels from json file")
+        if (channelDao.allDataCount == 0 || channelDao.publishedTelecomDataCount == 0) {
             initNotification()
 
             parseChannelJson()?.let {
                 val channelsJson = JSONObject(it)
                 val data: JSONArray = channelsJson.getJSONArray("data")
-                ChannelUtil.updateChannels(data, applicationContext)
+                Channel.load(data, channelDao, applicationContext)
 
                 Timber.i("Channels imported successfully")
                 Result.success()
             } ?: Timber.e("Error importing channels"); Result.retry()
         } else {
+            Timber.i("DB is either on par or has more updates compared to json file")
             Result.failure()
         }
     }
 
     private fun parseChannelJson(): String? {
         var channelsString: String? = null
-
-        val fileToUse = if (BuildConfig.DEBUG)
-            applicationContext.getString(R.string.channels_json_staging)
-        else
-            applicationContext.getString(R.string.channels_json_prod)
-
         try {
-            val inputStream = applicationContext.assets.open(fileToUse)
+            val inputStream = applicationContext.assets.open("channels.json")
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)
@@ -89,9 +79,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
         setForeground(getForegroundInfo())
     } catch (e: IllegalArgumentException) {
         Timber.e(e)
-    } /*catch (f: ForegroundServiceStartNotAllowedException) {
-        Timber.e(f)
-    }*/
+    }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

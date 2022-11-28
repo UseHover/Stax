@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
@@ -65,9 +66,6 @@
                 android:exported="false"
                 android:launchMode="singleTask"
                 android:theme="@style/StaxTheme" />
-        <activity
-                android:name=".destruct.SelfDestructActivity"
-                android:exported="false" />
         <activity
                 android:name=".onboarding.OnBoardingActivity"
                 android:exported="false"

@@ -40,6 +40,10 @@
 
         <item>sw</item>
 
+        <item>so</item>
+
+        <item>om</item>
+
     </string-array>
 
     <string name="btn_ok">D\'accord</string>
@@ -518,8 +522,6 @@
 
     <string name="language_cardhead">Langue</string>
 
-    <string name="app_version_and_device_id">Version de l\'application: %1$s Code de version:%2$s ID de l\'appareil: %3$s</string>
-
     <string name="disclaimer">Tous les noms de produits, marques et marques déposées appartiennent à leurs propriétaires respectifs. L\'utilisation n\'implique pas d\'affiliation.</string>
 
     <string name="twitter" translatable="false">Twitter</string>
@@ -696,7 +698,7 @@
 
     <string name="filtering_in_progress">Filtrage, veuillez patienter…</string>
 
-    <string name="country_placeholder">Pays</string>
+    <string name="country">Pays</string>
 
     <string name="country_error_nodata">Veuillez activer les données pour charger les services et les pays.</string>
 

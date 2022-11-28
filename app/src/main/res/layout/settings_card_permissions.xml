@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/app_permissions">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorSurface">
+
+        <TextView
+                android:id="@+id/permission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_21"
+                android:background="?attr/selectableItemBackground"
+                android:text="@string/manage_permissions_title"
+                android:textSize="@dimen/text_16" />
+    </FrameLayout>
+
+</com.hover.stax.views.StaxCardView>

@@ -3,20 +3,23 @@ package com.hover.stax.hover
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-
-import com.hover.stax.accounts.ACCOUNT_ID
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
-import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountRepo
-import com.hover.stax.accounts.PLACEHOLDER
-import com.hover.stax.actions.ActionRepo
+import com.hover.stax.domain.model.ACCOUNT_ID
+import com.hover.stax.domain.model.Account
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelRepo
+import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.merchants.MerchantRepo
+import com.hover.stax.paybill.BUSINESS_NAME
+import com.hover.stax.paybill.BUSINESS_NO
+import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.transactions.TransactionRepo
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +36,8 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private val channelRepo: ChannelRepo by inject()
     private val accountRepo: AccountRepo by inject()
     private val contactRepo: ContactRepo by inject()
+    private val billRepo: PaybillRepo by inject()
+    private val merchantRepo: MerchantRepo by inject()
     private val requestRepo: RequestRepo by inject()
 
     private var channel: Channel? = null
@@ -41,25 +46,30 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private var contact: StaxContact? = null
 
     override fun onReceive(context: Context, intent: Intent?) {
-        intent?.let {
+        if (intent != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
 
-                actionId?.let {
-                    action = actionRepo.getAction(it)
+                if (actionId != null) {
+                    action = actionRepo.getAction(actionId)
 
                     //added null check to prevent npe whenever action is null
                     action?.let { a ->
                         channel = channelRepo.getChannel(a.channel_id)
 
-                        createAccounts(intent)
-                        updateBalance(intent)
                         updateContacts(intent)
                         updateTransaction(intent, context.applicationContext)
+                        updateBalance(intent)
+                        updateAccounts(intent)
+                        updateBusinesses(intent)
                         updateRequests(intent)
                     }
+                } else {
+                    AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no action ID", context)
                 }
             }
+        } else {
+            AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no intent", context)
         }
     }
 
@@ -94,6 +104,36 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         }
     }
 
+    private fun updateBusinesses(intent: Intent) {
+        if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.BILL && getBizNo(intent) != null) {
+            val bill = billRepo.getMatching(getBizNo(intent)!!, channel!!.id)
+            if (bill != null && bill.businessName.isNullOrEmpty() && getBizName(intent) != null) {
+                bill.businessName = getBizName(intent)
+                billRepo.save(bill)
+            }
+        } else if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.MERCHANT && getBizNo(intent) != null) {
+            val merchant = merchantRepo.getMatching(getBizNo(intent)!!, channel!!.id)
+            if (merchant != null && merchant.businessName.isNullOrEmpty() && getBizName(intent) != null) {
+                merchant.businessName = getBizName(intent)
+                merchantRepo.save(merchant)
+            }
+        }
+    }
+
+    private fun getBizNo(intent: Intent): String? {
+        val inExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as java.util.HashMap<String, String>?
+        return if (inExtras != null && inExtras.containsKey(BUSINESS_NO))
+            inExtras[BUSINESS_NO]
+        else null
+    }
+
+    private fun getBizName(intent: Intent): String? {
+        val outExtras = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as java.util.HashMap<String, String>?
+        return if (outExtras != null && outExtras.containsKey(BUSINESS_NAME))
+            outExtras[BUSINESS_NAME]?.replace(".", "") // MPESA adds a gramatically incorrect period which isn't easily fixable with a regex
+        else null
+    }
+
     private fun updateTransaction(intent: Intent, c: Context) {
         repo.insertOrUpdateTransaction(intent, action!!, contact!!, c)
     }
@@ -101,10 +141,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private fun updateRequests(intent: Intent) {
         if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.RECEIVE) {
             requestRepo.requests.forEach {
-                if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(
-                        it.amount
-                            ?: "00"
-                    ) == Utils.getAmount(getAmount(intent)!!)
+                if (it.requestee_ids.contains(contact!!.id) && Utils.amountToDouble(it.amount) == Utils.amountToDouble(getAmount(intent)!!)
                 ) {
                     it.matched_transaction_uuid = intent.getStringExtra(TransactionContract.COLUMN_UUID)
                     requestRepo.update(it)
@@ -125,43 +162,38 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         extras[HoverAction.AMOUNT_KEY]
     else null
 
-    private fun createAccounts(intent: Intent) {
+    private fun updateAccounts(intent: Intent) {
         if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
             if (parsedVariables.containsKey("userAccountList")) {
-                val accounts = accountRepo.getAllAccounts().toMutableList()
-                val parsedAccounts = parseAccounts(parsedVariables["userAccountList"]!!)
-
-                removePlaceholders(parsedAccounts, accounts.map { it.channelId }.toIntArray())
-
-                accountRepo.saveAccounts(parseAccounts(parsedVariables["userAccountList"]!!))
+                parseAccounts(parsedVariables["userAccountList"]!!)
             }
         }
     }
 
-    private fun parseAccounts(accountList: String): List<Account> {
-        val pattern = Pattern.compile("^[\\d]{1,2}[>):.\\s]+(.+)\$", Pattern.MULTILINE)
-        val matcher = pattern.matcher(accountList)
+    private fun parseAccounts(ussdAccountList: String) {
+        val pattern = Pattern.compile("^([\\d]{1,2})[>):.\\s]+(.+)\$", Pattern.MULTILINE)
+        val matcher = pattern.matcher(ussdAccountList)
 
-        val accounts = ArrayList<Account>()
         while (matcher.find()) {
-            val newAccount = Account(matcher.group(1)!!, channel!!)
-            accounts.add(newAccount)
-        }
+            try {
+                val accounts = accountRepo.getAccountsByChannel(channel!!.id)
+                if (accounts.any { it.institutionAccountName == matcher.group(2)!! }) { break }
 
-        if (accountRepo.getDefaultAccount() == null && accounts.isNotEmpty())
-            accounts.first().isDefault = true
+                val a = if (account != null && account!!.institutionAccountName == null) {
+                    account!!
+                } else if (accounts.any { it.institutionAccountName == null }) {
+                    accounts.first { it.institutionAccountName == null }
+                } else {
+                    Account(matcher.group(2)!!, channel!!, false, account?.simSubscriptionId ?: -1)
+                }
 
-        return accounts
-    }
+                a.institutionAccountName = matcher.group(2)!!
+                if (a.institutionName == a.userAlias) a.userAlias = matcher.group(2)!!
 
-    private fun removePlaceholders(parsedAccounts: List<Account>, savedAccounts: IntArray) {
-        parsedAccounts.forEach {
-            if (savedAccounts.contains(it.channelId)) {
-                Timber.e("Removing ${it.channelId} from ${it.name}")
-                accountRepo.deleteAccount(it.channelId, PLACEHOLDER)
-            }
+                accountRepo.saveAccount(a)
+            } catch (e: Exception) { AnalyticsUtil.logErrorAndReportToFirebase(TransactionReceiver::class.java.simpleName, "Failed to parse account list from USSD", e)}
         }
     }
 }

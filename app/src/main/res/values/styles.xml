@@ -21,14 +21,14 @@
         <item name="fontFamily">@font/brutalista_medium</item>
         <item name="android:fontFamily">@font/brutalista_medium</item>
         <item name="android:background">@drawable/button_bg</item>
-        <item name="android:elevation" tools:targetApi="lollipop">1dp</item>
-        <item name="elevation">1dp</item>
+<!--        <item name="android:elevation">1dp</item>-->
+<!--        <item name="elevation">1dp</item>-->
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="StaxOutlineButton" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:radius">5dp</item>
+    <style name="StaxOutlineButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="shapeAppearance">@style/ShapeAppearance.Stax.MediumComponent</item>
         <item name="strokeColor">@color/grey</item>
         <item name="android:textColor">@color/offWhite</item>
         <item name="android:textAllCaps">false</item>
@@ -37,10 +37,15 @@
         <item name="android:fontFamily">@font/brutalista_medium</item>
     </style>
 
+    <style name="ShapeAppearance.Stax.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
     <style name="StaxButtonColored" parent="StaxButton">
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:background">@drawable/button_bg_colored</item>
-        <item name="elevation">1dp</item>
+<!--        <item name="elevation">1dp</item>-->
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
     </style>
@@ -50,7 +55,7 @@
         <item name="android:radius">5dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="backgroundTint">@color/brightBlue</item>
-        <item name="elevation">1dp</item>
+<!--        <item name="elevation">1dp</item>-->
         <item name="android:textSize">@dimen/text_16</item>
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>

@@ -40,6 +40,10 @@
 
         <item>sw</item>
 
+        <item>so</item>
+
+        <item>om</item>
+
     </string-array>
 
     <string name="btn_ok">SAWA</string>
@@ -518,8 +522,6 @@
 
     <string name="language_cardhead">Lugha</string>
 
-    <string name="app_version_and_device_id">Toleo la programu: %1$s&#13;\nNambari ya toleo:%2$s&#13;\nKitambulisho cha Kifaa: %3$s</string>
-
     <string name="disclaimer">Majina yote ya bidhaa, chapa, na alama za biashara ni mali ya wamiliki wao. Matumizi haimaanishi ushirika.</string>
 
     <string name="twitter" translatable="false">Twitter</string>
@@ -696,7 +698,7 @@
 
     <string name="filtering_in_progress">Inachuja, tafadhali subiri…</string>
 
-    <string name="country_placeholder">Nchi</string>
+    <string name="country">Nchi</string>
 
     <string name="country_error_nodata">Tafadhali washa data ili kupakia huduma na nchi.</string>
 

@@ -30,6 +30,7 @@ internal class InteractiveOnboardingVariant : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_interactive)), requireActivity())
 
         setQuestionsClick()
@@ -43,6 +44,7 @@ internal class InteractiveOnboardingVariant : Fragment() {
             logQuestionClicked(1)
             NavUtil.navigate(findNavController(), InteractiveOnboardingVariantDirections.actionInteractiveOnboardingFragmentToInteractiveTutorialFragment())
         }
+
         binding.onboardingVariant2Question2.setOnClickListener {
             logQuestionClicked(2)
             NavUtil.navigate(

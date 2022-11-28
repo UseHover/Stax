@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.AccountsViewModel
@@ -17,7 +16,6 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillActionsAdapter.PaybillActionsClickListener {
 
@@ -28,27 +26,25 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private val paybillViewModel: PaybillViewModel by sharedViewModel()
 
-//    private val args: PaybillListFragmentArgs by navArgs()
-
     private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPaybillListBinding.inflate(inflater, container, false)
-//        accountsViewModel.setActiveAccount(args.accountId)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill_list)), requireActivity())
         updatePaybills(paybillViewModel.savedPaybills.value)
-        updateActions(accountsViewModel.channelActions.value)
+        updateActions(accountsViewModel.institutionActions.value)
         startListeners()
         startObservers()
     }
 
     private fun startListeners() {
-        binding.contentLayout.setOnClickIcon { NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment(false)) }
+        binding.contentLayout.setOnClickIcon { NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment()) }
 
         binding.newPaybill.newPaybillCard.setOnClickListener {
             PaybillNumberDialog().show(childFragmentManager, PaybillNumberDialog::class.java.simpleName)
@@ -57,7 +53,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
 
     private fun startObservers() {
         paybillViewModel.savedPaybills.observe(viewLifecycleOwner) { updatePaybills(it) }
-        accountsViewModel.channelActions.observe(viewLifecycleOwner) { updateActions(it) }
+        accountsViewModel.institutionActions.observe(viewLifecycleOwner) { updateActions(it) }
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
             it?.let { paybillViewModel.selectPaybill(it) }
@@ -112,21 +108,19 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
             .setPosButton(R.string.btn_delete) {
                 if (activity != null) {
                     paybillViewModel.deletePaybill(paybill)
-                    UIHelper.flashMessage(requireActivity(), R.string.paybill_delete_success)
+                    UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_delete_success)
                 }
             }
         dialog!!.showIt()
     }
 
     override fun onSelectPaybill(paybill: Paybill) {
-        Timber.e("Select by bill: %s", paybill.name)
         paybillViewModel.selectPaybill(paybill)
         actionSelectViewModel.setActiveAction(paybill.actionId)
         findNavController().popBackStack()
     }
 
     override fun onSelectPaybill(action: HoverAction) {
-        Timber.e("Select by action: %s", action.public_id)
         paybillViewModel.selectPaybill(action)
         actionSelectViewModel.setActiveAction(action)
         requireActivity().supportFragmentManager.popBackStack();

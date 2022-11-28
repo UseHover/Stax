@@ -13,7 +13,7 @@
         android:padding="@dimen/margin_13">
 
         <LinearLayout
-            android:id="@+id/header"
+            android:id="@+id/transaction_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_21"
@@ -29,15 +29,16 @@
                 android:textAlignment="viewEnd"
                 android:textAllCaps="true"
                 android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_13" />
+                android:textSize="@dimen/text_16" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_13"
-            android:textSize="@dimen/text_16"
+            android:layout_marginBottom="@dimen/margin_26"
+            android:textSize="@dimen/text_21"
+            android:textStyle="bold"
             android:visibility="gone"
             tools:ignore="RtlSymmetry" />
 
@@ -50,19 +51,8 @@
                 android:id="@+id/progress_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_13"
+                android:layout_marginBottom="@dimen/margin_8"
                 android:text="@string/perm_progress1" />
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_16"
-                    android:id="@+id/perm_message"
-                    android:layout_marginBottom="@dimen/margin_13"
-                    android:drawablePadding="@dimen/margin_13"
-                    android:textColor="@color/offWhite"
-                    android:text="@string/permissions_overlay_desc"
-                    app:drawableStartCompat="@drawable/ic_check" />
 
             <ProgressBar
                 android:id="@+id/progress_indicator"
@@ -71,7 +61,26 @@
                 android:layout_height="5dp"
                 android:layout_marginBottom="@dimen/margin_21"
                 android:max="100"
-                android:progress="13" />
+                android:progress="30" />
+
+            <TextView
+                android:id="@+id/path_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_34"
+                android:textStyle="bold"
+                android:textColor="@color/offWhite"
+                android:text="@string/permissions_overlay_path" />
+
+            <TextView android:id="@+id/perm_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_16"
+                android:layout_marginBottom="@dimen/margin_34"
+                android:drawablePadding="@dimen/margin_13"
+                android:textColor="@color/offWhite"
+                android:text="@string/permissions_overlay_desc"
+                app:drawableStartCompat="@drawable/ic_overlay" />
 
             <include
                 android:id="@+id/overlay_example"

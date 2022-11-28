@@ -1,48 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.hover.stax.views.StaxCardView
-                android:id="@+id/countryCard"
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/filter_by_country">
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/margin_5">
+
+            <com.hover.stax.views.StaxCardView
+                    android:id="@+id/countryCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
             <com.hover.stax.countries.CountryDropdown
                     android:id="@+id/country_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
+                    android:editable="false"
                     android:hint="@string/select_country" />
 
             <com.hover.stax.views.StaxTextInput
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search"
-                android:inputType="textFilter"
-                android:imeOptions="actionDone"
-                android:id="@+id/searchInput"/>
-        </com.hover.stax.views.StaxCardView>
-
-        <include layout="@layout/no_account_empty_state" android:id="@+id/emptyState"/>
-
-        <com.hover.stax.views.StaxCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-            android:id="@+id/shortcodesParent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/shortcodes"
+                    android:id="@+id/searchInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-        </com.hover.stax.views.StaxCardView>
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search"
+                    android:imeOptions="actionDone"
+                    android:inputType="textFilter" />
+            </com.hover.stax.views.StaxCardView>
 
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+            <include
+                    android:id="@+id/emptyState"
+                    layout="@layout/no_account_empty_state" />
+
+            <com.hover.stax.views.StaxCardView
+                    android:id="@+id/shortcodesParent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/shortcodes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+            </com.hover.stax.views.StaxCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

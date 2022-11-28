@@ -1,152 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginHorizontal="@dimen/margin_13">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_13">
 
     <TableRow android:layout_marginTop="@dimen/margin_18">
 
         <TextView
-            android:text="@string/date_label"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+                android:text="@string/date_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
 
         <TextView
-            android:id="@+id/details_date"
-            android:layout_weight="1"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+                android:id="@+id/details_date"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
     </TableRow>
 
 
     <TableRow android:layout_marginTop="@dimen/margin_18">
 
         <com.hover.stax.views.StaxInfoTextView
-            android:text="@string/status_label"
-            app:infoTitle="@string/transaction_status_info_title"
-            app:infoContent="@string/transaction_status_info_content"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+                android:text="@string/status_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16"
+                app:infoContent="@string/transaction_status_info_content"
+                app:infoTitle="@string/transaction_status_info_title" />
 
         <TextView
-            android:id="@+id/details_stax_status"
-            android:layout_weight="1"
-            android:drawablePadding="@dimen/margin_3"
-            android:layout_width="wrap_content"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
-    </TableRow>
-
-    <TableRow android:id="@+id/reasonRow" android:layout_marginTop="@dimen/margin_18">
-
-        <TextView
-            android:text="@string/reason_label"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
-
-        <TextView
-            android:id="@+id/details_stax_reason"
-            android:layout_weight="1"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
-    </TableRow>
-
-
-    <TableRow android:layout_marginTop="@dimen/margin_18">
-
-        <TextView
-            android:text="@string/paid_with_label"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
-
-        <TextView
-            android:id="@+id/details_stax_account"
-            android:layout_weight="1"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
-    </TableRow>
-
-    <TableRow android:layout_marginTop="@dimen/margin_18"
-        android:layout_marginBottom="@dimen/margin_34">
-
-        <TextView
-            android:text="@string/type_label"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
-
-        <TextView
-            android:id="@+id/details_stax_type"
-            android:layout_weight="1"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+                android:id="@+id/status_value"
+                android:layout_weight="1"
+                android:drawablePadding="@dimen/margin_3"
+                android:gravity="center_vertical|end"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
     </TableRow>
 
     <TableRow
-            android:id="@+id/recipInstitutionRow"
+            android:id="@+id/categoryRow"
             android:layout_marginTop="@dimen/margin_18">
 
         <TextView
-                android:text="@string/institution_label"
+                android:text="@string/category_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+        <TextView
+                android:id="@+id/categoryValue"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+    </TableRow>
+
+
+    <TableRow android:layout_marginTop="@dimen/margin_18" android:id="@+id/paid_with_row">
+
+        <TextView
+                android:text="@string/paid_with_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+        <TextView
+                android:id="@+id/paid_with_value"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+    </TableRow>
+
+    <TableRow
+            android:layout_marginTop="@dimen/margin_18"
+            android:layout_marginBottom="@dimen/margin_34">
+
+        <TextView
+                android:text="@string/type_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+        <TextView
+                android:id="@+id/type_value"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+    </TableRow>
+
+    <TableRow
+            android:id="@+id/recipientRow"
+            android:layout_marginTop="@dimen/margin_18">
+
+        <TextView
+                android:id="@+id/recipient_label"
+                android:text="@string/recipient_label"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
 
         <com.hover.stax.views.Stax2LineItem
-            android:id="@+id/details_institution"
+                android:id="@+id/recipient_value"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/recipInstitutionRow"
+        android:layout_marginTop="@dimen/margin_18">
+
+        <TextView
+            android:text="@string/institution_label"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
+
+        <com.hover.stax.views.Stax2LineItem
+            android:id="@+id/institutionValue"
             android:layout_weight="1"
             android:textAlignment="viewEnd" />
     </TableRow>
 
     <TableRow
-        android:id="@+id/recipientRow"
-        android:layout_marginTop="@dimen/margin_18">
+            android:id="@+id/amountRow"
+            android:layout_marginTop="@dimen/margin_18">
 
         <TextView
-            android:id="@+id/details_recipient_label"
-            android:text="@string/recipient_label"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+                android:text="@string/transfer_amount_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
 
-        <com.hover.stax.views.Stax2LineItem
-            android:id="@+id/details_recipient"
-            android:layout_weight="1"
-            android:textAlignment="viewEnd" />
-
+        <TextView
+                android:id="@+id/amount_value"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
     </TableRow>
 
-    <TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_18">
-        <TextView
-            android:text="@string/transfer_amount_label"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+    <TableRow
+            android:id="@+id/bonusRow"
+            android:layout_marginTop="@dimen/margin_18"
+            android:visibility="gone">
 
         <TextView
-            android:id="@+id/details_amount"
-            android:layout_weight="1"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+                android:text="@string/bonus_amount_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+        <TextView
+                android:id="@+id/bonusAmount"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
     </TableRow>
 
-    <TableRow android:id="@+id/feeRow" android:layout_marginTop="@dimen/margin_18">
-        <TextView
-            android:text="@string/transaction_fee"
-            android:textColor="@color/offWhite"
-            android:id="@+id/details_fee_label"
-            android:textSize="@dimen/text_16" />
+    <TableRow
+            android:id="@+id/feeRow"
+            android:layout_marginTop="@dimen/margin_18">
 
         <TextView
-            android:id="@+id/details_fee"
-            android:layout_weight="1"
-            android:textAlignment="viewEnd"
-            android:text=" - "
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+                android:id="@+id/fee_label"
+                android:maxWidth="@dimen/margin_176"
+                android:text="@string/transaction_fee"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+        <TextView
+                android:id="@+id/fee_value"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+    </TableRow>
+
+    <TableRow
+            android:id="@+id/balanceRow"
+            android:layout_marginTop="@dimen/margin_18">
+
+        <TextView
+                android:text="@string/new_balance_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+        <TextView
+                android:id="@+id/new_balance_value"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
     </TableRow>
 
     <TableRow
@@ -158,11 +202,12 @@
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
 
-        <include android:id="@+id/confirmCodeCopy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            layout="@layout/stax_copiable_text_layout"/>
+        <include
+                android:id="@+id/confirmCodeCopy"
+                layout="@layout/stax_copiable_text_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
     </TableRow>
 
     <TableRow android:layout_marginTop="@dimen/margin_18">
@@ -173,13 +218,11 @@
                 android:textSize="@dimen/text_16" />
 
         <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="end"
-            android:gravity="end"
-            layout="@layout/stax_copiable_text_layout"
-            android:id="@+id/details_stax_uuid"/>
+                android:id="@+id/details_stax_uuid"
+                layout="@layout/stax_copiable_text_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
     </TableRow>
 
