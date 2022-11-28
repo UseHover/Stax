@@ -14,6 +14,7 @@ import androidx.room.Update
  */
 interface BaseDao<T> {
 
+    // TODO - Make me suspendable
     @Insert(onConflict = REPLACE)
     fun insert(item: T)
 
