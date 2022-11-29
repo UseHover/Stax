@@ -114,8 +114,6 @@ android {
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "../hover.sdk", "include" to listOf("*.jar", "*.aar"))))
-
     // Google
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)
