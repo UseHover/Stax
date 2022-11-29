@@ -61,15 +61,6 @@ room-test = { module = "androidx.room:room-testing", version.ref = "room" }
 
 auth = "com.google.android.gms:play-services-auth:20.2.0"
 
-#okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
-#okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp3" }
-#retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-#retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
-#gson = "com.google.code.gson:gson:2.9.1"
-#grpc = "io.grpc:grpc-okhttp:1.48.1"
-#chucker = "com.github.chuckerteam.chucker:library:3.5.2"
-#chucker-release = "com.github.chuckerteam.chucker:library-no-op:3.5.2"
-
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
