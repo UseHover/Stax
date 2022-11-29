@@ -1,3 +1,7 @@
+import java.io.FileInputStream
+import java.nio.file.Paths
+import java.util.*
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -57,12 +61,22 @@ android {
         }
     }
 
+    val userHome = Paths.get(System.getProperty("user.home"))
+    val keystorePath = userHome.resolve(".stax/keystore.properties")
+    val keystorePropertiesFile = file(keystorePath)
+    val keystoreProperties = Properties()
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    }
+
     signingConfigs {
-        register("releaseConfig") {
-            keyAlias = providers.gradleProperty("keyAlias").orNull
-            keyPassword = providers.gradleProperty("keyPassword").orNull
-            storeFile = providers.gradleProperty("storeFile").orNull?.let { file(it) }
-            storePassword = providers.gradleProperty("storePassword").orNull
+        if (keystoreProperties.isNotEmpty()) {
+            create("releaseConfig") {
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storePassword = keystoreProperties.getProperty("storePassword")
+            }
         }
     }
 
@@ -80,7 +94,9 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("releaseConfig")
+            if (keystoreProperties.isNotEmpty()) {
+                signingConfig = signingConfigs.getByName("releaseConfig")
+            }
         }
     }
 
