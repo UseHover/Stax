@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.hover.stax.accounts.ChannelWithAccounts
 import com.hover.stax.channels.Channel
+import com.hover.stax.data.local.BaseDao
 
 @Dao
-interface ChannelDao {
+interface ChannelDao: BaseDao<Channel> {
 
     @get:Query("SELECT * FROM channels WHERE published = 1 AND institution_type != 'telecom' ORDER BY isFavorite DESC, name ASC")
     val publishedNonTelecomChannels: LiveData<List<Channel>>
@@ -52,12 +53,6 @@ interface ChannelDao {
 
     @Update
     fun update(channel: Channel)
-
-    @Update
-    fun updateAll(channel: List<Channel>)
-
-    @Delete
-    fun delete(channel: Channel)
 
     @Query("DELETE FROM channels")
     fun deleteAll()

@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
 class TransactionRepo(db: AppDatabase) {
+
     private val transactionDao: TransactionDao = db.transactionDao()
 
     val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction>>?
@@ -73,7 +74,7 @@ class TransactionRepo(db: AppDatabase) {
                 } else {
                     AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
                     t.update(intent, contact)
-                    transactionDao.update(t)
+                    transactionDao.updateTransaction(t)
                 }
                 Timber.e("save t with uuid: %s", t?.uuid)
             } catch (e: Exception) {

@@ -2,11 +2,12 @@ package com.hover.stax.transactions
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.hover.stax.data.local.BaseDao
 import kotlinx.coroutines.flow.Flow
 import com.hover.sdk.transactions.Transaction as Txn
 
 @Dao
-interface TransactionDao {
+interface TransactionDao : BaseDao<StaxTransaction> {
 
     @Query("SELECT * FROM stax_transactions WHERE channel_id = :channelId AND transaction_type != 'balance' AND status != 'failed' AND environment != 3 ORDER BY initiated_at DESC")
     fun getCompleteAndPendingTransfers(channelId: Int): LiveData<List<StaxTransaction>>?
@@ -48,11 +49,9 @@ interface TransactionDao {
     @Query("SELECT COUNT(id) FROM stax_transactions WHERE strftime('%m', initiated_at/1000, 'unixepoch') = :month AND strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND environment != 3")
     suspend fun getTransactionCount(month: String, year: String): Int?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(transaction: StaxTransaction?)
-
+    // Need to rework the implementation on TransactionRepo
     @Update
-    fun update(transaction: StaxTransaction?)
+    fun updateTransaction(transaction: StaxTransaction?)
 
     @Query("DELETE FROM stax_transactions WHERE account_id = :accountId")
     fun deleteAccountTransactions(accountId: Int)

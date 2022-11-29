@@ -6,6 +6,7 @@ import com.hover.stax.database.AppDatabase
 import com.hover.stax.utils.AnalyticsUtil
 
 class ContactRepo(db: AppDatabase) {
+
     private val contactDao: ContactDao = db.contactDao()
 
     val allContacts: LiveData<List<StaxContact>>
@@ -43,7 +44,7 @@ class ContactRepo(db: AppDatabase) {
                 } catch (e: Exception) {
                     AnalyticsUtil.logErrorAndReportToFirebase("ContactRepo", "failed to insert contact", e)
                 }
-            } else contactDao.update(contact)
+            } else contactDao.updateStaxContact(contact)
         }
     }
 }

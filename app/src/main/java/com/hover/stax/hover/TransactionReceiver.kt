@@ -73,7 +73,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         }
     }
 
-    private fun updateBalance(intent: Intent) {
+    private suspend fun updateBalance(intent: Intent) {
         if (intent.hasExtra(TransactionContract.COLUMN_INPUT_EXTRAS)) {
             val inputExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as HashMap<String, String>
 
@@ -162,7 +162,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         extras[HoverAction.AMOUNT_KEY]
     else null
 
-    private fun updateAccounts(intent: Intent) {
+    private suspend fun updateAccounts(intent: Intent) {
         if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
@@ -172,7 +172,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         }
     }
 
-    private fun parseAccounts(ussdAccountList: String) {
+    private suspend fun parseAccounts(ussdAccountList: String) {
         val pattern = Pattern.compile("^([\\d]{1,2})[>):.\\s]+(.+)\$", Pattern.MULTILINE)
         val matcher = pattern.matcher(ussdAccountList)
 
