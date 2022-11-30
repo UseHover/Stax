@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.home
 
 import android.view.View
@@ -41,7 +56,7 @@ class NavHelper(val activity: AppCompatActivity) {
         navController?.let {
             NavigationUI.setupWithNavController(nav, navController!!)
             appBarConfiguration = AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_sim,  R.id.navigation_history, R.id.libraryFragment
+                R.id.navigation_home, R.id.navigation_sim, R.id.navigation_history, R.id.libraryFragment
             ).build()
         }
 
@@ -53,7 +68,12 @@ class NavHelper(val activity: AppCompatActivity) {
         NavUtil.navigate(it, MainNavigationDirections.actionGlobalWellnessFragment().apply { setTipId(tipId) })
     }
 
-    fun navigateTransfer(type: String, accountId: String? = null, amount: String? = null, contactId: String? = null) {
+    fun navigateTransfer(
+        type: String,
+        accountId: String? = null,
+        amount: String? = null,
+        contactId: String? = null
+    ) {
         val transferDirection = MainNavigationDirections.actionGlobalTransferFragment(type)
         accountId?.let { transferDirection.accountId = it }
         amount?.let { transferDirection.amount = it }
@@ -110,9 +130,8 @@ class NavHelper(val activity: AppCompatActivity) {
         NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
         NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
         NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment()
-        else -> null //invalid or unmapped route, return nothing
+        else -> null // invalid or unmapped route, return nothing
     }
-
 
     fun requestBasicPerms() {
         PermissionUtils.showInformativeBasicPermissionDialog(

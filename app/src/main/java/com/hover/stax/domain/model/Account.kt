@@ -1,60 +1,77 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.domain.model
 
 import androidx.annotation.NonNull
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.hover.stax.channels.Channel
-import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
-import kotlin.random.Random
 
 const val ACCOUNT_NAME: String = "accountName"
 const val ACCOUNT_ID: String = "account_id"
 
 @Entity(
-        tableName = "accounts",
-        foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])],
-        indices = [Index(value = ["name", "sim_subscription_id"], unique = true)]
+    tableName = "accounts",
+    foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])],
+    indices = [Index(value = ["name", "sim_subscription_id"], unique = true)]
 )
 data class Account(
-        @ColumnInfo(name = "name")
-        val institutionName: String,
+    @ColumnInfo(name = "name")
+    val institutionName: String,
 
-        @ColumnInfo(name = "alias")
-        var userAlias: String,
+    @ColumnInfo(name = "alias")
+    var userAlias: String,
 
-        @ColumnInfo(name = "logo_url")
-        val logoUrl: String,
+    @ColumnInfo(name = "logo_url")
+    val logoUrl: String,
 
-        @ColumnInfo(name = "account_no")
-        var accountNo: String?,
+    @ColumnInfo(name = "account_no")
+    var accountNo: String?,
 
-        @ColumnInfo
-        var institutionId: Int,
+    @ColumnInfo
+    var institutionId: Int,
 
-        @NonNull
-        @ColumnInfo(name = "institution_type", defaultValue = Channel.BANK_TYPE)
-        var institutionType: String,
+    @NonNull
+    @ColumnInfo(name = "institution_type", defaultValue = Channel.BANK_TYPE)
+    var institutionType: String,
 
-        @JvmField
-        @ColumnInfo
-        var countryAlpha2: String,
+    @JvmField
+    @ColumnInfo
+    var countryAlpha2: String,
 
-        @ColumnInfo(index = true)
-        var channelId: Int,
+    @ColumnInfo(index = true)
+    var channelId: Int,
 
-        @ColumnInfo(name = "primary_color_hex")
-        val primaryColorHex: String,
+    @ColumnInfo(name = "primary_color_hex")
+    val primaryColorHex: String,
 
-        @ColumnInfo(name = "secondary_color_hex")
-        val secondaryColorHex: String,
+    @ColumnInfo(name = "secondary_color_hex")
+    val secondaryColorHex: String,
 
-        @ColumnInfo(defaultValue = "0")
-        var isDefault: Boolean = false,
+    @ColumnInfo(defaultValue = "0")
+    var isDefault: Boolean = false,
 
-        @NonNull
-        @ColumnInfo(name = "sim_subscription_id", defaultValue = "-1")
-        var simSubscriptionId: Int = -1
+    @NonNull
+    @ColumnInfo(name = "sim_subscription_id", defaultValue = "-1")
+    var simSubscriptionId: Int = -1
 
 ) : Comparable<Account> {
 
@@ -107,7 +124,7 @@ data class Account(
     override fun equals(other: Any?): Boolean {
         if (other !is Account) return false
         return id == other.id ||
-                (institutionName == other.institutionName && simSubscriptionId == other.simSubscriptionId && institutionAccountName == other.institutionAccountName)
+            (institutionName == other.institutionName && simSubscriptionId == other.simSubscriptionId && institutionAccountName == other.institutionAccountName)
     }
 
     override fun compareTo(other: Account): Int = toString().compareTo(other.toString())

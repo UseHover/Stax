@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.data.remote
 
 import androidx.datastore.core.DataStore
@@ -8,15 +23,28 @@ import com.appmattus.kotlinfixture.decorator.optional.NeverOptionalStrategy
 import com.appmattus.kotlinfixture.decorator.optional.optionalStrategy
 import com.appmattus.kotlinfixture.kotlinFixture
 import com.google.common.truth.Truth.assertThat
-import com.hover.stax.data.remote.dto.*
-import com.hover.stax.data.remote.dto.authorization.*
+import com.hover.stax.data.remote.dto.Attributes
+import com.hover.stax.data.remote.dto.Data
+import com.hover.stax.data.remote.dto.StaxUserDto
+import com.hover.stax.data.remote.dto.UserUpdateDto
+import com.hover.stax.data.remote.dto.UserUploadDto
+import com.hover.stax.data.remote.dto.authorization.AuthRequest
+import com.hover.stax.data.remote.dto.authorization.AuthResponse
+import com.hover.stax.data.remote.dto.authorization.RedirectUri
+import com.hover.stax.data.remote.dto.authorization.RevokeTokenRequest
+import com.hover.stax.data.remote.dto.authorization.TokenRequest
+import com.hover.stax.data.remote.dto.authorization.TokenResponse
 import com.hover.stax.ktor.EnvironmentProvider
 import com.hover.stax.ktor.KtorClientFactory
 import com.hover.stax.preferences.DefaultTokenProvider
-import io.ktor.client.engine.mock.*
-import io.ktor.client.plugins.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.client.engine.mock.respondError
+import io.ktor.client.plugins.ServerResponseException
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
 import io.mockk.mockk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -46,7 +74,8 @@ class AuthApiTest {
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
-            ).create(mockEngine), environmentProvider
+            ).create(mockEngine),
+            environmentProvider
         )
 
         runBlocking { api.authorize(authRequest) }
@@ -68,7 +97,8 @@ class AuthApiTest {
                 "action" : "896fa22f-d273-475b-80ee-e7553d9f9a15"
             },
             "status" : "152b1eff-f55a-4b57-9f45-0eaf5314d3c5"
-        }""".trimIndent()
+        }
+        """.trimIndent()
 
         val mockEngine = MockEngine {
             respond(
@@ -82,7 +112,8 @@ class AuthApiTest {
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
-            ).create(mockEngine), environmentProvider
+            ).create(mockEngine),
+            environmentProvider
         )
 
         val actual = runBlocking { api.authorize(authRequest) }
@@ -108,7 +139,8 @@ class AuthApiTest {
                 "created_at" : 1661785911,
                 "token_type" : "Bearer",
                 "expires_in" :  7200
-        }""".trimIndent()
+        }
+        """.trimIndent()
 
         val mockEngine = MockEngine {
             respond(
@@ -122,7 +154,8 @@ class AuthApiTest {
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
-            ).create(mockEngine), environmentProvider
+            ).create(mockEngine),
+            environmentProvider
         )
 
         val actual = runBlocking { api.fetchToken(tokenRequest) }
@@ -148,7 +181,8 @@ class AuthApiTest {
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
-            ).create(mockEngine), environmentProvider
+            ).create(mockEngine),
+            environmentProvider
         )
 
         val actual = runBlocking { api.revokeToken(tokenRevoke) }
@@ -205,7 +239,8 @@ class AuthApiTest {
                     "total_points" : 0
                 }
             }
-        }""".trimIndent()
+        }
+        """.trimIndent()
 
         val mockEngine = MockEngine {
             respond(
@@ -219,7 +254,8 @@ class AuthApiTest {
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
-            ).create(mockEngine), environmentProvider
+            ).create(mockEngine),
+            environmentProvider
         )
 
         val actual = runBlocking { api.uploadUserToStax(userDTO) }
@@ -238,7 +274,8 @@ class AuthApiTest {
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
-            ).create(mockEngine), environmentProvider
+            ).create(mockEngine),
+            environmentProvider
         )
 
         runBlocking { api.uploadUserToStax(userDTO) }
@@ -295,7 +332,8 @@ class AuthApiTest {
                     "total_points" : 0
                 }
             }
-        }""".trimIndent()
+        }
+        """.trimIndent()
 
         val mockEngine = MockEngine {
             respond(
@@ -309,7 +347,8 @@ class AuthApiTest {
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
-            ).create(mockEngine), environmentProvider
+            ).create(mockEngine),
+            environmentProvider
         )
 
         val actual = runBlocking { api.updateUser(email = email, userDTO = userDTO) }

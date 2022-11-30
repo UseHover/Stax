@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.addChannels
 
 import android.app.Application
@@ -5,36 +20,43 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
-import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.ActionApi
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.local.SimRepo
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.local.channels.ChannelRepo
+import com.hover.stax.domain.model.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel as KChannel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class ChannelsViewModel(application: Application, val repo: ChannelRepo,
-                        val simRepo: SimRepo,
-                        val accountRepo: AccountRepo,
-                        val actionRepo: ActionRepo) : AndroidViewModel(application),
+class ChannelsViewModel(
+    application: Application,
+    val repo: ChannelRepo,
+    val simRepo: SimRepo,
+    val accountRepo: AccountRepo,
+    val actionRepo: ActionRepo
+) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -230,7 +252,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     private fun standardizeString(value: String?): String {
         // a non null String always contains an empty string
         if (value == null) return ""
-        return value.lowercase().replace(" ", "").replace("#", "").replace("-", "");
+        return value.lowercase().replace(" ", "").replace("#", "").replace("-", "")
     }
 
     override fun onCleared() {

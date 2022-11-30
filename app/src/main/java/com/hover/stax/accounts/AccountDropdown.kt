@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.accounts
 
 import android.content.Context
@@ -16,7 +31,6 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import kotlinx.coroutines.launch
-
 
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
@@ -68,7 +82,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             UIHelper.loadImage(context, account.logoUrl, target)
             autoCompleteTextView.setText(account.userAlias, false)
             highlightedAccount = account
-        } else { UIHelper.loadImage(context, null, target)}
+        } else { UIHelper.loadImage(context, null, target) }
     }
 
     private fun updateChoices(accounts: List<Account>) {
@@ -82,7 +96,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         if (accounts.firstOrNull()?.id != 0)
             onSelect(accounts.firstOrNull { it.isDefault })
     }
-
 
     private fun onSelect(account: Account?) {
         setDropdownValue(account)
@@ -123,7 +136,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                 context.getString(
                     R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
-                ), ERROR
+                ),
+                ERROR
             )
         } else if (actions.isNotEmpty() && actions.size == 1)
             addInfoMessage(actions.first())
@@ -137,7 +151,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                 context.getString(
                     if (action.transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
                     else R.string.self_only_money_warning
-                ), INFO
+                ),
+                INFO
             )
         else
             setState(null, SUCCESS)

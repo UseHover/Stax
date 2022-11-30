@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.financial_tips
 
 import android.content.Intent
@@ -29,13 +44,17 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     private var _binding: FragmentWellnessBinding? = null
     private val binding get() = _binding!!
 
-    private val backPressedCallback = object: OnBackPressedCallback(false) {
+    private val backPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
             showTipList()
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentWellnessBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -51,7 +70,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
-    private fun initViews(){
+    private fun initViews() {
         binding.title.text = getString(R.string.financial_wellness_tips)
         binding.backButton.setOnClickListener { findNavController().popBackStack() }
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
@@ -63,7 +82,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 binding.progressIndicator.show()
                 binding.empty.visibility = View.GONE
             }
-            it.tips.isEmpty() && !it.isLoading-> {
+            it.tips.isEmpty() && !it.isLoading -> {
                 binding.progressIndicator.hide()
                 binding.empty.visibility = View.VISIBLE
                 binding.financialTips.visibility = View.GONE
@@ -141,11 +160,14 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             append(shareableLink)
         }
 
-        val share = Intent.createChooser(Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, shareableContent)
-            type = "text/plain"
-        }, getString(R.string.share_wellness_tip))
+        val share = Intent.createChooser(
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, shareableContent)
+                type = "text/plain"
+            },
+            getString(R.string.share_wellness_tip)
+        )
         startActivity(share)
 
         logTipShare(tip)

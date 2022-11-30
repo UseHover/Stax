@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.schedules
 
 import android.app.PendingIntent
@@ -15,9 +30,9 @@ import com.hover.stax.database.AppDatabase
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.SCHEDULE_REQUEST
 import com.hover.stax.schedules.Schedule.REQUEST_TYPE
+import java.util.concurrent.TimeUnit
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.util.concurrent.TimeUnit
 
 class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(context, params), KoinComponent {
 
@@ -35,15 +50,15 @@ class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(contex
     private fun notifyUser(s: Schedule) {
         val contacts = contactDao[s.recipient_ids.split(",").toTypedArray()]
         val builder = NotificationCompat.Builder(applicationContext, "DEFAULT")
-                .setSmallIcon(R.drawable.ic_stax)
-                .setContentTitle(s.title(applicationContext))
-                .setContentText(s.notificationMsg(applicationContext, contacts))
-                .setStyle(NotificationCompat.BigTextStyle().bigText(s.notificationMsg(applicationContext, contacts)))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setCategory(NotificationCompat.CATEGORY_REMINDER)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(createIntent(s))
-                .setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_stax)
+            .setContentTitle(s.title(applicationContext))
+            .setContentText(s.notificationMsg(applicationContext, contacts))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(s.notificationMsg(applicationContext, contacts)))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setOnlyAlertOnce(true)
+            .setContentIntent(createIntent(s))
+            .setAutoCancel(true)
 
         val notificationManager = NotificationManagerCompat.from(applicationContext)
         notificationManager.notify(s.id, builder.build())

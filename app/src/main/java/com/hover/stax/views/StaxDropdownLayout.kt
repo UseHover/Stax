@@ -1,20 +1,33 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.views
 
 import android.content.Context
-import com.hover.stax.views.AbstractStatefulInput
-import android.widget.AutoCompleteTextView
-import androidx.annotation.CallSuper
-import android.content.res.TypedArray
 import android.text.InputType
 import android.util.AttributeSet
-import com.hover.stax.R
-import com.google.android.material.textfield.TextInputLayout
-import android.view.View.OnFocusChangeListener
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
+import android.widget.AutoCompleteTextView
+import androidx.annotation.CallSuper
+import com.google.android.material.textfield.TextInputLayout
+import com.hover.stax.R
 import com.hover.stax.databinding.StaxDropdownBinding
 
-open class StaxDropdownLayout(context: Context, attrs: AttributeSet): AbstractStatefulInput(context, attrs) {
+open class StaxDropdownLayout(context: Context, attrs: AttributeSet) : AbstractStatefulInput(context, attrs) {
 
     private val binding: StaxDropdownBinding
 

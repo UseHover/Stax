@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.bounties
 
 import android.os.Bundle
@@ -5,7 +20,6 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.collectAsState
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -14,11 +28,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyApplicationBinding
-import com.hover.stax.home.MainActivity
-import com.hover.stax.login.LoginViewModel
 import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginScreenUiState
 import com.hover.stax.login.LoginUiState
+import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
@@ -36,7 +50,11 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
     private lateinit var networkMonitor: NetworkMonitor
     private val loginViewModel: LoginViewModel by sharedViewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentBountyApplicationBinding.inflate(inflater, container, false)
         networkMonitor = NetworkMonitor(requireContext())
         return binding.root
@@ -113,7 +131,7 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginState.collect {
-                    when(it.loginState) {
+                    when (it.loginState) {
                         LoginUiState.Loading -> show()
                         LoginUiState.Error -> hide()
                         LoginUiState.Success -> {
@@ -150,5 +168,4 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }
-
 }

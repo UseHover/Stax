@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transfers
 
 import android.app.Application
@@ -13,13 +28,17 @@ import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
-import com.hover.stax.utils.Utils
 import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class TransferViewModel(application: Application, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+class TransferViewModel(
+    application: Application,
+    private val requestRepo: RequestRepo,
+    contactRepo: ContactRepo,
+    scheduleRepo: ScheduleRepo
+) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
@@ -66,7 +85,8 @@ class TransferViewModel(application: Application, private val requestRepo: Reque
     fun amountErrors(a: HoverAction?): String? {
         val regex = a?.getStepByVar(HoverAction.AMOUNT_KEY)?.optString("valid_response_regex")
         return if ((amount.value.isNullOrEmpty() || !amount.value!!.matches("[\\d.]+".toRegex()) || amount.value!!.matches("[0]+".toRegex())) ||
-                (!regex.isNullOrEmpty() && !amount.value!!.matches(regex.toRegex()))) getString(R.string.amount_fielderror)
+            (!regex.isNullOrEmpty() && !amount.value!!.matches(regex.toRegex()))
+        ) getString(R.string.amount_fielderror)
         else null
     }
 

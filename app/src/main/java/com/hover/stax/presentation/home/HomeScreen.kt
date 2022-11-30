@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.home
 
 import android.annotation.SuppressLint
@@ -21,10 +36,16 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.presentation.home.components.*
+import com.hover.stax.presentation.home.components.BalanceHeader
+import com.hover.stax.presentation.home.components.BalanceItem
+import com.hover.stax.presentation.home.components.BonusCard
+import com.hover.stax.presentation.home.components.EmptyBalance
+import com.hover.stax.presentation.home.components.FinancialTipCard
+import com.hover.stax.presentation.home.components.GuideCard
+import com.hover.stax.presentation.home.components.PrimaryFeatures
+import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.network.NetworkMonitor
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -64,7 +85,8 @@ fun HomeScreen(
                     LazyColumn {
                         if (homeState.bonuses.isNotEmpty() && homeState.accounts.isNotEmpty())
                             item {
-                                BonusCard(message = homeState.bonuses.first().bonus_message,
+                                BonusCard(
+                                    message = homeState.bonuses.first().bonus_message,
                                     onClickedTC = homeClickFunctions.onClickedTC,
                                     onClickedTopUp = {
                                         clickedOnBonus(
@@ -72,7 +94,8 @@ fun HomeScreen(
                                             channelsViewModel,
                                             homeState.bonuses.first()
                                         )
-                                    })
+                                    }
+                                )
                             }
 
                         if (homeState.accounts.isEmpty())
@@ -125,7 +148,11 @@ fun HomeScreen(
     }
 }
 
-private fun clickedOnBonus(context: Context, channelsViewModel: ChannelsViewModel, bonus: HoverAction) {
+private fun clickedOnBonus(
+    context: Context,
+    channelsViewModel: ChannelsViewModel,
+    bonus: HoverAction
+) {
     AnalyticsUtil.logAnalyticsEvent(
         context.getString(R.string.clicked_bonus_airtime_banner),
         context
@@ -164,9 +191,11 @@ fun HomeScreenPreview() {
                         }
 
                         item {
-                            BonusCard(message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
+                            BonusCard(
+                                message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
                                 onClickedTC = {},
-                                onClickedTopUp = {})
+                                onClickedTopUp = {}
+                            )
                         }
                         item {
                             PrimaryFeatures(
@@ -185,7 +214,8 @@ fun HomeScreenPreview() {
                             FinancialTipCard(tipInterface = null, financialTip = financialTip, null)
                         }
                     })
-                })
+                }
+            )
         }
     }
 }

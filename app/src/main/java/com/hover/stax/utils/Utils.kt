@@ -1,8 +1,28 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.utils
 
 import android.Manifest
 import android.app.Activity
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -10,15 +30,14 @@ import androidx.annotation.StringRes
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
+import java.text.DecimalFormat
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
-import java.text.DecimalFormat
-
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"
-    private const val SDK_PREFS = "_hoversdk";
+    private const val SDK_PREFS = "_hoversdk"
 
     private fun getSharedPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE)
@@ -213,11 +232,11 @@ object Utils {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(@StringRes subject: Int, context: Context, body : String? = "") {
+    fun openEmail(@StringRes subject: Int, context: Context, body: String? = "") {
         openEmail(context.getString(subject), context, body)
     }
 
-    fun openEmail(subject: String, context: Context, body : String? ="") {
+    fun openEmail(subject: String, context: Context, body: String? = "") {
         val intent = Intent(Intent.ACTION_VIEW)
         val senderEmail = context.getString(R.string.stax_support_email)
         intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject&body=$body")
