@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,13 +40,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.stax.R
+import com.hover.stax.channels.Channel
 import com.hover.stax.domain.model.Account
 import com.hover.stax.presentation.home.BalanceTapListener
+import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.DateUtils
 
 @Composable
@@ -121,5 +125,30 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
             color = colorResource(id = R.color.nav_grey),
             modifier = Modifier.padding(horizontal = 13.dp)
         )
+    }
+}
+
+@Preview
+@Composable
+fun BalanceItemPreview() {
+    StaxTheme {
+        Surface {
+            BalanceItem(
+                staxAccount = Account(
+                    institutionName = "M-PESA",
+                    userAlias = "M-PESA",
+                    logoUrl = "https://stage.usehover.com//rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZU09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d9824d3caa5d9799109fab40f1b088968a13b2d6/test-logo",
+                    accountNo = "0711223344",
+                    institutionId = 0,
+                    institutionType = Channel.MOBILE_MONEY,
+                    countryAlpha2 = "KE",
+                    channelId = 0,
+                    primaryColorHex = "#568c5b",
+                    secondaryColorHex = "#124a2a",
+                    isDefault = false,
+                    simSubscriptionId = 1
+                ), null, LocalContext.current
+            )
+        }
     }
 }
