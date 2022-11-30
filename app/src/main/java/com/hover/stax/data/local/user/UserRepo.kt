@@ -1,6 +1,7 @@
-package com.hover.stax.user
+package com.hover.stax.data.local.user
 
 import com.hover.stax.database.AppDatabase
+import com.hover.stax.domain.model.StaxUser
 import kotlinx.coroutines.flow.Flow
 
 class UserRepo(db: AppDatabase) {
@@ -11,7 +12,7 @@ class UserRepo(db: AppDatabase) {
 
     suspend fun saveUser(user: StaxUser) {
         if (userDao.getUser() == null)
-            userDao.insert(user)
+            userDao.insertAsync(user)
         else
             userDao.update(user)
     }

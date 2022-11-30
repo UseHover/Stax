@@ -14,8 +14,12 @@ import androidx.room.Update
  */
 interface BaseDao<T> {
 
+    // TODO - Make me suspendable
     @Insert(onConflict = REPLACE)
     fun insert(item: T)
+
+    @Insert(onConflict = REPLACE)
+    suspend fun insertAsync(item: T)
 
     @Insert(onConflict = REPLACE)
     suspend fun insert(vararg items: T)

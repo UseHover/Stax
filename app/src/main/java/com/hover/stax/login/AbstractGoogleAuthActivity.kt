@@ -89,6 +89,7 @@ abstract class AbstractGoogleAuthActivity : AbstractHoverCallerActivity(),
                 if (result.resultCode == RESULT_OK) {
                     loginViewModel.signIntoGoogle(result.data)
                 } else {
+                    Timber.e("Google sign in failed")
                     staxGoogleLoginInterface.googleLoginFailed()
                 }
             }

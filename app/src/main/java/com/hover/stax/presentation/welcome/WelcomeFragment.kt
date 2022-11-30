@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.user.StaxUser
+import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper

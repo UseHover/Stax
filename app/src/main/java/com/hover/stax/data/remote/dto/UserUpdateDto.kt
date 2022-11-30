@@ -1,21 +1,20 @@
 package com.hover.stax.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserUpdateDto(
-
-    @SerializedName("stax_user")
+    @SerialName("stax_user")
     val staxUser: UpdateDto
 )
 
+@Serializable
 data class UpdateDto(
-
-    @SerializedName("is_mapper")
+    @SerialName("is_mapper")
     val isMapper: Boolean? = null,
-
-    @SerializedName("marketing_opted_in")
+    @SerialName("marketing_opted_in")
     val marketingOptedIn: Boolean? = null,
-
-    @SerializedName("email")
+    @SerialName("email")
     val email: String
 )
