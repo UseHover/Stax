@@ -132,6 +132,7 @@ android {
 dependencies {
     // Google
     implementation(libs.bundles.google)
+    implementation(libs.bundles.lifecycle)
     kapt(libs.lifecycle.common)
 
     // compose
