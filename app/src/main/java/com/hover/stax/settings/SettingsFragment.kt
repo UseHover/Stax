@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.settings
 
 import android.os.Bundle
@@ -23,9 +38,12 @@ import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginScreenUiState
 import com.hover.stax.login.LoginUiState
-import com.hover.stax.login.LoginUiState.*
 import com.hover.stax.login.LoginViewModel
-import com.hover.stax.utils.*
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -66,7 +84,8 @@ class SettingsFragment : Fragment() {
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_security)
-            ), requireActivity()
+            ),
+            requireActivity()
         )
 
         setUpShare()
@@ -226,7 +245,8 @@ class SettingsFragment : Fragment() {
                     getString(
                         R.string.stax_emailing_subject,
                         Hover.getDeviceId(requireActivity())
-                    ), requireActivity()
+                    ),
+                    requireActivity()
                 )
             }
             faq.setOnClickListener {
@@ -365,11 +385,12 @@ class SettingsFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginState.collect {
                     when (it.loginState) {
-                        Loading -> {}
-                        Error -> {}
-                        Success -> {
+                        LoginUiState.Loading -> {}
+                        is Error -> {}
+                        LoginUiState.Success -> {
                             binding.staxSupport.contactCard.hideProgressIndicator()
                         }
+                        else -> {}
                     }
                 }
             }

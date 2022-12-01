@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax
 
 import android.app.NotificationChannel
@@ -166,18 +181,19 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
                 override fun onVerificationFailed(errorMessage: String) {}
             })
         }
-
     }
 
     private fun registerUXCamPushNotification() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                return@OnCompleteListener
-            }
-            val token = task.result
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
+                }
+                val token = task.result
 
-            UXCam.setPushNotificationToken(token)
-        })
+                UXCam.setPushNotificationToken(token)
+            }
+        )
     }
 
     private fun createNotificationChannel() {
@@ -281,5 +297,4 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun hasPassedOnboarding(): Boolean = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, this)
 
     private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
-
 }

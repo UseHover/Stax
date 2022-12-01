@@ -30,7 +30,6 @@ dependencyResolutionManagement {
             content { includeGroup("com.hover") }
         }
     }
-
 }
 
 include(":app")

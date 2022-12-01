@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.bounties
 
 import android.app.Application
@@ -18,10 +33,19 @@ import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class BountyViewModel(private val simRepo: SimRepo, private val bountiesUseCase: GetChannelBountiesUseCase, val application: Application) : ViewModel() {
+class BountyViewModel(
+    private val simRepo: SimRepo,
+    private val bountiesUseCase: GetChannelBountiesUseCase,
+    val application: Application
+) : ViewModel() {
 
     private val _countryList = MutableStateFlow<List<String>>(emptyList())
     val countryList = _countryList.asStateFlow()
