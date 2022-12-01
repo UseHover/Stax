@@ -1,9 +1,31 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.home.components
 
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -31,11 +53,13 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
     val size34 = dimensionResource(id = R.dimen.margin_34)
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Column {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 13.dp)
-            .heightIn(min = 70.dp)
-            .clickable { balanceTapListener?.onTapBalanceDetail(accountId = staxAccount.id) }) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 13.dp)
+                .heightIn(min = 70.dp)
+                .clickable { balanceTapListener?.onTapBalanceDetail(accountId = staxAccount.id) }
+        ) {
 
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -82,7 +106,8 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                     )
             }
 
-            Image(painter = painterResource(id = R.drawable.ic_refresh_white_24dp),
+            Image(
+                painter = painterResource(id = R.drawable.ic_refresh_white_24dp),
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -90,7 +115,6 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
                     .clickable { balanceTapListener?.onTapBalanceRefresh(staxAccount) }
                     .size(32.dp)
             )
-
         }
 
         Divider(

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transfers
 
 import android.app.Application
@@ -6,16 +21,18 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.stax.R
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.schedules.Schedule
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 
-abstract class AbstractFormViewModel(application: Application, val contactRepo: ContactRepo, private val scheduleRepo: ScheduleRepo) : AndroidViewModel(application) {
+abstract class AbstractFormViewModel(
+    application: Application,
+    val contactRepo: ContactRepo,
+    private val scheduleRepo: ScheduleRepo
+) : AndroidViewModel(application) {
 
     var recentContacts: LiveData<List<StaxContact>> = MutableLiveData()
     val schedule = MutableLiveData<Schedule>()

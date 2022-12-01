@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transactionDetails
 
 import android.os.Bundle
@@ -11,7 +26,6 @@ import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -60,7 +74,11 @@ class TransactionDetailsFragment : Fragment() {
     private lateinit var childFragManager: FragmentManager
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<RelativeLayout>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val uuid = requireArguments().getString(UUID)
         viewModel.setTransaction(uuid!!)
         logView(uuid)
@@ -80,7 +98,7 @@ class TransactionDetailsFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
-    private val backPressedCallback = object: OnBackPressedCallback(true) {
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             handleBackNavigation()
         }
@@ -94,7 +112,7 @@ class TransactionDetailsFragment : Fragment() {
         with(binding.details.confirmCodeCopy.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
     }
 
-    private fun handleBackNavigation(){
+    private fun handleBackNavigation() {
         val isBounty = viewModel.transaction.value?.isRecorded ?: false
 
         if (isBounty) findNavController().popBackStack()
@@ -195,19 +213,18 @@ class TransactionDetailsFragment : Fragment() {
         viewModel.transaction.value?.let {
             val msg = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
             binding.statusInfo.longDescription.text = HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            binding.details.categoryValue.text = it.shortStatusExplain(action,"", requireContext())
+            binding.details.categoryValue.text = it.shortStatusExplain(action, "", requireContext())
             if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
             showBonusAmount(it.amount, action)
         }
         binding.statusInfo.institutionLogo.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo)
-
     }
 
     private fun showBonusAmount(amount: Double?, action: HoverAction) = with(binding.details) {
         bonusRow.visibility = if (amount != null && amount > 0 && action.bonus_percent > 0) VISIBLE else GONE
         if (amount != null)
-            bonusAmount.text = (amount * action.bonus_percent/100).toString()
+            bonusAmount.text = (amount * action.bonus_percent / 100).toString()
     }
 
     private fun updateAccount(account: Account) {
@@ -266,7 +283,7 @@ class TransactionDetailsFragment : Fragment() {
         contactSupportTextView.setOnClickListener {
             resetTryAgainCounter(id)
             val deviceId = Hover.getDeviceId(requireContext())
-            val subject = "Stax Transaction failure - support id- {${deviceId}}"
+            val subject = "Stax Transaction failure - support id- {$deviceId}"
             Utils.openEmail(subject, requireActivity())
         }
     }

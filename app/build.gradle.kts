@@ -1,6 +1,6 @@
 import java.io.FileInputStream
 import java.nio.file.Paths
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -103,7 +103,7 @@ android {
 
     bundle {
         language {
-            //Ensures all language string resources is bundled in the aab.
+            // Ensures all language string resources is bundled in the aab.
             enableSplit = false
         }
     }
@@ -118,12 +118,15 @@ android {
         }
     }
 
+    sourceSets {
+        getByName("debug").assets.srcDirs(files("$projectDir/schemas"))
+    }
+
     testOptions {
         unitTests.apply {
             isIncludeAndroidResources = true
         }
     }
-
 }
 
 dependencies {
@@ -131,12 +134,12 @@ dependencies {
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)
 
-    //compose
+    // compose
     implementation(libs.bundles.compose)
     debugImplementation(libs.compose.tooling)
     androidTestImplementation(libs.compose.ui.test)
 
-    //logging
+    // logging
     implementation(libs.bundles.logging)
 
     // Firebase
@@ -180,7 +183,6 @@ dependencies {
 
     // Tests
     testImplementation(libs.bundles.test)
-
 
     androidTestImplementation(libs.junit.androidx)
     androidTestImplementation(libs.espresso)

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transfers
 
 import android.os.Bundle
@@ -23,12 +38,10 @@ import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
-import com.hover.stax.utils.*
 import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
-import timber.log.Timber
-
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
@@ -49,7 +62,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         setTransactionType(args.transactionType)
 
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
@@ -307,7 +324,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     private fun createVariableInput(key: String, value: String, parent: ViewGroup) {
         val binding = InputItemBinding.inflate(LayoutInflater.from(context), parent, true)
         val inputTextWatcher: TextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence,i: Int,i1: Int,i2: Int) {}
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 nonStandardVarUpdate(key, charSequence.toString())
@@ -319,7 +336,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         binding.variableInput.tag = key
         binding.variableInput.setText(value)
     }
-
 
     fun nonStandardVarUpdate(key: String, value: String) {
         actionSelectViewModel.updateNonStandardVariables(key, value)
@@ -377,7 +393,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                     cta.visibility = View.GONE
                 } else if (actions?.any { a -> a.bonus_percent > 0 } != true) {
                     cardBonus.visibility = View.GONE
-                } else if (transferViewModel.isEditing.value == true){
+                } else if (transferViewModel.isEditing.value == true) {
                     cardBonus.visibility = View.VISIBLE
                     val bonus = actions.first { a -> a.bonus_percent > 0 }
                     title.text = getString(R.string.get_extra_airtime)

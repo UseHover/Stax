@@ -1,17 +1,34 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.inapp_banner
 
 import com.hover.stax.R
 
 class Banner
-private constructor(val id: Int,
-                    val title: Int,
-                    val desc: Int?,
-                    val cta: Int,
-                    val iconRes: Int,
-                    val primaryColor: Int,
-                    val secondaryColor: Int,
-                    val url: Int,
-                    val impressions: Int) {
+private constructor(
+    val id: Int,
+    val title: Int,
+    val desc: Int?,
+    val cta: Int,
+    val iconRes: Int,
+    val primaryColor: Int,
+    val secondaryColor: Int,
+    val url: Int,
+    val impressions: Int
+) {
     companion object {
         const val PERMISSION: Int = 101
         const val ROUND_UP_NEWS: Int = 102
@@ -21,73 +38,73 @@ private constructor(val id: Int,
 
         fun permissions(): Banner {
             return Banner(
-                    PERMISSION,
-                    R.string.banner_permission_title,
-                    R.string.banner_permission_desc,
-                    R.string.banner_permission_cta,
-                    R.drawable.banner_permission,
-                    R.color.banner_permission_primary,
-                    R.color.banner_secondary,
-                    R.string.banner_permission_url,
-                    3)
+                PERMISSION,
+                R.string.banner_permission_title,
+                R.string.banner_permission_desc,
+                R.string.banner_permission_cta,
+                R.drawable.banner_permission,
+                R.color.banner_permission_primary,
+                R.color.banner_secondary,
+                R.string.banner_permission_url,
+                3
+            )
         }
 
         fun roundupNews(): Banner {
             return Banner(
-                    ROUND_UP_NEWS,
-                    R.string.banner_roundupnews_title,
-                    null,
-                    R.string.banner_roundupnews_cta,
-                    R.drawable.banner_roundupnews,
-                    R.color.offWhite,
-                    R.color.banner_secondary,
-                    R.string.banner_roundupnews_url,
-                    2
+                ROUND_UP_NEWS,
+                R.string.banner_roundupnews_title,
+                null,
+                R.string.banner_roundupnews_cta,
+                R.drawable.banner_roundupnews,
+                R.color.offWhite,
+                R.color.banner_secondary,
+                R.string.banner_roundupnews_url,
+                2
             )
         }
 
         fun gist(): Banner {
             return Banner(
-                    GIST,
-                    R.string.banner_gist_title,
-                    null,
-                    R.string.banner_gist_cta,
-                    R.drawable.banner_gist,
-                    R.color.banner_gist_primary,
-                    R.color.banner_secondary,
-                    R.string.receive_stax_updates_url,
-                    1
+                GIST,
+                R.string.banner_gist_title,
+                null,
+                R.string.banner_gist_cta,
+                R.drawable.banner_gist,
+                R.color.banner_gist_primary,
+                R.color.banner_secondary,
+                R.string.receive_stax_updates_url,
+                1
             )
         }
 
         fun upvote(): Banner {
             return Banner(
-                    UPVOTE,
-                    R.string.banner_upvote_title,
-                    null,
-                    R.string.banner_upvote_cta,
-                    R.drawable.banner_upvote,
-                    R.color.banner_secondary,
-                    R.color.offWhite,
-                    R.string.banner_upvoteurl,
-                    1
+                UPVOTE,
+                R.string.banner_upvote_title,
+                null,
+                R.string.banner_upvote_cta,
+                R.drawable.banner_upvote,
+                R.color.banner_secondary,
+                R.color.offWhite,
+                R.string.banner_upvoteurl,
+                1
             )
         }
 
         fun research(): Banner {
             return Banner(
-                    RESEARCH,
-                    R.string.banner_research_title,
-                    null,
-                    R.string.banner_research_cta,
-                    R.drawable.banner_roundupnews,
-                    R.color.offWhite,
-                    R.color.offWhite,
-                    R.string.banner_research_url,
-                    3
+                RESEARCH,
+                R.string.banner_research_title,
+                null,
+                R.string.banner_research_cta,
+                R.drawable.banner_roundupnews,
+                R.color.offWhite,
+                R.color.offWhite,
+                R.string.banner_research_url,
+                3
             )
         }
-
     }
 
     override fun equals(other: Any?): Boolean {
@@ -121,7 +138,4 @@ private constructor(val id: Int,
         result = 31 * result + impressions
         return result
     }
-
-
 }
-

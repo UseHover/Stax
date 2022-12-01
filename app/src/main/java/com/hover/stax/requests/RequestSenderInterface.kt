@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.requests
 
 import android.annotation.SuppressLint
@@ -11,8 +26,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
 import com.hover.stax.utils.Utils.copyToClipboard
@@ -68,7 +83,12 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
         if (requestees.size == 1) sendWhatsAppToSingleContact(r, requestees.filterNotNull(), account, a) else sendWhatsAppToMultipleContacts(r.generateMessage(a), a)
     }
 
-    fun sendWhatsAppToSingleContact(r: Request, requestees: List<StaxContact>, account: Account?, a: Activity) {
+    fun sendWhatsAppToSingleContact(
+        r: Request,
+        requestees: List<StaxContact>,
+        account: Account?,
+        a: Activity
+    ) {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_VIEW
         val whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, account) + "&text=" + r.generateMessage(a)

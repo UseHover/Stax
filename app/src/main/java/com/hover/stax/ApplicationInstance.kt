@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax
 
 import android.app.Application
@@ -8,15 +23,20 @@ import com.appsflyer.AppsFlyerProperties
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
-import com.hover.stax.di.*
+import com.hover.stax.di.appModule
+import com.hover.stax.di.dataModule
+import com.hover.stax.di.datastoreModule
+import com.hover.stax.di.ktorModule
+import com.hover.stax.di.repositories
+import com.hover.stax.di.useCases
 import com.hover.stax.utils.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
+import java.util.*
+import kotlin.properties.Delegates
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
-import java.util.*
-import kotlin.properties.Delegates
 
 class ApplicationInstance : Application() {
 

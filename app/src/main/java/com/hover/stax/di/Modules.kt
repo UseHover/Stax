@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.di
 
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
@@ -18,9 +33,19 @@ import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.local.user.UserRepo
 import com.hover.stax.data.remote.StaxApi
-import com.hover.stax.data.repository.*
+import com.hover.stax.data.repository.AccountRepositoryImpl
+import com.hover.stax.data.repository.AuthRepositoryImpl
+import com.hover.stax.data.repository.BountyRepositoryImpl
+import com.hover.stax.data.repository.ChannelRepositoryImpl
+import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
+import com.hover.stax.data.repository.StaxUserRepositoryImpl
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.domain.repository.*
+import com.hover.stax.domain.repository.AccountRepository
+import com.hover.stax.domain.repository.AuthRepository
+import com.hover.stax.domain.repository.BountyRepository
+import com.hover.stax.domain.repository.ChannelRepository
+import com.hover.stax.domain.repository.FinancialTipsRepository
+import com.hover.stax.domain.repository.StaxUserRepository
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import com.hover.stax.domain.use_case.sims.ListSimsUseCase
@@ -54,7 +79,7 @@ import com.hover.stax.transactionDetails.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
-import io.ktor.client.engine.android.*
+import io.ktor.client.engine.android.Android
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -120,9 +145,11 @@ val ktorModule = module {
     single { EnvironmentProvider(androidApplication(), get()) }
 
     single {
-        KtorClientFactory(get(), get()).create(Android.create {
-            connectTimeout = TIMEOUT
-        })
+        KtorClientFactory(get(), get()).create(
+            Android.create {
+                connectTimeout = TIMEOUT
+            }
+        )
     }
 }
 
