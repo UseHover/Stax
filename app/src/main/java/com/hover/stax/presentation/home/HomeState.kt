@@ -25,3 +25,7 @@ data class HomeState(
     val financialTips: List<FinancialTip> = emptyList(),
     val dismissedTipId: String = ""
 )
+
+data class AccountsState(
+    val accounts: List<Account> = emptyList()
+)
