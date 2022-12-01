@@ -1,13 +1,35 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.data.remote.workers
 
 import android.content.Context
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.transactions.StaxTransaction
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,8 +40,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
-import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
@@ -29,14 +49,14 @@ class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParam
 
         fun makeToil(): PeriodicWorkRequest {
             return PeriodicWorkRequest.Builder(UpdateChannelsWorker::class.java, 24, TimeUnit.HOURS)
-                    .setConstraints(netConstraint())
-                    .build()
+                .setConstraints(netConstraint())
+                .build()
         }
 
         fun makeWork(): OneTimeWorkRequest {
             return OneTimeWorkRequest.Builder(UpdateBountyTransactionsWorker::class.java)
-                    .setConstraints(netConstraint())
-                    .build()
+                .setConstraints(netConstraint())
+                .build()
         }
 
         private fun netConstraint(): Constraints {
@@ -98,5 +118,4 @@ class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParam
         val response: Response = client.newCall(request).execute()
         return JSONObject(response.body!!.string())
     }
-
 }

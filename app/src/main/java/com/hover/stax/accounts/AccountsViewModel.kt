@@ -1,8 +1,26 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.accounts
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
@@ -16,9 +34,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
-class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo) : AndroidViewModel(application),
+class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo) :
+    AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
     private val _accounts = MutableStateFlow(AccountList())
@@ -121,7 +139,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     fun setDefaultAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         if (accountList.value.accounts.isNotEmpty()) {
             val accts = accountList.value.accounts
-            //remove current default account
+            // remove current default account
             val current: Account? = accts.firstOrNull { it.isDefault }
 
             if (account.id == current?.id) return@launch
@@ -140,7 +158,6 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     override fun highlightAccount(account: Account) {
         activeAccount.postValue(account)
     }
-
 }
 
 data class AccountList(val accounts: List<Account> = emptyList())

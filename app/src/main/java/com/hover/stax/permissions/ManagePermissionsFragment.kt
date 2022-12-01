@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.permissions
 
 import android.Manifest
@@ -43,7 +58,11 @@ class ManagePermissionsFragment : Fragment() {
             Timber.i("Phone permissions granted")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = ManagePermissionsLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -59,7 +78,7 @@ class ManagePermissionsFragment : Fragment() {
     }
 
     private fun updateSwitches() = with(binding) {
-        //only way to handle manual toggles without impacting accessibility
+        // only way to handle manual toggles without impacting accessibility
         callsPermissionSwitch.apply {
             setOnCheckedChangeListener(null)
             isChecked = ph.hasPhonePerm()
@@ -88,8 +107,8 @@ class ManagePermissionsFragment : Fragment() {
     private val callsPermCheckedChangeListener = CompoundButton.OnCheckedChangeListener { _, _ ->
         when {
             shouldOpenSettings(listOf(Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE)) -> openAppDetailSettings()
-            shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)
-                    || shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE) -> showRationale { requestPhonePerms() }
+            shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE) ||
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE) -> showRationale { requestPhonePerms() }
             else -> requestPhonePerms()
         }
     }
@@ -97,8 +116,8 @@ class ManagePermissionsFragment : Fragment() {
     private val smsPermCheckedChangeListener = CompoundButton.OnCheckedChangeListener { _, _ ->
         when {
             shouldOpenSettings(listOf(Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS)) -> openAppDetailSettings()
-            shouldShowRequestPermissionRationale(Manifest.permission.READ_SMS)
-                    || shouldShowRequestPermissionRationale(Manifest.permission.RECEIVE_SMS) -> showRationale { requestSMSPerms() }
+            shouldShowRequestPermissionRationale(Manifest.permission.READ_SMS) ||
+                shouldShowRequestPermissionRationale(Manifest.permission.RECEIVE_SMS) -> showRationale { requestSMSPerms() }
             else -> requestSMSPerms()
         }
     }
@@ -115,7 +134,7 @@ class ManagePermissionsFragment : Fragment() {
 
     private fun shouldOpenSettings(permissions: List<String>): Boolean {
         return grantResults.contains(ContextCompat.checkSelfPermission(requireActivity(), permissions[0])) ||
-                grantResults.contains(ContextCompat.checkSelfPermission(requireActivity(), permissions[1]))
+            grantResults.contains(ContextCompat.checkSelfPermission(requireActivity(), permissions[1]))
     }
 
     private fun openAppDetailSettings() {

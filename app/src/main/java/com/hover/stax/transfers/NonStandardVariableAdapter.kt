@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transfers
 
 import android.content.Context
@@ -7,17 +22,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
-import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.databinding.CountryItemBinding
 import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.utils.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
-import com.hover.stax.views.StaxTextInput
 
-class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>, private val editTextListener: NonStandardVariableInputListener, context: Context) :
+class NonStandardVariableAdapter(
+    private var variables: LinkedHashMap<String, String>,
+    private val editTextListener: NonStandardVariableInputListener,
+    context: Context
+) :
     ArrayAdapter<HashMap<String, String>>(context, 0) {
 
     override fun getView(position: Int, v: View?, parent: ViewGroup): View {
@@ -48,7 +62,7 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
 
         fun setVar(key: String, v: String) {
             val inputTextWatcher: TextWatcher = object : TextWatcher {
-                override fun beforeTextChanged(charSequence: CharSequence,i: Int,i1: Int,i2: Int) {}
+                override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                 override fun afterTextChanged(editable: Editable) {}
                 override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                     editTextListener.nonStandardVarUpdate(key, charSequence.toString())

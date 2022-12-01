@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.hover
 
 import android.content.Intent
@@ -8,8 +23,6 @@ import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.ACCOUNT_NAME
-import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.home.NavHelper
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
@@ -20,7 +33,6 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 const val SCHEDULE_REQUEST = 204
@@ -46,7 +58,12 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         runSession(account, action, null, account.id)
     }
 
-    fun runSession(account: Account, action: HoverAction, extras: HashMap<String, String>?, requestCode: Int) {
+    fun runSession(
+        account: Account,
+        action: HoverAction,
+        extras: HashMap<String, String>?,
+        requestCode: Int
+    ) {
         Timber.e("Building sesh")
         val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity, requestCode)
         if (!extras.isNullOrEmpty()) hsb.extras(extras)

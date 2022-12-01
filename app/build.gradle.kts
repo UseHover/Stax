@@ -1,3 +1,7 @@
+import java.io.FileInputStream
+import java.nio.file.Paths
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -8,6 +12,7 @@ plugins {
     id("androidx.navigation.safeargs")
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlin.android")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -20,8 +25,8 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 202
-        versionName = "1.18.3"
+        versionCode = 203
+        versionName = "1.19.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -57,12 +62,22 @@ android {
         }
     }
 
+    val userHome = Paths.get(System.getProperty("user.home"))
+    val keystorePath = userHome.resolve(".stax/keystore.properties")
+    val keystorePropertiesFile = file(keystorePath)
+    val keystoreProperties = Properties()
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    }
+
     signingConfigs {
-        register("releaseConfig") {
-            keyAlias = providers.gradleProperty("keyAlias").orNull
-            keyPassword = providers.gradleProperty("keyPassword").orNull
-            storeFile = providers.gradleProperty("storeFile").orNull?.let { file(it) }
-            storePassword = providers.gradleProperty("storePassword").orNull
+        if (keystoreProperties.isNotEmpty()) {
+            create("releaseConfig") {
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storePassword = keystoreProperties.getProperty("storePassword")
+            }
         }
     }
 
@@ -80,13 +95,15 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("releaseConfig")
+            if (keystoreProperties.isNotEmpty()) {
+                signingConfig = signingConfigs.getByName("releaseConfig")
+            }
         }
     }
 
     bundle {
         language {
-            //Ensures all language string resources is bundled in the aab.
+            // Ensures all language string resources is bundled in the aab.
             enableSplit = false
         }
     }
@@ -110,26 +127,23 @@ android {
             isIncludeAndroidResources = true
         }
     }
-
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "../hover.sdk", "include" to listOf("*.jar", "*.aar"))))
-
     // Google
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)
 
-    //compose
+    // compose
     implementation(libs.bundles.compose)
     debugImplementation(libs.compose.tooling)
     androidTestImplementation(libs.compose.ui.test)
 
-    //logging
+    // logging
     implementation(libs.bundles.logging)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:31.0.1"))
+    implementation(platform("com.google.firebase:firebase-bom:31.1.0"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging")
@@ -146,10 +160,13 @@ dependencies {
 
     // Networking
     implementation(libs.bundles.network)
-    debugImplementation(libs.chucker)
-    releaseImplementation(libs.chucker.release)
+
+    implementation(libs.datastore)
+
+    implementation(libs.phoenix)
 
     implementation(libs.libphonenumber)
+
     implementation(libs.lingver)
 
     // Images
@@ -159,16 +176,16 @@ dependencies {
     // Room
     implementation(libs.bundles.room)
     kapt(libs.room.compiler)
+    androidTestImplementation(libs.room.test)
 
     // DI
     implementation(libs.bundles.koin)
 
     // Tests
-    testImplementation(libs.junit)
+    testImplementation(libs.bundles.test)
 
     androidTestImplementation(libs.junit.androidx)
     androidTestImplementation(libs.espresso)
-    androidTestImplementation(libs.room.test)
 
     // Hover SDK
     debugImplementation(project(":hover.sdk"))

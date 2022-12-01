@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.merchants
 
 import android.content.Context
@@ -11,21 +26,21 @@ import com.hover.stax.views.StaxDropdownLayout
 
 class MerchantInput(context: Context, attrs: AttributeSet) : AbstractAutocompleteInput(context, attrs) {
 
-	val binding = MerchantInputBinding.inflate(LayoutInflater.from(context), this, true)
+    val binding = MerchantInputBinding.inflate(LayoutInflater.from(context), this, true)
 
-	override var inputLayout: StaxDropdownLayout = binding.dropdownLayout
-	override var autocomplete: AutoCompleteTextView = binding.dropdownLayout.findViewById(R.id.autoCompleteView)
+    override var inputLayout: StaxDropdownLayout = binding.dropdownLayout
+    override var autocomplete: AutoCompleteTextView = binding.dropdownLayout.findViewById(R.id.autoCompleteView)
 
-	init {
-		initUI()
-	}
+    init {
+        initUI()
+    }
 
-	fun setRecent(merchants: List<Merchant>, c: Context) {
-		val adapter = MerchantArrayAdapter(c, merchants)
-		autocomplete.setAdapter(adapter)
-	}
+    fun setRecent(merchants: List<Merchant>, c: Context) {
+        val adapter = MerchantArrayAdapter(c, merchants)
+        autocomplete.setAdapter(adapter)
+    }
 
-	fun setSelected(merchant: Merchant?) {
-		if (merchant != null) setText(merchant.toString(), false)
-	}
+    fun setSelected(merchant: Merchant?) {
+        if (merchant != null) setText(merchant.toString(), false)
+    }
 }

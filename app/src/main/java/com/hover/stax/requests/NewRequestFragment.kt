@@ -1,5 +1,19 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.requests
-
 
 import android.os.Bundle
 import android.text.Editable
@@ -21,10 +35,13 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
-import com.hover.stax.views.*
+import com.hover.stax.views.AbstractStatefulInput
+import com.hover.stax.views.Stax2LineItem
+import com.hover.stax.views.StaxCardView
+import com.hover.stax.views.StaxDialog
+import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
-
 
 class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface, RequestSenderInterface {
 
@@ -49,7 +66,11 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), requireActivity())
 
@@ -91,8 +112,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     override fun startObservers(root: View) {
         super.startObservers(root)
 
-        //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
-        //https://stackoverflow.com/a/54939860/2371515
+        // This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
+        // https://stackoverflow.com/a/54939860/2371515
         val accountsObserver = Observer<Account?> { a ->
             a?.let {
                 requestViewModel.setActiveAccount(it)
@@ -229,15 +250,18 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         return accountError == null && requesterAcctNoError == null && recipientError == null
     }
 
-    private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            when {
-                !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> requestViewModel.setEditing(true)
-                !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value != null -> askAreYouSure()
-                else -> findNavController().popBackStack()
+    private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(
+        viewLifecycleOwner,
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                when {
+                    !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> requestViewModel.setEditing(true)
+                    !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value != null -> askAreYouSure()
+                    else -> findNavController().popBackStack()
+                }
             }
         }
-    })
+    )
 
     private fun askAreYouSure() {
         requestDialog = StaxDialog(requireActivity())
