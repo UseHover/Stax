@@ -4,6 +4,7 @@ koin = "3.2.0"
 room = "2.4.3"
 ktor = "2.1.2"
 glide = "4.13.2"
+lifecycle = "2.6.0-alpha03"
 
 androidGradlePlugin = "7.3.1"
 kotlin = "1.7.10"
@@ -38,7 +39,11 @@ work-runtime = "androidx.work:work-runtime-ktx:2.7.1"
 lifecycle-runtime = "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 activity-compose = "androidx.activity:activity-compose:1.5.1"
 core-ktx = "androidx.core:core-ktx:+"
-lifecycle-viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+
+lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+
 kotlin-stdlib = "org.jetbrains.kotlin:kotlin-stdlib:1.0.0"
 lifecycle-common = "androidx.lifecycle:lifecycle-common-java8:2.5.1"
 splashscreen = "androidx.core:core-splashscreen:1.0.0"
@@ -102,7 +107,8 @@ espresso = "androidx.test.espresso:espresso-core:3.4.0"
 
 [bundles]
 compose = ["compose-ui", "compose-material", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist"]
-google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "splashscreen", "preference", "legacy-support"]
+google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "kotlin-stdlib", "splashscreen", "preference", "legacy-support"]
+lifecycle = ["lifecycle-viewmodel", "lifecycle-viewmodel-compose", "lifecycle-runtime-compose"]
 logging = ["timber", "amplitude", "appsflyer", "installreferrer", "uxcam"]
 koin = ["koin", "koin-compose"]
 room = ["room", "room-runtime"]
