@@ -19,13 +19,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
@@ -43,9 +41,6 @@ class HomeViewModel(
     private val _homeState = MutableStateFlow(HomeState())
     val homeState = _homeState.asStateFlow()
 
-    private val _accounts = MutableStateFlow<List<Account>>(emptyList())
-    val accounts: StateFlow<List<Account>> = _accounts
-
     init {
         fetchData()
     }
@@ -58,11 +53,6 @@ class HomeViewModel(
 
     private fun getAccounts() = viewModelScope.launch {
         accountsRepo.addedAccounts.collect { accounts ->
-            accounts.forEach {
-                Timber.d("Juuuumaaaaa for ${it.institutionName} is ${it.latestBalance}")
-            }
-
-            _accounts.value = accounts
             _homeState.update { it.copy(accounts = accounts) }
             getBonusList(accounts.map { it.countryAlpha2 }.toTypedArray())
         }
