@@ -65,4 +65,11 @@ class MigrationsTest {
         account.moveToFirst()
         MatcherAssert.assertThat(account, Is(notNullValue()))
     }
+
+    @Test
+    fun migrate51To52() {
+        val db = helper.createDatabase(TEST_DB, 51)
+        db.close()
+        helper.runMigrationsAndValidate(TEST_DB, 52, true, Migrations.M51_52)
+    }
 }

@@ -220,5 +220,16 @@ class Migrations {
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_accounts_name_sim_subscription_id` ON `accounts` (`name`, `sim_subscription_id`)")
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_accounts_channelId` ON `accounts` (`channelId`)")
         }
+
+        val M51_52 = Migration(51, 52) { database ->
+            database.execSQL(
+                "INSERT INTO accounts (institutionId)\n" +
+                     "SELECT a.institution_id\n" +
+                     "FROM (SELECT institution_id, name FROM channels) AS a \n" +
+                     "LEFT JOIN accounts AS b \n" +
+                     "ON a.name = b.alias \n" +
+                     "WHERE b.institutionId IS NULL"
+            )
+        }
     }
 }

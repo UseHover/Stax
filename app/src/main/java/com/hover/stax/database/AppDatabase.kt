@@ -45,7 +45,7 @@ import java.util.concurrent.Executors
     entities = [
         Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class
     ],
-    version = 51,
+    version = 52,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
@@ -114,7 +114,8 @@ abstract class AppDatabase : RoomDatabase() {
                         Migrations.M45_46,
                         Migrations.M47_48,
                         Migrations.M48_49,
-                        Migrations.M50_51
+                        Migrations.M50_51,
+                        Migrations.M51_52
                     )
                     .build()
                 INSTANCE = instance
