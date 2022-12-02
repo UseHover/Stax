@@ -53,7 +53,7 @@ public class Channel implements Comparable<Channel> {
     public String logoUrl;
 
     @NonNull
-    @ColumnInfo(name = "institution_id")
+    @ColumnInfo(name = "institution_id", defaultValue = "-1")
     public int institutionId;
 
     @NonNull
