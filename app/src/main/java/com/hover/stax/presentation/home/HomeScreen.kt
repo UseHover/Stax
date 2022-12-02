@@ -25,18 +25,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hover.sdk.actions.HoverAction
@@ -53,7 +47,6 @@ import com.hover.stax.presentation.home.components.PrimaryFeatures
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
-import timber.log.Timber
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -71,22 +64,6 @@ interface FinancialTipClickInterface {
     fun onTipClicked(tipId: String?)
 }
 
-@Composable
-fun ComposableLifecycle(
-    lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-    onEvent: (LifecycleOwner, Lifecycle.Event) -> Unit
-) {
-    DisposableEffect(lifeCycleOwner) {
-        val observer = LifecycleEventObserver { source, event ->
-            onEvent(source, event)
-        }
-        lifeCycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifeCycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-}
-
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -99,24 +76,8 @@ fun HomeScreen(
     navTo: (dest: Int) -> Unit,
 ) {
     val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
-    val accountState by homeViewModel.accounts.collectAsStateWithLifecycle()
     val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
     val context = LocalContext.current
-
-    ComposableLifecycle { source, event ->
-        if (event == Lifecycle.Event.ON_START) {
-            Timber.d("Inside composable start ${accountState.firstOrNull()?.latestBalance}")
-        }
-        if (event == Lifecycle.Event.ON_PAUSE) {
-            Timber.d("Inside composable pause ${accountState.firstOrNull()?.latestBalance}")
-        }
-        if (event == Lifecycle.Event.ON_RESUME) {
-            Timber.d("Inside composable resume ${accountState.firstOrNull()?.latestBalance}")
-        }
-        if (event == Lifecycle.Event.ON_CREATE) {
-            Timber.d("Inside composable create ${accountState.firstOrNull()?.latestBalance}")
-        }
-    }
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -158,11 +119,12 @@ fun HomeScreen(
                         if (homeState.accounts.isNotEmpty())
                             item {
                                 BalanceHeader(
-                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
+                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount,
+                                    homeState.accounts.isNotEmpty()
                                 )
                             }
 
-                        items(accountState) { account ->
+                        items(homeState.accounts) { account ->
                             BalanceItem(
                                 staxAccount = account,
                                 context = context,
@@ -201,7 +163,8 @@ private fun clickedOnBonus(
     channelsViewModel.payWith(bonus.channel_id)
 }
 
-private fun showKEFeatures(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
+private fun showKEFeatures(countryIsos: List<String>): Boolean =
+    countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
 @Preview
 @Composable
