@@ -17,6 +17,7 @@ package com.hover.stax.hover
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
@@ -26,6 +27,7 @@ import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.domain.model.ACCOUNT_ID
 import com.hover.stax.domain.model.ACCOUNT_NAME
 import com.hover.stax.domain.model.Account
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.settings.TEST_MODE
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -36,13 +38,14 @@ import timber.log.Timber
 const val PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity"
 private const val TIMER_LENGTH = 35000
 
-class HoverSession private constructor(b: Builder) {
-
+class HoverSession private constructor(private val b: Builder) : PushNotificationTopicsInterface {
     private val frag: Fragment?
     private val account: Account
     private val action: HoverAction
     private val requestCode: Int
     private val finalScreenTime: Int
+
+    private val builder: HoverParameters.Builder
 
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
         .apply {
@@ -50,7 +53,7 @@ class HoverSession private constructor(b: Builder) {
             extra(ACCOUNT_NAME, account.getAccountNameExtra())
             private_extra(ACCOUNT_ID, account.id.toString())
             request(b.action.public_id)
-            setHeader(getMessage(b.action, b.activity))
+            setHeader(getMessage(b))
             initialProcessingMessage("")
             showUserStepDescriptions(true)
             timeout(TIMER_LENGTH)
@@ -75,12 +78,15 @@ class HoverSession private constructor(b: Builder) {
         } else value
     }
 
-    private fun getMessage(a: HoverAction, c: Context): String {
-        return when (a.transaction_type) {
-            HoverAction.BALANCE -> c.getString(R.string.balance_msg, a.from_institution_name)
-            HoverAction.AIRTIME -> c.getString(R.string.airtime_msg)
-            else -> c.getString(R.string.transfer_msg)
-        }
+    private fun getMessage(b: Builder): String {
+        return if (b.message != null) { b.message!! }
+            else {
+                when (b.action.transaction_type) {
+                    HoverAction.BALANCE -> b.activity.getString(R.string.balance_msg, b.action.from_institution_name)
+                    HoverAction.AIRTIME -> b.activity.getString(R.string.airtime_msg)
+                    else -> b.activity.getString(R.string.transfer_msg)
+                }
+            }
     }
 
     private fun stopEarly(builder: HoverParameters.Builder, varName: String?) {
@@ -88,22 +94,41 @@ class HoverSession private constructor(b: Builder) {
             builder.stopAt(action.output_params.getInt(varName))
     }
 
-    private fun startHover(builder: HoverParameters.Builder, a: Activity) {
-        Timber.v("starting hover")
-        val i = builder.buildIntent()
-        AnalyticsUtil.logAnalyticsEvent(a.getString(R.string.start_load_screen), a)
-        if (frag != null) frag.startActivityForResult(i, requestCode) else a.startActivityForResult(i, requestCode)
+    fun runForResult(activity: Activity) {
+        Timber.e("starting hover")
+        AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.start_load_screen), activity)
+        logStart(b)
+        updatePushNotifGroupStatus(b.activity)
+        if (frag != null) {
+            frag.startActivityForResult(builder.buildIntent(), requestCode)
+        } else {
+            activity.startActivityForResult(builder.buildIntent(), requestCode) }
+    }
+
+    fun getIntent(): Intent {
+        logStart(b)
+        updatePushNotifGroupStatus(b.activity)
+        return builder.buildIntent()
     }
 
     class Builder(a: HoverAction?, c: Account, activity: Activity, code: Int) {
         val activity: Activity
         var fragment: Fragment? = null
         val account: Account
+        var message: String? = null
         val action: HoverAction
         val extras: JSONObject
         var requestCode: Int
         var finalScreenTime = 0
         var stopVar: String? = null
+
+        constructor(action: HoverAction,
+                    c: Account,
+                    extras: HashMap<String, String>?,
+                    act: Activity,
+                    requestCode: Int) : this(action, c, act, requestCode) {
+            if (!extras.isNullOrEmpty()) { extras(extras) }
+        }
 
         constructor(a: HoverAction?, c: Account, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
             fragment = frag
@@ -137,7 +162,12 @@ class HoverSession private constructor(b: Builder) {
             return this
         }
 
-        fun run(): HoverSession {
+        fun message(msg: String): Builder {
+            message = msg
+            return this
+        }
+
+        fun build(): HoverSession {
             return HoverSession(this)
         }
 
@@ -158,9 +188,33 @@ class HoverSession private constructor(b: Builder) {
         action = b.action
         requestCode = b.requestCode
         finalScreenTime = b.finalScreenTime
-        val builder = getBasicBuilder(b)
+
+        builder = getBasicBuilder(b)
         addExtras(builder, b.extras)
         stopEarly(builder, b.stopVar)
-        startHover(builder, b.activity)
+    }
+
+    private fun logStart(hsb: Builder) {
+        val msg = if (hsb.stopVar != null) {
+            hsb.activity.getString(R.string.checking_var, action.transaction_type, hsb.stopVar)
+        } else { hsb.activity.getString(R.string.starting_transaction, action.transaction_type) }
+        val data = JSONObject()
+        try {
+            data.put("actionId", hsb.action.id)
+        } catch (ignored: JSONException) {
+        }
+        AnalyticsUtil.logAnalyticsEvent(msg, data, hsb.activity)
+        AnalyticsUtil.logAnalyticsEvent(hsb.activity.getString(R.string.start_load_screen), hsb.activity)
+        Timber.e(msg)
+    }
+
+    private fun updatePushNotifGroupStatus(c: Context) {
+        joinTransactionGroup(c)
+        leaveNoUsageGroup(c)
+    }
+
+    private fun updatePushNotifGroupStatus(a: HoverAction, c: Context) {
+        joinAllBountiesGroup(c)
+        joinBountyCountryGroup(a.country_alpha2, c)
     }
 }

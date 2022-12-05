@@ -15,6 +15,7 @@
  */
 package com.hover.stax.transfers
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,9 +24,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -33,15 +34,18 @@ import com.hover.stax.actions.ActionSelect
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.databinding.InputItemBinding
-import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.hover.FEE_REQUEST
+import com.hover.stax.hover.HoverSession
+import com.hover.stax.hover.TransactionContract
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
+import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
+import timber.log.Timber
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
@@ -114,12 +118,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         binding.summaryCard.feeValue.setOnClickListener { checkFee() }
     }
 
-    private fun checkFee() {
-        callHover(FEE_REQUEST)
-    }
-
     private fun showCheckFeeOption(action: HoverAction) {
-//        actionSelectViewModel.activeAction.value?
         Timber.e("action out params: %s", action.output_params)
         binding.summaryCard.feeRow.visibility = if (action.output_params?.opt("fee") != null) View.VISIBLE else ViewGroup.GONE
     }
@@ -253,15 +252,58 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     override fun onSubmitForm() {
-        callHover(0)
-        findNavController().popBackStack()
+        val hsb = generateSessionBuilder(0)
+        callHover(transfer, hsb)
     }
 
-    private fun callHover(requestCode: Int) {
-        (requireActivity() as AbstractHoverCallerActivity).runSession(
+    private fun checkFee() {
+        val hsb = generateSessionBuilder(FEE_REQUEST)
+        hsb.message(getString(R.string.check_fee_for, hsb.action.from_institution_name, hsb.action.transaction_type))
+        hsb.stopAt("fee")
+        Timber.e("Checking fee")
+        callHover(fetchFee, hsb)
+    }
+
+    private fun generateSessionBuilder(requestCode: Int): HoverSession.Builder {
+        return HoverSession.Builder(actionSelectViewModel.activeAction.value!!,
             payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
-            actionSelectViewModel.activeAction.value!!, getExtras(), requestCode
-        )
+            getExtras(), requireActivity(), requestCode)
+    }
+
+    private val fetchFee = registerForActivityResult(TransactionContract()) { data: Intent? ->
+        var fee = "No fee information found"
+        if (data != null && data.hasExtra(com.hover.sdk.transactions.TransactionContract.COLUMN_PARSED_VARIABLES)) {
+            val parsedVariables = data.getSerializableExtra(com.hover.sdk.transactions.TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
+            Timber.e("parsed vars is non-null: %s", parsedVariables)
+
+            if (parsedVariables.containsKey("fee") && parsedVariables["fee"] != null) {
+                fee = parsedVariables["fee"]!!
+            }
+        }
+        Timber.e("parsed vars is null")
+
+        requireActivity().runOnUiThread { UIHelper.flashAndReportMessage(requireContext(), "Got return callback. Fee: " + fee) }
+
+        val dialog = StaxDialog(requireActivity())
+            .setDialogTitle(getString(R.string.fee_fetched_header))
+            .setDialogMessage(fee)
+            .setPosButton(R.string.got_it) { }
+        dialog.showIt()
+    }
+
+    private val transfer = registerForActivityResult(TransactionContract()) { data: Intent? ->
+        if (data != null) {
+            // Handle the Intent
+        }
+    }
+
+    private fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder) {
+        try {
+            launcher.launch(b)
+        } catch (e: Exception) {
+            requireActivity().runOnUiThread { UIHelper.flashAndReportMessage(requireContext(), getString(R.string.error_running_action)) }
+            AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
+        }
     }
 
     private fun getExtras(): HashMap<String, String> {
@@ -374,7 +416,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             binding.summaryCard.recipientValue.setContent(getString(R.string.self_choice), "")
         } else {
             binding.editCard.contactSelect.setHint(
-                if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
+                if (action.required_params.has(HoverAction.ACCOUNT_KEY))
                     getString(R.string.recipientacct_label)
                 else
                     getString(R.string.recipientphone_label)

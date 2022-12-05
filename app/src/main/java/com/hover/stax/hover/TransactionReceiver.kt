@@ -33,6 +33,7 @@ import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
+import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -64,8 +65,13 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         if (intent != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
+                val type = if (StaxTransaction.hasExtra(intent, TransactionContract.COLUMN_CATEGORY))
+                    intent.getStringExtra(TransactionContract.COLUMN_CATEGORY)!!
+                else null
 
-                if (actionId != null) {
+                Timber.e("category: %s", category)
+
+                if (actionId != null && category != "forced-stopped-before-end") {
                     action = actionRepo.getAction(actionId)
 
                     // added null check to prevent npe whenever action is null

@@ -806,9 +806,10 @@
 
 
     <!-- Fees -->
+    <string name="check_fee">Check fee</string>
     <string name="fee_fetched_header">Fee for %1$s</string>
+    <string name="check_fee_for">Checking fee for %1$s %2$s</string>
     <string name="got_it">Got it</string>
-    <string name="check_fee">check fee</string>
 
     <!-- Transaction share  -->
     <string name="share_link">https://stax.onelink.me/nR0j/fb15b3f2</string>

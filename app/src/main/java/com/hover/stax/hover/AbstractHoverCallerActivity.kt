@@ -15,7 +15,9 @@
  */
 package com.hover.stax.hover
 
+import android.app.Activity
 import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -44,16 +46,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
 
     lateinit var navHelper: NavHelper
 
-    private fun runAction(hsb: HoverSession.Builder) = try {
-        hsb.run()
-        updatePushNotifGroupStatus()
-    } catch (e: Exception) {
-        Timber.e(e)
-        runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.error_running_action)) }
-        AnalyticsUtil.logErrorAndReportToFirebase(hsb.action.public_id, getString(R.string.error_running_action_log), e)
-        createLog(hsb, "Failed Actions")
-    }
-
     fun runSession(account: Account, action: HoverAction) {
         runSession(account, action, null, account.id)
     }
@@ -65,21 +57,23 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         requestCode: Int
     ) {
         Timber.e("Building sesh")
-        val hsb = HoverSession.Builder(action, account, this@AbstractHoverCallerActivity, requestCode)
-        if (!extras.isNullOrEmpty()) hsb.extras(extras)
+        val hsb = HoverSession.Builder(action, account, extras, this@AbstractHoverCallerActivity, requestCode)
         if (requestCode == FEE_REQUEST) hsb.stopAt("fee")
-        runAction(hsb)
-        createLog(hsb, getString(R.string.finish_transfer, action.transaction_type))
+        try {
+            hsb.build().runForResult(this)
+        } catch (e: Exception) {
+            runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.error_running_action)) }
+            AnalyticsUtil.logErrorAndReportToFirebase(hsb.action.public_id, getString(R.string.error_running_action_log), e)
+        }
     }
 
-    private fun createLog(hsb: HoverSession.Builder, event: String) {
-        val data = JSONObject()
+    private fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder, activity: Activity) {
         try {
-            data.put("actionId", hsb.action.id)
-        } catch (ignored: JSONException) {
+            launcher.launch(b)
+        } catch (e: Exception) {
+            activity.runOnUiThread { UIHelper.flashAndReportMessage(activity, getString(R.string.error_running_action)) }
+            AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
         }
-        AnalyticsUtil.logAnalyticsEvent(event, data, this)
-        Timber.e(event)
     }
 
     fun makeRegularCall(a: HoverAction, analytics: Int) {
@@ -93,22 +87,22 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         startActivityForResult(i, BOUNTY_REQUEST)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Timber.e("code: %s", requestCode)
-        Timber.e("received result. %s", data?.action)
-        Timber.e("uuid? %s", data?.extras?.getString("uuid"))
-        Timber.e("extras? %s", data?.extras)
-
-        when (requestCode) {
-            REQUEST_REQUEST -> showMessage(getString(R.string.toast_confirm_request))
-            BOUNTY_REQUEST -> showBountyDetails(data)
-            FEE_REQUEST -> showFeeDetails(data)
-            else -> {
-                navToTransactionDetail(data)
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        Timber.e("code: %s", requestCode)
+//        Timber.e("received result. %s", data?.action)
+//        Timber.e("uuid? %s", data?.extras?.getString("uuid"))
+//        Timber.e("extras? %s", data?.extras)
+//
+//        when (requestCode) {
+//            REQUEST_REQUEST -> showMessage(getString(R.string.toast_confirm_request))
+//            BOUNTY_REQUEST -> showBountyDetails(data)
+//            FEE_REQUEST -> Timber.e("Fee request")
+//            else -> {
+//                navToTransactionDetail(data)
+//            }
+//        }
+//    }
 
     private fun generateScheduleMsg(resultCode: Int, data: Intent?): String {
         return if (resultCode == RESULT_OK && data != null)
@@ -123,29 +117,7 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
         navToTransactionDetail(data)
     }
 
-    private fun showFeeDetails(data: Intent?) {
-        Timber.e("Request code is fee")
-        if (data != null) {
-            val dialog = StaxDialog(this)
-                .setDialogTitle(getString(R.string.fee_fetched_header))
-                .setDialogMessage(getFee(data))
-                .setPosButton(R.string.got_it) { }
-            dialog.showIt()
-        }
-    }
 
-    private fun getFee(data: Intent): String {
-        if (data.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
-            val parsedVariables = data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
-            Timber.e("parsed vars is non-null: %s", parsedVariables)
-
-            if (parsedVariables.containsKey("fee") && parsedVariables["fee"] != null) {
-                return parsedVariables["fee"]!!
-            }
-        }
-        Timber.e("parsed vars is null")
-        return "No fee information found"
-    }
 
     private fun navToTransactionDetail(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
@@ -154,11 +126,6 @@ abstract class AbstractHoverCallerActivity : AppCompatActivity(), PushNotificati
                 data.extras!!.getString("uuid")!!
             )
         }
-    }
-
-    private fun updatePushNotifGroupStatus() {
-        joinTransactionGroup(this)
-        leaveNoUsageGroup(this)
     }
 
     private fun updatePushNotifGroupStatus(a: HoverAction) {

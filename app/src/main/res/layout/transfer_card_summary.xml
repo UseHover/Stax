@@ -10,7 +10,8 @@
         <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_10">
+                android:layout_marginHorizontal="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_55">
 
             <TableRow
                     android:id="@+id/accountsRow"
@@ -43,7 +44,8 @@
                         android:textAlignment="viewEnd" />
             </TableRow>
 
-            <TableRow android:id="@+id/amountRow">
+            <TableRow android:id="@+id/amountRow"
+                android:layout_marginTop="@dimen/margin_21">
 
                 <TextView
                         android:text="@string/transfer_amount_label"
@@ -60,6 +62,7 @@
 
             <TableRow
                     android:id="@+id/feeRow"
+                    android:layout_marginTop="@dimen/margin_21"
                     android:visibility="gone">
 
                 <TextView
@@ -103,7 +106,6 @@
                 android:id="@+id/btnRow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_21"
                 android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatButton

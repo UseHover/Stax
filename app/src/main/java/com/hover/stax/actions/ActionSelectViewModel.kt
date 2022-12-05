@@ -21,11 +21,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.actions.HoverAction.ACCOUNT_KEY
-import com.hover.sdk.actions.HoverAction.AMOUNT_KEY
-import com.hover.sdk.actions.HoverAction.NOTE_KEY
-import com.hover.sdk.actions.HoverAction.PHONE_KEY
-import com.hover.sdk.actions.HoverAction.PIN_KEY
+import com.hover.sdk.actions.HoverAction.*
+import com.hover.sdk.api.HoverConfigException
 import com.hover.stax.R
 import com.hover.stax.domain.model.ACCOUNT_NAME
 
@@ -62,8 +59,10 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
     private fun initNonStandardVariables(action: HoverAction?) {
         action?.let {
             val variableMap = LinkedHashMap<String, String>()
-            action.requiredParams.forEach {
-                if (!isStandardVariable(it)) variableMap[it] = ""
+            val keys: Iterator<String> = action.required_params.keys()
+            while (keys.hasNext()) {
+                val key = keys.next()
+                if (!isStandardVariable(key)) variableMap[key] = ""
             }
             nonStandardVariables.postValue(variableMap)
         }
