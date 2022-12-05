@@ -47,7 +47,7 @@ legacy-support = "androidx.legacy:legacy-support-v4:1.0.0"
 
 timber = "com.jakewharton.timber:timber:5.0.1"
 amplitude = "com.amplitude:android-sdk:3.35.1"
-appsflyer = "com.appsflyer:af-android-sdk:6.8.0"
+appsflyer = "com.appsflyer:af-android-sdk:6.8.2"
 installreferrer = "com.android.installreferrer:installreferrer:2.2"
 uxcam = "com.uxcam:uxcam:3.5.1"
 
