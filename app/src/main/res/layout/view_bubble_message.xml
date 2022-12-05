@@ -19,7 +19,7 @@
             android:layout_marginTop="13dp"
             android:contentDescription="@string/btn_ok"
             android:visibility="gone"
-            tools:src="@drawable/ic_stax"
+            tools:src="@mipmap/ic_launcher_round"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
