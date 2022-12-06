@@ -44,6 +44,8 @@ import timber.log.Timber
 
 class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface {
 
+    lateinit var navHelper: NavHelper
+
     private val transferViewModel: TransferViewModel by viewModel()
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()

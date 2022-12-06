@@ -24,18 +24,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
@@ -53,7 +51,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AccountDetailFragment :
-    Fragment(),
+    AbstractBalanceCheckerFragment(),
     TransactionHistoryAdapter.SelectListener,
     ScheduledAdapter.SelectListener,
     RequestsAdapter.SelectListener {
@@ -214,21 +212,13 @@ class AccountDetailFragment :
     }
 
     private fun observeBalanceCheck() {
-        collectLifecycleFlow(balancesViewModel.balanceAction) {
-            attemptCallHover(viewModel.account.value, it)
+        collectLifecycleFlow(balancesViewModel.balanceAction) { action ->
+            viewModel.account.value?.let { callHover(checkBalance, generateSessionBuilder(it, action)) }
         }
     }
 
     private fun onTapBalanceRefresh(account: Account?) {
         balancesViewModel.requestBalance(account)
-    }
-
-    private fun attemptCallHover(account: Account?, action: HoverAction?) {
-        action?.let { account?.let { callHover(account, action) } }
-    }
-
-    private fun callHover(account: Account, action: HoverAction) {
-        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
     }
 
     private fun setUpRemoveAccount(account: Account) {

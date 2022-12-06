@@ -27,6 +27,8 @@ import android.widget.LinearLayout
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -34,18 +36,17 @@ import com.hover.stax.actions.ActionSelect
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.databinding.InputItemBinding
-import com.hover.stax.hover.FEE_REQUEST
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
-import com.hover.stax.utils.splitCamelCase
+import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
+
+
+const val FEE_REQUEST = 208
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
@@ -257,6 +258,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     override fun onSubmitForm() {
         val hsb = generateSessionBuilder(0)
         callHover(transfer, hsb)
+        findNavController().popBackStack()
     }
 
     private fun checkFee() {
@@ -272,6 +274,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             getExtras(), requireActivity(), requestCode)
     }
 
+    private val transfer = registerForActivityResult(TransactionContract()) { data: Intent? ->
+        goToDeets(data)
+    }
+
     private val fetchFee = registerForActivityResult(TransactionContract()) { data: Intent? ->
         var fee = "No fee information found"
         if (data != null && data.hasExtra(com.hover.sdk.transactions.TransactionContract.COLUMN_PARSED_VARIABLES)) {
@@ -283,21 +289,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             }
             setFeeState(fee)
             transferViewModel.setEditing(false)
-        }
-    }
-
-    private val transfer = registerForActivityResult(TransactionContract()) { data: Intent? ->
-        if (data != null) {
-            // Handle the Intent
-        }
-    }
-
-    private fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder) {
-        try {
-            launcher.launch(b)
-        } catch (e: Exception) {
-            requireActivity().runOnUiThread { UIHelper.flashAndReportMessage(requireContext(), getString(R.string.error_running_action)) }
-            AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
         }
     }
 

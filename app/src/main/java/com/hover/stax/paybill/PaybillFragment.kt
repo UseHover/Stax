@@ -15,6 +15,7 @@
  */
 package com.hover.stax.paybill
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +28,9 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.domain.model.Account
+import com.hover.stax.hover.HoverSession
+import com.hover.stax.hover.TransactionContract
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
@@ -287,18 +290,26 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     override fun onSubmitForm() {
         with(accountsViewModel) {
             val actions = institutionActions.value
-            val account = activeAccount.value
             val activeAction = actionSelectViewModel.activeAction.value
-
             val actionToRun = activeAction ?: actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
 
-            if (!actions.isNullOrEmpty() && account != null)
-                (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun ?: actions.first(), viewModel.wrapExtras(), 0)
-            else
-                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $account")
+            if (!actions.isNullOrEmpty() && activeAccount.value != null) {
+                val hsb = generateSessionBuilder(actionToRun!!, activeAccount.value!!, 0)
+                callHover(paybill, hsb)
+            } else {
+                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, ${activeAccount.value!!}") }
 
             findNavController().popBackStack()
         }
+    }
+
+    private fun generateSessionBuilder(action: HoverAction, account: Account, requestCode: Int): HoverSession.Builder {
+        return HoverSession.Builder(action,payWithDropdown.getHighlightedAccount() ?: account,
+            viewModel.wrapExtras(), requireActivity(), requestCode)
+    }
+
+    private val paybill = registerForActivityResult(TransactionContract()) { data: Intent? ->
+        goToDeets(data)
     }
 
     private fun showUpdatePaybillConfirmation() = viewModel.selectedPaybill.value?.let {

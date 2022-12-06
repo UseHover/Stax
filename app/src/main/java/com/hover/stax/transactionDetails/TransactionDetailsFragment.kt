@@ -15,6 +15,7 @@
  */
 package com.hover.stax.transactionDetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -42,10 +44,14 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.AbstractBalanceCheckerFragment
+import com.hover.stax.hover.BountyContract
+import com.hover.stax.hover.HoverSession
+import com.hover.stax.hover.TransactionContract
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
@@ -60,7 +66,7 @@ import timber.log.Timber
 
 const val UUID = "uuid"
 
-class TransactionDetailsFragment : Fragment() {
+class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
 
@@ -299,8 +305,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun retry(transaction: StaxTransaction) {
         updateRetryCounter(transaction.action_id)
         if (transaction.transaction_type == HoverAction.BALANCE) {
-            (requireActivity() as AbstractHoverCallerActivity)
-                .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
+            callHover(checkBalance, generateSessionBuilder(viewModel.account.value!!, viewModel.action.value!!))
         } else if (transaction.transaction_type == HoverAction.P2P || transaction.transaction_type == HoverAction.AIRTIME)
             navToTransferDetail(transaction)
 //        else if (transaction.transaction_type == HoverAction.BILL)
@@ -327,7 +332,14 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun retryBounty() {
         viewModel.action.value?.let {
-            (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), requireContext())
+            bounty.launch(it)
+        }
+    }
+
+    private val bounty = registerForActivityResult(BountyContract()) { data: Intent? ->
+        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
         }
     }
 
