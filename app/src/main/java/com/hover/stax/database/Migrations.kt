@@ -245,7 +245,7 @@ class Migrations {
                      "FROM (SELECT institution_id, id FROM channels) AS a \n" +
                      "LEFT JOIN accounts AS b \n" +
                      "ON a.id = b.channelId \n" +
-                     "WHERE b.institutionId IS NULL"
+                     "WHERE b.institutionId IS NULL OR b.institutionId IS -1"
             )
         }
     }
