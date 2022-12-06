@@ -66,6 +66,7 @@
                     android:visibility="gone">
 
                 <TextView
+                        android:id="@+id/feeLabel"
                         android:text="@string/transfer_fee_label"
                         android:textColor="@color/offWhite"
                         android:textSize="@dimen/text_16" />

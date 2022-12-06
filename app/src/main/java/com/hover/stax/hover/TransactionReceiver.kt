@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactRepo
@@ -65,13 +66,9 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         if (intent != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
-                val type = if (StaxTransaction.hasExtra(intent, TransactionContract.COLUMN_CATEGORY))
-                    intent.getStringExtra(TransactionContract.COLUMN_CATEGORY)!!
-                else null
+                val type = intent.getStringExtra(TransactionContract.COLUMN_TYPE)!!
 
-                Timber.e("category: %s", category)
-
-                if (actionId != null && category != "forced-stopped-before-end") {
+                if (actionId != null && type != Transaction.VAR_CHECK) {
                     action = actionRepo.getAction(actionId)
 
                     // added null check to prevent npe whenever action is null
@@ -85,7 +82,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                         updateBusinesses(intent)
                         updateRequests(intent)
                     }
-                } else {
+                } else if (actionId == null) {
                     AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no action ID", context)
                 }
             }

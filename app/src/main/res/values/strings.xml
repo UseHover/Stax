@@ -355,6 +355,7 @@
     <string name="recipient_label">To</string>
     <string name="business_label">Business</string>
     <string name="transfer_fee_label">Fee</string>
+    <string name="transfer_fee_label_who">%1$s Fee</string>
     <string name="sender_label">From</string>
     <string name="send_who_header">Send money to</string>
     <string name="airtime_who_header">Buy airtime for</string>
