@@ -83,7 +83,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
         createNotificationChannel()
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stax)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
             .setContentTitle(context.getString(R.string.importing_channels))
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setAutoCancel(true)

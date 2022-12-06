@@ -50,7 +50,7 @@ class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(contex
     private fun notifyUser(s: Schedule) {
         val contacts = contactDao[s.recipient_ids.split(",").toTypedArray()]
         val builder = NotificationCompat.Builder(applicationContext, "DEFAULT")
-            .setSmallIcon(R.drawable.ic_stax)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
             .setContentTitle(s.title(applicationContext))
             .setContentText(s.notificationMsg(applicationContext, contacts))
             .setStyle(NotificationCompat.BigTextStyle().bigText(s.notificationMsg(applicationContext, contacts)))

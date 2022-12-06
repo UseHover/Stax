@@ -130,7 +130,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun initHover() {
         Hover.initialize(this)
-        Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, R.drawable.ic_stax, this)
+        Hover.setBranding(getString(R.string.app_name), R.drawable.named_stax_logo, R.mipmap.ic_launcher_round, this)
         Hover.setPermissionActivity(PERM_ACTIVITY, this)
     }
 

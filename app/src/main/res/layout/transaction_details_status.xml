@@ -14,7 +14,7 @@
             android:layout_marginTop="@dimen/margin_16"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_stax"
+            tools:src="@mipmap/ic_launcher_round"
             tools:ignore="ContentDescription" />
 
     <TextView

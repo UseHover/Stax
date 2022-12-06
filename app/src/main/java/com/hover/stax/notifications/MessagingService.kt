@@ -65,7 +65,7 @@ class MessagingService : FirebaseMessagingService() {
         val pendingIntent = getPendingIntent(title, redirect)
 
         val builder = NotificationCompat.Builder(this, channelId).apply {
-            setSmallIcon(R.drawable.ic_stax)
+            setSmallIcon(R.mipmap.ic_launcher_round)
             setAutoCancel(true)
             setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             priority = 2
