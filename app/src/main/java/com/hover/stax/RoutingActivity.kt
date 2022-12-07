@@ -221,6 +221,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun chooseNavigation(intent: Intent) {
+        Timber.i("Intent data is: ${intent.data.toString()}, Extra is ${intent.extras.toString()}, and action is ${intent.action.toString()}")
         when {
             !hasPassedOnboarding() -> goToOnBoardingActivity()
             redirectToFinancialTips() -> goToFinancialTips()
@@ -234,6 +235,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
                 }
             }
             isForFulfilRequest(intent) -> goToFulfillRequestActivity(intent)
+            isForSettingsScreen(intent) -> goToSettings()
             else -> goToMainActivity(null)
         }
 
@@ -268,6 +270,12 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         startActivity(Intent(this, MainActivity::class.java).putExtra(REQUEST_LINK, intent.data.toString()))
         finish()
     }
+    private fun goToSettings() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(FRAGMENT_DIRECT, R.id.navigation_settings)
+        startActivity(intent)
+        finish()
+    }
 
     private fun goToMainActivity(redirectLink: String?) {
         val intent = Intent(this, MainActivity::class.java)
@@ -290,11 +298,21 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun isToRedirectFromMainActivity(intent: Intent): Boolean = intent.extras?.getString(FRAGMENT_DIRECT) != null
 
-    private fun isForFulfilRequest(intent: Intent): Boolean = intent.action != null && intent.action == Intent.ACTION_VIEW && intent.data != null
+    private fun isForFulfilRequest(intent: Intent): Boolean = hasDeepLink("pay")
 
     private fun openUrl(url: String) = startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)))
 
     private fun hasPassedOnboarding(): Boolean = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, this)
 
+    private fun isForSettingsScreen(intent: Intent) : Boolean  = hasDeepLink("share")
+
     private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
+
+    private fun hasDeepLink(expectedPath: String) : Boolean {
+        val parameters: List<String> =  intent.data?.pathSegments?: emptyList()
+        if(parameters.isEmpty()) return false
+
+        val param = parameters[parameters.size - 1]
+        return param.contains("/$expectedPath")
+    }
 }
