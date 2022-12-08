@@ -303,11 +303,14 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
     private fun processForRecipient(data: Intent?) {
         transferViewModel.contact.value?.let {
+            val showPopup = !it.hasName()
             it.updateNames(data)
             val dialog = StaxDialog(layoutInflater)
                 .setDialogMessage(getString(R.string.check_recipient_result, it.accountNumber, it.name))
                 .setPosButton(R.string.btn_ok) { }
-            dialog.showIt()
+
+            if (showPopup)
+                dialog.showIt()
             transferViewModel.saveContact()
         }
     }
