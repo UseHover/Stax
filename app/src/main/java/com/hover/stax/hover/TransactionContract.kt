@@ -24,9 +24,6 @@ class TransactionContract : ActivityResultContract<HoverSession.Builder, Intent?
 	}
 
 	override fun parseResult(resultCode: Int, result: Intent?) : Intent? {
-		if (resultCode != Activity.RESULT_OK) {
-			return null
-		}
 		return result
 	}
 
