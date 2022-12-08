@@ -163,7 +163,7 @@ class MerchantFragment : AbstractFormFragment() {
     }
 
     override fun onSubmitForm() {
-        val hsb = generateSessionBuilder(0)
+        val hsb = generateSessionBuilder()
         callHover(pay, hsb)
         findNavController().popBackStack()
     }
@@ -176,10 +176,10 @@ class MerchantFragment : AbstractFormFragment() {
         TODO("Not yet implemented")
     }
 
-    private fun generateSessionBuilder(requestCode: Int): HoverSession.Builder {
+    private fun generateSessionBuilder(): HoverSession.Builder {
         return HoverSession.Builder(actionSelectViewModel.activeAction.value!!,
             payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
-            viewModel.wrapExtras(), requireActivity(), requestCode)
+            viewModel.wrapExtras(), requireActivity())
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {

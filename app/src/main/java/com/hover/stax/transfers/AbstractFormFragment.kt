@@ -100,7 +100,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun generateSessionBuilder(action: HoverAction): HoverSession.Builder {
-        return HoverSession.Builder(action, accountsViewModel.activeAccount.value!!, null, requireActivity(), 0)
+        return HoverSession.Builder(action, accountsViewModel.activeAccount.value!!, null, requireActivity())
     }
 
     private val checkBalance = registerForActivityResult(TransactionContract()) { data: Intent? ->

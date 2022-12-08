@@ -45,9 +45,6 @@ import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
-
-const val FEE_REQUEST = 208
-
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
     private lateinit var transferViewModel: TransferViewModel
@@ -256,22 +253,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     override fun onSubmitForm() {
-        val hsb = generateSessionBuilder(0)
-        callHover(transfer, hsb)
+        callHover(transfer, generateSessionBuilder())
         findNavController().popBackStack()
     }
 
     private fun checkFee() {
-        val hsb = generateSessionBuilder(FEE_REQUEST)
-        hsb.message(getString(R.string.check_fee_for, hsb.action.from_institution_name, hsb.action.transaction_type))
+        val hsb = generateSessionBuilder()
+        hsb.message(getString(R.string.check_transfer_fee_for, transferViewModel.amount.value, hsb.action.from_institution_name))
         hsb.stopAt("fee")
         callHover(fetchFee, hsb)
     }
 
-    private fun generateSessionBuilder(requestCode: Int): HoverSession.Builder {
+    private fun generateSessionBuilder(): HoverSession.Builder {
         return HoverSession.Builder(actionSelectViewModel.activeAction.value!!,
             payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
-            getExtras(), requireActivity(), requestCode)
+            getExtras(), requireActivity())
     }
 
     private val transfer = registerForActivityResult(TransactionContract()) { data: Intent? ->

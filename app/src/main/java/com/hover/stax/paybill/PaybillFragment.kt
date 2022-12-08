@@ -294,7 +294,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             val actionToRun = activeAction ?: actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
 
             if (!actions.isNullOrEmpty() && activeAccount.value != null) {
-                val hsb = generateSessionBuilder(actionToRun!!, activeAccount.value!!, 0)
+                val hsb = generateSessionBuilder(actionToRun!!, activeAccount.value!!)
                 callHover(paybill, hsb)
             } else {
                 Timber.e("Request composition not complete; ${actions?.firstOrNull()}, ${activeAccount.value!!}") }
@@ -303,9 +303,9 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         }
     }
 
-    private fun generateSessionBuilder(action: HoverAction, account: Account, requestCode: Int): HoverSession.Builder {
+    private fun generateSessionBuilder(action: HoverAction, account: Account): HoverSession.Builder {
         return HoverSession.Builder(action,payWithDropdown.getHighlightedAccount() ?: account,
-            viewModel.wrapExtras(), requireActivity(), requestCode)
+            viewModel.wrapExtras(), requireActivity())
     }
 
     private val paybill = registerForActivityResult(TransactionContract()) { data: Intent? ->

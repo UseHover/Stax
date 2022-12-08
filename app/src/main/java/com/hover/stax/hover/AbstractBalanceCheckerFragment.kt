@@ -20,7 +20,7 @@ abstract class AbstractBalanceCheckerFragment: Fragment() {
 	}
 
 	protected fun generateSessionBuilder(account: Account, action: HoverAction): HoverSession.Builder {
-		return HoverSession.Builder(action, account, requireActivity(), 0)
+		return HoverSession.Builder(action, account, requireActivity())
 	}
 
 	protected fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder) {

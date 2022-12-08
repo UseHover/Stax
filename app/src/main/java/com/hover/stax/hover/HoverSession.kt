@@ -39,7 +39,6 @@ class HoverSession private constructor(b: Builder) {
     private val frag: Fragment?
     private val account: Account
     private val action: HoverAction
-    private val requestCode: Int
     private val finalScreenTime: Int
 
     private val builder: HoverParameters.Builder
@@ -95,26 +94,24 @@ class HoverSession private constructor(b: Builder) {
         return builder.buildIntent()
     }
 
-    class Builder(a: HoverAction?, c: Account, activity: Activity, code: Int) {
+    class Builder(a: HoverAction?, c: Account, activity: Activity) {
         val activity: Activity
         var fragment: Fragment? = null
         val account: Account
         var message: String? = null
         val action: HoverAction
         val extras: JSONObject
-        var requestCode: Int
         var finalScreenTime = 0
         var stopVar: String? = null
 
         constructor(action: HoverAction,
                     c: Account,
                     extras: HashMap<String, String>?,
-                    act: Activity,
-                    requestCode: Int) : this(action, c, act, requestCode) {
+                    act: Activity) : this(action, c, act) {
             if (!extras.isNullOrEmpty()) { extras(extras) }
         }
 
-        constructor(a: HoverAction?, c: Account, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
+        constructor(a: HoverAction?, c: Account, act: Activity, frag: Fragment?) : this(a, c, act) {
             fragment = frag
         }
 
@@ -161,7 +158,6 @@ class HoverSession private constructor(b: Builder) {
             account = c
             action = a
             extras = JSONObject()
-            requestCode = code
         }
     }
 
@@ -170,7 +166,6 @@ class HoverSession private constructor(b: Builder) {
         frag = b.fragment
         account = b.account
         action = b.action
-        requestCode = b.requestCode
         finalScreenTime = b.finalScreenTime
 
         builder = getBasicBuilder(b)
