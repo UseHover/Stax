@@ -156,14 +156,16 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             it?.let {
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
-                showCheckFeeOption(it)
+                showLookupOptions(it)
                 updateBonusBanner(it, accountsViewModel.bonusActions.value)
             }
         }
     }
 
-    private fun showCheckFeeOption(action: HoverAction) {
+    private fun showLookupOptions(action: HoverAction) {
         Timber.e("action out params: %s", action.output_params)
+        showVerifyRecipient(transferViewModel.contact.value, action)
+        binding.summaryCard.verifyRecipientBtn.setOnClickListener { checkRecipient() }
         binding.summaryCard.feeRow.visibility = if (action.output_params?.opt("fee") != null) View.VISIBLE else ViewGroup.GONE
         setFeeState(null)
     }
@@ -178,8 +180,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         transferViewModel.contact.observe(viewLifecycleOwner) {
             it?.let {
                 binding.summaryCard.recipientValue.setContact(it)
+                showVerifyRecipient(it, actionSelectViewModel.activeAction.value)
             }
         }
+    }
+
+    private fun showVerifyRecipient(contact: StaxContact?, action: HoverAction?) {
+        binding.summaryCard.verifyRecipientRow.visibility =
+            if (contact?.hasName() == false && action?.output_params?.opt("recipientName") != null) View.VISIBLE
+            else View.GONE
     }
 
     private fun observeAmount() {
@@ -257,11 +266,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         findNavController().popBackStack()
     }
 
+    private fun checkRecipient() {
+        val hsb = generateSessionBuilder()
+        hsb.message(getString(R.string.check_recipient_for, transferViewModel.contact.value?.accountNumber))
+        hsb.stopAt("recipientName")
+        callHover(retrieveData, hsb)
+    }
+
     private fun checkFee() {
         val hsb = generateSessionBuilder()
         hsb.message(getString(R.string.check_transfer_fee_for, transferViewModel.amount.value, hsb.action.from_institution_name))
         hsb.stopAt("fee")
-        callHover(fetchFee, hsb)
+        callHover(retrieveData, hsb)
     }
 
     private fun generateSessionBuilder(): HoverSession.Builder {
@@ -274,18 +290,38 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         goToDeets(data)
     }
 
-    private val fetchFee = registerForActivityResult(TransactionContract()) { data: Intent? ->
-        var fee = "No fee information found"
-        if (data != null && data.hasExtra(com.hover.sdk.transactions.TransactionContract.COLUMN_PARSED_VARIABLES)) {
-            val parsedVariables = data.getSerializableExtra(com.hover.sdk.transactions.TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
-            Timber.e("parsed vars is non-null: %s", parsedVariables)
+    private val retrieveData = registerForActivityResult(TransactionContract()) { data: Intent? ->
+        processForFee(data)
+        processForRecipient(data)
+        transferViewModel.setEditing(false)
+    }
 
-            if (parsedVariables.containsKey("fee") && parsedVariables["fee"] != null) {
-                fee = parsedVariables["fee"]!!
-            }
-            setFeeState(fee)
-            transferViewModel.setEditing(false)
+    private fun processForFee(data: Intent?) {
+        val fee = processFor(data, "fee", "No fee information found")
+        setFeeState(fee)
+    }
+
+    private fun processForRecipient(data: Intent?) {
+        transferViewModel.contact.value?.let {
+            it.updateNames(data)
+            val dialog = StaxDialog(layoutInflater)
+                .setDialogMessage(getString(R.string.check_recipient_result, it.accountNumber, it.name))
+                .setPosButton(R.string.btn_ok) { }
+            dialog.showIt()
+            transferViewModel.saveContact()
         }
+    }
+
+    private fun processFor(data: Intent?, key: String, defaultVal: String): String? {
+        if (data != null && data.hasExtra(com.hover.sdk.transactions.TransactionContract.COLUMN_PARSED_VARIABLES)) {
+            val parsedVariables =
+                data.getSerializableExtra(com.hover.sdk.transactions.TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
+            Timber.e("parsed vars is non-null: %s", parsedVariables)
+            if (parsedVariables.containsKey(key) && parsedVariables[key] != null) {
+                return parsedVariables[key]!!
+            }
+        }
+        return defaultVal
     }
 
     private fun getExtras(): HashMap<String, String> {

@@ -354,6 +354,7 @@
     <string name="request_note_label">What is your request for?</string>
     <string name="recipient_label">To</string>
     <string name="business_label">Business</string>
+    <string name="verify_recipient_label">Check recipient name</string>
     <string name="transfer_fee_label">Fee</string>
     <string name="transfer_fee_label_who">%1$s Fee</string>
     <string name="sender_label">From</string>
@@ -808,8 +809,9 @@
 
     <!-- Fees -->
     <string name="check_fee">Check fee</string>
-    <string name="fee_fetched_header">Fee for %1$s</string>
     <string name="check_transfer_fee_for">Checking fee to send %1$s with %2$s</string>
+    <string name="check_recipient_for">Checking owner of %1$s</string>
+    <string name="check_recipient_result">The owner of %1$s is %2$s.</string>
     <string name="got_it">Got it</string>
 
     <!-- Transaction share  -->

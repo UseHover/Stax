@@ -44,6 +44,23 @@
                         android:textAlignment="viewEnd" />
             </TableRow>
 
+            <TableRow
+                android:id="@+id/verifyRecipientRow"
+                android:layout_marginTop="-16dp">
+
+                <TextView
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_16" />
+
+                <TextView
+                    android:id="@+id/verifyRecipientBtn"
+                    android:text="@string/verify_recipient_label"
+                    android:layout_weight="1"
+                    android:textAlignment="viewEnd"
+                    android:textColor="@color/brightBlue"
+                    android:textSize="@dimen/text_21" />
+            </TableRow>
+
             <TableRow android:id="@+id/amountRow"
                 android:layout_marginTop="@dimen/margin_21">
 
