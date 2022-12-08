@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import timber.log.Timber
 
 class BountyContract : ActivityResultContract<HoverAction, Intent?>(),
 	PushNotificationTopicsInterface {
@@ -16,11 +17,12 @@ class BountyContract : ActivityResultContract<HoverAction, Intent?>(),
 		return HoverParameters.Builder(context).request(a.public_id).setEnvironment(HoverParameters.MANUAL_ENV).buildIntent()
 	}
 
-	override fun parseResult(resultCode: Int, result: Intent?) : Intent? {
-		if (resultCode != Activity.RESULT_OK) {
-			return null
+	override fun parseResult(resultCode: Int, intent: Intent?) : Intent? {
+		// We don't care about the resultCode - bounties are currently always cancelled because they rely on the timer running out to end.
+		if (intent == null || intent.extras == null || intent.extras!!.getString("uuid") == null) {
+			Timber.e("Bounty result got null transaction data")
 		}
-		return result
+		return intent
 	}
 
 	private fun updatePushNotifGroupStatus(c: Context, a: HoverAction) {
