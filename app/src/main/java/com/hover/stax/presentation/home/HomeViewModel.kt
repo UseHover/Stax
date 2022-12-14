@@ -15,6 +15,8 @@
  */
 package com.hover.stax.presentation.home
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
@@ -38,8 +40,8 @@ class HomeViewModel(
     private val tipsUseCase: TipsUseCase
 ) : ViewModel() {
 
-    private val _homeState = MutableStateFlow(HomeState())
-    val homeState = _homeState.asStateFlow()
+    private val _homeState = MutableLiveData(HomeState())
+    val homeState: LiveData<HomeState> get() = _homeState
 
     init {
         fetchData()
@@ -53,7 +55,7 @@ class HomeViewModel(
 
     private fun getAccounts() = viewModelScope.launch {
         accountsRepo.addedAccounts.collect { accounts ->
-            _homeState.update { it.copy(accounts = accounts) }
+            _homeState.value = homeState.value?.copy(accounts = accounts)
             getBonusList(accounts.map { it.countryAlpha2 }.toTypedArray())
         }
     }
@@ -61,7 +63,7 @@ class HomeViewModel(
     private fun getBonusList(countries: Array<String>) = viewModelScope.launch {
         bonusListToFlow(countries).collect { bonusList ->
             if (bonusList is Resource.Success)
-                _homeState.update { it.copy(bonuses = bonusList.data ?: emptyList()) }
+                _homeState.value= homeState.value?.copy(bonuses = bonusList.data ?: emptyList())
         }
     }
 
@@ -78,17 +80,17 @@ class HomeViewModel(
 
     private fun getFinancialTips() = tipsUseCase().onEach { result ->
         if (result is Resource.Success)
-            _homeState.update { it.copy(financialTips = result.data ?: emptyList()) }
+            _homeState.value= homeState.value?.copy(financialTips = result.data ?: emptyList())
     }.launchIn(viewModelScope)
 
-    private fun getDismissedFinancialTips() = _homeState.update {
-        it.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
+    private fun getDismissedFinancialTips() {
+        _homeState.value =  homeState.value?.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
     }
 
     fun dismissTip(id: String) {
         viewModelScope.launch {
             tipsUseCase.dismissTip(id)
-            _homeState.update { it.copy(dismissedTipId = id) }
+            _homeState.value = homeState.value?.copy(dismissedTipId = id)
         }
     }
 }
