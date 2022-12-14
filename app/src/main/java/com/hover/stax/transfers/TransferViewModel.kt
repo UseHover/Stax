@@ -58,7 +58,8 @@ class TransferViewModel(
 
     fun setRecipientNumber(str: String) {
         if (contact.value != null && contact.value.toString() == str) return
-        contact.value = if (str.isEmpty()) StaxContact() else StaxContact(str)
+        if (str.isEmpty()) { contact.value = StaxContact() }
+        else { contact.value = StaxContact(str) }
     }
 
     private fun setRecipientSmartly(r: Request?, countryAlpha2: String?) =
@@ -133,10 +134,17 @@ class TransferViewModel(
     }
 
     fun saveContact() {
-        contact.value?.let { sc ->
-            viewModelScope.launch {
-                sc.lastUsedTimestamp = DateUtils.now()
-                contactRepo.save(sc)
+        viewModelScope.launch(Dispatchers.IO) {
+            contact.value?.let { sc ->
+                val lookup = StaxContact.getContactByPhoneValue(sc.accountNumber, "", contactRepo)
+                val c = if (!sc.hasName() && lookup != null) {
+                    lookup
+                } else {
+                    sc
+                }
+                c.lastUsedTimestamp = DateUtils.now()
+                contactRepo.save(c)
+                contact.postValue(c)
             }
         }
     }

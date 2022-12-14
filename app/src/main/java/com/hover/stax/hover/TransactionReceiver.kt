@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactRepo
@@ -33,6 +34,7 @@ import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
+import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -64,8 +66,9 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         if (intent != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
+                val type = intent.getStringExtra(TransactionContract.COLUMN_TYPE)!!
 
-                if (actionId != null) {
+                if (actionId != null && type != Transaction.VAR_CHECK) {
                     action = actionRepo.getAction(actionId)
 
                     // added null check to prevent npe whenever action is null
@@ -79,7 +82,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                         updateBusinesses(intent)
                         updateRequests(intent)
                     }
-                } else {
+                } else if (actionId == null) {
                     AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no action ID", context)
                 }
             }

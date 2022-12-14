@@ -42,7 +42,7 @@ class ContactRepo(db: AppDatabase) {
         return contactDao.getAsync(id)
     }
 
-    fun getContactByPhone(phone: String): StaxContact? {
+    fun getContactByPhone(phone: String?): StaxContact? {
         return contactDao.getByPhone("%$phone%")
     }
 

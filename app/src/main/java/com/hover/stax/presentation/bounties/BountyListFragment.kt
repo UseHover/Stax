@@ -15,6 +15,7 @@
  */
 package com.hover.stax.presentation.bounties
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,7 +34,7 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.data.remote.workers.UpdateBountyTransactionsWorker
 import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.domain.model.Bounty
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.BountyContract
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
@@ -174,7 +175,14 @@ class BountyListFragment : Fragment() {
 
     private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
-        (requireActivity() as AbstractHoverCallerActivity).makeRegularCall(b.action, R.string.clicked_start_bounty)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_start_bounty), requireContext())
+        bounty.launch(b.action)
+    }
+
+    private val bounty = registerForActivityResult(BountyContract()) { data: Intent? ->
+        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
+        }
     }
 
     private fun retrySimMatch(b: Bounty?) {

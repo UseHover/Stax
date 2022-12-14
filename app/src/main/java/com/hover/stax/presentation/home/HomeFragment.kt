@@ -20,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -30,7 +29,7 @@ import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
@@ -40,7 +39,7 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener {
+class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterface, BalanceTapListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -134,11 +133,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {
-        action?.let { account?.let { callHover(account, action) } }
-    }
-
-    private fun callHover(account: Account, action: HoverAction) {
-        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
+        action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
     }
 
     private fun askToCheckBalance(account: Account) {

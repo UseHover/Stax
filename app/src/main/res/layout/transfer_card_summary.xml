@@ -10,7 +10,8 @@
         <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_10">
+                android:layout_marginHorizontal="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_55">
 
             <TableRow
                     android:id="@+id/accountsRow"
@@ -43,7 +44,25 @@
                         android:textAlignment="viewEnd" />
             </TableRow>
 
-            <TableRow android:id="@+id/amountRow">
+            <TableRow
+                android:id="@+id/verifyRecipientRow"
+                android:layout_marginTop="-16dp">
+
+                <TextView
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_16" />
+
+                <TextView
+                    android:id="@+id/verifyRecipientBtn"
+                    android:text="@string/verify_recipient_label"
+                    android:layout_weight="1"
+                    android:textAlignment="viewEnd"
+                    android:textColor="@color/brightBlue"
+                    android:textSize="@dimen/text_21" />
+            </TableRow>
+
+            <TableRow android:id="@+id/amountRow"
+                android:layout_marginTop="@dimen/margin_21">
 
                 <TextView
                         android:text="@string/transfer_amount_label"
@@ -60,9 +79,11 @@
 
             <TableRow
                     android:id="@+id/feeRow"
+                    android:layout_marginTop="@dimen/margin_21"
                     android:visibility="gone">
 
                 <TextView
+                        android:id="@+id/feeLabel"
                         android:text="@string/transfer_fee_label"
                         android:textColor="@color/offWhite"
                         android:textSize="@dimen/text_16" />
@@ -103,7 +124,6 @@
                 android:id="@+id/btnRow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_21"
                 android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatButton

@@ -18,6 +18,7 @@ package com.hover.stax.login
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -33,7 +34,6 @@ import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_T
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.hover.stax.hover.AbstractHoverCallerActivity
 import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
@@ -44,7 +44,7 @@ import timber.log.Timber
 const val FORCED_VERSION = "force_update_app_version"
 
 abstract class AbstractGoogleAuthActivity :
-    AbstractHoverCallerActivity(),
+    AppCompatActivity(),
     StaxGoogleLoginInterface {
 
     private val loginViewModel: LoginViewModel by viewModel()

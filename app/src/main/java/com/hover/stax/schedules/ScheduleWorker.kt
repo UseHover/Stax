@@ -28,11 +28,12 @@ import com.hover.stax.R
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.home.MainActivity
-import com.hover.stax.hover.SCHEDULE_REQUEST
 import com.hover.stax.schedules.Schedule.REQUEST_TYPE
 import java.util.concurrent.TimeUnit
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
+const val SCHEDULE_REQUEST = 204
 
 class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(context, params), KoinComponent {
 

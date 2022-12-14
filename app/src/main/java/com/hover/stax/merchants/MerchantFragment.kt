@@ -15,6 +15,7 @@
  */
 package com.hover.stax.merchants
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -27,7 +28,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentMerchantBinding
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.HoverSession
+import com.hover.stax.hover.TransactionContract
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -161,23 +163,23 @@ class MerchantFragment : AbstractFormFragment() {
     }
 
     override fun onSubmitForm() {
-        callHover(0)
+        val hsb = generateSessionBuilder()
+        callHover(pay, hsb)
         findNavController().popBackStack()
+    }
+
+    private val pay = registerForActivityResult(TransactionContract()) { data: Intent? ->
+        goToDeets(data)
     }
 
     override fun onContactSelected(contact: StaxContact) {
         TODO("Not yet implemented")
     }
 
-    private fun callHover(requestCode: Int) {
-        (requireActivity() as AbstractHoverCallerActivity).runSession(
+    private fun generateSessionBuilder(): HoverSession.Builder {
+        return HoverSession.Builder(actionSelectViewModel.activeAction.value!!,
             payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
-            actionSelectViewModel.activeAction.value!!, getExtras(), requestCode
-        )
-    }
-
-    private fun getExtras(): HashMap<String, String> {
-        return viewModel.wrapExtras()
+            viewModel.wrapExtras(), requireActivity())
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {

@@ -16,7 +16,7 @@
 package com.hover.stax.hover
 
 import android.app.Activity
-import android.content.Context
+import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
@@ -27,7 +27,6 @@ import com.hover.stax.domain.model.ACCOUNT_ID
 import com.hover.stax.domain.model.ACCOUNT_NAME
 import com.hover.stax.domain.model.Account
 import com.hover.stax.settings.TEST_MODE
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import org.json.JSONException
 import org.json.JSONObject
@@ -37,12 +36,12 @@ const val PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity"
 private const val TIMER_LENGTH = 35000
 
 class HoverSession private constructor(b: Builder) {
-
     private val frag: Fragment?
     private val account: Account
     private val action: HoverAction
-    private val requestCode: Int
     private val finalScreenTime: Int
+
+    private val builder: HoverParameters.Builder
 
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
         .apply {
@@ -50,7 +49,7 @@ class HoverSession private constructor(b: Builder) {
             extra(ACCOUNT_NAME, account.getAccountNameExtra())
             private_extra(ACCOUNT_ID, account.id.toString())
             request(b.action.public_id)
-            setHeader(getMessage(b.action, b.activity))
+            setHeader(getMessage(b))
             initialProcessingMessage("")
             showUserStepDescriptions(true)
             timeout(TIMER_LENGTH)
@@ -75,31 +74,44 @@ class HoverSession private constructor(b: Builder) {
         } else value
     }
 
-    private fun getMessage(a: HoverAction, c: Context): String {
-        return when (a.transaction_type) {
-            HoverAction.BALANCE -> c.getString(R.string.balance_msg, a.from_institution_name)
-            HoverAction.AIRTIME -> c.getString(R.string.airtime_msg)
-            else -> c.getString(R.string.transfer_msg)
-        }
+    private fun getMessage(b: Builder): String {
+        return if (b.message != null) { b.message!! }
+            else {
+                when (b.action.transaction_type) {
+                    HoverAction.BALANCE -> b.activity.getString(R.string.balance_msg, b.action.from_institution_name)
+                    HoverAction.AIRTIME -> b.activity.getString(R.string.airtime_msg)
+                    else -> b.activity.getString(R.string.transfer_msg)
+                }
+            }
     }
 
-    private fun startHover(builder: HoverParameters.Builder, a: Activity) {
-        Timber.v("starting hover")
-        val i = builder.buildIntent()
-        AnalyticsUtil.logAnalyticsEvent(a.getString(R.string.start_load_screen), a)
-        if (frag != null) frag.startActivityForResult(i, requestCode) else a.startActivityForResult(i, requestCode)
+    private fun stopEarly(builder: HoverParameters.Builder, varName: String?) {
+        if (varName != null && action.output_params.has(varName))
+            builder.stopAt(action.output_params.getInt(varName))
     }
 
-    class Builder(a: HoverAction?, c: Account, activity: Activity, code: Int) {
+    private fun getIntent(): Intent {
+        return builder.buildIntent()
+    }
+
+    class Builder(a: HoverAction?, c: Account, activity: Activity) {
         val activity: Activity
         var fragment: Fragment? = null
         val account: Account
+        var message: String? = null
         val action: HoverAction
         val extras: JSONObject
-        var requestCode: Int
         var finalScreenTime = 0
+        var stopVar: String? = null
 
-        constructor(a: HoverAction?, c: Account, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
+        constructor(action: HoverAction,
+                    c: Account,
+                    extras: HashMap<String, String>?,
+                    act: Activity) : this(action, c, act) {
+            if (!extras.isNullOrEmpty()) { extras(extras) }
+        }
+
+        constructor(a: HoverAction?, c: Account, act: Activity, frag: Fragment?) : this(a, c, act) {
             fragment = frag
         }
 
@@ -121,8 +133,23 @@ class HoverSession private constructor(b: Builder) {
             return this
         }
 
-        fun run(): HoverSession {
-            return HoverSession(this)
+        fun stopAt(varName: String): Builder {
+            stopVar = varName
+            return this
+        }
+
+        fun finalScreenTime(ms: Int): Builder {
+            finalScreenTime = ms
+            return this
+        }
+
+        fun message(msg: String): Builder {
+            message = msg
+            return this
+        }
+
+        fun build(): Intent {
+            return HoverSession(this).getIntent()
         }
 
         init {
@@ -131,7 +158,6 @@ class HoverSession private constructor(b: Builder) {
             account = c
             action = a
             extras = JSONObject()
-            requestCode = code
         }
     }
 
@@ -140,10 +166,10 @@ class HoverSession private constructor(b: Builder) {
         frag = b.fragment
         account = b.account
         action = b.action
-        requestCode = b.requestCode
         finalScreenTime = b.finalScreenTime
-        val builder = getBasicBuilder(b)
+
+        builder = getBasicBuilder(b)
         addExtras(builder, b.extras)
-        startHover(builder, b.activity)
+        stopEarly(builder, b.stopVar)
     }
 }
