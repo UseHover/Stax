@@ -156,7 +156,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             it?.let {
                 binding.editCard.actionSelect.selectRecipientNetwork(it)
                 setRecipientHint(it)
-                showLookupOptions(it)
+//                showLookupOptions(it)
                 updateBonusBanner(it, accountsViewModel.bonusActions.value)
             }
         }
@@ -186,9 +186,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun showVerifyRecipient(contact: StaxContact?, action: HoverAction?) {
-        binding.summaryCard.verifyRecipientRow.visibility =
-            if (contact?.hasName() == false && action?.output_params?.opt("recipientName") != null) View.VISIBLE
-            else View.GONE
+        binding.summaryCard.verifyRecipientRow.visibility = View.GONE
+//            if (contact?.hasName() == false && action?.output_params?.opt("recipientName") != null) View.VISIBLE
+//            else View.GONE
     }
 
     private fun observeAmount() {

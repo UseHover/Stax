@@ -46,7 +46,8 @@
 
             <TableRow
                 android:id="@+id/verifyRecipientRow"
-                android:layout_marginTop="-16dp">
+                android:layout_marginTop="-16dp"
+                android:visibility="gone">
 
                 <TextView
                     android:textColor="@color/offWhite"
