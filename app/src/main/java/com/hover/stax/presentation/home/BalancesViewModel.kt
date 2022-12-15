@@ -76,8 +76,7 @@ class BalancesViewModel(
     private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
         if (account == null) return@launch
 
-        val channelId = account.channelId
-        val action = actionRepo.getFirstAction(channelId, HoverAction.BALANCE)
+        val action = actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE)
         action?.let { _balanceAction.emit(action) } ?: run { _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action)) }
     }
 

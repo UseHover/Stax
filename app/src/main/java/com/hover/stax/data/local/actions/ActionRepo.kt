@@ -32,8 +32,8 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
         return actionDao.getLiveAction(public_id)
     }
 
-    fun getFirstAction(channelId: Int, type: String): HoverAction? {
-        return actionDao.getFirstAction(channelId, type)
+    fun getFirstAction(institutionId: Int, countryCode: String, type: String): HoverAction? {
+        return actionDao.getFirstAction(institutionId, countryCode, type)
     }
 
     fun getTransferActions(institutionId: Int, countryCode: String): List<HoverAction> {
