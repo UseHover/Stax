@@ -1,14 +1,27 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transactions
 
 import android.content.Context
-import android.text.Html
 import androidx.core.text.HtmlCompat
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.transactionDetails.UssdCallResponse
 import com.hover.stax.utils.Utils
-import timber.log.Timber
 
 interface TransactionUiDelegate {
     val transaction: StaxTransaction
@@ -37,8 +50,8 @@ interface TransactionUiDelegate {
         }
     }
 
-    fun humanCategory(c: Context) : String {
-        return if (transaction.isFailed) transaction.category.replace("-", " ") .replaceFirstChar { it.uppercaseChar() }
+    fun humanCategory(c: Context): String {
+        return if (transaction.isFailed) transaction.category.replace("-", " ").replaceFirstChar { it.uppercaseChar() }
         else ""
     }
 
@@ -62,21 +75,29 @@ interface TransactionUiDelegate {
         }
     }
 
-    fun longStatus(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, isExpectingSMS: Boolean, c: Context): String {
+    fun longStatus(
+        action: HoverAction?,
+        messages: UssdCallResponse?,
+        sms: List<UssdCallResponse>?,
+        isExpectingSMS: Boolean,
+        c: Context
+    ): String {
         return if (transaction.isRecorded) getRecordedStatusDetail(c)
         else when (transaction.status) {
             Transaction.FAILED -> longFailureMessage(action, c)
-            Transaction.PENDING -> c.getString( if(isExpectingSMS)  R.string.pending_cardbody else R.string.pending_no_sms_expected_cardbody)
+            Transaction.PENDING -> c.getString(if (isExpectingSMS) R.string.pending_cardbody else R.string.pending_no_sms_expected_cardbody)
             else -> lookupSuccessDescription(messages, sms, c)
         }
     }
 
     private fun getRecordedStatusDetail(c: Context): String {
-        val msg = c.getString(when (transaction.status) {
-            Transaction.FAILED -> R.string.bounty_transaction_failed
-            Transaction.PENDING -> R.string.bounty_flow_pending_dialog_msg
-            else -> R.string.flow_done_desc
-        })
+        val msg = c.getString(
+            when (transaction.status) {
+                Transaction.FAILED -> R.string.bounty_transaction_failed
+                Transaction.PENDING -> R.string.bounty_flow_pending_dialog_msg
+                else -> R.string.flow_done_desc
+            }
+        )
 
         return HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
     }
@@ -107,7 +128,11 @@ interface TransactionUiDelegate {
         }
     }
 
-    private fun lookupSuccessDescription(last_message: UssdCallResponse?, sms: List<UssdCallResponse>?, c: Context): String {
+    private fun lookupSuccessDescription(
+        last_message: UssdCallResponse?,
+        sms: List<UssdCallResponse>?,
+        c: Context
+    ): String {
         return if (!sms.isNullOrEmpty())
             sms.sortedByDescending { it.responseMessage.length }.map { it.responseMessage }.toString()
         else if (!(last_message?.responseMessage.isNullOrEmpty()))

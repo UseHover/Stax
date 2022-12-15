@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.channels
 
 import android.app.Notification
@@ -6,19 +21,20 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.work.*
-import com.hover.stax.BuildConfig
+import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkerParameters
 import com.hover.stax.R
-import com.hover.stax.data.local.channels.ChannelDao
 import com.hover.stax.database.AppDatabase
+import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
-import java.io.IOException
 
 class ImportChannelsWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
@@ -67,7 +83,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
         createNotificationChannel()
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_stax)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
             .setContentTitle(context.getString(R.string.importing_channels))
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setAutoCancel(true)
@@ -92,7 +108,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
 
     companion object {
         private const val NOTIFICATION_ID = 981
-        private const val CHANNEL_ID = "ChannelsImport" //TODO update this after the merge with financial tips notifications // branch
+        private const val CHANNEL_ID = "ChannelsImport" // TODO update this after the merge with financial tips notifications // branch
 
         fun channelsImportRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<ImportChannelsWorker>()

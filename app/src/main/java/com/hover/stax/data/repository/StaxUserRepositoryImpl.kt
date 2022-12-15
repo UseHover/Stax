@@ -1,27 +1,26 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.data.repository
 
-import com.hover.stax.data.remote.StaxApi
-import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.toStaxUser
+import com.hover.stax.data.local.user.UserRepo
+import com.hover.stax.domain.model.StaxUser
 import com.hover.stax.domain.repository.StaxUserRepository
-import com.hover.stax.user.StaxUser
-import com.hover.stax.user.UserRepo
 import kotlinx.coroutines.flow.Flow
 
-class StaxUserRepositoryImpl(private val staxApi: StaxApi, private val userRepo: UserRepo) : StaxUserRepository {
-
-    override suspend fun uploadUser(userUploadDto: UserUploadDto): StaxUser {
-        val userDto = staxApi.uploadUserToStax(userUploadDto)
-
-        return userDto.toStaxUser().also { userRepo.saveUser(it) }
-    }
-
-    override suspend fun updateUser(email: String, userUpdateDto: UserUpdateDto): StaxUser {
-        val userDto = staxApi.updateUser(email, userUpdateDto)
-
-        return userDto.toStaxUser().also { userRepo.saveUser(it) }
-    }
+class StaxUserRepositoryImpl(private val userRepo: UserRepo) : StaxUserRepository {
 
     override val staxUser: Flow<StaxUser>
         get() = userRepo.user

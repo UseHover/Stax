@@ -1,5 +1,19 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.requests
-
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,7 +35,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RequestDetailFragment: Fragment(), RequestSenderInterface  {
+class RequestDetailFragment : Fragment(), RequestSenderInterface {
 
     private val viewModel: RequestDetailViewModel by viewModel()
     private val args: RequestDetailFragmentArgs by navArgs()
@@ -29,7 +43,11 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
     private var dialog: StaxDialog? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val data = JSONObject()
 
         try {
@@ -56,7 +74,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
 
         viewModel.account.observe(viewLifecycleOwner) {
             binding.summaryCard.requesterAccountRow.visibility = if (it != null) View.VISIBLE else View.GONE
-            it?.let { (view.findViewById(R.id.requesterValue) as Stax2LineItem).setTitle(it.userAlias)  }
+            it?.let { (view.findViewById(R.id.requesterValue) as Stax2LineItem).setTitle(it.userAlias) }
         }
 
         viewModel.request.observe(viewLifecycleOwner) {
@@ -118,9 +136,8 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        if(dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
 
         _binding = null
     }
-
 }

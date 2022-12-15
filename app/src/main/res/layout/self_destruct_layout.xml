@@ -20,7 +20,7 @@
                 android:layout_height="@dimen/margin_34"
                 android:layout_gravity="start"
                 android:layout_margin="@dimen/margin_10"
-                android:src="@mipmap/stax" />
+                android:src="@mipmap/ic_launcher_round" />
 
         <TextView
                 android:id="@+id/explainer"

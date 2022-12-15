@@ -1,6 +1,6 @@
 import java.io.FileInputStream
 import java.nio.file.Paths
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -12,6 +12,7 @@ plugins {
     id("androidx.navigation.safeargs")
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlin.android")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -23,9 +24,9 @@ android {
     defaultConfig {
         applicationId = "com.hover.stax"
         minSdk = 21
-        targetSdk = 32
-        versionCode = 206
-        versionName = "1.18.7"
+        targetSdk = 33
+        versionCode = 208
+        versionName = "1.18.9"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -102,7 +103,7 @@ android {
 
     bundle {
         language {
-            //Ensures all language string resources is bundled in the aab.
+            // Ensures all language string resources is bundled in the aab.
             enableSplit = false
         }
     }
@@ -126,7 +127,6 @@ android {
             isIncludeAndroidResources = true
         }
     }
-
 }
 
 dependencies {
@@ -134,16 +134,16 @@ dependencies {
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)
 
-    //compose
+    // compose
     implementation(libs.bundles.compose)
     debugImplementation(libs.compose.tooling)
     androidTestImplementation(libs.compose.ui.test)
 
-    //logging
+    // logging
     implementation(libs.bundles.logging)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:31.0.1"))
+    implementation(platform("com.google.firebase:firebase-bom:31.1.0"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging")
@@ -160,10 +160,13 @@ dependencies {
 
     // Networking
     implementation(libs.bundles.network)
-    debugImplementation(libs.chucker)
-    releaseImplementation(libs.chucker.release)
+
+    implementation(libs.datastore)
+
+    implementation(libs.phoenix)
 
     implementation(libs.libphonenumber)
+
     implementation(libs.lingver)
 
     // Images
@@ -173,16 +176,16 @@ dependencies {
     // Room
     implementation(libs.bundles.room)
     kapt(libs.room.compiler)
+    androidTestImplementation(libs.room.test)
 
     // DI
     implementation(libs.bundles.koin)
 
     // Tests
-    testImplementation(libs.junit)
+    testImplementation(libs.bundles.test)
 
     androidTestImplementation(libs.junit.androidx)
     androidTestImplementation(libs.espresso)
-    androidTestImplementation(libs.room.test)
 
     // Hover SDK
     debugImplementation(project(":hover.sdk"))

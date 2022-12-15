@@ -139,8 +139,13 @@ public class StaxContact {
     }
 
     private static StaxContact getContactByPhoneValue(HashMap<String, String> map, String key, String countryAlpha2, ContactRepo dr) {
-        StaxContact c = dr.getContactByPhone(PhoneHelper.getNationalSignificantNumber(map.get(key), countryAlpha2));
-        if (c == null) c = dr.getContactByPhone(map.get(key));
+        return getContactByPhoneValue(map.get(key), countryAlpha2, dr);
+    }
+
+    public static StaxContact getContactByPhoneValue(String value, String countryAlpha2, ContactRepo dr) {
+        if (value == null) return null;
+        StaxContact c = dr.getContactByPhone(PhoneHelper.getNationalSignificantNumber(value, countryAlpha2));
+        if (c == null) c = dr.getContactByPhone(value);
         return c;
     }
 

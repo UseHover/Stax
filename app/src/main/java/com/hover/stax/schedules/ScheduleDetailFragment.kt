@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.schedules
 
 import android.os.Bundle
@@ -12,7 +27,6 @@ import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentScheduleBinding
-
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
@@ -22,7 +36,6 @@ import com.hover.stax.views.StaxDialog
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class ScheduleDetailFragment : Fragment() {
 
@@ -34,7 +47,11 @@ class ScheduleDetailFragment : Fragment() {
 
     private var dialog: StaxDialog? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         logAnalytics()
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
 
@@ -99,15 +116,15 @@ class ScheduleDetailFragment : Fragment() {
 
     private fun showConfirmDialog() {
         dialog = StaxDialog(requireActivity())
-                .setDialogTitle(R.string.cancelfuture_head)
-                .setDialogMessage(R.string.cancelfuture_msg)
-                .setNegButton(R.string.btn_back) {}
-                .setPosButton(R.string.btn_canceltrans) {
-                    viewModel.deleteSchedule()
-                    UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.toast_confirm_cancelfuture))
-                    findNavController().popBackStack()
-                }
-                .isDestructive
+            .setDialogTitle(R.string.cancelfuture_head)
+            .setDialogMessage(R.string.cancelfuture_msg)
+            .setNegButton(R.string.btn_back) {}
+            .setPosButton(R.string.btn_canceltrans) {
+                viewModel.deleteSchedule()
+                UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.toast_confirm_cancelfuture))
+                findNavController().popBackStack()
+            }
+            .isDestructive
         dialog!!.showIt()
     }
 
@@ -115,8 +132,10 @@ class ScheduleDetailFragment : Fragment() {
         binding.testBtn.apply {
             visibility = if (Utils.usingDebugVariant(requireActivity())) View.VISIBLE else View.GONE
             setOnClickListener {
-                WorkManager.getInstance(requireActivity()).beginUniqueWork("TEST", ExistingWorkPolicy.REPLACE,
-                        ScheduleWorker.makeWork()).enqueue()
+                WorkManager.getInstance(requireActivity()).beginUniqueWork(
+                    "TEST", ExistingWorkPolicy.REPLACE,
+                    ScheduleWorker.makeWork()
+                ).enqueue()
 
                 if (!schedule.isScheduledForToday)
                     UIHelper.flashAndReportMessage(requireActivity(), "Shouldn't show notification; not scheduled for today")
@@ -129,5 +148,4 @@ class ScheduleDetailFragment : Fragment() {
 
         _binding = null
     }
-
 }

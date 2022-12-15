@@ -72,7 +72,9 @@
 	<string name="visit_merchant" translatable="false">Pay merchant</string>
 	<string name="visit_paybill_list" translatable="false">Paybill List</string>
 
-	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>
+	<string name="starting_transaction" translatable="false">Sending %1$s request to the SDK</string>
+	<string name="checking_var" translatable="false">Checking %1$s %2$s with the SDK</string>
+	<string name="generate_failed" translatable="false">Generating SDK Intent Failed</string>
 	<string name="scheduled_complete" translatable="false">Scheduled new %1$s</string>
 	<string name="clicked_schedule_notification" translatable="false">Clicked notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Sending scheduled %1$s transfer to the SDK</string>

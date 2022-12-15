@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.permissions
 
 import android.app.Activity
@@ -65,13 +80,15 @@ class PermissionsFragment : DialogFragment() {
                 getString(
                     if (helper.hasOverlayPerm()) R.string.perms_overlay_granted
                     else R.string.perms_overlay_notgranted
-                ), requireContext()
+                ),
+                requireContext()
             ) else if (current == ACCESS)
                 logAnalyticsEvent(
                     getString(
                         if (helper.hasAccessPerm()) R.string.perms_accessibility_granted
                         else R.string.perms_accessibility_notgranted
-                    ), requireContext()
+                    ),
+                    requireContext()
                 )
         }
     }
@@ -81,7 +98,7 @@ class PermissionsFragment : DialogFragment() {
             setOnlyNeedAccess()
         else if (current == OVERLAY && helper.hasOverlayPerm() && !helper.hasAccessPerm()) {
             lifecycleScope.launch {
-                delay(500)
+                delay(300)
                 animateToStep2()
             }
         } else if (helper.hasAccessPerm()) {
@@ -114,9 +131,22 @@ class PermissionsFragment : DialogFragment() {
                 setPath(R.string.permissions_accessibility_path)
                 view.findViewById<View>(R.id.overlay_example).visibility = View.GONE
                 view.findViewById<View>(R.id.accessibility_example).visibility = View.VISIBLE
+                view.findViewById<View>(R.id.accessibility_more).visibility = View.VISIBLE
+                view.findViewById<View>(R.id.accessibility_more).setOnClickListener { toggleDataInfo(view, true) }
                 setPosButton(R.string.perm_cta2) { requestAccessibility() }
             }
         }
+    }
+
+    private fun toggleDataInfo(v: View, show: Boolean) {
+        (v.findViewById<View>(R.id.accessibility_more) as TextView).setCompoundDrawablesWithIntrinsicBounds(getArrow(show),  0, 0, 0)
+        v.findViewById<View>(R.id.accessibility_data_info)?.visibility = if (show) View.VISIBLE else View.GONE
+        v.findViewById<View>(R.id.accessibility_more)?.setOnClickListener { toggleDataInfo(v, !show) }
+    }
+
+    private fun getArrow(show: Boolean): Int {
+        return if (show) R.drawable.ic_chevron_down
+        else R.drawable.ic_chevron_right
     }
 
     private fun animateToDone() {

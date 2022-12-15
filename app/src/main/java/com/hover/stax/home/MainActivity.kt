@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.home
 
 import android.content.Intent
@@ -28,6 +43,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface {
+
+    lateinit var navHelper: NavHelper
 
     private val transferViewModel: TransferViewModel by viewModel()
     private val requestViewModel: NewRequestViewModel by viewModel()
@@ -106,7 +123,11 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         transferViewModel.isLoading.observe(this@MainActivity) { if (!it) alertDialog?.dismiss() }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.home
 
 import android.os.Bundle
@@ -5,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -15,14 +29,17 @@ import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
-import com.hover.stax.hover.AbstractHoverCallerActivity
-import com.hover.stax.utils.*
+import com.hover.stax.hover.AbstractBalanceCheckerFragment
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener {
+class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterface, BalanceTapListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -31,7 +48,11 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -112,11 +133,7 @@ class HomeFragment : Fragment(), FinancialTipClickInterface, BalanceTapListener 
     }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {
-        action?.let { account?.let { callHover(account, action) } }
-    }
-
-    private fun callHover(account: Account, action: HoverAction) {
-        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
+        action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
     }
 
     private fun askToCheckBalance(account: Account) {

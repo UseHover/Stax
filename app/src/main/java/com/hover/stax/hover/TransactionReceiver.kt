@@ -1,33 +1,50 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.hover
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
-import com.hover.stax.domain.model.ACCOUNT_ID
-import com.hover.stax.domain.model.Account
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.local.channels.ChannelRepo
+import com.hover.stax.domain.model.ACCOUNT_ID
+import com.hover.stax.domain.model.Account
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
+import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
+import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
-import java.util.regex.Pattern
 
 class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
@@ -49,11 +66,12 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         if (intent != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
+                val type = intent.getStringExtra(TransactionContract.COLUMN_TYPE)!!
 
-                if (actionId != null) {
+                if (actionId != null && type != Transaction.VAR_CHECK) {
                     action = actionRepo.getAction(actionId)
 
-                    //added null check to prevent npe whenever action is null
+                    // added null check to prevent npe whenever action is null
                     action?.let { a ->
                         channel = channelRepo.getChannel(a.channel_id)
 
@@ -64,7 +82,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                         updateBusinesses(intent)
                         updateRequests(intent)
                     }
-                } else {
+                } else if (actionId == null) {
                     AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no action ID", context)
                 }
             }
@@ -193,7 +211,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                 if (a.institutionName == a.userAlias) a.userAlias = matcher.group(2)!!
 
                 accountRepo.saveAccount(a)
-            } catch (e: Exception) { AnalyticsUtil.logErrorAndReportToFirebase(TransactionReceiver::class.java.simpleName, "Failed to parse account list from USSD", e)}
+            } catch (e: Exception) { AnalyticsUtil.logErrorAndReportToFirebase(TransactionReceiver::class.java.simpleName, "Failed to parse account list from USSD", e) }
         }
     }
 }

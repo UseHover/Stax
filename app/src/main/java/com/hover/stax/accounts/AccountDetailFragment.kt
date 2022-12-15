@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.accounts
 
 import android.content.res.ColorStateList
@@ -9,31 +24,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.AbstractBalanceCheckerFragment
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
-import com.hover.stax.utils.*
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.NavUtil
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
+import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
+class AccountDetailFragment :
+    AbstractBalanceCheckerFragment(),
+    TransactionHistoryAdapter.SelectListener,
+    ScheduledAdapter.SelectListener,
     RequestsAdapter.SelectListener {
 
     private val viewModel: AccountDetailViewModel by sharedViewModel()
@@ -51,7 +71,11 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private val args: AccountDetailFragmentArgs by navArgs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -98,7 +122,12 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         }
     }
 
-    private fun toggleButtonHighlight(v: StaxTextInput, btn: AppCompatButton, newText: String, comparator: String?) {
+    private fun toggleButtonHighlight(
+        v: StaxTextInput,
+        btn: AppCompatButton,
+        newText: String,
+        comparator: String?
+    ) {
         if (newText.isNotEmpty() && comparator != null && newText != comparator)
             v.setState(null, AbstractStatefulInput.NONE)
         btn.backgroundTintList = ColorStateList.valueOf(
@@ -116,13 +145,19 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         validateInput(binding.manageCard.accountNumberInput, viewModel.account.value?.accountNo, R.string.account_number_error, viewModel::updateAccountNumber)
     }
 
-    private fun validateInput(v: StaxTextInput, comparison: String?, errorMsg: Int, successFun: (text: String) -> Unit) {
+    private fun validateInput(
+        v: StaxTextInput,
+        comparison: String?,
+        errorMsg: Int,
+        successFun: (text: String) -> Unit
+    ) {
         val msg = validates(v, comparison, errorMsg)
         if (msg == null)
             successFun(v.text)
         v.setState(
             msg
-                ?: getString(R.string.label_saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                ?: getString(R.string.label_saved),
+            if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
         )
     }
 
@@ -177,8 +212,8 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun observeBalanceCheck() {
-        collectLifecycleFlow(balancesViewModel.balanceAction) {
-            attemptCallHover(viewModel.account.value, it)
+        collectLifecycleFlow(balancesViewModel.balanceAction) { action ->
+            viewModel.account.value?.let { callHover(checkBalance, generateSessionBuilder(it, action)) }
         }
     }
 
@@ -186,21 +221,13 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         balancesViewModel.requestBalance(account)
     }
 
-    private fun attemptCallHover(account: Account?, action: HoverAction?) {
-        action?.let { account?.let { callHover(account, action) } }
-    }
-
-    private fun callHover(account: Account, action: HoverAction) {
-        (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
-    }
-
     private fun setUpRemoveAccount(account: Account) {
         dialog = StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.userAlias))
-                .setDialogMessage(R.string.removeaccount_msg)
-                .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
-                .setNegButton(R.string.btn_cancel, null)
-                .isDestructive
+            .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.userAlias))
+            .setDialogMessage(R.string.removeaccount_msg)
+            .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
+            .setNegButton(R.string.btn_cancel, null)
+            .isDestructive
         dialog!!.showIt()
     }
 
@@ -257,7 +284,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id))
     }
 
-    override fun viewTransactionDetail(uuid: String?)  {
+    override fun viewTransactionDetail(uuid: String?) {
         uuid?.let { NavUtil.showTransactionDetailsFragment(findNavController(), it) }
     }
 
@@ -268,6 +295,4 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
         _binding = null
     }
-
-
 }
