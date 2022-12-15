@@ -227,10 +227,12 @@
     <string name="permissions_title">Permissions needed</string>
     <string name="permissions_basic_title">Grant us phone and SMS permission.</string>
     <string name="perms_basic_desc">To find all your various accounts and detect transactions on those accounts, allow Stax access to your phone and SMSs.</string>
-    <string name="permissions_overlay_path">Tap Settings > Apps > Appear on top > Stax</string>
+    <string name="permissions_overlay_path">Settings > Apps > Appear on top > Stax</string>
     <string name="permissions_overlay_desc">This allows Stax to show you the transaction progress.</string>
-    <string name="permissions_accessibility_path">Tap Settings > Accessibility > Installed Services > Stax</string>
-    <string name="permissions_accessibility_desc">This allows Stax to run USSD sessions at your command.</string>
+    <string name="permissions_accessibility_path">Settings > Accessibility > Installed Services > Stax</string>
+    <string name="permissions_accessibility_desc">This allows Stax to automate USSD sessions at your command.</string>
+    <string name="permissions_accessibility_more">Learn how Stax uses your data.</string>
+    <string name="accessibility_data_info">Stax uses accessibility services to transmit data you provide to USSD providers. Stax collects the text of these USSD sessions to ensure the reliability of our USSD automation and provide you with helpful statuses. This data is not shared with any third parties.</string>
     <string name="app_permissions">App permissions</string>
     <string name="manage_permissions_title">Manage permissions</string>
     <string name="perm_calls_title">Calls</string>
@@ -313,7 +315,7 @@
     <string name="hsdk_accessibility_sub">Services</string>
     <string name="hsdk_enable_accessibility">Enable Accessibility</string>
     <string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
-    <string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
+    <string name="access_service_descript">Stax uses accessibility services to transmit data you provide to USSD providers. Stax collects the text of these USSD sessions to ensure the reliability of our USSD automation and provide you with helpful statuses. This data is not shared with any third parties.</string>
     <string name="hsdk_manual_env">Manual environment active. The USSD menu text will be recorded.</string>
     <string name="hsdk_overlay_header">Transacting</string>
     <string name="hsdk_complete">Transaction complete</string>

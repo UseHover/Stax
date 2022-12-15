@@ -98,7 +98,7 @@ class PermissionsFragment : DialogFragment() {
             setOnlyNeedAccess()
         else if (current == OVERLAY && helper.hasOverlayPerm() && !helper.hasAccessPerm()) {
             lifecycleScope.launch {
-                delay(500)
+                delay(300)
                 animateToStep2()
             }
         } else if (helper.hasAccessPerm()) {
@@ -131,9 +131,22 @@ class PermissionsFragment : DialogFragment() {
                 setPath(R.string.permissions_accessibility_path)
                 view.findViewById<View>(R.id.overlay_example).visibility = View.GONE
                 view.findViewById<View>(R.id.accessibility_example).visibility = View.VISIBLE
+                view.findViewById<View>(R.id.accessibility_more).visibility = View.VISIBLE
+                view.findViewById<View>(R.id.accessibility_more).setOnClickListener { toggleDataInfo(view, true) }
                 setPosButton(R.string.perm_cta2) { requestAccessibility() }
             }
         }
+    }
+
+    private fun toggleDataInfo(v: View, show: Boolean) {
+        (v.findViewById<View>(R.id.accessibility_more) as TextView).setCompoundDrawablesWithIntrinsicBounds(getArrow(show),  0, 0, 0)
+        v.findViewById<View>(R.id.accessibility_data_info)?.visibility = if (show) View.VISIBLE else View.GONE
+        v.findViewById<View>(R.id.accessibility_more)?.setOnClickListener { toggleDataInfo(v, !show) }
+    }
+
+    private fun getArrow(show: Boolean): Int {
+        return if (show) R.drawable.ic_chevron_down
+        else R.drawable.ic_chevron_right
     }
 
     private fun animateToDone() {

@@ -76,21 +76,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_16"
-                android:layout_marginBottom="@dimen/margin_34"
                 android:drawablePadding="@dimen/margin_13"
                 android:textColor="@color/offWhite"
                 android:text="@string/permissions_overlay_desc"
                 app:drawableStartCompat="@drawable/ic_overlay" />
 
+            <TextView android:id="@+id/accessibility_more"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_16"
+                android:layout_marginTop="@dimen/margin_21"
+                android:layout_marginBottom="@dimen/margin_8"
+                android:drawablePadding="@dimen/margin_13"
+                android:textColor="@color/brightBlue"
+                android:text="@string/permissions_accessibility_more"
+                app:drawableStartCompat="@drawable/ic_chevron_right"
+                android:visibility="gone"/>
+
+            <TextView android:id="@+id/accessibility_data_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="37dp"
+                android:textSize="@dimen/text_13"
+                android:textColor="@color/offWhite"
+                android:text="@string/accessibility_data_info"
+                android:visibility="gone" />
+
             <include
                 android:id="@+id/overlay_example"
                 layout="@layout/permission_help_overlay"
+                android:layout_marginTop="@dimen/margin_34"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <include
                 android:id="@+id/accessibility_example"
                 layout="@layout/permission_help_accessibility"
+                android:layout_marginTop="@dimen/margin_34"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
