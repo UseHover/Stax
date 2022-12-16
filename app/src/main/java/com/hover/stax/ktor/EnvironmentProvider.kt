@@ -17,8 +17,8 @@ package com.hover.stax.ktor
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import com.hover.sdk.requests.HoverRequestContract.ENVIRONMENT
 import com.hover.stax.preferences.LocalPreferences
+import com.hover.stax.preferences.LocalPreferences.Companion.ENVIRONMENT
 import com.jakewharton.processphoenix.ProcessPhoenix
 import timber.log.Timber
 
