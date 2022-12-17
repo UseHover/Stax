@@ -20,8 +20,8 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.FinancialTip
 
 data class HomeState(
-    val bonuses: List<HoverAction> = emptyList(),
-    val accounts: List<Account> = emptyList(),
-    val financialTips: List<FinancialTip> = emptyList(),
+    val bonuses: List<HoverAction>? = null,
+    val accounts: List<Account>? = null,
+    val financialTips: List<FinancialTip>? = null,
     val dismissedTipId: String = ""
 )
