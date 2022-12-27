@@ -56,7 +56,7 @@ object UIHelper {
     }
 
     fun flashAndReportMessage(context: Context, message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         AnalyticsUtil.logAnalyticsEvent(message, context)
     }
 
@@ -66,7 +66,7 @@ object UIHelper {
     }
 
     fun flashAndReportError(context: Context, message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         AnalyticsUtil.logAnalyticsEvent(message, context)
         AnalyticsUtil.logErrorAndReportToFirebase(context.getString(R.string.toast_err_tag), message, null)
     }

@@ -102,4 +102,20 @@ class TransactionRepo(db: AppDatabase) {
             }
         }
     }
+
+    fun updateStatus(t: StaxTransaction, status: String, c: Context) {
+        t.status = status
+        AppDatabase.databaseWriteExecutor.execute {
+            AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_status_updated, status), c)
+            try {
+                transactionDao.updateTransaction(t)
+            } catch (e: Exception) {
+                AnalyticsUtil.logErrorAndReportToFirebase(
+                    TransactionRepo::class.java.simpleName,
+                    e.message,
+                    e
+                )
+            }
+        }
+    }
 }

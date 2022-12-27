@@ -118,36 +118,6 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_55">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/neg_btn"
-                style="@style/StaxButton"
-                android:layout_width="wrap_content"
-                android:layout_height="54.5dp"
-                android:layout_marginEnd="@dimen/margin_21"
-                android:layout_toStartOf="@id/divider"
-                android:text="@string/btn_cancel"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="@dimen/margin_21"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/pos_btn"
-                android:background="@color/transparent" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/pos_btn"
-                style="@style/StaxButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@string/btn_ok" />
-        </RelativeLayout>
-
+        <include layout="@layout/dialog_layout_button_area"/>
     </LinearLayout>
 </ScrollView>

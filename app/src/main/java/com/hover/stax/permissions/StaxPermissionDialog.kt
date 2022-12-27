@@ -18,7 +18,9 @@ package com.hover.stax.permissions
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.widget.TextView
 import com.hover.stax.R
 import com.hover.stax.views.StaxDialog
 
@@ -28,7 +30,7 @@ class StaxPermissionDialog private constructor(a: Activity, inflater: LayoutInfl
 
     init {
         ctx = a
-        mView = inflater.inflate(R.layout.stax_permission_dialog, null)
+        mView = inflater.inflate(R.layout.dialog_permission, null)
         customPosListener = null
         customNegListener = null
     }
@@ -40,5 +42,20 @@ class StaxPermissionDialog private constructor(a: Activity, inflater: LayoutInfl
             interpolator = DecelerateInterpolator()
             start()
         }
+    }
+
+    fun setPath(pathStringRes: Int): StaxDialog {
+        mView.findViewById<TextView>(R.id.path_text)?.let {
+            it.visibility = View.VISIBLE
+            it.text = ctx.getString(pathStringRes)
+        }
+        return this
+    }
+
+    fun setHelperIcon(iconRes: Int): StaxDialog {
+        mView.findViewById<TextView>(R.id.perm_message)?.let {
+            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
+        }
+        return this
     }
 }

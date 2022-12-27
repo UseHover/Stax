@@ -167,8 +167,8 @@ data class StaxTransaction(
         }
     }
 
-    val canRetry: Boolean
-        get() = isRecorded || (
+    val hasUserAction: Boolean
+        get() = isRecorded || isPending || (
             (
                 transaction_type == HoverAction.P2P || transaction_type == HoverAction.AIRTIME ||
                     transaction_type == HoverAction.BALANCE

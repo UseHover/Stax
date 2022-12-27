@@ -281,6 +281,8 @@
     <string name="pending_cardHead">Pending</string>
     <string name="failed_cardHead">Unsuccessful</string>
     <string name="null_service_name_text">this USSD service</string>
+    <string name="update_status">Update status</string>
+    <string name="update_status_msg">We could not detect if this transaction succeeded or failed. You can manually set the status</string>
 
     <string name="no_response_error_short">No response from %1$s.</string>
     <string name="incomplete_error_short">%1$s problem, please try again</string>
@@ -339,6 +341,7 @@
     <string name="recipientacct_label">Contact account number</string>
     <string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
     <string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
+    <string name="toast_error_selection">You must make a selection.</string>
     <string name="transfer_error_recipient_general">Please enter a recipient number.</string>
     <string name="transfer_error_recipient_phone">Please enter a phone number.</string>
     <string name="transfer_error_recipient_account">Please enter an account number.</string>
@@ -478,7 +481,7 @@
     <string name="view_full_details">View full details</string>
     <string name="new_balance">New %1$s balance %2$s</string>
     <string name="failed_label">Failed</string>
-    <string name="successful_label">Successful</string>
+    <string name="successful_label">Succeeded</string>
     <string name="successful_content_descrip">Success icon</string>
     <string name="viewUSSDLog">View USSD Log</string>
     <string name="status_label">Status</string>

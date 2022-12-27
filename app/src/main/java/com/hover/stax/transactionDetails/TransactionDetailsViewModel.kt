@@ -155,4 +155,10 @@ class TransactionDetailsViewModel(
             if (transaction.isPending) isExpectingSMS.postValue(hasSMSParser)
         }
     }
+
+    fun updateStatus(status: String) = viewModelScope.launch(Dispatchers.IO) {
+        transaction.value?.let {
+            repo.updateStatus(it, status, getApplication())
+        }
+    }
 }

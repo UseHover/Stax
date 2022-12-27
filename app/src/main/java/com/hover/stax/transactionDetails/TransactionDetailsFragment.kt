@@ -59,6 +59,7 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.UIHelper.loadImage
 import com.hover.stax.utils.Utils
+import com.hover.stax.views.StaxDialog
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -150,7 +151,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
-            addRetryOrSupportButton(transaction)
+            addButton(transaction)
             update(transaction)
         }
     }
@@ -271,15 +272,35 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         } else visibility = GONE
     }
 
-    private fun addRetryOrSupportButton(transaction: StaxTransaction) {
+    private fun addButton(transaction: StaxTransaction) {
         if (transaction.isRecorded)
             binding.statusInfo.btnRetry.setOnClickListener { retryBounty() }
         else if (transaction.status == Transaction.FAILED) {
             if (shouldContactSupport(transaction.action_id))
                 setupContactSupportButton(transaction.action_id, binding.statusInfo.btnRetry)
             else binding.statusInfo.btnRetry.setOnClickListener { maybeRetry(transaction) }
+        } else if (transaction.status == Transaction.PENDING) {
+            binding.statusInfo.btnRetry.setOnClickListener { setStatusManually() }
         }
-        binding.statusInfo.btnRetry.visibility = if (transaction.canRetry) VISIBLE else GONE
+        binding.statusInfo.btnRetry.visibility = if (transaction.hasUserAction) VISIBLE else GONE
+    }
+
+    private fun setStatusManually() {
+        binding.statusInfo.btnRetry.setText(R.string.update_status)
+        val dialog = UpdateStatusDialog(requireActivity())
+        dialog
+            .setDialogTitle(R.string.update_status)
+            .setNegButton(R.string.btn_cancel) { dialog.dismiss() }
+            .setPosButton(R.string.btn_save) { saveStatus(dialog) }
+        dialog.showIt()
+    }
+
+    private fun saveStatus(dialog: UpdateStatusDialog) {
+        if (dialog.getSelected() == -1) {
+            UIHelper.flashAndReportMessage(requireContext(), R.string.toast_error_selection)
+        } else {
+            viewModel.updateStatus(if (dialog.getSelected() == R.id.success) Transaction.SUCCEEDED else Transaction.FAILED)
+        }
     }
 
     private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false

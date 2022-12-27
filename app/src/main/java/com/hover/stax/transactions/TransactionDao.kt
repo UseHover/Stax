@@ -67,7 +67,6 @@ interface TransactionDao : BaseDao<StaxTransaction> {
     @Query("SELECT COUNT(id) FROM stax_transactions WHERE strftime('%m', initiated_at/1000, 'unixepoch') = :month AND strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND environment != 3")
     suspend fun getTransactionCount(month: String, year: String): Int?
 
-    // Need to rework the implementation on TransactionRepo
     @Update
     fun updateTransaction(transaction: StaxTransaction?)
 

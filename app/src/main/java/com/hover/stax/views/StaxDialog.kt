@@ -53,6 +53,7 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
         }
         return this
     }
+
     fun setDialogTitle(title: Int): StaxDialog {
         if (title == 0) setDialogMessage("") else setDialogTitle(ctx.getString(title))
         return this
@@ -65,14 +66,6 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
         return this
     }
 
-    fun setPath(pathStringRes: Int): StaxDialog {
-        mView.findViewById<TextView>(R.id.path_text)?.let {
-            it.visibility = View.VISIBLE
-            it.text = ctx.getString(pathStringRes)
-        }
-        return this
-    }
-
     fun setDialogMessage(message: Int): StaxDialog {
         setDialogMessage(context.getString(message))
         return this
@@ -82,13 +75,6 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
         mView.findViewById<TextView>(R.id.message)?.let {
             it.visibility = View.VISIBLE
             it.text = message
-        }
-        return this
-    }
-
-    fun setHelperIcon(iconRes: Int): StaxDialog {
-        mView.findViewById<TextView>(R.id.perm_message)?.let {
-            it.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
         }
         return this
     }

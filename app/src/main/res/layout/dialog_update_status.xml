@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:fillViewport="false">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:padding="@dimen/margin_13">
+
+		<include layout="@layout/dialog_layout_header_area"/>
+
+		<RadioGroup android:id="@+id/status_radio"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+			<RadioButton android:id="@+id/success"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/successful_label"
+				android:layout_weight="1"/>
+
+			<RadioButton android:id="@+id/failure"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/failed_label"
+				android:layout_weight="1" />
+		</RadioGroup>
+
+		<include layout="@layout/dialog_layout_button_area"/>
+
+	</LinearLayout>
+</ScrollView>
