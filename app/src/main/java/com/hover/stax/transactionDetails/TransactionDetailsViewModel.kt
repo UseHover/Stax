@@ -156,9 +156,9 @@ class TransactionDetailsViewModel(
         }
     }
 
-    fun updateStatus(status: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateStatus(status: String, category: String?) = viewModelScope.launch(Dispatchers.IO) {
         transaction.value?.let {
-            repo.updateStatus(it, status, getApplication())
+            repo.updateStatus(it, status, category, getApplication())
         }
     }
 }

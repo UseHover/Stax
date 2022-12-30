@@ -31,6 +31,15 @@
 				android:layout_weight="1" />
 		</RadioGroup>
 
+		<com.hover.stax.views.StaxDropdownLayout
+			android:id="@+id/categoryDropdown"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:editable="true"
+			android:hint="@string/category_update_label"
+			tools:layout="@layout/stax_dropdown"
+			android:visibility="gone" />
+
 		<include layout="@layout/dialog_layout_button_area"/>
 
 	</LinearLayout>

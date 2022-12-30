@@ -486,11 +486,21 @@
     <string name="viewUSSDLog">View USSD Log</string>
     <string name="status_label">Status</string>
     <string name="category_label">Reason</string>
+    <string name="category_update_label">Reason (Optional)</string>
     <string name="type_label">Type</string>
     <string name="display_transfer_money">Transfer money to %1$s</string>
     <string name="display_bill_payment">Bill payment</string>
     <string name="display_money_received">Money received</string>
     <string name="tap_to_copy">(Tap to copy)</string>
+
+    <string-array name="category_options">
+        <item>Balance too low</item>
+        <item>USSD session not complete</item>
+        <item>USSD did not respond</item>
+        <item>USSD error</item>
+        <item>Invalid PIN</item>
+        <item>Invalid input</item>
+    </string-array>
 
     <!-- INFO SYSTEM -->
     <string name="transaction_status_info_title">About transaction status</string>

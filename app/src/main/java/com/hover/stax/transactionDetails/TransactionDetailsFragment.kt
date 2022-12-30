@@ -280,6 +280,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
                 setupContactSupportButton(transaction.action_id, binding.statusInfo.btnRetry)
             else binding.statusInfo.btnRetry.setOnClickListener { maybeRetry(transaction) }
         } else if (transaction.status == Transaction.PENDING) {
+            binding.statusInfo.btnRetry.setText(R.string.update_status)
             binding.statusInfo.btnRetry.setOnClickListener { setStatusManually() }
         }
         binding.statusInfo.btnRetry.visibility = if (transaction.hasUserAction) VISIBLE else GONE
@@ -299,7 +300,8 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         if (dialog.getSelected() == -1) {
             UIHelper.flashAndReportMessage(requireContext(), R.string.toast_error_selection)
         } else {
-            viewModel.updateStatus(if (dialog.getSelected() == R.id.success) Transaction.SUCCEEDED else Transaction.FAILED)
+            val cat = if (dialog.getSelected() == R.id.failure) dialog.getCategory() else null
+            viewModel.updateStatus(if (dialog.getSelected() == R.id.success) Transaction.SUCCEEDED else Transaction.FAILED, cat)
         }
     }
 

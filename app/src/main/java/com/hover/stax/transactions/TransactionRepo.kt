@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.TransactionApi
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
@@ -103,13 +104,17 @@ class TransactionRepo(db: AppDatabase) {
         }
     }
 
-    fun updateStatus(t: StaxTransaction, status: String, c: Context) {
+    fun updateStatus(t: StaxTransaction, status: String, category: String?, c: Context) {
         t.status = status
+        if (category != null) { t.category = category }
         AppDatabase.databaseWriteExecutor.execute {
-            AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_status_updated, status), c)
+            AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_status_updated, t.status), c)
             try {
                 transactionDao.updateTransaction(t)
+//                TransactionApi.userStatusUpdate(t.uuid, status, c)
+                Timber.e("successfully updated")
             } catch (e: Exception) {
+                Timber.e("failed to update")
                 AnalyticsUtil.logErrorAndReportToFirebase(
                     TransactionRepo::class.java.simpleName,
                     e.message,

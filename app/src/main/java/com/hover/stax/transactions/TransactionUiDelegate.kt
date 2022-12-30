@@ -111,7 +111,7 @@ interface TransactionUiDelegate {
             StaxTransaction.UNREGISTERED_ERROR -> c.getString(R.string.unregistered_error_short)
             StaxTransaction.INCOMPLETE_ERROR -> c.getString(R.string.incomplete_error_short, getServiceName(a, c))
             StaxTransaction.NO_RESPONSE_ERROR -> c.getString(R.string.no_response_error_short, getServiceName(a, c))
-            else -> c.getString(R.string.unspecified_error_short)
+            else -> transaction.category
         }
     }
 
@@ -124,7 +124,7 @@ interface TransactionUiDelegate {
             StaxTransaction.UNREGISTERED_ERROR -> c.getString(R.string.unregistered_error, getServiceName(a, c))
             StaxTransaction.INCOMPLETE_ERROR -> c.getString(R.string.incomplete_desc, getServiceName(a, c))
             StaxTransaction.NO_RESPONSE_ERROR -> c.getString(R.string.no_response_desc, getServiceName(a, c))
-            else -> c.getString(R.string.unspecified_error_desc)
+            else -> transaction.category
         }
     }
 

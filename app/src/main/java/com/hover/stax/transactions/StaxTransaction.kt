@@ -128,9 +128,11 @@ data class StaxTransaction(
     }
 
     fun update(data: Intent, contact: StaxContact) {
-        status = data.getStringExtra(TransactionContract.COLUMN_STATUS)!!
-        if (hasExtra(data, TransactionContract.COLUMN_CATEGORY))
-            category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY)!!
+        if (status == Transaction.PENDING) {
+            status = data.getStringExtra(TransactionContract.COLUMN_STATUS)!!
+            if (hasExtra(data, TransactionContract.COLUMN_CATEGORY))
+                category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY)!!
+        }
         parseExtras(data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>?)
         if (counterparty_id == null) counterparty_id = contact.id
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at)
