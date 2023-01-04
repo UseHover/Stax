@@ -111,7 +111,7 @@ class TransactionRepo(db: AppDatabase) {
             AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_status_updated, t.status), c)
             try {
                 transactionDao.updateTransaction(t)
-//                TransactionApi.userStatusUpdate(t.uuid, status, c)
+                TransactionApi.userStatusUpdate(t.uuid, status, c)
                 Timber.e("successfully updated")
             } catch (e: Exception) {
                 Timber.e("failed to update")
