@@ -101,6 +101,20 @@ android {
         }
     }
 
+    flavorDimensions += "version"
+    productFlavors {
+        create("staging") {
+            // Assigns this product flavor to the "version" flavor dimension.
+            // If you are using only one dimension, this property is optional,
+            // and the plugin automatically assigns all the module's flavors to
+            // that dimension.
+            dimension = "version"
+        }
+        create("production") {
+            dimension = "version"
+        }
+    }
+
     bundle {
         language {
             // Ensures all language string resources is bundled in the aab.
@@ -188,7 +202,7 @@ dependencies {
     androidTestImplementation(libs.espresso)
 
     // Hover SDK
-    debugImplementation(project(":hover.sdk"))
-    debugImplementation(libs.bundles.hover)
-    releaseImplementation(libs.hover)
+    "stagingImplementation"(project(":hover.sdk"))
+    "stagingImplementation"(libs.bundles.hover)
+    "productionImplementation"(libs.hover)
 }
