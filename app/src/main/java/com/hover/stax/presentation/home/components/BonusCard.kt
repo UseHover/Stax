@@ -1,9 +1,27 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.home.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,15 +32,17 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
+import com.hover.stax.presentation.components.StaxCard
 
 @Composable
 fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Unit) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     val size10 = dimensionResource(id = R.dimen.margin_10)
 
-    Card(modifier = Modifier.padding(all = size13), elevation = 2.dp) {
+    StaxCard {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,4 +84,10 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    BonusCard(message = "Get some bonus when you do some thing", {}, {})
 }

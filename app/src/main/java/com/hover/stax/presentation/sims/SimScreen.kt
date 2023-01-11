@@ -1,16 +1,35 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.sims
 
-import android.content.Context
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -18,20 +37,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.presentation.sims.components.LinkSimCard
 import com.hover.stax.presentation.sims.components.SampleSimInfoProvider
 import com.hover.stax.presentation.sims.components.SimItem
-import com.hover.stax.ui.theme.*
-import com.hover.stax.utils.network.NetworkMonitor
+import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.ui.theme.TextGrey
 import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
 
 @Composable
 fun SimScreen(
@@ -70,9 +86,7 @@ fun SimScreen(
                         }
                     } else {
                         val comparator = Comparator { s1: SimWithAccount, s2: SimWithAccount ->
-                            return@Comparator if (s1.sim.slotIdx == -1) { 1 }
-                            else if (s2.sim.slotIdx == -1) { -1 }
-                            else { s1.sim.slotIdx - s2.sim.slotIdx }
+                            return@Comparator if (s1.sim.slotIdx == -1) { 1 } else if (s2.sim.slotIdx == -1) { -1 } else { s1.sim.slotIdx - s2.sim.slotIdx }
                         }
 
                         items(sims.sortedWith(comparator)) { sim ->
@@ -89,7 +103,9 @@ fun SimScreen(
 
 @Preview
 @Composable
-private fun SimScreenPreview(@PreviewParameter(SampleSimInfoProvider::class) sims: List<SimWithAccount>) {
+private fun SimScreenPreview(
+    @PreviewParameter(SampleSimInfoProvider::class) sims: List<SimWithAccount>
+) {
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(topBar = {
@@ -150,7 +166,3 @@ private fun ShowGrantPermissionContent() {
         LinkSimCard(id = R.string.link_sim_to_stax)
     }
 }
-
-
-
-

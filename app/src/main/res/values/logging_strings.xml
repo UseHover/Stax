@@ -5,26 +5,26 @@
 	<!--	Amplitude and Firebase Analytics log events -->
 	<string name="viewing_onboarding_slide" translatable="false">Viewing slide %1$s</string>
 	<string name="clicked_getstarted">Clicked get started</string>
-	<string name="perms_basic_dialog" translatable="false">Permission _ Phone and SMS _ dialog shown</string>
-	<string name="perms_basic_requested" translatable="false">Permission _ Phone and SMS _ requested</string>
-	<string name="perms_phone_requested" translatable="false">Permission _ Phone _ requested</string>
-	<string name="perms_sms_requested" translatable="false">Permission _ SMS _ requested</string>
-	<string name="perms_basic_cancelled" translatable="false">Permission _ Phone and SMS _ dialog canceled</string>
-	<string name="perms_basic_granted" translatable="false">Permission _ Phone and SMS _ granted</string>
-	<string name="perms_phone_denied" translatable="false">Permission _ Phone _ denied</string>
-	<string name="perms_sms_granted" translatable="false">Permission _ SMS _ granted</string>
-	<string name="perms_sms_denied" translatable="false">Permission _ SMS _ denied</string>
-	<string name="perms_basic_denied" translatable="false">Permission _ Phone and SMS _ denied</string>
-	<string name="perms_overlay_dialog" translatable="false">Permission _ Overlay _ dialog shown</string>
-	<string name="perms_overlay_requested" translatable="false">Permission _ Overlay _ sent to settings</string>
-	<string name="perms_overlay_granted" translatable="false">Permission _ Overlay _ granted</string>
-	<string name="perms_overlay_notgranted" translatable="false">Permission _ Overlay _ returned to app without toggling</string>
-	<string name="perms_overlay_cancelled" translatable="false">Permission _ Overlay _ dialog canceled</string>
-	<string name="perms_accessibility_dialog" translatable="false">Permission _ Accessibility _ dialog shown</string>
-	<string name="perms_accessibility_requested" translatable="false">Permission _ Accessibility _ sent to settings</string>
-	<string name="perms_accessibility_granted" translatable="false">Permission _ Accessibility _ granted</string>
-	<string name="perms_accessibility_notgranted" translatable="false">Permission _ Accessibility _ returned to app without toggling</string>
-	<string name="perms_accessibility_cancelled" translatable="false">Permission _ Accessibility _ dialog canceled</string>
+	<string name="perms_basic_dialog" translatable="false">Permission_Phone and SMS_dialog shown</string>
+	<string name="perms_basic_requested" translatable="false">Permission_Phone and SMS_requested</string>
+	<string name="perms_phone_requested" translatable="false">Permission_Phone_requested</string>
+	<string name="perms_sms_requested" translatable="false">Permission_SMS_requested</string>
+	<string name="perms_basic_cancelled" translatable="false">Permission_Phone and SMS_dialog canceled</string>
+	<string name="perms_basic_granted" translatable="false">Permission_Phone and SMS_granted</string>
+	<string name="perms_phone_denied" translatable="false">Permission_Phone_denied</string>
+	<string name="perms_sms_granted" translatable="false">Permission_SMS_granted</string>
+	<string name="perms_sms_denied" translatable="false">Permission_SMS_denied</string>
+	<string name="perms_basic_denied" translatable="false">Permission_Phone and SMS_denied</string>
+	<string name="perms_overlay_dialog" translatable="false">Permission_Overlay_dialogshown</string>
+	<string name="perms_overlay_requested" translatable="false">Permission_Overlay_sent to settings</string>
+	<string name="perms_overlay_granted" translatable="false">Permission_Overlay_granted</string>
+	<string name="perms_overlay_notgranted" translatable="false">Permission_Overlay_returned to app without toggling</string>
+	<string name="perms_overlay_cancelled" translatable="false">Permission_Overlay_dialog canceled</string>
+	<string name="perms_accessibility_dialog" translatable="false">Permission_Accessibility_dialog shown</string>
+	<string name="perms_accessibility_requested" translatable="false">Permission_Accessibility_senttosettings</string>
+	<string name="perms_accessibility_granted" translatable="false">Permission_Accessibility_granted</string>
+	<string name="perms_accessibility_notgranted" translatable="false">Permission_Accessibility_returned to app without toggling</string>
+	<string name="perms_accessibility_cancelled" translatable="false">Permission_Accessibility_dialog canceled</string>
 
 	<string name="initializing_USSD_event_confirmed">Initializing USSD services</string>
 	<string name="displaying_in_app_banner">Displaying in_app banner_ %1$d </string>
@@ -72,7 +72,9 @@
 	<string name="visit_merchant" translatable="false">Pay merchant</string>
 	<string name="visit_paybill_list" translatable="false">Paybill List</string>
 
-	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>
+	<string name="starting_transaction" translatable="false">Sending %1$s request to the SDK</string>
+	<string name="checking_var" translatable="false">Checking %1$s %2$s with the SDK</string>
+	<string name="generate_failed" translatable="false">Generating SDK Intent Failed</string>
 	<string name="scheduled_complete" translatable="false">Scheduled new %1$s</string>
 	<string name="clicked_schedule_notification" translatable="false">Clicked notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Sending scheduled %1$s transfer to the SDK</string>
@@ -162,5 +164,5 @@
 	<string name="clicked_continue" translatable="false">Clicked continue button</string>
 
 	<string name="clicked_bonus_airtime_banner" translatable="false">Clicked bonus airtime banner</string>
-
+	<string name="force_update_status" translatable="false">Force update status is %1$s</string>
 </resources>

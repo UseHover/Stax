@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.notifications
 
 import android.app.NotificationChannel
@@ -16,10 +31,10 @@ import com.google.firebase.messaging.RemoteMessage
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.FROM_FCM
 import com.hover.stax.R
-import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
-import timber.log.Timber
+import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import kotlin.random.Random
+import timber.log.Timber
 
 class MessagingService : FirebaseMessagingService() {
 
@@ -32,7 +47,7 @@ class MessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         val data = message.data
 
-        if (data.containsKey("af-uinstall-tracking")) //ensures uninstall notifications remain silent
+        if (data.containsKey("af-uinstall-tracking")) // ensures uninstall notifications remain silent
             return
         else {
             val redirect = data["redirect"]
@@ -50,7 +65,7 @@ class MessagingService : FirebaseMessagingService() {
         val pendingIntent = getPendingIntent(title, redirect)
 
         val builder = NotificationCompat.Builder(this, channelId).apply {
-            setSmallIcon(R.drawable.ic_stax)
+            setSmallIcon(R.mipmap.ic_launcher_round)
             setAutoCancel(true)
             setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
             priority = 2
@@ -70,7 +85,10 @@ class MessagingService : FirebaseMessagingService() {
         notificationManager.notify(Random.nextInt(), builder.build())
     }
 
-    private fun createNotificationChannel(channelId: String, notificationManager: NotificationManager) {
+    private fun createNotificationChannel(
+        channelId: String,
+        notificationManager: NotificationManager
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId, getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(channel)
@@ -96,5 +114,4 @@ class MessagingService : FirebaseMessagingService() {
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
         }
     }
-
 }

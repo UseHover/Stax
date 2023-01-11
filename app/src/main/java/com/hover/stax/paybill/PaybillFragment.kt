@@ -1,5 +1,21 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.paybill
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +28,9 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.domain.model.Account
+import com.hover.stax.hover.HoverSession
+import com.hover.stax.hover.TransactionContract
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
@@ -37,7 +55,11 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentPaybillBinding.inflate(inflater, container, false)
         accountsViewModel.setType(HoverAction.BILL)
         return binding.root
@@ -75,7 +97,11 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         billIcon.setOnClickListener { toggleIconChooser(true) }
     }
 
-    private fun setInputListener(input: StaxTextInput, setFun: (String) -> Unit, errorMsg: () -> String?) {
+    private fun setInputListener(
+        input: StaxTextInput,
+        setFun: (String) -> Unit,
+        errorMsg: () -> String?
+    ) {
         input.setOnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) setFun((v as TextInputEditText).text.toString())
             setInputState(hasFocus, input, errorMsg())
@@ -145,7 +171,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     }
 
     private fun observeActions() {
-        accountsViewModel.channelActions.observe(viewLifecycleOwner) {
+        accountsViewModel.institutionActions.observe(viewLifecycleOwner) {
             val err = accountsViewModel.errorCheck()
             payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         }
@@ -263,22 +289,27 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     override fun onSubmitForm() {
         with(accountsViewModel) {
-            val actions = channelActions.value
-            val account = activeAccount.value
+            val actions = institutionActions.value
             val activeAction = actionSelectViewModel.activeAction.value
+            val actionToRun = activeAction ?: actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
 
-            val actionToRun = if (activeAction == null)
-                actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
-            else
-                actions!!.first()
-
-            if (!actions.isNullOrEmpty() && account != null)
-                (requireActivity() as AbstractHoverCallerActivity).runSession(account, actionToRun ?: actions.first(), viewModel.wrapExtras(), 0)
-            else
-                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $account")
+            if (!actions.isNullOrEmpty() && activeAccount.value != null) {
+                val hsb = generateSessionBuilder(actionToRun!!, activeAccount.value!!)
+                callHover(paybill, hsb)
+            } else {
+                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, ${activeAccount.value!!}") }
 
             findNavController().popBackStack()
         }
+    }
+
+    private fun generateSessionBuilder(action: HoverAction, account: Account): HoverSession.Builder {
+        return HoverSession.Builder(action,payWithDropdown.getHighlightedAccount() ?: account,
+            viewModel.wrapExtras(), requireActivity())
+    }
+
+    private val paybill = registerForActivityResult(TransactionContract()) { data: Intent? ->
+        goToDeets(data)
     }
 
     private fun showUpdatePaybillConfirmation() = viewModel.selectedPaybill.value?.let {

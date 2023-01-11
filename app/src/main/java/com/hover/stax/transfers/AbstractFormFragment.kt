@@ -1,14 +1,31 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transfers
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
@@ -22,7 +39,8 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.domain.model.Account
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.HoverSession
+import com.hover.stax.hover.TransactionContract
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.utils.AnalyticsUtil
@@ -77,13 +95,32 @@ abstract class AbstractFormFragment : Fragment() {
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
         collectLifecycleFlow(balancesViewModel.balanceAction) {
-            callHover(accountsViewModel.activeAccount.value, it)
+            callHover(checkBalance, generateSessionBuilder(it))
         }
     }
 
-    private fun callHover(account: Account?, action: HoverAction) {
-        account?.let {
-            (requireActivity() as AbstractHoverCallerActivity).runSession(account, action)
+    private fun generateSessionBuilder(action: HoverAction): HoverSession.Builder {
+        return HoverSession.Builder(action, accountsViewModel.activeAccount.value!!, null, requireActivity())
+    }
+
+    private val checkBalance = registerForActivityResult(TransactionContract()) { data: Intent? ->
+        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
+        }
+    }
+
+    protected fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder) {
+        try {
+            launcher.launch(b)
+        } catch (e: Exception) {
+            requireActivity().runOnUiThread { UIHelper.flashAndReportMessage(requireContext(), getString(R.string.error_running_action)) }
+            AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
+        }
+    }
+
+    protected fun goToDeets(data: Intent?) {
+        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
         }
     }
 
@@ -116,7 +153,7 @@ abstract class AbstractFormFragment : Fragment() {
     private fun askToCheckBalance(account: Account) {
         val dialog = StaxDialog(layoutInflater)
             .setDialogTitle(R.string.finish_adding_title)
-            .setDialogMessage(getString(R.string.finish_adding_desc, account.alias))
+            .setDialogMessage(getString(R.string.finish_adding_desc, account.userAlias))
             .setNegButton(R.string.btn_cancel, null)
             .setPosButton(R.string.connect_cta) { balancesViewModel.requestBalance(account) }
         dialog.showIt()
@@ -134,10 +171,9 @@ abstract class AbstractFormFragment : Fragment() {
             isEditing -> getString(R.string.btn_continue)
             accountsViewModel.getActionType() == HoverAction.AIRTIME -> getString(R.string.fab_airtimenow)
             accountsViewModel.getActionType() == HoverAction.P2P ||
-                    accountsViewModel.getActionType() == HoverAction.MERCHANT ||
-                    accountsViewModel.getActionType() == HoverAction.BILL -> getString(R.string.fab_transfernow)
+                accountsViewModel.getActionType() == HoverAction.MERCHANT ||
+                accountsViewModel.getActionType() == HoverAction.BILL -> getString(R.string.fab_transfernow)
             else -> getString(R.string.fab_submit)
-
         }
     }
 
@@ -203,7 +239,6 @@ abstract class AbstractFormFragment : Fragment() {
         accountsViewModel.reset()
         actionSelectViewModel.activeAction.value = null
     }
-
 
     override fun onDestroy() {
         resetVMs()

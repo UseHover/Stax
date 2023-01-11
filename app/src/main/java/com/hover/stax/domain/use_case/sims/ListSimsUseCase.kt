@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.domain.use_case.sims
 
 import com.hover.sdk.actions.HoverAction
@@ -5,27 +20,23 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.Bonus
 import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.domain.repository.BonusRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 data class SimWithAccount(
     val sim: SimInfo,
     val account: Account,
     val balanceAction: HoverAction?,
-    val airtimeAction: HoverAction?,
-    val bonus: Double
+    val airtimeActions: List<HoverAction?> = emptyList()
 )
 
 class ListSimsUseCase(
     private val simRepo: SimRepo,
     private val accountRepository: AccountRepository,
     private val actionRepository: ActionRepo,
-    private val bonusRepository: BonusRepository,
-    private val defaultDispatcher: CoroutineDispatcher) {
+    private val defaultDispatcher: CoroutineDispatcher
+) {
 
     suspend operator fun invoke(): List<SimWithAccount> = withContext(defaultDispatcher) {
         val sims = simRepo.getAll()
@@ -33,22 +44,17 @@ class ListSimsUseCase(
         for (sim in sims) {
             var account = accountRepository.getAccountBySim(sim.subscriptionId)
             var balanceAct: HoverAction? = null
-            var airtimeAct: HoverAction? = null
-            val bonus : Double? = getSimBonus(bonusRepository.bonusList(), sim.osReportedHni)?.bonusPercent
+            var airtimeActs: List<HoverAction> = emptyList()
 
             if (account == null)
                 account = accountRepository.createAccount(sim)
 
             if (account.channelId != -1) {
-                balanceAct = actionRepository.getFirstAction(account.channelId, HoverAction.BALANCE)
-                airtimeAct = actionRepository.getFirstAction(account.channelId, HoverAction.AIRTIME)
+                balanceAct = actionRepository.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE)
+                airtimeActs = actionRepository.getActionsByRecipientInstitution(account.institutionId, account.countryAlpha2, HoverAction.AIRTIME)
             }
-            result.add(SimWithAccount(sim, account, balanceAct, airtimeAct, (bonus ?: 0.toDouble())))
+            result.add(SimWithAccount(sim, account, balanceAct, airtimeActs))
         }
         result
-    }
-
-    private fun getSimBonus(bonuses: List<Bonus>, simHni: String) : Bonus? {
-        return bonuses.find { it.hniList.contains(simHni) }
     }
 }

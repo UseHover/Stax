@@ -1,23 +1,66 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transfers
 
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.ArrayAdapter
 import com.hover.stax.R
 import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.utils.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
 
-class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>, private val editTextListener: NonStandardVariableInputListener, private val recyclerView: RecyclerView) :
-    RecyclerView.Adapter<NonStandardVariableAdapter.ViewHolder>() {
+class NonStandardVariableAdapter(
+    private var variables: LinkedHashMap<String, String>,
+    private val editTextListener: NonStandardVariableInputListener,
+    context: Context
+) :
+    ArrayAdapter<HashMap<String, String>>(context, 0) {
 
-    inner class ViewHolder(val binding: InputItemBinding): RecyclerView.ViewHolder(binding.root) {
-        val input = binding.variableInput
+    override fun getView(position: Int, v: View?, parent: ViewGroup): View {
+        return initView(position, v, parent)
+    }
 
-        fun bindItems(key: String, value: String) {
+    private fun initView(position: Int, v: View?, parent: ViewGroup): View {
+        val holder: NonStandardVariableAdapter.ViewHolder
+        var view = v
+        if (view == null) {
+            val binding = InputItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            view = binding.root
 
+            holder = ViewHolder(binding)
+            holder.setVar(variables.keys.toList()[position], variables.values.toList()[position])
+            holder.setState(position)
+        }
+
+        return view
+    }
+
+//    override fun getItem(position: Int): HashMap<String, String>? = if (count > 0) HashMap(variables.keys.toList()[position], variables.values.toList()[position]) else null
+
+    override fun getCount(): Int = variables.size
+
+    inner class ViewHolder(val binding: InputItemBinding) {
+        private val input = binding.variableInput
+
+        fun setVar(key: String, v: String) {
             val inputTextWatcher: TextWatcher = object : TextWatcher {
                 override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                 override fun afterTextChanged(editable: Editable) {}
@@ -29,41 +72,24 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
             input.addTextChangedListener(inputTextWatcher)
             input.setHint(key.splitCamelCase())
             input.tag = key
-            input.setText(value)
+            input.setText(v)
+        }
+
+        fun setState(pos: Int) {
+            if (variables.values.toList()[pos].isNullOrEmpty())
+                input.setState(context.getString(R.string.enterValue_non_template_error, variables.keys.toList()[pos].lowercase()), AbstractStatefulInput.ERROR)
+            else input.setState(null, AbstractStatefulInput.SUCCESS)
         }
     }
 
     fun validates(): Boolean {
-        var valid = true
-
-        variables.onEachIndexed { index, entry ->
-            if (entry.value.isBlank()) {
-                valid = false
-
-                (recyclerView.findViewHolderForAdapterPosition(index) as? NonStandardVariableAdapter.ViewHolder)?.input?.setState(
-                    recyclerView.context.getString(R.string.enterValue_non_template_error, entry.key.lowercase()), AbstractStatefulInput.ERROR
-                )
-            } else {
-                (recyclerView.findViewHolderForAdapterPosition(index) as? NonStandardVariableAdapter.ViewHolder)?.input?.setState(
-                    null, AbstractStatefulInput.SUCCESS
-                )
-            }
-        }
-        return valid
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = InputItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItems(variables.keys.toList()[position], variables.values.toList()[position])
+        if (variables.isNullOrEmpty()) return true
+        for ((k, v) in variables)
+            if (v.isNullOrEmpty()) return false
+        return true
     }
 
     interface NonStandardVariableInputListener {
         fun nonStandardVarUpdate(key: String, value: String)
     }
-
-    override fun getItemCount(): Int { return variables.size }
 }

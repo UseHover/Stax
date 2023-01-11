@@ -1,0 +1,114 @@
+[versions]
+compose = "1.2.1"
+koin = "3.2.0"
+room = "2.4.3"
+ktor = "2.1.2"
+glide = "4.13.2"
+
+androidGradlePlugin = "7.3.1"
+kotlin = "1.7.10"
+ktlint = "10.2.0"
+detekt = "1.18.0-RC2"
+spotless = "6.0.0"
+dokka = "1.7.10"
+serialization = "1.6.21"
+
+[libraries]
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
+compose-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+compose-viewbinding = { module = "androidx.compose.ui:ui-viewbinding", version.ref = "compose" }
+compose-livedata = "androidx.compose.runtime:runtime-livedata:1.3.0-alpha03"
+compose-accompanist = "com.google.accompanist:accompanist-drawablepainter:0.25.1"
+compose-ui-test = "androidx.compose.ui:ui-test-junit4:1.2.1"
+compose-tooling = "androidx.compose.ui:ui-tooling:1.2.1"
+
+appcompat = "androidx.appcompat:appcompat:1.5.0"
+constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
+vectordrawable = "androidx.vectordrawable:vectordrawable:1.1.0"
+navigation-fragment = "androidx.navigation:navigation-fragment-ktx:2.5.1"
+navigation-ui = "androidx.navigation:navigation-ui-ktx:2.5.1"
+lifecycle-extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
+biometric = "androidx.biometric:biometric:1.1.0"
+material = "com.google.android.material:material:1.6.1"
+viewpager = "androidx.viewpager:viewpager:1.0.0"
+recyclerview = "androidx.recyclerview:recyclerview-selection:1.1.0"
+work-runtime = "androidx.work:work-runtime-ktx:2.7.1"
+lifecycle-runtime = "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+activity-compose = "androidx.activity:activity-compose:1.5.1"
+core-ktx = "androidx.core:core-ktx:+"
+lifecycle-viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+kotlin-stdlib = "org.jetbrains.kotlin:kotlin-stdlib:1.0.0"
+lifecycle-common = "androidx.lifecycle:lifecycle-common-java8:2.5.1"
+splashscreen = "androidx.core:core-splashscreen:1.0.0"
+preference = "androidx.preference:preference-ktx:1.2.0"
+legacy-support = "androidx.legacy:legacy-support-v4:1.0.0"
+
+timber = "com.jakewharton.timber:timber:5.0.1"
+amplitude = "com.amplitude:android-sdk:3.35.1"
+appsflyer = "com.appsflyer:af-android-sdk:6.8.2"
+installreferrer = "com.android.installreferrer:installreferrer:2.2"
+uxcam = "com.uxcam:uxcam:3.5.1"
+
+koin = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+
+room = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-test = { module = "androidx.room:room-testing", version.ref = "room" }
+
+auth = "com.google.android.gms:play-services-auth:20.2.0"
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+grpc = "io.grpc:grpc-okhttp:1.48.1"
+
+phoenix = "com.jakewharton:process-phoenix:2.1.2"
+
+datastore = "androidx.datastore:datastore-preferences:1.0.0"
+
+libphonenumber = "com.googlecode.libphonenumber:libphonenumber:8.12.53"
+
+lingver = "com.github.YarikSOffice:lingver:1.3.0"
+
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+coil = "io.coil-kt:coil-compose:2.1.0"
+
+hover = "com.hover:android-sdk:2.0.0-stax-1.18.10-pro"
+volley = "com.android.volley:volley:1.2.1"
+play-services = "com.google.android.gms:play-services-analytics:18.0.1"
+picasso = "com.squareup.picasso:picasso:2.71828"
+sentry = "io.sentry:sentry-android:4.3.0"
+
+junit = "junit:junit:4.13.2"
+robolectric = "org.robolectric:robolectric:4.9"
+test-core-ktx = "androidx.test:core-ktx:1.5.0"
+fixture = "com.appmattus.fixture:fixture:1.2.0"
+truth = "com.google.truth:truth:1.1.3"
+mockk = "io.mockk:mockk:1.13.2"
+compose-test = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+
+junit-androidx = "androidx.test.ext:junit:1.1.3"
+espresso = "androidx.test.espresso:espresso-core:3.4.0"
+
+[bundles]
+compose = ["compose-ui", "compose-material", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist"]
+google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "splashscreen", "preference", "legacy-support"]
+logging = ["timber", "amplitude", "appsflyer", "installreferrer", "uxcam"]
+koin = ["koin", "koin-compose"]
+room = ["room", "room-runtime"]
+network = ["ktor-client-core", "ktor-client-android", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization", "ktor-client", "kotlinx-serialization", "grpc"]
+image = ["glide", "coil"]
+hover = ["volley", "play-services", "picasso", "sentry"]
+test = ["junit", "robolectric", "test-core-ktx", "fixture", "truth", "mockk", "ktor-client-mock", "espresso", "compose-test"]
+
+[plugins]

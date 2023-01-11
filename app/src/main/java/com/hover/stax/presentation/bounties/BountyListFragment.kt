@@ -1,5 +1,21 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.presentation.bounties
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +34,7 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.data.remote.workers.UpdateBountyTransactionsWorker
 import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.domain.model.Bounty
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.BountyContract
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
@@ -29,8 +45,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-
-class BountyListFragment : Fragment()  {
+class BountyListFragment : Fragment() {
 
     private lateinit var networkMonitor: NetworkMonitor
 
@@ -41,7 +56,11 @@ class BountyListFragment : Fragment()  {
 
     private var dialog: StaxDialog? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
 
         _binding = FragmentBountyListBinding.inflate(inflater, container, false)
@@ -83,15 +102,18 @@ class BountyListFragment : Fragment()  {
     }
 
     private fun updateActionConfig() = lifecycleScope.launch {
-        Hover.initialize(requireActivity(), object : Hover.DownloadListener {
-            override fun onError(p0: String?) {
-                AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
-            }
+        Hover.initialize(
+            requireActivity(),
+            object : Hover.DownloadListener {
+                override fun onError(p0: String?) {
+                    AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
+                }
 
-            override fun onSuccess(p0: ArrayList<HoverAction>?) {
-                Timber.i("Action configs initialized successfully $p0")
+                override fun onSuccess(p0: ArrayList<HoverAction>?) {
+                    Timber.i("Action configs initialized successfully $p0")
+                }
             }
-        })
+        )
     }
 
     private fun updateChannelsWorker() = with(WorkManager.getInstance(requireActivity())) {
@@ -153,7 +175,14 @@ class BountyListFragment : Fragment()  {
 
     private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
-        (requireActivity() as AbstractHoverCallerActivity).makeRegularCall(b.action, R.string.clicked_start_bounty)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_start_bounty), requireContext())
+        bounty.launch(b.action)
+    }
+
+    private val bounty = registerForActivityResult(BountyContract()) { data: Intent? ->
+        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
+        }
     }
 
     private fun retrySimMatch(b: Bounty?) {

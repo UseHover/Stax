@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.data.local.actions
 
 import androidx.lifecycle.LiveData
@@ -17,35 +32,33 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
         return actionDao.getLiveAction(public_id)
     }
 
-    fun getChannelActions(channelId: Int): LiveData<List<HoverAction>> {
-        return actionDao.getLiveChannelActions(channelId)
+    fun getFirstAction(institutionId: Int, countryCode: String, type: String): HoverAction? {
+        return actionDao.getFirstAction(institutionId, countryCode, type)
     }
 
-    fun getFirstLiveAction(channelId: Int, type: String): LiveData<HoverAction?> {
-        return actionDao.getFirstLiveAction(channelId, type)
+    fun getTransferActions(institutionId: Int, countryCode: String): List<HoverAction> {
+        return actionDao.getTransferActions(institutionId, countryCode)
     }
 
-    fun getFirstAction(channelId: Int, type: String): HoverAction? {
-        return actionDao.getFirstAction(channelId, type)
+    fun getActions(institutionId: Int, countryCode: String, type: String?): List<HoverAction> {
+        return actionDao.getActions(institutionId, countryCode, type)
     }
 
-    fun getTransferActions(channelId: Int): List<HoverAction> {
-        return actionDao.getTransferActions(channelId)
+    fun getActionsByRecipientInstitution(
+        recipientInstitutionId: Int,
+        countryCode: String,
+        type: String
+    ): List<HoverAction> {
+        return actionDao.getActionsByRecipientInstitution(recipientInstitutionId, countryCode, type)
     }
 
-    fun getActions(channelId: Int, type: String?): List<HoverAction> {
-        return actionDao.getActions(channelId, type)
+    fun getBonusActionsByCountry(countries: Array<String>): List<HoverAction> {
+        return actionDao.getBonusActions(countries)
     }
 
-    fun getActions(channelIds: IntArray?, type: String?): List<HoverAction> {
-        return actionDao.getActions(channelIds, type)
+    fun getBonusActionsByCountryAndType(country: String, type: String): List<HoverAction> {
+        return actionDao.getBonusActionsByType(country, type)
     }
-
-    fun getActions(channelIds: IntArray?, recipientInstitutionId: Int): List<HoverAction> {
-        return actionDao.getActions(channelIds, recipientInstitutionId, HoverAction.P2P)
-    }
-
-    val bountyActions: LiveData<List<HoverAction>> get() = actionDao.bountyActions
 
     val bounties: List<HoverAction> get() = actionDao.bounties
 }

@@ -33,9 +33,10 @@
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal" />
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/nonStandardVariableRecyclerView"
+        <LinearLayout
+                android:id="@+id/nonStandardVariables"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
 
 </com.hover.stax.views.StaxCardView>

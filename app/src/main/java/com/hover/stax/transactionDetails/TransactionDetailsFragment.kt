@@ -1,5 +1,21 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transactionDetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -11,7 +27,7 @@ import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -28,10 +44,14 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
-import com.hover.stax.hover.AbstractHoverCallerActivity
+import com.hover.stax.hover.AbstractBalanceCheckerFragment
+import com.hover.stax.hover.BountyContract
+import com.hover.stax.hover.HoverSession
+import com.hover.stax.hover.TransactionContract
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
@@ -46,7 +66,7 @@ import timber.log.Timber
 
 const val UUID = "uuid"
 
-class TransactionDetailsFragment : Fragment() {
+class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
 
@@ -60,7 +80,11 @@ class TransactionDetailsFragment : Fragment() {
     private lateinit var childFragManager: FragmentManager
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<RelativeLayout>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val uuid = requireArguments().getString(UUID)
         viewModel.setTransaction(uuid!!)
         logView(uuid)
@@ -80,7 +104,7 @@ class TransactionDetailsFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
-    private val backPressedCallback = object: OnBackPressedCallback(true) {
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             handleBackNavigation()
         }
@@ -94,7 +118,7 @@ class TransactionDetailsFragment : Fragment() {
         with(binding.details.confirmCodeCopy.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
     }
 
-    private fun handleBackNavigation(){
+    private fun handleBackNavigation() {
         val isBounty = viewModel.transaction.value?.isRecorded ?: false
 
         if (isBounty) findNavController().popBackStack()
@@ -107,11 +131,7 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun startObservers() = with(viewModel) {
-        val txnObserver = object : Observer<Transaction> {
-            override fun onChanged(t: Transaction?) {
-                t?.let { Timber.e("Updating transaction messages ${t.uuid}") }
-            }
-        }
+        val txnObserver = Observer<Transaction> { t -> Timber.e("Updating transaction messages ${t?.uuid}") }
 
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
@@ -120,15 +140,10 @@ class TransactionDetailsFragment : Fragment() {
         account.observe(viewLifecycleOwner) { it?.let { updateAccount(it) } }
         hoverTransaction.observe(viewLifecycleOwner, txnObserver)
         messages.observe(viewLifecycleOwner) { it?.let { updateMessages(it) } }
-        bonusAmt.observe(viewLifecycleOwner) { showBonusAmount(it) }
 
-
-        val observer = object : Observer<Boolean> {
-            override fun onChanged(t: Boolean?) {
-                Timber.i("Expecting sms $t")
-                action.value?.let { a -> updateAction(a) }
-            }
-
+        val observer = Observer<Boolean> { t ->
+            Timber.i("Expecting sms $t")
+            action.value?.let { a -> updateAction(a) }
         }
         isExpectingSMS.observe(viewLifecycleOwner, observer)
     }
@@ -204,16 +219,23 @@ class TransactionDetailsFragment : Fragment() {
         viewModel.transaction.value?.let {
             val msg = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
             binding.statusInfo.longDescription.text = HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            binding.details.categoryValue.text = it.shortStatusExplain(action,"", requireContext())
+            binding.details.categoryValue.text = it.shortStatusExplain(action, "", requireContext())
             if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
+            showBonusAmount(it.amount, action)
         }
         binding.statusInfo.institutionLogo.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo)
     }
 
+    private fun showBonusAmount(amount: Double?, action: HoverAction) = with(binding.details) {
+        bonusRow.visibility = if (amount != null && amount > 0 && action.bonus_percent > 0) VISIBLE else GONE
+        if (amount != null)
+            bonusAmount.text = (amount * action.bonus_percent / 100).toString()
+    }
+
     private fun updateAccount(account: Account) {
-        binding.details.paidWithValue.text = account.name
-        binding.details.feeLabel.text = getString(R.string.transaction_fee, account.name)
+        binding.details.paidWithValue.text = account.userAlias
+        binding.details.feeLabel.text = getString(R.string.transaction_fee, account.institutionName)
     }
 
     private fun updateMessages(ussdCallResponses: List<UssdCallResponse>?) {
@@ -267,7 +289,7 @@ class TransactionDetailsFragment : Fragment() {
         contactSupportTextView.setOnClickListener {
             resetTryAgainCounter(id)
             val deviceId = Hover.getDeviceId(requireContext())
-            val subject = "Stax Transaction failure - support id- {${deviceId}}"
+            val subject = "Stax Transaction failure - support id- {$deviceId}"
             Utils.openEmail(subject, requireActivity())
         }
     }
@@ -283,8 +305,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun retry(transaction: StaxTransaction) {
         updateRetryCounter(transaction.action_id)
         if (transaction.transaction_type == HoverAction.BALANCE) {
-            (requireActivity() as AbstractHoverCallerActivity)
-                .runSession(viewModel.account.value!!, viewModel.action.value!!, viewModel.wrapExtras(), 0)
+            callHover(checkBalance, generateSessionBuilder(viewModel.account.value!!, viewModel.action.value!!))
         } else if (transaction.transaction_type == HoverAction.P2P || transaction.transaction_type == HoverAction.AIRTIME)
             navToTransferDetail(transaction)
 //        else if (transaction.transaction_type == HoverAction.BILL)
@@ -296,7 +317,7 @@ class TransactionDetailsFragment : Fragment() {
     private fun navToTransferDetail(transaction: StaxTransaction) {
         NavUtil.navigateTransfer(
             findNavController(), transaction.transaction_type,
-            transaction.accountId.toString(), transaction.amount.toString(), transaction.counterparty_id
+            transaction.accountId.toString(), Utils.formatAmountForUSSD(transaction.amount), transaction.counterparty_id
         )
     }
 
@@ -311,7 +332,14 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun retryBounty() {
         viewModel.action.value?.let {
-            (requireActivity() as MainActivity).makeRegularCall(it, R.string.clicked_retry_bounty_session)
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), requireContext())
+            bounty.launch(it)
+        }
+    }
+
+    private val bounty = registerForActivityResult(BountyContract()) { data: Intent? ->
+        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
         }
     }
 
@@ -343,18 +371,6 @@ class TransactionDetailsFragment : Fragment() {
         }
 
         bottomSheetBehavior.state = updatedState
-    }
-
-
-    private fun showBonusAmount(amount: Int) = with(binding.details) {
-        val txn = viewModel.transaction.value
-
-        if (amount > 0 && (txn != null && txn.isSuccessful)) {
-            bonusRow.visibility = VISIBLE
-            bonusAmount.text = amount.toString()
-        } else {
-            bonusRow.visibility = GONE
-        }
     }
 
     override fun onDestroyView() {

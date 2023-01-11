@@ -2,6 +2,6 @@
 	<string name="root_url" translatable="false">https://stage.usehover.com/</string>
 	<string name="api_url" translatable="false">https://stage.usehover.com/stax_api</string>
 	<string name="maathai_api_url" translatable="false">https://stage.usehover.com/api</string>
-	<string name="amp" translatable="false" public="false">befa4bbbaae25b13ebfe4da8ff86d26c</string>
+	<string name="amp" public="false" translatable="false">befa4bbbaae25b13ebfe4da8ff86d26c</string>
 	<string name="tips_table" translatable="false">wellness_tips_develop</string>
 </resources>

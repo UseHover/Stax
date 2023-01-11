@@ -51,7 +51,7 @@
 					android:contentDescription="@string/hsdk_response_ic"
 					android:gravity="center"
 					android:visibility="visible"
-					app:srcCompat="@mipmap/stax" />
+					app:srcCompat="@mipmap/ic_launcher_round" />
 
 			<LinearLayout
 					android:layout_width="match_parent"

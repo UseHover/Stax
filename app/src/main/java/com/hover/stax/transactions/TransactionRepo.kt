@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
@@ -16,6 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
 class TransactionRepo(db: AppDatabase) {
+
     private val transactionDao: TransactionDao = db.transactionDao()
 
     val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction>>?
@@ -60,7 +76,12 @@ class TransactionRepo(db: AppDatabase) {
 
     fun deleteAccountTransactions(accountId: Int) = transactionDao.deleteAccountTransactions(accountId)
 
-    fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
+    fun insertOrUpdateTransaction(
+        intent: Intent,
+        action: HoverAction,
+        contact: StaxContact,
+        c: Context
+    ) {
         AppDatabase.databaseWriteExecutor.execute {
             try {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
@@ -72,12 +93,12 @@ class TransactionRepo(db: AppDatabase) {
                     t = transactionDao.getTransaction(t.uuid)
                 } else {
                     AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
-                    t.update(intent, action, contact, c)
-                    transactionDao.update(t)
+                    t.update(intent, contact)
+                    transactionDao.updateTransaction(t)
                 }
                 Timber.e("save t with uuid: %s", t?.uuid)
             } catch (e: Exception) {
-                Timber.e(e, "error")
+                AnalyticsUtil.logErrorAndReportToFirebase(TransactionRepo::class.java.simpleName, e.message, e)
             }
         }
     }

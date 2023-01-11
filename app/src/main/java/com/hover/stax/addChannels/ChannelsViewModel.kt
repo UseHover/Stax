@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.addChannels
 
 import android.app.Application
@@ -5,41 +20,43 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
-import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.ActionApi
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.channels.Channel
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.local.SimRepo
-import com.hover.stax.domain.model.PLACEHOLDER
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.local.channels.ChannelRepo
+import com.hover.stax.domain.model.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel as KChannel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-//TODO: Refactor this class, and note the comment in the createAccounts(channels: List<Channel>) method
-//Todo created by Tobi, 11th of August, 2022.
-class ChannelsViewModel(application: Application, val repo: ChannelRepo,
-                        val simRepo: SimRepo,
-                        val accountRepo: AccountRepo,
-                        val actionRepo: ActionRepo,
-                        private val bonusRepo: BonusRepo) : AndroidViewModel(application),
+class ChannelsViewModel(
+    application: Application,
+    val repo: ChannelRepo,
+    val simRepo: SimRepo,
+    val accountRepo: AccountRepo,
+    val actionRepo: ActionRepo
+) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -167,7 +184,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
-    fun validateAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun payWith(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val accounts = accountRepo.getAccountsByChannel(channelId)
 
         if (accounts.isEmpty())
@@ -187,8 +204,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         val defaultAccount = accountRepo.getDefaultAccount()
 
         val accounts = channels.mapIndexed { index, channel ->
-            val accountName: String = if (getFetchAccountAction(channel.id) == null) channel.name else channel.name.plus(PLACEHOLDER) //ensures uniqueness of name due to db constraints
-            Account(accountName, channel, defaultAccount == null && index == 0, -1)
+            Account(channel, defaultAccount == null && index == 0, -1)
         }.onEach {
             logChoice(it)
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
@@ -196,7 +212,6 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
 
         val accountIds = accountRepo.insert(accounts)
 
-        //Refactoring tip: This is currently the only difference when compared with the function in AccountRepositoryImpl.
         promptBalanceCheck(accountIds.first().toInt())
     }
 
@@ -208,9 +223,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
         }
     }
 
-    private fun getFetchAccountAction(channelId: Int): HoverAction? = actionRepo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
-
-    fun updateSearch(value: String) {
+    fun updateSearch(value: String?) {
         filterQuery.value = value
     }
 
@@ -219,7 +232,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     fun updateCountry(code: String) {
-        countryChoice.postValue(code.uppercase())
+        countryChoice.postValue(code.lowercase())
     }
 
     private fun updateCountryChannels(channels: List<Channel>?) {
@@ -227,17 +240,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     }
 
     private fun runFilter(channels: List<Channel>, value: String?) {
-        filterBonusChannels(channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) })
-    }
-
-    private fun filterBonusChannels(channels: List<Channel>) = viewModelScope.launch {
-        bonusRepo.collectBonuses.collect { list ->
-            val ids = list.map { it.purchaseChannel }
-            filteredChannels.value = if (ids.isEmpty())
-                channels
-            else
-                channels.filterNot { ids.contains(it.id) }
-        }
+        filteredChannels.value = channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) }
     }
 
     fun updateChannel(channel: Channel) {
@@ -249,7 +252,7 @@ class ChannelsViewModel(application: Application, val repo: ChannelRepo,
     private fun standardizeString(value: String?): String {
         // a non null String always contains an empty string
         if (value == null) return ""
-        return value.lowercase().replace(" ", "").replace("#", "").replace("-", "");
+        return value.lowercase().replace(" ", "").replace("#", "").replace("-", "")
     }
 
     override fun onCleared() {

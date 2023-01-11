@@ -1,18 +1,37 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transactionDetails
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.domain.model.Account
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.bonus.BonusRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.parser.ParserRepo
+import com.hover.stax.domain.model.Account
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.transactions.StaxTransaction
@@ -21,11 +40,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
-import kotlin.math.floor
 
 class TransactionDetailsViewModel(
-    application: Application, val repo: TransactionRepo, val actionRepo: ActionRepo, val contactRepo: ContactRepo, val accountRepo: AccountRepo,
-    private val bonusRepo: BonusRepo, private val parserRepo: ParserRepo, private val merchantRepo: MerchantRepo
+    application: Application,
+    val repo: TransactionRepo,
+    val actionRepo: ActionRepo,
+    val contactRepo: ContactRepo,
+    val accountRepo: AccountRepo,
+    private val parserRepo: ParserRepo,
+    private val merchantRepo: MerchantRepo
 ) : AndroidViewModel(application) {
 
     val transaction = MutableLiveData<StaxTransaction>()
@@ -46,7 +69,6 @@ class TransactionDetailsViewModel(
         action = Transformations.switchMap(transaction) { getLiveAction(it) }
         contact = Transformations.switchMap(transaction) { getLiveContact(it) }
         merchant = Transformations.switchMap(transaction) { getLiveMerchant(it) }
-        bonusAmt.addSource(transaction, this::getBonusAmount)
 
         messages.apply {
             addSource(transaction) { loadMessages(it) }
@@ -70,9 +92,9 @@ class TransactionDetailsViewModel(
     else null
 
     private fun getLiveMerchant(txn: StaxTransaction?): LiveData<Merchant?>? =
-            if (txn != null && txn.transaction_type == HoverAction.MERCHANT && txn.counterpartyNo != null)
-        merchantRepo.getLiveMatching(txn.counterpartyNo!!, txn.channel_id)
-    else null
+        if (txn != null && txn.transaction_type == HoverAction.MERCHANT && txn.counterpartyNo != null)
+            merchantRepo.getLiveMatching(txn.counterpartyNo!!, txn.channel_id)
+        else null
 
     fun setTransaction(uuid: String) = viewModelScope.launch(Dispatchers.IO) {
         repo.getTransactionAsync(uuid).collect { transaction.postValue(it) }
@@ -131,18 +153,6 @@ class TransactionDetailsViewModel(
         transaction?.let {
             val hasSMSParser = parserRepo.hasSMSParser(transaction.action_id)
             if (transaction.isPending) isExpectingSMS.postValue(hasSMSParser)
-        }
-    }
-
-    private fun getBonusAmount(staxTransaction: StaxTransaction?) = viewModelScope.launch(Dispatchers.IO) {
-        staxTransaction?.let {
-            val bonus = bonusRepo.getBonusByPurchaseChannel(staxTransaction.channel_id)
-
-            if (bonus != null && staxTransaction.amount != null) {
-                val bonusAmount = floor(bonus.bonusPercent.times(staxTransaction.amount!!))
-                bonusAmt.postValue(bonusAmount.toInt())
-            } else
-                bonusAmt.postValue(0)
         }
     }
 }

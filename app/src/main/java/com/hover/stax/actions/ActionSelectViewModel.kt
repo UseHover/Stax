@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.actions
 
 import android.app.Application
@@ -5,12 +20,11 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
+import com.hover.sdk.api.HoverConfigException
 import com.hover.stax.R
 import com.hover.stax.domain.model.ACCOUNT_NAME
-import java.util.LinkedHashMap
 
 const val RECIPIENT_INSTITUTION = "recipientInstitution"
 
@@ -45,8 +59,10 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
     private fun initNonStandardVariables(action: HoverAction?) {
         action?.let {
             val variableMap = LinkedHashMap<String, String>()
-            action.requiredParams.forEach {
-                if (!isStandardVariable(it)) variableMap[it] = ""
+            val keys: Iterator<String> = action.required_params.keys()
+            while (keys.hasNext()) {
+                val key = keys.next()
+                if (!isStandardVariable(key)) variableMap[key] = ""
             }
             nonStandardVariables.postValue(variableMap)
         }
@@ -62,7 +78,7 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
         nonStandardVariables.postValue(map)
     }
 
-     fun wrapExtras(): HashMap<String, String> {
-         return nonStandardVariables.value ?: hashMapOf()
-     }
+    fun wrapExtras(): HashMap<String, String> {
+        return nonStandardVariables.value ?: hashMapOf()
+    }
 }

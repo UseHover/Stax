@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.transfers
 
 import android.app.Application
@@ -8,40 +23,28 @@ import com.hover.stax.R
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.data.local.bonus.BonusRepo
-import com.hover.stax.domain.model.BonusList
-import com.hover.stax.domain.use_case.bonus.GetBonusesUseCase
 import com.hover.stax.requests.Request
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
-import com.hover.stax.utils.Utils
 import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-const val STAX_PREFIX = "stax_airtime_prefix"
-private const val KE_PREFIX = "0"
-
-class TransferViewModel(application: Application, private val getBonusesUseCase: GetBonusesUseCase, private val requestRepo: RequestRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
-
-    private val _bonusList = MutableStateFlow(BonusList())
-    val bonusList = _bonusList.asStateFlow()
+class TransferViewModel(
+    application: Application,
+    private val requestRepo: RequestRepo,
+    contactRepo: ContactRepo,
+    scheduleRepo: ScheduleRepo
+) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
 
     val isLoading = MutableLiveData(false)
-
-    init {
-    	collectBonusList()
-    }
 
     fun setAmount(a: String?) = amount.postValue(a)
 
@@ -55,7 +58,8 @@ class TransferViewModel(application: Application, private val getBonusesUseCase:
 
     fun setRecipientNumber(str: String) {
         if (contact.value != null && contact.value.toString() == str) return
-        contact.value = if (str.isEmpty()) StaxContact() else StaxContact(str)
+        if (str.isEmpty()) { contact.value = StaxContact() }
+        else { contact.value = StaxContact(str) }
     }
 
     private fun setRecipientSmartly(r: Request?, countryAlpha2: String?) =
@@ -79,9 +83,12 @@ class TransferViewModel(application: Application, private val getBonusesUseCase:
 
     private fun setNote(n: String?) = note.postValue(n)
 
-    fun amountErrors(): String? {
-        return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
-        else getString(R.string.amount_fielderror)
+    fun amountErrors(a: HoverAction?): String? {
+        val regex = a?.getStepByVar(HoverAction.AMOUNT_KEY)?.optString("valid_response_regex")
+        return if ((amount.value.isNullOrEmpty() || !amount.value!!.matches("[\\d.]+".toRegex()) || amount.value!!.matches("[0]+".toRegex())) ||
+            (!regex.isNullOrEmpty() && !amount.value!!.matches(regex.toRegex()))
+        ) getString(R.string.amount_fielderror)
+        else null
     }
 
     fun recipientErrors(a: HoverAction?): String? {
@@ -91,20 +98,28 @@ class TransferViewModel(application: Application, private val getBonusesUseCase:
         }
     }
 
-    fun wrapExtras(isBonusAirtime: Boolean = false): HashMap<String, String> {
+    fun wrapExtras(action: HoverAction): HashMap<String, String> {
         val extras: HashMap<String, String> = hashMapOf()
         if (amount.value != null) extras[HoverAction.AMOUNT_KEY] = amount.value!!
         if (contact.value != null && contact.value?.accountNumber != null) {
             extras[StaxContact.ID_KEY] = contact.value!!.id
             extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
-            extras[HoverAction.ACCOUNT_KEY] = if (isBonusAirtime) staxPrefix.plus(KE_PREFIX).plus(PhoneHelper.getNationalSignificantNumber(contact.value!!.accountNumber, "KE")) else
-                contact.value!!.accountNumber
+            extras[HoverAction.ACCOUNT_KEY] = generateRecipientAccount(action)
         }
         if (note.value != null) extras[HoverAction.NOTE_KEY] = note.value!!
         return extras
     }
 
-    private val staxPrefix get() = Utils.getString(STAX_PREFIX, getApplication())
+    private fun generateRecipientAccount(action: HoverAction): String {
+        return if (action.bonus_percent > 0 && action.getStepByVar("account").has("prefix")) {
+            val prefix = action.getStepByVar("account").optString("prefix")
+            if (action.isPhoneBased)
+                prefix + PhoneHelper.normalizeNumberByCountry(
+                    contact.value!!.accountNumber, action.country_alpha2, action.to_country_alpha2
+                )
+            else prefix + contact.value!!.accountNumber
+        } else contact.value!!.accountNumber
+    }
 
     fun load(encryptedString: String) = viewModelScope.launch {
         isLoading.postValue(true)
@@ -119,17 +134,18 @@ class TransferViewModel(application: Application, private val getBonusesUseCase:
     }
 
     fun saveContact() {
-        contact.value?.let { sc ->
-            viewModelScope.launch {
-                sc.lastUsedTimestamp = DateUtils.now()
-                contactRepo.save(sc)
+        viewModelScope.launch(Dispatchers.IO) {
+            contact.value?.let { sc ->
+                val lookup = StaxContact.getContactByPhoneValue(sc.accountNumber, "", contactRepo)
+                val c = if (!sc.hasName() && lookup != null) {
+                    lookup
+                } else {
+                    sc
+                }
+                c.lastUsedTimestamp = DateUtils.now()
+                contactRepo.save(c)
+                contact.postValue(c)
             }
-        }
-    }
-
-    private fun collectBonusList() = viewModelScope.launch(Dispatchers.IO) {
-        getBonusesUseCase.bonusList.collect { items ->
-            _bonusList.update { _bonusList.value.copy(bonuses = items) }
         }
     }
 

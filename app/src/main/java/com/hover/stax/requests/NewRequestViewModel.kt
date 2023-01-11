@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.requests
 
 import android.app.Application
@@ -5,20 +20,25 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
-import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.domain.model.PLACEHOLDER
-import com.hover.stax.schedules.ScheduleRepo
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.domain.model.Account
 import com.hover.stax.schedules.Schedule
+import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
+import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
-class NewRequestViewModel(application: Application, val repo: RequestRepo, val accountRepo: AccountRepo, contactRepo: ContactRepo, scheduleRepo: ScheduleRepo) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
+class NewRequestViewModel(
+    application: Application,
+    val repo: RequestRepo,
+    val accountRepo: AccountRepo,
+    contactRepo: ContactRepo,
+    scheduleRepo: ScheduleRepo
+) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
     val activeAccount = MutableLiveData<Account?>()
     val amount = MutableLiveData<String?>()
@@ -69,13 +89,11 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun accountError(): String? = if (activeAccount.value != null) null else getString(R.string.accounts_error_noselect)
 
-    fun isValidAccount(): Boolean = !activeAccount.value!!.name.contains(PLACEHOLDER)
-
     fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else getString(R.string.requester_number_fielderror)
 
     fun validNote(): Boolean = !note.value.isNullOrEmpty()
 
-    //TODO validate that this works from schedule
+    // TODO validate that this works from schedule
     fun setSchedule(s: Schedule) {
         schedule.postValue(s)
         setAmount(s.amount)
@@ -88,7 +106,7 @@ class NewRequestViewModel(application: Application, val repo: RequestRepo, val a
 
     fun createRequest() {
         saveContacts()
-        
+
         activeAccount.value?.institutionId?.let {
             val request = Request(amount.value, note.value, requesterNumber.value, it)
             formulatedRequest.value = request

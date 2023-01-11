@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.addChannels
 
 import android.os.Bundle
@@ -16,10 +31,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
@@ -28,7 +41,6 @@ import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
 import com.hover.stax.views.RequestServiceDialog
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -62,7 +74,11 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         ).enqueue()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
@@ -93,14 +109,17 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
 
     private fun startObservers() = with(channelsViewModel) {
         val channelsObserver =
-            Observer<List<Channel>> { t -> t?.let {
-                loadFilteredChannels(it)
-            } }
+            Observer<List<Channel>> { t ->
+                t?.let {
+                    loadFilteredChannels(it)
+                }
+            }
 
         channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
         sims.observe(viewLifecycleOwner) { Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} sims") }
         simCountryList.observe(viewLifecycleOwner) {
-            Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} hnis") }
+            Timber.v("${this@AddChannelsFragment.javaClass.simpleName} Loaded ${it?.size} hnis")
+        }
         accounts.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
         filteredChannels.observe(viewLifecycleOwner, channelsObserver)
@@ -129,6 +148,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
     }
 
     private fun setSearchInputWatcher() {
+        channelsViewModel.updateSearch(null)
         val searchInputWatcher: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}

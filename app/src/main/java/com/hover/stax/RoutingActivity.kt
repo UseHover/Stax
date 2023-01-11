@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax
 
 import android.app.NotificationChannel
@@ -26,20 +41,19 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.PERM_ACTIVITY
 import com.hover.stax.inapp_banner.BannerUtils
+import com.hover.stax.login.FORCED_VERSION
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.transfers.STAX_PREFIX
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.uxcam.OnVerificationListener
 import com.uxcam.UXCam
 import com.uxcam.datamodel.UXConfig
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
@@ -116,7 +130,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun initHover() {
         Hover.initialize(this)
-        Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, R.drawable.ic_stax, this)
+        Hover.setBranding(getString(R.string.app_name), R.drawable.named_stax_logo, R.mipmap.ic_launcher_round, this)
         Hover.setPermissionActivity(PERM_ACTIVITY, this)
     }
 
@@ -126,7 +140,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
-                fetchConfigs(remoteConfig)
+                cacheConfigs(remoteConfig)
                 validateUser()
             }.addOnFailureListener {
                 validateUser()
@@ -134,9 +148,9 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         }
     }
 
-    private fun fetchConfigs(remoteConfig: FirebaseRemoteConfig) {
-        val staxPrefix = remoteConfig.getString(STAX_PREFIX)
-        Utils.saveString(STAX_PREFIX, staxPrefix, this)
+    private fun cacheConfigs(remoteConfig: FirebaseRemoteConfig) {
+        val forcedVersion = remoteConfig.getString(FORCED_VERSION)
+        Utils.saveInt(FORCED_VERSION, forcedVersion.toInt(), this)
     }
 
     private fun initUxCam() {
@@ -167,18 +181,19 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
                 override fun onVerificationFailed(errorMessage: String) {}
             })
         }
-
     }
 
     private fun registerUXCamPushNotification() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                return@OnCompleteListener
-            }
-            val token = task.result
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
+                }
+                val token = task.result
 
-            UXCam.setPushNotificationToken(token)
-        })
+                UXCam.setPushNotificationToken(token)
+            }
+        )
     }
 
     private fun createNotificationChannel() {
@@ -282,5 +297,4 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun hasPassedOnboarding(): Boolean = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, this)
 
     private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
-
 }
