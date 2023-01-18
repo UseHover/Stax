@@ -20,6 +20,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.database.HoverRoomDatabase
+import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
@@ -30,9 +32,10 @@ import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
-class TransactionRepo(db: AppDatabase) {
+class TransactionRepo(db: AppDatabase, hoverDb: HoverRoomDatabase) {
 
     private val transactionDao: TransactionDao = db.transactionDao()
+    private val hoverTransactionDao: com.hover.sdk.transactions.TransactionDao = hoverDb.transactionDao()
 
     val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction>>?
         get() = transactionDao.getCompleteAndPendingTransfers()
@@ -48,6 +51,10 @@ class TransactionRepo(db: AppDatabase) {
 
     val bountyTransactionList: List<StaxTransaction>
         get() = transactionDao.bountyTransactionList
+
+    fun loadFromHover(uuid: String): Transaction {
+        return hoverTransactionDao.getTransactionByUUID(uuid)
+    }
 
     @SuppressLint("DefaultLocale")
     suspend fun hasTransactionLastMonth(): Boolean {

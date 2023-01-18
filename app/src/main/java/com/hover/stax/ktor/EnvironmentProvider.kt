@@ -17,6 +17,7 @@ package com.hover.stax.ktor
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import com.hover.stax.BuildConfig
 import com.hover.stax.preferences.LocalPreferences
 import com.jakewharton.processphoenix.ProcessPhoenix
 import timber.log.Timber
@@ -67,12 +68,12 @@ class EnvironmentProvider(
     /**
      * Returns true if we are in a debug build, and false otherwise
      */
-    private fun shouldAllowEnvironmentChange(): Boolean = context.isDebuggable()
+    private fun shouldAllowEnvironmentChange(): Boolean = BuildConfig.FLAVOR.equals("staging")
 
-    private fun defaultEnvironment() = if (shouldAllowEnvironmentChange()) {
-        Environment.STAGING
-    } else {
+    private fun defaultEnvironment() = if (!shouldAllowEnvironmentChange()) {
         Environment.PROD
+    } else {
+        Environment.STAGING
     }
 }
 
