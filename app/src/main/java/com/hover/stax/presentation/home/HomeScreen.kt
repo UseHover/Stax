@@ -46,6 +46,7 @@ import com.hover.stax.presentation.home.components.PrimaryFeatures
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
+import timber.log.Timber
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -73,7 +74,7 @@ fun HomeScreen(
     homeViewModel: HomeViewModel,
     navTo: (dest: Int) -> Unit,
 ) {
-    val homeState by homeViewModel.homeState.collectAsState()
+    val homeState by homeViewModel.homeState.observeAsState()
     val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
     val context = LocalContext.current
 
@@ -83,22 +84,24 @@ fun HomeScreen(
                 topBar = { TopBar(title = R.string.nav_home, navTo) },
                 content = {
                     LazyColumn {
-                        if (homeState.bonuses.isNotEmpty() && homeState.accounts.isNotEmpty())
-                            item {
-                                BonusCard(
-                                    message = homeState.bonuses.first().bonus_message,
-                                    onClickedTC = homeClickFunctions.onClickedTC,
-                                    onClickedTopUp = {
-                                        clickedOnBonus(
-                                            context,
-                                            channelsViewModel,
-                                            homeState.bonuses.first()
-                                        )
-                                    }
-                                )
-                            }
 
-                        if (homeState.accounts.isEmpty())
+                        homeState?.bonuses?.let { bonus ->
+                                item {
+                                    BonusCard(
+                                        message = bonus.first().bonus_message,
+                                        onClickedTC = homeClickFunctions.onClickedTC,
+                                        onClickedTopUp = {
+                                            clickedOnBonus(
+                                                context,
+                                                channelsViewModel,
+                                                bonus.first()
+                                            )
+                                        }
+                                    )
+                                }
+                        }
+
+                        if (homeState?.accounts?.isEmpty() == true)
                             item {
                                 EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
                             }
@@ -114,31 +117,36 @@ fun HomeScreen(
                             )
                         }
 
-                        if (homeState.accounts.isNotEmpty())
+                        homeState?.accounts?.let { accounts ->
                             item {
                                 BalanceHeader(
-                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, homeState.accounts.isNotEmpty()
+                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, accounts.isNotEmpty()
                                 )
                             }
-
-                        items(homeState.accounts) { account ->
-                            BalanceItem(
-                                staxAccount = account,
-                                context = context,
-                                balanceTapListener = balanceTapListener
-                            )
                         }
 
-                        item {
-                            homeState.financialTips.firstOrNull {
-                                android.text.format.DateUtils.isToday(it.date!!)
-                            }?.let {
-                                if (homeState.dismissedTipId != it.id)
-                                    FinancialTipCard(
-                                        tipInterface = tipInterface,
-                                        financialTip = homeState.financialTips.first(),
-                                        homeViewModel
-                                    )
+                        homeState?.accounts?.let { accounts ->
+                            items(accounts) { account ->
+                                BalanceItem(
+                                    staxAccount = account,
+                                    context = context,
+                                    balanceTapListener = balanceTapListener
+                                )
+                            }
+                        }
+
+                        homeState?.financialTips?.let { financialTips ->
+                            item {
+                                financialTips.firstOrNull {
+                                    android.text.format.DateUtils.isToday(it.date!!)
+                                }?.let {
+                                    if (homeState?.dismissedTipId != it.id)
+                                        FinancialTipCard(
+                                            tipInterface = tipInterface,
+                                            financialTip = financialTips.first(),
+                                            homeViewModel
+                                        )
+                                }
                             }
                         }
                     }

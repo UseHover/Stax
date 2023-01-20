@@ -107,8 +107,8 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
 
     private fun observeForBonus() {
         collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            if (homeViewModel.homeState.value.bonuses.isNotEmpty())
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.homeState.value.bonuses.first().from_institution_id.toString()))
+            if (homeViewModel.homeState.value?.bonuses?.isNotEmpty() == true)
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.homeState.value?.bonuses?.first()?.from_institution_id.toString()))
         }
     }
 

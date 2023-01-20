@@ -102,8 +102,7 @@ class BountyListFragment : Fragment() {
     }
 
     private fun updateActionConfig() = lifecycleScope.launch {
-        Hover.initialize(
-            requireActivity(),
+        Hover.updateActionConfigs(
             object : Hover.DownloadListener {
                 override fun onError(p0: String?) {
                     AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
@@ -112,7 +111,7 @@ class BountyListFragment : Fragment() {
                 override fun onSuccess(p0: ArrayList<HoverAction>?) {
                     Timber.i("Action configs initialized successfully $p0")
                 }
-            }
+            }, requireActivity()
         )
     }
 
