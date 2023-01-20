@@ -24,7 +24,7 @@ import timber.log.Timber
 
 private const val ENVIRONMENT = "env"
 
-private const val PROD_BASE_URL = "https://usehover.com/stax_api/"
+private const val PROD_BASE_URL = "https://www.usehover.com/stax_api/"
 private const val PROD_CLIENT_ID = "bWh7AmyCO3TxKA2ohObk2mLLvKODBrv3BPMMXQ0yHhk"
 private const val PROD_CLIENT_SECRET = "vQNaIvC92dXWA-M7q829BHL-89bUbKgcOuFjjXq4mZ4"
 private const val PROD_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob"
@@ -104,6 +104,3 @@ enum class Environment(
         }
     }
 }
-
-fun Context.isDebuggable(): Boolean =
-    (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
