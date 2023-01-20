@@ -50,6 +50,7 @@ class HoverSession private constructor(b: Builder) {
             private_extra(ACCOUNT_ID, account.id.toString())
             request(b.action.public_id)
             setHeader(getMessage(b))
+            skipConfirm(true)
             initialProcessingMessage("")
             showUserStepDescriptions(true)
             timeout(TIMER_LENGTH)

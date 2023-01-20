@@ -165,7 +165,6 @@ class MerchantFragment : AbstractFormFragment() {
     override fun onSubmitForm() {
         val hsb = generateSessionBuilder()
         callHover(pay, hsb)
-        findNavController().popBackStack()
     }
 
     private val pay = registerForActivityResult(TransactionContract()) { data: Intent? ->

@@ -22,7 +22,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverAction.*
-import com.hover.sdk.api.HoverConfigException
 import com.hover.stax.R
 import com.hover.stax.domain.model.ACCOUNT_NAME
 

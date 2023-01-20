@@ -57,10 +57,7 @@ object PhoneHelper {
             val phoneUtil = PhoneNumberUtil.getInstance()
             val phone = phoneUtil.parse(number, country)
             phoneUtil.getNationalSignificantNumber(phone)
-        } catch (e: NumberParseException) {
-            logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e)
-            if (number.startsWith("+")) number.substring(4) else if (number.startsWith("0")) number.substring(1) else number
-        } catch (e: IllegalStateException) {
+        } catch (e: Exception) {
             logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e)
             if (number.startsWith("+")) number.substring(4) else if (number.startsWith("0")) number.substring(1) else number
         }
