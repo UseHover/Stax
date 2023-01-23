@@ -37,7 +37,12 @@ jobs:
           
       - name: Read app version from gradle build file so we can create a git tag
         id: get_version
-        run: echo "APP_VERSION={./gradlew -q printVersion}" >> $GITHUB_OUTPUT
+        run: echo "APP_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_OUTPUT
+        
+      - name: Create tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "v${{steps.get_version.outputs.APP_VERSION}}"
 
       - name: Assemble QA Bundle
         id: buildBundle
@@ -65,11 +70,6 @@ jobs:
           packageName: com.hover.stax
           releaseFiles: app/build/outputs/bundle/productionRelease/*.aab
           track: internal
-
-      - name: Create tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: "v${{steps.get_version.outputs.APP_VERSION}}"
 
       - name: Send Slack notification
         uses: Ilshidur/action-slack@2.0.2
