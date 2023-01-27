@@ -28,7 +28,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyApplicationBinding
-import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.database.entity.StaxUser
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginScreenUiState
 import com.hover.stax.login.LoginUiState

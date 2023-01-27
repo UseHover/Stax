@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.database.entity.StaxUser
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.AnalyticsUtil

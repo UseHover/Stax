@@ -22,7 +22,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.hover.stax.channels.Channel
-import com.hover.stax.data.local.BaseDao
+import com.hover.stax.database.dao.BaseDao
 
 @Dao
 interface ChannelDao : BaseDao<Channel> {
