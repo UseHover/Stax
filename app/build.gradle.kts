@@ -144,6 +144,9 @@ android {
 }
 
 dependencies {
+    // Storage module
+    implementation(project(path = ":database"))
+
     // Google
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)
