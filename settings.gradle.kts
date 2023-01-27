@@ -33,7 +33,7 @@ dependencyResolutionManagement {
 }
 
 include(":app")
+include(":database")
 include(":hover.sdk")
 
 rootProject.name = "Stax"
-include(":database")
