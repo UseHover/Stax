@@ -36,3 +36,4 @@ include(":app")
 include(":hover.sdk")
 
 rootProject.name = "Stax"
+include(":database")
