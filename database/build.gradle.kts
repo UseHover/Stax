@@ -24,6 +24,8 @@ android {
 }
 
 dependencies {
+    // To Refactor: Expose those dependencies as api implementation
+
     // Room
     implementation(libs.bundles.room)
     kapt(libs.room.compiler)
@@ -31,4 +33,7 @@ dependencies {
 
     // DI
     implementation(libs.bundles.koin)
+
+    // Tests
+    testImplementation(libs.bundles.test)
 }
