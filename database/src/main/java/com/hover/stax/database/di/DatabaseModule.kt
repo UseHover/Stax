@@ -9,6 +9,6 @@ import org.koin.dsl.module
 object DatabaseModule {
 
     val repository = module {
-        singleOf(::StaxUserRepositoryImpl) {bind<StaxUserRepository>()}
+        singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
     }
 }
