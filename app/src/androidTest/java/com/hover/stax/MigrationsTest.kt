@@ -18,6 +18,7 @@ package com.hover.stax
 import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.Migrations
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert
