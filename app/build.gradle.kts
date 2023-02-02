@@ -25,6 +25,10 @@ configurations.all {
     }
 }
 
+group = "com.hover"
+version = "1.19.4"
+
+
 android {
 
     namespace = "com.hover.stax"
@@ -35,8 +39,8 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 211
-        versionName = "1.19.1"
+        versionCode = 214
+        versionName = project.version.toString()
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -220,3 +224,12 @@ dependencies {
     "stagingImplementation"(libs.bundles.hover)
     "productionImplementation"(libs.hover)
 }
+
+abstract class VersionTask : DefaultTask() {
+    @TaskAction
+    fun printVersion() {
+        println(project.version)
+    }
+}
+
+tasks.register<VersionTask>("printVersion")
