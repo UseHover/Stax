@@ -109,13 +109,13 @@ class TransactionDetailsViewModel(
     }
 
     private fun loadMessages(txn: StaxTransaction, a: HoverAction) {
-        val t = Hover.getTransaction(txn.uuid, getApplication())
+        val t = repo.loadFromHover(txn.uuid)
         hoverTransaction.value = t
         messages.value = UssdCallResponse.generateConvo(t, a)
     }
 
     private fun loadSms(txn: StaxTransaction): List<UssdCallResponse> {
-        val t = Hover.getTransaction(txn.uuid, getApplication())
+        val t = repo.loadFromHover(txn.uuid)
         hoverTransaction.value = t
         return generateSmsConvo(
             if (t.smsHits != null && t.smsHits.length() > 0) t.smsHits

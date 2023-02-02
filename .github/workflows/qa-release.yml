@@ -8,22 +8,15 @@ on:
   push:
     branches: [ qa ]
 
-# Define jobs to be run sequentially or parallel
 jobs:
-  # First job to be run called "build"
   build:
-    # The type of runner the job will run on
     runs-on: ubuntu-latest
-
-    # Sequence of tasks that will be executed as part of the job
     steps:
 
       # Checkout the repository so that the job can access it
       - name: checkout
         uses: actions/checkout@v3
 
-
-      # Set up our gradle properties for access by the Android build
       - name: set up gradle properties
         env:
           HoverUsername: ${{ secrets.HOVER_USERNAME }}
@@ -35,17 +28,17 @@ jobs:
           echo "HoverUsername=$HoverUsername" >> ~/.gradle/gradle.properties
           echo "HoverPassword=$HoverPassword" >> ~/.gradle/gradle.properties
 
-
-      # Set up JDK 1.8 for use
       - name: set up JDK 1.8
         uses: actions/setup-java@v3
         with:
           # Specify a supported distribution and java version to run
           distribution: 'zulu'
           java-version: 11
+          
+      - name: Read app version from gradle build file so we can create a git tag
+        id: get_version
+        run: echo "APP_VERSION=$(./gradlew -q printVersion)" >> $GITHUB_OUTPUT
 
-
-      # Run the assembleRelease gradle command to start the build process for our buildVariant
       - name: Assemble QA Bundle
         id: buildBundle
         uses: gradle/gradle-build-action@v2
@@ -53,40 +46,31 @@ jobs:
           # Can be overridden with the desired gradle version
           gradle-version: 7.4
           # Specifies the gradle command to be run, can be replaced with any desired task
-          arguments: bundleRelease
+          arguments: bundleProductionRelease
 
-
-      # Sign the generated apk
       - name: Sign artifact
         id: signArtifact
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/bundle/release
+          releaseDirectory: app/build/outputs/bundle/productionRelease
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      #Deploy to alpha track
       - name: Deploy to internal test track
         uses: r0adkll/upload-google-play@v1.0.15
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
           packageName: com.hover.stax
-          releaseFiles: app/build/outputs/bundle/release/*.aab
+          releaseFiles: app/build/outputs/bundle/productionRelease/*.aab
           track: internal
-#          whatsNewDirectory: whatsnew/
-
-      # Start release checklist
-      - name: Start Manifestly release checklist
-        uses: fjogeleit/http-request-action@v1
+          
+      - name: Create tag
+        uses: rickstaa/action-create-tag@v1
         with:
-          url: 'https://api.manifest.ly/api/v1/runs/?api_key=${{ secrets.MANIFESTLY_KEY }}'
-          method: 'POST'
-          data: '{ "checklist_id": 55793, "channel": "stax-releases", "title": "Test checklist run"}'
+          tag: "v${{steps.get_version.outputs.APP_VERSION}}"
 
-
-      # Send slack notification
       - name: Send Slack notification
         uses: Ilshidur/action-slack@2.0.2
         env:
@@ -95,7 +79,7 @@ jobs:
           SLACK_CHANNEL: stax
           SLACK_AVATAR: sender
         with:
-          args: 'Stax has just been deployed to Play Store internal track. :truck:'
+          args: 'Stax ${{steps.get_version.outputs.APP_VERSION}} has just been deployed to Play Store internal track. :truck:'
 
 
 

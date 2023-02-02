@@ -263,7 +263,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
     override fun onSubmitForm() {
         callHover(transfer, generateSessionBuilder())
-        findNavController().popBackStack()
     }
 
     private fun checkRecipient() {

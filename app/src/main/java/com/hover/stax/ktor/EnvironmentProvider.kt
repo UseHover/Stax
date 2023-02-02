@@ -16,14 +16,14 @@
 package com.hover.stax.ktor
 
 import android.content.Context
-import android.content.pm.ApplicationInfo
+import com.hover.stax.BuildConfig
 import com.hover.stax.preferences.LocalPreferences
 import com.jakewharton.processphoenix.ProcessPhoenix
 import timber.log.Timber
 
 private const val ENVIRONMENT = "env"
 
-private const val PROD_BASE_URL = "https://usehover.com/stax_api/"
+private const val PROD_BASE_URL = "https://www.usehover.com/stax_api/"
 private const val PROD_CLIENT_ID = "bWh7AmyCO3TxKA2ohObk2mLLvKODBrv3BPMMXQ0yHhk"
 private const val PROD_CLIENT_SECRET = "vQNaIvC92dXWA-M7q829BHL-89bUbKgcOuFjjXq4mZ4"
 private const val PROD_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob"
@@ -67,12 +67,12 @@ class EnvironmentProvider(
     /**
      * Returns true if we are in a debug build, and false otherwise
      */
-    private fun shouldAllowEnvironmentChange(): Boolean = context.isDebuggable()
+    private fun shouldAllowEnvironmentChange(): Boolean = BuildConfig.FLAVOR.equals("staging")
 
-    private fun defaultEnvironment() = if (shouldAllowEnvironmentChange()) {
-        Environment.STAGING
-    } else {
+    private fun defaultEnvironment() = if (!shouldAllowEnvironmentChange()) {
         Environment.PROD
+    } else {
+        Environment.STAGING
     }
 }
 
@@ -103,6 +103,3 @@ enum class Environment(
         }
     }
 }
-
-fun Context.isDebuggable(): Boolean =
-    (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0

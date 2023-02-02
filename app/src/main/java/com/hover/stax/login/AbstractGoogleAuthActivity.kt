@@ -165,7 +165,7 @@ abstract class AbstractGoogleAuthActivity :
             }
             setActionTextColor(
                 ContextCompat.getColor(
-                    this@AbstractGoogleAuthActivity, R.color.stax_state_blue
+                    this@AbstractGoogleAuthActivity, R.color.white
                 )
             )
             show()

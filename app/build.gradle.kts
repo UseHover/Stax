@@ -15,6 +15,9 @@ plugins {
     id("kotlinx-serialization")
 }
 
+group = "com.hover"
+version = "1.19.4"
+
 android {
 
     namespace = "com.hover.stax"
@@ -25,8 +28,8 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 208
-        versionName = "1.18.9"
+        versionCode = 214
+        versionName = project.version.toString()
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -98,6 +101,20 @@ android {
             if (keystoreProperties.isNotEmpty()) {
                 signingConfig = signingConfigs.getByName("releaseConfig")
             }
+        }
+    }
+
+    flavorDimensions += "version"
+    productFlavors {
+        create("staging") {
+            // Assigns this product flavor to the "version" flavor dimension.
+            // If you are using only one dimension, this property is optional,
+            // and the plugin automatically assigns all the module's flavors to
+            // that dimension.
+            dimension = "version"
+        }
+        create("production") {
+            dimension = "version"
         }
     }
 
@@ -188,7 +205,16 @@ dependencies {
     androidTestImplementation(libs.espresso)
 
     // Hover SDK
-    debugImplementation(project(":hover.sdk"))
-    debugImplementation(libs.bundles.hover)
-    releaseImplementation(libs.hover)
+    "stagingImplementation"(project(":hover.sdk"))
+    "stagingImplementation"(libs.bundles.hover)
+    "productionImplementation"(libs.hover)
 }
+
+abstract class VersionTask : DefaultTask() {
+    @TaskAction
+    fun printVersion() {
+        println(project.version)
+    }
+}
+
+tasks.register<VersionTask>("printVersion")

@@ -37,7 +37,7 @@ recyclerview = "androidx.recyclerview:recyclerview-selection:1.1.0"
 work-runtime = "androidx.work:work-runtime-ktx:2.7.1"
 lifecycle-runtime = "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 activity-compose = "androidx.activity:activity-compose:1.5.1"
-core-ktx = "androidx.core:core-ktx:+"
+core-ktx = "androidx.core:core-ktx:1.8.0"
 lifecycle-viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 kotlin-stdlib = "org.jetbrains.kotlin:kotlin-stdlib:1.0.0"
 lifecycle-common = "androidx.lifecycle:lifecycle-common-java8:2.5.1"
@@ -83,7 +83,7 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 coil = "io.coil-kt:coil-compose:2.1.0"
 
-hover = "com.hover:android-sdk:2.0.0-stax-1.18.7-pro"
+hover = "com.hover:android-sdk:2.0.0-beta01"
 volley = "com.android.volley:volley:1.2.1"
 play-services = "com.google.android.gms:play-services-analytics:18.0.1"
 picasso = "com.squareup.picasso:picasso:2.71828"
