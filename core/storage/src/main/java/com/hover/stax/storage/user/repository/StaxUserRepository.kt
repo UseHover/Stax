@@ -1,6 +1,6 @@
-package com.hover.stax.database.repository
+package com.hover.stax.storage.user.repository
 
-import com.hover.stax.database.entity.StaxUser
+import com.hover.stax.storage.user.entity.StaxUser
 import kotlinx.coroutines.flow.Flow
 
 interface StaxUserRepository {

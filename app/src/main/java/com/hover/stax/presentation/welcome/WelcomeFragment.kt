@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.database.entity.StaxUser
+import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.AnalyticsUtil
@@ -90,7 +90,7 @@ class WelcomeFragment : Fragment() {
         dialog!!.showIt()
     }
 
-    private fun showWelcomeMessage(user: StaxUser) {
+    private fun showWelcomeMessage(user: com.hover.stax.storage.user.entity.StaxUser) {
         val message = if (user.transactionCount > 0)
             getString(R.string.welcome_back, user.username)
         else

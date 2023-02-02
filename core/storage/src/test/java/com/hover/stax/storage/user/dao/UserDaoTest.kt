@@ -1,7 +1,7 @@
-package com.hover.stax.database.dao.user
+package com.hover.stax.storage.user.dao
 
 import com.google.common.truth.Truth.assertThat
-import com.hover.stax.database.entity.StaxUser
+import com.hover.stax.storage.user.entity.StaxUser
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coJustRun
@@ -19,7 +19,7 @@ class UserDaoTest {
     private lateinit var staxUser: StaxUser
 
     @MockK(relaxed = true)
-    private lateinit var userDao: UserDao
+    private lateinit var userDao: com.hover.stax.storage.user.dao.user.UserDao
 
     @Before
     fun setup() {

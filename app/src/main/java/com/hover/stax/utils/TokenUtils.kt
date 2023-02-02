@@ -19,7 +19,7 @@ import android.util.Base64
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.authorization.TokenData
 import com.hover.stax.data.remote.dto.toStaxUser
-import com.hover.stax.database.entity.StaxUser
+import com.hover.stax.storage.user.entity.StaxUser
 import java.io.UnsupportedEncodingException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -28,7 +28,7 @@ import timber.log.Timber
 object TokenUtils {
 
     @Throws(Exception::class)
-    fun decodeToken(token: String): StaxUser? {
+    fun decodeToken(token: String): com.hover.stax.storage.user.entity.StaxUser? {
         return try {
             val split = token.split(".")
 

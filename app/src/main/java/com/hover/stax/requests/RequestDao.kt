@@ -21,10 +21,10 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.hover.stax.database.dao.BaseDao
+import com.hover.stax.storage.user.dao.BaseDao
 
 @Dao
-interface RequestDao : BaseDao<Request> {
+interface RequestDao : com.hover.stax.storage.user.dao.BaseDao<Request> {
 
     @get:Query("SELECT * FROM requests ORDER BY date_sent DESC")
     val all: LiveData<List<Request>>

@@ -21,11 +21,11 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.hover.stax.database.dao.BaseDao
+import com.hover.stax.storage.user.dao.BaseDao
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface TransactionDao : BaseDao<StaxTransaction> {
+interface TransactionDao : com.hover.stax.storage.user.dao.BaseDao<StaxTransaction> {
 
     @Query("SELECT * FROM stax_transactions WHERE channel_id = :channelId AND transaction_type != 'balance' AND status != 'failed' AND environment != 3 ORDER BY initiated_at DESC")
     fun getCompleteAndPendingTransfers(channelId: Int): LiveData<List<StaxTransaction>>?

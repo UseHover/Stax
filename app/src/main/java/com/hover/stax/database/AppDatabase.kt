@@ -25,9 +25,9 @@ import com.hover.stax.contacts.ContactDao
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountDao
 import com.hover.stax.data.local.channels.ChannelDao
-import com.hover.stax.database.dao.user.UserDao
+import com.hover.stax.storage.user.dao.user.UserDao
 import com.hover.stax.domain.model.Account
-import com.hover.stax.database.entity.StaxUser
+import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantDao
 import com.hover.stax.paybill.Paybill
@@ -43,7 +43,7 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [
-        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class
+        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, com.hover.stax.storage.user.entity.StaxUser::class
     ],
     version = 52,
     autoMigrations = [
@@ -76,7 +76,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun merchantDao(): MerchantDao
 
-    abstract fun userDao(): UserDao
+    abstract fun userDao(): com.hover.stax.storage.user.dao.user.UserDao
 
     companion object {
 

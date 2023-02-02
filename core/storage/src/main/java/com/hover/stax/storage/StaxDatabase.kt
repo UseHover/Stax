@@ -1,4 +1,4 @@
-package com.hover.stax.database
+package com.hover.stax.storage
 
 import androidx.room.RoomDatabase
 

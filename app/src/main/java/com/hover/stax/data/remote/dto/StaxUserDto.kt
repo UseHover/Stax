@@ -15,7 +15,7 @@
  */
 package com.hover.stax.data.remote.dto
 
-import com.hover.stax.database.entity.StaxUser
+import com.hover.stax.storage.user.entity.StaxUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -67,8 +67,8 @@ data class Attributes(
 /**
  * Mapper to convert a [StaxUserDto] to a [StaxUser].
  */
-fun StaxUserDto.toStaxUser(): StaxUser {
-    return StaxUser(
+fun StaxUserDto.toStaxUser(): com.hover.stax.storage.user.entity.StaxUser {
+    return com.hover.stax.storage.user.entity.StaxUser(
         id = data.attributes.id,
         username = data.attributes.username,
         email = data.attributes.email,

@@ -19,10 +19,10 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Update
-import com.hover.stax.database.dao.BaseDao
+import com.hover.stax.storage.user.dao.BaseDao
 
 @Dao
-interface ContactDao : BaseDao<StaxContact> {
+interface ContactDao : com.hover.stax.storage.user.dao.BaseDao<StaxContact> {
     @get:Query("SELECT * FROM stax_contacts ORDER BY name, phone_number, last_used_timestamp")
     val all: LiveData<List<StaxContact>>
 

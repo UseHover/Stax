@@ -1,4 +1,4 @@
-package com.hover.stax.database.dao
+package com.hover.stax.storage.user.dao
 
 import androidx.room.Delete
 import androidx.room.Insert

@@ -1,4 +1,4 @@
-package com.hover.stax.database.entity
+package com.hover.stax.storage.user.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
