@@ -28,7 +28,7 @@ import timber.log.Timber
 object TokenUtils {
 
     @Throws(Exception::class)
-    fun decodeToken(token: String): com.hover.stax.storage.user.entity.StaxUser? {
+    fun decodeToken(token: String): StaxUser? {
         return try {
             val split = token.split(".")
 

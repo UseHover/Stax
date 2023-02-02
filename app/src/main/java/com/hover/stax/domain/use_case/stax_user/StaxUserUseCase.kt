@@ -18,11 +18,11 @@ package com.hover.stax.domain.use_case.stax_user
 import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.storage.user.repository.StaxUserRepository
 
-class StaxUserUseCase(private val staxUserRepository: com.hover.stax.storage.user.repository.StaxUserRepository) {
+class StaxUserUseCase(private val staxUserRepository: StaxUserRepository) {
 
     val user = staxUserRepository.getUserAsync()
 
-    suspend fun saveUser(user: com.hover.stax.storage.user.entity.StaxUser) = staxUserRepository.saveUser(user)
+    suspend fun saveUser(user: StaxUser) = staxUserRepository.saveUser(user)
 
-    suspend fun deleteUser(user: com.hover.stax.storage.user.entity.StaxUser) = staxUserRepository.deleteUser(user)
+    suspend fun deleteUser(user: StaxUser) = staxUserRepository.deleteUser(user)
 }

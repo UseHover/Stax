@@ -90,7 +90,7 @@ class WelcomeFragment : Fragment() {
         dialog!!.showIt()
     }
 
-    private fun showWelcomeMessage(user: com.hover.stax.storage.user.entity.StaxUser) {
+    private fun showWelcomeMessage(user: StaxUser) {
         val message = if (user.transactionCount > 0)
             getString(R.string.welcome_back, user.username)
         else

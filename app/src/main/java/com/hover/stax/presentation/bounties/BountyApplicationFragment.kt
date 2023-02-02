@@ -80,7 +80,7 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun initUI(staxUser: com.hover.stax.storage.user.entity.StaxUser?) = with(binding) {
+    private fun initUI(staxUser: StaxUser?) = with(binding) {
         when {
             staxUser != null -> {
                 btnSignIn.visibility = View.GONE

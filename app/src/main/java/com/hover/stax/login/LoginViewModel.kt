@@ -54,7 +54,7 @@ class LoginViewModel(
     lateinit var signInClient: GoogleSignInClient
 
     val googleUser = MutableLiveData<GoogleSignInAccount>()
-    var staxUser = MutableLiveData<com.hover.stax.storage.user.entity.StaxUser?>()
+    var staxUser = MutableLiveData<StaxUser?>()
         private set
 
     var error = MutableLiveData<String>()

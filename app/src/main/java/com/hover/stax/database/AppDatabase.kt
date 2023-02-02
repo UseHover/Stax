@@ -43,7 +43,7 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [
-        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, com.hover.stax.storage.user.entity.StaxUser::class
+        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class
     ],
     version = 52,
     autoMigrations = [
@@ -76,7 +76,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun merchantDao(): MerchantDao
 
-    abstract fun userDao(): com.hover.stax.storage.user.dao.user.UserDao
+    abstract fun userDao(): UserDao
 
     companion object {
 
