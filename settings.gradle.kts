@@ -32,7 +32,6 @@ dependencyResolutionManagement {
     }
 }
 
-
 rootProject.name = "Stax"
 include(":app")
 
