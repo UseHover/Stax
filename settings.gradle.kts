@@ -32,8 +32,17 @@ dependencyResolutionManagement {
     }
 }
 
-include(":app")
-include(":database")
-include(":hover.sdk")
 
 rootProject.name = "Stax"
+include(":app")
+
+include(":core")
+include(":core:network")
+include(":core:storage")
+include(":core:resources")
+
+include(":features")
+include(":features:user-profile")
+include(":features:transactions")
+
+include(":hover.sdk")

@@ -154,8 +154,9 @@ android {
 }
 
 dependencies {
-    // Storage module
-    implementation(project(path = ":database"))
+    // Modules
+    implementation(project(path = ":core"))
+    implementation(project(path = ":features"))
 
     // Google
     implementation(libs.bundles.google)
