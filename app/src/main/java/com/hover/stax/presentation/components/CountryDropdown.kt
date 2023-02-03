@@ -15,7 +15,7 @@ import java.util.*
 
 @Composable
 fun CountryDropdown(selected: String, options: List<String>, onSelect: (String) -> Unit) {
-	StaxDropdown(selectedOption = getCountryString(selected), options = options, startIcon = null, content = { country -> CountryItem(country) }, onSelect = onSelect)
+	StaxDropdown(selectedOption = getCountryString(selected), options = options, content = { country -> CountryItem(country) }, onSelect = onSelect)
 }
 
 @Composable

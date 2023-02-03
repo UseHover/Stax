@@ -13,7 +13,7 @@ import com.hover.stax.ui.theme.mainBackground
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun StaxDropdown(selectedOption: String, options: List<String>, startIcon: Int?, content: @Composable (String) -> Unit, onSelect: (String) -> Unit) {
+fun StaxDropdown(selectedOption: String, options: List<String>, content: @Composable (String) -> Unit, onSelect: (String) -> Unit) {
 	var expand by remember { mutableStateOf(false) }
 
 	ExposedDropdownMenuBox(
@@ -26,9 +26,6 @@ fun StaxDropdown(selectedOption: String, options: List<String>, startIcon: Int?,
 			onValueChange = { },
 			singleLine = true,
 			readOnly = true,
-			leadingIcon = {
-				startIcon?.let { Icon(painterResource(startIcon), "", tint = colorResource(R.color.white)) }
-			},
 			trailingIcon = {
 				ExposedDropdownMenuDefaults.TrailingIcon(expanded = expand)
 			},
@@ -57,7 +54,7 @@ fun StaxDropdown(selectedOption: String, options: List<String>, startIcon: Int?,
 @Composable
 fun StaxDropdwonPreview() {
 	val list = listOf("ke", "et", "tz", "ng")
-	StaxDropdown(list[0], list, null, { item -> Text(item) }) { }
+	StaxDropdown(list[0], list, { item -> Text(item) }) { }
 }
 
 @OptIn(ExperimentalMaterialApi::class)

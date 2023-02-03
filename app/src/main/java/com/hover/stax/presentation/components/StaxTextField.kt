@@ -16,14 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
 
 @Composable
-fun StaxTextField(text: TextFieldValue, placeholder: Int, startIcon: Int?, onChange: (TextFieldValue) -> Unit) {
+fun StaxTextField(text: TextFieldValue, placeholder: Int, startIcon: Int, onChange: (TextFieldValue) -> Unit) {
 	OutlinedTextField(
 		value = text,
 		onValueChange = onChange,
 		label = { Text(text = stringResource(placeholder)) },
 		singleLine = true,
 		leadingIcon = {
-			startIcon?.let { Icon(painterResource(startIcon), "", tint = colorResource(R.color.white)) }
+			Icon(painterResource(startIcon), "", tint = colorResource(R.color.white))
 		},
 		colors = StaxTextFieldDefaults()
 	)
