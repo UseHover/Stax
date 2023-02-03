@@ -34,8 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hover.stax.R
 import com.hover.stax.ui.theme.Border
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.ColorPrimary
@@ -51,7 +53,8 @@ const val DISABLED = 2
 private fun StaxButton(text: String, icon: Int?, onClick: () -> Unit, buttonType: Int) {
     Button(
         onClick = { onClick() },
-        modifier = Modifier.wrapContentWidth()
+        modifier = Modifier
+            .wrapContentWidth()
             .padding(vertical = 6.dp),
         contentPadding = PaddingValues(13.dp),
         border = if (buttonType == SECONDARY) BorderStroke(1.dp, Border) else null,
@@ -82,14 +85,6 @@ private fun backgroundColor(type: Int): Color {
     return if (type == PRIMARY) { BrightBlue } else { mainBackground }
 }
 
-private fun contentColor(type: Int): Color {
-    return when (type) {
-        PRIMARY -> ColorPrimary
-        DISABLED -> TextGrey
-        else -> OffWhite
-    }
-}
-
 @Composable
 fun PrimaryButton(text: String, icon: Int? = null, onClick: () -> Unit) {
     StaxButton(text = text, icon = icon, onClick = onClick, PRIMARY)
@@ -103,4 +98,22 @@ fun SecondaryButton(text: String, icon: Int? = null, onClick: () -> Unit) {
 @Composable
 fun DisabledButton(text: String, icon: Int? = null, onClick: () -> Unit) {
     StaxButton(text = text, icon = icon, onClick = onClick, DISABLED)
+}
+
+@Preview
+@Composable
+fun PrimaryButtonPreview() {
+    PrimaryButton("Test Button", R.drawable.ic_search) { }
+}
+
+@Preview
+@Composable
+fun SecondaryButtonPreview() {
+    SecondaryButton("Test Button", R.drawable.ic_search) { }
+}
+
+@Preview
+@Composable
+fun DisabledButtonPreview() {
+    DisabledButton("Test Button", R.drawable.ic_search) { }
 }

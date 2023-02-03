@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/navigation_sim"
-        android:icon="@drawable/ic_sim_card_24"
+        android:icon="@drawable/ic_sim_card"
         android:title="@string/nav_sim" />
 
     <item
