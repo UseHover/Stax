@@ -6,6 +6,8 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -16,10 +18,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
 
 @Composable
-fun StaxTextField(text: TextFieldValue, placeholder: Int, startIcon: Int, onChange: (TextFieldValue) -> Unit) {
+fun StaxTextField(textField: TextFieldValue, placeholder: Int, startIcon: Int, onChange: (TextFieldValue) -> Unit) {
 	OutlinedTextField(
-		value = text,
-		onValueChange = onChange,
+		value = textField,
+		onValueChange = {
+			onChange(it)
+		},
 		label = { Text(text = stringResource(placeholder)) },
 		singleLine = true,
 		leadingIcon = {

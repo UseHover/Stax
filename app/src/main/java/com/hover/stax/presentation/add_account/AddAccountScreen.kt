@@ -32,9 +32,7 @@ import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
-import com.hover.stax.presentation.components.CountryDropdown
-import com.hover.stax.presentation.components.StaxTextField
-import com.hover.stax.presentation.components.StaxTextFieldDefaults
+import com.hover.stax.presentation.components.*
 import com.hover.stax.ui.theme.OffWhite
 import com.hover.stax.ui.theme.mainBackground
 import kotlinx.coroutines.launch
@@ -50,10 +48,11 @@ fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel()) {
 	val countryList by channelsViewModel.channelCountryList.observeAsState(initial = emptyList())
 	val channels by channelsViewModel.filteredChannels.observeAsState(initial = emptyList())
 
+	var searchValue by remember { mutableStateOf(TextFieldValue("")) }
+
 	val pagerState = rememberPagerState()
 	val tabs = listOf(TabItem.MobileMoney(channels), TabItem.Bank(channels), TabItem.Crypto)
 
-	val searchValue = remember { mutableStateOf(TextFieldValue()) }
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -70,9 +69,10 @@ fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel()) {
 						}
 
 						Column() {
-							StaxTextField(searchValue.value, R.string.search, R.drawable.ic_search) {
-								searchValue.value = it
-							}
+							StaxTextField(searchValue, R.string.search, R.drawable.ic_search,
+								onChange = {
+									searchValue = it
+									channelsViewModel.filterQuery.postValue(it.text) })
 						}
 					}
 
@@ -83,6 +83,13 @@ fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel()) {
 				}
 			}
 		}
+	}
+}
+
+@Composable
+fun ChannelItem(channelName: String = "Test Channel") {
+	Row {
+		Text(text = channelName)
 	}
 }
 

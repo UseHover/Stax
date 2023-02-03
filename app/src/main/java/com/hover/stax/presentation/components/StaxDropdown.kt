@@ -5,7 +5,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
@@ -35,7 +34,6 @@ fun StaxDropdown(selectedOption: String, options: List<String>, content: @Compos
 		DropdownMenu(expanded = expand,
 			modifier = Modifier.exposedDropdownSize(),
 			onDismissRequest = { expand = false }) {
-//			val filterOpts = options.filter { it.contains(selectedOption, ignoreCase = true) }
 			options.forEach { selectionOption ->
 				DropdownMenuItem(
 					onClick = {
@@ -61,6 +59,7 @@ fun StaxDropdwonPreview() {
 @Composable
 fun staxDropdownDefaults() = ExposedDropdownMenuDefaults.outlinedTextFieldColors(
 	textColor = colorResource(id = R.color.offWhite),
+	focusedLabelColor = colorResource(id = R.color.offWhite),
 	focusedTrailingIconColor = colorResource(id = R.color.offWhite),
 	backgroundColor = mainBackground,
 	cursorColor = colorResource(id = R.color.offWhite),
