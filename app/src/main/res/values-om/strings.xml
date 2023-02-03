@@ -242,7 +242,7 @@
     <string name="onboard_addaccount_greatwork_desc">Amma herrega keessan kanneen biroo itti dabalaa akka hafnaan adda addaa keessan hunda bakka tokkotti ilaaluu dandeessu.</string>
 
     <!-- Transfer -->
-    <string name="loading_link_dialoghead">Buusujirra, yeroo tokko</string>
+    <string name="loading_human">Buusujirra, yeroo tokko</string>
     <string name="transfer_amount_label">Hamma</string>
     <string name="account_label">Herrega</string>
     <string name="actions_fielderror">Akkaawuntii kun buy airtime hin deeggaru. Maaloo akkaawuntii adda ta\'e filadhu.</string>

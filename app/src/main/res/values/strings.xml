@@ -327,7 +327,7 @@
     <string name="onboard_addaccount_greatwork_desc">Now add your other accounts so you can view all your separate balances in one place.</string>
 
     <!-- Transfer -->
-    <string name="loading_link_dialoghead">Loading, one moment</string>
+    <string name="loading_human">Loading, one moment</string>
     <string name="pay_with_label">Pay with</string>
     <string name="paid_with_label">Paid with</string>
     <string name="transfer_amount_label">Amount</string>
@@ -675,7 +675,8 @@
     <string name="country">Country</string>
     <string name="country_error_nodata">Please turn on data to load services and countries.</string>
     <string name="country_with_emoji">%1$s  %2$s </string>
-    <string name="all_countries_with_emoji">🌎 Global</string>
+    <string name="all_countries_emoji">🌎</string>
+    <string name="all_countries_text">Global</string>
     <string name="bounty_sim_err_header">Insert correct SIM</string>
     <string name="bounty_sim_err_desc">Please input a SIM card from %1$s in your device and try again.</string>
     <string name="retry">Retry</string>

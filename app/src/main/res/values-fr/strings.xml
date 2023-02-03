@@ -242,7 +242,7 @@
 
     <!-- Transfer -->
 
-    <string name="loading_link_dialoghead">Chargement, un instant</string>
+    <string name="loading_human">Chargement, un instant</string>
 
     <string name="transfer_amount_label">Montant</string>
 

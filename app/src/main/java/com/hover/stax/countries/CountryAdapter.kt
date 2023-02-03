@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.compose.ui.res.stringResource
 import com.hover.stax.R
 import com.hover.stax.databinding.CountryItemBinding
 import com.yariksoffice.lingver.Lingver
@@ -46,17 +47,18 @@ class CountryAdapter(val codes: Array<String>, context: Context) : ArrayAdapter<
         return view
     }
 
-    fun getCountryString(code: String?): String = if (code.isNullOrEmpty() || code == CODE_ALL_COUNTRIES)
-        context.getString(R.string.all_countries_with_emoji)
-    else
-        context.getString(R.string.country_with_emoji, countryCodeToEmoji(code), getFullCountryName(code))
+    fun getCountryString(code: String?): String = context.getString(R.string.country_with_emoji, countryCodeToEmoji(code), getFullCountryName(code))
 
-    private fun getFullCountryName(code: String): String {
+    private fun getFullCountryName(code: String?): String {
+        if (code.isNullOrEmpty() || code == CountryAdapter.CODE_ALL_COUNTRIES) {
+            return context.getString(R.string.all_countries_text)
+        }
         val locale = Locale(Lingver.getInstance().getLanguage(), code)
         return locale.displayCountry
     }
 
-    private fun countryCodeToEmoji(countryCode: String): String {
+    private fun countryCodeToEmoji(countryCode: String?): String {
+        if (countryCode.isNullOrEmpty() || countryCode == CountryAdapter.CODE_ALL_COUNTRIES) { return context.getString(R.string.all_countries_emoji) }
         val firstLetter = Character.codePointAt(countryCode.uppercase(), 0) - 0x41 + 0x1F1E6
         val secondLetter = Character.codePointAt(countryCode.uppercase(), 1) - 0x41 + 0x1F1E6
         return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))

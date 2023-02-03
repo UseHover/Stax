@@ -242,7 +242,7 @@
     <string name="onboard_addaccount_greatwork_desc">Hadda ku dar xisaabaadkaaga kale si aad hal meel ugu arki karto dhammaan baaqyadaada gaarka ah.</string>
 
     <!-- Transfer -->
-    <string name="loading_link_dialoghead">Wareegayaa, wax yar sug</string>
+    <string name="loading_human">Wareegayaa, wax yar sug</string>
     <string name="transfer_amount_label">Cadadka</string>
     <string name="account_label">Koontooyinka</string>
     <string name="actions_fielderror">Koontadan kama gadan kartid wakhtiga hawada. Fadlan door akoon ka duwan</string>

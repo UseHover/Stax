@@ -119,7 +119,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     }
 
     private fun addLoadingDialog() {
-        val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
+        val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_human).showIt()
         transferViewModel.isLoading.observe(this@MainActivity) { if (!it) alertDialog?.dismiss() }
     }
 

@@ -242,7 +242,7 @@
 
     <!-- Transfer -->
 
-    <string name="loading_link_dialoghead">Inapakia, subiri kidogo</string>
+    <string name="loading_human">Inapakia, subiri kidogo</string>
 
     <string name="transfer_amount_label">Kiasi</string>
 

@@ -132,6 +132,6 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
     }
 
     fun showError(c: Context) {
-        flashAndReportMessage(c, c.getString(R.string.loading_link_dialoghead))
+        flashAndReportMessage(c, c.getString(R.string.loading_human))
     }
 }

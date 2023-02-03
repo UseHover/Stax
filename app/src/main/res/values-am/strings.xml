@@ -215,7 +215,7 @@
 
     <!-- Transfer -->
 
-    <string name="loading_link_dialoghead">በመጫን ላይ ፣ አንድ አፍታ</string>
+    <string name="loading_human">በመጫን ላይ ፣ አንድ አፍታ</string>
 
     <string name="transfer_amount_label">መጠን</string>
 
