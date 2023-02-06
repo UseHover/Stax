@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -32,75 +33,53 @@ import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
+import com.hover.stax.presentation.add_account.components.SampleChannelProvider
+import com.hover.stax.presentation.add_account.components.TabItem
 import com.hover.stax.presentation.components.*
+import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.OffWhite
 import com.hover.stax.ui.theme.mainBackground
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel()) {
 
 	val simList by channelsViewModel.sims.observeAsState(initial = emptyList())
-	val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
-	val countryList by channelsViewModel.channelCountryList.observeAsState(initial = emptyList())
+	val countryChannels by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
+
+	val countries by channelsViewModel.channelCountryList.observeAsState(initial = emptyList())
 	val channels by channelsViewModel.filteredChannels.observeAsState(initial = emptyList())
+	val countryChoice by channelsViewModel.countryChoice.observeAsState(initial = "00")
 
-	var searchValue by remember { mutableStateOf(TextFieldValue("")) }
-
-	val pagerState = rememberPagerState()
-	val tabs = listOf(TabItem.MobileMoney(channels), TabItem.Bank(channels), TabItem.Crypto)
-
+	val showingHelp = remember { mutableStateOf(false) }
 
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 			Scaffold(
-				topBar = { TopBar() },
+				topBar = { TopBar(showingHelp) },
 			) {
-				Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
-
-					Row(Modifier.padding(horizontal = 8.dp)) {
-						Column(Modifier.padding(8.dp)) {
-							CountryDropdown(channelsViewModel.countryChoice.value ?: "00", countryList) {
-								channelsViewModel.countryChoice.postValue(it)
-							}
-						}
-
-						Column() {
-							StaxTextField(searchValue, R.string.search, R.drawable.ic_search,
-								onChange = {
-									searchValue = it
-									channelsViewModel.filterQuery.postValue(it.text) })
-						}
-					}
-
-					Spacer(modifier = Modifier.height(13.dp))
-
-					Tabs(tabs = tabs, pagerState = pagerState)
-					TabsContent(tabs = tabs, pagerState = pagerState)
-				}
+				FindAccountScreen(channels, countries, countryChoice,
+					{ channelsViewModel.countryChoice.postValue(it) },
+					{ channelsViewModel.filterQuery.postValue(it) })
+				showHelp(showingHelp)
 			}
 		}
 	}
 }
 
-@Composable
-fun ChannelItem(channelName: String = "Test Channel") {
-	Row {
-		Text(text = channelName)
-	}
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar() {
+fun TopBar(showingHelp: MutableState<Boolean>) {
 	Column(modifier = Modifier.fillMaxWidth()) {
 		CenterAlignedTopAppBar(
-	        title = { Text(text = stringResource(R.string.add_account), fontSize = 18.sp) },
-			colors = StaxTopBarDefaults()
-	    )
+			title = { Text(text = stringResource(R.string.add_account), fontSize = 18.sp) },
+			colors = StaxTopBarDefaults(),
+			actions = { IconButton(onClick = { showingHelp.value = true }) {
+				Icon(painterResource(id = R.drawable.ic_question),
+					stringResource(R.string.learn_more), tint = BrightBlue)
+			} }
+		)
 	}
 }
 
@@ -111,13 +90,47 @@ fun StaxTopBarDefaults() = TopAppBarDefaults.centerAlignedTopAppBarColors(
 	containerColor = mainBackground)
 
 @Composable
-fun MobileMoneyScreen(channels: List<Channel>?) {
-	ChannelList(channels, "mmo")
+fun showHelp(showingHelp: MutableState<Boolean>) {
+	if (showingHelp.value) {
+		AlertDialog(title = { Text(stringResource(R.string.add_accounts_help_title)) },
+			text = { Text(stringResource(R.string.add_accounts_help_info)) },
+			buttons = {
+				Row(horizontalArrangement = Arrangement.End,
+					modifier = Modifier.fillMaxWidth().padding(13.dp))
+				{ SecondaryButton(stringResource(R.string.btn_ok), onClick = { showingHelp.value = false }) }},
+			onDismissRequest = { showingHelp.value = false })
+	}
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun BankScreen(channels: List<Channel>?) {
-	ChannelList(channels, "bank")
+fun FindAccountScreen(channels: List<Channel>, countries: List<String>, countryChoice: String, onSelectCountry: (String) -> Unit, onSearch: (String) -> Unit) {
+	var searchValue by remember { mutableStateOf(TextFieldValue("")) }
+
+	val pagerState = rememberPagerState()
+	val tabs = listOf(TabItem.MobileMoney(channels), TabItem.Bank(channels), TabItem.Crypto)
+
+	Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
+		Row(Modifier.padding(horizontal = 8.dp)) {
+			Column(Modifier.padding(8.dp)) {
+				CountryDropdown(countryChoice, countries) {
+					onSelectCountry(it)
+				}
+			}
+
+			Column() {
+				StaxTextField(searchValue, R.string.search, R.drawable.ic_search,
+					onChange = {
+						searchValue = it
+						onSearch(it.text) })
+			}
+		}
+
+		Spacer(modifier = Modifier.height(13.dp))
+
+		Tabs(tabs = tabs, pagerState = pagerState)
+		TabsContent(tabs = tabs, pagerState = pagerState)
+	}
 }
 
 @Composable
@@ -127,28 +140,19 @@ fun ChannelList(channels: List<Channel>?, type: String) {
 			text = stringResource(id = R.string.loading_human),
 			style = MaterialTheme.typography.h2,
 			color = colorResource(id = R.color.stax_state_blue),
-			modifier = Modifier.padding(horizontal = 16.dp).padding(top = 5.dp),
+			modifier = Modifier
+				.padding(horizontal = 16.dp)
+				.padding(top = 13.dp),
 		)
 	} else {
-		LazyColumn(modifier = Modifier.fillMaxSize().padding(top = 5.dp),
+		LazyColumn(modifier = Modifier
+			.fillMaxSize()
+			.padding(top = 5.dp),
 			verticalArrangement = Arrangement.spacedBy(5.dp)) {
 			items(channels!!.filter { it.institutionType == type }) { channel ->
 				ChannelItem(channel)
 			}
 		}
-	}
-}
-
-@Composable
-fun CryptoScreen() {
-	Row(modifier = Modifier.fillMaxWidth().padding(top = 5.dp)) {
-		Icon(painterResource(R.drawable.ic_crypto), contentDescription = "USDC logo", modifier = Modifier.align(Alignment.CenterVertically))
-		Text(
-			text = "USDC",
-			color = OffWhite,
-			modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp).padding(top = 5.dp),
-			fontSize = 18.sp
-		)
 	}
 }
 
@@ -170,51 +174,35 @@ fun ChannelItem(channel: Channel) {
 		Text(
 			text = channel.name,
 			color = OffWhite,
-			modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp),
+			modifier = Modifier
+				.align(Alignment.CenterVertically)
+				.padding(horizontal = 16.dp),
 			fontSize = 18.sp,
+		)
+	}
+}
+
+@Composable
+fun CryptoScreen() {
+	Row(modifier = Modifier
+		.fillMaxWidth()
+		.padding(top = 5.dp)) {
+		Icon(painterResource(R.drawable.ic_crypto), contentDescription = "USDC logo", modifier = Modifier.align(Alignment.CenterVertically))
+		Text(
+			text = "USDC",
+			color = OffWhite,
+			modifier = Modifier
+				.align(Alignment.CenterVertically)
+				.padding(horizontal = 16.dp)
+				.padding(top = 5.dp),
+			fontSize = 18.sp
 		)
 	}
 }
 
 @Preview
 @Composable
-fun AddAccountScreenPreview() {
-	AddAccountScreen()
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
-	val scope = rememberCoroutineScope()
-	TabRow(
-		selectedTabIndex = pagerState.currentPage,
-		backgroundColor = mainBackground,
-		contentColor = OffWhite,
-		indicator = { tabPositions ->
-			TabRowDefaults.Indicator(
-				Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-			)
-		}) {
-		tabs.forEachIndexed { index, tab ->
-			LeadingIconTab(
-				icon = { Icon(painter = painterResource(id = tab.icon), contentDescription = "") },
-				text = { Text(tab.title) },
-				selected = pagerState.currentPage == index,
-				modifier = Modifier.padding(vertical = 8.dp),
-				onClick = {
-					scope.launch {
-						pagerState.animateScrollToPage(index)
-					}
-				},
-			)
-		}
-	}
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
-	HorizontalPager(state = pagerState, count = tabs.size, modifier = Modifier.padding(horizontal = 16.dp)) { page ->
-		tabs[page].screen()
-	}
+fun AddAccountScreenPreview(@PreviewParameter(SampleChannelProvider::class) channels: List<Channel>) {
+	val countries = listOf("00", "ke", "ng", "mz", "zm")
+	FindAccountScreen(channels, countries, "ke", {}, {})
 }

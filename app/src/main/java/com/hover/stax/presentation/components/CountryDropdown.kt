@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 import com.hover.stax.countries.CountryAdapter
@@ -44,4 +45,11 @@ private fun countryCodeToEmoji(code: String?): String {
 	val firstLetter = Character.codePointAt(code.uppercase(), 0) - 0x41 + 0x1F1E6
 	val secondLetter = Character.codePointAt(code.uppercase(), 1) - 0x41 + 0x1F1E6
 	return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
+}
+
+@Preview
+@Composable
+fun CountryDropdownPreview() {
+	val countries = listOf("00", "ke", "ng", "mz", "zm")
+	StaxDropdown(selectedOption = "Kenya", options = countries, content = { stringResource(R.string.country_with_emoji, countryCodeToEmoji("ke"), "Kenya") }, onSelect = { })
 }

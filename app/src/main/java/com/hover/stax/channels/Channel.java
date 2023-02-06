@@ -78,9 +78,19 @@ public class Channel implements Comparable<Channel> {
 
     public Channel() {}
 
-    public Channel(int _id, String addChannel) {
-        this.id = _id;
-        this.name = addChannel;
+    public Channel(int i, String n, String country, String code, String cur, String hni, String logo, int inst, String type, String color, String secondColor, Boolean pub) {
+        id = i;
+        name = n;
+        countryAlpha2 = country;
+        rootCode = code;
+        currency = cur;
+        hniList = hni;
+        logoUrl = logo;
+        institutionId = inst;
+        institutionType = type;
+        primaryColorHex = color;
+        secondaryColorHex = secondColor;
+        published = pub;
     }
 
     public Channel(JSONObject jsonObject, Context context) {

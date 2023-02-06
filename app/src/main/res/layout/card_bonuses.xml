@@ -50,7 +50,7 @@
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_marginEnd="@dimen/margin_16"
                 android:layout_marginBottom="@dimen/margin_8"
-                android:text="@string/learn_more"
+                android:text="@string/airtime_tc"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_13"
                 app:layout_constraintBottom_toTopOf="@id/cta"
