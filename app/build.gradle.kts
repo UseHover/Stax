@@ -15,8 +15,19 @@ plugins {
     id("kotlinx-serialization")
 }
 
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if ((requested.group == "org.jetbrains.kotlin") && (requested.name.startsWith("kotlin-stdlib"))) {
+                useVersion("1.8.0")
+            }
+        }
+    }
+}
+
 group = "com.hover"
 version = "1.19.4"
+
 
 android {
 
@@ -147,6 +158,10 @@ android {
 }
 
 dependencies {
+    // Modules
+    implementation(project(path = ":core"))
+    implementation(project(path = ":features"))
+
     // Google
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)

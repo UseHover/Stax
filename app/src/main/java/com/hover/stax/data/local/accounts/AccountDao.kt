@@ -20,12 +20,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.hover.stax.data.local.BaseDao
+import com.hover.stax.storage.user.dao.BaseDao
 import com.hover.stax.domain.model.Account
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AccountDao : BaseDao<Account> {
+interface AccountDao : com.hover.stax.storage.user.dao.BaseDao<Account> {
 
     @Query("SELECT * FROM accounts WHERE institution_type != 'telecom' ORDER BY alias ASC")
     fun getAllAccounts(): List<Account>

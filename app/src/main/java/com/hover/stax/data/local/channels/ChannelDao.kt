@@ -22,10 +22,10 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.hover.stax.channels.Channel
-import com.hover.stax.data.local.BaseDao
+import com.hover.stax.storage.user.dao.BaseDao
 
 @Dao
-interface ChannelDao : BaseDao<Channel> {
+interface ChannelDao : com.hover.stax.storage.user.dao.BaseDao<Channel> {
 
     @get:Query("SELECT * FROM channels WHERE published = 1 AND institution_type != 'telecom' ORDER BY isFavorite DESC, name ASC")
     val publishedNonTelecomChannels: LiveData<List<Channel>>

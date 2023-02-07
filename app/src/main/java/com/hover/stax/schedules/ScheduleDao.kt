@@ -20,10 +20,10 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Update
-import com.hover.stax.data.local.BaseDao
+import com.hover.stax.storage.user.dao.BaseDao
 
 @Dao
-interface ScheduleDao : BaseDao<Schedule> {
+interface ScheduleDao : com.hover.stax.storage.user.dao.BaseDao<Schedule> {
 
     @get:Query("SELECT * FROM schedules")
     val all: LiveData<List<Schedule>>
