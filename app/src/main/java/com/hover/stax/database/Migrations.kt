@@ -205,8 +205,8 @@ class Migrations {
         val M50_51 = Migration(50, 51) { database ->
             database.execSQL(
                 "CREATE TABLE IF NOT EXISTS `accounts_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, " +
-                    "`account_no` TEXT, `institutionId` INTEGER NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `countryAlpha2` TEXT NOT NULL, `channelId` INTEGER NOT NULL," +
-                    "`primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `institutionAccountName` TEXT," +
+                    "`account_no` TEXT, `institutionId` INTEGER DEFAULT -1, `institution_type` TEXT DEFAULT 'bank', `countryAlpha2` TEXT, `channelId` INTEGER," +
+                    "`primary_color_hex` TEXT, `secondary_color_hex` TEXT, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `institutionAccountName` TEXT," +
                     "`latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION)",
             )
@@ -240,6 +240,9 @@ class Migrations {
             database.execSQL("ALTER TABLE accounts_new RENAME TO accounts")
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_accounts_name_sim_subscription_id` ON `accounts` (`name`, `sim_subscription_id`)")
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_accounts_channelId` ON `accounts` (`channelId`)")
+
+            database.execSQL("DROP TABLE stax_users")
+            database.execSQL("CREATE TABLE IF NOT EXISTS `stax_users` (`id` INTEGER PRIMARY KEY NOT NULL, `username` TEXT NOT NULL, `email` TEXT NOT NULL, `isMapper` INTEGER NOT NULL DEFAULT 0, `marketingOptedIn` INTEGER NOT NULL DEFAULT 0, `transactionCount` INTEGER NOT NULL, `bountyTotal` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL DEFAULT 0)")
         }
     }
 }
