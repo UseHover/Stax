@@ -26,7 +26,7 @@ configurations.all {
 }
 
 group = "com.hover"
-version = "1.19.4"
+version = "1.19.5"
 
 
 android {
@@ -39,7 +39,7 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 214
+        versionCode = 215
         versionName = project.version.toString()
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
