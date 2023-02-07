@@ -531,39 +531,33 @@
           {
             "fieldPath": "institutionId",
             "columnName": "institutionId",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "institutionType",
             "columnName": "institution_type",
             "affinity": "TEXT",
-            "notNull": true,
             "defaultValue": "'bank'"
           },
           {
             "fieldPath": "countryAlpha2",
             "columnName": "countryAlpha2",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "channelId",
             "columnName": "channelId",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "primaryColorHex",
             "columnName": "primary_color_hex",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "secondaryColorHex",
             "columnName": "secondary_color_hex",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "isDefault",
