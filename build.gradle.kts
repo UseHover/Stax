@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.android.application") version "7.3.1" apply false
-    id("com.android.library") version "7.3.1" apply false
+    id("com.android.application") version "7.4.1" apply false
+    id("com.android.library") version "7.4.1" apply false
     id("org.jetbrains.kotlin.android") version "1.7.10" apply false
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
@@ -44,6 +44,7 @@ subprojects {
     spotless {
         kotlin {
             target("**/*.kt")
+            targetExclude("${project.rootDir}/build-logic/**/*.kt")
             licenseHeaderFile(
                 rootProject.file("${project.rootDir}/spotless/copyright.kt"),
                 "^(package|object|import|interface)"

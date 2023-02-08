@@ -28,7 +28,6 @@ configurations.all {
 group = "com.hover"
 version = "1.19.4"
 
-
 android {
 
     namespace = "com.hover.stax"

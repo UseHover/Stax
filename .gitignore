@@ -30,3 +30,6 @@ app/.settings/
 /app/src/main/res/values/app_keys.xml
 .idea/misc.xml
 
+build-logic/build
+build-logic/.gradle
+build-logic/convention/build
