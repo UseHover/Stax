@@ -44,6 +44,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.domain.model.USSDAccount
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -59,7 +60,7 @@ class ChannelsViewModel(
 ) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
-    val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
+    val accounts: LiveData<List<USSDAccount>> = accountRepo.getAllLiveAccounts()
     val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
 
     var sims = MutableLiveData<List<SimInfo>>()
@@ -76,7 +77,7 @@ class ChannelsViewModel(
     private val accountCreatedEvent = MutableSharedFlow<Boolean>()
     val accountEventFlow = accountCreatedEvent.asSharedFlow()
 
-    private val accountChannel = KChannel<Account>()
+    private val accountChannel = KChannel<USSDAccount>()
     val accountCallback = accountChannel.receiveAsFlow()
 
     private var simReceiver: BroadcastReceiver? = null
@@ -172,7 +173,7 @@ class ChannelsViewModel(
         }
     }
 
-    private fun logChoice(account: Account) {
+    private fun logChoice(account: USSDAccount) {
         joinChannelGroup(account.channelId, getApplication() as Context)
         val args = JSONObject()
 
@@ -204,7 +205,7 @@ class ChannelsViewModel(
         val defaultAccount = accountRepo.getDefaultAccount()
 
         val accounts = channels.mapIndexed { index, channel ->
-            Account(channel, defaultAccount == null && index == 0, -1)
+            USSDAccount(channel, defaultAccount == null && index == 0, -1)
         }.onEach {
             logChoice(it)
             ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())

@@ -45,11 +45,12 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.utils.DateUtils
 
 @Composable
-fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, context: Context) {
+fun BalanceItem(staxAccount: USSDAccount, balanceTapListener: BalanceTapListener?, context: Context) {
     val size34 = dimensionResource(id = R.dimen.margin_34)
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Column {

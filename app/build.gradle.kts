@@ -224,6 +224,8 @@ dependencies {
     androidTestImplementation(libs.junit.androidx)
     androidTestImplementation(libs.espresso)
 
+    implementation(libs.stellar)
+
     // Hover SDK
     "stagingImplementation"(project(":hover.sdk"))
     "stagingImplementation"(libs.bundles.hover)

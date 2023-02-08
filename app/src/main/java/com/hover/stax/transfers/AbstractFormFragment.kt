@@ -39,6 +39,7 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.permissions.PermissionUtils
@@ -150,7 +151,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     abstract fun onSubmitForm()
 
-    private fun askToCheckBalance(account: Account) {
+    private fun askToCheckBalance(account: USSDAccount) {
         val dialog = StaxDialog(layoutInflater)
             .setDialogTitle(R.string.finish_adding_title)
             .setDialogMessage(getString(R.string.finish_adding_desc, account.userAlias))

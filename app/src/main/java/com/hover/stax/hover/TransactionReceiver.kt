@@ -29,6 +29,7 @@ import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.ACCOUNT_ID
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
@@ -58,7 +59,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private val requestRepo: RequestRepo by inject()
 
     private var channel: Channel? = null
-    private var account: Account? = null
+    private var account: USSDAccount? = null
     private var action: HoverAction? = null
     private var contact: StaxContact? = null
 
@@ -204,7 +205,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                 } else if (accounts.any { it.institutionAccountName == null }) {
                     accounts.first { it.institutionAccountName == null }
                 } else {
-                    Account(matcher.group(2)!!, channel!!, false, account?.simSubscriptionId ?: -1)
+                    USSDAccount(matcher.group(2)!!, channel!!, false, account?.simSubscriptionId ?: -1)
                 }
 
                 a.institutionAccountName = matcher.group(2)!!

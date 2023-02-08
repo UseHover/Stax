@@ -29,6 +29,7 @@ import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.transfers.AbstractFormFragment
@@ -303,7 +304,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         }
     }
 
-    private fun generateSessionBuilder(action: HoverAction, account: Account): HoverSession.Builder {
+    private fun generateSessionBuilder(action: HoverAction, account: USSDAccount): HoverSession.Builder {
         return HoverSession.Builder(action,payWithDropdown.getHighlightedAccount() ?: account,
             viewModel.wrapExtras(), requireActivity())
     }

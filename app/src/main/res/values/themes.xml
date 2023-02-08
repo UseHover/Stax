@@ -62,10 +62,7 @@
         <item name="snackbarButtonStyle">@style/StaxButton</item>
         <item name="snackbarTextViewStyle">@style/StaxSnackbarText</item>
     </style>
-	<style name="Theme.App.Starting.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-		<item name="windowActionBar">false</item>
-		<item name="windowNoTitle">true</item>
-	</style>
+
 	<style name="Theme.App.Starting.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 	<style name="Theme.App.Starting.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     

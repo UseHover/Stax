@@ -17,12 +17,13 @@ package com.hover.stax.domain.repository
 
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import kotlinx.coroutines.flow.Flow
 
 interface AccountRepository {
-    val addedAccounts: Flow<List<Account>>
+    val addedAccounts: Flow<List<USSDAccount>>
 
-    suspend fun createAccount(sim: SimInfo): Account
+    suspend fun createAccount(sim: SimInfo): USSDAccount
 
-    suspend fun getAccountBySim(subscriptionId: Int): Account?
+    suspend fun getAccountBySim(subscriptionId: Int): USSDAccount?
 }

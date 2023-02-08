@@ -1,10 +1,10 @@
-package com.hover.stax.presentation.add_account.components
+package com.hover.stax.presentation.add_accounts.components
 
 import androidx.compose.runtime.Composable
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
-import com.hover.stax.presentation.add_account.ChannelList
-import com.hover.stax.presentation.add_account.CryptoScreen
+import com.hover.stax.presentation.add_accounts.ChannelList
+import com.hover.stax.presentation.add_accounts.CryptoScreen
 
 typealias ComposableFun = @Composable () -> Unit
 

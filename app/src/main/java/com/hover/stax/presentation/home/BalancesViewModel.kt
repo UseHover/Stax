@@ -27,6 +27,7 @@ import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -41,7 +42,7 @@ class BalancesViewModel(
     val accountRepo: AccountRepo
 ) : AndroidViewModel(application) {
 
-    var userRequestedBalanceAccount = MutableLiveData<Account?>()
+    var userRequestedBalanceAccount = MutableLiveData<USSDAccount?>()
 
     private var _balanceAction = MutableSharedFlow<HoverAction>()
     val balanceAction = _balanceAction.asSharedFlow()
@@ -56,7 +57,7 @@ class BalancesViewModel(
         getAccounts()
     }
 
-    fun requestBalance(account: Account?) {
+    fun requestBalance(account: USSDAccount?) {
         if (account == null) {
             AnalyticsUtil.logAnalyticsEvent(
                 (getApplication() as Context).getString(R.string.refresh_balance_failed),
@@ -73,7 +74,7 @@ class BalancesViewModel(
         }
     }
 
-    private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
+    private fun startBalanceActionFor(account: USSDAccount?) = viewModelScope.launch(Dispatchers.IO) {
         if (account == null) return@launch
 
         val action = actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE)

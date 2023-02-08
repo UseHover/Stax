@@ -30,6 +30,7 @@ import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
@@ -217,11 +218,11 @@ class AccountDetailFragment :
         }
     }
 
-    private fun onTapBalanceRefresh(account: Account?) {
+    private fun onTapBalanceRefresh(account: USSDAccount?) {
         balancesViewModel.requestBalance(account)
     }
 
-    private fun setUpRemoveAccount(account: Account) {
+    private fun setUpRemoveAccount(account: USSDAccount) {
         dialog = StaxDialog(requireActivity())
             .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.userAlias))
             .setDialogMessage(R.string.removeaccount_msg)
@@ -231,7 +232,7 @@ class AccountDetailFragment :
         dialog!!.showIt()
     }
 
-    private fun removeAccount(account: Account) {
+    private fun removeAccount(account: USSDAccount) {
         viewModel.removeAccount(account)
         NavHostFragment.findNavController(this).popBackStack()
         UIHelper.flashAndReportMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))

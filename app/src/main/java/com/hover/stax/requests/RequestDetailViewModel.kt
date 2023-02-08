@@ -24,6 +24,7 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -34,15 +35,15 @@ class RequestDetailViewModel(
 ) : ViewModel() {
 
     val request: MutableLiveData<Request> = MutableLiveData()
-    var account: LiveData<Account> = MutableLiveData()
+    var account: LiveData<USSDAccount> = MutableLiveData()
     var recipients: LiveData<List<StaxContact>> = MutableLiveData()
 
     init {
-        account = Transformations.switchMap(request) { r -> r?.let { loadAccount(r) } }
+//        account = Transformations.switchMap(request) { r -> r?.let { loadAccount(r) } }
         recipients = Transformations.switchMap(request) { r -> r?.let { loadRecipients(r) } }
     }
 
-    private fun loadAccount(r: Request): LiveData<Account> {
+    private fun loadAccount(r: Request): LiveData<USSDAccount> {
         return repo.getLiveAccount(r.requester_account_id)
     }
 

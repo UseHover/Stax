@@ -25,6 +25,7 @@ import com.hover.stax.R
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.DateUtils.now
 import com.hover.stax.utils.Utils.formatAmount
 import com.hover.stax.utils.paymentLinkCryptography.Base64
@@ -123,7 +124,7 @@ class Request {
         return phones.toString()
     }
 
-    fun generateWhatsappRecipientString(contacts: List<StaxContact>, account: Account?): String {
+    fun generateWhatsappRecipientString(contacts: List<StaxContact>, account: USSDAccount?): String {
         val phones = StringBuilder()
         if (contacts.isNotEmpty()) {
             for (r in contacts.indices) {

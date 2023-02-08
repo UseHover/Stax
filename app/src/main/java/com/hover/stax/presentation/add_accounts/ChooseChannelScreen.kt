@@ -1,4 +1,4 @@
-package com.hover.stax.presentation.add_account
+package com.hover.stax.presentation.add_accounts
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -27,17 +27,15 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.google.accompanist.pager.*
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
-import com.hover.stax.presentation.add_account.components.SampleChannelProvider
-import com.hover.stax.presentation.add_account.components.TabItem
+import com.hover.stax.presentation.add_accounts.components.SampleChannelProvider
+import com.hover.stax.presentation.add_accounts.components.TabItem
 import com.hover.stax.presentation.components.*
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.OffWhite
@@ -46,7 +44,7 @@ import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel(), navController: NavController) {
+fun ChooseChannelScreen(channelsViewModel: ChannelsViewModel = getViewModel(), navController: NavController) {
 
 	val simList by channelsViewModel.sims.observeAsState(initial = emptyList())
 	val countryChannels by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
@@ -62,7 +60,7 @@ fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel(), navC
 			topBar = { TopBar(showingHelp) },
 		) {
 			FindAccountScreen(channels, countries, countryChoice,
-				{ navController.navigate("add") }, { navController.navigate("usdc") },
+				{ navController.navigate("addChannel") }, { navController.navigate("addUSDC") },
 				{ channelsViewModel.countryChoice.postValue(it) },
 				{ channelsViewModel.filterQuery.postValue(it) })
 			showHelp(showingHelp)

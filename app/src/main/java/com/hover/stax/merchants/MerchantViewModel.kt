@@ -23,6 +23,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
@@ -54,7 +55,7 @@ class MerchantViewModel(
         merchant.postValue(merchantRepo.get(merchantId))
     }
 
-    fun setMerchant(str: String, account: Account?, action: HoverAction?) {
+    fun setMerchant(str: String, account: USSDAccount?, action: HoverAction?) {
         if (merchant.value != null && merchant.value.toString() == str) return
         if (account == null || action == null) return
         merchant.value = Merchant(null, str, action.public_id, account.id, account.channelId)

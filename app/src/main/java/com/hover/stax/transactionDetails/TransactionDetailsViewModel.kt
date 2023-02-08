@@ -32,6 +32,7 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.transactions.StaxTransaction
@@ -52,7 +53,7 @@ class TransactionDetailsViewModel(
 ) : AndroidViewModel(application) {
 
     val transaction = MutableLiveData<StaxTransaction>()
-    var account: LiveData<Account> = MutableLiveData()
+    var account: LiveData<USSDAccount> = MutableLiveData()
     var action: LiveData<HoverAction> = MutableLiveData()
 
     var contact: LiveData<StaxContact> = MutableLiveData()
@@ -79,7 +80,7 @@ class TransactionDetailsViewModel(
         isExpectingSMS.addSource(transaction, this::setExpectingSMS)
     }
 
-    private fun getLiveAccount(txn: StaxTransaction?): LiveData<Account>? = if (txn != null)
+    private fun getLiveAccount(txn: StaxTransaction?): LiveData<USSDAccount>? = if (txn != null)
         txn.accountId?.let { accountRepo.getLiveAccount(it) }
     else null
 

@@ -23,10 +23,12 @@ import androidx.room.RoomDatabase
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.data.local.accounts.AccountDao
+import com.hover.stax.data.local.accounts.USSDAccountDao
 import com.hover.stax.data.local.channels.ChannelDao
 import com.hover.stax.storage.user.dao.user.UserDao
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USDCAccount
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantDao
@@ -43,9 +45,9 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [
-        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class
+        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, USSDAccount::class, USDCAccount::class, Paybill::class, Merchant::class, StaxUser::class
     ],
-    version = 52,
+    version = 53,
     autoMigrations = [
         AutoMigration(from = 36, to = 37),
         AutoMigration(from = 37, to = 38),
@@ -54,7 +56,8 @@ import java.util.concurrent.Executors
         AutoMigration(from = 41, to = 42),
         AutoMigration(from = 43, to = 44),
         AutoMigration(from = 46, to = 47),
-        AutoMigration(from = 49, to = 50)
+        AutoMigration(from = 49, to = 50),
+        AutoMigration(from = 52, to = 53)
     ]
 )
 
@@ -70,7 +73,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun scheduleDao(): ScheduleDao
 
-    abstract fun accountDao(): AccountDao
+    abstract fun accountDao(): USSDAccountDao
 
     abstract fun paybillDao(): PaybillDao
 

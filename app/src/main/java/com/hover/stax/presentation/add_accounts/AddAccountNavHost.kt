@@ -1,4 +1,4 @@
-package com.hover.stax.presentation.add_account
+package com.hover.stax.presentation.add_accounts
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.addChannels.UsdcViewModel
 import com.hover.stax.ui.theme.StaxTheme
 import org.koin.androidx.compose.getViewModel
 
@@ -13,7 +14,8 @@ import org.koin.androidx.compose.getViewModel
 fun AddAccountNavHost(
 	navController: NavHostController = rememberNavController(),
 	startDestination: String = "findChannel",
-	channelsViewModel: ChannelsViewModel = getViewModel()
+	channelsViewModel: ChannelsViewModel = getViewModel(),
+	usdcViewModel: UsdcViewModel = getViewModel()
 ) {
 	StaxTheme {
 		NavHost(
@@ -21,9 +23,14 @@ fun AddAccountNavHost(
 			startDestination = startDestination
 		) {
 			composable("findChannel") {
-				AddAccountScreen(channelsViewModel, navController)
+				ChooseChannelScreen(channelsViewModel, navController)
 			}
-//			composable("addUSDC") { FriendsListScreen(/*...*/) }
+			composable("addChannel") {
+				AddChannelScreen(channelsViewModel, navController)
+			}
+			composable("addUSDC") {
+				AddUsdcScreen(usdcViewModel, navController)
+			}
 		}
 	}
 }

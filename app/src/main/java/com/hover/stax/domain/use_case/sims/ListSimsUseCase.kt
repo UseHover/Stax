@@ -20,13 +20,14 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.repository.AccountRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 data class SimWithAccount(
     val sim: SimInfo,
-    val account: Account,
+    val account: USSDAccount,
     val balanceAction: HoverAction?,
     val airtimeActions: List<HoverAction?> = emptyList()
 )

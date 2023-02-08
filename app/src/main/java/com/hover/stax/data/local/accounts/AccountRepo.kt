@@ -18,50 +18,56 @@ package com.hover.stax.data.local.accounts
 import androidx.lifecycle.LiveData
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USDCAccount
+import com.hover.stax.domain.model.USSDAccount
 import kotlinx.coroutines.flow.Flow
 
 class AccountRepo(db: AppDatabase) {
 
-    private val accountDao: AccountDao = db.accountDao()
+    private val USSDAccountDao: USSDAccountDao = db.accountDao()
 
-    fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
+    fun getAllAccounts(): List<USSDAccount> = USSDAccountDao.getAllAccounts()
 
-    fun getAllLiveAccounts(): LiveData<List<Account>> = accountDao.getLiveAccounts()
+    fun getAllLiveAccounts(): LiveData<List<USSDAccount>> = USSDAccountDao.getLiveAccounts()
 
-    fun getAccountBySim(simSubscriptionId: Int): Account? =
-        accountDao.getAccountBySim(simSubscriptionId)
+    fun getAccountBySim(simSubscriptionId: Int): USSDAccount? =
+        USSDAccountDao.getAccountBySim(simSubscriptionId)
 
     fun getTelecomAccounts(simSubscriptionIds: IntArray): Flow<List<Account>> =
-        accountDao.getAccountsBySubscribedSim(simSubscriptionIds)
+        USSDAccountDao.getAccountsBySubscribedSim(simSubscriptionIds)
 
-    fun getAccountsCount(): Int = accountDao.getDataCount()
+    fun getAccountsCount(): Int = USSDAccountDao.getDataCount()
 
     fun getAccountsByChannel(channelId: Int): List<Account> =
-        accountDao.getAccountsByChannel(channelId)
+        USSDAccountDao.getAccountsByChannel(channelId)
 
-    fun getDefaultAccount(): Account? = accountDao.getDefaultAccount()
+    fun getDefaultAccount(): Account? = USSDAccountDao.getDefaultAccount()
 
-    fun getAccount(id: Int): Account? = accountDao.getAccount(id)
+    fun getAccount(id: Int): USSDAccount? = USSDAccountDao.getAccount(id)
 
-    fun getLiveAccount(id: Int?): LiveData<Account> = accountDao.getLiveAccount(id)
+    fun getLiveAccount(id: Int?): LiveData<USSDAccount> = USSDAccountDao.getLiveAccount(id)
 
-    fun getAccounts(): Flow<List<Account>> = accountDao.getAccounts()
+    fun getAccounts(): Flow<List<USSDAccount>> = USSDAccountDao.getAccounts()
 
     suspend fun saveAccount(account: Account) {
         if (account.id == 0) {
-            accountDao.insert(account)
+            USSDAccountDao.insert(account)
         } else {
-            accountDao.update(account)
+            USSDAccountDao.update(account)
         }
     }
 
-    fun insert(account: Account) = accountDao.insert(account)
+    fun insert(account: Account) = USSDAccountDao.insert(account)
 
-    suspend fun insert(accounts: List<Account>): List<Long> = accountDao.insertAll(accounts)
+    fun insert(account: USSDAccount) = USSDAccountDao.insert(account)
 
-    suspend fun update(account: Account?) = account?.let { accountDao.update(it) }
+    fun insert(account: USDCAccount) = USSDAccountDao.insert(account)
 
-    suspend fun update(accounts: List<Account>) = accountDao.update(accounts)
+    suspend fun insert(accounts: List<Account>): List<Long> = USSDAccountDao.insertAll(accounts)
 
-    suspend fun delete(account: Account) = accountDao.delete(account)
+    suspend fun update(account: Account?) = account?.let { USSDAccountDao.update(it) }
+
+    suspend fun update(accounts: List<Account>) = USSDAccountDao.update(accounts)
+
+    suspend fun delete(account: Account) = USSDAccountDao.delete(account)
 }

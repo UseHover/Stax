@@ -26,6 +26,7 @@ import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.domain.model.ACCOUNT_ID
 import com.hover.stax.domain.model.ACCOUNT_NAME
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.settings.TEST_MODE
 import com.hover.stax.utils.Utils
 import org.json.JSONException
@@ -37,7 +38,7 @@ private const val TIMER_LENGTH = 35000
 
 class HoverSession private constructor(b: Builder) {
     private val frag: Fragment?
-    private val account: Account
+    private val account: USSDAccount
     private val action: HoverAction
     private val finalScreenTime: Int
 
@@ -95,10 +96,10 @@ class HoverSession private constructor(b: Builder) {
         return builder.buildIntent()
     }
 
-    class Builder(a: HoverAction?, c: Account, activity: Activity) {
+    class Builder(a: HoverAction?, c: USSDAccount, activity: Activity) {
         val activity: Activity
         var fragment: Fragment? = null
-        val account: Account
+        val account: USSDAccount
         var message: String? = null
         val action: HoverAction
         val extras: JSONObject
@@ -106,13 +107,13 @@ class HoverSession private constructor(b: Builder) {
         var stopVar: String? = null
 
         constructor(action: HoverAction,
-                    c: Account,
+                    c: USSDAccount,
                     extras: HashMap<String, String>?,
                     act: Activity) : this(action, c, act) {
             if (!extras.isNullOrEmpty()) { extras(extras) }
         }
 
-        constructor(a: HoverAction?, c: Account, act: Activity, frag: Fragment?) : this(a, c, act) {
+        constructor(a: HoverAction?, c: USSDAccount, act: Activity, frag: Fragment?) : this(a, c, act) {
             fragment = frag
         }
 

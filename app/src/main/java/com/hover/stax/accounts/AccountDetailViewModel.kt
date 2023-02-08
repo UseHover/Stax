@@ -27,6 +27,7 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryItem
 import com.hover.stax.transactions.TransactionRepo
@@ -43,7 +44,7 @@ class AccountDetailViewModel(
 ) : ViewModel() {
 
     private val id = MutableLiveData<Int>()
-    var account: LiveData<Account> = MutableLiveData()
+    var account: LiveData<USSDAccount> = MutableLiveData()
     var channel: LiveData<Channel> = MutableLiveData()
     private var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     var transactionHistoryItem: MediatorLiveData<List<TransactionHistoryItem>> = MediatorLiveData()
@@ -94,7 +95,7 @@ class AccountDetailViewModel(
         }
     }
 
-    fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
+    fun removeAccount(account: USSDAccount) = viewModelScope.launch(Dispatchers.IO) {
         repo.delete(account)
         transactionRepo.deleteAccountTransactions(account.id)
 

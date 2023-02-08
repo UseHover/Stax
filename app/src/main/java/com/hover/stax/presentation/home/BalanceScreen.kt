@@ -26,13 +26,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.presentation.home.components.BalanceHeader
 import com.hover.stax.presentation.home.components.BalanceItem
 import com.hover.stax.presentation.home.components.EmptyBalance
 import com.hover.stax.ui.theme.StaxTheme
 
 interface BalanceTapListener {
-    fun onTapBalanceRefresh(account: Account?)
+    fun onTapBalanceRefresh(account: USSDAccount?)
     fun onTapBalanceDetail(accountId: Int)
 }
 
@@ -47,7 +48,7 @@ fun BalanceScreenPreview() {
 }
 
 @Composable
-private fun BalanceListForPreview(accountList: List<Account>) {
+private fun BalanceListForPreview(accountList: List<USSDAccount>) {
 
     if (accountList.isEmpty()) {
         EmptyBalance {}

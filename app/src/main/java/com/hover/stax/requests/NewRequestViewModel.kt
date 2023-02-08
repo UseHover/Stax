@@ -24,6 +24,7 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
@@ -40,7 +41,7 @@ class NewRequestViewModel(
     scheduleRepo: ScheduleRepo
 ) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
-    val activeAccount = MutableLiveData<Account?>()
+    val activeAccount = MutableLiveData<USSDAccount?>()
     val amount = MutableLiveData<String?>()
     private val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
     val requestee = MutableLiveData<StaxContact?>()
@@ -56,7 +57,7 @@ class NewRequestViewModel(
 
     fun setAmount(a: String?) = amount.postValue(a)
 
-    fun setActiveAccount(account: Account) = activeAccount.postValue(account)
+    fun setActiveAccount(account: USSDAccount) = activeAccount.postValue(account)
 
     private fun setRequesterNumber(a: Account?) {
         requesterNumber.postValue(a?.accountNo ?: "")

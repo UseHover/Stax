@@ -42,6 +42,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.presentation.components.DisabledButton
 import com.hover.stax.presentation.components.PrimaryButton
@@ -54,8 +55,8 @@ import com.hover.stax.utils.Utils
 @Composable
 internal fun SimItem(
     simWithAccount: SimWithAccount,
-    refreshBalance: (Account) -> Unit,
-    buyAirtime: (Account) -> Unit
+    refreshBalance: (USSDAccount) -> Unit,
+    buyAirtime: (USSDAccount) -> Unit
 ) {
     StaxCard {
         val context = LocalContext.current
@@ -144,7 +145,7 @@ private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
 @Composable
 private fun SimItemTopRow(
     simWithAccount: SimWithAccount,
-    refreshBalance: (Account) -> Unit,
+    refreshBalance: (USSDAccount) -> Unit,
 ) {
     Row(
         modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),

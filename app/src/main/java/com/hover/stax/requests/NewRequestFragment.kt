@@ -31,6 +31,7 @@ import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
@@ -114,7 +115,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         // This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         // https://stackoverflow.com/a/54939860/2371515
-        val accountsObserver = Observer<Account?> { a ->
+        val accountsObserver = Observer<USSDAccount?> { a ->
             a?.let {
                 requestViewModel.setActiveAccount(it)
                 accountValue.setTitle(it.toString())

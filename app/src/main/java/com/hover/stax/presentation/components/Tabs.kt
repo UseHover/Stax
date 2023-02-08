@@ -11,7 +11,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.hover.stax.presentation.add_account.components.TabItem
+import com.hover.stax.presentation.add_accounts.components.TabItem
 import com.hover.stax.ui.theme.OffWhite
 import com.hover.stax.ui.theme.mainBackground
 import kotlinx.coroutines.launch

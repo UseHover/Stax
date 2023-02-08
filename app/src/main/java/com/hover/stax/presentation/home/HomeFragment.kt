@@ -26,10 +26,12 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
+import com.hover.stax.addChannels.AddAccountActivity
 import com.hover.stax.addChannels.AddAccountContract
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.hover.TransactionContract
@@ -100,8 +102,10 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
 
     private fun goToAddAccount() {
 //        (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
-	    addAccount.launch(null)
+//	    addAccount.launch()
+        startActivity(Intent(context, AddAccountActivity::class.java))
     }
+
 
     private fun setComposeView() {
         binding.root.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -144,11 +148,11 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         }
     }
 
-    private fun attemptCallHover(account: Account?, action: HoverAction?) {
+    private fun attemptCallHover(account: USSDAccount?, action: HoverAction?) {
         action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
     }
 
-    private fun askToCheckBalance(account: Account) {
+    private fun askToCheckBalance(account: USSDAccount) {
         val dialog = StaxDialog(requireActivity()).setDialogTitle(R.string.check_balance_title)
             .setDialogMessage(R.string.check_balance_desc).setNegButton(R.string.later, null)
             .setPosButton(R.string.check_balance_title) { onTapBalanceRefresh(account) }
@@ -164,7 +168,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         NavUtil.navigate(findNavController(), destination)
     }
 
-    override fun onTapBalanceRefresh(account: Account?) {
+    override fun onTapBalanceRefresh(account: USSDAccount?) {
         balancesViewModel.requestBalance(account)
     }
 

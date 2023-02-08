@@ -161,7 +161,7 @@
     <string name="refresh">Refresh</string>
     <string name="refresh_balance_error">Add an account to check your balance.</string>
     <string name="empty_balance_desc">To make any successful transaction add an account. Securely manage your mobile money or bank accounts in one place with Stax</string>
-    <string name="add_account">Import an account</string>
+    <string name="add_account">Link an account</string>
 
     <string name="check_balance_title">Check balance</string>
     <string name="check_balance_desc">Nice! You added your first account. You can now check your balance on Stax.</string>
@@ -846,14 +846,7 @@
     <string name="welcome">Welcome to Stax %1$s</string>
     <string name="welcome_back">Welcome back to Stax %1$s</string>
     <string name="signed_in_message">You are already signed in to Stax</string>
-	<string name="title_activity_add_account">AddAccountActivity</string>
     <!-- Strings used for fragments for navigation -->
-	<string name="first_fragment_label">First Fragment</string>
-	<string name="second_fragment_label">Second Fragment</string>
 	<string name="next">Next</string>
 	<string name="previous">Previous</string>
-
-	<string name="hello_first_fragment">Hello first fragment</string>
-	<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-
 </resources>

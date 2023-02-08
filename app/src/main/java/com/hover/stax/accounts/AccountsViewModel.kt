@@ -26,6 +26,7 @@ import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.schedules.Schedule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -42,7 +43,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     private val _accounts = MutableStateFlow(AccountList())
     val accountList = _accounts.asStateFlow()
 
-    val activeAccount = MutableLiveData<Account?>()
+    val activeAccount = MutableLiveData<USSDAccount?>()
 
     private var type = MutableLiveData<String>()
     val institutionActions = MediatorLiveData<List<HoverAction>>()
@@ -73,7 +74,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         type.value = t
     }
 
-    private fun setActiveAccountIfNull(accounts: List<Account>) {
+    private fun setActiveAccountIfNull(accounts: List<USSDAccount>) {
         if (accounts.isNotEmpty() && activeAccount.value == null)
             activeAccount.value = accounts.firstOrNull { it.isDefault }
     }
@@ -88,20 +89,20 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         loadActions(activeAccount.value!!, type)
     }
 
-    private fun loadActions(account: Account?) {
+    private fun loadActions(account: USSDAccount?) {
         if (account == null || type.value.isNullOrEmpty()) return
 
         loadActions(account, type.value!!)
     }
 
-    private fun loadActions(account: Account, type: String) = viewModelScope.launch(Dispatchers.IO) {
+    private fun loadActions(account: USSDAccount, type: String) = viewModelScope.launch(Dispatchers.IO) {
         institutionActions.postValue(
             if (type == HoverAction.P2P) actionRepo.getTransferActions(account.institutionId!!, account.countryAlpha2!!)
             else actionRepo.getActions(account.institutionId!!, account.countryAlpha2!!, type)
         )
     }
 
-    private fun loadBonuses(account: Account?) {
+    private fun loadBonuses(account: USSDAccount?) {
         if (account?.countryAlpha2 == null || type.value.isNullOrEmpty()) return
         viewModelScope.launch(Dispatchers.IO) {
             bonusActions.postValue(
@@ -136,11 +137,11 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         activeAccount.value = accountList.value.accounts.firstOrNull { it.isDefault }
     }
 
-    fun setDefaultAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
+    fun setDefaultAccount(account: USSDAccount) = viewModelScope.launch(Dispatchers.IO) {
         if (accountList.value.accounts.isNotEmpty()) {
             val accts = accountList.value.accounts
             // remove current default account
-            val current: Account? = accts.firstOrNull { it.isDefault }
+            val current: USSDAccount? = accts.firstOrNull { it.isDefault }
 
             if (account.id == current?.id) return@launch
 
@@ -155,9 +156,9 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         }
     }
 
-    override fun highlightAccount(account: Account) {
+    override fun highlightAccount(account: USSDAccount) {
         activeAccount.postValue(account)
     }
 }
 
-data class AccountList(val accounts: List<Account> = emptyList())
+data class AccountList(val accounts: List<USSDAccount> = emptyList())

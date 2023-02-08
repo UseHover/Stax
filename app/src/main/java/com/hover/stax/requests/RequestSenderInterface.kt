@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
 import com.hover.stax.utils.Utils.copyToClipboard
@@ -74,7 +75,7 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
         a.startActivityForResult(Intent.createChooser(sendIntent, "Request"), SMS)
     }
 
-    fun sendWhatsapp(r: Request?, requestees: List<StaxContact?>?, account: Account?, a: Activity) {
+    fun sendWhatsapp(r: Request?, requestees: List<StaxContact?>?, account: USSDAccount?, a: Activity) {
         if (r == null || requestees == null) {
             showError(a)
             return
@@ -86,7 +87,7 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
     fun sendWhatsAppToSingleContact(
         r: Request,
         requestees: List<StaxContact>,
-        account: Account?,
+        account: USSDAccount?,
         a: Activity
     ) {
         val sendIntent = Intent()

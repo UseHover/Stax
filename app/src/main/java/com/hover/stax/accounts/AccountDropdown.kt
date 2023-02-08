@@ -28,6 +28,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import kotlinx.coroutines.launch
@@ -37,7 +38,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private var showSelected: Boolean = true
     private var highlightListener: HighlightListener? = null
 
-    private var highlightedAccount: Account? = null
+    private var highlightedAccount: USSDAccount? = null
 
     val target = object : CustomTarget<Drawable>() {
         override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
@@ -69,7 +70,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         highlightListener = listener
     }
 
-    private fun accountUpdate(accounts: List<Account>) {
+    private fun accountUpdate(accounts: List<USSDAccount>) {
         if (accounts.isNotEmpty()) {
             updateChoices(accounts.toMutableList())
         } else if (!hasExistingContent()) {
@@ -77,7 +78,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
-    private fun setDropdownValue(account: Account?) {
+    private fun setDropdownValue(account: USSDAccount?) {
         if (account != null) {
             UIHelper.loadImage(context, account.logoUrl, target)
             autoCompleteTextView.setText(account.userAlias, false)
@@ -85,19 +86,19 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         } else { UIHelper.loadImage(context, null, target) }
     }
 
-    private fun updateChoices(accounts: List<Account>) {
+    private fun updateChoices(accounts: List<USSDAccount>) {
         if (highlightedAccount == null) setDropdownValue(null)
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
-            setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
+            setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as USSDAccount) }
         }
 
         if (accounts.firstOrNull()?.id != 0)
             onSelect(accounts.firstOrNull { it.isDefault })
     }
 
-    private fun onSelect(account: Account?) {
+    private fun onSelect(account: USSDAccount?) {
         setDropdownValue(account)
         if (account != null && account.id != 0)
             highlightListener?.highlightAccount(account)
@@ -112,7 +113,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             lifecycleOwner.lifecycleScope.launch {
                 lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     accountList.collect {
-                        accountUpdate(it.accounts.plus(Account("Add account")))
+                        accountUpdate(it.accounts.plus(USSDAccount("Add account")))
                     }
                 }
             }
@@ -165,6 +166,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     fun getHighlightedAccount() = highlightedAccount
 
     interface HighlightListener {
-        fun highlightAccount(account: Account)
+        fun highlightAccount(account: USSDAccount)
     }
 }

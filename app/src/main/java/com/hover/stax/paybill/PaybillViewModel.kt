@@ -24,6 +24,7 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.schedules.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.AnalyticsUtil
@@ -180,7 +181,7 @@ class PaybillViewModel(
         }
     }
 
-    fun savePaybill(account: Account?, action: HoverAction?) {
+    fun savePaybill(account: USSDAccount?, action: HoverAction?) {
         viewModelScope.launch(Dispatchers.IO) {
             Timber.e("saving bill")
             val businessNo = businessNumber.value

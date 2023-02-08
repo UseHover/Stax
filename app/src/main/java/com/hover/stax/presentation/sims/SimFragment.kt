@@ -25,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalanceTapListener
@@ -72,7 +73,7 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
         }
     }
 
-    private fun attemptCallHover(account: Account?, action: HoverAction?) {
+    private fun attemptCallHover(account: USSDAccount?, action: HoverAction?) {
         action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
     }
 
@@ -81,7 +82,7 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
     private fun navigateTo(navDirections: NavDirections) =
         (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 
-    override fun onTapBalanceRefresh(account: Account?) {
+    override fun onTapBalanceRefresh(account: USSDAccount?) {
         balancesViewModel.requestBalance(account)
     }
 

@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.components.TopBar
@@ -51,8 +52,8 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SimScreen(
-    refreshBalance: (Account) -> Unit,
-    buyAirtime: (Account) -> Unit,
+    refreshBalance: (USSDAccount) -> Unit,
+    buyAirtime: (USSDAccount) -> Unit,
     navTo: (dest: Int) -> Unit,
     simViewModel: SimViewModel = getViewModel()
 ) {

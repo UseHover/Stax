@@ -1,4 +1,4 @@
-package com.hover.stax.presentation.add_account.components
+package com.hover.stax.presentation.add_accounts.components
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.hover.stax.channels.Channel

@@ -34,6 +34,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginScreenUiState
@@ -282,7 +283,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun createDefaultSelector(accounts: List<Account>) {
+    private fun createDefaultSelector(accounts: List<USSDAccount>) {
         binding.settingsCard.connectAccounts.visibility = GONE
         val spinner = binding.settingsCard.defaultAccountSpinner
         binding.settingsCard.defaultAccountEntry.visibility = VISIBLE

@@ -7,12 +7,13 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.presentation.add_account.AddAccountNavHost
+import com.hover.stax.presentation.add_accounts.AddAccountNavHost
 import com.hover.stax.utils.AnalyticsUtil
 
 class AddAccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         refreshChannels()
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), this)
 
@@ -28,4 +29,6 @@ class AddAccountActivity : AppCompatActivity() {
             UpdateChannelsWorker.makeWork()
         ).enqueue()
     }
+
+
 }

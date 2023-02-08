@@ -23,6 +23,7 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
@@ -40,13 +41,13 @@ class AccountRepositoryImpl(
 
     private val context: Context by inject()
 
-    override val addedAccounts: Flow<List<Account>>
+    override val addedAccounts: Flow<List<USSDAccount>>
         get() = accountRepo.getAccounts()
 
-    override suspend fun createAccount(sim: SimInfo): Account {
-        var account = Account(generateSimBasedName(sim), generateSimBasedAlias(sim))
+    override suspend fun createAccount(sim: SimInfo): USSDAccount {
+        var account = USSDAccount(generateSimBasedName(sim), generateSimBasedAlias(sim))
         channelRepo.getTelecom(sim.osReportedHni)?.let {
-            account = Account(account.userAlias, it, false, sim.subscriptionId)
+            account = USSDAccount(account.userAlias, it, false, sim.subscriptionId)
             accountRepo.insert(account)
         }
         logChoice(account)
@@ -62,11 +63,11 @@ class AccountRepositoryImpl(
         return sim.operatorName ?: sim.networkOperatorName ?: "Unknown"
     }
 
-    override suspend fun getAccountBySim(subscriptionId: Int): Account? {
+    override suspend fun getAccountBySim(subscriptionId: Int): USSDAccount? {
         return accountRepo.getAccountBySim(subscriptionId)
     }
 
-    private fun logChoice(account: Account) {
+    private fun logChoice(account: USSDAccount) {
         joinChannelGroup(account.channelId, context)
         val args = JSONObject()
 

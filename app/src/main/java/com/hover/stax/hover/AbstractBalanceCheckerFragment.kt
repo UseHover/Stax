@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
@@ -19,7 +20,7 @@ abstract class AbstractBalanceCheckerFragment: Fragment() {
 		}
 	}
 
-	protected fun generateSessionBuilder(account: Account, action: HoverAction): HoverSession.Builder {
+	protected fun generateSessionBuilder(account: USSDAccount, action: HoverAction): HoverSession.Builder {
 		return HoverSession.Builder(action, account, requireActivity())
 	}
 
