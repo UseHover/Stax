@@ -26,5 +26,5 @@ interface ChannelRepository {
 
     fun insert(channel: Channel)
 
-    suspend fun update(channels: List<Channel>):Int
+    suspend fun update(channels: List<Channel>): Int
 }
