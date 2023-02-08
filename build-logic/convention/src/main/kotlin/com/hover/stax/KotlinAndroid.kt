@@ -67,6 +67,8 @@ internal fun Project.configureKotlinAndroid(
 
     dependencies {
         add("testImplementation", libs.findBundle("test").get())
+        add("androidTestImplementation", libs.findLibrary("espresso").get())
+        add("androidTestImplementation", libs.findLibrary("junit.androidx").get())
     }
 }
 
