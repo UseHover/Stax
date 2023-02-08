@@ -27,9 +27,7 @@ import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
 import androidx.core.text.HtmlCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -43,11 +41,8 @@ import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.domain.model.Account
-import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.hover.BountyContract
-import com.hover.stax.hover.HoverSession
-import com.hover.stax.hover.TransactionContract
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.paybill.Paybill
 import com.hover.stax.transactions.StaxTransaction

@@ -23,7 +23,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.api.Hover
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.contacts.ContactRepo
