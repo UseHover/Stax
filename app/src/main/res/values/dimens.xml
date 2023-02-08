@@ -37,4 +37,5 @@
 	<dimen name="margin_150">150dp</dimen>
 	<dimen name="margin_176">176dp</dimen>
 	<dimen name="margin_120">120dp</dimen>
+	<dimen name="fab_margin">16dp</dimen>
 </resources>

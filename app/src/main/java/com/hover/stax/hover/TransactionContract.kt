@@ -1,6 +1,5 @@
 package com.hover.stax.hover
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract

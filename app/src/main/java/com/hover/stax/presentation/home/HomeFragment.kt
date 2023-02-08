@@ -15,6 +15,7 @@
  */
 package com.hover.stax.presentation.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,11 +26,13 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
+import com.hover.stax.addChannels.AddAccountContract
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
+import com.hover.stax.hover.TransactionContract
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
@@ -73,7 +76,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         fun onBuyGoodsClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment())
         fun onPayBillClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
         fun onRequestMoneyClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())
-        fun onClickedAddNewAccount() = (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
+        fun onClickedAddNewAccount() = goToAddAccount()
         fun onClickedTermsAndConditions() = Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
         fun onClickedSettingsIcon() = navigateTo(HomeFragmentDirections.toSettingsFragment())
         fun onClickedRewards() = navigateTo(HomeFragmentDirections.actionGlobalRewardsFragment())
@@ -89,6 +92,15 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
             onClickedSettingsIcon = { onClickedSettingsIcon() },
             onClickedRewards = { onClickedRewards() }
         )
+    }
+
+	val addAccount = registerForActivityResult(AddAccountContract()) { data: Intent? ->
+
+	}
+
+    private fun goToAddAccount() {
+//        (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
+	    addAccount.launch(null)
     }
 
     private fun setComposeView() {

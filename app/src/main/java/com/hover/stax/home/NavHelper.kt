@@ -95,7 +95,7 @@ class NavHelper(val activity: AppCompatActivity) {
 
     private fun setDestinationChangeListener(nav: BottomNavigationView) = navController?.let {
         it.addOnDestinationChangedListener { _, destination, _ ->
-            nav.visibility = if (destination.id == R.id.navigation_linkAccount) View.GONE else View.VISIBLE
+//            nav.visibility = if (destination.id == R.id.navigation_linkAccount) View.GONE else View.VISIBLE
         }
     }
 
@@ -128,7 +128,7 @@ class NavHelper(val activity: AppCompatActivity) {
         R.id.libraryFragment, NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
         NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
         NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
-        NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
+//        NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
         NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment()
         else -> null // invalid or unmapped route, return nothing
     }

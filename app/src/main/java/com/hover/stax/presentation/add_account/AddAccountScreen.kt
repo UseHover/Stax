@@ -1,6 +1,7 @@
 package com.hover.stax.presentation.add_account
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -43,7 +46,7 @@ import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel()) {
+fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel(), navController: NavController) {
 
 	val simList by channelsViewModel.sims.observeAsState(initial = emptyList())
 	val countryChannels by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
@@ -54,16 +57,15 @@ fun AddAccountScreen(channelsViewModel: ChannelsViewModel = getViewModel()) {
 
 	val showingHelp = remember { mutableStateOf(false) }
 
-	StaxTheme {
-		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-			Scaffold(
-				topBar = { TopBar(showingHelp) },
-			) {
-				FindAccountScreen(channels, countries, countryChoice,
-					{ channelsViewModel.countryChoice.postValue(it) },
-					{ channelsViewModel.filterQuery.postValue(it) })
-				showHelp(showingHelp)
-			}
+	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+		Scaffold(
+			topBar = { TopBar(showingHelp) },
+		) {
+			FindAccountScreen(channels, countries, countryChoice,
+				{ navController.navigate("add") }, { navController.navigate("usdc") },
+				{ channelsViewModel.countryChoice.postValue(it) },
+				{ channelsViewModel.filterQuery.postValue(it) })
+			showHelp(showingHelp)
 		}
 	}
 }
@@ -104,11 +106,14 @@ fun showHelp(showingHelp: MutableState<Boolean>) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FindAccountScreen(channels: List<Channel>, countries: List<String>, countryChoice: String, onSelectCountry: (String) -> Unit, onSearch: (String) -> Unit) {
+fun FindAccountScreen(channels: List<Channel>, countries: List<String>, countryChoice: String,
+                      navigateToAdd: (Int) -> Unit, navigateToUSDC: () -> Unit,
+                      onSelectCountry: (String) -> Unit, onSearch: (String) -> Unit) {
+
 	var searchValue by remember { mutableStateOf(TextFieldValue("")) }
 
 	val pagerState = rememberPagerState()
-	val tabs = listOf(TabItem.MobileMoney(channels), TabItem.Bank(channels), TabItem.Crypto)
+	val tabs = listOf(TabItem.MobileMoney(channels, navigateToAdd), TabItem.Bank(channels, navigateToAdd), TabItem.Crypto(navigateToUSDC))
 
 	Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
 		Row(Modifier.padding(horizontal = 8.dp)) {
@@ -134,7 +139,7 @@ fun FindAccountScreen(channels: List<Channel>, countries: List<String>, countryC
 }
 
 @Composable
-fun ChannelList(channels: List<Channel>?, type: String) {
+fun ChannelList(channels: List<Channel>?, type: String, navigateToAdd: (Int) -> Unit) {
 	if (channels?.filter { it.institutionType == type }.isNullOrEmpty()) {
 		Text(
 			text = stringResource(id = R.string.loading_human),
@@ -150,15 +155,15 @@ fun ChannelList(channels: List<Channel>?, type: String) {
 			.padding(top = 5.dp),
 			verticalArrangement = Arrangement.spacedBy(5.dp)) {
 			items(channels!!.filter { it.institutionType == type }) { channel ->
-				ChannelItem(channel)
+				ChannelItem(channel, navigateToAdd)
 			}
 		}
 	}
 }
 
 @Composable
-fun ChannelItem(channel: Channel) {
-	Row(Modifier.padding(vertical = 8.dp)) {
+fun ChannelItem(channel: Channel, navigateToAdd: (Int) -> Unit) {
+	Row(Modifier.padding(vertical = 8.dp).clickable { navigateToAdd(channel.id) }) {
 		AsyncImage(
 			model = ImageRequest.Builder(LocalContext.current).data(channel.logoUrl)
 				.crossfade(true)
@@ -183,10 +188,9 @@ fun ChannelItem(channel: Channel) {
 }
 
 @Composable
-fun CryptoScreen() {
-	Row(modifier = Modifier
-		.fillMaxWidth()
-		.padding(top = 5.dp)) {
+fun CryptoScreen(navigateToUSDC: () -> Unit) {
+	Row(modifier = Modifier.fillMaxWidth().padding(top = 5.dp)
+		.clickable { navigateToUSDC() }) {
 		Icon(painterResource(R.drawable.ic_crypto), contentDescription = "USDC logo", modifier = Modifier.align(Alignment.CenterVertically))
 		Text(
 			text = "USDC",
@@ -204,5 +208,5 @@ fun CryptoScreen() {
 @Composable
 fun AddAccountScreenPreview(@PreviewParameter(SampleChannelProvider::class) channels: List<Channel>) {
 	val countries = listOf("00", "ke", "ng", "mz", "zm")
-	FindAccountScreen(channels, countries, "ke", {}, {})
+	FindAccountScreen(channels, countries, "ke", {}, {}, {}, {})
 }

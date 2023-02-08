@@ -101,8 +101,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         setDropdownValue(account)
         if (account != null && account.id != 0)
             highlightListener?.highlightAccount(account)
-        else
-            findNavController().navigate(R.id.navigation_linkAccount)
+//        else
+//            findNavController().navigate(R.id.navigation_linkAccount)
     }
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
