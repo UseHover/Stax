@@ -31,21 +31,18 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
-import com.hover.stax.data.local.user.UserRepo
 import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.AccountRepositoryImpl
 import com.hover.stax.data.repository.AuthRepositoryImpl
 import com.hover.stax.data.repository.BountyRepositoryImpl
 import com.hover.stax.data.repository.ChannelRepositoryImpl
 import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
-import com.hover.stax.data.repository.StaxUserRepositoryImpl
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.repository.BountyRepository
 import com.hover.stax.domain.repository.ChannelRepository
 import com.hover.stax.domain.repository.FinancialTipsRepository
-import com.hover.stax.domain.repository.StaxUserRepository
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import com.hover.stax.domain.use_case.sims.ListSimsUseCase
@@ -123,6 +120,7 @@ val appModule = module {
 val dataModule = module(createdAtStart = true) {
     single { AppDatabase.getInstance(get()) }
     single { HoverRoomDatabase.getInstance(get()) }
+    single { get<AppDatabase>().userDao() }
 
     singleOf(::TransactionRepo)
     singleOf(::ChannelRepo)
@@ -133,7 +131,6 @@ val dataModule = module(createdAtStart = true) {
     singleOf(::ScheduleRepo)
     singleOf(::PaybillRepo)
     singleOf(::MerchantRepo)
-    singleOf(::UserRepo)
     singleOf(::ParserRepo)
     singleOf(::SimRepo)
 
@@ -184,7 +181,6 @@ val repositories = module {
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
-    singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
 
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
 }

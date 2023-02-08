@@ -32,7 +32,7 @@ import com.hover.stax.data.remote.dto.UploadDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.data.remote.dto.toStaxUser
-import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.preferences.DefaultTokenProvider
@@ -40,6 +40,7 @@ import com.hover.stax.preferences.TokenProvider
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -66,7 +67,7 @@ class LoginViewModel(
     }
 
     private fun getUser() = viewModelScope.launch {
-        staxUserUseCase.user.collect { staxUser.value = it }
+        staxUserUseCase.user.collectLatest { staxUser.value = it } // To understand the UseCase
     }
 
     fun signIntoGoogle(data: Intent?) {
@@ -141,6 +142,7 @@ class LoginViewModel(
         loginUser(token = idToken, signInAccount = signInAccount)
     }
 
+    @Suppress("unused")
     fun userIsNotSet(): Boolean = staxUser.value == null
 
     // Sign out user if any step of the login process fails. Have user restart the flow, except for updates

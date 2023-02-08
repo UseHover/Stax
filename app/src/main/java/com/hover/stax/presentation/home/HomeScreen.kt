@@ -45,7 +45,6 @@ import com.hover.stax.presentation.home.components.PrimaryFeatures
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
-import timber.log.Timber
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -83,8 +82,8 @@ fun HomeScreen(
                 topBar = { TopBar(title = R.string.nav_home, navTo) },
                 content = {
                     LazyColumn {
-
                         homeState?.bonuses?.let { bonus ->
+                            if (bonus.isNotEmpty()) {
                                 item {
                                     BonusCard(
                                         message = bonus.first().bonus_message,
@@ -98,6 +97,7 @@ fun HomeScreen(
                                         }
                                     )
                                 }
+                            }
                         }
 
                         if (homeState?.accounts?.isEmpty() == true)
@@ -119,7 +119,8 @@ fun HomeScreen(
                         homeState?.accounts?.let { accounts ->
                             item {
                                 BalanceHeader(
-                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount, accounts.isNotEmpty()
+                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount,
+                                    accounts.isNotEmpty()
                                 )
                             }
                         }
@@ -167,7 +168,8 @@ private fun clickedOnBonus(
     channelsViewModel.payWith(bonus.channel_id)
 }
 
-private fun showKEFeatures(countryIsos: List<String>): Boolean = countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
+private fun showKEFeatures(countryIsos: List<String>): Boolean =
+    countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
 @Preview
 @Composable
