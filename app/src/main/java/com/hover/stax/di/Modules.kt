@@ -29,7 +29,6 @@ import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.AccountRepositoryImpl
@@ -123,7 +122,6 @@ val dataModule = module {
     single { get<AppDatabase>().userDao() }
 
     singleOf(::TransactionRepo)
-    singleOf(::ChannelRepo)
     singleOf(::ActionRepo)
     singleOf(::ContactRepo)
     singleOf(::AccountRepo)

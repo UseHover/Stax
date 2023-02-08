@@ -23,14 +23,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.channels.ChannelRepo
+import com.hover.stax.storage.channel.repository.ChannelRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TransactionHistoryViewModel(
-    val repo: TransactionRepo,
-    val actionRepo: ActionRepo,
-    private val channelRepo: ChannelRepo
+    private val repo: TransactionRepo,
+    private val actionRepo: ActionRepo,
+    private val channelRepository: ChannelRepository
 ) : ViewModel() {
 
     private val allNonBountyTransaction: LiveData<List<StaxTransaction>> = repo.allNonBountyTransactions

@@ -19,11 +19,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.hover.stax.storage.user.dao.BaseDao
+import com.hover.stax.storage.BaseDao
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface PaybillDao : com.hover.stax.storage.user.dao.BaseDao<Paybill> {
+interface PaybillDao : BaseDao<Paybill> {
 
     @get:Query("SELECT * FROM paybills ORDER BY name ASC")
     val allBills: Flow<List<Paybill>>

@@ -24,8 +24,8 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountDao
-import com.hover.stax.data.local.channels.ChannelDao
-import com.hover.stax.storage.user.dao.user.UserDao
+import com.hover.stax.storage.channel.dao.ChannelDao
+import com.hover.stax.storage.user.dao.UserDao
 import com.hover.stax.domain.model.Account
 import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.merchants.Merchant
