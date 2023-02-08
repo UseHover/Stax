@@ -34,7 +34,7 @@ class UserDaoTest {
     private lateinit var staxUser: StaxUser
 
     @MockK(relaxed = true)
-    private lateinit var userDao: com.hover.stax.storage.user.dao.user.UserDao
+    private lateinit var userDao: UserDao
 
     @Before
     fun setup() {
