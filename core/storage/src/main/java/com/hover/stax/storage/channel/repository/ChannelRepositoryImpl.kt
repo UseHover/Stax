@@ -7,7 +7,8 @@ import com.hover.stax.storage.channel.entity.Channel
 internal class ChannelRepositoryImpl(
     private val channelDao: ChannelDao
 ) : ChannelRepository {
-    override val publishedNonTelecomChannels: LiveData<List<Channel>> = channelDao.publishedNonTelecomChannels
+    override val publishedNonTelecomChannels: LiveData<List<Channel>> =
+        channelDao.publishedNonTelecomChannels
 
     override suspend fun getTelecom(hni: String): Channel? = channelDao.getTelecom(hni)
 
@@ -29,11 +30,12 @@ internal class ChannelRepositoryImpl(
         countryCode: String
     ): List<Channel> = channelDao.getChannels(countryCode.lowercase(), channelIds)
 
-    override fun getChannelsByCountry(countryCode: String): List<Channel> = channelDao.getChannels(countryCode)
+    override fun getChannelsByCountry(countryCode: String): List<Channel> =
+        channelDao.getChannels(countryCode)
 
     override suspend fun update(channel: Channel) = channelDao.update(channel)
 
     override fun insert(channel: Channel) = channelDao.insert(channel)
 
-    override suspend fun update(channels: List<Channel>):Int = channelDao.update(channels)
+    override suspend fun update(channels: List<Channel>): Int = channelDao.update(channels)
 }
