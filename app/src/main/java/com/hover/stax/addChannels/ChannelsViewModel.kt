@@ -26,12 +26,10 @@ import com.hover.sdk.api.ActionApi
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
@@ -44,6 +42,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.storage.channel.entity.Channel
+import com.hover.stax.storage.channel.repository.ChannelRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -52,7 +52,7 @@ import org.json.JSONObject
 
 class ChannelsViewModel(
     application: Application,
-    val repo: ChannelRepo,
+    val channelRepository: ChannelRepository,
     val simRepo: SimRepo,
     val accountRepo: AccountRepo,
     val actionRepo: ActionRepo
@@ -60,7 +60,7 @@ class ChannelsViewModel(
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
-    val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
+    val allChannels: LiveData<List<Channel>> = channelRepository.publishedNonTelecomChannels
 
     var sims = MutableLiveData<List<SimInfo>>()
     var simCountryList: LiveData<List<String>> = MutableLiveData()
@@ -139,7 +139,7 @@ class ChannelsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (countryCodes.isNotEmpty()) {
                 for (code in countryCodes) {
-                    if (repo.getChannelsByCountry(code).isNotEmpty())
+                    if (channelRepository.getChannelsByCountry(code).isNotEmpty())
                         updateCountry(code)
                 }
             }
@@ -194,7 +194,7 @@ class ChannelsViewModel(
     }
 
     private fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        val channel = repo.getChannel(channelId)
+        val channel = channelRepository.getChannel(channelId)
         channel?.let { createAccounts(listOf(it)) }
 
         accountCreatedEvent.emit(true)
@@ -245,7 +245,7 @@ class ChannelsViewModel(
 
     fun updateChannel(channel: Channel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.update(channel)
+            channelRepository.update(channel)
         }
     }
 

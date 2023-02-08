@@ -23,7 +23,7 @@ import com.appsflyer.AppsFlyerProperties
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
-import com.hover.stax.storage.user.di.DatabaseModule
+import com.hover.stax.storage.di.DatabaseModule
 import com.hover.stax.di.appModule
 import com.hover.stax.di.dataModule
 import com.hover.stax.di.datastoreModule
@@ -69,7 +69,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + com.hover.stax.storage.user.di.DatabaseModule.repository)
+            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + DatabaseModule.repository)
         }
     }
 

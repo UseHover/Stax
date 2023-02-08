@@ -1,8 +1,8 @@
-package com.hover.stax.storage.user.dao.user
+package com.hover.stax.storage.user.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.hover.stax.storage.user.dao.BaseDao
+import com.hover.stax.storage.BaseDao
 import com.hover.stax.storage.user.entity.StaxUser
 import kotlinx.coroutines.flow.Flow
 

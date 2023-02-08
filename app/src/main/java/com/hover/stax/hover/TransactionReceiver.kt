@@ -21,12 +21,10 @@ import android.content.Intent
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
-import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.ACCOUNT_ID
 import com.hover.stax.domain.model.Account
 import com.hover.stax.merchants.MerchantRepo
@@ -34,7 +32,8 @@ import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
-import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.storage.channel.entity.Channel
+import com.hover.stax.storage.channel.repository.ChannelRepository
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -50,7 +49,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
     private val repo: TransactionRepo by inject()
     private val actionRepo: ActionRepo by inject()
-    private val channelRepo: ChannelRepo by inject()
+    private val channelRepository: ChannelRepository by inject()
     private val accountRepo: AccountRepo by inject()
     private val contactRepo: ContactRepo by inject()
     private val billRepo: PaybillRepo by inject()
@@ -73,7 +72,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
                     // added null check to prevent npe whenever action is null
                     action?.let { a ->
-                        channel = channelRepo.getChannel(a.channel_id)
+                        channel = channelRepository.getChannel(a.channel_id)
 
                         updateContacts(intent)
                         updateTransaction(intent, context.applicationContext)

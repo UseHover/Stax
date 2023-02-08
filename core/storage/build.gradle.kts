@@ -36,6 +36,9 @@ dependencies {
     // DI
     implementation(libs.bundles.koin)
 
+    // Logging
+    implementation(libs.timber)
+
     // Tests
     testImplementation(libs.bundles.test)
 }
