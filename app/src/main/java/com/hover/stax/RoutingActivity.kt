@@ -221,7 +221,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun chooseNavigation(intent: Intent) {
-        Timber.i("Intent data is: ${intent.data.toString()}, Extra is ${intent.extras.toString()}, and action is ${intent.action.toString()}")
+        Timber.i("Intent data is: ${intent.data}, Extra is ${intent.extras}, and action is ${intent.action}")
         when {
             !hasPassedOnboarding() -> goToOnBoardingActivity()
             redirectToFinancialTips() -> goToFinancialTips()
@@ -304,13 +304,13 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun hasPassedOnboarding(): Boolean = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, this)
 
-    private fun isForSettingsScreen(intent: Intent) : Boolean  = hasDeepLink("share")
+    private fun isForSettingsScreen(intent: Intent): Boolean = hasDeepLink("share")
 
     private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
 
-    private fun hasDeepLink(expectedPath: String) : Boolean {
-        val parameters: List<String> =  intent.data?.pathSegments?: emptyList()
-        if(parameters.isEmpty()) return false
+    private fun hasDeepLink(expectedPath: String): Boolean {
+        val parameters: List<String> = intent.data?.pathSegments ?: emptyList()
+        if (parameters.isEmpty()) return false
 
         val param = parameters[parameters.size - 1]
         return param.contains("/$expectedPath")

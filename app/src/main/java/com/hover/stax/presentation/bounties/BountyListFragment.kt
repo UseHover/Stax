@@ -111,7 +111,8 @@ class BountyListFragment : Fragment() {
                 override fun onSuccess(p0: ArrayList<HoverAction>?) {
                     Timber.i("Action configs initialized successfully $p0")
                 }
-            }, requireActivity()
+            },
+            requireActivity()
         )
     }
 

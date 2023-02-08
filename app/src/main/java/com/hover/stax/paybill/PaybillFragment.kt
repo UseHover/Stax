@@ -297,15 +297,18 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
                 val hsb = generateSessionBuilder(actionToRun!!, activeAccount.value!!)
                 callHover(paybill, hsb)
             } else {
-                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, ${activeAccount.value!!}") }
+                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, ${activeAccount.value!!}")
+            }
 
             findNavController().popBackStack()
         }
     }
 
     private fun generateSessionBuilder(action: HoverAction, account: Account): HoverSession.Builder {
-        return HoverSession.Builder(action,payWithDropdown.getHighlightedAccount() ?: account,
-            viewModel.wrapExtras(), requireActivity())
+        return HoverSession.Builder(
+            action, payWithDropdown.getHighlightedAccount() ?: account,
+            viewModel.wrapExtras(), requireActivity()
+        )
     }
 
     private val paybill = registerForActivityResult(TransactionContract()) { data: Intent? ->
