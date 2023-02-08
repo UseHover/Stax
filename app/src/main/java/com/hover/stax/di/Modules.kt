@@ -34,13 +34,11 @@ import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.AccountRepositoryImpl
 import com.hover.stax.data.repository.AuthRepositoryImpl
 import com.hover.stax.data.repository.BountyRepositoryImpl
-import com.hover.stax.data.repository.ChannelRepositoryImpl
 import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.repository.BountyRepository
-import com.hover.stax.domain.repository.ChannelRepository
 import com.hover.stax.domain.repository.FinancialTipsRepository
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
@@ -178,7 +176,6 @@ val repositories = module {
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
-    singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
 
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
 }
