@@ -1,6 +1,8 @@
 package com.hover.stax.storage.channel.repository
 
 import androidx.lifecycle.LiveData
+import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.sims.SimInfo
 import com.hover.stax.storage.channel.entity.Channel
 
 interface ChannelRepository {
@@ -27,4 +29,8 @@ interface ChannelRepository {
     fun insert(channel: Channel)
 
     suspend fun update(channels: List<Channel>): Int
+
+    suspend fun presentSims(): List<SimInfo>
+
+    suspend fun filterChannels(countryCode: String, actions: List<HoverAction>): List<Channel>
 }
