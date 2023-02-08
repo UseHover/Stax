@@ -1,6 +1,6 @@
 package com.hover.stax.storage.user.repository
 
-import com.hover.stax.storage.user.dao.user.UserDao
+import com.hover.stax.storage.user.dao.UserDao
 import com.hover.stax.storage.user.entity.StaxUser
 import kotlinx.coroutines.flow.Flow
 

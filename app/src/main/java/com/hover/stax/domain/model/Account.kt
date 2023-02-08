@@ -21,7 +21,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.hover.stax.channels.Channel
+import com.hover.stax.storage.channel.entity.Channel
+import com.hover.stax.storage.channel.entity.ChannelTypes
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
 
@@ -50,8 +51,8 @@ data class Account(
     var institutionId: Int,
 
     @NonNull
-    @ColumnInfo(name = "institution_type", defaultValue = Channel.BANK_TYPE)
-    var institutionType: String,
+    @ColumnInfo(name = "institution_type", defaultValue = "bank")
+    var institutionType: String = ChannelTypes.BANK.type,
 
     @JvmField
     @ColumnInfo
