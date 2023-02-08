@@ -39,6 +39,9 @@ dependencies {
     // Logging
     implementation(libs.timber)
 
+    // Hover Sdk
+    implementation(libs.hover)
+
     // Tests
     testImplementation(libs.bundles.test)
 }
