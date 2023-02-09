@@ -33,3 +33,7 @@ app/.settings/
 build-logic/build
 build-logic/.gradle
 build-logic/convention/build
+
+#Fastlane
+fastlane/report.xml
+fastlane/README.md
