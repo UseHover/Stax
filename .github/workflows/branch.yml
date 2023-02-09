@@ -4,6 +4,10 @@ on:
   push:
     branches-ignore: [ main, development, qa ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   APP_SIGN_KEYSTORE_PATH: /tmp/keystore
   CACHE_BUNDLER: ~/.bundler
