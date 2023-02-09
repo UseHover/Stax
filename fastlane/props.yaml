@@ -1,0 +1,4 @@
+configurations:
+  - name: branch
+    task_build: assembleProductionDebug
+    task_unittest: assembleProductionDebugUnitTest
