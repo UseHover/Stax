@@ -101,7 +101,7 @@ internal fun SimItem(
         } else {
             val bonus = getBonus(simWithAccount.airtimeActions)
             SecondaryButton(
-                getAirtimeButtonLabel(bonus, context), getAirtimeButtonIcon(bonus),
+                getAirtimeButtonLabel(bonus, context), icon = getAirtimeButtonIcon(bonus),
                 onClick = { buyAirtime(simWithAccount.account) }
             )
         }

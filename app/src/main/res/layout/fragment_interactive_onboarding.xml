@@ -21,7 +21,7 @@
             app:layout_constraintBottom_toTopOf="@id/welcomeText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_rounded_white" />
+            app:srcCompat="@drawable/ic_logo_white" />
 
     <TextView
             android:id="@+id/welcomeText"

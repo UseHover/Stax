@@ -49,7 +49,7 @@
                 android:padding="@dimen/margin_13"
                 android:text="@string/email_support"
                 android:textSize="@dimen/text_16"
-                app:drawableEndCompat="@drawable/email_filled_24" />
+                app:drawableEndCompat="@drawable/ic_email" />
 
         <RelativeLayout
                 android:id="@+id/receiveStaxUpdate"

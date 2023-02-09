@@ -40,9 +40,6 @@ import androidx.compose.ui.unit.sp
 import com.hover.stax.R
 import com.hover.stax.ui.theme.Border
 import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.ColorPrimary
-import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.TextGrey
 import com.hover.stax.ui.theme.mainBackground
 
 const val SECONDARY = 0
@@ -50,15 +47,15 @@ const val PRIMARY = 1
 const val DISABLED = 2
 
 @Composable
-private fun StaxButton(text: String, icon: Int?, onClick: () -> Unit, buttonType: Int) {
+private fun StaxButton(text: String, icon: Int?, buttonType: Int, modifier: Modifier? = Modifier, onClick: () -> Unit) {
     Button(
         onClick = { onClick() },
-        modifier = Modifier
+        modifier = modifier ?: Modifier
             .wrapContentWidth()
             .padding(vertical = 6.dp),
         contentPadding = PaddingValues(13.dp),
         border = if (buttonType == SECONDARY) BorderStroke(1.dp, Border) else null,
-        colors = ButtonDefaults.buttonColors(backgroundColor = backgroundColor(buttonType), disabledBackgroundColor = mainBackground),
+        colors = StaxButtonColors(buttonType),
         enabled = (buttonType != DISABLED)
     ) {
         Row(modifier = Modifier.wrapContentSize()) {
@@ -81,39 +78,44 @@ private fun StaxButton(text: String, icon: Int?, onClick: () -> Unit, buttonType
     }
 }
 
+@Composable
+fun StaxButtonColors(buttonType: Int) = ButtonDefaults.buttonColors(
+    backgroundColor = backgroundColor(buttonType),
+    disabledBackgroundColor = mainBackground)
+
 private fun backgroundColor(type: Int): Color {
     return if (type == PRIMARY) { BrightBlue } else { mainBackground }
 }
 
 @Composable
-fun PrimaryButton(text: String, icon: Int? = null, onClick: () -> Unit) {
-    StaxButton(text = text, icon = icon, onClick = onClick, PRIMARY)
+fun PrimaryButton(text: String, modifier: Modifier? = Modifier, icon: Int? = null, onClick: () -> Unit) {
+    StaxButton(text = text, icon = icon, PRIMARY, modifier, onClick = onClick)
 }
 
 @Composable
-fun SecondaryButton(text: String, icon: Int? = null, onClick: () -> Unit) {
-    StaxButton(text = text, icon = icon, onClick = onClick, SECONDARY)
+fun SecondaryButton(text: String, modifier: Modifier? = Modifier, icon: Int? = null, onClick: () -> Unit) {
+    StaxButton(text = text, icon = icon, SECONDARY, modifier, onClick = onClick)
 }
 
 @Composable
 fun DisabledButton(text: String, icon: Int? = null, onClick: () -> Unit) {
-    StaxButton(text = text, icon = icon, onClick = onClick, DISABLED)
+    StaxButton(text = text, icon = icon, DISABLED, onClick = onClick)
 }
 
 @Preview
 @Composable
 fun PrimaryButtonPreview() {
-    PrimaryButton("Test Button", R.drawable.ic_search) { }
+    PrimaryButton("Test Button", icon = R.drawable.ic_search) { }
 }
 
 @Preview
 @Composable
 fun SecondaryButtonPreview() {
-    SecondaryButton("Test Button", R.drawable.ic_search) { }
+    SecondaryButton("Test Button", icon = R.drawable.ic_search) { }
 }
 
 @Preview
 @Composable
 fun DisabledButtonPreview() {
-    DisabledButton("Test Button", R.drawable.ic_search) { }
+    DisabledButton("Test Button", icon = R.drawable.ic_search) { }
 }

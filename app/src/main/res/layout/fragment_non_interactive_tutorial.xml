@@ -39,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/skip_tutorial"
-            app:srcCompat="@drawable/ic_rounded_white" />
+            app:srcCompat="@drawable/ic_logo_white" />
 
     <TextView
             android:id="@+id/variant_v2_nocheckbox_title"

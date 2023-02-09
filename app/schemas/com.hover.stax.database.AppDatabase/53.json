@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 53,
-    "identityHash": "5425709fedc6d598ad4b97705d754875",
+    "identityHash": "4bcad2f26e4cbdf480104790a76f0704",
     "entities": [
       {
         "tableName": "channels",
@@ -743,8 +743,14 @@
       },
       {
         "tableName": "usdc_accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assetType` TEXT NOT NULL, `assetCode` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `institutionId` INTEGER NOT NULL, `account_type` TEXT NOT NULL DEFAULT 'ussd', `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `institutionAccountName` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`encryptedKeystore` TEXT NOT NULL, `assetType` TEXT NOT NULL, `assetCode` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `institutionId` INTEGER NOT NULL, `account_type` TEXT NOT NULL DEFAULT 'ussd', `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `institutionAccountName` TEXT, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP)",
         "fields": [
+          {
+            "fieldPath": "encryptedKeystore",
+            "columnName": "encryptedKeystore",
+            "affinity": "TEXT",
+            "notNull": true
+          },
           {
             "fieldPath": "assetType",
             "columnName": "assetType",
@@ -1145,7 +1151,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5425709fedc6d598ad4b97705d754875')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4bcad2f26e4cbdf480104790a76f0704')"
     ]
   }
 }

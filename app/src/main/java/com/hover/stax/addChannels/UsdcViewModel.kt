@@ -45,7 +45,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 		Timber.e("Balances for account " + pair.getAccountId())
 		for (balance in accountNo.getBalances()) {
 			val acct = USDCAccount("Stellar USDC", "Stellar USDC", "logo", pair.getAccountId(), -1, CRYPTO_TYPE, "Stellar color 1", "stellar color 2",
-				"type", "code", false)
+				pair.getAccountId(), "type", "code", false)
 			acct.updateBalance(balance.getBalance(), null)
 			Timber.e(
 				"Type: %s, Code: %s, Balance: %s%n",

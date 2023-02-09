@@ -8,6 +8,10 @@ class USDCAccount(institutionName : String, userAlias: String, logoUrl: String, 
 
 	@JvmField
 	@ColumnInfo
+	var encryptedKeystore: String,
+
+	@JvmField
+	@ColumnInfo
 	var assetType: String,
 
 	@ColumnInfo
