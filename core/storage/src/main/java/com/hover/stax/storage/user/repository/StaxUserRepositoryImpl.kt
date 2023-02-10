@@ -24,11 +24,7 @@ internal class StaxUserRepositoryImpl(
 ) : StaxUserRepository {
     override fun getUserAsync(): Flow<StaxUser> = userDao.getUserAsync()
 
-    override suspend fun saveUser(user: StaxUser) {
-        userDao.getUser()?.let {
-            userDao.insertAsync(user)
-        } ?: userDao.update(user)
-    }
+    override suspend fun saveUser(user: StaxUser) = userDao.insertAsync(user)
 
     override suspend fun deleteUser(user: StaxUser) = userDao.delete(user)
 }
