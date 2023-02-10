@@ -197,7 +197,7 @@ dependencies {
 
     // compose
     implementation(libs.bundles.compose)
-    debugImplementation(libs.compose.tooling)
+    debugImplementation(libs.compose.preview)
     androidTestImplementation(libs.compose.ui.test)
 
     // logging

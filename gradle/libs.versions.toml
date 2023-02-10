@@ -1,6 +1,5 @@
 [versions]
-compose = "1.2.1"
-core = "1.10.3"
+compose = "1.4.0-alpha05"
 koin = "3.2.0"
 kotlinxCoroutinesPlayServices = "1.6.4"
 room = "2.5.0"
@@ -17,7 +16,6 @@ serialization = "1.6.21"
 [libraries]
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
-compose-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 compose-viewbinding = { module = "androidx.compose.ui:ui-viewbinding", version.ref = "compose" }
 compose-material-3 = "androidx.compose.material3:material3:1.0.1"
@@ -27,8 +25,8 @@ compose-accompanist-pager = "com.google.accompanist:accompanist-pager:0.25.1"
 compose-accompanist-animation = "com.google.accompanist:accompanist-navigation-animation:0.25.1"
 compose-accompanist-tabs = "com.google.accompanist:accompanist-pager-indicators:0.25.1"
 compose-ui-test = "androidx.compose.ui:ui-test-junit4:1.2.1"
-compose-tooling = "androidx.compose.ui:ui-tooling:1.2.1"
-compose-navigation = "androidx.navigation:navigation-compose:2.5.3"
+compose-tooling = "androidx.compose.ui:ui-tooling:1.4.0-alpha05"
+compose-preview = "androidx.compose.ui:ui-tooling-preview:1.4.0-alpha05"
 
 appcompat = "androidx.appcompat:appcompat:1.6.1"
 constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
@@ -115,6 +113,7 @@ android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", ver
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [bundles]
+compose = ["compose-ui", "compose-material", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist", "compose-tooling"]
 compose = ["compose-ui", "compose-material", "compose-material-3", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-navigation", "compose-accompanist-painter", "compose-accompanist-animation", "compose-accompanist-pager", "compose-accompanist-tabs"]
 google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "splashscreen", "preference", "legacy-support"]
 logging = ["timber", "amplitude", "appsflyer", "installreferrer", "uxcam"]
