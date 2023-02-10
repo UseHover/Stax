@@ -21,9 +21,6 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-object DatabaseModule {
-
-    val repository = module {
-        singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
-    }
+val storage = module {
+    singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
 }
