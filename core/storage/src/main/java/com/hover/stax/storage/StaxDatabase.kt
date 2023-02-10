@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Stax
+ * Copyright 2023 Stax
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.repository
+package com.hover.stax.storage
 
-import com.hover.stax.data.local.user.UserRepo
-import com.hover.stax.domain.model.StaxUser
-import com.hover.stax.domain.repository.StaxUserRepository
-import kotlinx.coroutines.flow.Flow
+import androidx.room.RoomDatabase
 
-class StaxUserRepositoryImpl(private val userRepo: UserRepo) : StaxUserRepository {
-
-    override val staxUser: Flow<StaxUser>
-        get() = userRepo.user
-
-    override suspend fun saveUser(user: StaxUser) = userRepo.saveUser(user)
-
-    override suspend fun deleteUser(user: StaxUser) = userRepo.deleteUser(user)
-}
+@Suppress("UnnecessaryAbstractClass")
+abstract class StaxDatabase : RoomDatabase()

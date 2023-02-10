@@ -58,8 +58,7 @@ class TransferViewModel(
 
     fun setRecipientNumber(str: String) {
         if (contact.value != null && contact.value.toString() == str) return
-        if (str.isEmpty()) { contact.value = StaxContact() }
-        else { contact.value = StaxContact(str) }
+        if (str.isEmpty()) { contact.value = StaxContact() } else { contact.value = StaxContact(str) }
     }
 
     private fun setRecipientSmartly(r: Request?, countryAlpha2: String?) =

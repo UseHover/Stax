@@ -18,10 +18,10 @@ package com.hover.stax.merchants
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
-import com.hover.stax.data.local.BaseDao
+import com.hover.stax.storage.user.dao.BaseDao
 
 @Dao
-interface MerchantDao : BaseDao<Merchant> {
+interface MerchantDao : com.hover.stax.storage.user.dao.BaseDao<Merchant> {
 
     @get:Query("SELECT * FROM merchants ORDER BY last_used_timestamp ASC")
     val all: LiveData<List<Merchant>>

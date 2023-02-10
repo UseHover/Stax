@@ -205,16 +205,16 @@ class Migrations {
         val M50_51 = Migration(50, 51) { database ->
             database.execSQL(
                 "CREATE TABLE IF NOT EXISTS `accounts_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, " +
-                    "`account_no` TEXT, `institutionId` INTEGER NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `countryAlpha2` TEXT NOT NULL, `channelId` INTEGER NOT NULL," +
-                    "`primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `institutionAccountName` TEXT," +
+                    "`account_no` TEXT, `institutionId` INTEGER DEFAULT -1, `institution_type` TEXT DEFAULT 'bank', `countryAlpha2` TEXT, `channelId` INTEGER," +
+                    "`primary_color_hex` TEXT, `secondary_color_hex` TEXT, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `institutionAccountName` TEXT," +
                     "`latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION)",
             )
 
             database.execSQL(
                 "INSERT INTO accounts_new (id, name, alias, logo_url, account_no, institutionId, institution_type, countryAlpha2, channelId, primary_color_hex, secondary_color_hex, isDefault, sim_subscription_id, institutionAccountName, latestBalance, latestBalanceTimestamp)" +
-                        " SELECT a.id, a.name, a.alias, a.logo_url, a.account_no, c.institution_id, c.institution_type, LOWER(c.country_alpha2), c.id, c.primary_color_hex, c.secondary_color_hex, a.isDefault, a.sim_subscription_id, a.institutionAccountName, a.latestBalance, a.latestBalanceTimestamp" +
-                        " FROM accounts as a LEFT JOIN channels AS c ON a.channelId = c.id"
+                    " SELECT a.id, a.name, a.alias, a.logo_url, a.account_no, c.institution_id, c.institution_type, LOWER(c.country_alpha2), c.id, c.primary_color_hex, c.secondary_color_hex, a.isDefault, a.sim_subscription_id, a.institutionAccountName, a.latestBalance, a.latestBalanceTimestamp" +
+                    " FROM accounts as a LEFT JOIN channels AS c ON a.channelId = c.id"
             )
             database.execSQL("DROP TABLE accounts")
             database.execSQL("ALTER TABLE accounts_new RENAME TO accounts")
@@ -225,21 +225,24 @@ class Migrations {
         val M51_52 = Migration(51, 52) { database ->
             database.execSQL(
                 "CREATE TABLE IF NOT EXISTS `accounts_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, " +
-                        "`account_no` TEXT, `institutionId` INTEGER NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `countryAlpha2` TEXT NOT NULL, `channelId` INTEGER NOT NULL," +
-                        "`primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `institutionAccountName` TEXT," +
-                        "`latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-                        "FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION)",
+                    "`account_no` TEXT, `institutionId` INTEGER NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `countryAlpha2` TEXT NOT NULL, `channelId` INTEGER NOT NULL," +
+                    "`primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `institutionAccountName` TEXT," +
+                    "`latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                    "FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION)",
             )
 
             database.execSQL(
                 "INSERT INTO accounts_new (id, name, alias, logo_url, account_no, institutionId, institution_type, countryAlpha2, channelId, primary_color_hex, secondary_color_hex, isDefault, sim_subscription_id, institutionAccountName, latestBalance, latestBalanceTimestamp)" +
-                        " SELECT a.id, a.name, a.alias, a.logo_url, a.account_no, c.institution_id, c.institution_type, LOWER(c.country_alpha2), c.id, c.primary_color_hex, c.secondary_color_hex, a.isDefault, a.sim_subscription_id, a.institutionAccountName, a.latestBalance, a.latestBalanceTimestamp" +
-                        " FROM accounts as a LEFT JOIN channels AS c ON a.channelId = c.id"
+                    " SELECT a.id, a.name, a.alias, a.logo_url, a.account_no, c.institution_id, c.institution_type, LOWER(c.country_alpha2), c.id, c.primary_color_hex, c.secondary_color_hex, a.isDefault, a.sim_subscription_id, a.institutionAccountName, a.latestBalance, a.latestBalanceTimestamp" +
+                    " FROM accounts as a LEFT JOIN channels AS c ON a.channelId = c.id"
             )
             database.execSQL("DROP TABLE accounts")
             database.execSQL("ALTER TABLE accounts_new RENAME TO accounts")
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_accounts_name_sim_subscription_id` ON `accounts` (`name`, `sim_subscription_id`)")
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_accounts_channelId` ON `accounts` (`channelId`)")
+
+            database.execSQL("DROP TABLE stax_users")
+            database.execSQL("CREATE TABLE IF NOT EXISTS `stax_users` (`id` INTEGER PRIMARY KEY NOT NULL, `username` TEXT NOT NULL, `email` TEXT NOT NULL, `isMapper` INTEGER NOT NULL DEFAULT 0, `marketingOptedIn` INTEGER NOT NULL DEFAULT 0, `transactionCount` INTEGER NOT NULL, `bountyTotal` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL DEFAULT 0)")
         }
     }
 }

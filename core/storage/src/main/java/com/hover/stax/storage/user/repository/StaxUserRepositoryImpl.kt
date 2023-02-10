@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Stax
+ * Copyright 2023 Stax
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.local.user
+package com.hover.stax.storage.user.repository
 
-import com.hover.stax.database.AppDatabase
-import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.storage.user.dao.user.UserDao
+import com.hover.stax.storage.user.entity.StaxUser
 import kotlinx.coroutines.flow.Flow
 
-class UserRepo(db: AppDatabase) {
+internal class StaxUserRepositoryImpl(
+    private val userDao: UserDao
+) : StaxUserRepository {
+    override fun getUserAsync(): Flow<StaxUser> = userDao.getUserAsync()
 
-    private val userDao = db.userDao()
+    override suspend fun saveUser(user: StaxUser) = userDao.insertAsync(user)
 
-    val user: Flow<StaxUser> = userDao.getUserAsync()
-
-    suspend fun saveUser(user: StaxUser) {
-        if (userDao.getUser() == null)
-            userDao.insertAsync(user)
-        else
-            userDao.update(user)
-    }
-
-    suspend fun deleteUser(user: StaxUser) = userDao.delete(user)
+    override suspend fun deleteUser(user: StaxUser) = userDao.delete(user)
 }

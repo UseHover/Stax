@@ -25,12 +25,9 @@ import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -63,7 +60,7 @@ class HomeViewModel(
     private fun getBonusList(countries: Array<String>) = viewModelScope.launch {
         bonusListToFlow(countries).collect { bonusList ->
             if (bonusList is Resource.Success)
-                _homeState.value= homeState.value?.copy(bonuses = bonusList.data ?: emptyList())
+                _homeState.value = homeState.value?.copy(bonuses = bonusList.data ?: emptyList())
         }
     }
 
@@ -80,11 +77,11 @@ class HomeViewModel(
 
     private fun getFinancialTips() = tipsUseCase().onEach { result ->
         if (result is Resource.Success)
-            _homeState.value= homeState.value?.copy(financialTips = result.data ?: emptyList())
+            _homeState.value = homeState.value?.copy(financialTips = result.data ?: emptyList())
     }.launchIn(viewModelScope)
 
     private fun getDismissedFinancialTips() {
-        _homeState.value =  homeState.value?.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
+        _homeState.value = homeState.value?.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
     }
 
     fun dismissTip(id: String) {

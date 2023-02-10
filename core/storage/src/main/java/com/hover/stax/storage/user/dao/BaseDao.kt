@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Stax
+ * Copyright 2023 Stax
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.local
+package com.hover.stax.storage.user.dao
 
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.OnConflictStrategy
 import androidx.room.Update
 
 /**
@@ -30,22 +30,22 @@ import androidx.room.Update
 interface BaseDao<T> {
 
     // TODO - Make me suspendable
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: T)
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAsync(item: T)
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg items: T)
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(items: List<T>)
 
-    @Update(onConflict = REPLACE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(item: T?): Int
 
-    @Update(onConflict = REPLACE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(items: List<T>): Int
 
     @Delete

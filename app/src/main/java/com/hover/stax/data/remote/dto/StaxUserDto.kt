@@ -15,7 +15,7 @@
  */
 package com.hover.stax.data.remote.dto
 
-import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.storage.user.entity.StaxUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -29,6 +29,7 @@ import com.hover.stax.di.datastoreModule
 import com.hover.stax.di.ktorModule
 import com.hover.stax.di.repositories
 import com.hover.stax.di.useCases
+import com.hover.stax.storage.user.di.storage
 import com.hover.stax.utils.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
@@ -68,7 +69,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories)
+            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + storage)
         }
     }
 

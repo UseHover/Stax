@@ -15,12 +15,12 @@
  */
 package com.hover.stax.domain.use_case.stax_user
 
-import com.hover.stax.domain.model.StaxUser
-import com.hover.stax.domain.repository.StaxUserRepository
+import com.hover.stax.storage.user.entity.StaxUser
+import com.hover.stax.storage.user.repository.StaxUserRepository
 
 class StaxUserUseCase(private val staxUserRepository: StaxUserRepository) {
 
-    val user = staxUserRepository.staxUser
+    val user = staxUserRepository.getUserAsync()
 
     suspend fun saveUser(user: StaxUser) = staxUserRepository.saveUser(user)
 
