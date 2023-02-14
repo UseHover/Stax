@@ -26,10 +26,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.data.local.SimRepo
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
+import com.hover.stax.storage.sim.SimInfoRepository
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -42,7 +42,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BountyViewModel(
-    private val simRepo: SimRepo,
+    private val simRepository: SimInfoRepository,
     private val bountiesUseCase: GetChannelBountiesUseCase,
     val application: Application
 ) : ViewModel() {
@@ -87,7 +87,7 @@ class BountyViewModel(
     }
 
     private fun fetchSims() = viewModelScope.launch(Dispatchers.IO) {
-        _sims.update { simRepo.getPresentSims() }
+        _sims.update { simRepository.getPresentSims() }
     }
 
     private fun loadCountryList() = viewModelScope.launch {
