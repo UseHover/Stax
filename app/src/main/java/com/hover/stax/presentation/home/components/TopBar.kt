@@ -16,62 +16,47 @@
 package com.hover.stax.presentation.home.components
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.hover.stax.R
+import com.hover.stax.presentation.add_accounts.StaxTopBarDefaults
+import com.hover.stax.ui.theme.OffWhite
 import com.hover.stax.utils.network.NetworkMonitor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(@StringRes title: Int = R.string.app_name, navTo: (dest: Int) -> Unit) {
+fun TopBar(@StringRes title: Int = 0, navTo: (dest: Int) -> Unit) {
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = true)
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(all = dimensionResource(id = R.dimen.margin_13)),
-    ) {
-        HorizontalImageTextView(
-            drawable = R.drawable.stax_logo,
-            stringRes = title,
-            modifier = Modifier.weight(1f),
-            MaterialTheme.typography.button
-        )
-
-        if (!hasNetwork) {
-            HorizontalImageTextView(
-                drawable = R.drawable.ic_internet_off,
-                stringRes = R.string.working_offline,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(horizontal = 16.dp),
-                MaterialTheme.typography.button
+    CenterAlignedTopAppBar(
+        title = {
+            Row(modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
+                Text(stringResource(id = title))
+                if (!hasNetwork) {
+                    HorizontalImageTextView(
+                        drawable = R.drawable.ic_internet_off,
+                        stringRes = R.string.working_offline,
+                        MaterialTheme.typography.button
+                    )
+                }
+            }
+        },
+        actions = { IconButton(onClick = { navTo(R.id.action_global_NavigationSettings) }) {
+            Icon(painterResource(id = R.drawable.ic_settings),
+                stringResource(R.string.nav_settings), tint = OffWhite
             )
-        }
-
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_10)))
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_settings),
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .clickable(onClick = { navTo(R.id.action_global_NavigationSettings) })
-                .size(30.dp),
-        )
-    }
+        } },
+        colors = StaxTopBarDefaults()
+    )
 }

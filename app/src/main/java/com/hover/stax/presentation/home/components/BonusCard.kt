@@ -61,14 +61,14 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
                 Text(
                     text = stringResource(id = R.string.tc_apply),
                     textDecoration = TextDecoration.Underline,
-                    color = colorResource(id = R.color.brightBlue),
+                    color = colorResource(id = R.color.offWhite),
                     style = MaterialTheme.typography.body2,
                     modifier = Modifier.clickable(onClick = onClickedTC)
                 )
                 Text(
                     text = stringResource(id = R.string.top_up),
                     color = colorResource(id = R.color.brightBlue),
-                    style = MaterialTheme.typography.h4,
+                    style = MaterialTheme.typography.h1,
                     modifier = Modifier
                         .padding(top = size13)
                         .clickable(onClick = onClickedTopUp)
@@ -88,6 +88,6 @@ fun BonusCard(message: String, onClickedTC: () -> Unit, onClickedTopUp: () -> Un
 
 @Preview
 @Composable
-fun HomeScreenPreview() {
+fun BonusCardPreview() {
     BonusCard(message = "Get some bonus when you do some thing", {}, {})
 }

@@ -24,10 +24,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.hover.stax.ui.theme.Background
 import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.ColorPrimaryDark
 
-// TODO change the button text to "Continue without signing in" or "Explore Stax"
+
 @Composable
 fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit)) {
     Button(
@@ -36,7 +36,7 @@ fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> 
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = BrightBlue,
-            contentColor = ColorPrimaryDark
+            contentColor = Background
         )
     ) {
         Text(

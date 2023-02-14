@@ -69,8 +69,8 @@ fun HomeScreen(
     val context = LocalContext.current
 
     StaxTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-            Scaffold(topBar = { TopBar(title = R.string.nav_home, navTo) }) {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            Scaffold(topBar = { TopBar(0, navTo) }) {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     if (accounts.isEmpty()) {
                         EmptyBalance {

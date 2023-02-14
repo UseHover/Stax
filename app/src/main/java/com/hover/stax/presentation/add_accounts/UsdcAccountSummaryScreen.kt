@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.UsdcViewModel
-import com.hover.stax.presentation.add_accounts.StaxTopBarDefaults
-import com.hover.stax.presentation.add_accounts.TopBar
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.OffWhite
 import org.koin.androidx.compose.getViewModel

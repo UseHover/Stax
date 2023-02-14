@@ -37,9 +37,9 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.presentation.add_accounts.components.SampleChannelProvider
 import com.hover.stax.presentation.add_accounts.components.TabItem
 import com.hover.stax.presentation.components.*
+import com.hover.stax.ui.theme.Background
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.mainBackground
 import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -92,7 +92,7 @@ fun TopBar(showingHelp: MutableState<Boolean>) {
 @Composable
 fun StaxTopBarDefaults() = TopAppBarDefaults.centerAlignedTopAppBarColors(
 	titleContentColor = OffWhite,
-	containerColor = mainBackground)
+	containerColor = Background)
 
 @Composable
 fun showHelp(showingHelp: MutableState<Boolean>) {

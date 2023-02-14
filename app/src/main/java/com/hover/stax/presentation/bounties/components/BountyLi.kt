@@ -101,7 +101,7 @@ private fun getColor(bounty: Bounty): Int {
         bounty.isLastTransactionFailed() -> R.color.stax_bounty_red_bg
         !bounty.action.bounty_is_open -> R.color.lighter_grey
         bounty.transactionCount > 0 -> R.color.pending_brown
-        else -> R.color.colorSurface
+        else -> R.color.colorBackground
     }
 }
 
@@ -158,7 +158,7 @@ fun BountyCardPreview() {
 
     Column(
         modifier = Modifier
-            .background(color = colorResource(id = R.color.colorSurface))
+            .background(color = colorResource(id = R.color.colorBackground))
             .padding(vertical = margin8)
     ) {
         Row(

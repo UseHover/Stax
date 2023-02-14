@@ -35,7 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
-import com.hover.stax.ui.theme.ColorSurface
+import com.hover.stax.presentation.components.SecondaryButton
 import com.hover.stax.ui.theme.DarkGray
 import com.hover.stax.ui.theme.OffWhite
 
@@ -60,28 +60,11 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedButton(
+        SecondaryButton(
+            stringResource(id = R.string.add_account),
             onClick = onClickedAddAccount,
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 0.dp)
-                .then(modifier),
-            shape = MaterialTheme.shapes.medium,
-            border = BorderStroke(width = 0.5.dp, color = DarkGray),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = ColorSurface,
-                contentColor = OffWhite
-            )
-        ) {
-            Text(
-                text = stringResource(id = R.string.add_account),
-                style = MaterialTheme.typography.button,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 5.dp, bottom = 5.dp),
-                textAlign = TextAlign.Center
-            )
-        }
+            modifier = Modifier.fillMaxWidth().then(modifier)
+        )
     }
 }
 

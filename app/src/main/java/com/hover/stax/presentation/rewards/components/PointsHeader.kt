@@ -40,8 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hover.stax.R
 import com.hover.stax.ui.theme.BrightBlue
+import com.hover.stax.ui.theme.OffWhite
 import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.ui.theme.TextColorDark
 
 @Composable
 fun PointsHeader(points: Int, onClickRedeem: () -> Unit) {
@@ -71,7 +71,7 @@ fun PointsHeader(points: Int, onClickRedeem: () -> Unit) {
             shape = MaterialTheme.shapes.medium,
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = BrightBlue,
-                contentColor = TextColorDark
+                contentColor = OffWhite
             )
         ) {
             Text(

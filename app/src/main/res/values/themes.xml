@@ -26,7 +26,7 @@
         <item name="colorSecondaryVariant">@color/brightBlue</item>
         <item name="colorOnSecondary">@color/cardViewColor</item>
 
-        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorSurface">@color/colorBackground</item>
         <item name="colorOnSurface">@color/offWhite</item>
         <item name="colorOnBackground">@color/darkGrey</item>
         <item name="colorError">@color/stax_state_red</item>

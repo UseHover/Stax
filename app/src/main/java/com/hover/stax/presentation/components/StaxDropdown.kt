@@ -8,7 +8,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
-import com.hover.stax.ui.theme.mainBackground
+import com.hover.stax.ui.theme.Background
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -61,7 +61,7 @@ fun staxDropdownDefaults() = ExposedDropdownMenuDefaults.outlinedTextFieldColors
 	textColor = colorResource(id = R.color.offWhite),
 	focusedLabelColor = colorResource(id = R.color.offWhite),
 	focusedTrailingIconColor = colorResource(id = R.color.offWhite),
-	backgroundColor = mainBackground,
+	backgroundColor = Background,
 	cursorColor = colorResource(id = R.color.offWhite),
 	focusedBorderColor = colorResource(id = R.color.offWhite),
 	unfocusedBorderColor = colorResource(id = R.color.buttonColor),)

@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hover.stax.R
 import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.StaxCardBlue
+import com.hover.stax.ui.theme.SecondaryBlue
 import com.hover.stax.ui.theme.StaxTheme
 
 @Composable
@@ -54,7 +54,7 @@ fun GuideCard(message: String, buttonString: String, onClick: () -> Unit) {
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .shadow(elevation = 0.dp)
-            .background(shape = RoundedCornerShape(5.dp), color = StaxCardBlue)
+            .background(shape = RoundedCornerShape(5.dp), color = SecondaryBlue)
     ) {
         Column(
             modifier = Modifier
@@ -96,7 +96,7 @@ fun GuideCard(message: String, buttonString: String, onClick: () -> Unit) {
                 shape = MaterialTheme.shapes.medium,
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = OffWhite,
-                    contentColor = StaxCardBlue
+                    contentColor = SecondaryBlue
                 )
             ) {
                 Text(

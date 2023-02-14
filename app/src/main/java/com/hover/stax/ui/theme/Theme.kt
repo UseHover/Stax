@@ -22,43 +22,45 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
-    primary = ColorPrimary,
+    primary = BrightBlue,
     onPrimary = OffWhite,
-    primaryVariant = ColorPrimaryDark,
-    secondary = BrightBlue,
-    onSecondary = CardViewColor,
-    surface = CardViewColor,
+    primaryVariant = SecondaryBlue,
+    secondary = OffWhite,
+    onSecondary = SecondaryBlue,
+    surface = Background,
     onSurface = OffWhite,
-    background = mainBackground,
+    background = Background,
     onBackground = OffWhite,
     error = StaxStateRed,
     onError = OffWhite
 )
 
 private val LightColorPalette = lightColors(
-    primary = ColorPrimary,
+    primary = BrightBlue,
     onPrimary = OffWhite,
-    primaryVariant = ColorPrimaryDark,
+    primaryVariant = SecondaryBlue,
     secondary = BrightBlue,
-    onSecondary = CardViewColor,
-    surface = CardViewColor,
-    onSurface = OffWhite,
-    background = mainBackground,
-    onBackground = OffWhite,
+    onSecondary = OffWhite,
+    surface = OffWhite,
+    onSurface = SecondaryBlue,
+    background = OffWhite,
+    onBackground = SecondaryBlue,
     error = StaxStateRed,
     onError = OffWhite
 )
 
+
+
 @Composable
 fun StaxTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
+//    val colors = if (darkTheme) {
+//        DarkColorPalette
+//    } else {
+//        LightColorPalette
+//    }
 
     MaterialTheme(
-        colors = colors,
+        colors = DarkColorPalette,
         typography = Typography,
         shapes = Shapes,
         content = content

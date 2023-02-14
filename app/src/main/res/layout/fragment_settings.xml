@@ -52,11 +52,11 @@
 
         <include
             android:id="@+id/appInfoCard"
-            layout="@layout/settings_app_details_card" />
+            layout="@layout/settings_card_app_details" />
 
         <include
                 android:id="@+id/accountCard"
-                layout="@layout/settings_account_card" />
+                layout="@layout/settings_card_account" />
 
         <TextView
                 android:id="@+id/disclaimer"

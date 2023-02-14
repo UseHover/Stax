@@ -82,7 +82,6 @@ fun FinancialTipCard(financialTip: FinancialTip, navController: NavController) {
                 HorizontalImageTextView(
                     drawable = R.drawable.ic_tip_of_day,
                     stringRes = R.string.tip_of_the_day,
-                    Modifier.weight(1f),
                     MaterialTheme.typography.button
                 )
 

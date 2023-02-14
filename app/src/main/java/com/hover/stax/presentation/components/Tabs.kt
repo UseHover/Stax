@@ -12,8 +12,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.hover.stax.presentation.add_accounts.components.TabItem
+import com.hover.stax.ui.theme.Background
 import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.mainBackground
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
@@ -22,7 +22,7 @@ fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
 	val scope = rememberCoroutineScope()
 	TabRow(
 		selectedTabIndex = pagerState.currentPage,
-		backgroundColor = mainBackground,
+		backgroundColor = Background,
 		contentColor = OffWhite,
 		indicator = { tabPositions ->
 			TabRowDefaults.Indicator(

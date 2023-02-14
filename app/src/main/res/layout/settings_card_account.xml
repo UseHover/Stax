@@ -7,9 +7,7 @@
         app:title="@string/account_cardhead">
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorSurface"
-        >
+        android:layout_height="wrap_content">
 
     <LinearLayout
             android:layout_width="match_parent"

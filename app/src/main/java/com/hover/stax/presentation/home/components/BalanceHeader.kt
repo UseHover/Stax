@@ -41,16 +41,16 @@ fun BalanceHeader(showAddAccount: Boolean, onClickedAddAccount: () -> Unit) {
         Text(
             text = stringResource(id = R.string.your_accounts),
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.h4
+            style = MaterialTheme.typography.h6
         )
 
         if (showAddAccount) {
-            Box() {
+            Box(modifier = Modifier.clickable(onClick = onClickedAddAccount)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.add_an_account),
                         style = MaterialTheme.typography.body2,
-                        modifier = Modifier.clickable(onClick = onClickedAddAccount).padding(end = 8.dp)
+                        modifier = Modifier.padding(end = 8.dp)
                     )
 
                     Icon(
@@ -58,7 +58,6 @@ fun BalanceHeader(showAddAccount: Boolean, onClickedAddAccount: () -> Unit) {
                         contentDescription = null,
                         modifier = Modifier
                             .clip(CircleShape)
-                            .clickable(onClick = onClickedAddAccount)
                             .background(color = colorResource(id = R.color.brightBlue))
                     )
                 }

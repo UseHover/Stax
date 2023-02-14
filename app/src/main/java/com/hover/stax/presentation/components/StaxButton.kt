@@ -38,9 +38,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hover.stax.R
+import com.hover.stax.ui.theme.Background
 import com.hover.stax.ui.theme.Border
 import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.mainBackground
+import com.hover.stax.ui.theme.SecondaryBackground
 
 const val SECONDARY = 0
 const val PRIMARY = 1
@@ -81,10 +82,10 @@ private fun StaxButton(text: String, icon: Int?, buttonType: Int, modifier: Modi
 @Composable
 fun StaxButtonColors(buttonType: Int) = ButtonDefaults.buttonColors(
     backgroundColor = backgroundColor(buttonType),
-    disabledBackgroundColor = mainBackground)
+    disabledBackgroundColor = SecondaryBackground)
 
 private fun backgroundColor(type: Int): Color {
-    return if (type == PRIMARY) { BrightBlue } else { mainBackground }
+    return if (type == PRIMARY) { BrightBlue } else { Background }
 }
 
 @Composable

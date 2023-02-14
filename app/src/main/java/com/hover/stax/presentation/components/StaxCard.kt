@@ -24,8 +24,8 @@ import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.hover.stax.ui.theme.Background
 import com.hover.stax.ui.theme.Border
-import com.hover.stax.ui.theme.mainBackground
 
 @Composable
 fun StaxCard(content: @Composable ColumnScope.() -> Unit) {
@@ -35,7 +35,7 @@ fun StaxCard(content: @Composable ColumnScope.() -> Unit) {
             .fillMaxWidth()
             .padding(top = 6.dp, end = 6.dp, bottom = 13.dp, start = 6.dp),
         elevation = 3.dp,
-        backgroundColor = mainBackground,
+        backgroundColor = Background,
         border = BorderStroke(1.dp, Border)
     ) {
         Column(
