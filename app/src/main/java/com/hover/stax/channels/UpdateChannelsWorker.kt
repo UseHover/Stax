@@ -17,13 +17,13 @@ package com.hover.stax.channels
 
 import android.content.Context
 import androidx.work.Constraints
+import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.hover.stax.R
-import com.hover.stax.database.AppDatabase
+import com.hover.stax.storage.channel.repository.ChannelRepository
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
@@ -34,17 +34,20 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 
-class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
+class UpdateChannelsWorker(
+    context: Context,
+    params: WorkerParameters,
+    private val channelRepository: ChannelRepository
+) : CoroutineWorker(context, params) {
 
     private val client = OkHttpClient()
-    private val channelDao = AppDatabase.getInstance(context).channelDao()
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         return try {
             val channelsJson = downloadChannels(url)
             if (channelsJson != null) {
                 val data: JSONArray = channelsJson.getJSONArray("data")
-                Channel.load(data, channelDao, applicationContext)
+                ChannelUtil.load(data, channelRepository, applicationContext)
                 Timber.v("Successfully Updated channels")
                 Result.success()
             } else {
@@ -60,7 +63,9 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
         }
     }
 
-    private val url get() = applicationContext.getString(R.string.maathai_api_url).plus(applicationContext.getString(R.string.channels_endpoint))
+    private val url
+        get() = applicationContext.getString(R.string.maathai_api_url)
+            .plus(applicationContext.getString(R.string.channels_endpoint))
 
     private fun downloadChannels(url: String): JSONObject? {
         val request: Request = Request.Builder().url(url).build()

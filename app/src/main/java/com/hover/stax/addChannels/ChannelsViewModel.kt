@@ -27,7 +27,6 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
@@ -44,6 +43,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.storage.channel.entity.Channel
 import com.hover.stax.storage.channel.repository.ChannelRepository
+import com.hover.stax.storage.sim.SimInfoRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -52,9 +52,9 @@ import org.json.JSONObject
 
 class ChannelsViewModel(
     application: Application,
-    val channelRepository: ChannelRepository,
-    val simRepo: SimRepo,
-    val accountRepo: AccountRepo,
+    private val channelRepository: ChannelRepository,
+    private val simRepository: SimInfoRepository,
+    private val accountRepo: AccountRepo,
     val actionRepo: ActionRepo
 ) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
@@ -100,7 +100,7 @@ class ChannelsViewModel(
     }
 
     private fun loadSims() {
-        viewModelScope.launch(Dispatchers.IO) { sims.postValue(simRepo.getPresentSims()) }
+        viewModelScope.launch(Dispatchers.IO) { sims.postValue(simRepository.getPresentSims()) }
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(getApplication())
@@ -114,7 +114,7 @@ class ChannelsViewModel(
         simReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 viewModelScope.launch {
-                    sims.postValue(simRepo.getPresentSims())
+                    sims.postValue(simRepository.getPresentSims())
                 }
             }
         }

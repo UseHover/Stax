@@ -26,7 +26,6 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.contacts.ContactRepo
-import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.parser.ParserRepo
@@ -128,7 +127,6 @@ val dataModule = module(createdAtStart = true) {
     singleOf(::PaybillRepo)
     singleOf(::MerchantRepo)
     singleOf(::ParserRepo)
-    singleOf(::SimRepo)
 
     singleOf(::StaxApi)
 }
