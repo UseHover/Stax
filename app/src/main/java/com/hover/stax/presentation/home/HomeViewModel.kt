@@ -15,82 +15,42 @@
  */
 package com.hover.stax.presentation.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
+import com.hover.stax.R
 import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.domain.model.Resource
-import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
+import com.hover.stax.domain.repository.FinancialTipsRepository
+import com.hover.stax.presentation.bounties.BountiesState
+import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
+import com.hover.stax.utils.AnalyticsUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class HomeViewModel(
-    private val accountsRepo: AccountRepository,
-    private val actionRepo: ActionRepo,
-    private val tipsUseCase: TipsUseCase
-) : ViewModel() {
+class HomeViewModel(application: Application,
+    actionRepo: ActionRepo,
+    tipsRepo: FinancialTipsRepository
+) : FinancialTipsViewModel(application, tipsRepo) {
 
-    private val _homeState = MutableLiveData(HomeState())
-    val homeState: LiveData<HomeState> get() = _homeState
+    val bonusActions: LiveData<List<HoverAction>> = actionRepo.getBonusActions()
 
-    init {
-        fetchData()
-    }
+//    private fun bonusListToFlow(countries: Array<String>): Flow<Resource<List<HoverAction>>> = flow {
+//        Timber.e("Looking for bounties from: ${countries.contentToString()}")
+//        try {
+//            emit(Resource.Loading())
+//
+//            emit(Resource.Success(actionRepo.getBonusActions()))
+//        } catch (e: Exception) {
+//            emit(Resource.Error("Error fetching tips"))
+//        }
+//    }
 
-    private fun fetchData() {
-        getAccounts()
-        getFinancialTips()
-        getDismissedFinancialTips()
-    }
-
-    private fun getAccounts() = viewModelScope.launch {
-        accountsRepo.addedAccounts.collect { accounts ->
-            _homeState.value = homeState.value?.copy(accounts = accounts)
-            getBonusList(accounts.map { it.countryAlpha2 }.toTypedArray())
-        }
-    }
-
-    private fun getBonusList(countries: Array<String>) = viewModelScope.launch {
-        bonusListToFlow(countries).collect { bonusList ->
-            if (bonusList is Resource.Success)
-                _homeState.value= homeState.value?.copy(bonuses = bonusList.data ?: emptyList())
-        }
-    }
-
-    private fun bonusListToFlow(countries: Array<String>): Flow<Resource<List<HoverAction>>> = flow {
-        Timber.e("Looking for bounties from: ${countries.contentToString()}")
-        try {
-            emit(Resource.Loading())
-
-            emit(Resource.Success(actionRepo.getBonusActionsByCountry(countries)))
-        } catch (e: Exception) {
-            emit(Resource.Error("Error fetching tips"))
-        }
-    }
-
-    private fun getFinancialTips() = tipsUseCase().onEach { result ->
-        if (result is Resource.Success)
-            _homeState.value= homeState.value?.copy(financialTips = result.data ?: emptyList())
-    }.launchIn(viewModelScope)
-
-    private fun getDismissedFinancialTips() {
-        _homeState.value =  homeState.value?.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
-    }
-
-    fun dismissTip(id: String) {
-        viewModelScope.launch {
-            tipsUseCase.dismissTip(id)
-            _homeState.value = homeState.value?.copy(dismissedTipId = id)
-        }
+    fun logBuyAirtimeFromAd() = viewModelScope.launch(Dispatchers.IO) {
+        AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.clicked_bonus_airtime_banner), getApplication())
     }
 }

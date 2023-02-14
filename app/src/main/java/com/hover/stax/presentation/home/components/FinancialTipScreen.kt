@@ -28,6 +28,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -37,19 +40,38 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.hover.stax.R
 import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.presentation.home.FinancialTipClickInterface
+import com.hover.stax.domain.model.Resource
+import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.presentation.home.HomeViewModel
 
 @Composable
-fun FinancialTipCard(
-    tipInterface: FinancialTipClickInterface?,
-    financialTip: FinancialTip,
-    homeViewModel: HomeViewModel?
-) {
-    val size13 = dimensionResource(id = R.dimen.margin_13)
+fun FinancialTipScreen(viewModel: FinancialTipsViewModel, navController: NavController) {
 
+    val tips by viewModel.tips.observeAsState(initial = emptyList())
+
+    tips?.find {financialTipsAreOn() && it.date == today() && !dismissed(it.id)}?.apply {
+        FinancialTipCard(tips.first(), navController)
+    }
+}
+
+fun financialTipsAreOn(): Boolean {
+    return true
+}
+
+fun today(): Long {
+    return 0
+}
+
+fun dismissed(id: String): Boolean {
+    return true
+}
+
+@Composable
+fun FinancialTipCard(financialTip: FinancialTip, navController: NavController) {
+    val size13 = dimensionResource(id = R.dimen.margin_13)
     Card(elevation = 0.dp, modifier = Modifier.padding(all = size13)) {
         Column {
             Row(
@@ -68,14 +90,13 @@ fun FinancialTipCard(
                     painter = painterResource(id = R.drawable.ic_close_white),
                     contentDescription = null,
                     alignment = Alignment.CenterEnd,
-                    modifier = Modifier.clickable { homeViewModel?.dismissTip(financialTip.id) }
+                    modifier = Modifier.clickable { dismissTip(financialTip.id, navController) }
                 )
             }
 
             Row(
                 modifier = Modifier
                     .padding(horizontal = size13)
-                    .clickable { tipInterface?.onTipClicked(null) }
             ) {
 
                 Column(modifier = Modifier.weight(1f)) {
@@ -102,7 +123,7 @@ fun FinancialTipCard(
                         color = colorResource(id = R.color.brightBlue),
                         modifier = Modifier
                             .padding(bottom = size13)
-                            .clickable { tipInterface?.onTipClicked(financialTip.id) }
+                            .clickable { visitTip(financialTip.id, navController) }
                     )
                 }
 
@@ -117,4 +138,12 @@ fun FinancialTipCard(
             }
         }
     }
+}
+
+fun visitTip(id: String, navController: NavController) {
+
+}
+
+fun dismissTip(id: String, navController: NavController) {
+
 }

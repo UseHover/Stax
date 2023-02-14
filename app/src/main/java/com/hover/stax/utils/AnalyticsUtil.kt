@@ -58,6 +58,7 @@ object AnalyticsUtil {
 
     @JvmStatic
     fun logAnalyticsEvent(event: String, args: JSONObject, context: Context) {
+        Timber.e(event)
         logAmplitude(event, args, context)
         logFirebase(event, args, context)
         logAppsFlyer(event, args, context)

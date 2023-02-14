@@ -64,8 +64,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
         initViews()
 
-        viewModel.getTips()
-
         startObserver()
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }

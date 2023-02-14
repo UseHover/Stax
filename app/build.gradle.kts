@@ -224,7 +224,7 @@ dependencies {
     androidTestImplementation(libs.junit.androidx)
     androidTestImplementation(libs.espresso)
 
-    implementation(libs.stellar)
+    implementation("com.github.stellar:java-stellar-sdk:0.34.2")
 
     // Hover SDK
     "stagingImplementation"(project(":hover.sdk"))

@@ -1,12 +1,9 @@
-package com.hover.stax.presentation.add_accounts
+package com.hover.stax.presentation.add_accounts.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -19,51 +16,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.hover.stax.R
-import com.hover.stax.addChannels.UsdcViewModel
 import com.hover.stax.presentation.components.PRIMARY
-import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.components.SECONDARY
 import com.hover.stax.presentation.components.StaxButtonColors
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.OffWhite
-import org.koin.androidx.compose.getViewModel
-
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun AddUsdcScreen(viewModel: UsdcViewModel = getViewModel(), navController: NavController) {
-
-	val editingPin = remember { mutableStateOf("") }
-
-//	viewModel.createAccount()
-
-	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-		Scaffold(
-			topBar = { TopBar(navController) },
-		) {
-			InputPinScreen(editingPin)
-		}
-	}
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopBar(navController: NavController) {
-	Column(modifier = Modifier.fillMaxWidth()) {
-		CenterAlignedTopAppBar(
-			navigationIcon = {
-				IconButton(content = { Icon(painterResource(R.drawable.ic_arrow_back), contentDescription = "back", tint = OffWhite) },
-					onClick = { navController.popBackStack() })
-			},
-			title = { Text(text = stringResource(R.string.create_pin), fontSize = 18.sp) },
-			colors = StaxTopBarDefaults()
-		)
-	}
-}
 
 @Composable
-fun InputPinScreen(editingPin: MutableState<String>) {
+fun InputPinScreen(pin: MutableState<String>, doneText: Int, doneAction: () -> Unit) {
 	Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
 		Column(modifier = Modifier
 			.fillMaxWidth()
@@ -72,7 +33,7 @@ fun InputPinScreen(editingPin: MutableState<String>) {
 				modifier = Modifier.fillMaxWidth(),
 				horizontalArrangement = Arrangement.Center
 			) {
-				editingPin.value.forEach { _ ->
+				pin.value.forEach { _ ->
 					Box(
 						modifier = Modifier
 							.size(32.dp)
@@ -89,43 +50,45 @@ fun InputPinScreen(editingPin: MutableState<String>) {
 		Row(modifier = Modifier
 			.fillMaxWidth()
 			.weight(1f, false)) {
-			PinPad(editingPin = editingPin)
+			PinPad(pin = pin, doneText, doneAction)
 		}
 	}
 }
 
 @Composable
-fun PinPad(editingPin: MutableState<String>) {
+fun PinPad(pin: MutableState<String>, doneText: Int, doneAction: () -> Unit) {
 	Column() {
 		Row() {
-			PinButton("1", editingPin, Modifier.weight(1F))
-			PinButton("2", editingPin,  Modifier.weight(1F))
-			PinButton("3", editingPin,  Modifier.weight(1F))
+			PinButton("1", pin, Modifier.weight(1F))
+			PinButton("2", pin,  Modifier.weight(1F))
+			PinButton("3", pin,  Modifier.weight(1F))
 		}
 		Row() {
-			PinButton("4", editingPin,  Modifier.weight(1F))
-			PinButton("5", editingPin,  Modifier.weight(1F))
-			PinButton("6", editingPin,  Modifier.weight(1F))
+			PinButton("4", pin,  Modifier.weight(1F))
+			PinButton("5", pin,  Modifier.weight(1F))
+			PinButton("6", pin,  Modifier.weight(1F))
 		}
 		Row() {
-			PinButton("7", editingPin,  Modifier.weight(1F))
-			PinButton("8", editingPin,  Modifier.weight(1F))
-			PinButton("9", editingPin,  Modifier.weight(1F))
+			PinButton("7", pin,  Modifier.weight(1F))
+			PinButton("8", pin,  Modifier.weight(1F))
+			PinButton("9", pin,  Modifier.weight(1F))
 		}
 		Row() {
 			Spacer(modifier = Modifier.weight(1F))
-			PinButton("0", editingPin,  Modifier.weight(1F))
-			BackspaceButton(editingPin, modifier = Modifier.weight(1F))
+			PinButton("0", pin,  Modifier.weight(1F))
+			BackspaceButton(pin, modifier = Modifier.weight(1F))
 		}
-		Row(modifier = Modifier.fillMaxWidth().padding(top = 55.dp), horizontalArrangement = Arrangement.Center) {
+		Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
 			Button(
-				onClick = { },
-				modifier = Modifier.wrapContentWidth().padding(vertical = 6.dp),
+				onClick = { doneAction() },
+				modifier = Modifier
+					.wrapContentWidth()
+					.padding(vertical = 6.dp),
 				contentPadding = PaddingValues(vertical = 13.dp, horizontal = 55.dp),
 				colors = StaxButtonColors(PRIMARY)
 			) {
 				Text(
-					text = "Continue",
+					text = stringResource(id = doneText),
 					style = MaterialTheme.typography.button,
 					textAlign = TextAlign.Center,
 					fontSize = 18.sp
@@ -188,5 +151,5 @@ fun removeLastDigit(editingPin: MutableState<String>) {
 @Composable
 fun InputPinScreenPreview() {
 	val editingPin = remember { mutableStateOf("1234") }
-	InputPinScreen(editingPin = editingPin)
+	InputPinScreen(pin = editingPin, R.string.btn_continue, {})
 }

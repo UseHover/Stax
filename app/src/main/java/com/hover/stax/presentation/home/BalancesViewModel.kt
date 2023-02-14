@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class BalancesViewModel(
     application: Application,
@@ -48,7 +49,7 @@ class BalancesViewModel(
     val balanceAction = _balanceAction.asSharedFlow()
 
     private val _accounts = MutableLiveData<List<Account>>()
-    val accounts: LiveData<List<Account>> = _accounts
+    val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
 
     private val _actionRunError = Channel<String>()
     val actionRunError = _actionRunError.receiveAsFlow()
@@ -82,6 +83,8 @@ class BalancesViewModel(
     }
 
     private fun getAccounts() = viewModelScope.launch {
-        accountRepo.getAccounts().collect { _accounts.postValue(it) }
+        accountRepo.getAccounts().collect {
+            Timber.e("Found some accounts %s", it.size)
+            _accounts.postValue(it) }
     }
 }

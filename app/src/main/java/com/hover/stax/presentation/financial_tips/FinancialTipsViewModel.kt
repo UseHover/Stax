@@ -15,29 +15,44 @@
  */
 package com.hover.stax.presentation.financial_tips
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.hover.stax.domain.model.Resource
-import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.domain.repository.FinancialTipsRepository
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
-class FinancialTipsViewModel(private val tipsUseCase: TipsUseCase) : ViewModel() {
+open class FinancialTipsViewModel(application: Application, private val tipsRepo: FinancialTipsRepository) : AndroidViewModel(application) {
+
+    val tips = MutableLiveData<List<FinancialTip>>()
 
     private val _tipsState = MutableStateFlow(FinancialTipsState())
     val tipsState = _tipsState.asStateFlow()
 
     init {
-        getTips()
+        viewModelScope.launch {
+            tips.postValue(tipsRepo.getTips())
+        }
     }
 
-    fun getTips() = tipsUseCase().onEach { result ->
-        when (result) {
-            is Resource.Loading -> _tipsState.value = FinancialTipsState(isLoading = true)
-            is Resource.Error -> _tipsState.value = FinancialTipsState(error = result.message ?: "An unexpected error occurred", isLoading = false)
-            is Resource.Success -> _tipsState.value = FinancialTipsState(tips = result.data ?: emptyList(), isLoading = false)
-        }
-    }.launchIn(viewModelScope)
+//    private fun loadTips(): Flow<Resource<List<FinancialTip>>> = flow {
+//        try {
+//            emit(Resource.Loading())
+//
+//            val financialTips = tipsRepo.tips
+//            emit(Resource.Success(financialTips))
+//        } catch (e: Exception) {
+//            emit(Resource.Error("Error fetching tips"))
+//        }
+//    }
+//
+//    fun getTips() = loadTips().onEach { result ->
+//        when (result) {
+//            is Resource.Loading -> _tipsState.value = FinancialTipsState(isLoading = true)
+//            is Resource.Error -> _tipsState.value = FinancialTipsState(error = result.message ?: "An unexpected error occurred", isLoading = false)
+//            is Resource.Success -> _tipsState.value = FinancialTipsState(tips = result.data ?: emptyList(), isLoading = false)
+//        }
+//    }.launchIn(viewModelScope)
 }

@@ -18,6 +18,7 @@ package com.hover.stax.utils
 import android.content.Context
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.hover.stax.R
+import java.time.Clock
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -38,10 +39,6 @@ object DateUtils {
 
     fun todayDate(): Date = Calendar.getInstance().time
 
-    fun timeAgo(context: Context, millis: Long): String {
-        return humanFriendlyTime(context, System.currentTimeMillis() - millis)
-    }
-
     @JvmStatic
     fun humanFriendlyDate(timestamp: Long): String {
         if (timestamp == -1L) return ""
@@ -54,54 +51,6 @@ object DateUtils {
 
         if (date[Calendar.YEAR] != now[Calendar.YEAR]) str += " " + date[Calendar.YEAR]
         return str
-    }
-
-    private fun humanFriendlyTime(context: Context, diffMillis: Long): String {
-        val seconds = (abs(diffMillis) / 1000).toDouble()
-        val minutes = seconds / 60
-        val hours = minutes / 60
-        val days = hours / 24
-        val years = days / 365
-        val time: String = when {
-            seconds < 45 -> {
-                context.getString(R.string.timeago_secondes)
-            }
-            seconds < 90 -> {
-                context.getString(R.string.timeago_minute)
-            }
-            minutes < 45 -> {
-                context.getString(R.string.timeago_minutes, Math.round(minutes))
-            }
-            minutes < 90 -> {
-                context.getString(R.string.timeago_hour)
-            }
-            hours < 24 -> {
-                context.getString(R.string.timeago_hours, Math.round(hours))
-            }
-            hours < 42 -> {
-                context.getString(R.string.timeago_day)
-            }
-            days < 30 -> {
-                context.getString(R.string.timeago_days, Math.round(Math.floor(days)))
-            }
-            days < 45 -> {
-                context.getString(R.string.timeago_month)
-            }
-            days < 365 -> {
-                context.getString(R.string.timeago_months, Math.round(Math.floor(days / 30)))
-            }
-            years < 1.5 -> {
-                context.getString(R.string.timeago_year)
-            }
-            else -> {
-                context.getString(R.string.timeago_years, Math.round(Math.floor(years)))
-            }
-        }
-        return if (diffMillis < 0) {
-            context.getString(R.string.timeago_from_now, time)
-        } else {
-            context.getString(R.string.timeago_ago, time)
-        }
     }
 
     @JvmStatic

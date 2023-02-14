@@ -49,7 +49,7 @@ fun ChooseChannelScreen(channelsViewModel: ChannelsViewModel = getViewModel(), n
 	val simList by channelsViewModel.sims.observeAsState(initial = emptyList())
 	val countryChannels by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
 
-	val countries by channelsViewModel.channelCountryList.observeAsState(initial = emptyList())
+	val countries by channelsViewModel._channelCountryList.observeAsState(initial = emptyList())
 	val channels by channelsViewModel.filteredChannels.observeAsState(initial = emptyList())
 	val countryChoice by channelsViewModel.countryChoice.observeAsState(initial = "00")
 
@@ -60,12 +60,17 @@ fun ChooseChannelScreen(channelsViewModel: ChannelsViewModel = getViewModel(), n
 			topBar = { TopBar(showingHelp) },
 		) {
 			FindAccountScreen(channels, countries, countryChoice,
-				{ navController.navigate("addChannel") }, { navController.navigate("addUSDC") },
+				{ onChoice(it, channelsViewModel) }, { navController.navigate("createUSDC") },
 				{ channelsViewModel.countryChoice.postValue(it) },
 				{ channelsViewModel.filterQuery.postValue(it) })
 			showHelp(showingHelp)
 		}
 	}
+}
+
+fun onChoice(channel: Channel, channelsViewModel: ChannelsViewModel) {
+	channelsViewModel.createAccount(channel)
+//	navController.navigate("addChannel")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,7 +110,7 @@ fun showHelp(showingHelp: MutableState<Boolean>) {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun FindAccountScreen(channels: List<Channel>, countries: List<String>, countryChoice: String,
-                      navigateToAdd: (Int) -> Unit, navigateToUSDC: () -> Unit,
+                      navigateToAdd: (Channel) -> Unit, navigateToUSDC: () -> Unit,
                       onSelectCountry: (String) -> Unit, onSearch: (String) -> Unit) {
 
 	var searchValue by remember { mutableStateOf(TextFieldValue("")) }
@@ -137,7 +142,7 @@ fun FindAccountScreen(channels: List<Channel>, countries: List<String>, countryC
 }
 
 @Composable
-fun ChannelList(channels: List<Channel>?, type: String, navigateToAdd: (Int) -> Unit) {
+fun ChannelList(channels: List<Channel>?, type: String, navigateToAdd: (Channel) -> Unit) {
 	if (channels?.filter { it.institutionType == type }.isNullOrEmpty()) {
 		Text(
 			text = stringResource(id = R.string.loading_human),
@@ -160,8 +165,8 @@ fun ChannelList(channels: List<Channel>?, type: String, navigateToAdd: (Int) -> 
 }
 
 @Composable
-fun ChannelItem(channel: Channel, navigateToAdd: (Int) -> Unit) {
-	Row(Modifier.padding(vertical = 8.dp).clickable { navigateToAdd(channel.id) }) {
+fun ChannelItem(channel: Channel, navigateToAdd: (Channel) -> Unit) {
+	Row(Modifier.padding(vertical = 8.dp).clickable { navigateToAdd(channel) }) {
 		AsyncImage(
 			model = ImageRequest.Builder(LocalContext.current).data(channel.logoUrl)
 				.crossfade(true)

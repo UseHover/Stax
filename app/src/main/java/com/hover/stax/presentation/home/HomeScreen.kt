@@ -16,11 +16,11 @@
 package com.hover.stax.presentation.home
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.content.Intent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -29,22 +29,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.hover.sdk.actions.HoverAction
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hover.stax.R
-import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.addChannels.AddAccountActivity
 import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.presentation.home.components.BalanceHeader
-import com.hover.stax.presentation.home.components.BalanceItem
-import com.hover.stax.presentation.home.components.BonusCard
-import com.hover.stax.presentation.home.components.EmptyBalance
-import com.hover.stax.presentation.home.components.FinancialTipCard
-import com.hover.stax.presentation.home.components.GuideCard
-import com.hover.stax.presentation.home.components.PrimaryFeatures
-import com.hover.stax.presentation.home.components.TopBar
+import com.hover.stax.presentation.home.components.*
 import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.utils.AnalyticsUtil
+import org.koin.androidx.compose.getViewModel
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -65,111 +58,38 @@ interface FinancialTipClickInterface {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    channelsViewModel: ChannelsViewModel,
-    homeClickFunctions: HomeClickFunctions,
-    balanceTapListener: BalanceTapListener,
-    tipInterface: FinancialTipClickInterface,
-    homeViewModel: HomeViewModel,
+    homeClickFunctions: HomeClickFunctions?,
+    homeViewModel: HomeViewModel = getViewModel(),
+    balancesViewModel: BalancesViewModel = getViewModel(),
     navTo: (dest: Int) -> Unit,
+    navController: NavHostController = rememberNavController()
 ) {
-    val homeState by homeViewModel.homeState.observeAsState()
-    val simCountryList by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
+    val accounts by balancesViewModel.accounts.observeAsState(initial = emptyList())
+
     val context = LocalContext.current
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-            Scaffold(
-                topBar = { TopBar(title = R.string.nav_home, navTo) },
-                content = {
-                    LazyColumn {
-                        homeState?.bonuses?.let { bonus ->
-                            if (bonus.isNotEmpty()) {
-                                item {
-                                    BonusCard(
-                                        message = bonus.first().bonus_message,
-                                        onClickedTC = homeClickFunctions.onClickedTC,
-                                        onClickedTopUp = {
-                                            clickedOnBonus(
-                                                context,
-                                                channelsViewModel,
-                                                bonus.first()
-                                            )
-                                        }
-                                    )
-                                }
-                            }
+            Scaffold(topBar = { TopBar(title = R.string.nav_home, navTo) }) {
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    if (accounts.isEmpty()) {
+                        EmptyBalance {
+                            context.startActivity(Intent(context, AddAccountActivity::class.java))
                         }
+                    } else { BonusAd(homeViewModel, navController) }
 
-                        if (homeState?.accounts?.isEmpty() == true)
-                            item {
-                                EmptyBalance(onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount)
-                            }
+                    MoveMoneyOptions(homeClickFunctions, accounts)
 
-                        item {
-                            PrimaryFeatures(
-                                onSendMoneyClicked = homeClickFunctions.onSendMoneyClicked,
-                                onBuyAirtimeClicked = homeClickFunctions.onBuyAirtimeClicked,
-                                onBuyGoodsClicked = homeClickFunctions.onBuyGoodsClicked,
-                                onPayBillClicked = homeClickFunctions.onPayBillClicked,
-                                onRequestMoneyClicked = homeClickFunctions.onRequestMoneyClicked,
-                                showKEFeatures(simCountryList)
-                            )
-                        }
-
-                        homeState?.accounts?.let { accounts ->
-                            item {
-                                BalanceHeader(
-                                    onClickedAddAccount = homeClickFunctions.onClickedAddNewAccount,
-                                    accounts.isNotEmpty()
-                                )
-                            }
-                        }
-
-                        homeState?.accounts?.let { accounts ->
-                            items(accounts) { account ->
-                                BalanceItem(
-                                    staxAccount = account,
-                                    context = context,
-                                    balanceTapListener = balanceTapListener
-                                )
-                            }
-                        }
-
-                        homeState?.financialTips?.let { financialTips ->
-                            item {
-                                financialTips.firstOrNull {
-                                    android.text.format.DateUtils.isToday(it.date!!)
-                                }?.let {
-                                    if (homeState?.dismissedTipId != it.id)
-                                        FinancialTipCard(
-                                            tipInterface = tipInterface,
-                                            financialTip = financialTips.first(),
-                                            homeViewModel
-                                        )
-                                }
-                            }
-                        }
+                    BalancesList(accounts = accounts) {
+                        context.startActivity(Intent(context, AddAccountActivity::class.java))
                     }
+
+                    FinancialTipScreen(homeViewModel, navController)
                 }
-            )
+            }
         }
     }
 }
-
-private fun clickedOnBonus(
-    context: Context,
-    channelsViewModel: ChannelsViewModel,
-    bonus: HoverAction
-) {
-    AnalyticsUtil.logAnalyticsEvent(
-        context.getString(R.string.clicked_bonus_airtime_banner),
-        context
-    )
-    channelsViewModel.payWith(bonus.channel_id)
-}
-
-private fun showKEFeatures(countryIsos: List<String>): Boolean =
-    countryIsos.any { it.contentEquals("KE", ignoreCase = true) }
 
 @Preview
 @Composable
@@ -184,47 +104,5 @@ fun HomeScreenPreview() {
         deepLink = null
     )
 
-    StaxTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-            Scaffold(
-                topBar = {
-                    TopBar(title = R.string.nav_home, {})
-                },
-                content = { padding ->
-                    LazyColumn(modifier = Modifier.padding(padding), content = {
-                        item {
-                            GuideCard(
-                                message = stringResource(id = R.string.beginners_guide_airtime),
-                                buttonString = stringResource(id = R.string.check_airtime_balance)
-                            ) {}
-                        }
-
-                        item {
-                            BonusCard(
-                                message = "Buy at least Ksh 50 airtime on Stax to get 3% or more bonus airtime",
-                                onClickedTC = {},
-                                onClickedTopUp = {}
-                            )
-                        }
-                        item {
-                            PrimaryFeatures(
-                                onSendMoneyClicked = { },
-                                onBuyAirtimeClicked = { },
-                                onBuyGoodsClicked = { },
-                                onPayBillClicked = { },
-                                onRequestMoneyClicked = {},
-                                true
-                            )
-                        }
-                        item {
-                            BalanceScreenPreview()
-                        }
-                        item {
-                            FinancialTipCard(tipInterface = null, financialTip = financialTip, null)
-                        }
-                    })
-                }
-            )
-        }
-    }
+    HomeScreen(null, navTo = {})
 }

@@ -50,6 +50,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
 
 class ChannelsViewModel(
     application: Application,
@@ -60,8 +61,8 @@ class ChannelsViewModel(
 ) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
-    val accounts: LiveData<List<USSDAccount>> = accountRepo.getAllLiveAccounts()
-    val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
+    val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
+    private val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
 
     var sims = MutableLiveData<List<SimInfo>>()
     var simCountryList: LiveData<List<String>> = MutableLiveData()
@@ -71,7 +72,7 @@ class ChannelsViewModel(
     private var countryChannels = MediatorLiveData<List<Channel>>()
     val filteredChannels = MediatorLiveData<List<Channel>>()
 
-    private val _channelCountryList = MediatorLiveData<List<String>>()
+    val _channelCountryList = MediatorLiveData<List<String>>()
     val channelCountryList: LiveData<List<String>> = _channelCountryList
 
     private val accountCreatedEvent = MutableSharedFlow<Boolean>()
@@ -185,18 +186,9 @@ class ChannelsViewModel(
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
-    fun payWith(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        val accounts = accountRepo.getAccountsByChannel(channelId)
-
-        if (accounts.isEmpty())
-            createAccount(channelId)
-        else
-            accountCreatedEvent.emit(true)
-    }
-
-    private fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        val channel = repo.getChannel(channelId)
-        channel?.let { createAccounts(listOf(it)) }
+    fun createAccount(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
+//        val channel = repo.getChannel(channelId)
+        createAccounts(listOf(channel))
 
         accountCreatedEvent.emit(true)
     }
@@ -212,6 +204,7 @@ class ChannelsViewModel(
         }
 
         val accountIds = accountRepo.insert(accounts)
+        Timber.e("Created %s accounts", accountIds.size)
 
         promptBalanceCheck(accountIds.first().toInt())
     }

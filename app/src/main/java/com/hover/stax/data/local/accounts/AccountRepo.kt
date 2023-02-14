@@ -28,7 +28,9 @@ class AccountRepo(db: AppDatabase) {
 
     fun getAllAccounts(): List<USSDAccount> = USSDAccountDao.getAllAccounts()
 
-    fun getAllLiveAccounts(): LiveData<List<USSDAccount>> = USSDAccountDao.getLiveAccounts()
+    fun getAllLiveAccounts(): LiveData<List<Account>> = USSDAccountDao.getLiveAccounts()
+
+    fun getUsdcAccounts(): LiveData<List<USDCAccount>> = USSDAccountDao.getUSDCAccounts()
 
     fun getAccountBySim(simSubscriptionId: Int): USSDAccount? =
         USSDAccountDao.getAccountBySim(simSubscriptionId)

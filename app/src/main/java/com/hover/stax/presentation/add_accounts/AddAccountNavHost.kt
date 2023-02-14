@@ -1,5 +1,6 @@
 package com.hover.stax.presentation.add_accounts
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,6 +11,7 @@ import com.hover.stax.addChannels.UsdcViewModel
 import com.hover.stax.ui.theme.StaxTheme
 import org.koin.androidx.compose.getViewModel
 
+@ExperimentalAnimationApi
 @Composable
 fun AddAccountNavHost(
 	navController: NavHostController = rememberNavController(),
@@ -28,9 +30,12 @@ fun AddAccountNavHost(
 			composable("addChannel") {
 				AddChannelScreen(channelsViewModel, navController)
 			}
-			composable("addUSDC") {
-				AddUsdcScreen(usdcViewModel, navController)
+			composable("createUSDC") {
+				CreateUsdcAccountScreen(usdcViewModel, navController)
 			}
+//			composable("UsdcCreated") {
+//				UsdcAccountSummaryScreen(usdcViewModel, navController)
+//			}
 		}
 	}
 }

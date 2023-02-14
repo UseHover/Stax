@@ -21,6 +21,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.storage.user.dao.BaseDao
 import kotlinx.coroutines.flow.Flow
@@ -31,8 +32,11 @@ interface USSDAccountDao : BaseDao<Account> {
     @Query("SELECT * FROM ussd_accounts WHERE institution_type != 'telecom' ORDER BY alias ASC")
     fun getAllAccounts(): List<USSDAccount>
 
-    @Query("SELECT * FROM ussd_accounts WHERE institution_type != 'telecom' ORDER BY alias ASC")
-    fun getLiveAccounts(): LiveData<List<USSDAccount>>
+    @Query("SELECT * FROM accounts ORDER BY alias ASC")
+    fun getLiveAccounts(): LiveData<List<Account>>
+
+    @Query("SELECT * FROM usdc_accounts ORDER BY alias ASC")
+    fun getUSDCAccounts(): LiveData<List<USDCAccount>>
 
     @Query("SELECT * FROM ussd_accounts WHERE sim_subscription_id IN (:sim_subscriptionIds)")
     fun getAccountsBySubscribedSim(sim_subscriptionIds: IntArray): Flow<List<USSDAccount>>

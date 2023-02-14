@@ -163,6 +163,9 @@
     <string name="empty_balance_desc">To make any successful transaction add an account. Securely manage your mobile money or bank accounts in one place with Stax</string>
     <string name="add_account">Link an account</string>
     <string name="create_pin">Create a PIN for your USDC wallet</string>
+    <string name="confirm_pin">Re-enter your PIN to confirm</string>
+    <string name="create_account">Create account</string>
+    <string name="create_account_success">Success! Your USDC wallet has been created.</string>
 
     <string name="check_balance_title">Check balance</string>
     <string name="check_balance_desc">Nice! You added your first account. You can now check your balance on Stax.</string>

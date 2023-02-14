@@ -17,33 +17,26 @@ package com.hover.stax.presentation.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 
 @Composable
-fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
-    val size13 = dimensionResource(id = R.dimen.margin_13)
-
+fun BalanceHeader(showAddAccount: Boolean, onClickedAddAccount: () -> Unit) {
     Row(
-        modifier = Modifier
-            .padding(all = size13)
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(13.dp), Arrangement.SpaceBetween
     ) {
         Text(
             text = stringResource(id = R.string.your_accounts),
@@ -51,25 +44,37 @@ fun BalanceHeader(onClickedAddAccount: () -> Unit, accountExists: Boolean) {
             style = MaterialTheme.typography.h4
         )
 
-        if (accountExists) {
-            Text(
-                text = stringResource(id = R.string.add_an_account),
-                style = MaterialTheme.typography.body2,
-                modifier = Modifier
-                    .clickable(onClick = onClickedAddAccount)
-                    .padding(end = 5.dp)
-            )
+        if (showAddAccount) {
+            Box() {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(id = R.string.add_an_account),
+                        style = MaterialTheme.typography.body2,
+                        modifier = Modifier.clickable(onClick = onClickedAddAccount).padding(end = 8.dp)
+                    )
 
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_add_white_16),
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(onClick = onClickedAddAccount)
-                    .background(color = colorResource(id = R.color.brightBlue))
-            )
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_add_white_16),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable(onClick = onClickedAddAccount)
+                            .background(color = colorResource(id = R.color.brightBlue))
+                    )
+                }
+            }
         }
     }
+}
+
+@Preview
+@Composable
+fun BalanceHeaderPreview() {
+    BalanceHeader(onClickedAddAccount = { }, showAddAccount = true)
+}
+
+@Preview
+@Composable
+fun EmptyBalanceHeaderPreview() {
+    BalanceHeader(onClickedAddAccount = { }, showAddAccount = false)
 }

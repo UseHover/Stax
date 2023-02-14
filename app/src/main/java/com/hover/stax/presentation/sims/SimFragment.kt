@@ -24,18 +24,16 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
-import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
+class SimFragment : AbstractBalanceCheckerFragment() {
 
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
@@ -81,10 +79,4 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
 
     private fun navigateTo(navDirections: NavDirections) =
         (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
-
-    override fun onTapBalanceRefresh(account: USSDAccount?) {
-        balancesViewModel.requestBalance(account)
-    }
-
-    override fun onTapBalanceDetail(accountId: Int) {}
 }

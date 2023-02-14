@@ -32,6 +32,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 import com.hover.stax.ui.theme.ColorSurface
@@ -45,11 +46,7 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
     Column(modifier = Modifier.padding(vertical = size16)) {
         val modifier = Modifier.padding(horizontal = size34)
 
-        Text(
-            text = stringResource(id = R.string.your_accounts),
-            style = MaterialTheme.typography.h4,
-            modifier = Modifier.padding(horizontal = size16)
-        )
+        BalanceHeader(false, {})
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -86,4 +83,10 @@ fun EmptyBalance(onClickedAddAccount: () -> Unit) {
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun EmptyBalancePreview() {
+    EmptyBalance {}
 }

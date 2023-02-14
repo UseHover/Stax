@@ -24,27 +24,23 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.addChannels.AddAccountActivity
 import com.hover.stax.addChannels.AddAccountContract
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
-import com.hover.stax.hover.TransactionContract
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLifecycleFlow
-import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterface, BalanceTapListener {
+class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterface {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -110,21 +106,14 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     private fun setComposeView() {
         binding.root.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         binding.root.setContent {
-            HomeScreen(
-                channelsViewModel,
-                homeClickFunctions = getHomeClickFunctions(),
-                tipInterface = this@HomeFragment,
-                balanceTapListener = this@HomeFragment,
-                homeViewModel = homeViewModel,
-                navTo = { dest -> navigateTo(dest) }
-            )
+            HomeScreen(getHomeClickFunctions(), homeViewModel, navTo = { dest -> navigateTo(dest) })
         }
     }
 
     private fun observeForBonus() {
         collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            if (homeViewModel.homeState.value?.bonuses?.isNotEmpty() == true)
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.homeState.value?.bonuses?.first()?.from_institution_id.toString()))
+            if (homeViewModel.bonusActions.value?.isNotEmpty() == true)
+                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.bonusActions.value?.first()?.from_institution_id.toString()))
         }
     }
 
@@ -134,7 +123,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         }
 
         collectLifecycleFlow(channelsViewModel.accountCallback) {
-            askToCheckBalance(it)
+//            askToCheckBalance(it)
         }
 
         collectLifecycleFlow(balancesViewModel.actionRunError) {
@@ -153,10 +142,10 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     }
 
     private fun askToCheckBalance(account: USSDAccount) {
-        val dialog = StaxDialog(requireActivity()).setDialogTitle(R.string.check_balance_title)
-            .setDialogMessage(R.string.check_balance_desc).setNegButton(R.string.later, null)
-            .setPosButton(R.string.check_balance_title) { onTapBalanceRefresh(account) }
-        dialog.showIt()
+//        val dialog = StaxDialog(requireActivity()).setDialogTitle(R.string.check_balance_title)
+//            .setDialogMessage(R.string.check_balance_desc).setNegButton(R.string.later, null)
+//            .setPosButton(R.string.check_balance_title) { onTapBalanceRefresh(account) }
+//        dialog.showIt()
     }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
@@ -166,14 +155,6 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     override fun onTipClicked(tipId: String?) {
         val destination = HomeFragmentDirections.actionNavigationHomeToWellnessFragment().apply { setTipId(tipId) }
         NavUtil.navigate(findNavController(), destination)
-    }
-
-    override fun onTapBalanceRefresh(account: USSDAccount?) {
-        balancesViewModel.requestBalance(account)
-    }
-
-    override fun onTapBalanceDetail(accountId: Int) {
-        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
     }
 
     override fun onDestroyView() {
