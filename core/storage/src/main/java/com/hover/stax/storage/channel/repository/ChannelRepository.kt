@@ -8,6 +8,10 @@ import com.hover.stax.storage.channel.entity.Channel
 interface ChannelRepository {
     val publishedNonTelecomChannels: LiveData<List<Channel>>
 
+    val allDataCount: Int
+
+    val publishedTelecomDataCount: Int
+
     suspend fun getTelecom(hni: String): Channel?
 
     fun getChannel(id: Int): Channel?
