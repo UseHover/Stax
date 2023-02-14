@@ -28,7 +28,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.hover.stax.R
-import com.hover.stax.database.AppDatabase
+import com.hover.stax.storage.channel.repository.ChannelRepository
 import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -36,9 +36,11 @@ import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 
-class ImportChannelsWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
-
-    private val channelDao = AppDatabase.getInstance(context).channelDao()
+class ImportChannelsWorker(
+    val context: Context,
+    params: WorkerParameters,
+    private val channelRepository: ChannelRepository
+) : CoroutineWorker(context, params) {
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(NOTIFICATION_ID, createNotification())
@@ -46,13 +48,13 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         Timber.i("Attempting to import channels from json file")
-        if (channelDao.allDataCount == 0 || channelDao.publishedTelecomDataCount == 0) {
+        if (channelRepository.allDataCount == 0 || channelRepository.publishedTelecomDataCount == 0) {
             initNotification()
 
             parseChannelJson()?.let {
                 val channelsJson = JSONObject(it)
                 val data: JSONArray = channelsJson.getJSONArray("data")
-                Channel.load(data, channelDao, applicationContext)
+                ChannelUtil.load(data, channelRepository, applicationContext)
 
                 Timber.i("Channels imported successfully")
                 Result.success()

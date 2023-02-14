@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
+import com.hover.stax.storage.channel.entity.Channel
 import com.hover.stax.databinding.LibraryListItemBinding
 import com.hover.stax.utils.Utils
 

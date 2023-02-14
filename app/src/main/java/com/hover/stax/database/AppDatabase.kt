@@ -20,7 +20,7 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.hover.stax.channels.Channel
+import com.hover.stax.storage.channel.entity.Channel
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountDao
