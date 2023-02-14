@@ -14,6 +14,12 @@ internal class ChannelRepositoryImpl(
     override val publishedNonTelecomChannels: LiveData<List<Channel>> =
         channelDao.publishedNonTelecomChannels
 
+    override val allDataCount: Int
+        get() = channelDao.allDataCount
+
+    override val publishedTelecomDataCount: Int
+        get() = channelDao.publishedTelecomDataCount
+
     override suspend fun getTelecom(hni: String): Channel? = channelDao.getTelecom(hni)
 
     override fun getChannel(id: Int): Channel? = channelDao.getChannel(id)
