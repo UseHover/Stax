@@ -17,10 +17,10 @@ package com.hover.stax.domain.use_case.sims
 
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
-import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.repository.AccountRepository
+import com.hover.stax.storage.sim.SimInfoRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -32,14 +32,14 @@ data class SimWithAccount(
 )
 
 class ListSimsUseCase(
-    private val simRepo: SimRepo,
+    private val simRepository: SimInfoRepository,
     private val accountRepository: AccountRepository,
     private val actionRepository: ActionRepo,
     private val defaultDispatcher: CoroutineDispatcher
 ) {
 
     suspend operator fun invoke(): List<SimWithAccount> = withContext(defaultDispatcher) {
-        val sims = simRepo.getAll()
+        val sims = simRepository.getAll()
         val result: MutableList<SimWithAccount> = mutableListOf()
         for (sim in sims) {
             var account = accountRepository.getAccountBySim(sim.subscriptionId)
