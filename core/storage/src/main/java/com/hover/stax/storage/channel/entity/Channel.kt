@@ -3,7 +3,7 @@ package com.hover.stax.storage.channel.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
+import java.util.Locale
 
 @Entity(tableName = "channels")
 data class Channel(
@@ -44,7 +44,7 @@ data class Channel(
     val institutionType: String = ChannelTypes.BANK.type,
 
     @ColumnInfo(name = "isFavorite")
-    val isFavorite: Boolean = false
+    var isFavorite: Boolean = false
 ) : Comparable<Channel> {
 
     override fun equals(other: Any?): Boolean {
@@ -62,5 +62,4 @@ data class Channel(
     override fun compareTo(other: Channel): Int {
         return this.toString().compareTo(other.toString())
     }
-
 }
