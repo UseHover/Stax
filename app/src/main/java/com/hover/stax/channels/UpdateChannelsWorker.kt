@@ -32,15 +32,17 @@ import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
 class UpdateChannelsWorker(
     context: Context,
-    params: WorkerParameters,
-    private val channelRepository: ChannelRepository
-) : CoroutineWorker(context, params) {
+    params: WorkerParameters
+) : CoroutineWorker(context, params), KoinComponent {
 
     private val client = OkHttpClient()
+    private val channelRepository: ChannelRepository by inject()
 
     override suspend fun doWork(): Result {
         return try {
@@ -77,7 +79,8 @@ class UpdateChannelsWorker(
         const val CHANNELS_WORK_ID = "CHANNELS"
         const val TAG = "UpdateChannelsWorker"
 
-        private val netConstraint = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        private val netConstraint =
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
 
         fun makeToil(): PeriodicWorkRequest {
             return PeriodicWorkRequest.Builder(UpdateChannelsWorker::class.java, 7, TimeUnit.DAYS)

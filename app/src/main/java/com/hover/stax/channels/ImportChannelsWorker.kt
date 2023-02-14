@@ -28,19 +28,23 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.hover.stax.R
+import com.hover.stax.database.AppDatabase
 import com.hover.stax.storage.channel.repository.ChannelRepository
 import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
 class ImportChannelsWorker(
     val context: Context,
-    params: WorkerParameters,
-    private val channelRepository: ChannelRepository
-) : CoroutineWorker(context, params) {
+    params: WorkerParameters
+) : CoroutineWorker(context, params), KoinComponent {
+
+    private val channelRepository: ChannelRepository by inject()
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(NOTIFICATION_ID, createNotification())
