@@ -117,6 +117,7 @@ val dataModule = module(createdAtStart = true) {
     single { AppDatabase.getInstance(get()) }
     single { HoverRoomDatabase.getInstance(get()) }
     single { get<AppDatabase>().userDao() }
+    single { get<AppDatabase>().channelDao() }
 
     singleOf(::TransactionRepo)
     singleOf(::ActionRepo)
