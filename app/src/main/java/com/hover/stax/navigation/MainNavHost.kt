@@ -35,8 +35,6 @@ fun MainNavHost() {
     val accountList by accountsViewModel.accountList.collectAsStateWithLifecycle()
     val actionList by accountsViewModel.institutionActions.observeAsState()
 
-    Timber.d("Wangereka ${actionList?.size}")
-
     ModalBottomSheetLayout(
         bottomSheetNavigator = bottomSheetNavigator,
         sheetShape = bottomSheetConfig.value.sheetShape,
