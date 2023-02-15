@@ -8,5 +8,5 @@ interface SimInfoRepository {
 
     fun getPresentSims(): List<SimInfo>
 
-    val flowAll:Flow<MutableList<SimInfo>>
+    val flowAll: Flow<MutableList<SimInfo>>
 }

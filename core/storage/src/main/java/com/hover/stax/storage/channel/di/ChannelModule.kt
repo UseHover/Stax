@@ -24,4 +24,3 @@ import org.koin.dsl.module
 val channelStorage = module {
     singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
 }
-
