@@ -197,6 +197,7 @@ dependencies {
 
     // compose
     implementation(libs.bundles.compose)
+    implementation(libs.bundles.accompanist)
     debugImplementation(libs.compose.preview)
     androidTestImplementation(libs.compose.ui.test)
 
