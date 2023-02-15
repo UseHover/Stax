@@ -1,0 +1,37 @@
+name: Instrumentation Tests with Gradle Managed Device
+
+on:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  android-ci:
+    runs-on: macos-12
+
+    steps:
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - uses: actions/checkout@v3
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Run Instrumented Tests with Gradle Managed Device
+        run: ./gradlew cleanManagedDevices --unused-only &&
+          ./gradlew pixel4api30ProductionDebugAndroidTest -Dorg.gradle.workers.max=1
+          -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.experimental.testOptions.managedDevices.emulator.showKernelLogging=true --info
+
+      - name: Upload Test Reports
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: |
+            '**/*/build/reports/androidTests/'

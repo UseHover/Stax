@@ -24,11 +24,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -38,7 +35,10 @@ import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
-import com.hover.stax.utils.*
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
+import com.hover.stax.utils.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
@@ -280,9 +280,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun generateSessionBuilder(): HoverSession.Builder {
-        return HoverSession.Builder(actionSelectViewModel.activeAction.value!!,
+        return HoverSession.Builder(
+            actionSelectViewModel.activeAction.value!!,
             payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
-            getExtras(), requireActivity())
+            getExtras(), requireActivity()
+        )
     }
 
     private val transfer = registerForActivityResult(TransactionContract()) { data: Intent? ->

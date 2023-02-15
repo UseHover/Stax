@@ -1,0 +1,51 @@
+@configuration = nil
+@gradleProperties = nil
+
+private_lane :build do
+    executeGradle(@configuration['task_build'])
+end
+
+private_lane :unit_test do
+    executeGradle(@configuration['task_unittest'])
+end
+
+def executeGradle(task)
+    gradle(
+        task: task,
+        properties: @gradleProperties,
+        flags: "-S"
+    )
+end
+
+def readAndroidParams(options)
+    @configuration = YAML.load_file('props.yaml')
+    if(@configuration == nil)
+        UI.user_error!("File ./props.yaml not found")
+    end
+
+    if options[:conf] != nil
+        read_gradle_properties(options[:conf])
+    else
+        UI.user_error!("Missing conf param")
+    end
+
+end
+
+def read_gradle_properties(env)
+    _mavenGradleCredentialsProperties = {
+        "someValue" => @configuration['someValue']
+    }
+
+    puts "Reading gradle properties for env: #{env}"
+    @configuration = @configuration["configurations"].detect{ |item| item["name"] == env }
+    if(@configuration == nil)
+        UI.user_error!("Environment not found for value: #{env}")
+    end
+
+    _gradleProperties = {
+        "applicationId" => @configuration['app_identifier'],
+        "appLabel" => @configuration['app_name']
+    }
+
+    @gradleProperties = _gradleProperties.merge(_mavenGradleCredentialsProperties)
+end

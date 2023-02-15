@@ -139,7 +139,7 @@ class PermissionsFragment : DialogFragment() {
     }
 
     private fun toggleDataInfo(v: View, show: Boolean) {
-        (v.findViewById<View>(R.id.accessibility_more) as TextView).setCompoundDrawablesWithIntrinsicBounds(getArrow(show),  0, 0, 0)
+        (v.findViewById<View>(R.id.accessibility_more) as TextView).setCompoundDrawablesWithIntrinsicBounds(getArrow(show), 0, 0, 0)
         v.findViewById<View>(R.id.accessibility_data_info)?.visibility = if (show) View.VISIBLE else View.GONE
         v.findViewById<View>(R.id.accessibility_more)?.setOnClickListener { toggleDataInfo(v, !show) }
     }

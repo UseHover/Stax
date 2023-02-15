@@ -76,14 +76,13 @@ class HoverSession private constructor(b: Builder) {
     }
 
     private fun getMessage(b: Builder): String {
-        return if (b.message != null) { b.message!! }
-            else {
-                when (b.action.transaction_type) {
-                    HoverAction.BALANCE -> b.activity.getString(R.string.balance_msg, b.action.from_institution_name)
-                    HoverAction.AIRTIME -> b.activity.getString(R.string.airtime_msg)
-                    else -> b.activity.getString(R.string.transfer_msg)
-                }
+        return if (b.message != null) { b.message!! } else {
+            when (b.action.transaction_type) {
+                HoverAction.BALANCE -> b.activity.getString(R.string.balance_msg, b.action.from_institution_name)
+                HoverAction.AIRTIME -> b.activity.getString(R.string.airtime_msg)
+                else -> b.activity.getString(R.string.transfer_msg)
             }
+        }
     }
 
     private fun stopEarly(builder: HoverParameters.Builder, varName: String?) {
@@ -105,10 +104,12 @@ class HoverSession private constructor(b: Builder) {
         var finalScreenTime = 0
         var stopVar: String? = null
 
-        constructor(action: HoverAction,
-                    c: Account,
-                    extras: HashMap<String, String>?,
-                    act: Activity) : this(action, c, act) {
+        constructor(
+            action: HoverAction,
+            c: Account,
+            extras: HashMap<String, String>?,
+            act: Activity
+        ) : this(action, c, act) {
             if (!extras.isNullOrEmpty()) { extras(extras) }
         }
 
