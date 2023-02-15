@@ -29,7 +29,7 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.storage.sim.SimInfoRepository
+import com.hover.stax.storage.sim.repository.SimInfoRepository
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

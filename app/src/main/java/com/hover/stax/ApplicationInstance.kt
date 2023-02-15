@@ -23,13 +23,15 @@ import com.appsflyer.AppsFlyerProperties
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
-import com.hover.stax.storage.di.DatabaseModule
 import com.hover.stax.di.appModule
 import com.hover.stax.di.dataModule
 import com.hover.stax.di.datastoreModule
 import com.hover.stax.di.ktorModule
 import com.hover.stax.di.repositories
 import com.hover.stax.di.useCases
+import com.hover.stax.storage.channel.di.channelStorage
+import com.hover.stax.storage.sim.di.simInfoStorage
+import com.hover.stax.storage.user.di.userStorage
 import com.hover.stax.utils.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
@@ -69,7 +71,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + DatabaseModule.repository)
+            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + userStorage + channelStorage + simInfoStorage)
         }
     }
 

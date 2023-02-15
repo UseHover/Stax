@@ -43,7 +43,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.storage.channel.entity.Channel
 import com.hover.stax.storage.channel.repository.ChannelRepository
-import com.hover.stax.storage.sim.SimInfoRepository
+import com.hover.stax.storage.sim.repository.SimInfoRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow

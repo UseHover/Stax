@@ -5,7 +5,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.storage.channel.dao.ChannelDao
 import com.hover.stax.storage.channel.entity.Channel
-import com.hover.stax.storage.sim.SimInfoRepository
+import com.hover.stax.storage.sim.repository.SimInfoRepository
 
 internal class ChannelRepositoryImpl(
     private val channelDao: ChannelDao,

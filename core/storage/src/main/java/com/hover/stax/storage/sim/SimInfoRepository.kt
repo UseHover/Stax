@@ -1,4 +1,4 @@
-package com.hover.stax.storage.sim
+package com.hover.stax.storage.sim.repository
 
 import com.hover.sdk.sims.SimInfo
 import kotlinx.coroutines.flow.Flow
