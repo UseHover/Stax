@@ -79,6 +79,11 @@ package="com.hover.stax">
 		android:exported="false"
 		android:theme="@style/StaxTheme" />
 
+    <activity
+        android:name=".send.SendMoneyActivity"
+        android:exported="true"
+        android:theme="@style/StaxTheme" />
+
 	<activity
 		android:name="com.hover.stax.addAccounts.AddAccountActivity"
 		android:exported="false"
