@@ -16,6 +16,7 @@
 package com.hover.stax.presentation.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -74,14 +75,14 @@ fun HomeScreen(
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     if (accounts.isEmpty()) {
                         EmptyBalance {
-                            context.startActivity(Intent(context, AddAccountActivity::class.java))
+                            goToAddAccount(context)
                         }
                     } else { BonusAd(homeViewModel, navController) }
 
                     MoveMoneyOptions(homeClickFunctions, accounts)
 
                     BalancesList(accounts = accounts) {
-                        context.startActivity(Intent(context, AddAccountActivity::class.java))
+                        goToAddAccount(context)
                     }
 
                     FinancialTipScreen(homeViewModel, navController)
@@ -89,6 +90,10 @@ fun HomeScreen(
             }
         }
     }
+}
+
+fun goToAddAccount(context: Context)  {
+    context.startActivity(Intent(context, AddAccountActivity::class.java))
 }
 
 @Preview

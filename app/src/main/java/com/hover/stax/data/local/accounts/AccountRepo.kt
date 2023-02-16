@@ -59,11 +59,11 @@ class AccountRepo(db: AppDatabase) {
         }
     }
 
-    fun insert(account: Account) = USSDAccountDao.insert(account)
+    fun insert(account: Account): Long = USSDAccountDao.ins(account)
 
-    fun insert(account: USSDAccount) = USSDAccountDao.insert(account)
+    fun insert(account: USSDAccount) = USSDAccountDao.ins(account)
 
-    fun insert(account: USDCAccount) = USSDAccountDao.insert(account)
+    fun insert(account: USDCAccount) = USSDAccountDao.ins(account)
 
     suspend fun insert(accounts: List<Account>): List<Long> = USSDAccountDao.insertAll(accounts)
 

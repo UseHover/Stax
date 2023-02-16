@@ -44,7 +44,7 @@ import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.presentation.sims.components.LinkSimCard
 import com.hover.stax.presentation.sims.components.SampleSimInfoProvider
-import com.hover.stax.presentation.sims.components.SimItem
+import com.hover.stax.presentation.sims.components.SimScreenCard
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.ui.theme.TextGrey
 import org.koin.androidx.compose.getViewModel
@@ -92,7 +92,7 @@ fun SimScreen(
                         items(sims.sortedWith(comparator)) { sim ->
                             // Don't show removed SIM cards that we don't support, it is confusing
                             if (sim.account.channelId != -1 || sim.sim.slotIdx != -1)
-                                SimItem(sim, refreshBalance, buyAirtime)
+                                SimScreenCard(sim, refreshBalance, buyAirtime)
                         }
                     }
                 }
@@ -133,7 +133,7 @@ private fun SimScreenPreview(
                     }
 
                     itemsIndexed(sims) { index, sim ->
-                        SimItem(
+                        SimScreenCard(
                             simWithAccount = sim,
                             { }, { }
                         )

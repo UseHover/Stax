@@ -42,7 +42,7 @@ fun TopBar(@StringRes title: Int = 0, navTo: (dest: Int) -> Unit) {
     CenterAlignedTopAppBar(
         title = {
             Row(modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
-                Text(stringResource(id = title))
+                if (title != 0) { Text(stringResource(id = title), style = MaterialTheme.typography.h4) }
                 if (!hasNetwork) {
                     HorizontalImageTextView(
                         drawable = R.drawable.ic_internet_off,

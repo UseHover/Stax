@@ -16,44 +16,30 @@
 package com.hover.stax.presentation.sims.components
 
 import android.content.Context
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.CachePolicy
-import coil.request.ImageRequest
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.presentation.components.DisabledButton
 import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.components.SecondaryButton
 import com.hover.stax.presentation.components.StaxCard
+import com.hover.stax.presentation.components.SimTitle
 import com.hover.stax.ui.theme.TextGrey
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 
 @Composable
-internal fun SimItem(
+internal fun SimScreenCard(
     simWithAccount: SimWithAccount,
     refreshBalance: (USSDAccount) -> Unit,
     buyAirtime: (USSDAccount) -> Unit
@@ -95,13 +81,13 @@ internal fun SimItem(
 
         if (simWithAccount.account.channelId == -1) {
             SecondaryButton(
-                context.getString(R.string.email_support), null,
+                stringResource(id = R.string.email_support), null,
                 onClick = { emailStax(simWithAccount, context) }
             )
         } else {
             val bonus = getBonus(simWithAccount.airtimeActions)
             SecondaryButton(
-                getAirtimeButtonLabel(bonus, context), icon = getAirtimeButtonIcon(bonus),
+                getAirtimeButtonLabel(bonus), icon = getAirtimeButtonIcon(bonus),
                 onClick = { buyAirtime(simWithAccount.account) }
             )
         }
@@ -116,10 +102,11 @@ private fun getBonus(actions: List<HoverAction?>): Int {
     return bonus
 }
 
-private fun getAirtimeButtonLabel(bonus: Int, context: Context): String {
-    var label = context.getString(R.string.nav_airtime)
+@Composable
+private fun getAirtimeButtonLabel(bonus: Int): String {
+    var label = stringResource(id = R.string.nav_airtime)
     if (bonus > 0) {
-        label = context.getString(R.string.buy_airitme_bonus, Utils.formatPercent(bonus))
+        label = stringResource(R.string.buy_airitme_bonus, Utils.formatPercent(bonus))
     }
     return label
 }
@@ -139,61 +126,29 @@ private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
         simWithAccount.sim.countryIso ?: "Null"
     )
 
-    Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody)
+    Utils.openEmail(context.getString(R.string.sim_card_support_request_emailSubject), context, emailBody)
 }
 
 @Composable
-private fun SimItemTopRow(
+fun SimItemTopRow(
     simWithAccount: SimWithAccount,
-    refreshBalance: (USSDAccount) -> Unit,
+    refreshBalance: (USSDAccount) -> Unit
 ) {
-    Row(
-        modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),
-        verticalAlignment = Alignment.CenterVertically
-
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).data(simWithAccount.account.logoUrl).crossfade(true)
-                .diskCachePolicy(CachePolicy.ENABLED).build(),
-            contentDescription = simWithAccount.account.userAlias + " logo",
-            placeholder = painterResource(id = R.drawable.img_placeholder),
-            error = painterResource(id = R.drawable.img_placeholder),
-            modifier = Modifier
-                .size(dimensionResource(id = R.dimen.margin_34))
-                .clip(CircleShape)
-                .align(Alignment.CenterVertically),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 13.dp)
-                .weight(1f)
-        ) {
-            Text(text = simWithAccount.account.userAlias, style = MaterialTheme.typography.body1)
-            Text(
-                text = getSimSlot(simWithAccount.sim, LocalContext.current),
-                color = TextGrey,
-                style = MaterialTheme.typography.body2
-            )
-        }
-
-        if (simWithAccount.balanceAction != null) {
-            PrimaryButton(
-                stringResource(id = R.string.check_balance_capitalized), null,
-                onClick = { refreshBalance(simWithAccount.account) }
-            )
-        } else {
-            DisabledButton(stringResource(id = R.string.unsupported), null) { }
-        }
-    }
+    SimTitle(simWithAccount, content = {
+        SimAction(simWithAccount, refreshBalance)
+    })
 }
 
-private fun getSimSlot(simInfo: SimInfo, context: Context): String {
-    return if (simInfo.slotIdx >= 0)
-        context.getString(R.string.sim_index, simInfo.slotIdx + 1)
-    else
-        context.getString(R.string.not_present)
+@Composable
+fun SimAction(simWithAccount: SimWithAccount, refreshBalance: (USSDAccount) -> Unit) {
+    if (simWithAccount.balanceAction != null) {
+        PrimaryButton(
+            stringResource(id = R.string.check_balance_capitalized), null,
+            onClick = { refreshBalance(simWithAccount.account) }
+        )
+    } else {
+        DisabledButton(stringResource(id = R.string.unsupported), null) { }
+    }
 }
 
 // @Composable

@@ -27,7 +27,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.AddAccountActivity
 import com.hover.stax.addChannels.AddAccountContract
-import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.addChannels.AddAccountViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.home.MainActivity
@@ -45,7 +45,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
+    private val addAccountViewModel: AddAccountViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
 
@@ -111,10 +111,8 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     }
 
     private fun observeForBonus() {
-        collectLifecycleFlow(channelsViewModel.accountEventFlow) {
-            if (homeViewModel.bonusActions.value?.isNotEmpty() == true)
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.bonusActions.value?.first()?.from_institution_id.toString()))
-        }
+        if (homeViewModel.bonusActions.value?.isNotEmpty() == true)
+            navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.bonusActions.value?.first()?.from_institution_id.toString()))
     }
 
     private fun observeForBalances() {
@@ -122,9 +120,9 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
             attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
         }
 
-        collectLifecycleFlow(channelsViewModel.accountCallback) {
+//        collectLifecycleFlow(channelsViewModel.accountCallback) {
 //            askToCheckBalance(it)
-        }
+//        }
 
         collectLifecycleFlow(balancesViewModel.actionRunError) {
             UIHelper.flashAndReportError(requireActivity(), it)
@@ -141,12 +139,12 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
     }
 
-    private fun askToCheckBalance(account: USSDAccount) {
+//    private fun askToCheckBalance(account: USSDAccount) {
 //        val dialog = StaxDialog(requireActivity()).setDialogTitle(R.string.check_balance_title)
 //            .setDialogMessage(R.string.check_balance_desc).setNegButton(R.string.later, null)
 //            .setPosButton(R.string.check_balance_title) { onTapBalanceRefresh(account) }
 //        dialog.showIt()
-    }
+//    }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 

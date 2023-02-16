@@ -23,12 +23,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.compose.runtime.getValue
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.addChannels.AddAccountViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
@@ -42,7 +41,7 @@ import timber.log.Timber
 
 class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChannelsAdapter.FavoriteClickInterface {
 
-    private val viewModel: ChannelsViewModel by viewModel()
+    private val viewModel: AddAccountViewModel by viewModel()
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 

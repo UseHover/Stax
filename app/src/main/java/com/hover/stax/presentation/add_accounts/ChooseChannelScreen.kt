@@ -31,7 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.google.accompanist.pager.*
-import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.addChannels.AddAccountViewModel
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.presentation.add_accounts.components.SampleChannelProvider
@@ -44,14 +44,14 @@ import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ChooseChannelScreen(channelsViewModel: ChannelsViewModel = getViewModel(), navController: NavController) {
+fun ChooseChannelScreen(addAccountViewModel: AddAccountViewModel = getViewModel(), navController: NavController) {
 
-	val simList by channelsViewModel.sims.observeAsState(initial = emptyList())
-	val countryChannels by channelsViewModel.simCountryList.observeAsState(initial = emptyList())
+	val simList by addAccountViewModel.sims.observeAsState(initial = emptyList())
+	val countryChannels by addAccountViewModel.simCountryList.observeAsState(initial = emptyList())
 
-	val countries by channelsViewModel._channelCountryList.observeAsState(initial = emptyList())
-	val channels by channelsViewModel.filteredChannels.observeAsState(initial = emptyList())
-	val countryChoice by channelsViewModel.countryChoice.observeAsState(initial = "00")
+	val countries by addAccountViewModel._channelCountryList.observeAsState(initial = emptyList())
+	val channels by addAccountViewModel.filteredChannels.observeAsState(initial = emptyList())
+	val countryChoice by addAccountViewModel.countryChoice.observeAsState(initial = "00")
 
 	val showingHelp = remember { mutableStateOf(false) }
 
@@ -60,17 +60,18 @@ fun ChooseChannelScreen(channelsViewModel: ChannelsViewModel = getViewModel(), n
 			topBar = { TopBar(showingHelp) },
 		) {
 			FindAccountScreen(channels, countries, countryChoice,
-				{ onChoice(it, channelsViewModel) }, { navController.navigate("createUSDC") },
-				{ channelsViewModel.countryChoice.postValue(it) },
-				{ channelsViewModel.filterQuery.postValue(it) })
+				navigateToAdd = { onChoice(it, addAccountViewModel, navController) },
+				navigateToUSDC = { navController.navigate("createUSDC") },
+				onSelectCountry = { addAccountViewModel.countryChoice.postValue(it) },
+				onSearch = { addAccountViewModel.filterQuery.postValue(it) })
 			showHelp(showingHelp)
 		}
 	}
 }
 
-fun onChoice(channel: Channel, channelsViewModel: ChannelsViewModel) {
-	channelsViewModel.createAccount(channel)
-//	navController.navigate("addChannel")
+fun onChoice(channel: Channel, addAccountViewModel: AddAccountViewModel, navController: NavController) {
+	addAccountViewModel.chooseChannel(channel)
+	navController.navigate("addChannel/${channel.id}")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +79,7 @@ fun onChoice(channel: Channel, channelsViewModel: ChannelsViewModel) {
 fun TopBar(showingHelp: MutableState<Boolean>) {
 	Column(modifier = Modifier.fillMaxWidth()) {
 		CenterAlignedTopAppBar(
-			title = { Text(text = stringResource(R.string.add_account), fontSize = 18.sp) },
+			title = { Text(text = stringResource(R.string.add_account), style = MaterialTheme.typography.h1) },
 			colors = StaxTopBarDefaults(),
 			actions = { IconButton(onClick = { showingHelp.value = true }) {
 				Icon(painterResource(id = R.drawable.ic_question),
@@ -166,7 +167,7 @@ fun ChannelList(channels: List<Channel>?, type: String, navigateToAdd: (Channel)
 
 @Composable
 fun ChannelItem(channel: Channel, navigateToAdd: (Channel) -> Unit) {
-	Row(Modifier.padding(vertical = 8.dp).clickable { navigateToAdd(channel) }) {
+	Row(Modifier.fillMaxWidth().clickable { navigateToAdd(channel) }.padding(vertical = 8.dp)) {
 		AsyncImage(
 			model = ImageRequest.Builder(LocalContext.current).data(channel.logoUrl)
 				.crossfade(true)
@@ -192,18 +193,11 @@ fun ChannelItem(channel: Channel, navigateToAdd: (Channel) -> Unit) {
 
 @Composable
 fun CryptoScreen(navigateToUSDC: () -> Unit) {
-	Row(modifier = Modifier.fillMaxWidth().padding(top = 5.dp)
-		.clickable { navigateToUSDC() }) {
-		Icon(painterResource(R.drawable.ic_crypto), contentDescription = "USDC logo", modifier = Modifier.align(Alignment.CenterVertically))
-		Text(
-			text = "USDC",
-			color = OffWhite,
-			modifier = Modifier
-				.align(Alignment.CenterVertically)
-				.padding(horizontal = 16.dp)
-				.padding(top = 5.dp),
-			fontSize = 18.sp
-		)
+	Row(modifier = Modifier.clickable { navigateToUSDC() }.fillMaxWidth().padding(top = 5.dp)) {
+		Icon(painterResource(R.drawable.stellar_logo),
+			contentDescription = "Stellar USDC logo",
+			modifier = Modifier.align(Alignment.CenterVertically).height(55.dp).padding(13.dp),
+			tint = OffWhite)
 	}
 }
 

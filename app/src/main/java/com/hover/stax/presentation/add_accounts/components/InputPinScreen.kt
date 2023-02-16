@@ -27,8 +27,7 @@ import com.hover.stax.ui.theme.OffWhite
 fun InputPinScreen(pin: MutableState<String>, doneText: Int, doneAction: () -> Unit) {
 	Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
 		Column(modifier = Modifier
-			.fillMaxWidth()
-			.weight(1f, true), verticalArrangement = Arrangement.Center) {
+			.fillMaxWidth().weight(1f, true), verticalArrangement = Arrangement.Bottom) {
 			Row(
 				modifier = Modifier.fillMaxWidth(),
 				horizontalArrangement = Arrangement.Center
@@ -44,12 +43,12 @@ fun InputPinScreen(pin: MutableState<String>, doneText: Int, doneAction: () -> U
 				}
 			}
 			Divider(thickness = 1.dp, color = OffWhite, modifier = Modifier
-				.padding(horizontal = 55.dp)
+				.padding(horizontal = 89.dp)
 				.padding(vertical = 13.dp))
 		}
 		Row(modifier = Modifier
 			.fillMaxWidth()
-			.weight(1f, false)) {
+			.weight(2f, false)) {
 			PinPad(pin = pin, doneText, doneAction)
 		}
 	}
@@ -104,7 +103,7 @@ fun PinPad(pin: MutableState<String>, doneText: Int, doneAction: () -> Unit) {
 fun PinButton(text: String, editingPin: MutableState<String>, modifier: Modifier) {
 	PinPadButton(
 		onClick = { addPinDigit(text, editingPin) },
-		modifier = modifier
+		modifier = modifier.padding(8.dp)
 	) {
 		Text(
 			text = text,
@@ -119,7 +118,7 @@ fun PinButton(text: String, editingPin: MutableState<String>, modifier: Modifier
 fun BackspaceButton(editingPin: MutableState<String>, modifier: Modifier) {
 	PinPadButton(
 		onClick = { removeLastDigit(editingPin) },
-		modifier = modifier
+		modifier = modifier.padding(8.dp)
 	) {
 		Icon(painterResource(id = R.drawable.ic_backspace), contentDescription = "Backspace", )
 	}

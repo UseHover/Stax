@@ -37,22 +37,21 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel as KChannel
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.domain.model.USSDAccount
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class ChannelsViewModel(
+class AddAccountViewModel(
     application: Application,
     val repo: ChannelRepo,
     val simRepo: SimRepo,
@@ -75,11 +74,13 @@ class ChannelsViewModel(
     val _channelCountryList = MediatorLiveData<List<String>>()
     val channelCountryList: LiveData<List<String>> = _channelCountryList
 
-    private val accountCreatedEvent = MutableSharedFlow<Boolean>()
-    val accountEventFlow = accountCreatedEvent.asSharedFlow()
+    val chosenChannel = MutableSharedFlow<Channel>()
+    val createdAccount = MutableSharedFlow<USSDAccount>()
+    private val _balanceAction = MutableSharedFlow<HoverAction>()
+    val balanceAction = _balanceAction.asSharedFlow()
 
-    private val accountChannel = KChannel<USSDAccount>()
-    val accountCallback = accountChannel.receiveAsFlow()
+    private val _accountCreatedEvent = MutableSharedFlow<Boolean>()
+    val accountCreatedEvent = _accountCreatedEvent.asSharedFlow()
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -88,17 +89,17 @@ class ChannelsViewModel(
         loadSims()
 
         simCountryList = Transformations.map(sims, this::getCountriesAndFirebaseSubscriptions)
-        countryChoice.addSource(simCountryList, this@ChannelsViewModel::onSimUpdate)
+        countryChoice.addSource(simCountryList, this@AddAccountViewModel::onSimUpdate)
 
         countryChannels.apply {
-            addSource(allChannels, this@ChannelsViewModel::onAllChannelsUpdate)
-            addSource(countryChoice, this@ChannelsViewModel::onChoiceUpdate)
+            addSource(allChannels, this@AddAccountViewModel::onAllChannelsUpdate)
+            addSource(countryChoice, this@AddAccountViewModel::onCountryUpdate)
         }
 
         _channelCountryList.addSource(allChannels, this::loadChannelCountryList)
 
-        filteredChannels.addSource(filterQuery, this@ChannelsViewModel::search)
-        filteredChannels.addSource(countryChannels, this@ChannelsViewModel::updateCountryChannels)
+        filteredChannels.addSource(filterQuery, this@AddAccountViewModel::search)
+        filteredChannels.addSource(countryChannels, this@AddAccountViewModel::updateCountryChannels)
     }
 
     private fun loadSims() {
@@ -126,7 +127,7 @@ class ChannelsViewModel(
         updateCountryChannels(channels, countryChoice.value)
     }
 
-    private fun onChoiceUpdate(countryCode: String?) {
+    private fun onCountryUpdate(countryCode: String?) {
         updateCountryChannels(allChannels.value, countryCode)
     }
 
@@ -186,34 +187,35 @@ class ChannelsViewModel(
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
     }
 
-    fun createAccount(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
-//        val channel = repo.getChannel(channelId)
-        createAccounts(listOf(channel))
-
-        accountCreatedEvent.emit(true)
+    fun chooseChannel(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
+        chosenChannel.emit(channel)
     }
 
-    fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
+    fun createAccountWithoutBalance(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
+        createAccount(channel)
+
+        _accountCreatedEvent.emit(true)
+    }
+
+    fun createAccount(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = accountRepo.getDefaultAccount()
 
-        val accounts = channels.mapIndexed { index, channel ->
-            USSDAccount(channel, defaultAccount == null && index == 0, -1)
-        }.onEach {
-            logChoice(it)
-            ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
-        }
+        val account = USSDAccount(channel, defaultAccount == null, -1)
+        logChoice(account)
+        ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, getApplication())
 
-        val accountIds = accountRepo.insert(accounts)
-        Timber.e("Created %s accounts", accountIds.size)
-
-        promptBalanceCheck(accountIds.first().toInt())
+        val accountId = accountRepo.insert(account)
+        Timber.e("Created account with id %s", accountId)
+        createdAccount.emit(account)
     }
 
-    private fun promptBalanceCheck(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        val account = accountRepo.getAccount(accountId)
+    fun balanceCheck(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
+        val action = actionRepo.getFirstAction(channel.institutionId, channel.countryAlpha2, HoverAction.BALANCE)
 
-        account?.let {
-            accountChannel.send(it)
+        createAccount(channel)
+        action?.let { _balanceAction.emit(action) } ?: run {
+            Timber.e("something went wrong")
+//            _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action))
         }
     }
 
@@ -240,6 +242,13 @@ class ChannelsViewModel(
     fun updateChannel(channel: Channel) {
         viewModelScope.launch(Dispatchers.IO) {
             repo.update(channel)
+        }
+    }
+
+    fun loadChannel(channelId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val c = repo.getChannel(channelId)
+            c?.let { chosenChannel.emit(c) }
         }
     }
 

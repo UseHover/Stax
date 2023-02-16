@@ -36,12 +36,12 @@ import com.hover.stax.R
 @Composable
 fun BalanceHeader(showAddAccount: Boolean, onClickedAddAccount: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(13.dp), Arrangement.SpaceBetween
+        modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp).padding(horizontal = 13.dp), Arrangement.SpaceBetween
     ) {
         Text(
             text = stringResource(id = R.string.your_accounts),
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.h4
         )
 
         if (showAddAccount) {

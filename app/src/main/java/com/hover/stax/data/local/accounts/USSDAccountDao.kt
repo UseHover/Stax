@@ -71,7 +71,10 @@ interface USSDAccountDao : BaseDao<Account> {
     @Query("SELECT COUNT(id) FROM accounts")
     fun getDataCount(): Int
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun ins(account: Account): Long
+
+    @Insert
     suspend fun insertAll(accounts: List<Account>): List<Long>
 
     @Query("DELETE FROM accounts")

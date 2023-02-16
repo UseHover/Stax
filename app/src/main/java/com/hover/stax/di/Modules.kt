@@ -24,7 +24,7 @@ import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.addChannels.AddAccountViewModel
 import com.hover.stax.addChannels.UsdcViewModel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.SimRepo
@@ -93,7 +93,7 @@ const val TIMEOUT = 10_000
 val appModule = module {
     viewModelOf(::FaqViewModel)
     viewModelOf(::ActionSelectViewModel)
-    viewModelOf(::ChannelsViewModel)
+    viewModelOf(::AddAccountViewModel)
     viewModelOf(::AccountsViewModel)
     viewModelOf(::AccountDetailViewModel)
     viewModelOf(::NewRequestViewModel)

@@ -23,6 +23,7 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
+import com.hover.stax.addChannels.AddAccountActivity
 import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NAV_HOME
@@ -66,7 +67,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
 
     fun checkPermissionsAndNavigate() {
         val permissionHelper = PermissionHelper(this)
-        if (permissionHelper.hasBasicPerms()) navigateToMainActivity()
+        if (permissionHelper.hasBasicPerms()) navigateToAddAccount()
         else showBasicPermission()
     }
 
@@ -89,8 +90,8 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
         checkPermissionsAndNavigate()
     }
 
-    private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java).apply {
+    private fun navigateToAddAccount() {
+        val intent = Intent(this, AddAccountActivity::class.java).apply {
             putExtra(FRAGMENT_DIRECT, NAV_LINK_ACCOUNT)
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         }

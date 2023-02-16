@@ -27,6 +27,7 @@ import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
+import androidx.compose.ui.res.stringResource
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
@@ -230,10 +231,6 @@ object Utils {
 
     fun openUrl(urlRes: Int, ctx: Context) {
         openUrl(ctx.resources.getString(urlRes), ctx)
-    }
-
-    fun openEmail(@StringRes subject: Int, context: Context, body: String? = "") {
-        openEmail(context.getString(subject), context, body)
     }
 
     fun openEmail(subject: String, context: Context, body: String? = "") {

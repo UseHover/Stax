@@ -35,7 +35,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
-import com.hover.stax.addChannels.ChannelsViewModel
+import com.hover.stax.addChannels.AddAccountViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.home.MainActivity
@@ -54,7 +54,7 @@ import com.hover.stax.utils.Utils
 import com.uxcam.OnVerificationListener
 import com.uxcam.UXCam
 import com.uxcam.datamodel.UXConfig
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -65,7 +65,7 @@ const val FROM_FCM = "from_notification"
 
 class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val addAccountViewModel: AddAccountViewModel by viewModel()
     private lateinit var remoteConfig: FirebaseRemoteConfig
     private lateinit var workManager: WorkManager
     private var hasAccounts = false
@@ -82,11 +82,11 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startBackgroundProcesses() {
-        with(channelsViewModel) {
+        with(addAccountViewModel) {
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
         }
 
-        lifecycleScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             initAmplitude()
             logPushNotificationIfRequired()
             initHover()
