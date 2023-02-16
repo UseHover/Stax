@@ -31,7 +31,7 @@ import com.hover.stax.addChannels.AddAccountViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
-import com.hover.stax.presentation.home.components.TopBar
+import com.hover.stax.presentation.home.components.HomeTopBar
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
@@ -78,7 +78,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
 
     private fun initToolbar() {
         binding.toolbar.setContent {
-            StaxTheme { TopBar(title = R.string.library_cardhead) { dest -> navigateTo(dest) } }
+            StaxTheme { HomeTopBar(title = R.string.library_cardhead) { dest -> navigateTo(dest) } }
         }
     }
 

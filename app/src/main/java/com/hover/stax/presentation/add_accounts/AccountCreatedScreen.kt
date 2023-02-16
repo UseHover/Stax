@@ -29,7 +29,7 @@ fun AccountCreatedScreen(channelId: Int?, addAccountViewModel: AddAccountViewMod
 
 	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 		Scaffold(
-			topBar = { TopBar(getTitle(channel)) },
+			topBar = {  },
 		) {
 			if (channel != null) {
 				Column(modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp).padding(horizontal = 13.dp), Arrangement.SpaceBetween) {

@@ -19,7 +19,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +35,7 @@ import com.hover.stax.utils.network.NetworkMonitor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(@StringRes title: Int = 0, navTo: (dest: Int) -> Unit) {
+fun HomeTopBar(@StringRes title: Int = 0, navTo: (dest: Int) -> Unit) {
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = true)
 
     CenterAlignedTopAppBar(

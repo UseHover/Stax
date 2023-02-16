@@ -25,7 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
-import com.hover.stax.presentation.home.components.TopBar
+import com.hover.stax.presentation.home.components.HomeTopBar
 import com.hover.stax.presentation.rewards.components.PointsDistributionDetail
 import com.hover.stax.presentation.rewards.components.PointsHeader
 import com.hover.stax.presentation.rewards.components.RecentPointsHeader
@@ -49,7 +49,7 @@ fun RewardsScreen() {
         ) {
             Scaffold(
                 topBar = {
-                    TopBar(title = R.string.nav_earn, {})
+                    HomeTopBar(title = R.string.nav_earn, {})
                 },
                 content = { padding ->
                     LazyColumn(

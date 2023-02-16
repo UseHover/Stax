@@ -28,7 +28,7 @@ import timber.log.Timber
 @Entity(
     tableName = "ussd_accounts",
     foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])],
-    indices = [Index(value = ["name", "sim_subscription_id"], unique = true)]
+    indices = [Index(value = ["institutionAccountName", "sim_subscription_id"], unique = true)]
 )
 class USSDAccount(institutionName : String, userAlias: String, logoUrl: String, accountNo: String?, institutionId: Int, type: String, primaryColorHex: String, secondaryColorHex: String,
 

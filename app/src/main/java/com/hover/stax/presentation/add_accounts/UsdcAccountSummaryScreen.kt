@@ -1,63 +1,76 @@
 package com.hover.stax.presentation.add_accounts
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.UsdcViewModel
-import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.OffWhite
+import com.hover.stax.presentation.components.PrimaryButton
+import com.hover.stax.presentation.components.TallTopBar
 import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun UsdcAccountSummaryScreen(viewModel: UsdcViewModel = getViewModel(), navController: NavController) {
+fun UsdcAccountSummaryScreen(viewModel: UsdcViewModel = getViewModel()) {
 	val accounts by viewModel.accounts.observeAsState(initial = emptyList())
-	viewModel.createAccount()
 
 	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 		Scaffold(
-			topBar = { TopBar(accounts.isEmpty()) },
+			topBar = { TallTopBar(getTitle(accounts.isEmpty()), null) },
 		) {
 			if (accounts.isNotEmpty()) {
-				Text("Created something woot!")
+				Column(modifier = Modifier.fillMaxSize().padding(34.dp), Arrangement.SpaceAround) {
+					Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
+						Text(
+							text = stringResource(id = R.string.usdc_account_1),
+							modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp),
+							style = MaterialTheme.typography.subtitle1
+						)
+						Text(
+							text = stringResource(id = R.string.usdc_account_1_explain),
+							modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp),
+							style = MaterialTheme.typography.body1
+						)
+						PrimaryButton(text = stringResource(R.string.usdc_account_1_action)) {
+
+						}
+					}
+					Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
+						Text(
+							text = stringResource(id = R.string.usdc_bullet_2),
+							modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp),
+							style = MaterialTheme.typography.subtitle1
+						)
+						Text(
+							text = stringResource(id = R.string.usdc_account_2_explain),
+							modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp),
+							style = MaterialTheme.typography.body1
+						)
+						PrimaryButton(text = stringResource(R.string.usdc_account_2_action)) {
+
+						}
+					}
+				}
 			}
 		}
 	}
 }
 
-	@OptIn(ExperimentalMaterial3Api::class)
-	@Composable
-	fun TopBar(loading: Boolean) {
-		Column(modifier = Modifier.fillMaxWidth()) {
-			CenterAlignedTopAppBar(
-				title = { Text(text = stringResource(if (loading) R.string.loading_human else R.string.create_account_success), fontSize = 18.sp) },
-				navigationIcon = {
-					if (!loading) {
-						IconButton(content = {
-							Icon(
-								painterResource(R.drawable.ic_close),
-								contentDescription = "back",
-								tint = OffWhite
-							)
-						},
-							onClick = { })
-					}
-				},
-				colors = StaxTopBarDefaults()
-			)
-		}
-	}
+@Composable
+fun getTitle(loading: Boolean): String {
+	return stringResource(if (loading) R.string.loading_human else R.string.create_account_success)
+}
+
+@Preview
+@Composable
+fun UsdcAccountSummaryScreenPreview() {
+	UsdcAccountSummaryScreen()
+}

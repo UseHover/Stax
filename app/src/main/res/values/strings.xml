@@ -71,19 +71,31 @@
 
     <!-- COMPOSE ADD ACCOUNTS SCREEN -->
     <string name="add_account">Link an account</string>
+    <string name="learn_more">Learn more</string>
+    <string name="add_accounts_help_title">Adding accounts to Stax</string>
+    <string name="add_accounts_help_info">Stax works with your existing money accounts to give you control. USSD is used to interact with accounts connected to your SIM card.\n\nStax never holds money and cannot create accounts for you.\n\nSecurity is our top concern: your SIM card must always be present in your phone to interact with your accounts and you must always enter your PIN to initiate a transaction.</string>
     <string name="link_x">Link %1$s</string>
     <string name="link_explain">This will allow you to see your balance and move money from Stax. Stax uses USSD so that you can have access to your money even without an internet connection. Stax does not hold money, and updating your balance or moving money always requires both your linked SIM card and PIN.</string>
-    <string name="link_to_sim">This account will be linked to the following SIM:</string>
+    <string name="link_to_sim">This account will use the following SIM:</string>
+    <string name="no_useable_sim">We could not detect a SIM card that will work with this USSD service.</string>
     <string name="ask_check_balance">To finish linking your account check your balance.</string>
     <string name="check_balance_btn">Check account balance</string>
     <string name="skip_balance_btn">Skip balance check</string>
     <string name="create_pin">Create a PIN for your USDC wallet</string>
     <string name="confirm_pin">Re-enter your PIN to confirm</string>
     <string name="create_account">Create account</string>
+    <string name="create_usdc_explain_title">What to know about creating a USDC account</string>
+    <string name="usdc_bullet_1">This is your wallet</string>
+    <string name="usdc_bullet_2">Don\'t lose your security key</string>
+    <string name="usdc_explain_1">You can access your money on any platform that supports Stellar USDC such as Coinbase or Binance. Stax does not keep your credentials and cannot directly access your money.</string>
+    <string name="usdc_explain_2">Your key will be saved to your Google account Drive storage and your PIN will be required to access it in Stax. You must have both your key and PIN to access your money.</string>
+    <string name="continue_to_create_pin">Continue to create your PIN</string>
     <string name="create_account_success">Success! Your USDC wallet has been created.</string>
-    <string name="learn_more">Learn more</string>
-    <string name="add_accounts_help_title">Adding accounts to Stax</string>
-    <string name="add_accounts_help_info">Stax works with your existing money accounts to give you control. USSD is used to interact with accounts connected to your SIM card.\n\nStax never holds money and cannot create accounts for you.\n\nSecurity is our top concern: your SIM card must always be present in your phone to interact with your accounts and you must always enter your PIN to initiate a transaction.</string>
+    <string name="usdc_account_1">Your wallet address is %s</string>
+    <string name="usdc_account_1_explain">You can use this to receive money on any platform that supports USDC.</string>
+    <string name="usdc_account_1_action">Copy wallet address</string>
+    <string name="usdc_account_2_explain">Your key has been saved to your Google account Drive storage. You may want to save a backup somewhere else or with someone you trust.</string>
+    <string name="usdc_account_2_action">Download key to local storage</string>
 
     <!-- ONBOARDING VARIANT ZERO (DEFAULT)-->
     <string name="stax_tagline">Move money without stress</string>

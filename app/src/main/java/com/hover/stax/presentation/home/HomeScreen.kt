@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -33,7 +32,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.hover.stax.R
 import com.hover.stax.addChannels.AddAccountActivity
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.presentation.home.components.*
@@ -71,7 +69,7 @@ fun HomeScreen(
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
-            Scaffold(topBar = { TopBar(0, navTo) }) {
+            Scaffold(topBar = { HomeTopBar(0, navTo) }) {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     if (accounts.isEmpty()) {
                         EmptyBalance {

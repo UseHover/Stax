@@ -62,6 +62,7 @@ class AddAccountActivity : AppCompatActivity() {
     private val checkBalance = registerForActivityResult(TransactionContract()) { data: Intent? ->
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
 //            NavUtil.showTransactionDetailsFragment(navController, data.extras!!.getString("uuid")!!)
+            finish()
         }
     }
 

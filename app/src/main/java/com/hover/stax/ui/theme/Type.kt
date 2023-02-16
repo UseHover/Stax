@@ -40,9 +40,14 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 15.sp
     ),
+    subtitle1 = TextStyle(
+        fontFamily = Brutalista,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp
+    ),
     subtitle2 = TextStyle(
         fontFamily = Brutalista,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 14.sp
     ),
     h1 = TextStyle(

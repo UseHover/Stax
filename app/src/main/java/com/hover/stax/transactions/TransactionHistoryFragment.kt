@@ -19,12 +19,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.getValue
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionCardHistoryBinding
-import com.hover.stax.presentation.home.components.TopBar
+import com.hover.stax.presentation.home.components.HomeTopBar
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
@@ -60,7 +59,7 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
 
     private fun initToolbar() {
         binding.toolbar.setContent {
-            StaxTheme { TopBar(title = R.string.nav_history) { dest -> navigateTo(dest) } }
+            StaxTheme { HomeTopBar(title = R.string.nav_history) { dest -> navigateTo(dest) } }
         }
     }
 

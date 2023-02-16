@@ -29,10 +29,6 @@ fun AddAccountNavHost(
 			composable("findChannel") {
 				ChooseChannelScreen(addAccountViewModel, navController)
 			}
-			composable("addChannel/{channelId}",
-					arguments = listOf(navArgument("channelId") { type = NavType.IntType })) {
-				AddChannelScreen(it.arguments?.getInt("channelId"), addAccountViewModel)
-			}
 			composable("channelAdded/{channelId}",
 				arguments = listOf(navArgument("channelId") { type = NavType.IntType })) {
 				AccountCreatedScreen(it.arguments?.getInt("channelId"), addAccountViewModel)

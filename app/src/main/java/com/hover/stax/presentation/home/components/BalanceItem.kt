@@ -47,11 +47,11 @@ import coil.request.ImageRequest
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.presentation.add_accounts.components.SampleAccountProvider
+import com.hover.stax.presentation.components.Logo
 import com.hover.stax.presentation.components.TimeStringGenerator
 
 @Composable
 fun BalanceItem(account: Account, goToDetail: (Account) -> Unit, refresh: (Account) -> Unit) {
-    val size34 = dimensionResource(id = R.dimen.margin_34)
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Row(
         modifier = Modifier
@@ -59,22 +59,7 @@ fun BalanceItem(account: Account, goToDetail: (Account) -> Unit, refresh: (Accou
             .clickable { goToDetail(account) }
             .padding(13.dp)
     ) {
-
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(account.logoUrl)
-                .crossfade(true)
-                .diskCachePolicy(CachePolicy.ENABLED)
-                .build(),
-            contentDescription = "Account Institution Logo",
-            placeholder = painterResource(id = R.drawable.img_placeholder),
-            error = painterResource(id = R.drawable.img_placeholder),
-            modifier = Modifier
-                .size(size34)
-                .clip(CircleShape)
-                .align(Alignment.CenterVertically),
-            contentScale = ContentScale.Crop
-        )
+        Logo(account.logoUrl, "Account Institution Logo")
 
         Text(
             text = account.userAlias,

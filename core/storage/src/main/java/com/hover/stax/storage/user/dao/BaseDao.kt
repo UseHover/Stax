@@ -15,22 +15,22 @@ import androidx.room.Update
 interface BaseDao<T> {
 
     // TODO - Make me suspendable
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insert(item: T)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAsync(item: T)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(vararg items: T)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(items: List<T>)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     suspend fun update(item: T?): Int
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     suspend fun update(items: List<T>): Int
 
     @Delete

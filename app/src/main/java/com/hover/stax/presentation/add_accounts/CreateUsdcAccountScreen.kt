@@ -4,29 +4,21 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.UsdcViewModel
 import com.hover.stax.presentation.add_accounts.components.InputPinScreen
-import com.hover.stax.ui.theme.Background
-import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.SecondaryBackground
+import com.hover.stax.presentation.add_accounts.components.USDCExplainerScreen
+import com.hover.stax.presentation.components.TallTopBar
 import org.koin.androidx.compose.getViewModel
 
+const val EXPLAIN = "explain"
 const val PIN1 = "pin1"
 const val PIN2 = "pin2"
 const val SUMMARY = "summary"
@@ -37,11 +29,12 @@ fun CreateUsdcAccountScreen(viewModel: UsdcViewModel = getViewModel(), navContro
 	val enterPin = remember { mutableStateOf("") }
 	val confirmPin = remember { mutableStateOf("") }
 
-	val currentPage = remember { mutableStateOf(PIN1) }
+	val currentPage = remember { mutableStateOf(EXPLAIN) }
 
 	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 		Crossfade(targetState = currentPage.value) { page ->
 			when (page) {
+				EXPLAIN -> USDCExplainerScreen(currentPage) { navController.popBackStack() }
 				PIN1 -> PinEntryScreen(R.string.create_pin, enterPin, R.string.btn_continue,
 					doneAction = {
 						viewModel.setPin(enterPin.value)
@@ -55,7 +48,7 @@ fun CreateUsdcAccountScreen(viewModel: UsdcViewModel = getViewModel(), navContro
 						confirmPin.value = ""
 						currentPage.value = PIN1
 					})
-				SUMMARY -> UsdcAccountSummaryScreen(viewModel, navController)
+				SUMMARY -> UsdcAccountSummaryScreen(viewModel)
 			}
 		}
 	}
@@ -63,6 +56,7 @@ fun CreateUsdcAccountScreen(viewModel: UsdcViewModel = getViewModel(), navContro
 
 private fun onConfirmPin(pin: String, currentPage: MutableState<String>, viewModel: UsdcViewModel) {
 	if (viewModel.confirmPin(pin)) {
+		viewModel.createAccount()
 		currentPage.value = SUMMARY
 	}
 }
@@ -71,28 +65,8 @@ private fun onConfirmPin(pin: String, currentPage: MutableState<String>, viewMod
 @Composable
 fun PinEntryScreen(title: Int, pin: MutableState<String>, doneText: Int, doneAction: () -> Unit, backAction: () -> Unit) {
 	Scaffold(
-		topBar = { TopBar(title, backAction) },
+		topBar = { TallTopBar(stringResource(title), backAction) },
 	) {
 		InputPinScreen(pin, doneText, doneAction)
-	}
-}
-
-@Composable
-fun TopBar(title: Int, backAction: () -> Unit) {
-	Column(modifier = Modifier.fillMaxWidth()) {
-		TopAppBar (
-			modifier = Modifier.height(100.dp),
-			elevation = 0.dp,
-			navigationIcon = {
-				IconButton(
-					content = { Icon(painterResource(R.drawable.ic_arrow_back),
-						contentDescription = "back",
-						tint = OffWhite)
-					},
-					onClick = { backAction() })
-			},
-			title = { Text(text = stringResource(title), style = MaterialTheme.typography.h1) },
-			backgroundColor = Color.Transparent
-		)
 	}
 }

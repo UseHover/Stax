@@ -35,20 +35,7 @@ fun SimTitle(
 		verticalAlignment = Alignment.CenterVertically
 
 	) {
-		AsyncImage(
-			model = ImageRequest.Builder(LocalContext.current).data(simWithAccount.account.logoUrl)
-				.crossfade(true)
-				.diskCachePolicy(CachePolicy.ENABLED).build(),
-			contentDescription = simWithAccount.account.userAlias + " logo",
-			placeholder = painterResource(id = R.drawable.img_placeholder),
-			error = painterResource(id = R.drawable.img_placeholder),
-			modifier = Modifier
-				.size(dimensionResource(id = R.dimen.margin_34))
-				.clip(CircleShape)
-				.align(Alignment.CenterVertically),
-			contentScale = ContentScale.Crop
-		)
-
+		Logo(simWithAccount.account.logoUrl, simWithAccount.account.userAlias + " logo")
 		Column(
 			modifier = Modifier
 				.padding(horizontal = 13.dp)

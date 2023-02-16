@@ -41,7 +41,7 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.presentation.home.components.TopBar
+import com.hover.stax.presentation.home.components.HomeTopBar
 import com.hover.stax.presentation.sims.components.LinkSimCard
 import com.hover.stax.presentation.sims.components.SampleSimInfoProvider
 import com.hover.stax.presentation.sims.components.SimScreenCard
@@ -64,7 +64,7 @@ fun SimScreen(
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(
                 topBar = {
-                    TopBar(title = R.string.your_sim_cards, navTo)
+                    HomeTopBar(title = R.string.your_sim_cards, navTo)
                 }
             ) { innerPadding ->
                 val paddingModifier = Modifier.padding(innerPadding)
@@ -109,7 +109,7 @@ private fun SimScreenPreview(
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
             Scaffold(topBar = {
-                TopBar(title = R.string.your_sim_cards, {})
+                HomeTopBar(title = R.string.your_sim_cards, {})
             }, content = { innerPadding ->
                 val paddingModifier = Modifier.padding(innerPadding)
 

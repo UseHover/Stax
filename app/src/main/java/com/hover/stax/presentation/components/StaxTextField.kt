@@ -1,10 +1,7 @@
 package com.hover.stax.presentation.components
 
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,7 +21,7 @@ fun StaxTextField(textField: TextFieldValue, placeholder: Int, startIcon: Int, o
 		onValueChange = {
 			onChange(it)
 		},
-		label = { Text(text = stringResource(placeholder)) },
+		label = { Text(text = stringResource(placeholder), style = MaterialTheme.typography.body1) },
 		singleLine = true,
 		leadingIcon = {
 			Icon(painterResource(startIcon), "", tint = colorResource(R.color.white))
