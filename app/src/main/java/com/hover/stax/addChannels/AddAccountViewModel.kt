@@ -45,8 +45,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.domain.model.USSDAccount
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
@@ -64,23 +63,29 @@ class AddAccountViewModel(
     private val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
 
     var sims = MutableLiveData<List<SimInfo>>()
+    var simChannels = MediatorLiveData<List<Pair<SimInfo, Channel?>>>()
     var simCountryList: LiveData<List<String>> = MutableLiveData()
 
+    val channelCountryList = MediatorLiveData<List<String>>()
     var countryChoice: MediatorLiveData<String> = MediatorLiveData()
     val filterQuery = MutableLiveData<String?>()
+
     private var countryChannels = MediatorLiveData<List<Channel>>()
     val filteredChannels = MediatorLiveData<List<Channel>>()
 
-    val _channelCountryList = MediatorLiveData<List<String>>()
-    val channelCountryList: LiveData<List<String>> = _channelCountryList
-
     val chosenChannel = MutableSharedFlow<Channel>()
-    val createdAccount = MutableSharedFlow<USSDAccount>()
-    private val _balanceAction = MutableSharedFlow<HoverAction>()
-    val balanceAction = _balanceAction.asSharedFlow()
+    private val createdAccount = MutableSharedFlow<USSDAccount>()
+    val account = createdAccount.asSharedFlow()
 
-    private val _accountCreatedEvent = MutableSharedFlow<Boolean>()
-    val accountCreatedEvent = _accountCreatedEvent.asSharedFlow()
+    val balanceAction = combineTransform(chosenChannel, createdAccount) { _, account ->
+        emit(actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE))
+    }
+    private val _checkBalanceEvent = MutableSharedFlow<Boolean>()
+    val checkBalanceEvent = combineTransform(balanceAction, _checkBalanceEvent) { action, go ->
+        if (action != null && go) { emit(action) }
+    }
+
+    val doneEvent = MutableStateFlow(false)
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -88,6 +93,7 @@ class AddAccountViewModel(
         setSimBroadcastReceiver()
         loadSims()
 
+        simChannels.addSource(sims, this::getTelecomChannels)
         simCountryList = Transformations.map(sims, this::getCountriesAndFirebaseSubscriptions)
         countryChoice.addSource(simCountryList, this@AddAccountViewModel::onSimUpdate)
 
@@ -96,7 +102,7 @@ class AddAccountViewModel(
             addSource(countryChoice, this@AddAccountViewModel::onCountryUpdate)
         }
 
-        _channelCountryList.addSource(allChannels, this::loadChannelCountryList)
+        channelCountryList.addSource(allChannels, this::loadChannelCountryList)
 
         filteredChannels.addSource(filterQuery, this@AddAccountViewModel::search)
         filteredChannels.addSource(countryChannels, this@AddAccountViewModel::updateCountryChannels)
@@ -135,7 +141,7 @@ class AddAccountViewModel(
         val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
         countryCodes.addAll(channels.map { it.countryAlpha2 }.distinct().sorted())
 
-        _channelCountryList.postValue(countryCodes)
+        channelCountryList.postValue(countryCodes)
     }
 
     private fun onSimUpdate(countryCodes: List<String>) {
@@ -153,6 +159,14 @@ class AddAccountViewModel(
         countryChannels.value = when {
             countryCode.isNullOrEmpty() || countryCode == CountryAdapter.CODE_ALL_COUNTRIES -> channels
             else -> channels?.filter { it.countryAlpha2 == countryChoice.value }
+        }
+    }
+
+    private fun getTelecomChannels(sims: List<SimInfo>?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = mutableListOf<Pair<SimInfo, Channel?>>()
+            sims?.forEach { list.add(Pair(it, repo.getTelecom(it.osReportedHni))) }
+            simChannels.postValue(list.toList())
         }
     }
 
@@ -192,9 +206,11 @@ class AddAccountViewModel(
     }
 
     fun createAccountWithoutBalance(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("Skipping balance check")
         createAccount(channel)
-
-        _accountCreatedEvent.emit(true)
+        Timber.e("done event has %s subscribers", doneEvent.subscriptionCount.value)
+        val emitted = doneEvent.tryEmit(true)
+        Timber.e("emitted %s", emitted)
     }
 
     fun createAccount(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
@@ -210,13 +226,8 @@ class AddAccountViewModel(
     }
 
     fun balanceCheck(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
-        val action = actionRepo.getFirstAction(channel.institutionId, channel.countryAlpha2, HoverAction.BALANCE)
-
         createAccount(channel)
-        action?.let { _balanceAction.emit(action) } ?: run {
-            Timber.e("something went wrong")
-//            _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action))
-        }
+        _checkBalanceEvent.emit(true)
     }
 
     fun updateSearch(value: String?) {

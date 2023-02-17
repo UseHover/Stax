@@ -1,6 +1,8 @@
 package com.hover.stax.addChannels
 
 import android.app.Application
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.AndroidViewModel
@@ -15,9 +17,7 @@ import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.stellar.sdk.Server
 import org.stellar.sdk.responses.AccountResponse
@@ -39,7 +39,10 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	var initialPin: MediatorLiveData<String> = MediatorLiveData()
 	var confirmPin: MediatorLiveData<String> = MediatorLiveData()
 
-	var accounts = accountRepo.getUsdcAccounts()
+	val account = MutableSharedFlow<USDCAccount>()
+
+	private val _doneEvent = MutableStateFlow(false)
+	val doneEvent = _doneEvent.asSharedFlow()
 
 	fun setPin(pin: String) {
 		initialPin.postValue(pin)
@@ -84,7 +87,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 		logUSDCAdded()
 	}
 
-	private fun createStaxAccount(pair: StellarKeyPair, balance: AccountResponse.Balance) {
+	private suspend fun createStaxAccount(pair: StellarKeyPair, balance: AccountResponse.Balance) {
 		val acct = USDCAccount("Stellar USDC", "Stellar USDC", "logo", pair.accountId, -1, CRYPTO_TYPE, "Stellar color 1", "stellar color 2",
 			balance.assetType, balance.assetCode.orNull(), false)
 		acct.updateBalance(balance.balance, null)
@@ -97,8 +100,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 		)
 
 		accountRepo.insert(acct)
-//		accounts.emit()
-//		accounts.value = accountRepo.getUsdcAccounts()
+		account.emit(acct)
 	}
 
 	private fun encryptSecret(account: USDCAccount, pin: String, secret: String) {
@@ -138,5 +140,17 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	private fun logUSDCAdded() {
 		FirebaseMessaging.getInstance().subscribeToTopic((getApplication() as Context).getString(R.string.firebase_topic_usdc))
 		AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.added_usdc), getApplication() as Context)
+	}
+
+	fun copyToClipboard(text: String) {
+		val clipboardManager =
+			(getApplication() as Application).getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+		val clip = ClipData.newPlainText("usdc address", text)
+		clipboardManager.setPrimaryClip(clip)
+	}
+
+	fun done() = viewModelScope.launch(Dispatchers.IO) {
+		Timber.e("emitting done")
+		_doneEvent.emit(true)
 	}
 }

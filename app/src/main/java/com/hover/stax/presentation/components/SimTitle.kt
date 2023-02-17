@@ -22,28 +22,27 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
+import com.hover.stax.channels.Channel
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.ui.theme.TextGrey
 
+
 @Composable
-fun SimTitle(
-	simWithAccount: SimWithAccount,
-	content: @Composable () -> Unit,
-) {
+fun SimTitle(sim: SimInfo, title: String, logo: String?, content: @Composable () -> Unit) {
 	Row(
 		modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),
 		verticalAlignment = Alignment.CenterVertically
 
 	) {
-		Logo(simWithAccount.account.logoUrl, simWithAccount.account.userAlias + " logo")
+		Logo(logo, "$title logo")
 		Column(
 			modifier = Modifier
 				.padding(horizontal = 13.dp)
 				.weight(1f)
 		) {
-			Text(text = simWithAccount.account.userAlias, style = MaterialTheme.typography.body1)
+			Text(text = title, style = MaterialTheme.typography.body1)
 			Text(
-				text = getSimSlot(simWithAccount.sim),
+				text = getSimSlot(sim),
 				color = TextGrey,
 				style = MaterialTheme.typography.body2
 			)
@@ -51,6 +50,11 @@ fun SimTitle(
 
 		content()
 	}
+}
+
+@Composable
+fun SimTitle(sim: SimInfo, channel: Channel?, content: @Composable () -> Unit) {
+	SimTitle(sim, channel?.name ?: sim.operatorName, channel?.logoUrl, content)
 }
 
 @Composable

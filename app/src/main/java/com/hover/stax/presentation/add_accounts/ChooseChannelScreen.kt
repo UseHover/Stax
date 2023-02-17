@@ -32,6 +32,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.presentation.add_accounts.components.SampleChannelProvider
 import com.hover.stax.presentation.add_accounts.components.TabItem
 import com.hover.stax.presentation.components.*
+import com.hover.stax.ui.theme.Background
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.OffWhite
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +47,7 @@ fun ChooseChannelScreen(addAccountViewModel: AddAccountViewModel = getViewModel(
 	val simList by addAccountViewModel.sims.observeAsState(initial = emptyList())
 	val countryChannels by addAccountViewModel.simCountryList.observeAsState(initial = emptyList())
 
-	val countries by addAccountViewModel._channelCountryList.observeAsState(initial = emptyList())
+	val countries by addAccountViewModel.channelCountryList.observeAsState(initial = emptyList())
 	val channels by addAccountViewModel.filteredChannels.observeAsState(initial = emptyList())
 	val countryChoice by addAccountViewModel.countryChoice.observeAsState(initial = "00")
 
@@ -62,6 +63,7 @@ fun ChooseChannelScreen(addAccountViewModel: AddAccountViewModel = getViewModel(
 		ModalBottomSheetLayout(
 			sheetState = bottomSheetState,
 			sheetShape = bottomSheetShape(),
+			sheetBackgroundColor = Background,
 			sheetContent = { AddChannelBottomSheet(channelChoice, addAccountViewModel) }) {
 			Scaffold(
 				topBar = { TopBar(showingHelp) }
@@ -201,8 +203,8 @@ fun ChannelItem(channel: Channel, navigateToAdd: (Channel) -> Unit) {
 fun ListItem(title: String, modifier: Modifier, logo: @Composable () -> Unit) {
 	Row(
 		modifier
-			.fillMaxWidth()
-			.padding(vertical = 8.dp)) {
+			.padding(vertical = 8.dp)
+			.fillMaxWidth()) {
 		logo()
 		Text(
 			text = title,

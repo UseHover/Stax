@@ -134,7 +134,7 @@ fun SimItemTopRow(
     simWithAccount: SimWithAccount,
     refreshBalance: (USSDAccount) -> Unit
 ) {
-    SimTitle(simWithAccount, content = {
+    SimTitle(simWithAccount.sim, simWithAccount.account.institutionName, simWithAccount.account.logoUrl, content = {
         SimAction(simWithAccount, refreshBalance)
     })
 }

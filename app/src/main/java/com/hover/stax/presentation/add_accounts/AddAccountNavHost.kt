@@ -29,16 +29,9 @@ fun AddAccountNavHost(
 			composable("findChannel") {
 				ChooseChannelScreen(addAccountViewModel, navController)
 			}
-			composable("channelAdded/{channelId}",
-				arguments = listOf(navArgument("channelId") { type = NavType.IntType })) {
-				AccountCreatedScreen(it.arguments?.getInt("channelId"), addAccountViewModel)
-			}
 			composable("createUSDC") {
 				CreateUsdcAccountScreen(usdcViewModel, navController)
 			}
-//			composable("UsdcCreated") {
-//				UsdcAccountSummaryScreen(usdcViewModel, navController)
-//			}
 		}
 	}
 }

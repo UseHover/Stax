@@ -18,25 +18,34 @@ package com.hover.stax.data.local.channels
 import androidx.lifecycle.LiveData
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.AppDatabase
+import com.hover.stax.domain.model.USSDAccount
 
 class ChannelRepo(db: AppDatabase) {
 
     private val channelDao: ChannelDao = db.channelDao()
 
-    val publishedNonTelecomChannels: LiveData<List<Channel>> = channelDao.publishedNonTelecomChannels
+    val publishedNonTelecomChannels: LiveData<List<Channel>> =
+        channelDao.publishedNonTelecomChannels
+
     suspend fun getTelecom(hni: String): Channel? = channelDao.getTelecom(hni)
 
-    fun getChannel(id: Int): Channel? { return channelDao.getChannel(id) }
+    fun getChannel(id: Int): Channel? {
+        return channelDao.getChannel(id)
+    }
 
-    fun getLiveChannel(id: Int): LiveData<Channel> { return channelDao.getLiveChannel(id) }
+    fun getLiveChannel(id: Int): LiveData<Channel> {
+        return channelDao.getLiveChannel(id)
+    }
 
-    suspend fun getChannelByInstitution(institutionId: Int): Channel? = channelDao.getChannelByInstitution(institutionId)
+    suspend fun getChannelByInstitution(institutionId: Int): Channel? =
+        channelDao.getChannelByInstitution(institutionId)
 
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
     fun getChannelsByIdsAsync(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
-    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): List<Channel> = channelDao.getChannels(countryCode.lowercase(), channelIds)
+    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): List<Channel> =
+        channelDao.getChannels(countryCode.lowercase(), channelIds)
 
     fun getChannelsByCountry(countryCode: String): List<Channel> {
         return channelDao.getChannels(countryCode.lowercase())

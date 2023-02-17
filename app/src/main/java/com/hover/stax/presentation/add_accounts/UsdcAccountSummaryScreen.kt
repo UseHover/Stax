@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.UsdcViewModel
 import com.hover.stax.presentation.components.PrimaryButton
@@ -20,38 +19,52 @@ import org.koin.androidx.compose.getViewModel
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun UsdcAccountSummaryScreen(viewModel: UsdcViewModel = getViewModel()) {
-	val accounts by viewModel.accounts.observeAsState(initial = emptyList())
+	val account by viewModel.account.collectAsState(initial = null)
 
 	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 		Scaffold(
-			topBar = { TallTopBar(getTitle(accounts.isEmpty()), null) },
+			topBar = { TallTopBar(getTitle(account == null)) { viewModel.done() } },
 		) {
-			if (accounts.isNotEmpty()) {
-				Column(modifier = Modifier.fillMaxSize().padding(34.dp), Arrangement.SpaceAround) {
-					Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
+			account?.let {
+				Column(modifier = Modifier
+					.fillMaxSize()
+					.padding(34.dp), Arrangement.SpaceAround) {
+					Column(modifier = Modifier.padding(13.dp)
+						.fillMaxWidth()
+						.weight(1f)) {
 						Text(
-							text = stringResource(id = R.string.usdc_account_1),
-							modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp),
+							text = stringResource(id = R.string.usdc_account_1, account!!.accountNo!!),
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(bottom = 13.dp),
 							style = MaterialTheme.typography.subtitle1
 						)
 						Text(
 							text = stringResource(id = R.string.usdc_account_1_explain),
-							modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp),
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(vertical = 13.dp),
 							style = MaterialTheme.typography.body1
 						)
 						PrimaryButton(text = stringResource(R.string.usdc_account_1_action)) {
-
+							viewModel.copyToClipboard(account!!.accountNo!!)
 						}
 					}
-					Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
+					Column(modifier = Modifier.padding(13.dp)
+						.fillMaxWidth()
+						.weight(1f)) {
 						Text(
 							text = stringResource(id = R.string.usdc_bullet_2),
-							modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp),
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(bottom = 13.dp),
 							style = MaterialTheme.typography.subtitle1
 						)
 						Text(
 							text = stringResource(id = R.string.usdc_account_2_explain),
-							modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp),
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(vertical = 13.dp),
 							style = MaterialTheme.typography.body1
 						)
 						PrimaryButton(text = stringResource(R.string.usdc_account_2_action)) {

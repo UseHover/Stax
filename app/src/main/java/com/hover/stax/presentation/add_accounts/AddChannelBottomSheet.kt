@@ -28,12 +28,7 @@ import org.koin.androidx.compose.getViewModel
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddChannelBottomSheet(channel: Channel?, addAccountViewModel: AddAccountViewModel = getViewModel()) {
-	val simList by addAccountViewModel.sims.observeAsState(initial = emptyList())
-
-	val account by addAccountViewModel.createdAccount.collectAsState(initial = null)
-	val action by addAccountViewModel.balanceAction.collectAsState(initial = null)
-
-	var simIdChoice by remember { mutableStateOf(-1) }
+	val simChannels by addAccountViewModel.simChannels.observeAsState(initial = emptyList())
 
 	Column(modifier = Modifier.fillMaxWidth().padding(bottom = 1.dp).padding(horizontal = 13.dp), Arrangement.Bottom) {
 		if (channel != null) {
@@ -41,9 +36,8 @@ fun AddChannelBottomSheet(channel: Channel?, addAccountViewModel: AddAccountView
 			Text(text = stringResource(id = R.string.link_to_sim),
 				modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp))
 
-			account?.let {
-				SimTitle(SimWithAccount(chooseSim(it, channel, simList), it, action)) {}
-			}
+			val simChannel = chooseSim(simChannels, channel)
+			SimTitle(simChannel.first, simChannel.second) {}
 
 			Column(modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
 				Text(text = stringResource(id = R.string.ask_check_balance),
@@ -71,17 +65,17 @@ fun getTitle(channel: Channel?): String {
 		stringResource(R.string.link_x, channel.name) }
 }
 
-fun chooseSim(account: USSDAccount, channel: Channel, simList: List<SimInfo>): SimInfo {
-	if (account.simSubscriptionId != -1 && simList.map { it.subscriptionId }.contains(account.simSubscriptionId)) {
-		return simList.find { it.subscriptionId == account.simSubscriptionId }!!
-	} else {
-		simList.forEach {
-			if (channel.hniList.contains(it.osReportedHni)) {
+fun chooseSim(simChannelList: List<Pair<SimInfo, Channel?>>, chosenChannel: Channel): Pair<SimInfo, Channel?> {
+//	if (account.simSubscriptionId != -1 && simChannelList.map { it.first.subscriptionId }.contains(account.simSubscriptionId)) {
+//		return simChannelList.find { it.first.subscriptionId == account.simSubscriptionId }!!
+//	} else {
+		simChannelList.forEach {
+			if (chosenChannel.hniList.contains(it.first.osReportedHni)) {
 				return it
 			}
 		}
-		return simList[0]
-	}
+		return simChannelList[0]
+//	}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

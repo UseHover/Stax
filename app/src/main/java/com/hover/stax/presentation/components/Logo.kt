@@ -15,7 +15,7 @@ import coil.request.ImageRequest
 import com.hover.stax.R
 
 @Composable
-fun Logo(url: String, contentDescription: String) {
+fun Logo(url: String?, contentDescription: String) {
 	AsyncImage(
 		model = ImageRequest.Builder(LocalContext.current).data(url)
 			.crossfade(true)
