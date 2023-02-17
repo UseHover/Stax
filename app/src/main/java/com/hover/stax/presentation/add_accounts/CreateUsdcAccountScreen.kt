@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.hover.stax.R
-import com.hover.stax.addChannels.UsdcViewModel
+import com.hover.stax.addAccounts.UsdcViewModel
 import com.hover.stax.presentation.add_accounts.components.InputPinScreen
 import com.hover.stax.presentation.add_accounts.components.USDCExplainerScreen
 import com.hover.stax.presentation.components.TallTopBar

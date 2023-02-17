@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.addChannels
+package com.hover.stax.addAccounts
 
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -74,15 +74,17 @@ class AddAccountViewModel(
     val filteredChannels = MediatorLiveData<List<Channel>>()
 
     val chosenChannel = MutableSharedFlow<Channel>()
-    private val createdAccount = MutableSharedFlow<USSDAccount>()
+    private val createdAccount = MutableStateFlow<USSDAccount?>(null)
     val account = createdAccount.asSharedFlow()
 
-    val balanceAction = combineTransform(chosenChannel, createdAccount) { _, account ->
-        emit(actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE))
+    private val balanceAction = combineTransform(chosenChannel, account) { _, account ->
+        if (account != null) {
+            emit(actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE))
+        }
     }
     private val _checkBalanceEvent = MutableSharedFlow<Boolean>()
-    val checkBalanceEvent = combineTransform(balanceAction, _checkBalanceEvent) { action, go ->
-        if (action != null && go) { emit(action) }
+    val checkBalanceEvent = combineTransform(balanceAction, createdAccount, _checkBalanceEvent) { action, account, go ->
+        if (action != null && account != null && go) { emit(Pair(account, action)) }
     }
 
     val doneEvent = MutableStateFlow(false)
@@ -214,15 +216,17 @@ class AddAccountViewModel(
     }
 
     fun createAccount(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
-        val defaultAccount = accountRepo.getDefaultAccount()
+        if (createdAccount.value == null) {
+            val defaultAccount = accountRepo.getDefaultAccount()
 
-        val account = USSDAccount(channel, defaultAccount == null, -1)
-        logChoice(account)
-        ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, getApplication())
+            val account = USSDAccount(channel, defaultAccount == null, -1)
+            logChoice(account)
+            ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, getApplication())
 
-        val accountId = accountRepo.insert(account)
-        Timber.e("Created account with id %s", accountId)
-        createdAccount.emit(account)
+            val accountId = accountRepo.insert(account)
+            Timber.e("Created account with id %s", accountId)
+            createdAccount.emit(account)
+        }
     }
 
     fun balanceCheck(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {

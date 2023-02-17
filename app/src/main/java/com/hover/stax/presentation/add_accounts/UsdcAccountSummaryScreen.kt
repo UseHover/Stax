@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
-import com.hover.stax.addChannels.UsdcViewModel
+import com.hover.stax.addAccounts.UsdcViewModel
 import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.components.TallTopBar
 import org.koin.androidx.compose.getViewModel

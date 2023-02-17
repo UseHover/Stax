@@ -24,8 +24,8 @@ import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.addChannels.AddAccountViewModel
-import com.hover.stax.addChannels.UsdcViewModel
+import com.hover.stax.addAccounts.AddAccountViewModel
+import com.hover.stax.addAccounts.UsdcViewModel
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo

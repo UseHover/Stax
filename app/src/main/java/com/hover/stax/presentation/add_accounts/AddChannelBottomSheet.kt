@@ -14,21 +14,18 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.addChannels.AddAccountViewModel
+import com.hover.stax.addAccounts.AddAccountViewModel
 import com.hover.stax.channels.Channel
-import com.hover.stax.domain.model.USSDAccount
-import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.presentation.add_accounts.components.SampleChannelProvider
-import com.hover.stax.presentation.components.Logo
-import com.hover.stax.presentation.components.PrimaryButton
-import com.hover.stax.presentation.components.SecondaryButton
-import com.hover.stax.presentation.components.SimTitle
+import com.hover.stax.presentation.components.*
 import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddChannelBottomSheet(channel: Channel?, addAccountViewModel: AddAccountViewModel = getViewModel()) {
 	val simChannels by addAccountViewModel.simChannels.observeAsState(initial = emptyList())
+
+	val startingBalanceCheck = remember { mutableStateOf(false) }
 
 	Column(modifier = Modifier.fillMaxWidth().padding(bottom = 1.dp).padding(horizontal = 13.dp), Arrangement.Bottom) {
 		if (channel != null) {
@@ -48,7 +45,9 @@ fun AddChannelBottomSheet(channel: Channel?, addAccountViewModel: AddAccountView
 					SecondaryButton(text = stringResource(R.string.skip_balance_btn)) {
 						addAccountViewModel.createAccountWithoutBalance(channel)
 					}
-					PrimaryButton(text = stringResource(R.string.check_balance_btn)) {
+					StaxButton(text = stringResource(R.string.check_balance_btn), icon = null,
+						buttonType = if (startingBalanceCheck.value) DISABLED else PRIMARY) {
+						startingBalanceCheck.value = true
 						addAccountViewModel.balanceCheck(channel)
 					}
 				}

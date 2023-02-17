@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.*
-import com.hover.stax.addChannels.AddAccountViewModel
+import com.hover.stax.addAccounts.AddAccountViewModel
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.presentation.add_accounts.components.SampleChannelProvider
@@ -43,10 +43,6 @@ import org.koin.androidx.compose.getViewModel
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ChooseChannelScreen(addAccountViewModel: AddAccountViewModel = getViewModel(), navController: NavController) {
-
-	val simList by addAccountViewModel.sims.observeAsState(initial = emptyList())
-	val countryChannels by addAccountViewModel.simCountryList.observeAsState(initial = emptyList())
-
 	val countries by addAccountViewModel.channelCountryList.observeAsState(initial = emptyList())
 	val channels by addAccountViewModel.filteredChannels.observeAsState(initial = emptyList())
 	val countryChoice by addAccountViewModel.countryChoice.observeAsState(initial = "00")
@@ -54,6 +50,7 @@ fun ChooseChannelScreen(addAccountViewModel: AddAccountViewModel = getViewModel(
 	val channelChoice by addAccountViewModel.chosenChannel.collectAsState(initial = null)
 
 	val showingHelp = remember { mutableStateOf(false) }
+
 	val coroutineScope = rememberCoroutineScope()
 	val bottomSheetState = rememberModalBottomSheetState(
 		initialValue = ModalBottomSheetValue.Hidden,

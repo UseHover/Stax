@@ -80,7 +80,7 @@ package="com.hover.stax">
 		android:theme="@style/StaxTheme" />
 
 	<activity
-		android:name="com.hover.stax.addChannels.AddAccountActivity"
+		android:name="com.hover.stax.addAccounts.AddAccountActivity"
 		android:exported="false"
 		android:theme="@style/StaxTheme">
 	</activity>

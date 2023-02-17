@@ -1,4 +1,4 @@
-package com.hover.stax.addChannels
+package com.hover.stax.addAccounts
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,10 +19,7 @@ import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.presentation.add_accounts.AddAccountNavHost
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -44,7 +41,7 @@ class AddAccountActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.checkBalanceEvent.collect {
-                        callHover(checkBalance, generateSessionBuilder(viewModel.account.first(), it))
+                        callHover(checkBalance, generateSessionBuilder(it.first, it.second))
                 }}
                 launch {
                     viewModel.doneEvent.collect { isDone ->
@@ -70,13 +67,11 @@ class AddAccountActivity : AppCompatActivity() {
         Timber.e("got check balance result")
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
 //            NavUtil.showTransactionDetailsFragment(navController, data.extras!!.getString("uuid")!!)
-            Timber.e("finishing")
             finish()
         }
     }
 
     private fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder) {
-        Timber.e("calling hover")
         try {
             launcher.launch(b)
         } catch (e: Exception) {

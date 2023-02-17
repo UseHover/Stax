@@ -1,4 +1,4 @@
-package com.hover.stax.addChannels
+package com.hover.stax.addAccounts
 
 import android.content.Context
 import android.content.Intent

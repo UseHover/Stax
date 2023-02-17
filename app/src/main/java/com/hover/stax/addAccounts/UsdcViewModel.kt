@@ -1,12 +1,10 @@
-package com.hover.stax.addChannels
+package com.hover.stax.addAccounts
 
 import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.messaging.FirebaseMessaging
@@ -14,7 +12,6 @@ import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.CRYPTO_TYPE
 import com.hover.stax.domain.model.USDCAccount
-import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

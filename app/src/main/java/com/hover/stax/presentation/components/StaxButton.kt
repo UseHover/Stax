@@ -48,7 +48,7 @@ const val PRIMARY = 1
 const val DISABLED = 2
 
 @Composable
-private fun StaxButton(text: String, icon: Int?, buttonType: Int, modifier: Modifier? = Modifier, onClick: () -> Unit) {
+fun StaxButton(text: String, icon: Int?, buttonType: Int, modifier: Modifier? = Modifier, onClick: () -> Unit) {
     Button(
         onClick = { onClick() },
         modifier = modifier ?: Modifier

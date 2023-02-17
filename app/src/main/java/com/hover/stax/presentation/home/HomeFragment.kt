@@ -25,9 +25,9 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.addChannels.AddAccountActivity
-import com.hover.stax.addChannels.AddAccountContract
-import com.hover.stax.addChannels.AddAccountViewModel
+import com.hover.stax.addAccounts.AddAccountActivity
+import com.hover.stax.addAccounts.AddAccountContract
+import com.hover.stax.addAccounts.AddAccountViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.home.MainActivity
@@ -45,7 +45,6 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val addAccountViewModel: AddAccountViewModel by sharedViewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
 
@@ -97,11 +96,8 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
 	}
 
     private fun goToAddAccount() {
-//        (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
-//	    addAccount.launch()
-        startActivity(Intent(context, AddAccountActivity::class.java))
+	    addAccount.launch(null)
     }
-
 
     private fun setComposeView() {
         binding.root.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)

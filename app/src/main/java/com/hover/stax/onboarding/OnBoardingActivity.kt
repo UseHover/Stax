@@ -23,7 +23,8 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.addChannels.AddAccountActivity
+import com.hover.stax.addAccounts.AddAccountActivity
+import com.hover.stax.addAccounts.AddAccountContract
 import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NAV_HOME
@@ -91,13 +92,12 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
     }
 
     private fun navigateToAddAccount() {
-        val intent = Intent(this, AddAccountActivity::class.java).apply {
-            putExtra(FRAGMENT_DIRECT, NAV_LINK_ACCOUNT)
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-        startActivity(intent)
-
+        addAccount.launch(null)
         setPassedOnboarding()
+    }
+
+    val addAccount = registerForActivityResult(AddAccountContract()) { data: Intent? ->
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 

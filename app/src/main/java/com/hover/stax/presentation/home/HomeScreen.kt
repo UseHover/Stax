@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.hover.stax.addChannels.AddAccountActivity
+import com.hover.stax.addAccounts.AddAccountActivity
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.presentation.home.components.*
 import com.hover.stax.ui.theme.StaxTheme
