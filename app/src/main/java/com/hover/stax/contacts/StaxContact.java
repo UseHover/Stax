@@ -173,8 +173,12 @@ public class StaxContact {
     }
 
     private boolean isSamePhone(StaxContact other) {
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        return phoneUtil.isNumberMatch(accountNumber, other.accountNumber) != NO_MATCH;
+        try {
+            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+            return phoneUtil.isNumberMatch(accountNumber, other.accountNumber) != NO_MATCH;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void updateNames(Intent i) {
