@@ -208,8 +208,8 @@ dependencies {
     implementation("com.google.firebase:firebase-perf")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.android.play:core:1.10.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+    implementation(libs.core)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     // Auth
     implementation(libs.auth)
