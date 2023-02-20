@@ -63,7 +63,13 @@ fun MainNavHost() {
                 PaymentTypeScreen(
                     onClickBack = { navController.navigateUp() },
                     accounts = accountList.accounts,
-                    actions = actionList
+                    onAccountSelected = { account ->
+                        Timber.d("Selected account: ${account.id}")
+                        navigateWithPop(
+                            PaymentScreens.SendMoney.route,
+                            navController
+                        )
+                    }
                 )
             }
         }
