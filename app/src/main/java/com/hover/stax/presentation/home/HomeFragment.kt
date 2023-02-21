@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.api.Hover
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
@@ -39,8 +38,6 @@ import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import io.sentry.Sentry
-import io.sentry.protocol.User
 
 class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterface, BalanceTapListener {
 
@@ -51,24 +48,12 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
 
-    val userSentry = User()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
-        Sentry.configureScope { scope ->
-            Utils.getSdkPrefs(requireContext()).getString("channel_actions_schema_version", "")
-                ?.let { scope.setTag("configVersion", it) }
-        }
-
-        Sentry.configureScope { scope ->
-            scope.setContexts("deviceId", Hover.getDeviceId(requireContext()))
-        }
-
-        Sentry.setUser(userSentry)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
