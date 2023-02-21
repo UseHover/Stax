@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
@@ -13,7 +15,9 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.domain.model.CRYPTO_TYPE
 import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.utils.AnalyticsUtil
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.stellar.sdk.Server
@@ -37,9 +41,16 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	var confirmPin: MediatorLiveData<String> = MediatorLiveData()
 
 	val account = MutableSharedFlow<USDCAccount>()
+	val secret = MutableLiveData<String>()
+
+	private val _downloadEvent = Channel<Boolean>()
+	val downloadEvent = _downloadEvent.receiveAsFlow()
 
 	private val _doneEvent = MutableStateFlow(false)
 	val doneEvent = _doneEvent.asSharedFlow()
+
+	private val _error = MutableStateFlow(-1)
+	val error = _error.asSharedFlow()
 
 	fun setPin(pin: String) {
 		initialPin.postValue(pin)
@@ -51,11 +62,15 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 		return true
 	}
 
+	private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+		_error.value = R.string.create_account_error
+	}
+
 	fun createAccount() {
-		viewModelScope.launch(Dispatchers.IO) {
+		viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
 			val keyPair = createKeypair()
 			generateRemoteAccount(keyPair.accountId)
-
+			secret.postValue(String(keyPair.secretSeed))
 			generateStaxAccountsForEachBalance(keyPair)
 		}
 	}
@@ -63,7 +78,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	private fun createKeypair(): StellarKeyPair {
 		val pair: StellarKeyPair = StellarKeyPair.random()
 		Timber.e("accountId ${pair.accountId}")
-		Timber.e("seed ${pair.secretSeed}")
+		Timber.e("seed ${String(pair.secretSeed)}")
 		return pair
 	}
 
@@ -101,9 +116,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	}
 
 	private fun encryptSecret(account: USDCAccount, pin: String, secret: String) {
-		val pinAsBytes: ByteArray = pin.toByteArray(charset("UTF-8"))
 		val secretAsBytes: ByteArray = secret.toByteArray(charset("UTF-8"))
-
 
 		// One option
 //		val key = SecretKeySpec(pinAsBytes, "AES")
@@ -144,6 +157,10 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 			(getApplication() as Application).getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 		val clip = ClipData.newPlainText("usdc address", text)
 		clipboardManager.setPrimaryClip(clip)
+	}
+
+	fun downloadKey() = viewModelScope.launch(Dispatchers.IO) {
+		secret.value?.let { _downloadEvent.send(true) }
 	}
 
 	fun done() = viewModelScope.launch(Dispatchers.IO) {

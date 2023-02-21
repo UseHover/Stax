@@ -20,12 +20,13 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun UsdcAccountSummaryScreen(viewModel: UsdcViewModel = getViewModel()) {
 	val account by viewModel.account.collectAsState(initial = null)
+	val error by viewModel.error.collectAsState(initial = -1)
 
 	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 		Scaffold(
-			topBar = { TallTopBar(getTitle(account == null)) { viewModel.done() } },
+			topBar = { TallTopBar(getTitle(account == null, error)) { viewModel.done() } },
 		) {
-			account?.let {
+			if (account != null) {
 				Column(modifier = Modifier
 					.fillMaxSize()
 					.padding(34.dp), Arrangement.SpaceAround) {
@@ -68,7 +69,7 @@ fun UsdcAccountSummaryScreen(viewModel: UsdcViewModel = getViewModel()) {
 							style = MaterialTheme.typography.body1
 						)
 						PrimaryButton(text = stringResource(R.string.usdc_account_2_action)) {
-
+							viewModel.downloadKey()
 						}
 					}
 				}
@@ -78,8 +79,11 @@ fun UsdcAccountSummaryScreen(viewModel: UsdcViewModel = getViewModel()) {
 }
 
 @Composable
-fun getTitle(loading: Boolean): String {
-	return stringResource(if (loading) R.string.loading_human else R.string.create_account_success)
+fun getTitle(loading: Boolean, error: Int): String {
+	return stringResource(
+		if (loading && error == -1) R.string.loading_human
+		else if (error != -1) error
+		else R.string.create_account_success)
 }
 
 @Preview

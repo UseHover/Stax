@@ -15,15 +15,15 @@ class TransactionContract : ActivityResultContract<HoverSession.Builder, Intent?
 
 	private var builder: HoverSession.Builder? = null
 
-	override fun createIntent(context: Context, b: HoverSession.Builder): Intent {
-		builder = b
+	override fun createIntent(context: Context, input: HoverSession.Builder): Intent {
+		builder = input
 		updatePushNotifGroupStatus(context)
-		logStart(context, b)
-		return b.build()
+		logStart(context, input)
+		return input.build()
 	}
 
-	override fun parseResult(resultCode: Int, result: Intent?) : Intent? {
-		return result
+	override fun parseResult(resultCode: Int, intent: Intent?) : Intent? {
+		return intent
 	}
 
 	private fun updatePushNotifGroupStatus(c: Context) {

@@ -77,13 +77,18 @@
     <string name="link_x">Link %1$s</string>
     <string name="link_explain">This will allow you to see your balance and move money from Stax. Stax uses USSD so that you can have access to your money even without an internet connection. Stax does not hold money, and updating your balance or moving money always requires both your linked SIM card and PIN.</string>
     <string name="link_to_sim">This account will use the following SIM:</string>
-    <string name="no_useable_sim">We could not detect a SIM card that will work with this USSD service.</string>
+    <string name="link_sim_error">Could not detect a SIM that works with this service.</string>
+    <string name="link_sim_error_details">You can add the account but you will not be able to check balance or move money until you insert the correct SIM. If you think this is a mistake you can <u>report the issue</u>.</string>
+    <string name="sims_detected">The following SIM cards were detected:</string>
     <string name="ask_check_balance">To finish linking your account check your balance.</string>
     <string name="check_balance_btn">Check account balance</string>
+    <string name="save_without_sim_btn">Add account without SIM</string>
     <string name="skip_balance_btn">Skip balance check</string>
     <string name="create_pin">Create a PIN for your USDC wallet</string>
     <string name="confirm_pin">Re-enter your PIN to confirm</string>
     <string name="create_account">Create account</string>
+
+    <!-- COMPOSE ADD USDC ACCOUNT -->
     <string name="create_usdc_explain_title">What to know about creating a USDC account</string>
     <string name="usdc_bullet_1">This is your wallet</string>
     <string name="usdc_bullet_2">Don\'t lose your security key</string>
@@ -91,6 +96,7 @@
     <string name="usdc_explain_2">Your key will be saved to your Google account Drive storage and your PIN will be required to access it in Stax. You must have both your key and PIN to access your money.</string>
     <string name="continue_to_create_pin">Continue to create your PIN</string>
     <string name="create_account_success">Success! Your USDC wallet has been created.</string>
+    <string name="create_account_error">Could not contact server. Please make sure you are online and try again.</string>
     <string name="usdc_account_1">Your wallet address is %s</string>
     <string name="usdc_account_1_explain">You can use this to receive money on any platform that supports USDC.</string>
     <string name="usdc_account_1_action">Copy wallet address</string>

@@ -208,11 +208,8 @@ class AddAccountViewModel(
     }
 
     fun createAccountWithoutBalance(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {
-        Timber.e("Skipping balance check")
         createAccount(channel)
-        Timber.e("done event has %s subscribers", doneEvent.subscriptionCount.value)
-        val emitted = doneEvent.tryEmit(true)
-        Timber.e("emitted %s", emitted)
+        doneEvent.emit(true)
     }
 
     fun createAccount(channel: Channel) = viewModelScope.launch(Dispatchers.IO) {

@@ -1,6 +1,7 @@
 package com.hover.stax.addAccounts
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -20,10 +21,12 @@ import com.hover.stax.hover.TransactionContract
 import com.hover.stax.presentation.add_accounts.AddAccountNavHost
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 
 class AddAccountActivity : AppCompatActivity() {
 
@@ -47,6 +50,10 @@ class AddAccountActivity : AppCompatActivity() {
                     viewModel.doneEvent.collect { isDone ->
                         if (isDone) { finish() }
                 }}
+                launch {
+                    usdcViewModel.downloadEvent.collect { go ->
+                       if (go) { chooseFileLocation() }
+                    }}
                 launch {
                     usdcViewModel.doneEvent.collect { isDone ->
                         if (isDone) { finish() }
@@ -78,6 +85,31 @@ class AddAccountActivity : AppCompatActivity() {
             runOnUiThread { UIHelper.flashAndReportMessage(this, getString(
                 R.string.error_running_action)) }
             AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
+        }
+    }
+
+    private fun chooseFileLocation() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+            putExtra(Intent.EXTRA_TITLE, "usdcSecretKey.txt")
+        }
+        startActivityForResult(intent, 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0) {
+            data?.data?.let {
+                try {
+                    val outputStream = contentResolver.openOutputStream(it) ?: return
+                    Timber.e("Secret should be ${usdcViewModel.secret.value}")
+                    outputStream.write(usdcViewModel.secret.value!!.toByteArray(charset("UTF-8")))
+                    outputStream.close()
+                } catch (e: Exception) {
+                    Timber.e("Something went wrong", e)
+                }
+            }
         }
     }
 
