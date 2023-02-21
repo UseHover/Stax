@@ -19,19 +19,3 @@ val DefaultBottomSheetConfig = BottomSheetConfig(
     ),
     true
 )
-
-val NoScrimMainBottomSheetConfig = BottomSheetConfig(
-    RoundedCornerShape(
-        topStart = LargeRadius,
-        topEnd = LargeRadius
-    ),
-    false
-)
-
-val NoScrimSmallShapeMainBottomSheetConfig = BottomSheetConfig(
-    RoundedCornerShape(
-        topStart = SmallRadius,
-        topEnd = SmallRadius
-    ),
-    false
-)
