@@ -26,6 +26,7 @@ import com.hover.stax.ui.theme.StaxTheme
 
 @Composable
 fun StaxModalCell(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     header: String,
     subHeader: String,
@@ -47,7 +48,7 @@ fun StaxModalCell(
 
     val shape = MaterialTheme.shapes.medium
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .height(56.dp)
@@ -102,6 +103,11 @@ fun StaxModalCell(
 @Composable
 fun StaxModalCellPreview() {
     StaxTheme {
-        StaxModalCell(onClick = { }, header = "This is a test", subHeader = "This is a test", footer = "This is a test")
+        StaxModalCell(
+            onClick = { },
+            header = "This is a test",
+            subHeader = "This is a test",
+            footer = "This is a test"
+        )
     }
 }
