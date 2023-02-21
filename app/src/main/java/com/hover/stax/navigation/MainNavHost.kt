@@ -17,6 +17,7 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.send.PayWithScreen
 import com.hover.stax.send.PaymentTypeScreen
 import com.hover.stax.send.SendMoneyScreen
 import org.koin.androidx.compose.koinViewModel
@@ -52,15 +53,15 @@ fun MainNavHost() {
             composable(route = PaymentScreens.SendMoney.route) {
                 SendMoneyScreen(navTo = {
                     navigate(
-                        PaymentScreens.PaymentTypeScreen.route,
+                        PaymentScreens.PayWithScreen.route,
                         navController
                     )
                 })
             }
 
-            bottomSheet(PaymentScreens.PaymentTypeScreen.route) {
+            bottomSheet(PaymentScreens.PayWithScreen.route) {
                 bottomSheetConfig.value = DefaultBottomSheetConfig
-                PaymentTypeScreen(
+                PayWithScreen(
                     onClickBack = { navController.navigateUp() },
                     accounts = accountList.accounts,
                     onAccountSelected = { account ->
@@ -70,6 +71,13 @@ fun MainNavHost() {
                             navController
                         )
                     }
+                )
+            }
+
+            bottomSheet(PaymentScreens.PaymentTypeScreen.route) {
+                bottomSheetConfig.value = DefaultBottomSheetConfig
+                PaymentTypeScreen(
+                    onClickBack = { navController.navigateUp() },
                 )
             }
         }
