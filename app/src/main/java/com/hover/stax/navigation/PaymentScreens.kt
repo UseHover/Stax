@@ -6,6 +6,10 @@ sealed class PaymentScreens(val name: String) {
         val route = name
     }
 
+    object PayWithScreen : PaymentScreens("pay-with-screen") {
+        val route = name
+    }
+
     object PaymentTypeScreen : PaymentScreens("payment-type-screen") {
         val route = name
     }

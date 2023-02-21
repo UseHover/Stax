@@ -9,7 +9,7 @@ import com.hover.stax.views.composables.StaxLayout
 import com.hover.stax.views.composables.StaxModalCell
 
 @Composable
-fun PaymentTypeScreen(
+fun PayWithScreen(
     onClickBack: () -> Unit,
     accounts: List<Account>,
     onAccountSelected: (Account) -> Unit
