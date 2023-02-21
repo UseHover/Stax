@@ -110,6 +110,14 @@ fun SendMoneyScreen(
     }
 }
 
+object SendMoneyScreenTags {
+    const val TAG_AMOUNT_FIELD = "amount_field"
+    const val TAG_ACCOUNT_FIELD = "account_field"
+    const val TAG_NUM_KEYPAD = "num_keypad"
+    const val TAG_CANCEL_BUTTON = "cancel_button"
+    const val TAG_NEXT_BUTTON = "next_button"
+}
+
 @Preview
 @Composable
 fun SendMoneyScreenPreview() {
