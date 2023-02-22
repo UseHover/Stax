@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import org.junit.Rule
 import org.junit.Test
 
-class PayWithScreenKtTest {
+class PayWithScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
