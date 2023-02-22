@@ -100,7 +100,7 @@ data class StaxTransaction(
     var accountName: String? = null
 
     constructor(data: Intent, action: HoverAction, contact: StaxContact?, context: Context) : this(
-        data.getStringExtra(TransactionContract.COLUMN_UUID) ?: "",
+        data.getStringExtra(TransactionContract.COLUMN_UUID)!!,
         data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)!!,
         data.getIntExtra(TransactionContract.COLUMN_ENVIRONMENT, 0),
         data.getStringExtra(TransactionContract.COLUMN_TYPE)!!,
