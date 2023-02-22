@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright 2023 Stax
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -12,42 +11,57 @@
      limitations under the License.
 -->
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/accountCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/account_cardhead">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/accountCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:title="@string/account_cardhead">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSurface"
-        >
+        android:background="@color/colorSurface">
 
-    <LinearLayout
+        <LinearLayout
+            android:id="@+id/accountLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:orientation="vertical"
-            android:id="@+id/accountLayout"
             android:paddingHorizontal="@dimen/margin_13"
             android:paddingTop="@dimen/margin_16"
             android:paddingBottom="@dimen/margin_16">
 
-        <TextView
+            <TextView
+                android:id="@+id/loggedInHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_5"
                 android:text="@string/logout"
                 android:textSize="@dimen/text_16" />
 
-        <TextView
+            <TextView
                 android:id="@+id/loggedInAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/logged_in_as"
                 android:textColor="@color/grey"
                 android:textSize="14sp" />
-    </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginAccount"
+                style="@style/StaxButtonColored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/btn_google_signin"
+                app:icon="@drawable/google_logo"
+                app:iconGravity="start"
+                app:iconPadding="@dimen/margin_8"
+                app:iconSize="@dimen/margin_21" />
+
+        </LinearLayout>
+
     </FrameLayout>
 
 </com.hover.stax.views.StaxCardView>
