@@ -12,9 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.hover.stax.R
 
 @Composable
 fun StaxIcon(
@@ -34,16 +37,18 @@ fun StaxIcon(
 fun StaxImage(
     modifier: Modifier = Modifier,
     imageUrl: String,
-    tint: Color = LocalContentColor.current,
 ) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(imageUrl)
             .crossfade(true)
+            .diskCachePolicy(CachePolicy.ENABLED)
             .build(),
-        contentDescription = null, // TODO - add content description
+        contentDescription = "", // TODO - add content description
+        placeholder = painterResource(id = R.drawable.img_placeholder),
+        error = painterResource(id = R.drawable.img_placeholder),
         contentScale = ContentScale.Crop,
-        modifier = Modifier.clip(CircleShape)
+        modifier = modifier
     )
 }
 
