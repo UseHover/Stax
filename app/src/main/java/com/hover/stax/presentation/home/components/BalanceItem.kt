@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -46,12 +47,14 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.stax.R
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSD_TYPE
+import com.hover.stax.domain.use_case.AccountWithBalance
 import com.hover.stax.presentation.add_accounts.components.SampleAccountProvider
 import com.hover.stax.presentation.components.Logo
 import com.hover.stax.presentation.components.TimeStringGenerator
 
 @Composable
-fun BalanceItem(account: Account, goToDetail: (Account) -> Unit, refresh: (Account) -> Unit) {
+fun BalanceItem(account: AccountWithBalance, goToDetail: (AccountWithBalance) -> Unit, refresh: (AccountWithBalance) -> Unit) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Row(
         modifier = Modifier
@@ -59,10 +62,18 @@ fun BalanceItem(account: Account, goToDetail: (Account) -> Unit, refresh: (Accou
             .clickable { goToDetail(account) }
             .padding(13.dp)
     ) {
-        Logo(account.logoUrl, "Account Institution Logo")
+        if (account.account.type == USSD_TYPE)
+            Logo(account.account.logoUrl, "Account Institution Logo")
+        else {
+            Icon(
+                painterResource(R.drawable.stellar_logo),
+                contentDescription = "Stellar USDC logo",
+                modifier = Modifier.height(34.dp).padding(5.dp).align(Alignment.CenterVertically)
+            )
+        }
 
         Text(
-            text = account.userAlias,
+            text = account.account.userAlias,
             style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .weight(1f)
@@ -73,7 +84,7 @@ fun BalanceItem(account: Account, goToDetail: (Account) -> Unit, refresh: (Accou
 
         Column(modifier = Modifier.align(Alignment.CenterVertically)) {
             Text(
-                text = account.latestBalance ?: " - ",
+                text = account.account.latestBalance ?: " - ",
                 modifier = Modifier.align(Alignment.End),
                 style = MaterialTheme.typography.subtitle2,
                 color = colorResource(id = R.color.offWhite)
@@ -81,9 +92,9 @@ fun BalanceItem(account: Account, goToDetail: (Account) -> Unit, refresh: (Accou
 
             Spacer(modifier = Modifier.height(2.dp))
 
-            if (account.latestBalance != null)
+            if (account.account.latestBalance != null)
                 Text(
-                    text = TimeStringGenerator(account.latestBalanceTimestamp),
+                    text = TimeStringGenerator(account.account.latestBalanceTimestamp),
                     modifier = Modifier.align(Alignment.End),
                     color = colorResource(id = R.color.offWhite),
                     style = MaterialTheme.typography.caption
@@ -109,6 +120,12 @@ fun BalanceItem(account: Account, goToDetail: (Account) -> Unit, refresh: (Accou
 
 @Preview
 @Composable
-fun BalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<Account>) {
+fun USSDBalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<AccountWithBalance>) {
     BalanceItem(accounts[0], {}, {})
+}
+
+@Preview
+@Composable
+fun USDCBalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<AccountWithBalance>) {
+    BalanceItem(accounts[3], {}, {})
 }

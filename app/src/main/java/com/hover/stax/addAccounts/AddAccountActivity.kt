@@ -3,6 +3,7 @@ package com.hover.stax.addAccounts
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
@@ -106,7 +107,9 @@ class AddAccountActivity : AppCompatActivity() {
                     Timber.e("Secret should be ${usdcViewModel.secret.value}")
                     outputStream.write(usdcViewModel.secret.value!!.toByteArray(charset("UTF-8")))
                     outputStream.close()
+                    Toast.makeText(this, R.string.key_downloaded, Toast.LENGTH_LONG).show()
                 } catch (e: Exception) {
+                    Toast.makeText(this, R.string.key_download_error, Toast.LENGTH_LONG).show()
                     Timber.e("Something went wrong", e)
                 }
             }

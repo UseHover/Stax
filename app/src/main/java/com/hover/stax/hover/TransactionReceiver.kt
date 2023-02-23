@@ -99,7 +99,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             if (inputExtras.containsKey(ACCOUNT_ID)) {
                 val accountId = inputExtras[ACCOUNT_ID]
                 accountId?.let {
-                    account = accountRepo.getAccount(accountId.toInt())
+                    account = accountRepo.getUssdAccount(accountId.toInt())
                     Timber.e("$account")
                 }
             }

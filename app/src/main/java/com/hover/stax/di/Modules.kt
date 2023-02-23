@@ -43,9 +43,10 @@ import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.repository.BountyRepository
 import com.hover.stax.domain.repository.ChannelRepository
 import com.hover.stax.domain.repository.FinancialTipsRepository
-import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.domain.use_case.sims.ListSimsUseCase
-import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
+import com.hover.stax.domain.use_case.AccountBalancesUseCase
+import com.hover.stax.domain.use_case.GetChannelBountiesUseCase
+import com.hover.stax.domain.use_case.ListSimsUseCase
+import com.hover.stax.domain.use_case.StaxUserUseCase
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
@@ -190,6 +191,7 @@ val useCases = module {
         Dispatchers.IO
     }
     single { ListSimsUseCase(get(), get(), get(), get(named("CoroutineDispatcher"))) }
+    single { AccountBalancesUseCase(get(), get(), get(named("CoroutineDispatcher"))) }
 
     factoryOf(::GetChannelBountiesUseCase)
 

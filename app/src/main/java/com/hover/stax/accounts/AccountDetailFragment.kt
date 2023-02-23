@@ -97,7 +97,9 @@ class AccountDetailFragment :
         binding.balanceCard.root.cardElevation = 0F
         binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
         binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onTapBalanceRefresh(viewModel.account.value) }
+        binding.balanceCard.balanceRefreshIcon.setOnClickListener { viewModel.account.value?.let { a ->
+            onTapBalanceRefresh(a)
+        } }
     }
 
     private fun setUpManage() {
@@ -213,13 +215,13 @@ class AccountDetailFragment :
     }
 
     private fun observeBalanceCheck() {
-        collectLifecycleFlow(balancesViewModel.balanceAction) { action ->
-            viewModel.account.value?.let { callHover(checkBalance, generateSessionBuilder(it, action)) }
-        }
+//        collectLifecycleFlow(balancesViewModel.userRequestedBalance) {
+//            it?.let { callHover(checkBalance, generateSessionBuilder(it.ussdAccount, it.balanceAction)) }
+//        }
     }
 
-    private fun onTapBalanceRefresh(account: USSDAccount?) {
-        balancesViewModel.requestBalance(account)
+    private fun onTapBalanceRefresh(account: USSDAccount) {
+//        balancesViewModel.requestBalance(account)
     }
 
     private fun setUpRemoveAccount(account: USSDAccount) {

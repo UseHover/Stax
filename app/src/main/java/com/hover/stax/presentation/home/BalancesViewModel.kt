@@ -17,74 +17,70 @@ package com.hover.stax.presentation.home
 
 import android.app.Application
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.common.base.Optional
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.model.USSD_TYPE
+import com.hover.stax.domain.use_case.AccountBalancesUseCase
+import com.hover.stax.domain.use_case.AccountWithBalance
+import com.hover.stax.domain.use_case.ListSimsUseCase
+import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import org.stellar.sdk.Server
+import org.stellar.sdk.responses.AccountResponse
 import timber.log.Timber
 
 class BalancesViewModel(
     application: Application,
-    val actionRepo: ActionRepo,
-    val accountRepo: AccountRepo
+    private val accountBalancesUseCase: AccountBalancesUseCase
 ) : AndroidViewModel(application) {
 
-    var userRequestedBalanceAccount = MutableLiveData<USSDAccount?>()
+    private val _accounts = MutableStateFlow<List<AccountWithBalance>>(emptyList())
+    val accounts = _accounts.asStateFlow()
 
-    private var _balanceAction = MutableSharedFlow<HoverAction>()
-    val balanceAction = _balanceAction.asSharedFlow()
-
-    private val _accounts = MutableLiveData<List<Account>>()
-    val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
+    private val _userRequestedBalance = Channel<AccountWithBalance>()
+    val userRequestedBalance = _userRequestedBalance.receiveAsFlow()
 
     private val _actionRunError = Channel<String>()
     val actionRunError = _actionRunError.receiveAsFlow()
 
     init {
-        getAccounts()
+        loadAccounts()
     }
 
-    fun requestBalance(account: USSDAccount?) {
-        if (account == null) {
-            AnalyticsUtil.logAnalyticsEvent(
-                (getApplication() as Context).getString(R.string.refresh_balance_failed),
-                getApplication()
-            )
-            Toast.makeText(getApplication(), R.string.refresh_balance_failed, Toast.LENGTH_LONG).show()
-        } else {
-            AnalyticsUtil.logAnalyticsEvent(
-                (getApplication() as Context).getString(R.string.refresh_balance),
-                getApplication()
-            )
-            userRequestedBalanceAccount.value = account
-            startBalanceActionFor(userRequestedBalanceAccount.value)
-        }
+    fun loadAccounts() = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("Loading accounts")
+        _accounts.update { accountBalancesUseCase() }
     }
 
-    private fun startBalanceActionFor(account: USSDAccount?) = viewModelScope.launch(Dispatchers.IO) {
-        if (account == null) return@launch
-
-        val action = actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE)
-        action?.let { _balanceAction.emit(action) } ?: run { _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action)) }
+    fun requestBalance(account: AccountWithBalance) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("requesting balance for ${account.account}")
+        _userRequestedBalance.send(account)
     }
-
-    private fun getAccounts() = viewModelScope.launch {
-        accountRepo.getAccounts().collect {
-            Timber.e("Found some accounts %s", it.size)
-            _accounts.postValue(it) }
-    }
+//
+//    private fun requestBalance(account: USDCAccount): USDCAccount {
+//        Timber.e("requesting usdc balance")
+//        AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.refresh_usdc_balance), getApplication())
+//        val server = Server("https://horizon-testnet.stellar.org")
+//        val accountNo: AccountResponse = server.accounts().account(account.accountNo)
+//
+//        for (balance in accountNo.balances) {
+//            if (balance.assetType == account.assetType && balance.assetCode == Optional.fromNullable(account.assetCode)) {
+//                account.updateBalance(balance.balance, null)
+//            }
+//        }
+//        return account
+//    }
 }

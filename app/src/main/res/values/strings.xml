@@ -100,8 +100,11 @@
     <string name="usdc_account_1">Your wallet address is %s</string>
     <string name="usdc_account_1_explain">You can use this to receive money on any platform that supports USDC.</string>
     <string name="usdc_account_1_action">Copy wallet address</string>
+    <string name="address_copied">Copied address to clipboard.</string>
     <string name="usdc_account_2_explain">Your key has been saved to your Google account Drive storage. You may want to save a backup somewhere else or with someone you trust.</string>
     <string name="usdc_account_2_action">Download key to local storage</string>
+    <string name="key_downloaded">Key saved.</string>
+    <string name="key_download_error">Could not save key, please try again.</string>
 
     <!-- ONBOARDING VARIANT ZERO (DEFAULT)-->
     <string name="stax_tagline">Move money without stress</string>

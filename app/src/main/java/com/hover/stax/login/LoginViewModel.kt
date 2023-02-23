@@ -34,7 +34,7 @@ import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.data.remote.dto.toStaxUser
 import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.domain.repository.AuthRepository
-import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
+import com.hover.stax.domain.use_case.StaxUserUseCase
 import com.hover.stax.preferences.DefaultTokenProvider
 import com.hover.stax.preferences.TokenProvider
 import com.hover.stax.utils.AnalyticsUtil
@@ -45,10 +45,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class LoginViewModel(
-    application: Application,
-    private val staxUserUseCase: StaxUserUseCase,
-    private val authRepository: AuthRepository,
-    private val tokenProvider: TokenProvider
+	application: Application,
+	private val staxUserUseCase: StaxUserUseCase,
+	private val authRepository: AuthRepository,
+	private val tokenProvider: TokenProvider
 ) : AndroidViewModel(application) {
 
     lateinit var signInClient: GoogleSignInClient

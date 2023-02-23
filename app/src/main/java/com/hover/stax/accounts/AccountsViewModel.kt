@@ -145,8 +145,10 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
             if (account.id == current?.id) return@launch
 
-            current?.isDefault = false
-            repo.update(current)
+            current?.let {
+                current.isDefault = false
+                repo.update(current)
+            }
 
             val a = accts.first { it.id == account.id }
             a.isDefault = true

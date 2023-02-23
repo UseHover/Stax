@@ -24,8 +24,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.api.Hover
-import com.hover.stax.domain.use_case.sims.ListSimsUseCase
-import com.hover.stax.domain.use_case.sims.SimWithAccount
+import com.hover.stax.domain.use_case.ListSimsUseCase
+import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

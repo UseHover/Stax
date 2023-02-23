@@ -25,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -33,7 +34,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hover.stax.addAccounts.AddAccountActivity
+import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.domain.use_case.AccountWithBalance
 import com.hover.stax.presentation.home.components.*
 import com.hover.stax.ui.theme.StaxTheme
 import org.koin.androidx.compose.getViewModel
@@ -45,7 +48,6 @@ data class HomeClickFunctions(
     val onPayBillClicked: () -> Unit,
     val onRequestMoneyClicked: () -> Unit,
     val onClickedTC: () -> Unit,
-    val onClickedAddNewAccount: () -> Unit,
     val onClickedSettingsIcon: () -> Unit,
     val onClickedRewards: () -> Unit
 )
@@ -63,9 +65,7 @@ fun HomeScreen(
     navTo: (dest: Int) -> Unit,
     navController: NavHostController = rememberNavController()
 ) {
-    val accounts by balancesViewModel.accounts.observeAsState(initial = emptyList())
-
-    val context = LocalContext.current
+    val accounts by balancesViewModel.accounts.collectAsState()
 
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
@@ -73,15 +73,16 @@ fun HomeScreen(
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     if (accounts.isEmpty()) {
                         EmptyBalance {
-                            goToAddAccount(context)
+                            homeViewModel.requestAddAccount()
                         }
                     } else { BonusAd(homeViewModel, navController) }
 
                     MoveMoneyOptions(homeClickFunctions, accounts)
 
-                    BalancesList(accounts = accounts) {
-                        goToAddAccount(context)
-                    }
+                    BalancesList(accounts = accounts,
+                        { homeViewModel.requestAddAccount() },
+                        { goToAccountDetails(it) },
+                        { balancesViewModel.requestBalance(it) } )
 
                     FinancialTipScreen(homeViewModel, navController)
                 }
@@ -90,8 +91,8 @@ fun HomeScreen(
     }
 }
 
-fun goToAddAccount(context: Context)  {
-    context.startActivity(Intent(context, AddAccountActivity::class.java))
+fun goToAccountDetails(account: AccountWithBalance)  {
+
 }
 
 @Preview

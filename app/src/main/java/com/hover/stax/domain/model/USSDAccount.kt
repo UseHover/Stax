@@ -37,10 +37,10 @@ class USSDAccount(institutionName : String, userAlias: String, logoUrl: String, 
     var institutionType: String,
 
     @JvmField
-    @ColumnInfo
+    @ColumnInfo(defaultValue = "00")
     var countryAlpha2: String,
 
-    @ColumnInfo(index = true)
+    @ColumnInfo(index = true, defaultValue = "-1")
     var channelId: Int,
 
     @ColumnInfo(defaultValue = "0")

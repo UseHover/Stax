@@ -24,52 +24,49 @@ import kotlinx.coroutines.flow.Flow
 
 class AccountRepo(db: AppDatabase) {
 
-    private val USSDAccountDao: USSDAccountDao = db.accountDao()
+    private val AccountDao: AccountDao = db.accountDao()
 
-    fun getAllAccounts(): List<USSDAccount> = USSDAccountDao.getAllAccounts()
+    fun getAllAccounts(): List<Account> = AccountDao.getAllAccounts()
 
-    fun getAllLiveAccounts(): LiveData<List<Account>> = USSDAccountDao.getLiveAccounts()
+    fun getUssdAccounts(): List<USSDAccount> = AccountDao.getUssdAccounts()
 
-    fun getUsdcAccounts(): LiveData<List<USDCAccount>> = USSDAccountDao.getUSDCAccounts()
+    fun getAllLiveAccounts(): LiveData<List<USSDAccount>> = AccountDao.getLiveAccounts()
+
+    fun getUsdcAccounts(): Flow<List<USDCAccount>> = AccountDao.getUSDCAccounts()
 
     fun getAccountBySim(simSubscriptionId: Int): USSDAccount? =
-        USSDAccountDao.getAccountBySim(simSubscriptionId)
+        AccountDao.getAccountBySim(simSubscriptionId)
 
     fun getTelecomAccounts(simSubscriptionIds: IntArray): Flow<List<Account>> =
-        USSDAccountDao.getAccountsBySubscribedSim(simSubscriptionIds)
+        AccountDao.getAccountsBySubscribedSim(simSubscriptionIds)
 
-    fun getAccountsCount(): Int = USSDAccountDao.getDataCount()
+    fun getAccountsCount(): Int = AccountDao.getDataCount()
 
-    fun getAccountsByChannel(channelId: Int): List<Account> =
-        USSDAccountDao.getAccountsByChannel(channelId)
+    fun getAccountsByChannel(channelId: Int): List<USSDAccount> =
+        AccountDao.getAccountsByChannel(channelId)
 
-    fun getDefaultAccount(): Account? = USSDAccountDao.getDefaultAccount()
+    fun getDefaultAccount(): Account? = AccountDao.getDefaultAccount()
 
-    fun getAccount(id: Int): USSDAccount? = USSDAccountDao.getAccount(id)
+    suspend fun getUssdAccount(id: Int): USSDAccount? = AccountDao.getUssdAccount(id)
+    suspend fun getUsdcAccount(id: Int): USDCAccount? = AccountDao.getUsdcAccount(id)
 
-    fun getLiveAccount(id: Int?): LiveData<USSDAccount> = USSDAccountDao.getLiveAccount(id)
+    fun getLiveAccount(id: Int?): LiveData<USSDAccount> = AccountDao.getLiveAccount(id)
 
-    fun getAccounts(): Flow<List<USSDAccount>> = USSDAccountDao.getAccounts()
+    fun getAccounts(): Flow<List<USSDAccount>> = AccountDao.getAccounts()
 
-    suspend fun saveAccount(account: Account) {
+    suspend fun saveAccount(account: USSDAccount) {
         if (account.id == 0) {
-            USSDAccountDao.insert(account)
+            AccountDao.insert(account)
         } else {
-            USSDAccountDao.update(account)
+            AccountDao.update(account)
         }
     }
 
-    fun insert(account: Account): Long = USSDAccountDao.ins(account)
+    fun insert(account: USSDAccount) = AccountDao.insert(account)
 
-    fun insert(account: USSDAccount) = USSDAccountDao.ins(account)
+    fun insert(account: USDCAccount) = AccountDao.insert(account)
 
-    fun insert(account: USDCAccount) = USSDAccountDao.ins(account)
+    fun update(account: USSDAccount) = AccountDao.update(account)
 
-    suspend fun insert(accounts: List<Account>): List<Long> = USSDAccountDao.insertAll(accounts)
-
-    suspend fun update(account: Account?) = account?.let { USSDAccountDao.update(it) }
-
-    suspend fun update(accounts: List<Account>) = USSDAccountDao.update(accounts)
-
-    suspend fun delete(account: Account) = USSDAccountDao.delete(account)
+    suspend fun delete(account: USSDAccount) = AccountDao.delete(account)
 }

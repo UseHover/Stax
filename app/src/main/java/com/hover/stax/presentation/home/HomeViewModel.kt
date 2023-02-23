@@ -24,10 +24,12 @@ import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.FinancialTipsRepository
+import com.hover.stax.domain.use_case.AccountWithBalance
 import com.hover.stax.presentation.bounties.BountiesState
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,6 +38,9 @@ class HomeViewModel(application: Application,
     actionRepo: ActionRepo,
     tipsRepo: FinancialTipsRepository
 ) : FinancialTipsViewModel(application, tipsRepo) {
+
+    private val _addAccountEvent = Channel<Boolean>()
+    val addAccountEvent = _addAccountEvent.receiveAsFlow()
 
     val bonusActions: LiveData<List<HoverAction>> = actionRepo.getBonusActions()
 
@@ -49,6 +54,11 @@ class HomeViewModel(application: Application,
 //            emit(Resource.Error("Error fetching tips"))
 //        }
 //    }
+
+    fun requestAddAccount() = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("requesting add account")
+        _addAccountEvent.send(true)
+    }
 
     fun logBuyAirtimeFromAd() = viewModelScope.launch(Dispatchers.IO) {
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.clicked_bonus_airtime_banner), getApplication())

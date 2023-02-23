@@ -22,7 +22,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.channels.Channel
-import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.model.USSDAccount
 import javax.annotation.Nullable
 
 const val BUSINESS_NO = "businessNo"
@@ -32,7 +32,7 @@ const val BUSINESS_NAME = "businessName"
     tableName = "paybills",
     foreignKeys = [
         ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"]),
-        ForeignKey(entity = Account::class, parentColumns = ["id"], childColumns = ["accountId"])
+        ForeignKey(entity = USSDAccount::class, parentColumns = ["id"], childColumns = ["accountId"])
     ],
     indices = [Index(value = ["business_no", "account_no"], unique = true)]
 )

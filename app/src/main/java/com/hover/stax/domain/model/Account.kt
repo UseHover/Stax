@@ -17,7 +17,6 @@ package com.hover.stax.domain.model
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
@@ -28,8 +27,7 @@ const val ACCOUNT_ID: String = "account_id"
 const val USSD_TYPE: String = "ussd"
 const val CRYPTO_TYPE: String = "crypto"
 
-@Entity(tableName = "accounts")
-open class Account(
+abstract class Account(
 	@ColumnInfo(name = "name")
 	val institutionName: String,
 

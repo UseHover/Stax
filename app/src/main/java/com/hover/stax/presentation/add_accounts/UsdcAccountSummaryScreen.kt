@@ -1,12 +1,14 @@
 package com.hover.stax.presentation.add_accounts
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +23,8 @@ import org.koin.androidx.compose.getViewModel
 fun UsdcAccountSummaryScreen(viewModel: UsdcViewModel = getViewModel()) {
 	val account by viewModel.account.collectAsState(initial = null)
 	val error by viewModel.error.collectAsState(initial = -1)
+
+	val c = LocalContext.current
 
 	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
 		Scaffold(
@@ -49,6 +53,8 @@ fun UsdcAccountSummaryScreen(viewModel: UsdcViewModel = getViewModel()) {
 						)
 						PrimaryButton(text = stringResource(R.string.usdc_account_1_action)) {
 							viewModel.copyToClipboard(account!!.accountNo!!)
+							Toast.makeText(c, R.string.address_copied, Toast.LENGTH_LONG).show()
+
 						}
 					}
 					Column(modifier = Modifier.padding(13.dp)

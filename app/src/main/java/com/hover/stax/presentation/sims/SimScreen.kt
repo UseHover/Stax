@@ -39,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.hover.stax.R
 import com.hover.stax.domain.model.USSDAccount
-import com.hover.stax.domain.use_case.sims.SimWithAccount
+import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.components.HomeTopBar
 import com.hover.stax.presentation.sims.components.LinkSimCard

@@ -59,7 +59,7 @@ class AddAccountViewModel(
 ) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
-    val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
+    val accounts: LiveData<List<USSDAccount>> = accountRepo.getAllLiveAccounts()
     private val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
 
     var sims = MutableLiveData<List<SimInfo>>()

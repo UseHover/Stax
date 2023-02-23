@@ -26,12 +26,13 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.model.USSD_TYPE
+import com.hover.stax.domain.use_case.AccountWithBalance
 import com.hover.stax.presentation.home.HomeClickFunctions
 
 @Composable
 fun MoveMoneyOptions(
     homeClickFunctions: HomeClickFunctions?,
-    accounts: List<Account>
+    accounts: List<AccountWithBalance>
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -79,8 +80,7 @@ fun MoveMoneyOptions(
     }
 }
 
-private fun showKeFeatures(accounts: List<Account>): Boolean =
+private fun showKeFeatures(accounts: List<AccountWithBalance>): Boolean =
     accounts.any {
-        it.type == USSD_TYPE
-//                && (it as USSDAccount).countryAlpha2.contentEquals("KE", ignoreCase = true)
+        it.account.type == USSD_TYPE && it.ussdAccount?.countryAlpha2.contentEquals("KE", ignoreCase = true)
     }

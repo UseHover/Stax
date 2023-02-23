@@ -26,7 +26,6 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryItem
@@ -99,13 +98,13 @@ class AccountDetailViewModel(
         repo.delete(account)
         transactionRepo.deleteAccountTransactions(account.id)
 
-        val accounts = repo.getAllAccounts()
+        val accounts = repo.getUssdAccounts()
         val changeDefault = account.isDefault
 
-        if (accounts.isNotEmpty() && changeDefault)
-            accounts.firstOrNull()?.let {
-                it.isDefault = true
-                repo.update(it)
-            }
+//        if (accounts.isNotEmpty() && changeDefault)
+//            accounts.firstOrNull()?.let {
+//                it.isDefault = true
+//                repo.update(it)
+//            }
     }
 }

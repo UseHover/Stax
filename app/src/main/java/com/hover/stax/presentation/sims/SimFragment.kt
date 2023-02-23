@@ -49,7 +49,7 @@ class SimFragment : AbstractBalanceCheckerFragment() {
 
             setContent {
                 SimScreen(
-                    refreshBalance = { acct -> balancesViewModel.requestBalance(acct) },
+                    refreshBalance = {  },
                     buyAirtime = { navigateTo(SimFragmentDirections.toTransferFragment(HoverAction.AIRTIME)) },
                     navTo = { dest -> navigateTo(dest) }
                 )
@@ -62,9 +62,9 @@ class SimFragment : AbstractBalanceCheckerFragment() {
     }
 
     private fun observeBalances() {
-        collectLifecycleFlow(balancesViewModel.balanceAction) {
-            attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
-        }
+//        collectLifecycleFlow(balancesViewModel.balanceAction) {
+//            attemptCallHover(it.first, it.second)
+//        }
 
         collectLifecycleFlow(balancesViewModel.actionRunError) {
             UIHelper.flashAndReportMessage(requireActivity(), it)

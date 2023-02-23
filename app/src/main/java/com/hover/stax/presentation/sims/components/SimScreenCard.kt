@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.domain.model.USSDAccount
-import com.hover.stax.domain.use_case.sims.SimWithAccount
+import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.presentation.components.DisabledButton
 import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.components.SecondaryButton

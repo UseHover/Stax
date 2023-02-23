@@ -21,6 +21,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -37,15 +41,17 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLifecycleFlow
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterface {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val balancesViewModel: BalancesViewModel by viewModel()
     private val homeViewModel: HomeViewModel by viewModel()
 
     override fun onCreateView(
@@ -54,16 +60,14 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         savedInstanceState: Bundle?
     ): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
+        observe()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setComposeView()
-
-        observeForBalances()
         observeForBonus()
     }
 
@@ -73,7 +77,6 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         fun onBuyGoodsClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment())
         fun onPayBillClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
         fun onRequestMoneyClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())
-        fun onClickedAddNewAccount() = goToAddAccount()
         fun onClickedTermsAndConditions() = Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
         fun onClickedSettingsIcon() = navigateTo(HomeFragmentDirections.toSettingsFragment())
         fun onClickedRewards() = navigateTo(HomeFragmentDirections.actionGlobalRewardsFragment())
@@ -84,7 +87,6 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
             onBuyGoodsClicked = { onBuyGoodsClicked() },
             onPayBillClicked = { onPayBillClicked() },
             onRequestMoneyClicked = { onRequestMoneyClicked() },
-            onClickedAddNewAccount = { onClickedAddNewAccount() },
             onClickedTC = { onClickedTermsAndConditions() },
             onClickedSettingsIcon = { onClickedSettingsIcon() },
             onClickedRewards = { onClickedRewards() }
@@ -92,10 +94,12 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     }
 
 	val addAccount = registerForActivityResult(AddAccountContract()) { data: Intent? ->
-
+        Timber.e("I want to reload accounts")
+        balancesViewModel.loadAccounts()
 	}
 
     private fun goToAddAccount() {
+        Timber.e("launching add account")
 	    addAccount.launch(null)
     }
 
@@ -111,14 +115,21 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
             navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.bonusActions.value?.first()?.from_institution_id.toString()))
     }
 
-    private fun observeForBalances() {
-        collectLifecycleFlow(balancesViewModel.balanceAction) {
-            attemptCallHover(balancesViewModel.userRequestedBalanceAccount.value, it)
+    private fun observe() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    balancesViewModel.userRequestedBalance.collect {
+                        Timber.e("receive balance request event")
+                        attemptCallHover(it.ussdAccount, it.balanceAction)
+                } }
+                launch {
+                    homeViewModel.addAccountEvent.collect {
+                        if (it) { goToAddAccount() }
+                    }
+                }
+            }
         }
-
-//        collectLifecycleFlow(channelsViewModel.accountCallback) {
-//            askToCheckBalance(it)
-//        }
 
         collectLifecycleFlow(balancesViewModel.actionRunError) {
             UIHelper.flashAndReportError(requireActivity(), it)
@@ -132,15 +143,11 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     }
 
     private fun attemptCallHover(account: USSDAccount?, action: HoverAction?) {
-        action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
+        if (account != null && action != null) {
+            AnalyticsUtil.logAnalyticsEvent(requireContext().getString(R.string.refresh_balance), requireContext())
+            callHover(checkBalance, generateSessionBuilder(account, action))
+        }
     }
-
-//    private fun askToCheckBalance(account: USSDAccount) {
-//        val dialog = StaxDialog(requireActivity()).setDialogTitle(R.string.check_balance_title)
-//            .setDialogMessage(R.string.check_balance_desc).setNegButton(R.string.later, null)
-//            .setPosButton(R.string.check_balance_title) { onTapBalanceRefresh(account) }
-//        dialog.showIt()
-//    }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 

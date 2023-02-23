@@ -15,6 +15,7 @@
  */
 package com.hover.stax.presentation.home.components
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +37,8 @@ import com.hover.stax.R
 
 @Composable
 fun BalanceHeader(showAddAccount: Boolean, onClickedAddAccount: () -> Unit) {
+    val c = LocalContext.current
+
     Row(
         modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp).padding(horizontal = 13.dp), Arrangement.SpaceBetween
     ) {
@@ -45,7 +49,7 @@ fun BalanceHeader(showAddAccount: Boolean, onClickedAddAccount: () -> Unit) {
         )
 
         if (showAddAccount) {
-            Box(modifier = Modifier.clickable(onClick = onClickedAddAccount)) {
+            Box(modifier = Modifier.clickable(onClick = { onClickedAddAccount() })) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.add_an_account),

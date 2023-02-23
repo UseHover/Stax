@@ -15,6 +15,7 @@
  */
 package com.hover.stax.presentation.home.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,11 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.hover.stax.domain.model.Account
+import com.hover.stax.domain.use_case.AccountWithBalance
 import com.hover.stax.presentation.add_accounts.components.SampleAccountProvider
 
 
 @Composable
-fun BalancesList(accounts: List<Account>?, onClickNewAccount: () -> Unit) {
+fun BalancesList(accounts: List<AccountWithBalance>?, onClickNewAccount: () -> Unit, goToDetails: (AccountWithBalance) -> Unit, refresh: (AccountWithBalance) -> Unit) {
     if (!accounts.isNullOrEmpty()) {
         Column() {
             BalanceHeader(showAddAccount = true, onClickNewAccount)
@@ -40,7 +42,7 @@ fun BalancesList(accounts: List<Account>?, onClickNewAccount: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 accounts.forEach { account ->
-                    BalanceItem(account, {}, {})
+                    BalanceItem(account, goToDetails, refresh)
                     // balancesViewModel.requestBalance(account) }, { findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId)) })
                 }
             }
@@ -50,6 +52,6 @@ fun BalancesList(accounts: List<Account>?, onClickNewAccount: () -> Unit) {
 
 @Preview
 @Composable
-fun BalancesListPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<Account>) {
-    BalancesList(accounts) {}
+fun BalancesListPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<AccountWithBalance>) {
+    BalancesList(accounts, {}, {}, {})
 }

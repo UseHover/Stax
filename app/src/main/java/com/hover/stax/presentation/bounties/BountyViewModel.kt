@@ -29,7 +29,7 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.local.SimRepo
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.Resource
-import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
+import com.hover.stax.domain.use_case.GetChannelBountiesUseCase
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -42,9 +42,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BountyViewModel(
-    private val simRepo: SimRepo,
-    private val bountiesUseCase: GetChannelBountiesUseCase,
-    val application: Application
+	private val simRepo: SimRepo,
+	private val bountiesUseCase: GetChannelBountiesUseCase,
+	val application: Application
 ) : ViewModel() {
 
     private val _countryList = MutableStateFlow<List<String>>(emptyList())

@@ -95,9 +95,9 @@ abstract class AbstractFormFragment : Fragment() {
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
-        collectLifecycleFlow(balancesViewModel.balanceAction) {
-            callHover(checkBalance, generateSessionBuilder(it))
-        }
+//        collectLifecycleFlow(balancesViewModel.balanceAction) {
+//            callHover(checkBalance, generateSessionBuilder(it))
+//        }
     }
 
     private fun generateSessionBuilder(action: HoverAction): HoverSession.Builder {
@@ -156,7 +156,7 @@ abstract class AbstractFormFragment : Fragment() {
             .setDialogTitle(R.string.finish_adding_title)
             .setDialogMessage(getString(R.string.finish_adding_desc, account.userAlias))
             .setNegButton(R.string.btn_cancel, null)
-            .setPosButton(R.string.connect_cta) { balancesViewModel.requestBalance(account) }
+            .setPosButton(R.string.connect_cta) {  }
         dialog.showIt()
     }
 
