@@ -60,7 +60,8 @@ class TransactionDetailsViewModel(
     var hoverTransaction = MutableLiveData<Transaction>()
     val messages = MediatorLiveData<List<UssdCallResponse>>()
     var sms: LiveData<List<UssdCallResponse>> = MutableLiveData()
-    val isExpectingSMS: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().also { it.value = false }
+    val isExpectingSMS: MediatorLiveData<Boolean> =
+        MediatorLiveData<Boolean>().also { it.value = false }
     var bonusAmt: MediatorLiveData<Int> = MediatorLiveData()
 
     init {
@@ -109,17 +110,23 @@ class TransactionDetailsViewModel(
 
     private fun loadMessages(txn: StaxTransaction, a: HoverAction) {
         val t = repo.loadFromHover(txn.uuid)
-        hoverTransaction.value = t
-        messages.value = UssdCallResponse.generateConvo(t, a)
+        t?.let { transaction ->
+            hoverTransaction.value = transaction
+            messages.value = UssdCallResponse.generateConvo(transaction, a)
+        }
     }
 
     private fun loadSms(txn: StaxTransaction): List<UssdCallResponse> {
         val t = repo.loadFromHover(txn.uuid)
-        hoverTransaction.value = t
-        return generateSmsConvo(
-            if (t.smsHits != null && t.smsHits.length() > 0) t.smsHits
-            else t.smsMisses
-        )
+        t?.let { transaction ->
+            hoverTransaction.value = transaction
+        }
+
+        return t?.let { transaction ->
+            val smsArr =
+                if (transaction.smsHits != null && transaction.smsHits.length() > 0) transaction.smsHits else transaction.smsMisses
+            generateSmsConvo(smsArr)
+        }?.toList() ?: emptyList()
     }
 
     private fun generateSmsConvo(smsArr: JSONArray): ArrayList<UssdCallResponse> {
@@ -139,19 +146,25 @@ class TransactionDetailsViewModel(
 
     fun wrapExtras(): HashMap<String, String> {
         val extras = HashMap<String, String>()
-        if (transaction.value?.amount != null) extras[HoverAction.AMOUNT_KEY] = transaction.value!!.amount.toString()
-        if (contact.value?.accountNumber != null) extras[HoverAction.PHONE_KEY] = contact.value!!.accountNumber
-        if (contact.value?.accountNumber != null) extras[HoverAction.ACCOUNT_KEY] = contact.value!!.accountNumber
-        if (transaction.value?.counterparty_id != null) extras[StaxContact.ID_KEY] = transaction.value!!.counterparty_id!!
-        if (transaction.value?.note != null) extras[HoverAction.NOTE_KEY] = transaction.value!!.note!!
+        if (transaction.value?.amount != null) extras[HoverAction.AMOUNT_KEY] =
+            transaction.value!!.amount.toString()
+        if (contact.value?.accountNumber != null) extras[HoverAction.PHONE_KEY] =
+            contact.value!!.accountNumber
+        if (contact.value?.accountNumber != null) extras[HoverAction.ACCOUNT_KEY] =
+            contact.value!!.accountNumber
+        if (transaction.value?.counterparty_id != null) extras[StaxContact.ID_KEY] =
+            transaction.value!!.counterparty_id!!
+        if (transaction.value?.note != null) extras[HoverAction.NOTE_KEY] =
+            transaction.value!!.note!!
         Timber.e("Extras %s", extras.keys)
         return extras
     }
 
-    private fun setExpectingSMS(transaction: StaxTransaction?) = viewModelScope.launch(Dispatchers.IO) {
-        transaction?.let {
-            val hasSMSParser = parserRepo.hasSMSParser(transaction.action_id)
-            if (transaction.isPending) isExpectingSMS.postValue(hasSMSParser)
+    private fun setExpectingSMS(transaction: StaxTransaction?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            transaction?.let {
+                val hasSMSParser = parserRepo.hasSMSParser(transaction.action_id)
+                if (transaction.isPending) isExpectingSMS.postValue(hasSMSParser)
+            }
         }
-    }
 }
