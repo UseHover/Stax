@@ -1,9 +1,16 @@
 package com.hover.stax.send
 
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
+import com.hover.stax.R
 import com.hover.stax.domain.model.Account
 import com.hover.stax.views.composables.StaxHeader
 import com.hover.stax.views.composables.StaxImage
@@ -28,13 +35,20 @@ fun PayWithScreen(
         content = {
             items(accounts) { account ->
                 StaxModalCell(
-                    modifier = Modifier.testTag(PayWithScreenTags.PAY_WITH_SCREEN_ACCOUNT_CELL),
+                    modifier = Modifier
+                        .testTag(PayWithScreenTags.PAY_WITH_SCREEN_ACCOUNT_CELL)
+                        .heightIn(min = 70.dp),
                     onClick = { onAccountSelected(account) },
                     header = account.institutionName,
                     subHeader = account.latestBalance ?: "0.00",
                     footer = account.isDefault.toString(),
                     leftIcon = {
-                        StaxImage(imageUrl = account.logoUrl)
+                        StaxImage(
+                            imageUrl = account.logoUrl,
+                            modifier = Modifier
+                                .size(dimensionResource(id = R.dimen.margin_34))
+                                .clip(CircleShape)
+                        )
                     }
                 )
             }
