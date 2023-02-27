@@ -53,7 +53,7 @@ fun MainNavHost() {
             composable(route = PaymentScreens.SendMoney.route) {
                 SendMoneyScreen(navTo = {
                     navigate(
-                        PaymentScreens.PayWithScreen.route,
+                        PaymentScreens.PaymentTypeScreen.route,
                         navController
                     )
                 })
@@ -78,6 +78,10 @@ fun MainNavHost() {
                 bottomSheetConfig.value = DefaultBottomSheetConfig
                 PaymentTypeScreen(
                     onClickBack = { navController.navigateUp() },
+                    actions = actionList,
+                    onActionSelected = { action ->
+                        Timber.d("Selected action: ${action.id}")
+                    }
                 )
             }
         }

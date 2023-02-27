@@ -27,7 +27,7 @@ fun PayWithScreen(
     StaxLayout(
         title = {
             StaxHeader(
-                text = "Select Payment Type",
+                text = "Pay with",
                 onClickBack = onClickBack,
                 modifier = Modifier.testTag(PayWithScreenTags.PAY_WITH_SCREEN_HEADER)
             )
