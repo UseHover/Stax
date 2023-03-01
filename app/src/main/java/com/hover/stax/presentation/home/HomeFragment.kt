@@ -33,7 +33,9 @@ import com.hover.stax.addAccounts.AddAccountActivity
 import com.hover.stax.addAccounts.AddAccountContract
 import com.hover.stax.addAccounts.AddAccountViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
+import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.model.USSD_TYPE
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.utils.AnalyticsUtil
@@ -121,11 +123,16 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
                 launch {
                     balancesViewModel.userRequestedBalance.collect {
                         Timber.e("receive balance request event")
-                        attemptCallHover(it.ussdAccount, it.balanceAction)
+                        attemptCallHover(it.first, it.second)
                 } }
                 launch {
                     homeViewModel.addAccountEvent.collect {
                         if (it) { goToAddAccount() }
+                    }
+                }
+                launch {
+                    homeViewModel.accountDetail.collect {
+                        goToDetail(it.account)
                     }
                 }
             }
@@ -147,6 +154,11 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
             AnalyticsUtil.logAnalyticsEvent(requireContext().getString(R.string.refresh_balance), requireContext())
             callHover(checkBalance, generateSessionBuilder(account, action))
         }
+    }
+
+    private fun goToDetail(account: Account) {
+        if (account.type == USSD_TYPE)
+            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(account.id))
     }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)

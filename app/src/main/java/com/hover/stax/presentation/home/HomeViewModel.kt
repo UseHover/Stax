@@ -42,6 +42,9 @@ class HomeViewModel(application: Application,
     private val _addAccountEvent = Channel<Boolean>()
     val addAccountEvent = _addAccountEvent.receiveAsFlow()
 
+    private val _accountDetail = Channel<AccountWithBalance>()
+    val accountDetail = _accountDetail.receiveAsFlow()
+
     val bonusActions: LiveData<List<HoverAction>> = actionRepo.getBonusActions()
 
 //    private fun bonusListToFlow(countries: Array<String>): Flow<Resource<List<HoverAction>>> = flow {
@@ -58,6 +61,11 @@ class HomeViewModel(application: Application,
     fun requestAddAccount() = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("requesting add account")
         _addAccountEvent.send(true)
+    }
+
+    fun requestGoToAccount(accountWithBalance: AccountWithBalance) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("requesting add account")
+        _accountDetail.send(accountWithBalance)
     }
 
     fun logBuyAirtimeFromAd() = viewModelScope.launch(Dispatchers.IO) {

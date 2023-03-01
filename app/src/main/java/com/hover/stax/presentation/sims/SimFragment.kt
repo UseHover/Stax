@@ -25,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalancesViewModel
@@ -32,10 +33,11 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SimFragment : AbstractBalanceCheckerFragment() {
 
-    private val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val balancesViewModel: BalancesViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +51,6 @@ class SimFragment : AbstractBalanceCheckerFragment() {
 
             setContent {
                 SimScreen(
-                    refreshBalance = {  },
                     buyAirtime = { navigateTo(SimFragmentDirections.toTransferFragment(HoverAction.AIRTIME)) },
                     navTo = { dest -> navigateTo(dest) }
                 )
@@ -62,9 +63,9 @@ class SimFragment : AbstractBalanceCheckerFragment() {
     }
 
     private fun observeBalances() {
-//        collectLifecycleFlow(balancesViewModel.balanceAction) {
-//            attemptCallHover(it.first, it.second)
-//        }
+        collectLifecycleFlow(balancesViewModel.userRequestedBalance) {
+            attemptCallHover(it.first, it.second)
+        }
 
         collectLifecycleFlow(balancesViewModel.actionRunError) {
             UIHelper.flashAndReportMessage(requireActivity(), it)

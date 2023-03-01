@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -41,6 +40,7 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
+import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.presentation.home.components.HomeTopBar
 import com.hover.stax.presentation.sims.components.LinkSimCard
 import com.hover.stax.presentation.sims.components.SampleSimInfoProvider
@@ -51,10 +51,10 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SimScreen(
-    refreshBalance: (USSDAccount) -> Unit,
     buyAirtime: (USSDAccount) -> Unit,
     navTo: (dest: Int) -> Unit,
-    simViewModel: SimViewModel = getViewModel()
+    simViewModel: SimViewModel = getViewModel(),
+    balancesViewModel: BalancesViewModel = getViewModel()
 ) {
     val sims by simViewModel.sims.collectAsState()
 
@@ -92,7 +92,7 @@ fun SimScreen(
                         items(sims.sortedWith(comparator)) { sim ->
                             // Don't show removed SIM cards that we don't support, it is confusing
                             if (sim.account.channelId != -1 || sim.sim.slotIdx != -1)
-                                SimScreenCard(sim, refreshBalance, buyAirtime)
+                                SimScreenCard(sim, { balancesViewModel.requestBalance(it) }, buyAirtime)
                         }
                     }
                 }
@@ -106,42 +106,7 @@ fun SimScreen(
 private fun SimScreenPreview(
     @PreviewParameter(SampleSimInfoProvider::class) sims: List<SimWithAccount>
 ) {
-    StaxTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-            Scaffold(topBar = {
-                HomeTopBar(title = R.string.your_sim_cards, {})
-            }, content = { innerPadding ->
-                val paddingModifier = Modifier.padding(innerPadding)
-
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(horizontal = dimensionResource(id = R.dimen.margin_13))
-                        .then(paddingModifier)
-                ) {
-
-                    if (sims.isEmpty())
-                        item {
-                            NoticeText(stringRes = R.string.simpage_permission_alert)
-                        }
-
-                    sims.let {
-                        if (it.isEmpty()) {
-                            item {
-                                LinkSimCard()
-                            }
-                        }
-                    }
-
-                    itemsIndexed(sims) { index, sim ->
-                        SimScreenCard(
-                            simWithAccount = sim,
-                            { }, { }
-                        )
-                    }
-                }
-            })
-        }
-    }
+    SimScreen(buyAirtime = {}, navTo = {})
 }
 
 @Composable

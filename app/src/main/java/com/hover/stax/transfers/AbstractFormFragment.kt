@@ -40,6 +40,7 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.use_case.AccountWithBalance
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.permissions.PermissionUtils
@@ -95,13 +96,14 @@ abstract class AbstractFormFragment : Fragment() {
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
-//        collectLifecycleFlow(balancesViewModel.balanceAction) {
-//            callHover(checkBalance, generateSessionBuilder(it))
-//        }
+        collectLifecycleFlow(balancesViewModel.userRequestedBalance) {
+            if (it.first != null && it.second != null)
+                callHover(checkBalance, generateSessionBuilder(it.first!!, it.second!!))
+        }
     }
 
-    private fun generateSessionBuilder(action: HoverAction): HoverSession.Builder {
-        return HoverSession.Builder(action, accountsViewModel.activeAccount.value!!, null, requireActivity())
+    private fun generateSessionBuilder(account: USSDAccount, action: HoverAction): HoverSession.Builder {
+        return HoverSession.Builder(action, account, null, requireActivity())
     }
 
     private val checkBalance = registerForActivityResult(TransactionContract()) { data: Intent? ->
@@ -134,9 +136,10 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun fabClicked() {
-        if (accountsViewModel.activeAccount.value != null && !accountsViewModel.isValidAccount())
-            askToCheckBalance(accountsViewModel.activeAccount.value!!)
-        else if (validates()) {
+//        if (accountsViewModel.activeAccount.value != null && !accountsViewModel.isValidAccount())
+//            askToCheckBalance(accountsViewModel.activeAccount.value!!)
+//        else
+        if (validates()) {
             if (abstractFormViewModel.isEditing.value == true) {
                 onFinishForm()
             } else {
@@ -151,12 +154,12 @@ abstract class AbstractFormFragment : Fragment() {
 
     abstract fun onSubmitForm()
 
-    private fun askToCheckBalance(account: USSDAccount) {
+    private fun askToCheckBalance(account: AccountWithBalance) {
         val dialog = StaxDialog(layoutInflater)
             .setDialogTitle(R.string.finish_adding_title)
-            .setDialogMessage(getString(R.string.finish_adding_desc, account.userAlias))
+            .setDialogMessage(getString(R.string.finish_adding_desc, account.account.userAlias))
             .setNegButton(R.string.btn_cancel, null)
-            .setPosButton(R.string.connect_cta) {  }
+            .setPosButton(R.string.connect_cta) { balancesViewModel.requestBalance(account) }
         dialog.showIt()
     }
 

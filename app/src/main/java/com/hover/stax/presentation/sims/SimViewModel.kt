@@ -38,6 +38,7 @@ class SimViewModel(private val listSimsUseCase: ListSimsUseCase, val application
 
     private val _sims = MutableStateFlow<List<SimWithAccount>>(emptyList())
     val sims = _sims.asStateFlow()
+
     private var simReceiver: BroadcastReceiver? = null
 
     init {

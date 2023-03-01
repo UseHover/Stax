@@ -81,7 +81,7 @@ fun HomeScreen(
 
                     BalancesList(accounts = accounts,
                         { homeViewModel.requestAddAccount() },
-                        { goToAccountDetails(it) },
+                        { homeViewModel.requestGoToAccount(it) },
                         { balancesViewModel.requestBalance(it) } )
 
                     FinancialTipScreen(homeViewModel, navController)
@@ -89,10 +89,6 @@ fun HomeScreen(
             }
         }
     }
-}
-
-fun goToAccountDetails(account: AccountWithBalance)  {
-
 }
 
 @Preview

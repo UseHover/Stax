@@ -22,6 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.google.common.base.Optional
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
@@ -50,7 +51,7 @@ class BalancesViewModel(
     private val _accounts = MutableStateFlow<List<AccountWithBalance>>(emptyList())
     val accounts = _accounts.asStateFlow()
 
-    private val _userRequestedBalance = Channel<AccountWithBalance>()
+    private val _userRequestedBalance = Channel<Pair<USSDAccount?, HoverAction?>>()
     val userRequestedBalance = _userRequestedBalance.receiveAsFlow()
 
     private val _actionRunError = Channel<String>()
@@ -67,7 +68,12 @@ class BalancesViewModel(
 
     fun requestBalance(account: AccountWithBalance) = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("requesting balance for ${account.account}")
-        _userRequestedBalance.send(account)
+        _userRequestedBalance.send(Pair(account.ussdAccount, account.balanceAction))
+    }
+
+    fun requestBalance(account: SimWithAccount) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("requesting balance for ${account.account}")
+        _userRequestedBalance.send(Pair(account.account, account.balanceAction))
     }
 //
 //    private fun requestBalance(account: USDCAccount): USDCAccount {

@@ -41,7 +41,7 @@ import com.hover.stax.utils.Utils
 @Composable
 internal fun SimScreenCard(
     simWithAccount: SimWithAccount,
-    refreshBalance: (USSDAccount) -> Unit,
+    refreshBalance: (SimWithAccount) -> Unit,
     buyAirtime: (USSDAccount) -> Unit
 ) {
     StaxCard {
@@ -132,7 +132,7 @@ private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
 @Composable
 fun SimItemTopRow(
     simWithAccount: SimWithAccount,
-    refreshBalance: (USSDAccount) -> Unit
+    refreshBalance: (SimWithAccount) -> Unit
 ) {
     SimTitle(simWithAccount.sim, simWithAccount.account.institutionName, simWithAccount.account.logoUrl, content = {
         SimAction(simWithAccount, refreshBalance)
@@ -140,11 +140,11 @@ fun SimItemTopRow(
 }
 
 @Composable
-fun SimAction(simWithAccount: SimWithAccount, refreshBalance: (USSDAccount) -> Unit) {
+fun SimAction(simWithAccount: SimWithAccount, refreshBalance: (SimWithAccount) -> Unit) {
     if (simWithAccount.balanceAction != null) {
         PrimaryButton(
             stringResource(id = R.string.check_balance_capitalized), null,
-            onClick = { refreshBalance(simWithAccount.account) }
+            onClick = { refreshBalance(simWithAccount) }
         )
     } else {
         DisabledButton(stringResource(id = R.string.unsupported), null) { }
