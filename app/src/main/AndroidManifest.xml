@@ -138,6 +138,7 @@
         <meta-data
                 android:name="io.sentry.dsn"
                 android:value="https://ce9bf386ab104ece903cd33fc563c241@o44209.ingest.sentry.io/5477330" />
+        <meta-data android:name="io.sentry.attach-screenshot" android:value="true" />
         <meta-data
                 android:name="com.hover.ApiKey"
                 android:value="1335646a78bb2b1157304be1510641f6" />
