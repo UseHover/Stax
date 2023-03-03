@@ -190,7 +190,9 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     }
 
     private suspend fun parseAccounts(ussdAccountList: String) {
-        val pattern = Pattern.compile("^([\\d]{1,2})[>):.\\s]+(.+)\$", Pattern.MULTILINE)
+        var splitterPattern = action?.getStepByVar("accountName")?.optString("valid_response_regex")
+        if (splitterPattern == null) splitterPattern = "^\\s*([\\d]{1,2})[>):.\\s]+(.+)$"
+        val pattern = Pattern.compile(splitterPattern, Pattern.MULTILINE)
         val matcher = pattern.matcher(ussdAccountList)
 
         while (matcher.find()) {
