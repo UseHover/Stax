@@ -82,7 +82,7 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 coil = "io.coil-kt:coil-compose:2.1.0"
 
-hover = "com.hover:android-sdk:2.0.0-beta03"
+hover = "com.hover:android-sdk:2.0.0-beta04"
 volley = "com.android.volley:volley:1.2.1"
 play-services = "com.google.android.gms:play-services-analytics:18.0.1"
 picasso = "com.squareup.picasso:picasso:2.71828"
