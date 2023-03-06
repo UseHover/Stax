@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,8 +19,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.stellar.sdk.Server
+import org.stellar.sdk.*
+import org.stellar.sdk.Network.TESTNET
 import org.stellar.sdk.responses.AccountResponse
+import org.stellar.sdk.responses.SubmitTransactionResponse
 import timber.log.Timber
 import java.io.InputStream
 import java.net.URL
@@ -51,6 +52,8 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 
 	private val _error = MutableStateFlow(-1)
 	val error = _error.asSharedFlow()
+
+	val server = Server("https://horizon-testnet.stellar.org")
 
 	fun setPin(pin: String) {
 		initialPin.postValue(pin)
@@ -90,10 +93,11 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	}
 
 	private fun generateStaxAccountsForEachBalance(pair: StellarKeyPair) = viewModelScope.launch(Dispatchers.IO) {
-		val server = Server("https://horizon-testnet.stellar.org")
-		val accountNo: AccountResponse = server.accounts().account(pair.accountId)
+		val createAccountResponse: AccountResponse = server.accounts().account(pair.accountId)
+		sponsorAccount(pair)
+		val updateBalancesResponse: AccountResponse = server.accounts().account(pair.accountId)
 
-		for (balance in accountNo.balances) {
+		for (balance in updateBalancesResponse.balances) {
 			createStaxAccount(pair, balance)
 		}
 		logUSDCAdded()
@@ -103,7 +107,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 		val acct = USDCAccount("Stellar USDC", "Stellar USDC", "logo", pair.accountId, -1, CRYPTO_TYPE, "Stellar color 1", "stellar color 2",
 			balance.assetType, balance.assetCode.orNull(), false)
 		acct.updateBalance(balance.balance, null)
-		encryptSecret(acct, confirmPin.value!!, pair.secretSeed.toString())
+		encryptSecret(acct, confirmPin.value!!, String(pair.secretSeed))
 		Timber.e(
 			"Creating account: %s, Code: %s, Balance: %s%n",
 			balance.assetType,
@@ -113,6 +117,51 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 
 		accountRepo.insert(acct)
 		account.emit(acct)
+	}
+
+	private fun sponsorAccount(userAccountPair: StellarKeyPair) {
+		val hoverKeypair = getHoverKeypair()
+//		val a = Asset.create("ABCD", hoverKeypair.publicKey)
+
+		val transaction: Transaction = TransactionBuilder(getHoverAccount(hoverKeypair), TESTNET)
+			.addOperation(
+				BeginSponsoringFutureReservesOperation.Builder(
+					userAccountPair.accountId
+				).build()
+			)
+			.addOperation(
+				ChangeTrustOperation.Builder(
+					ChangeTrustAsset.create(AssetTypeNative()), "1000" // FIXME what is stellar usdc asset's canonicalForm?
+				).build()
+			)
+			.addOperation(
+				EndSponsoringFutureReservesOperation()
+			)
+			.setBaseFee(Transaction.MIN_BASE_FEE)
+			.setTimeout(60)
+//			.addPreconditions(TransactionPreconditions.TransactionPreconditionsBuilder().timeBounds(TimeBounds(0, 10000)).build())
+			.build()
+		Timber.e("Created transaction")
+
+		transaction.sign(hoverKeypair)
+		Timber.e("hover signed")
+		transaction.sign(userAccountPair)
+		Timber.e("user signed")
+
+		val response: SubmitTransactionResponse? = server.submitTransaction(transaction)
+		Timber.e("got response for sponsorship transaction: %s", response)
+	}
+
+	private fun getHoverKeypair(): StellarKeyPair {
+		val pair: StellarKeyPair = StellarKeyPair.random()
+		Timber.e("accountId ${pair.accountId}")
+		Timber.e("seed ${String(pair.secretSeed)}")
+		generateRemoteAccount(pair.accountId)
+		return pair
+	}
+
+	private fun getHoverAccount(hoverKeypair: StellarKeyPair): AccountResponse {
+		return server.accounts().account(hoverKeypair.accountId)
 	}
 
 	private fun encryptSecret(account: USDCAccount, pin: String, secret: String) {
