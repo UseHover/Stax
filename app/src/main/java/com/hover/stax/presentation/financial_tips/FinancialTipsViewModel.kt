@@ -20,6 +20,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.FinancialTipsRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -35,24 +36,25 @@ open class FinancialTipsViewModel(application: Application, private val tipsRepo
         viewModelScope.launch {
             tips.postValue(tipsRepo.getTips())
         }
+        getTips()
     }
 
-//    private fun loadTips(): Flow<Resource<List<FinancialTip>>> = flow {
-//        try {
-//            emit(Resource.Loading())
+    private fun loadTips(): Flow<Resource<List<FinancialTip>>> = flow {
+        try {
+            emit(Resource.Loading())
+
+            val financialTips = tipsRepo.tips
+            emit(Resource.Success(financialTips.value))
+        } catch (e: Exception) {
+            emit(Resource.Error("Error fetching tips"))
+        }
+    }
 //
-//            val financialTips = tipsRepo.tips
-//            emit(Resource.Success(financialTips))
-//        } catch (e: Exception) {
-//            emit(Resource.Error("Error fetching tips"))
-//        }
-//    }
-//
-//    fun getTips() = loadTips().onEach { result ->
-//        when (result) {
-//            is Resource.Loading -> _tipsState.value = FinancialTipsState(isLoading = true)
-//            is Resource.Error -> _tipsState.value = FinancialTipsState(error = result.message ?: "An unexpected error occurred", isLoading = false)
-//            is Resource.Success -> _tipsState.value = FinancialTipsState(tips = result.data ?: emptyList(), isLoading = false)
-//        }
-//    }.launchIn(viewModelScope)
+    private fun getTips() = loadTips().onEach { result ->
+        when (result) {
+            is Resource.Loading -> _tipsState.value = FinancialTipsState(isLoading = true)
+            is Resource.Error -> _tipsState.value = FinancialTipsState(error = result.message ?: "An unexpected error occurred", isLoading = false)
+            is Resource.Success -> _tipsState.value = FinancialTipsState(tips = result.data ?: emptyList(), isLoading = false)
+        }
+    }.launchIn(viewModelScope)
 }

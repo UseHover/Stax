@@ -69,7 +69,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     }
 
     private fun initViews() {
-        binding.title.text = getString(R.string.financial_wellness_tips)
         binding.backButton.setOnClickListener { findNavController().popBackStack() }
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
     }
@@ -80,7 +79,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 binding.progressIndicator.show()
                 binding.empty.visibility = View.GONE
             }
-            it.tips.isEmpty() && !it.isLoading -> {
+            it.tips.isEmpty() -> {
                 binding.progressIndicator.hide()
                 binding.empty.visibility = View.VISIBLE
                 binding.financialTips.visibility = View.GONE

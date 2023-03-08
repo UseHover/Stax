@@ -50,7 +50,7 @@ class FinancialTipsRepository(val context: Context) {
                     document.data!!["deep link"].toString()
                 )
             }
-
+        tips.postValue(collectionRef)
         return collectionRef
     }
 

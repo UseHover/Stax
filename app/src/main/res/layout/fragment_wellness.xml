@@ -42,11 +42,11 @@
                     android:textColor="@color/offWhite"
                     android:textSize="@dimen/text_16"
                     app:fontFamily="@font/brutalista_bold"
+                    android:text="@string/financial_wellness_tips"
                     app:layout_constraintBottom_toBottomOf="@id/backButton"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/backButton"
-                    app:layout_constraintTop_toTopOf="@id/backButton"
-                    tools:text="@string/financial_wellness_tips" />
+                    app:layout_constraintTop_toTopOf="@id/backButton" />
 
             <TextView
                     android:layout_width="wrap_content"
