@@ -39,7 +39,7 @@ class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListe
     inner class ViewHolder(val binding: ItemWellnessTipsBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun setItems(tip: FinancialTip) {
-            tip.date?.let {
+            tip.date.let {
                 binding.date.text = DateUtils.humanFriendlyDate(it)
             }
             binding.title.text = tip.title

@@ -17,7 +17,9 @@ package com.hover.stax.presentation.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
@@ -27,6 +29,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hover.stax.domain.model.FinancialTip
@@ -77,7 +80,9 @@ fun HomeScreen(
                         { homeViewModel.requestGoToAccount(it) },
                         { balancesViewModel.requestBalance(it) } )
 
-                    FinancialTipScreen(homeViewModel, navController)
+                    Spacer(Modifier.height(34.dp))
+
+                    FinancialTipScreen(homeViewModel, navTo)
                 }
             }
         }
@@ -87,15 +92,5 @@ fun HomeScreen(
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    val financialTip = FinancialTip(
-        id = "1234",
-        title = "Do you want to save money",
-        content = "This is a test content here so lets see if its going to use ellipse overflow",
-        snippet = "This is a test content here so lets see if its going to use ellipse overflow, with an example here",
-        date = System.currentTimeMillis(),
-        shareCopy = null,
-        deepLink = null
-    )
-
     HomeScreen(null, navTo = {})
 }

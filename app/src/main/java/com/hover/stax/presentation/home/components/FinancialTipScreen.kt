@@ -15,24 +15,19 @@
  */
 package com.hover.stax.presentation.home.components
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -43,17 +38,22 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.hover.stax.R
 import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.domain.model.Resource
+import com.hover.stax.presentation.components.StaxCard
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
-import com.hover.stax.presentation.home.HomeViewModel
+import com.hover.stax.presentation.home.HomeFragmentDirections
+import com.hover.stax.utils.Utils
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
-fun FinancialTipScreen(viewModel: FinancialTipsViewModel, navController: NavController) {
+fun FinancialTipScreen(viewModel: FinancialTipsViewModel, navTo: (dest: Int) -> Unit) {
 
+    val context = LocalContext.current
     val tips by viewModel.tips.observeAsState(initial = emptyList())
+    val showingTip = remember { mutableStateOf(true) }
 
-    tips?.find {financialTipsAreOn() && it.date == today() && !dismissed(it.id)}?.apply {
-        FinancialTipCard(tips.first(), navController)
+    tips?.find {financialTipsAreOn() && !dismissed(it.id, showingTip, context)}?.apply {
+        FinancialTipCard(this, showingTip, navTo, context)
     }
 }
 
@@ -61,60 +61,55 @@ fun financialTipsAreOn(): Boolean {
     return true
 }
 
-fun today(): Long {
-    return 0
+fun isToday(secondTimestamp: Long): Boolean {
+    val calendar1: Calendar = Calendar.getInstance()
+    calendar1.timeInMillis = secondTimestamp * 1000
+    val calendar2: Calendar = Calendar.getInstance()
+    calendar2.timeInMillis = System.currentTimeMillis()
+    return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+            calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
+            calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
 }
 
-fun dismissed(id: String): Boolean {
-    return true
+fun dismissed(id: String, showingTip: MutableState<Boolean>, context: Context): Boolean {
+    return Utils.dismissedTips(context).contains(id) || !showingTip.value
 }
 
 @Composable
-fun FinancialTipCard(financialTip: FinancialTip, navController: NavController) {
+fun FinancialTipCard(financialTip: FinancialTip, showingTip: MutableState<Boolean>, navTo: (dest: Int) -> Unit, context: Context) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
-    Card(elevation = 0.dp, modifier = Modifier.padding(all = size13)) {
-        Column {
+    StaxCard {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(all = size13)
             ) {
-                HorizontalImageTextView(
-                    drawable = R.drawable.ic_tip_of_day,
-                    stringRes = R.string.tip_of_the_day,
-                    MaterialTheme.typography.button
-                )
+                Icon(painterResource(R.drawable.ic_tip_of_day), contentDescription = "Tip icon")
 
-                Image(
-                    painter = painterResource(id = R.drawable.ic_close_white),
-                    contentDescription = null,
-                    alignment = Alignment.CenterEnd,
-                    modifier = Modifier.clickable { dismissTip(financialTip.id, navController) }
+                Text(stringResource(R.string.tip_of_the_day),
+                    modifier = Modifier.weight(1f).padding(horizontal = 13.dp))
+
+                Icon(painterResource(id = R.drawable.ic_close_white),
+                    contentDescription = "close tip",
+                    modifier = Modifier.clickable { dismissTip(financialTip.id, showingTip, context) }
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = size13)
-            ) {
-
+            Row(modifier = Modifier.padding(horizontal = size13)) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Spacer(modifier = Modifier.height(10.dp))
-
                     Text(
                         text = financialTip.title,
                         style = MaterialTheme.typography.body2,
                         textDecoration = TextDecoration.Underline
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
                     Text(
                         text = financialTip.snippet,
                         style = MaterialTheme.typography.body2,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(bottom = size13, top = 3.dp)
+                        modifier = Modifier.padding(vertical = size13)
                     )
 
                     Text(
@@ -122,7 +117,7 @@ fun FinancialTipCard(financialTip: FinancialTip, navController: NavController) {
                         color = colorResource(id = R.color.brightBlue),
                         modifier = Modifier
                             .padding(bottom = size13)
-                            .clickable { visitTip(financialTip.id, navController) }
+                            .clickable { visitTip(financialTip.id, navTo) }
                     )
                 }
 
@@ -130,19 +125,20 @@ fun FinancialTipCard(financialTip: FinancialTip, navController: NavController) {
                     painter = painterResource(id = R.drawable.tips_fancy_icon),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(60.dp)
-                        .padding(start = size13)
-                        .align(Alignment.CenterVertically),
+                        .size(89.dp)
+                        .padding(start = size13),
                 )
             }
         }
     }
 }
 
-fun visitTip(id: String, navController: NavController) {
-
+fun visitTip(id: String, navTo: (dest: Int) -> Unit) {
+    navTo(R.id.action_navigation_home_to_wellnessFragment)
+//    navController.navigate(HomeFragmentDirections.actionNavigationHomeToWellnessFragment().setTipId(id))
 }
 
-fun dismissTip(id: String, navController: NavController) {
-
+fun dismissTip(id: String, showingTip: MutableState<Boolean>, context: Context) {
+    Utils.dismissTip(id, context)
+    showingTip.value = false
 }

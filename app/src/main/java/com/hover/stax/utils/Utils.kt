@@ -28,6 +28,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.compose.ui.res.stringResource
+import androidx.datastore.preferences.PreferencesProto.StringSet
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
@@ -103,6 +104,19 @@ object Utils {
         val editor = getSharedPrefs(c).edit()
         editor.putBoolean(topic, false)
         editor.apply()
+    }
+
+    fun dismissTip(id: String, c: Context) {
+        val set = getSharedPrefs(c).getStringSet("DISMISSED_TIPS", setOf())
+        val newSet = set!!.toMutableSet()
+        newSet.add(id)
+        val editor = getSharedPrefs(c).edit()
+        editor.putStringSet("DISMISSED_TIPS", newSet)
+        editor.apply()
+    }
+
+    fun dismissedTips(c: Context): Set<String> {
+        return getSharedPrefs(c).getStringSet("DISMISSED_TIPS", setOf())!!
     }
 
     @JvmStatic

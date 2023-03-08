@@ -20,7 +20,7 @@ data class FinancialTip(
     val title: String,
     val content: String,
     val snippet: String,
-    val date: Long?,
+    val date: Long,
     val shareCopy: String?,
     val deepLink: String?
 )

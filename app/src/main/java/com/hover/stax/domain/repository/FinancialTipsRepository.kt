@@ -39,7 +39,7 @@ class FinancialTipsRepository(val context: Context) {
 
         val collectionRef = db.collection(context.getString(R.string.tips_table))
             .orderBy("date", Query.Direction.DESCENDING)
-            .whereLessThanOrEqualTo("date", today / 1000)
+            .whereLessThanOrEqualTo("date", today/1000) // date in db is in seconds
             .limit(20)
             .get()
             .await().documents
