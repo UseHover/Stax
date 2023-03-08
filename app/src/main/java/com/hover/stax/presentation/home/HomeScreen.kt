@@ -16,8 +16,6 @@
 package com.hover.stax.presentation.home
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
@@ -27,16 +25,11 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.hover.stax.addAccounts.AddAccountActivity
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.domain.use_case.AccountWithBalance
 import com.hover.stax.presentation.home.components.*
 import com.hover.stax.ui.theme.StaxTheme
 import org.koin.androidx.compose.getViewModel

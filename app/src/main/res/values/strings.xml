@@ -87,6 +87,7 @@
     <string name="create_pin">Create a PIN for your USDC wallet</string>
     <string name="confirm_pin">Re-enter your PIN to confirm</string>
     <string name="create_account">Create account</string>
+    <string name="account_added">Account added</string>
 
     <!-- COMPOSE ADD USDC ACCOUNT -->
     <string name="create_usdc_explain_title">What to know about creating a USDC account</string>

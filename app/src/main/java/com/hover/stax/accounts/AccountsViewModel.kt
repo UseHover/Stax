@@ -25,7 +25,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.schedules.Schedule
 import kotlinx.coroutines.Dispatchers
@@ -37,8 +36,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo) :
-    AndroidViewModel(application),
-    AccountDropdown.HighlightListener {
+    AndroidViewModel(application) {
 
     private val _accounts = MutableStateFlow(AccountList())
     val accountList = _accounts.asStateFlow()
@@ -62,7 +60,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         bonusActions.addSource(activeAccount, this@AccountsViewModel::loadBonuses)
     }
 
-    private fun fetchAccounts() = viewModelScope.launch {
+    fun fetchAccounts() = viewModelScope.launch {
         repo.getAccounts().collect { a ->
             _accounts.update { it.copy(accounts = a) }
 
@@ -98,7 +96,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     private fun loadActions(account: USSDAccount, type: String) = viewModelScope.launch(Dispatchers.IO) {
         institutionActions.postValue(
             if (type == HoverAction.P2P) actionRepo.getTransferActions(account.institutionId!!, account.countryAlpha2!!)
-            else actionRepo.getActions(account.institutionId!!, account.countryAlpha2!!, type)
+            else actionRepo.getActionsByType(account.institutionId!!, account.countryAlpha2!!, type)
         )
     }
 
@@ -158,7 +156,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         }
     }
 
-    override fun highlightAccount(account: USSDAccount) {
+    fun highlightAccount(account: USSDAccount) {
         activeAccount.postValue(account)
     }
 }

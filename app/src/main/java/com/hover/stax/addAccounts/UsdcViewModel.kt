@@ -54,6 +54,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	val error = _error.asSharedFlow()
 
 	val server = Server("https://horizon-testnet.stellar.org")
+//	val server = Server(" https://horizon.stellar.org")
 
 	fun setPin(pin: String) {
 		initialPin.postValue(pin)
@@ -153,10 +154,21 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	}
 
 	private fun getHoverKeypair(): StellarKeyPair {
-		val pair: StellarKeyPair = StellarKeyPair.random()
-		Timber.e("accountId ${pair.accountId}")
-		Timber.e("seed ${String(pair.secretSeed)}")
-		generateRemoteAccount(pair.accountId)
+//		val pair: StellarKeyPair = StellarKeyPair.random()
+//		Timber.e("accountId ${pair.accountId}")
+//		Timber.e("seed ${String(pair.secretSeed)}")
+
+//		test network
+//		key: GCZCGXB5MMEV5YE43VYPOHZX7X4ZNFBX64WAJYV6FCKJREIXGJCQDA6E
+//		secret: SC6L42WPVK37KSUJC5DYURNK55QS4FFGMWJOBF273QPNLN2YKSAYGU5O
+
+//		public network
+//		key: GA7AA5FUJYYNE2SXZ7LJLWGZ7OS72AGK7N7ARQ65Q6UK3M6KTVIIKIGM
+//		secret: SCMNZQNV2PAJIRIHEUYW3QRWK56OABA37YI6R43JYCCDHSBZLKNSFRKS
+
+		val pair: StellarKeyPair = StellarKeyPair.fromSecretSeed("SC6L42WPVK37KSUJC5DYURNK55QS4FFGMWJOBF273QPNLN2YKSAYGU5O")
+		Timber.e("Got account with address %s", pair.accountId)
+//		generateRemoteAccount(pair.accountId)
 		return pair
 	}
 

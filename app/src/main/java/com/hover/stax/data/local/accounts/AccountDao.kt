@@ -39,7 +39,7 @@ interface AccountDao {
         return accounts;
     }
 
-    @Query("SELECT * FROM ussd_accounts WHERE institution_type != 'telecom' ORDER BY alias ASC")
+    @Query("SELECT * FROM ussd_accounts ORDER BY alias ASC")
     fun getUssdAccounts(): List<USSDAccount>
 
     @Query("SELECT * FROM usdc_accounts")
@@ -58,17 +58,11 @@ interface AccountDao {
     @Query("SELECT * FROM ussd_accounts WHERE institution_type = 'telecom' AND sim_subscription_id = (:subscriptionId)")
     fun getAccountBySim(subscriptionId: Int): USSDAccount?
 
-    @Query("SELECT * FROM ussd_accounts WHERE channelId = :channelId AND institution_type != 'telecom' ORDER BY alias ASC")
+    @Query("SELECT * FROM ussd_accounts WHERE channelId = :channelId ORDER BY alias ASC")
     fun getAccountsByChannel(channelId: Int): List<USSDAccount>
-
-    @Query("SELECT * FROM ussd_accounts WHERE institutionId = :institutionId AND institution_type != 'telecom' ORDER BY alias ASC")
-    fun getAccountsByInstitution(institutionId: Int): LiveData<List<USSDAccount>>
 
     @Query("SELECT * FROM ussd_accounts WHERE institution_type != 'telecom' ORDER BY alias ASC")
     fun getAccounts(): Flow<List<USSDAccount>>
-
-    @Query("SELECT * FROM ussd_accounts where name = :name and channelId = :channelId AND institution_type != 'telecom'")
-    fun getAccount(name: String, channelId: Int): USSDAccount?
 
     @Query("SELECT * FROM ussd_accounts where id = :id LIMIT 1")
     suspend fun getUssdAccount(id: Int): USSDAccount?

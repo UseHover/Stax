@@ -37,7 +37,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.hover.stax.R
+import com.hover.stax.channels.Channel.TELECOM_TYPE
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.BalancesViewModel
@@ -51,12 +53,13 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SimScreen(
-    buyAirtime: (USSDAccount) -> Unit,
+    buyAirtime: (ActionableAccount) -> Unit,
     navTo: (dest: Int) -> Unit,
     simViewModel: SimViewModel = getViewModel(),
     balancesViewModel: BalancesViewModel = getViewModel()
 ) {
-    val sims by simViewModel.sims.collectAsState()
+    val sims by simViewModel.sims.collectAsState(emptyList())
+    val accounts by balancesViewModel.accounts.collectAsState()
 
     val context = LocalContext.current
 
@@ -91,8 +94,12 @@ fun SimScreen(
 
                         items(sims.sortedWith(comparator)) { sim ->
                             // Don't show removed SIM cards that we don't support, it is confusing
-                            if (sim.account.channelId != -1 || sim.sim.slotIdx != -1)
-                                SimScreenCard(sim, { balancesViewModel.requestBalance(it) }, buyAirtime)
+                            if (sim.account.channelId != -1 || sim.sim.slotIdx != -1) {
+                                val a = accounts.find { it.ussdAccount?.institutionType == TELECOM_TYPE && it.ussdAccount.simSubscriptionId == sim.sim.subscriptionId }
+                                SimScreenCard(sim, a,
+                                    { balancesViewModel.requestBalance(it) },
+                                    { buyAirtime(it) })
+                            }
                         }
                     }
                 }

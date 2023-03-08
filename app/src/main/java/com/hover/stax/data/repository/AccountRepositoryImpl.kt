@@ -41,9 +41,6 @@ class AccountRepositoryImpl(
 
     private val context: Context by inject()
 
-    override val addedAccounts: Flow<List<USSDAccount>>
-        get() = accountRepo.getAccounts()
-
     override suspend fun createAccount(sim: SimInfo): USSDAccount {
         var account = USSDAccount(generateSimBasedName(sim), generateSimBasedAlias(sim))
         channelRepo.getTelecom(sim.osReportedHni)?.let {

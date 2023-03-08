@@ -30,6 +30,7 @@ const val RECIPIENT_INSTITUTION = "recipientInstitution"
 class ActionSelectViewModel(application: Application) : AndroidViewModel(application) {
 
     val filteredActions = MutableLiveData<List<HoverAction>>()
+
     val activeAction = MediatorLiveData<HoverAction?>()
     val nonStandardVariables = MediatorLiveData<LinkedHashMap<String, String>>()
 

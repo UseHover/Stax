@@ -16,43 +16,29 @@
 package com.hover.stax.presentation.home
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.google.common.base.Optional
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.api.Hover
-import com.hover.stax.R
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.domain.model.USSDAccount
-import com.hover.stax.domain.model.USSD_TYPE
-import com.hover.stax.domain.use_case.AccountBalancesUseCase
-import com.hover.stax.domain.use_case.AccountWithBalance
-import com.hover.stax.domain.use_case.ListSimsUseCase
+import com.hover.stax.domain.use_case.ActionableAccountsUseCase
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.domain.use_case.SimWithAccount
-import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.stellar.sdk.Server
-import org.stellar.sdk.responses.AccountResponse
 import timber.log.Timber
 
 class BalancesViewModel(
     application: Application,
-    private val accountBalancesUseCase: AccountBalancesUseCase
+    private val actionableAccountsUseCase: ActionableAccountsUseCase
 ) : AndroidViewModel(application) {
 
-    private val _accounts = MutableStateFlow<List<AccountWithBalance>>(emptyList())
+    private val _accounts = MutableStateFlow<List<ActionableAccount>>(emptyList())
     val accounts = _accounts.asStateFlow()
 
-    private val _userRequestedBalance = Channel<Pair<USSDAccount?, HoverAction?>>()
-    val userRequestedBalance = _userRequestedBalance.receiveAsFlow()
+    private val _requestBalance = Channel<ActionableAccount>()
+    val requestBalance = _requestBalance.receiveAsFlow()
 
     private val _actionRunError = Channel<String>()
     val actionRunError = _actionRunError.receiveAsFlow()
@@ -63,17 +49,12 @@ class BalancesViewModel(
 
     fun loadAccounts() = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("Loading accounts")
-        _accounts.update { accountBalancesUseCase() }
+        _accounts.update { actionableAccountsUseCase() }
     }
 
-    fun requestBalance(account: AccountWithBalance) = viewModelScope.launch(Dispatchers.IO) {
+    fun requestBalance(account: ActionableAccount) = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("requesting balance for ${account.account}")
-        _userRequestedBalance.send(Pair(account.ussdAccount, account.balanceAction))
-    }
-
-    fun requestBalance(account: SimWithAccount) = viewModelScope.launch(Dispatchers.IO) {
-        Timber.e("requesting balance for ${account.account}")
-        _userRequestedBalance.send(Pair(account.account, account.balanceAction))
+        _requestBalance.send(account)
     }
 //
 //    private fun requestBalance(account: USDCAccount): USDCAccount {

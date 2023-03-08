@@ -21,8 +21,6 @@ import com.hover.stax.domain.model.USSDAccount
 import kotlinx.coroutines.flow.Flow
 
 interface AccountRepository {
-    val addedAccounts: Flow<List<USSDAccount>>
-
     suspend fun createAccount(sim: SimInfo): USSDAccount
 
     suspend fun getAccountBySim(subscriptionId: Int): USSDAccount?

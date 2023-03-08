@@ -3,6 +3,7 @@ package com.hover.stax.addAccounts
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
+import com.hover.stax.domain.model.Account
 
 
 class AddAccountContract : ActivityResultContract<Void?, Intent?>() {

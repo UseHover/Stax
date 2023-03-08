@@ -23,16 +23,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.model.USSD_TYPE
-import com.hover.stax.domain.use_case.AccountWithBalance
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.presentation.home.HomeClickFunctions
 
 @Composable
 fun MoveMoneyOptions(
     homeClickFunctions: HomeClickFunctions?,
-    accounts: List<AccountWithBalance>
+    accounts: List<ActionableAccount>
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -80,7 +78,7 @@ fun MoveMoneyOptions(
     }
 }
 
-private fun showKeFeatures(accounts: List<AccountWithBalance>): Boolean =
+private fun showKeFeatures(accounts: List<ActionableAccount>): Boolean =
     accounts.any {
         it.account.type == USSD_TYPE && it.ussdAccount?.countryAlpha2.contentEquals("KE", ignoreCase = true)
     }

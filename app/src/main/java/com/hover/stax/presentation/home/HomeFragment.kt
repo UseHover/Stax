@@ -15,13 +15,11 @@
  */
 package com.hover.stax.presentation.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,13 +27,12 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.addAccounts.AddAccountActivity
 import com.hover.stax.addAccounts.AddAccountContract
-import com.hover.stax.addAccounts.AddAccountViewModel
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.model.USSD_TYPE
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.utils.AnalyticsUtil
@@ -44,7 +41,6 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLifecycleFlow
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -95,7 +91,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         )
     }
 
-	val addAccount = registerForActivityResult(AddAccountContract()) { data: Intent? ->
+	val addAccount = registerForActivityResult(AddAccountContract()) {
         Timber.e("I want to reload accounts")
         balancesViewModel.loadAccounts()
 	}
@@ -121,9 +117,9 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    balancesViewModel.userRequestedBalance.collect {
+                    balancesViewModel.requestBalance.collect {
                         Timber.e("receive balance request event")
-                        attemptCallHover(it.first, it.second)
+                        attemptCallHover(it)
                 } }
                 launch {
                     homeViewModel.addAccountEvent.collect {
@@ -149,10 +145,11 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         }
     }
 
-    private fun attemptCallHover(account: USSDAccount?, action: HoverAction?) {
-        if (account != null && action != null) {
+    private fun attemptCallHover(account: ActionableAccount) {
+        val balanceAction = account.actions?.find { it.transaction_type == HoverAction.BALANCE }
+        if (account.ussdAccount != null && balanceAction != null) {
             AnalyticsUtil.logAnalyticsEvent(requireContext().getString(R.string.refresh_balance), requireContext())
-            callHover(checkBalance, generateSessionBuilder(account, action))
+            callHover(checkBalance, generateSessionBuilder(account.ussdAccount, balanceAction))
         }
     }
 

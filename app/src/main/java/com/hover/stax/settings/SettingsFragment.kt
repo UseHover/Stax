@@ -15,6 +15,7 @@
  */
 package com.hover.stax.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,7 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.addAccounts.AddAccountContract
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
@@ -121,10 +123,7 @@ class SettingsFragment : Fragment() {
 
     private fun setUpMeta() {
         binding.settingsCard.connectAccounts.setOnClickListener {
-//            NavUtil.navigate(
-//                findNavController(),
-//                SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount()
-//            )
+            addAccount.launch(null)
         }
 
         collectLifecycleFlow(accountsViewModel.accountList) {
@@ -134,6 +133,10 @@ class SettingsFragment : Fragment() {
             } else
                 createDefaultSelector(it.accounts)
         }
+    }
+
+    val addAccount = registerForActivityResult(AddAccountContract()) {
+        accountsViewModel.fetchAccounts()
     }
 
     private fun setUpChooseLang() {

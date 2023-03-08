@@ -28,6 +28,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
+import androidx.compose.runtime.collectAsState
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
@@ -37,10 +38,10 @@ import com.hover.stax.R
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.addAccounts.AddAccountContract
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
-import com.hover.stax.domain.use_case.AccountWithBalance
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.permissions.PermissionUtils
@@ -53,10 +54,12 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.last
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
-abstract class AbstractFormFragment : Fragment() {
+abstract class AbstractFormFragment : Fragment(), AccountDropdown.HighlightListener {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
@@ -86,8 +89,20 @@ abstract class AbstractFormFragment : Fragment() {
         fab = root.findViewById(R.id.fab)
         fab.setOnClickListener { fabClicked() }
         payWithDropdown = root.findViewById(R.id.payWithDropdown)
-        payWithDropdown.setListener(accountsViewModel)
+        payWithDropdown.setListener(this)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+    }
+
+    override fun highlightAccount(account: USSDAccount) {
+        accountsViewModel.highlightAccount(account)
+    }
+
+    override fun addAccount() {
+        addAccount.launch(null)
+    }
+
+    val addAccount = registerForActivityResult(AddAccountContract()) { data: Intent? ->
+//        UIHelper.flashAndReportMessage(requireContext(), R.string.account_added)
     }
 
     @CallSuper
@@ -96,9 +111,10 @@ abstract class AbstractFormFragment : Fragment() {
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
-        collectLifecycleFlow(balancesViewModel.userRequestedBalance) {
-            if (it.first != null && it.second != null)
-                callHover(checkBalance, generateSessionBuilder(it.first!!, it.second!!))
+        collectLifecycleFlow(balancesViewModel.requestBalance) {
+            val balanceAction = it.actions?.find { it.transaction_type == HoverAction.BALANCE }
+            if (it.ussdAccount != null && balanceAction != null)
+                callHover(checkBalance, generateSessionBuilder(it.ussdAccount, balanceAction))
         }
     }
 
@@ -136,10 +152,9 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun fabClicked() {
-//        if (accountsViewModel.activeAccount.value != null && !accountsViewModel.isValidAccount())
-//            askToCheckBalance(accountsViewModel.activeAccount.value!!)
-//        else
-        if (validates()) {
+        if (accountsViewModel.activeAccount.value != null && !accountsViewModel.isValidAccount())
+            askToCheckBalance(balancesViewModel.accounts.value.find { it.account.id == accountsViewModel.activeAccount.value!!.id })
+        else if (validates()) {
             if (abstractFormViewModel.isEditing.value == true) {
                 onFinishForm()
             } else {
@@ -154,7 +169,8 @@ abstract class AbstractFormFragment : Fragment() {
 
     abstract fun onSubmitForm()
 
-    private fun askToCheckBalance(account: AccountWithBalance) {
+    private fun askToCheckBalance(account: ActionableAccount?) {
+        if (account == null) return
         val dialog = StaxDialog(layoutInflater)
             .setDialogTitle(R.string.finish_adding_title)
             .setDialogMessage(getString(R.string.finish_adding_desc, account.account.userAlias))

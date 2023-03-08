@@ -1,6 +1,8 @@
 package com.hover.stax.domain.use_case
 
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.sims.SimInfo
+import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
@@ -11,36 +13,38 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-data class AccountWithBalance(
+data class ActionableAccount(
 	val account: Account,
+	val sim: SimInfo?,
 	val ussdAccount: USSDAccount?,
 	val usdcAccount: USDCAccount?,
-	val balanceAction: HoverAction?
+	val actions: List<HoverAction>?
 )
 
-class AccountBalancesUseCase(
+class ActionableAccountsUseCase(
 	val accountRepo: AccountRepo,
+	private val simRepo: SimRepo,
 	private val actionRepository: ActionRepo,
 	private val defaultDispatcher: CoroutineDispatcher
 ) {
 
-	suspend operator fun invoke(): List<AccountWithBalance> = withContext(defaultDispatcher) {
-		Timber.e("loading accounts in use case")
+	suspend operator fun invoke(): List<ActionableAccount> = withContext(defaultDispatcher) {
 		val accounts = accountRepo.getAllAccounts()
+		val sims = simRepo.getAll()
 		val ussds = accountRepo.getUssdAccounts()
 
-		val result: MutableList<AccountWithBalance> = mutableListOf()
+		val result: MutableList<ActionableAccount> = mutableListOf()
 		for (account in accounts) {
 			if (account.type == USSD_TYPE) {
 				val ussdAcct = ussds.find { it.id == account.id }
-				if (ussdAcct?.institutionType == null || ussdAcct.institutionType == "telecom") { Timber.e("Found telco, breaking"); break }
-				val balanceAct = ussdAcct.let {
-					actionRepository.getFirstAction(ussdAcct.institutionId, ussdAcct.countryAlpha2, HoverAction.BALANCE)
+				val actions = ussdAcct?.let {
+					actionRepository.getActions(ussdAcct.institutionId, ussdAcct.countryAlpha2)
 				}
-				result.add(AccountWithBalance(account, ussdAcct, null, balanceAct))
+				Timber.e("Loaded ${actions?.size} actions")
+				result.add(ActionableAccount(account, sims.find { it.subscriptionId == ussdAcct?.simSubscriptionId }, ussdAcct, null, actions))
 			} else {
 				val usdcAcct = accountRepo.getUsdcAccount(account.id)
-				result.add(AccountWithBalance(account, null, usdcAcct, null))
+				result.add(ActionableAccount(account,  null, null, usdcAcct, null))
 			}
 		}
 		result

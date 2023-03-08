@@ -21,11 +21,8 @@ import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.FinancialTipsRepository
-import com.hover.stax.domain.use_case.AccountWithBalance
-import com.hover.stax.presentation.bounties.BountiesState
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +39,7 @@ class HomeViewModel(application: Application,
     private val _addAccountEvent = Channel<Boolean>()
     val addAccountEvent = _addAccountEvent.receiveAsFlow()
 
-    private val _accountDetail = Channel<AccountWithBalance>()
+    private val _accountDetail = Channel<ActionableAccount>()
     val accountDetail = _accountDetail.receiveAsFlow()
 
     val bonusActions: LiveData<List<HoverAction>> = actionRepo.getBonusActions()
@@ -63,9 +60,9 @@ class HomeViewModel(application: Application,
         _addAccountEvent.send(true)
     }
 
-    fun requestGoToAccount(accountWithBalance: AccountWithBalance) = viewModelScope.launch(Dispatchers.IO) {
+    fun requestGoToAccount(actionableAccount: ActionableAccount) = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("requesting add account")
-        _accountDetail.send(accountWithBalance)
+        _accountDetail.send(actionableAccount)
     }
 
     fun logBuyAirtimeFromAd() = viewModelScope.launch(Dispatchers.IO) {

@@ -22,39 +22,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.CachePolicy
-import coil.request.ImageRequest
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSD_TYPE
-import com.hover.stax.domain.use_case.AccountWithBalance
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.presentation.add_accounts.components.SampleAccountProvider
 import com.hover.stax.presentation.components.Logo
 import com.hover.stax.presentation.components.TimeStringGenerator
 
 @Composable
-fun BalanceItem(account: AccountWithBalance, goToDetail: (AccountWithBalance) -> Unit, refresh: (AccountWithBalance) -> Unit) {
+fun BalanceItem(account: ActionableAccount, goToDetail: (ActionableAccount) -> Unit, refresh: (ActionableAccount) -> Unit) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Row(
         modifier = Modifier
@@ -120,12 +110,12 @@ fun BalanceItem(account: AccountWithBalance, goToDetail: (AccountWithBalance) ->
 
 @Preview
 @Composable
-fun USSDBalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<AccountWithBalance>) {
+fun USSDBalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<ActionableAccount>) {
     BalanceItem(accounts[0], {}, {})
 }
 
 @Preview
 @Composable
-fun USDCBalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<AccountWithBalance>) {
+fun USDCBalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<ActionableAccount>) {
     BalanceItem(accounts[3], {}, {})
 }

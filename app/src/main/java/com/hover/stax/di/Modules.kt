@@ -43,7 +43,7 @@ import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.repository.BountyRepository
 import com.hover.stax.domain.repository.ChannelRepository
 import com.hover.stax.domain.repository.FinancialTipsRepository
-import com.hover.stax.domain.use_case.AccountBalancesUseCase
+import com.hover.stax.domain.use_case.ActionableAccountsUseCase
 import com.hover.stax.domain.use_case.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.ListSimsUseCase
 import com.hover.stax.domain.use_case.StaxUserUseCase
@@ -190,8 +190,8 @@ val useCases = module {
     single(named("CoroutineDispatcher")) {
         Dispatchers.IO
     }
-    single { ListSimsUseCase(get(), get(), get(), get(named("CoroutineDispatcher"))) }
-    single { AccountBalancesUseCase(get(), get(), get(named("CoroutineDispatcher"))) }
+    single { ListSimsUseCase(get(), get(), get(named("CoroutineDispatcher"))) }
+    single { ActionableAccountsUseCase(get(), get(), get(), get(named("CoroutineDispatcher"))) }
 
     factoryOf(::GetChannelBountiesUseCase)
 

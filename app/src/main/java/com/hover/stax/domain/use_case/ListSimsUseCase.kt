@@ -15,11 +15,8 @@
  */
 package com.hover.stax.domain.use_case
 
-import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.data.local.SimRepo
-import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.repository.AccountRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,15 +24,12 @@ import kotlinx.coroutines.withContext
 
 data class SimWithAccount(
     val sim: SimInfo,
-    val account: USSDAccount,
-    val balanceAction: HoverAction?,
-    val airtimeActions: List<HoverAction?> = emptyList()
+    val account: USSDAccount
 )
 
 class ListSimsUseCase(
     private val simRepo: SimRepo,
     private val accountRepository: AccountRepository,
-    private val actionRepository: ActionRepo,
     private val defaultDispatcher: CoroutineDispatcher
 ) {
 
@@ -44,17 +38,11 @@ class ListSimsUseCase(
         val result: MutableList<SimWithAccount> = mutableListOf()
         for (sim in sims) {
             var account = accountRepository.getAccountBySim(sim.subscriptionId)
-            var balanceAct: HoverAction? = null
-            var airtimeActs: List<HoverAction> = emptyList()
 
             if (account == null)
                 account = accountRepository.createAccount(sim)
 
-            if (account.channelId != -1) {
-                balanceAct = actionRepository.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE)
-                airtimeActs = actionRepository.getActionsByRecipientInstitution(account.institutionId, account.countryAlpha2, HoverAction.AIRTIME)
-            }
-            result.add(SimWithAccount(sim, account, balanceAct, airtimeActs))
+            result.add(SimWithAccount(sim, account))
         }
         result
     }

@@ -40,7 +40,11 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
         return actionDao.getTransferActions(institutionId, countryCode)
     }
 
-    fun getActions(institutionId: Int, countryCode: String, type: String?): List<HoverAction> {
+    fun getActions(institutionId: Int, countryCode: String): List<HoverAction> {
+        return actionDao.getActions(institutionId, countryCode)
+    }
+
+    fun getActionsByType(institutionId: Int, countryCode: String, type: String?): List<HoverAction> {
         return actionDao.getActions(institutionId, countryCode, type)
     }
 

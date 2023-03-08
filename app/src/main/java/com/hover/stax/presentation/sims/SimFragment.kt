@@ -25,14 +25,13 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.domain.model.USSDAccount
-import com.hover.stax.domain.use_case.SimWithAccount
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SimFragment : AbstractBalanceCheckerFragment() {
@@ -63,8 +62,8 @@ class SimFragment : AbstractBalanceCheckerFragment() {
     }
 
     private fun observeBalances() {
-        collectLifecycleFlow(balancesViewModel.userRequestedBalance) {
-            attemptCallHover(it.first, it.second)
+        collectLifecycleFlow(balancesViewModel.requestBalance) {
+            attemptCallHover(it)
         }
 
         collectLifecycleFlow(balancesViewModel.actionRunError) {
@@ -72,8 +71,10 @@ class SimFragment : AbstractBalanceCheckerFragment() {
         }
     }
 
-    private fun attemptCallHover(account: USSDAccount?, action: HoverAction?) {
-        action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
+    private fun attemptCallHover(account: ActionableAccount?) {
+        val balanceAction = account?.actions?.find { it.transaction_type == HoverAction.BALANCE }
+        if (account?.ussdAccount != null && balanceAction != null)
+            callHover(checkBalance, generateSessionBuilder(account.ussdAccount, balanceAction))
     }
 
     private fun navigateTo(dest: Int) = findNavController().navigate(dest)

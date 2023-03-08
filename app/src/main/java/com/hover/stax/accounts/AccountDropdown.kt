@@ -16,6 +16,7 @@
 package com.hover.stax.accounts
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.lifecycle.Lifecycle
@@ -27,11 +28,13 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.addAccounts.AddAccountContract
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
@@ -102,8 +105,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         setDropdownValue(account)
         if (account != null && account.id != 0)
             highlightListener?.highlightAccount(account)
-//        else
-//            findNavController().navigate(R.id.navigation_linkAccount)
+        else
+            highlightListener?.addAccount()
     }
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
@@ -167,5 +170,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     interface HighlightListener {
         fun highlightAccount(account: USSDAccount)
+        fun addAccount()
     }
 }

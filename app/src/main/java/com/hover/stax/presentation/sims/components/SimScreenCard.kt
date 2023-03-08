@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.presentation.components.DisabledButton
 import com.hover.stax.presentation.components.PrimaryButton
@@ -37,17 +37,19 @@ import com.hover.stax.presentation.components.SimTitle
 import com.hover.stax.ui.theme.TextGrey
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
+import timber.log.Timber
 
 @Composable
 internal fun SimScreenCard(
     simWithAccount: SimWithAccount,
-    refreshBalance: (SimWithAccount) -> Unit,
-    buyAirtime: (USSDAccount) -> Unit
+    actionableSimAccount: ActionableAccount?,
+    refreshBalance: (ActionableAccount) -> Unit,
+    buyAirtime: (ActionableAccount) -> Unit
 ) {
     StaxCard {
         val context = LocalContext.current
 
-        SimItemTopRow(simWithAccount, refreshBalance)
+        SimItemTopRow(simWithAccount, actionableSimAccount, refreshBalance)
         if (simWithAccount.account.channelId != -1) {
             val notYetChecked = stringResource(id = R.string.not_yet_checked)
             Text(
@@ -79,27 +81,29 @@ internal fun SimScreenCard(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        if (simWithAccount.account.channelId == -1) {
+        if (simWithAccount.account.channelId == -1 || actionableSimAccount == null) {
             SecondaryButton(
                 stringResource(id = R.string.email_support), null,
                 onClick = { emailStax(simWithAccount, context) }
             )
         } else {
-            val bonus = getBonus(simWithAccount.airtimeActions)
+            val bonus = getBonus(actionableSimAccount.actions)
             SecondaryButton(
                 getAirtimeButtonLabel(bonus), icon = getAirtimeButtonIcon(bonus),
-                onClick = { buyAirtime(simWithAccount.account) }
+                onClick = { buyAirtime(actionableSimAccount) }
             )
         }
     }
 }
 
-private fun getBonus(actions: List<HoverAction?>): Int {
-    var bonus = 0
-    actions.let { action ->
-        bonus = action.firstOrNull { (it?.bonus_percent ?: 0) > 0 }?.bonus_percent ?: 0
+private fun getBonus(actions: List<HoverAction>?): Int {
+    val acts = actions?.filter { it.transaction_type == HoverAction.AIRTIME }
+    Timber.e("looking thru ${actions?.size} actions")
+    actions?.forEach {
+        Timber.e("checking action $it")
+        Timber.e("bonus ${it.bonus_percent}")
     }
-    return bonus
+    return actions?.firstOrNull { (it.bonus_percent ?: 0) > 0 }?.bonus_percent ?: 0
 }
 
 @Composable
@@ -111,19 +115,19 @@ private fun getAirtimeButtonLabel(bonus: Int): String {
     return label
 }
 
-private fun getAirtimeButtonIcon(bonus: Int?): Int? {
+private fun getAirtimeButtonIcon(bonus: Int): Int? {
     var icon: Int? = null
-    if (bonus != null) { icon = R.drawable.ic_bonus }
+    if (bonus > 0) { icon = R.drawable.ic_bonus }
     return icon
 }
 
-private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
+private fun emailStax(simAccount: SimWithAccount, context: Context) {
     val emailBody = context.getString(
         R.string.sim_card_support_request_emailBody,
-        simWithAccount.sim.osReportedHni ?: "Null",
-        simWithAccount.sim.operatorName ?: simWithAccount.account.userAlias,
-        simWithAccount.sim.networkOperator ?: "Null",
-        simWithAccount.sim.countryIso ?: "Null"
+        simAccount.sim.osReportedHni ?: "Null",
+        simAccount.sim.operatorName ?: simAccount.account.userAlias,
+        simAccount.sim.networkOperator ?: "Null",
+        simAccount.sim.countryIso ?: "Null"
     )
 
     Utils.openEmail(context.getString(R.string.sim_card_support_request_emailSubject), context, emailBody)
@@ -132,19 +136,21 @@ private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
 @Composable
 fun SimItemTopRow(
     simWithAccount: SimWithAccount,
-    refreshBalance: (SimWithAccount) -> Unit
+    actionableSimAccount: ActionableAccount?,
+    refreshBalance: (ActionableAccount) -> Unit
 ) {
     SimTitle(simWithAccount.sim, simWithAccount.account.institutionName, simWithAccount.account.logoUrl, content = {
-        SimAction(simWithAccount, refreshBalance)
+        SimAction(actionableSimAccount, refreshBalance)
     })
 }
 
 @Composable
-fun SimAction(simWithAccount: SimWithAccount, refreshBalance: (SimWithAccount) -> Unit) {
-    if (simWithAccount.balanceAction != null) {
+fun SimAction(actionableSimAccount: ActionableAccount?, refreshBalance: (ActionableAccount) -> Unit) {
+    val balanceAction = actionableSimAccount?.actions?.find { it.transaction_type == HoverAction.BALANCE }
+    if (balanceAction != null) {
         PrimaryButton(
             stringResource(id = R.string.check_balance_capitalized), null,
-            onClick = { refreshBalance(simWithAccount) }
+            onClick = { refreshBalance(actionableSimAccount) }
         )
     } else {
         DisabledButton(stringResource(id = R.string.unsupported), null) { }
