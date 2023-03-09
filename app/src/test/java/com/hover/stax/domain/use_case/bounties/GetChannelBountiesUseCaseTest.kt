@@ -20,12 +20,12 @@ import org.junit.Test
 
 
 @ExperimentalCoroutinesApi
-class GetChannelBountiesUseCaseTest{
+class GetChannelBountiesUseCaseTest {
     private val bountyRepository = mockk<BountyRepository>(relaxed = true)
     private val channelRepository = mockk<ChannelRepository>(relaxed = true)
     private val transactionRepo = mockk<TransactionRepo>(relaxed = true)
     private val channelBounties = mockk<List<ChannelBounties>>(relaxed = true)
-    private val bountyAction= mockk<Bounty>(relaxed = true)
+    private val bountyAction = mockk<Bounty>(relaxed = true)
     private val staxTransaction = mockk<List<StaxTransaction>>(relaxed = true)
     private val channelList = mockk<List<Channel>>(relaxed = true)
     private val countryCode = "KE"
@@ -34,7 +34,8 @@ class GetChannelBountiesUseCaseTest{
 
     @Before
     fun setUp() {
-        testSubject = GetChannelBountiesUseCase(channelRepository, bountyRepository, transactionRepo)
+        testSubject =
+            GetChannelBountiesUseCase(channelRepository, bountyRepository, transactionRepo)
     }
 
     @Test
@@ -43,8 +44,19 @@ class GetChannelBountiesUseCaseTest{
 
         coEvery { bountyRepository.bountyActions } returns bountyActionsList
         coEvery { transactionRepo.bountyTransactionList } returns staxTransaction
-        coEvery { channelRepository.filterChannels(countryCode, bountyActionsList) } returns channelList
-        coEvery { bountyRepository.makeBounties(bountyActionsList, staxTransaction, channelList) } returns channelBounties
+        coEvery {
+            channelRepository.filterChannels(
+                countryCode,
+                bountyActionsList
+            )
+        } returns channelList
+        coEvery {
+            bountyRepository.makeBounties(
+                bountyActionsList,
+                staxTransaction,
+                channelList
+            )
+        } returns channelBounties
 
         val result = testSubject.getBounties(countryCode).toList()
         Truth.assertThat(result.size).isEqualTo(2)
@@ -58,6 +70,7 @@ class GetChannelBountiesUseCaseTest{
         val result = testSubject.getBounties(countryCode).toList()
         Truth.assertThat(result[1].message).isEqualTo("Error loading bounties")
     }
+
     @Test
     fun `when isSimPresent is called with empty sims then returns false`() = runTest {
         val sims = emptyList<SimInfo>()
@@ -73,22 +86,3 @@ class GetChannelBountiesUseCaseTest{
         Truth.assertThat(countryList).isEqualTo(result)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
