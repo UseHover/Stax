@@ -35,7 +35,7 @@ interface TransactionDao : com.hover.stax.storage.user.dao.BaseDao<StaxTransacti
 
     @Transaction
     @Query("SELECT * FROM stax_transactions WHERE account_id = :accountId AND environment != 3 ORDER BY initiated_at DESC")
-    fun getAccountTransactions(accountId: Int): LiveData<List<StaxTransaction>>?
+    fun getAccountTransactions(accountId: Int): List<StaxTransaction>?
 
     @get:Query("SELECT * FROM stax_transactions WHERE status != 'failed' AND environment != 3 ORDER BY initiated_at DESC LIMIT 4")
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?
@@ -59,10 +59,10 @@ interface TransactionDao : com.hover.stax.storage.user.dao.BaseDao<StaxTransacti
     suspend fun getTransactionSuspended(uuid: String?): StaxTransaction?
 
     @Query("SELECT SUM(amount) as total FROM stax_transactions WHERE strftime('%m', initiated_at/1000, 'unixepoch') = :month AND strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND account_id = :accountId AND status = :status AND environment != 3")
-    fun getTotalAmount(accountId: Int, month: String, year: String, status: String = Txn.SUCCEEDED): LiveData<Double>?
+    fun getTotalAmount(accountId: Int, month: String, year: String, status: String = Txn.SUCCEEDED): Double?
 
     @Query("SELECT SUM(fee) as total FROM stax_transactions WHERE strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND account_id = :accountId AND environment != 3 AND status = :status")
-    fun getTotalFees(accountId: Int, year: String, status: String = Txn.SUCCEEDED): LiveData<Double>?
+    fun getTotalFees(accountId: Int, year: String, status: String = Txn.SUCCEEDED): Double?
 
     @Query("SELECT COUNT(id) FROM stax_transactions WHERE strftime('%m', initiated_at/1000, 'unixepoch') = :month AND strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND environment != 3")
     suspend fun getTransactionCount(month: String, year: String): Int?

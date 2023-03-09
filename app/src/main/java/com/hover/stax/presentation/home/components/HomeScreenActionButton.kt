@@ -43,7 +43,7 @@ import com.hover.stax.R
 import com.hover.stax.ui.theme.BrightBlue
 
 @Composable
-fun VerticalImageTextView(
+fun HomeScreenActionButton(
     @DrawableRes drawable: Int,
     @StringRes stringRes: Int,
     onItemClick: () -> Unit

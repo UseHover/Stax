@@ -118,8 +118,9 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     balancesViewModel.requestBalance.collect {
+                        AnalyticsUtil.logAnalyticsEvent(requireContext().getString(R.string.refresh_balance), requireContext())
                         Timber.e("receive balance request event")
-                        attemptCallHover(it)
+                        attemptCallHover(it, HoverAction.BALANCE)
                 } }
                 launch {
                     homeViewModel.addAccountEvent.collect {
@@ -145,17 +146,11 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         }
     }
 
-    private fun attemptCallHover(account: ActionableAccount) {
-        val balanceAction = account.actions?.find { it.transaction_type == HoverAction.BALANCE }
-        if (account.ussdAccount != null && balanceAction != null) {
-            AnalyticsUtil.logAnalyticsEvent(requireContext().getString(R.string.refresh_balance), requireContext())
-            callHover(checkBalance, generateSessionBuilder(account.ussdAccount, balanceAction))
-        }
-    }
-
     private fun goToDetail(account: Account) {
         if (account.type == USSD_TYPE)
             findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(account.id))
+        else
+            findNavController()
     }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)

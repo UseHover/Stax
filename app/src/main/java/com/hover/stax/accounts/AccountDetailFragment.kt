@@ -24,13 +24,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.use_case.AccountDetail
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
@@ -48,6 +54,7 @@ import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -113,7 +120,7 @@ class AccountDetailFragment :
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            toggleButtonHighlight(binding.manageCard.nicknameInput, binding.manageCard.nicknameSaveBtn, charSequence.toString(), viewModel.account.value?.userAlias)
+            toggleButtonHighlight(binding.manageCard.nicknameInput, binding.manageCard.nicknameSaveBtn, charSequence.toString(), viewModel.account.value?.ussdAccount?.userAlias)
         }
     }
 
@@ -121,7 +128,7 @@ class AccountDetailFragment :
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            toggleButtonHighlight(binding.manageCard.accountNumberInput, binding.manageCard.accountSaveBtn, charSequence.toString(), viewModel.account.value?.accountNo)
+            toggleButtonHighlight(binding.manageCard.accountNumberInput, binding.manageCard.accountSaveBtn, charSequence.toString(), viewModel.account.value?.ussdAccount?.accountNo)
         }
     }
 
@@ -141,11 +148,11 @@ class AccountDetailFragment :
     }
 
     private fun updateNickname() {
-        validateInput(binding.manageCard.nicknameInput, viewModel.account.value?.userAlias, R.string.account_name_error, viewModel::updateAccountName)
+        validateInput(binding.manageCard.nicknameInput, viewModel.account.value?.ussdAccount?.userAlias, R.string.account_name_error, viewModel::updateAccountName)
     }
 
     private fun updateAccountNumber() {
-        validateInput(binding.manageCard.accountNumberInput, viewModel.account.value?.accountNo, R.string.account_number_error, viewModel::updateAccountNumber)
+        validateInput(binding.manageCard.accountNumberInput, viewModel.account.value?.ussdAccount?.accountNo, R.string.account_number_error, viewModel::updateAccountNumber)
     }
 
     private fun validateInput(
@@ -170,58 +177,67 @@ class AccountDetailFragment :
     }
 
     private fun setupObservers() {
-        observeBalanceCheck()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.account.collect {
+                        it?.ussdAccount?.let { acct ->
+                            binding.amountsCard.setTitle(acct.userAlias)
+                            if (acct.userAlias != acct.institutionName)
+                                binding.amountsCard.setSubtitle(acct.institutionName)
+                            if (acct.latestBalance != null) {
+                                binding.balanceCard.balanceAmount.text = acct.latestBalance
+                                binding.balanceCard.balanceSubtitle.text =
+                                    DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
+                            } else binding.balanceCard.balanceSubtitle.text =
+                                getString(R.string.refresh_balance_desc)
 
-        with(viewModel) {
-            account.observe(viewLifecycleOwner) {
-                it?.let { acct ->
-                    binding.amountsCard.setTitle(acct.userAlias)
-                    if (acct.userAlias != acct.institutionName)
-                        binding.amountsCard.setSubtitle(acct.institutionName)
-                    if (acct.latestBalance != null) {
-                        binding.balanceCard.balanceAmount.text = acct.latestBalance
-                        binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
-                    } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
+                            binding.feesDescription.text =
+                                getString(R.string.fees_label, acct.institutionName)
+                            binding.detailsCard.officialName.text = acct.userAlias
 
-                    binding.feesDescription.text = getString(R.string.fees_label, acct.institutionName)
-                    binding.detailsCard.officialName.text = acct.userAlias
+                            binding.manageCard.nicknameInput.setText(acct.userAlias, false)
+                            binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
+                            binding.manageCard.removeAcctBtn.setOnClickListener {
+                                setUpRemoveAccount(
+                                    acct
+                                )
+                            }
 
-                    binding.manageCard.nicknameInput.setText(acct.userAlias, false)
-                    binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
-                    binding.manageCard.removeAcctBtn.setOnClickListener { setUpRemoveAccount(acct) }
+                            setUpFuture(acct.channelId)
+                        }
 
-                    setUpFuture(acct.channelId)
+                        it?.channel?.let { c ->
+                            binding.detailsCard.shortcodeBtn.text =
+                                getString(R.string.dial_btn, c.rootCode)
+                            binding.detailsCard.shortcodeBtn.setOnClickListener { _ ->
+                                Utils.dial(c.rootCode, requireContext())
+                            }
+                        }
+
+                        it?.transactions?.let { ts ->
+                            binding.historyCard.noHistory.visibility =
+                                if (ts.isNullOrEmpty()) View.VISIBLE else View.GONE
+                            transactionsAdapter!!.submitList(ts)
+                        }
+                    }
                 }
-            }
 
-            channel.observe(viewLifecycleOwner) { c ->
-                binding.detailsCard.shortcodeBtn.text = getString(R.string.dial_btn, c.rootCode)
-                binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
-            }
+//                launch {
+//                    viewModel.spentThisMonth.collect {
+//                    it.let { binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0) }
+//                }}
 
-            transactionHistoryItem.observe(viewLifecycleOwner) {
-                binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                transactionsAdapter!!.submitList(it)
-            }
-
-            spentThisMonth.observe(viewLifecycleOwner) {
-                binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0)
-            }
-
-            feesThisYear.observe(viewLifecycleOwner) {
-                binding.detailsFees.text = Utils.formatAmount(it ?: 0.0)
+//                launch {
+//                    viewModel.feesThisYear.collect {
+//                    it?.let { binding.detailsFees.text = Utils.formatAmount(it ?: 0.0) }
+//                }}
             }
         }
     }
 
-    private fun observeBalanceCheck() {
-//        collectLifecycleFlow(balancesViewModel.userRequestedBalance) {
-//            it?.let { callHover(checkBalance, generateSessionBuilder(it.ussdAccount, it.balanceAction)) }
-//        }
-    }
-
-    private fun onTapBalanceRefresh(account: USSDAccount) {
-//        balancesViewModel.requestBalance(account)
+    private fun onTapBalanceRefresh(account: AccountDetail) {
+        attemptCallHover(account.ussdAccount, account.balanceAction)
     }
 
     private fun setUpRemoveAccount(account: USSDAccount) {

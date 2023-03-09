@@ -47,6 +47,7 @@ class AccountRepo(db: AppDatabase) {
 
     fun getDefaultAccount(): Account? = AccountDao.getDefaultAccount()
 
+    suspend fun getAccount(id: Int): Account? = AccountDao.getAccount(id)
     suspend fun getUssdAccount(id: Int): USSDAccount? = AccountDao.getUssdAccount(id)
     suspend fun getUsdcAccount(id: Int): USDCAccount? = AccountDao.getUsdcAccount(id)
 

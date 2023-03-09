@@ -19,15 +19,20 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 import com.hover.stax.presentation.add_accounts.StaxTopBarDefaults
 import com.hover.stax.ui.theme.OffWhite
@@ -43,11 +48,21 @@ fun HomeTopBar(@StringRes title: Int = 0, navTo: (dest: Int) -> Unit) {
             Row(modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
                 if (title != 0) { Text(stringResource(id = title), style = MaterialTheme.typography.h4) }
                 if (!hasNetwork) {
-                    HorizontalImageTextView(
-                        drawable = R.drawable.ic_internet_off,
-                        stringRes = R.string.working_offline,
-                        MaterialTheme.typography.button
-                    )
+                    Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.padding(horizontal = 16.dp)) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_internet_off),
+                            contentDescription = null,
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                        )
+                        Text(
+                            text = stringResource(id = R.string.working_offline),
+                            style = MaterialTheme.typography.button,
+                            modifier = Modifier
+                                .padding(start = dimensionResource(id = R.dimen.margin_13))
+                                .align(Alignment.CenterVertically),
+                            color = colorResource(id = R.color.offWhite)
+                        )
+                    }
                 }
             }
         },

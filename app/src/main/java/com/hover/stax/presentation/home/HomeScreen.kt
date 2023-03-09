@@ -71,7 +71,7 @@ fun HomeScreen(
                         EmptyBalance {
                             homeViewModel.requestAddAccount()
                         }
-                    } else { BonusAd(homeViewModel, navController) }
+                    } else { BonusAd(homeViewModel, homeClickFunctions) }
 
                     MoveMoneyOptions(homeClickFunctions, accounts)
 

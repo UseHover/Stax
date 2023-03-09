@@ -39,14 +39,14 @@ fun MoveMoneyOptions(
             .fillMaxWidth()
     ) {
         homeClickFunctions?.onSendMoneyClicked?.let {
-            VerticalImageTextView(
+            HomeScreenActionButton(
                 onItemClick = it,
                 drawable = R.drawable.ic_send_money,
                 stringRes = R.string.cta_transfer
             )
         }
         homeClickFunctions?.onBuyAirtimeClicked?.let {
-            VerticalImageTextView(
+            HomeScreenActionButton(
                 onItemClick = it,
                 drawable = R.drawable.ic_system_upate_24,
                 stringRes = R.string.cta_airtime
@@ -54,14 +54,14 @@ fun MoveMoneyOptions(
         }
         if (showKeFeatures(accounts)) {
             homeClickFunctions?.onBuyGoodsClicked?.let {
-                VerticalImageTextView(
+                HomeScreenActionButton(
                     onItemClick = it,
                     drawable = R.drawable.ic_shopping_cart,
                     stringRes = R.string.cta_merchant
                 )
             }
             homeClickFunctions?.onPayBillClicked?.let {
-                VerticalImageTextView(
+                HomeScreenActionButton(
                     onItemClick = it,
                     drawable = R.drawable.ic_utility,
                     stringRes = R.string.cta_paybill_linebreak
@@ -69,7 +69,7 @@ fun MoveMoneyOptions(
             }
         }
         homeClickFunctions?.onRequestMoneyClicked?.let {
-            VerticalImageTextView(
+            HomeScreenActionButton(
                 onItemClick = it,
                 drawable = R.drawable.ic_baseline_people_24,
                 stringRes = R.string.cta_request

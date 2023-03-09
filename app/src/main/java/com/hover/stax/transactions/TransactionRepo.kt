@@ -61,17 +61,17 @@ class TransactionRepo(db: AppDatabase, hoverDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", DateUtils.lastMonth().first), DateUtils.lastMonth().second.toString())!! > 0
     }
 
-    fun getAccountTransactions(account: Account): LiveData<List<StaxTransaction>>? {
+    fun getAccountTransactions(account: Account): List<StaxTransaction>? {
         return transactionDao.getAccountTransactions(account.id)
     }
 
     @SuppressLint("DefaultLocale")
-    fun getSpentAmount(accountId: Int, month: Int, year: Int): LiveData<Double>? {
+    fun getSpentAmount(accountId: Int, month: Int, year: Int): Double? {
         return transactionDao.getTotalAmount(accountId, String.format("%02d", month), year.toString())
     }
 
     @SuppressLint("DefaultLocale")
-    fun getFees(accountId: Int, year: Int): LiveData<Double>? {
+    fun getFees(accountId: Int, year: Int): Double? {
         return transactionDao.getTotalFees(accountId, year.toString())
     }
 

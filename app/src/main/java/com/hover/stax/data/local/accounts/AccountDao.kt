@@ -39,6 +39,14 @@ interface AccountDao {
         return accounts;
     }
 
+    @Transaction
+    fun getAccount(id: Int): Account? {
+        var account: Account? = getUssdAccount(id) as Account
+        if (account == null)
+            account = getUsdcAccount(id) as Account
+        return account
+    }
+
     @Query("SELECT * FROM ussd_accounts ORDER BY alias ASC")
     fun getUssdAccounts(): List<USSDAccount>
 
@@ -65,10 +73,10 @@ interface AccountDao {
     fun getAccounts(): Flow<List<USSDAccount>>
 
     @Query("SELECT * FROM ussd_accounts where id = :id LIMIT 1")
-    suspend fun getUssdAccount(id: Int): USSDAccount?
+    fun getUssdAccount(id: Int): USSDAccount?
 
     @Query("SELECT * FROM usdc_accounts where id = :id LIMIT 1")
-    suspend fun getUsdcAccount(id: Int): USDCAccount?
+    fun getUsdcAccount(id: Int): USDCAccount?
 
     @Query("SELECT * FROM ussd_accounts where id = :id")
     fun getLiveAccount(id: Int?): LiveData<USSDAccount>

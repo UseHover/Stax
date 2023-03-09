@@ -63,18 +63,12 @@ class SimFragment : AbstractBalanceCheckerFragment() {
 
     private fun observeBalances() {
         collectLifecycleFlow(balancesViewModel.requestBalance) {
-            attemptCallHover(it)
+            attemptCallHover(it, HoverAction.BALANCE)
         }
 
         collectLifecycleFlow(balancesViewModel.actionRunError) {
             UIHelper.flashAndReportMessage(requireActivity(), it)
         }
-    }
-
-    private fun attemptCallHover(account: ActionableAccount?) {
-        val balanceAction = account?.actions?.find { it.transaction_type == HoverAction.BALANCE }
-        if (account?.ussdAccount != null && balanceAction != null)
-            callHover(checkBalance, generateSessionBuilder(account.ussdAccount, balanceAction))
     }
 
     private fun navigateTo(dest: Int) = findNavController().navigate(dest)
