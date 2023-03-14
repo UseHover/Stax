@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.hover.stax.R
 import com.hover.stax.channels.Channel.TELECOM_TYPE
-import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.domain.use_case.SimWithAccount
 import com.hover.stax.permissions.PermissionUtils
@@ -96,9 +95,11 @@ fun SimScreen(
                             // Don't show removed SIM cards that we don't support, it is confusing
                             if (sim.account.channelId != -1 || sim.sim.slotIdx != -1) {
                                 val a = accounts.find { it.ussdAccount?.institutionType == TELECOM_TYPE && it.ussdAccount.simSubscriptionId == sim.sim.subscriptionId }
-                                SimScreenCard(sim, a,
+                                SimScreenCard(
+                                    sim, a,
                                     { balancesViewModel.requestBalance(it) },
-                                    { buyAirtime(it) })
+                                    { buyAirtime(it) }
+                                )
                             }
                         }
                     }

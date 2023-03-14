@@ -7,6 +7,4 @@ import androidx.compose.ui.Modifier
 fun TransactionSuccessScreen(
     modifier: Modifier = Modifier,
 ) {
-
-
 }

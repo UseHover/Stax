@@ -18,22 +18,24 @@ import com.hover.stax.ui.theme.OffWhite
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CenteredTopBar(title: String, onBack: (() -> Unit)?) {
-	Column(modifier = Modifier.fillMaxWidth()) {
-		CenterAlignedTopAppBar(
-			title = { Text(text = title, style = MaterialTheme.typography.h1) },
-			navigationIcon = {
-				onBack?.let {
-					IconButton(content = {
-						Icon(
-							painterResource(R.drawable.ic_close),
-							contentDescription = "back",
-							tint = OffWhite
-						)
-					},
-						onClick = { onBack() })
-				}
-			},
-			colors = StaxTopBarDefaults()
-		)
-	}
+    Column(modifier = Modifier.fillMaxWidth()) {
+        CenterAlignedTopAppBar(
+            title = { Text(text = title, style = MaterialTheme.typography.h1) },
+            navigationIcon = {
+                onBack?.let {
+                    IconButton(
+                        content = {
+                            Icon(
+                                painterResource(R.drawable.ic_close),
+                                contentDescription = "back",
+                                tint = OffWhite
+                            )
+                        },
+                        onClick = { onBack() }
+                    )
+                }
+            },
+            colors = StaxTopBarDefaults()
+        )
+    }
 }

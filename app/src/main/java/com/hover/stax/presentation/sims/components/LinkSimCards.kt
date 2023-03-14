@@ -36,7 +36,8 @@ import com.hover.stax.ui.theme.StaxTheme
 @Composable
 internal fun LinkSimCard() {
     val context = LocalContext.current
-    SecondaryButton(stringResource(id = R.string.link_sim_to_stax),
+    SecondaryButton(
+        stringResource(id = R.string.link_sim_to_stax),
         onClick = { NavHelper(context as MainActivity).requestBasicPerms() },
         modifier = Modifier
             .fillMaxWidth()

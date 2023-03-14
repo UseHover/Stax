@@ -35,28 +35,34 @@ abstract class AbstractBalanceCheckerFragment : Fragment() {
         }
     }
 
-	protected fun generateSessionBuilder(account: USSDAccount, action: HoverAction): HoverSession.Builder {
-		return HoverSession.Builder(action, account, requireActivity())
-	}
+    protected fun generateSessionBuilder(account: USSDAccount, action: HoverAction): HoverSession.Builder {
+        return HoverSession.Builder(action, account, requireActivity())
+    }
 
-	protected fun attemptCallHover(account: ActionableAccount?, type: String) {
-		val balanceAction = account?.actions?.find { it.transaction_type == type }
-		if (account?.ussdAccount != null && balanceAction != null)
-			callHover(checkBalance, generateSessionBuilder(account.ussdAccount, balanceAction))
-	}
+    protected fun attemptCallHover(account: ActionableAccount?, type: String) {
+        val balanceAction = account?.actions?.find { it.transaction_type == type }
+        if (account?.ussdAccount != null && balanceAction != null)
+            callHover(checkBalance, generateSessionBuilder(account.ussdAccount, balanceAction))
+    }
 
-	protected fun attemptCallHover(account: USSDAccount?, action: HoverAction?) {
-		if (account != null && action != null)
-			callHover(checkBalance, generateSessionBuilder(account, action))
-	}
+    protected fun attemptCallHover(account: USSDAccount?, action: HoverAction?) {
+        if (account != null && action != null)
+            callHover(checkBalance, generateSessionBuilder(account, action))
+    }
 
-	protected fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder) {
-		try {
-			launcher.launch(b)
-		} catch (e: Exception) {
-			requireActivity().runOnUiThread { UIHelper.flashAndReportMessage(requireContext(), getString(
-				R.string.error_running_action)) }
-			AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
-		}
-	}
+    protected fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder) {
+        try {
+            launcher.launch(b)
+        } catch (e: Exception) {
+            requireActivity().runOnUiThread {
+                UIHelper.flashAndReportMessage(
+                    requireContext(),
+                    getString(
+                        R.string.error_running_action
+                    )
+                )
+            }
+            AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
+        }
+    }
 }

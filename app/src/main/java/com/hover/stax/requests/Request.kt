@@ -24,7 +24,6 @@ import androidx.room.PrimaryKey
 import com.hover.stax.R
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.DateUtils.now
 import com.hover.stax.utils.Utils.formatAmount

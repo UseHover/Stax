@@ -43,22 +43,28 @@ fun SendMoneyScreen(
                 ) {
                     val (amountField, accountField, numKeypad, buttons) = createRefs()
 
-                    AmountTextField(modifier = Modifier.constrainAs(amountField) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        height = Dimension.fillToConstraints
-                    }, amount = amountText)
+                    AmountTextField(
+                        modifier = Modifier.constrainAs(amountField) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            height = Dimension.fillToConstraints
+                        },
+                        amount = amountText
+                    )
 
-                    SendMoneyOption(modifier = Modifier.constrainAs(accountField) {
-                        top.linkTo(amountField.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        height = Dimension.fillToConstraints
-                    }, selectedAccount = {
-                        // Open Bottom Sheet
-                        navTo.invoke()
-                    })
+                    SendMoneyOption(
+                        modifier = Modifier.constrainAs(accountField) {
+                            top.linkTo(amountField.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            height = Dimension.fillToConstraints
+                        },
+                        selectedAccount = {
+                            // Open Bottom Sheet
+                            navTo.invoke()
+                        }
+                    )
 
 //                    AmountKeyboard(
 //                        modifier = Modifier.constrainAs(numKeypad) {
@@ -69,18 +75,20 @@ fun SendMoneyScreen(
 //                            height = Dimension.fillToConstraints
 //                        }
 //                    ) {
-////                        viewModel.onKeyboardButtonClick(it)
+// //                        viewModel.onKeyboardButtonClick(it)
 //                    }
 
-                    Row(modifier = Modifier.constrainAs(buttons) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }) {
+                    Row(
+                        modifier = Modifier.constrainAs(buttons) {
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        }
+                    ) {
                         Button(
                             onClick = {
-
-                            }, modifier = Modifier
+                            },
+                            modifier = Modifier
                                 .weight(1f)
                                 .padding(padding)
                         ) {
@@ -92,8 +100,8 @@ fun SendMoneyScreen(
                         }
                         Button(
                             onClick = {
-
-                            }, modifier = Modifier
+                            },
+                            modifier = Modifier
                                 .weight(1f)
                                 .padding(padding)
                         ) {

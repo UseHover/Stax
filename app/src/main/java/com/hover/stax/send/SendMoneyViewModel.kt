@@ -19,5 +19,4 @@ class SendMoneyViewModel : ViewModel() {
             SendMoneyEvent.SendMoney -> TODO()
         }
     }
-
 }

@@ -16,7 +16,11 @@
 package com.hover.stax.database
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.AutoMigration
+import androidx.room.Database
+import androidx.room.RenameTable
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import androidx.room.migration.AutoMigrationSpec
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactDao
@@ -24,7 +28,6 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountDao
 import com.hover.stax.data.local.channels.ChannelDao
 import com.hover.stax.storage.user.dao.user.UserDao
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.storage.user.entity.StaxUser

@@ -28,35 +28,35 @@ import timber.log.Timber
 
 class TransactionContract : ActivityResultContract<HoverSession.Builder, Intent?>(), PushNotificationTopicsInterface {
 
-	private var builder: HoverSession.Builder? = null
+    private var builder: HoverSession.Builder? = null
 
-	override fun createIntent(context: Context, input: HoverSession.Builder): Intent {
-		builder = input
-		updatePushNotifGroupStatus(context)
-		logStart(context, input)
-		return input.build()
-	}
+    override fun createIntent(context: Context, input: HoverSession.Builder): Intent {
+        builder = input
+        updatePushNotifGroupStatus(context)
+        logStart(context, input)
+        return input.build()
+    }
 
-	override fun parseResult(resultCode: Int, intent: Intent?) : Intent? {
-		return intent
-	}
+    override fun parseResult(resultCode: Int, intent: Intent?): Intent? {
+        return intent
+    }
 
-	private fun updatePushNotifGroupStatus(c: Context) {
-		joinTransactionGroup(c)
-		leaveNoUsageGroup(c)
-	}
+    private fun updatePushNotifGroupStatus(c: Context) {
+        joinTransactionGroup(c)
+        leaveNoUsageGroup(c)
+    }
 
-	private fun logStart(context: Context, hsb: HoverSession.Builder) {
-		val msg = if (hsb.stopVar != null) {
-			context.getString(R.string.checking_var, hsb.action.transaction_type, hsb.stopVar)
-		} else { context.getString(R.string.starting_transaction, hsb.action.transaction_type) }
-		val data = JSONObject()
-		try {
-			data.put("actionId", hsb.action.id)
-		} catch (ignored: JSONException) {
-		}
-		AnalyticsUtil.logAnalyticsEvent(msg, data, context)
-		AnalyticsUtil.logAnalyticsEvent(hsb.activity.getString(R.string.start_load_screen), context)
-		Timber.e(msg)
-	}
+    private fun logStart(context: Context, hsb: HoverSession.Builder) {
+        val msg = if (hsb.stopVar != null) {
+            context.getString(R.string.checking_var, hsb.action.transaction_type, hsb.stopVar)
+        } else { context.getString(R.string.starting_transaction, hsb.action.transaction_type) }
+        val data = JSONObject()
+        try {
+            data.put("actionId", hsb.action.id)
+        } catch (ignored: JSONException) {
+        }
+        AnalyticsUtil.logAnalyticsEvent(msg, data, context)
+        AnalyticsUtil.logAnalyticsEvent(hsb.activity.getString(R.string.start_load_screen), context)
+        Timber.e(msg)
+    }
 }

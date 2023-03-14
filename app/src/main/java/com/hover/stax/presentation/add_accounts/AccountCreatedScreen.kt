@@ -22,31 +22,31 @@ import org.koin.androidx.compose.getViewModel
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AccountCreatedScreen(channelId: Int?, addAccountViewModel: AddAccountViewModel = getViewModel()) {
-	val channel by addAccountViewModel.chosenChannel.collectAsState(initial = null)
-	addAccountViewModel.loadChannel(channelId!!)
+    val channel by addAccountViewModel.chosenChannel.collectAsState(initial = null)
+    addAccountViewModel.loadChannel(channelId!!)
 
-	val simList by addAccountViewModel.sims.observeAsState(initial = emptyList())
+    val simList by addAccountViewModel.sims.observeAsState(initial = emptyList())
 
-	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-		Scaffold(
-			topBar = {  },
-		) {
-			if (channel != null) {
-				Column(modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp).padding(horizontal = 13.dp), Arrangement.SpaceBetween) {
-					Text(text = stringResource(id = R.string.link_explain))
-					Text(text = stringResource(id = R.string.link_to_sim))
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+        Scaffold(
+            topBar = { },
+        ) {
+            if (channel != null) {
+                Column(modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp).padding(horizontal = 13.dp), Arrangement.SpaceBetween) {
+                    Text(text = stringResource(id = R.string.link_explain))
+                    Text(text = stringResource(id = R.string.link_to_sim))
 
-					Text(text = stringResource(id = R.string.ask_check_balance))
-					Row() {
-						SecondaryButton(text = stringResource(R.string.skip_balance_btn)) {
-							addAccountViewModel.createAccountWithoutBalance(channel!!)
-						}
-						PrimaryButton(text = stringResource(R.string.check_balance_btn)) {
-							addAccountViewModel.balanceCheck(channel!!)
-						}
-					}
-				}
-			}
-		}
-	}
+                    Text(text = stringResource(id = R.string.ask_check_balance))
+                    Row() {
+                        SecondaryButton(text = stringResource(R.string.skip_balance_btn)) {
+                            addAccountViewModel.createAccountWithoutBalance(channel!!)
+                        }
+                        PrimaryButton(text = stringResource(R.string.check_balance_btn)) {
+                            addAccountViewModel.balanceCheck(channel!!)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

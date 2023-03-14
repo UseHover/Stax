@@ -19,36 +19,37 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
-	val scope = rememberCoroutineScope()
-	TabRow(
-		selectedTabIndex = pagerState.currentPage,
-		backgroundColor = Background,
-		contentColor = OffWhite,
-		indicator = { tabPositions ->
-			TabRowDefaults.Indicator(
-				Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-			)
-		}) {
-		tabs.forEachIndexed { index, tab ->
-			LeadingIconTab(
-				icon = { Icon(painter = painterResource(id = tab.icon), contentDescription = "") },
-				text = { Text(tab.title) },
-				selected = pagerState.currentPage == index,
-				modifier = Modifier.padding(vertical = 8.dp),
-				onClick = {
-					scope.launch {
-						pagerState.animateScrollToPage(index)
-					}
-				},
-			)
-		}
-	}
+    val scope = rememberCoroutineScope()
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        backgroundColor = Background,
+        contentColor = OffWhite,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }
+    ) {
+        tabs.forEachIndexed { index, tab ->
+            LeadingIconTab(
+                icon = { Icon(painter = painterResource(id = tab.icon), contentDescription = "") },
+                text = { Text(tab.title) },
+                selected = pagerState.currentPage == index,
+                modifier = Modifier.padding(vertical = 8.dp),
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                },
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
-	HorizontalPager(state = pagerState, count = tabs.size, modifier = Modifier.padding(horizontal = 16.dp)) { page ->
-		tabs[page].screen()
-	}
+    HorizontalPager(state = pagerState, count = tabs.size, modifier = Modifier.padding(horizontal = 16.dp)) { page ->
+        tabs[page].screen()
+    }
 }

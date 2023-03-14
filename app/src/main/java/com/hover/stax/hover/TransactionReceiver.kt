@@ -28,7 +28,6 @@ import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.ACCOUNT_ID
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.paybill.BUSINESS_NAME

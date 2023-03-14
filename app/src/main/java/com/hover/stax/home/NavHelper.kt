@@ -15,7 +15,6 @@
  */
 package com.hover.stax.home
 
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections

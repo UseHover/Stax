@@ -16,9 +16,7 @@
 package com.hover.stax.domain.repository
 
 import com.hover.sdk.sims.SimInfo
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
-import kotlinx.coroutines.flow.Flow
 
 interface AccountRepository {
     suspend fun createAccount(sim: SimInfo): USSDAccount

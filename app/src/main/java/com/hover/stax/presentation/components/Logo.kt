@@ -16,16 +16,16 @@ import com.hover.stax.R
 
 @Composable
 fun Logo(url: String?, contentDescription: String) {
-	AsyncImage(
-		model = ImageRequest.Builder(LocalContext.current).data(url)
-			.crossfade(true)
-			.diskCachePolicy(CachePolicy.ENABLED).build(),
-		contentDescription = contentDescription,
-		placeholder = painterResource(id = R.drawable.img_placeholder),
-		error = painterResource(id = R.drawable.img_placeholder),
-		modifier = Modifier
-			.size(dimensionResource(id = R.dimen.margin_34))
-			.clip(CircleShape),
-		contentScale = ContentScale.Crop
-	)
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current).data(url)
+            .crossfade(true)
+            .diskCachePolicy(CachePolicy.ENABLED).build(),
+        contentDescription = contentDescription,
+        placeholder = painterResource(id = R.drawable.img_placeholder),
+        error = painterResource(id = R.drawable.img_placeholder),
+        modifier = Modifier
+            .size(dimensionResource(id = R.dimen.margin_34))
+            .clip(CircleShape),
+        contentScale = ContentScale.Crop
+    )
 }

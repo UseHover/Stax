@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hover.stax.navigation.PaymentScreens
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.views.composables.StaxHeader
 import com.hover.stax.views.composables.StaxLayout
@@ -28,7 +27,6 @@ fun ReviewScreen(
             )
         },
         content = {
-
         },
         footer = {
             PaymentScreenFooter()
@@ -37,7 +35,7 @@ fun ReviewScreen(
 }
 
 @Composable
-fun PaymentScreenFooter(){
+fun PaymentScreenFooter() {
     Column {
         Text(text = "Make sure you have the correct details before sending ")
         StaxPrimaryButton(

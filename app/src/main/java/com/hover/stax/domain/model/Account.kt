@@ -28,68 +28,74 @@ const val USSD_TYPE: String = "ussd"
 const val CRYPTO_TYPE: String = "crypto"
 
 abstract class Account(
-	@ColumnInfo(name = "name")
-	val institutionName: String,
+    @ColumnInfo(name = "name")
+    val institutionName: String,
 
-	@ColumnInfo(name = "alias")
-	var userAlias: String,
+    @ColumnInfo(name = "alias")
+    var userAlias: String,
 
-	@ColumnInfo(name = "logo_url")
-	val logoUrl: String,
+    @ColumnInfo(name = "logo_url")
+    val logoUrl: String,
 
-	@ColumnInfo(name = "account_no")
-	var accountNo: String?,
+    @ColumnInfo(name = "account_no")
+    var accountNo: String?,
 
-	@ColumnInfo
-	var institutionId: Int,
+    @ColumnInfo
+    var institutionId: Int,
 
-	@NonNull
-	@ColumnInfo(name = "account_type", defaultValue = USSD_TYPE)
-	var type: String,
+    @NonNull
+    @ColumnInfo(name = "account_type", defaultValue = USSD_TYPE)
+    var type: String,
 
-	@ColumnInfo(name = "primary_color_hex")
-	val primaryColorHex: String,
+    @ColumnInfo(name = "primary_color_hex")
+    val primaryColorHex: String,
 
-	@ColumnInfo(name = "secondary_color_hex")
-	val secondaryColorHex: String,
+    @ColumnInfo(name = "secondary_color_hex")
+    val secondaryColorHex: String,
 
 ) : Comparable<Account> {
 
-	constructor(name: String) : this(name, name)
-	constructor(name: String, alias: String) : this(
-		institutionName = name, userAlias = alias, logoUrl = "", accountNo = "", institutionId = -1, type = "", primaryColorHex = "#292E35", secondaryColorHex = "#1E232A"
-	)
+    constructor(name: String) : this(name, name)
+    constructor(name: String, alias: String) : this(
+        institutionName = name,
+        userAlias = alias,
+        logoUrl = "",
+        accountNo = "",
+        institutionId = -1,
+        type = "",
+        primaryColorHex = "#292E35",
+        secondaryColorHex = "#1E232A"
+    )
 
-	@PrimaryKey(autoGenerate = true)
-	var id: Int = 0
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
 
-	var institutionAccountName: String? = null
+    var institutionAccountName: String? = null
 
-	var latestBalance: String? = null
+    var latestBalance: String? = null
 
-	@ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
-	var latestBalanceTimestamp: Long = System.currentTimeMillis()
+    @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
+    var latestBalanceTimestamp: Long = System.currentTimeMillis()
 
+    fun updateBalance(balance: String, timestamp: Long?) {
+        latestBalance = balance
+        latestBalanceTimestamp = timestamp ?: now()
+        Timber.e("Balance is $latestBalance")
+    }
 
-	fun updateBalance(balance: String, timestamp: Long?) {
-		latestBalance = balance
-		latestBalanceTimestamp = timestamp ?: now()
-		Timber.e("Balance is $latestBalance")
-	}
+    override fun toString() = buildString {
+        append(userAlias)
 
-	override fun toString() = buildString {
-		append(userAlias)
+        if (!accountNo.isNullOrEmpty()) {
+            append(" - ")
+            append(accountNo)
+        }
+    }
 
-		if (!accountNo.isNullOrEmpty()) {
-			append(" - ")
-			append(accountNo)
-		}
-	}
+    override fun equals(other: Any?): Boolean {
+        if (other !is Account) return false
+        return id == other.id
+    }
 
-	override fun equals(other: Any?): Boolean {
-		if (other !is Account) return false
-		return id == other.id
-	}
-
-	override fun compareTo(other: Account): Int = toString().compareTo(other.toString())
+    override fun compareTo(other: Account): Int = toString().compareTo(other.toString())
 }

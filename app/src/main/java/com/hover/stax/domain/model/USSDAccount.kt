@@ -20,7 +20,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import androidx.room.PrimaryKey
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
@@ -30,7 +29,15 @@ import timber.log.Timber
     foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])],
     indices = [Index(value = ["institutionAccountName", "sim_subscription_id"], unique = true)]
 )
-class USSDAccount(institutionName : String, userAlias: String, logoUrl: String, accountNo: String?, institutionId: Int, type: String, primaryColorHex: String, secondaryColorHex: String,
+class USSDAccount(
+    institutionName: String,
+    userAlias: String,
+    logoUrl: String,
+    accountNo: String?,
+    institutionId: Int,
+    type: String,
+    primaryColorHex: String,
+    secondaryColorHex: String,
 
     @NonNull
     @ColumnInfo(name = "institution_type", defaultValue = Channel.BANK_TYPE)

@@ -21,7 +21,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.compose.ui.res.stringResource
 import com.hover.stax.R
 import com.hover.stax.databinding.CountryItemBinding
 import com.yariksoffice.lingver.Lingver

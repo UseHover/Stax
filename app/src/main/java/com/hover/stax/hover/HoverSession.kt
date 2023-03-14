@@ -25,7 +25,6 @@ import com.hover.stax.R
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.domain.model.ACCOUNT_ID
 import com.hover.stax.domain.model.ACCOUNT_NAME
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.settings.TEST_MODE
 import com.hover.stax.utils.Utils
@@ -105,10 +104,12 @@ class HoverSession private constructor(b: Builder) {
         var finalScreenTime = 0
         var stopVar: String? = null
 
-        constructor(action: HoverAction,
-                    c: USSDAccount,
-                    extras: HashMap<String, String>?,
-                    act: Activity) : this(action, c, act) {
+        constructor(
+            action: HoverAction,
+            c: USSDAccount,
+            extras: HashMap<String, String>?,
+            act: Activity
+        ) : this(action, c, act) {
             if (!extras.isNullOrEmpty()) { extras(extras) }
         }
 

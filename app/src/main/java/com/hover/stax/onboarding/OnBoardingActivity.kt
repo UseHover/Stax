@@ -20,15 +20,12 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.hover.sdk.permissions.PermissionHelper
-import com.hover.stax.FRAGMENT_DIRECT
 import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
-import com.hover.stax.addAccounts.AddAccountActivity
 import com.hover.stax.addAccounts.AddAccountContract
 import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NAV_HOME
-import com.hover.stax.home.NAV_LINK_ACCOUNT
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil

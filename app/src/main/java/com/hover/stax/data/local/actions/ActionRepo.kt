@@ -16,6 +16,7 @@
 package com.hover.stax.data.local.actions
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverActionDao
 import com.hover.sdk.database.HoverRoomDatabase
@@ -41,7 +42,8 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
     }
 
     fun getActions(institutionId: Int, countryCode: String): List<HoverAction> {
-        return actionDao.getActions(institutionId, countryCode)
+        // TODO - FIX ME
+        return actionDao.getActions(institutionId, countryCode, "")
     }
 
     fun getActionsByType(institutionId: Int, countryCode: String, type: String?): List<HoverAction> {
@@ -57,7 +59,10 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
     }
 
     fun getBonusActions(): LiveData<List<HoverAction>> {
-        return actionDao.bonusActions
+        // TODO - FIX ME
+        val me = MutableLiveData<List<HoverAction>>()
+        return me
+//        return actionDao.bonusActions
     }
 
     fun getBonusActionsByCountry(countries: Array<String>): List<HoverAction> {

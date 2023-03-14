@@ -30,14 +30,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.model.USSD_TYPE
 import com.hover.stax.domain.use_case.AccountDetail
-import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
@@ -51,7 +48,6 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
@@ -104,9 +100,11 @@ class AccountDetailFragment :
         binding.balanceCard.root.cardElevation = 0F
         binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
         binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        binding.balanceCard.balanceRefreshIcon.setOnClickListener { viewModel.account.value?.let { a ->
-            onTapBalanceRefresh(a)
-        } }
+        binding.balanceCard.balanceRefreshIcon.setOnClickListener {
+            viewModel.account.value?.let { a ->
+                onTapBalanceRefresh(a)
+            }
+        }
     }
 
     private fun setUpManage() {

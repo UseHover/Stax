@@ -115,7 +115,7 @@ fun StaxPrimaryButtonDarkPreview() {
     }
 }
 
-//TODO - Theming needs to get fixed - so dark mode would work well
+// TODO - Theming needs to get fixed - so dark mode would work well
 @Preview
 @Composable
 fun StaxPrimaryButtonDisableDarkPreview() {
@@ -168,7 +168,7 @@ fun StaxPrimaryOutlinedButtonLightPreview() {
     }
 }
 
-//TODO - Theming needs to get fixed - so dark mode would work well
+// TODO - Theming needs to get fixed - so dark mode would work well
 @Preview
 @Composable
 fun StaxPrimaryOutlinedButtonDarkPreview() {

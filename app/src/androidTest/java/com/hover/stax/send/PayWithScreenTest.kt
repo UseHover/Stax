@@ -18,5 +18,4 @@ class PayWithScreenTest {
         }
         composeTestRule.onNodeWithTag(PayWithScreenTags.PAY_WITH_SCREEN_HEADER).assertIsDisplayed()
     }
-
 }

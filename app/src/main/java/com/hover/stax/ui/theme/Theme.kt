@@ -49,8 +49,6 @@ private val LightColorPalette = lightColors(
     onError = OffWhite
 )
 
-
-
 @Composable
 fun StaxTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
 //    val colors = if (darkTheme) {

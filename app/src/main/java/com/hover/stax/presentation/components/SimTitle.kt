@@ -16,41 +16,40 @@ import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.ui.theme.TextGrey
 
-
 @Composable
 fun SimTitle(sim: SimInfo, title: String, logo: String?, content: @Composable () -> Unit) {
-	Row(
-		modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),
-		verticalAlignment = Alignment.CenterVertically
+    Row(
+        modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),
+        verticalAlignment = Alignment.CenterVertically
 
-	) {
-		Logo(logo, "$title logo")
-		Column(
-			modifier = Modifier
-				.padding(horizontal = 13.dp)
-				.weight(1f)
-		) {
-			Text(text = title, style = MaterialTheme.typography.body1)
-			Text(
-				text = getSimSlot(sim),
-				color = TextGrey,
-				style = MaterialTheme.typography.body2
-			)
-		}
+    ) {
+        Logo(logo, "$title logo")
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 13.dp)
+                .weight(1f)
+        ) {
+            Text(text = title, style = MaterialTheme.typography.body1)
+            Text(
+                text = getSimSlot(sim),
+                color = TextGrey,
+                style = MaterialTheme.typography.body2
+            )
+        }
 
-		content()
-	}
+        content()
+    }
 }
 
 @Composable
 fun SimTitle(sim: SimInfo, channel: Channel?, content: @Composable () -> Unit) {
-	SimTitle(sim, channel?.name ?: sim.operatorName, channel?.logoUrl, content)
+    SimTitle(sim, channel?.name ?: sim.operatorName, channel?.logoUrl, content)
 }
 
 @Composable
 private fun getSimSlot(simInfo: SimInfo): String {
-	return if (simInfo.slotIdx >= 0)
-		stringResource(id = R.string.sim_index, simInfo.slotIdx + 1)
-	else
-		stringResource(R.string.not_present)
+    return if (simInfo.slotIdx >= 0)
+        stringResource(id = R.string.sim_index, simInfo.slotIdx + 1)
+    else
+        stringResource(R.string.not_present)
 }

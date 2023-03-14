@@ -31,7 +31,6 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.parser.ParserRepo
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantRepo
@@ -70,7 +69,7 @@ class TransactionDetailsViewModel(
         account = transaction.switchMap { getLiveAccount(it) }
         action = transaction.switchMap { getLiveAction(it) }
         contact = transaction.switchMap { getLiveContact(it) }
-        merchant = transaction.switchMap {  getLiveMerchant(it) }
+        merchant = transaction.switchMap { getLiveMerchant(it) }
 
         messages.apply {
             addSource(transaction) { loadMessages(it) }

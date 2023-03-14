@@ -15,7 +15,6 @@
  */
 package com.hover.stax.presentation.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +33,6 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSD_TYPE
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
-import com.hover.stax.send.SendMoneyActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
@@ -81,9 +79,9 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
 
         return HomeClickFunctions(
             onSendMoneyClicked = {
-                startActivity(Intent(requireContext(), SendMoneyActivity::class.java))
-//                onSendMoneyClicked()
-                                 },
+//                startActivity(Intent(requireContext(), SendMoneyActivity::class.java))
+                onSendMoneyClicked()
+            },
             onBuyAirtimeClicked = { onBuyAirtimeClicked() },
             onBuyGoodsClicked = { onBuyGoodsClicked() },
             onPayBillClicked = { onPayBillClicked() },
@@ -94,14 +92,14 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         )
     }
 
-	val addAccount = registerForActivityResult(AddAccountContract()) {
+    val addAccount = registerForActivityResult(AddAccountContract()) {
         Timber.e("I want to reload accounts")
         balancesViewModel.loadAccounts()
-	}
+    }
 
     private fun goToAddAccount() {
         Timber.e("launching add account")
-	    addAccount.launch(null)
+        addAccount.launch(null)
     }
 
     private fun setComposeView() {
@@ -124,7 +122,8 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
                         AnalyticsUtil.logAnalyticsEvent(requireContext().getString(R.string.refresh_balance), requireContext())
                         Timber.e("receive balance request event")
                         attemptCallHover(it, HoverAction.BALANCE)
-                } }
+                    }
+                }
                 launch {
                     homeViewModel.addAccountEvent.collect {
                         if (it) { goToAddAccount() }

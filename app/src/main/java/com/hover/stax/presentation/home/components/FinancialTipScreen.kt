@@ -19,13 +19,11 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -35,14 +33,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.hover.stax.R
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.presentation.components.StaxCard
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
-import com.hover.stax.presentation.home.HomeFragmentDirections
 import com.hover.stax.utils.Utils
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
@@ -52,7 +47,7 @@ fun FinancialTipScreen(viewModel: FinancialTipsViewModel, navTo: (dest: Int) -> 
     val tips by viewModel.tips.observeAsState(initial = emptyList())
     val showingTip = remember { mutableStateOf(true) }
 
-    tips?.find {financialTipsAreOn() && !dismissed(it.id, showingTip, context)}?.apply {
+    tips?.find { financialTipsAreOn() && !dismissed(it.id, showingTip, context) }?.apply {
         FinancialTipCard(this, showingTip, navTo, context)
     }
 }
@@ -67,8 +62,8 @@ fun isToday(secondTimestamp: Long): Boolean {
     val calendar2: Calendar = Calendar.getInstance()
     calendar2.timeInMillis = System.currentTimeMillis()
     return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
-            calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
-            calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
+        calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
+        calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
 }
 
 fun dismissed(id: String, showingTip: MutableState<Boolean>, context: Context): Boolean {
@@ -87,10 +82,13 @@ fun FinancialTipCard(financialTip: FinancialTip, showingTip: MutableState<Boolea
             ) {
                 Icon(painterResource(R.drawable.ic_tip_of_day), contentDescription = "Tip icon")
 
-                Text(stringResource(R.string.tip_of_the_day),
-                    modifier = Modifier.weight(1f).padding(horizontal = 13.dp))
+                Text(
+                    stringResource(R.string.tip_of_the_day),
+                    modifier = Modifier.weight(1f).padding(horizontal = 13.dp)
+                )
 
-                Icon(painterResource(id = R.drawable.ic_close_white),
+                Icon(
+                    painterResource(id = R.drawable.ic_close_white),
                     contentDescription = "close tip",
                     modifier = Modifier.clickable { dismissTip(financialTip.id, showingTip, context) }
                 )

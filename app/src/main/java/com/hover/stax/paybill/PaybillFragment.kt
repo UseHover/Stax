@@ -28,7 +28,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
@@ -306,8 +305,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     }
 
     private fun generateSessionBuilder(action: HoverAction, account: USSDAccount): HoverSession.Builder {
-        return HoverSession.Builder(action,payWithDropdown.getHighlightedAccount() ?: account,
-            viewModel.wrapExtras(), requireActivity())
+        return HoverSession.Builder(
+            action, payWithDropdown.getHighlightedAccount() ?: account,
+            viewModel.wrapExtras(), requireActivity()
+        )
     }
 
     private val paybill = registerForActivityResult(TransactionContract()) { data: Intent? ->

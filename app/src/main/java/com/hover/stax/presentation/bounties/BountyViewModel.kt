@@ -42,9 +42,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BountyViewModel(
-	private val simRepo: SimRepo,
-	private val bountiesUseCase: GetChannelBountiesUseCase,
-	val application: Application
+    private val simRepo: SimRepo,
+    private val bountiesUseCase: GetChannelBountiesUseCase,
+    val application: Application
 ) : ViewModel() {
 
     private val _countryList = MutableStateFlow<List<String>>(emptyList())

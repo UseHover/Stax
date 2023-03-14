@@ -15,13 +15,9 @@
  */
 package com.hover.stax.utils
 
-import android.content.Context
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.hover.stax.R
-import java.time.Clock
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.abs
 
 object DateUtils {
     const val MIN = 60 * 1000

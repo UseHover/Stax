@@ -14,22 +14,22 @@ import org.koin.androidx.compose.getViewModel
 @ExperimentalAnimationApi
 @Composable
 fun AddAccountNavHost(
-	navController: NavHostController = rememberNavController(),
-	startDestination: String = "findChannel",
-	addAccountViewModel: AddAccountViewModel = getViewModel(),
-	usdcViewModel: UsdcViewModel = getViewModel()
+    navController: NavHostController = rememberNavController(),
+    startDestination: String = "findChannel",
+    addAccountViewModel: AddAccountViewModel = getViewModel(),
+    usdcViewModel: UsdcViewModel = getViewModel()
 ) {
-	StaxTheme {
-		NavHost(
-			navController = navController,
-			startDestination = startDestination
-		) {
-			composable("findChannel") {
-				ChooseChannelScreen(addAccountViewModel, navController)
-			}
-			composable("createUSDC") {
-				CreateUsdcAccountScreen(usdcViewModel, navController)
-			}
-		}
-	}
+    StaxTheme {
+        NavHost(
+            navController = navController,
+            startDestination = startDestination
+        ) {
+            composable("findChannel") {
+                ChooseChannelScreen(addAccountViewModel, navController)
+            }
+            composable("createUSDC") {
+                CreateUsdcAccountScreen(usdcViewModel, navController)
+            }
+        }
+    }
 }

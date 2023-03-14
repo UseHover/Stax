@@ -26,7 +26,8 @@ fun SendMoneyOption(
 ) {
 
     Row(
-        horizontalArrangement = Arrangement.Start, modifier = Modifier
+        horizontalArrangement = Arrangement.Start,
+        modifier = Modifier
             .fillMaxWidth()
             .padding(all = dimensionResource(id = R.dimen.margin_13))
             .clickable(onClick = { selectedAccount() })

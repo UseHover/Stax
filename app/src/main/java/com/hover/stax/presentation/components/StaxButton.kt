@@ -80,7 +80,8 @@ fun StaxButton(text: String, icon: Int? = null, buttonType: Int, modifier: Modif
 @Composable
 fun StaxButtonColors(buttonType: Int) = ButtonDefaults.buttonColors(
     backgroundColor = backgroundColor(buttonType),
-    disabledBackgroundColor = SecondaryBackground)
+    disabledBackgroundColor = SecondaryBackground
+)
 
 private fun backgroundColor(type: Int): Color {
     return when (type) {

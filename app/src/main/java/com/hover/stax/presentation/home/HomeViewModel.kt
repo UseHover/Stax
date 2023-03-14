@@ -31,7 +31,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class HomeViewModel(application: Application,
+class HomeViewModel(
+    application: Application,
     actionRepo: ActionRepo,
     tipsRepo: FinancialTipsRepository
 ) : FinancialTipsViewModel(application, tipsRepo) {

@@ -13,18 +13,17 @@ import com.hover.stax.countries.CountryAdapter
 import com.yariksoffice.lingver.Lingver
 import java.util.*
 
-
 @Composable
 fun CountryDropdown(selected: String, options: List<String>, onSelect: (String) -> Unit) {
-	StaxDropdown(selectedOption = getCountryString(selected), options = options, content = { country -> CountryItem(country) }, onSelect = onSelect)
+    StaxDropdown(selectedOption = getCountryString(selected), options = options, content = { country -> CountryItem(country) }, onSelect = onSelect)
 }
 
 @Composable
 fun CountryItem(countryCode: String = "00") {
-	Row {
-		Text(text = countryCodeToEmoji(countryCode), modifier = Modifier.padding(end = 8.dp))
-		Text(text = getFullCountryName(countryCode))
-	}
+    Row {
+        Text(text = countryCodeToEmoji(countryCode), modifier = Modifier.padding(end = 8.dp))
+        Text(text = getFullCountryName(countryCode))
+    }
 }
 
 @Composable
@@ -32,24 +31,24 @@ fun getCountryString(code: String?): String = stringResource(R.string.country_wi
 
 @Composable
 private fun getFullCountryName(code: String?): String {
-	if (code.isNullOrEmpty() || code == CountryAdapter.CODE_ALL_COUNTRIES) {
-		return stringResource(R.string.all_countries_text)
-	}
-	val locale = Locale(Lingver.getInstance().getLanguage(), code)
-	return locale.displayCountry
+    if (code.isNullOrEmpty() || code == CountryAdapter.CODE_ALL_COUNTRIES) {
+        return stringResource(R.string.all_countries_text)
+    }
+    val locale = Locale(Lingver.getInstance().getLanguage(), code)
+    return locale.displayCountry
 }
 
 @Composable
 private fun countryCodeToEmoji(code: String?): String {
-	if (code.isNullOrEmpty() || code == CountryAdapter.CODE_ALL_COUNTRIES) { return stringResource(R.string.all_countries_emoji) }
-	val firstLetter = Character.codePointAt(code.uppercase(), 0) - 0x41 + 0x1F1E6
-	val secondLetter = Character.codePointAt(code.uppercase(), 1) - 0x41 + 0x1F1E6
-	return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
+    if (code.isNullOrEmpty() || code == CountryAdapter.CODE_ALL_COUNTRIES) { return stringResource(R.string.all_countries_emoji) }
+    val firstLetter = Character.codePointAt(code.uppercase(), 0) - 0x41 + 0x1F1E6
+    val secondLetter = Character.codePointAt(code.uppercase(), 1) - 0x41 + 0x1F1E6
+    return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
 }
 
 @Preview
 @Composable
 fun CountryDropdownPreview() {
-	val countries = listOf("00", "ke", "ng", "mz", "zm")
-	StaxDropdown(selectedOption = "Kenya", options = countries, content = { stringResource(R.string.country_with_emoji, countryCodeToEmoji("ke"), "Kenya") }, onSelect = { })
+    val countries = listOf("00", "ke", "ng", "mz", "zm")
+    StaxDropdown(selectedOption = "Kenya", options = countries, content = { stringResource(R.string.country_with_emoji, countryCodeToEmoji("ke"), "Kenya") }, onSelect = { })
 }

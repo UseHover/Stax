@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import com.hover.stax.ui.theme.Background
 import com.hover.stax.ui.theme.BrightBlue
 
-
 @Composable
 fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit)) {
     Button(

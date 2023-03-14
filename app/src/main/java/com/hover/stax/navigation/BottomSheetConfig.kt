@@ -4,7 +4,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Shape
 import com.hover.stax.ui.theme.LargeRadius
-import com.hover.stax.ui.theme.SmallRadius
 
 @Immutable
 data class BottomSheetConfig(

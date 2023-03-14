@@ -17,9 +17,6 @@ package com.hover.stax.home
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
@@ -31,7 +28,6 @@ import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
-import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.requests.RequestSenderInterface
@@ -43,7 +39,6 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 

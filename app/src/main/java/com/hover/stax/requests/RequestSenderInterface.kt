@@ -27,7 +27,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper.flashAndReportMessage

@@ -17,8 +17,6 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.channels.Channel
-import com.hover.stax.domain.model.Account
 import com.hover.stax.send.PayWithScreen
 import com.hover.stax.send.PaymentTypeScreen
 import com.hover.stax.send.ReviewScreen
