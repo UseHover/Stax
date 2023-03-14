@@ -96,7 +96,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
     private fun loadActions(account: USSDAccount, type: String) = viewModelScope.launch(Dispatchers.IO) {
         institutionActions.postValue(
             if (type == HoverAction.P2P) actionRepo.getTransferActions(account.institutionId!!, account.countryAlpha2!!)
-            else actionRepo.getActionsByType(account.institutionId!!, account.countryAlpha2!!, type)
+            else actionRepo.getActions(account.institutionId!!, account.countryAlpha2!!)
         )
     }
 

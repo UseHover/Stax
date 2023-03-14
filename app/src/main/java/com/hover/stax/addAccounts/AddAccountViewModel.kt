@@ -41,7 +41,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.domain.model.USSDAccount
@@ -96,7 +97,7 @@ class AddAccountViewModel(
         loadSims()
 
         simChannels.addSource(sims, this::getTelecomChannels)
-        simCountryList = Transformations.map(sims, this::getCountriesAndFirebaseSubscriptions)
+        simCountryList = sims.map { getCountriesAndFirebaseSubscriptions(it) }
         countryChoice.addSource(simCountryList, this@AddAccountViewModel::onSimUpdate)
 
         countryChannels.apply {
@@ -172,9 +173,9 @@ class AddAccountViewModel(
         }
     }
 
-    private fun getCountriesAndFirebaseSubscriptions(sims: List<SimInfo>?): List<String>? {
+    private fun getCountriesAndFirebaseSubscriptions(sims: List<SimInfo>?): List<String> {
         setFirebaseSubscriptions(sims)
-        return sims?.map { it.countryIso }
+        return sims?.map { it.countryIso } ?: emptyList()
     }
 
     private fun setFirebaseSubscriptions(sims: List<SimInfo>?) {

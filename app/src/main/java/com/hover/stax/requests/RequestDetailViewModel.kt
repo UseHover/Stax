@@ -17,13 +17,12 @@ package com.hover.stax.requests
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.contacts.ContactRepo
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +39,7 @@ class RequestDetailViewModel(
 
     init {
 //        account = Transformations.switchMap(request) { r -> r?.let { loadAccount(r) } }
-        recipients = Transformations.switchMap(request) { r -> r?.let { loadRecipients(r) } }
+        recipients = request.switchMap { r -> r?.let { loadRecipients(r) } }
     }
 
     private fun loadAccount(r: Request): LiveData<USSDAccount> {

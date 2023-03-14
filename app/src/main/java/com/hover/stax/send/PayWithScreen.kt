@@ -41,7 +41,7 @@ fun PayWithScreen(
                     onClick = { onAccountSelected(account) },
                     header = account.institutionName,
                     subHeader = account.latestBalance ?: "0.00",
-                    footer = account.isDefault.toString(),
+                    footer = "",
                     leftIcon = {
                         StaxImage(
                             imageUrl = account.logoUrl,

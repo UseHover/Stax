@@ -903,6 +903,9 @@
 	<!-- Strings used for fragments for navigation -->
 	<string name="next">Next</string>
 	<string name="previous">Previous</string>
-	<!-- TODO: Remove or change this placeholder text -->
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Send Money -->
+    <string name="payment_type_screen_cancel">Cancel</string>
+    <string name="payment_type_screen_next">Next</string>
+    <string name="payment_type_screen_change">Change</string>
 </resources>

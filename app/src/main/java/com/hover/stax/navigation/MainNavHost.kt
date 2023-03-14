@@ -38,8 +38,6 @@ fun MainNavHost() {
 
     val accountList by accountsViewModel.accountList.collectAsStateWithLifecycle()
 
-    accountsViewModel.demo(accountList.accounts.first())
-
     val actionList by accountsViewModel.institutionActions.observeAsState()
 
     ModalBottomSheetLayout(
