@@ -64,6 +64,12 @@ class HomeViewModel(application: Application,
         Timber.e("requesting add account")
         _accountDetail.send(actionableAccount)
     }
+//    private fun getBonusList(countries: Array<String>) = viewModelScope.launch {
+//        bonusListToFlow(countries).collect { bonusList ->
+//            if (bonusList is Resource.Success)
+//                _homeState.value = homeState.value?.copy(bonuses = bonusList.data ?: emptyList())
+//        }
+//    }
 
     fun logBuyAirtimeFromAd() = viewModelScope.launch(Dispatchers.IO) {
         AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.clicked_bonus_airtime_banner), getApplication())

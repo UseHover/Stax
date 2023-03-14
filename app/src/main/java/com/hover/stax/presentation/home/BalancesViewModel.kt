@@ -18,11 +18,8 @@ package com.hover.stax.presentation.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.hover.sdk.actions.HoverAction
-import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.use_case.ActionableAccountsUseCase
 import com.hover.stax.domain.use_case.ActionableAccount
-import com.hover.stax.domain.use_case.SimWithAccount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -37,8 +34,8 @@ class BalancesViewModel(
     private val _accounts = MutableStateFlow<List<ActionableAccount>>(emptyList())
     val accounts = _accounts.asStateFlow()
 
-    private val _requestBalance = Channel<ActionableAccount>()
-    val requestBalance = _requestBalance.receiveAsFlow()
+    private val _requestedBalance = Channel<ActionableAccount>()
+    val requestedBalance = _requestedBalance.receiveAsFlow()
 
     private val _actionRunError = Channel<String>()
     val actionRunError = _actionRunError.receiveAsFlow()
@@ -54,7 +51,7 @@ class BalancesViewModel(
 
     fun requestBalance(account: ActionableAccount) = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("requesting balance for ${account.account}")
-        _requestBalance.send(account)
+        _requestedBalance.send(account)
     }
 //
 //    private fun requestBalance(account: USDCAccount): USDCAccount {

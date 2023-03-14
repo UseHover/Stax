@@ -23,7 +23,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
@@ -176,9 +175,11 @@ class MerchantFragment : AbstractFormFragment() {
     }
 
     private fun generateSessionBuilder(): HoverSession.Builder {
-        return HoverSession.Builder(actionSelectViewModel.activeAction.value!!,
+        return HoverSession.Builder(
+            actionSelectViewModel.activeAction.value!!,
             payWithDropdown.getHighlightedAccount() ?: accountsViewModel.activeAccount.value!!,
-            viewModel.wrapExtras(), requireActivity())
+            viewModel.wrapExtras(), requireActivity()
+        )
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {

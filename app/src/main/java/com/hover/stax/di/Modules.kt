@@ -115,9 +115,9 @@ val appModule = module {
     viewModelOf(::SimViewModel)
 }
 
-val dataModule = module(createdAtStart = true) {
-    single { AppDatabase.getInstance(get()) }
-    single { HoverRoomDatabase.getInstance(get()) }
+val dataModule = module {
+    single { AppDatabase.getInstance(androidApplication()) }
+    single { HoverRoomDatabase.getInstance(androidApplication()) }
     single { get<AppDatabase>().userDao() }
 
     singleOf(::TransactionRepo)
@@ -193,5 +193,5 @@ val useCases = module {
 
     factoryOf(::GetChannelBountiesUseCase)
 
-    factoryOf(::StaxUserUseCase)
+    singleOf(::StaxUserUseCase)
 }

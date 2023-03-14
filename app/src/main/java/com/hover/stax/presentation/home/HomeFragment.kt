@@ -30,9 +30,7 @@ import com.hover.stax.R
 import com.hover.stax.addAccounts.AddAccountContract
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.model.USSD_TYPE
-import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.utils.AnalyticsUtil
@@ -117,7 +115,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    balancesViewModel.requestBalance.collect {
+                    balancesViewModel.requestedBalance.collect {
                         AnalyticsUtil.logAnalyticsEvent(requireContext().getString(R.string.refresh_balance), requireContext())
                         Timber.e("receive balance request event")
                         attemptCallHover(it, HoverAction.BALANCE)

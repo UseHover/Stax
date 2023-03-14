@@ -28,7 +28,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
-import androidx.compose.runtime.collectAsState
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
@@ -54,8 +53,6 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.last
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -111,7 +108,7 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.HighlightListe
         payWithDropdown.setObservers(accountsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
 
-        collectLifecycleFlow(balancesViewModel.requestBalance) {
+        collectLifecycleFlow(balancesViewModel.requestedBalance) {
             val balanceAction = it.actions?.find { it.transaction_type == HoverAction.BALANCE }
             if (it.ussdAccount != null && balanceAction != null)
                 callHover(checkBalance, generateSessionBuilder(it.ussdAccount, balanceAction))

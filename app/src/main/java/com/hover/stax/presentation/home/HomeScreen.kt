@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.presentation.home.components.*
 import com.hover.stax.ui.theme.StaxTheme
 import org.koin.androidx.compose.getViewModel
@@ -77,8 +77,8 @@ fun HomeScreen(
 
                     BalancesList(accounts = accounts,
                         { homeViewModel.requestAddAccount() },
-                        { homeViewModel.requestGoToAccount(it) },
-                        { balancesViewModel.requestBalance(it) } )
+                        ::requestGoToAccount,
+                        ::requestBalance)
 
                     Spacer(Modifier.height(34.dp))
 
@@ -87,6 +87,14 @@ fun HomeScreen(
             }
         }
     }
+}
+
+fun requestGoToAccount(a: ActionableAccount) {
+//    balancesViewModel.requestBalance(a)
+}
+
+fun requestBalance(a: ActionableAccount) {
+//    balancesViewModel.requestBalance(a)
 }
 
 @Preview

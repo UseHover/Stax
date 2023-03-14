@@ -28,7 +28,7 @@ fun UsdcAccountScreen(viewModel: AccountDetailViewModel = getViewModel(),
 	StaxTheme {
 		Surface(modifier = Modifier.fillMaxSize()) {
 			account?.let {
-				BalanceItem(account = it.account, goToDetail = {}, refresh = { balancesViewModel.requestBalance(account) })
+				BalanceItem(account = it.account, goToDetail = {}, refresh = {  })
 
 				TransactionHistoryList(it.transactions)
 

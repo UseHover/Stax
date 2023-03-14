@@ -298,7 +298,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
                 val hsb = generateSessionBuilder(actionToRun!!, activeAccount.value!!)
                 callHover(paybill, hsb)
             } else {
-                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, ${activeAccount.value!!}") }
+                Timber.e("Request composition not complete; ${actions?.firstOrNull()}, ${activeAccount.value!!}")
+            }
 
             findNavController().popBackStack()
         }

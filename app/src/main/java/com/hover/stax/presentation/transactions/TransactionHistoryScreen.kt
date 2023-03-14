@@ -34,7 +34,7 @@ fun TransactionHistoryList(transactions: List<TransactionHistoryItem>?) {
 	if (!transactions.isNullOrEmpty()) {
 		LazyColumn(modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.margin_13))) {
 			itemsIndexed(transactions) { i, t ->
-				if (i == 0 || t.staxTransaction.initiated_at)
+//				if (i == 0) || t.staxTransaction.initiated_at)
 			}
 		}
 	}

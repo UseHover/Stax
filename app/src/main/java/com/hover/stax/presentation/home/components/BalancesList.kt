@@ -29,7 +29,7 @@ import com.hover.stax.presentation.add_accounts.components.SampleAccountProvider
 
 
 @Composable
-fun BalancesList(accounts: List<ActionableAccount>?, onClickNewAccount: () -> Unit, goToDetails: () -> Unit, refresh: () -> Unit) {
+fun BalancesList(accounts: List<ActionableAccount>?, onClickNewAccount: () -> Unit, goToDetails: (ActionableAccount) -> Unit, refresh: (ActionableAccount) -> Unit) {
     if (!accounts.isNullOrEmpty()) {
         Column() {
             BalanceHeader(showAddAccount = true, onClickNewAccount)
@@ -38,7 +38,7 @@ fun BalancesList(accounts: List<ActionableAccount>?, onClickNewAccount: () -> Un
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 accounts.filter{ it.ussdAccount == null || it.ussdAccount.institutionType != TELECOM_TYPE}.forEach { account ->
-                    BalanceItem(account.account, goToDetails, refresh)
+                    BalanceItem(account.account, { goToDetails(account) }, { refresh(account) })
                 }
             }
         }

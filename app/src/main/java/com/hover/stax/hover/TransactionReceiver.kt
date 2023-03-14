@@ -35,7 +35,6 @@ import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
-import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
@@ -192,7 +191,9 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     }
 
     private suspend fun parseAccounts(ussdAccountList: String) {
-        val pattern = Pattern.compile("^([\\d]{1,2})[>):.\\s]+(.+)\$", Pattern.MULTILINE)
+        var splitterPattern = action?.getStepByVar("accountName")?.optString("valid_response_regex")
+        if (splitterPattern == null) splitterPattern = "^\\s*([\\d]{1,2})[>):.\\s]+(.+)$"
+        val pattern = Pattern.compile(splitterPattern, Pattern.MULTILINE)
         val matcher = pattern.matcher(ussdAccountList)
 
         while (matcher.find()) {

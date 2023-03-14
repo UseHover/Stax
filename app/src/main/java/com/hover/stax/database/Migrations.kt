@@ -213,8 +213,8 @@ class Migrations {
 
             database.execSQL(
                 "INSERT INTO accounts_new (id, name, alias, logo_url, account_no, institutionId, institution_type, countryAlpha2, channelId, primary_color_hex, secondary_color_hex, isDefault, sim_subscription_id, institutionAccountName, latestBalance, latestBalanceTimestamp)" +
-                        " SELECT a.id, a.name, a.alias, a.logo_url, a.account_no, c.institution_id, c.institution_type, LOWER(c.country_alpha2), c.id, c.primary_color_hex, c.secondary_color_hex, a.isDefault, a.sim_subscription_id, a.institutionAccountName, a.latestBalance, a.latestBalanceTimestamp" +
-                        " FROM accounts as a LEFT JOIN channels AS c ON a.channelId = c.id"
+                    " SELECT a.id, a.name, a.alias, a.logo_url, a.account_no, c.institution_id, c.institution_type, LOWER(c.country_alpha2), c.id, c.primary_color_hex, c.secondary_color_hex, a.isDefault, a.sim_subscription_id, a.institutionAccountName, a.latestBalance, a.latestBalanceTimestamp" +
+                    " FROM accounts as a LEFT JOIN channels AS c ON a.channelId = c.id"
             )
             database.execSQL("DROP TABLE accounts")
             database.execSQL("ALTER TABLE accounts_new RENAME TO accounts")
@@ -225,16 +225,16 @@ class Migrations {
         val M51_52 = Migration(51, 52) { database ->
             database.execSQL(
                 "CREATE TABLE IF NOT EXISTS `accounts_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, " +
-                        "`account_no` TEXT, `institutionId` INTEGER NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `countryAlpha2` TEXT NOT NULL, `channelId` INTEGER NOT NULL," +
-                        "`primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `institutionAccountName` TEXT," +
-                        "`latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-                        "FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION)",
+                    "`account_no` TEXT, `institutionId` INTEGER NOT NULL, `institution_type` TEXT NOT NULL DEFAULT 'bank', `countryAlpha2` TEXT NOT NULL, `channelId` INTEGER NOT NULL," +
+                    "`primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL DEFAULT 0, `sim_subscription_id` INTEGER NOT NULL DEFAULT -1, `institutionAccountName` TEXT," +
+                    "`latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                    "FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION)",
             )
 
             database.execSQL(
                 "INSERT INTO accounts_new (id, name, alias, logo_url, account_no, institutionId, institution_type, countryAlpha2, channelId, primary_color_hex, secondary_color_hex, isDefault, sim_subscription_id, institutionAccountName, latestBalance, latestBalanceTimestamp)" +
-                        " SELECT a.id, a.name, a.alias, a.logo_url, a.account_no, c.institution_id, c.institution_type, LOWER(c.country_alpha2), c.id, c.primary_color_hex, c.secondary_color_hex, a.isDefault, a.sim_subscription_id, a.institutionAccountName, a.latestBalance, a.latestBalanceTimestamp" +
-                        " FROM accounts as a LEFT JOIN channels AS c ON a.channelId = c.id"
+                    " SELECT a.id, a.name, a.alias, a.logo_url, a.account_no, c.institution_id, c.institution_type, LOWER(c.country_alpha2), c.id, c.primary_color_hex, c.secondary_color_hex, a.isDefault, a.sim_subscription_id, a.institutionAccountName, a.latestBalance, a.latestBalanceTimestamp" +
+                    " FROM accounts as a LEFT JOIN channels AS c ON a.channelId = c.id"
             )
             database.execSQL("DROP TABLE accounts")
             database.execSQL("ALTER TABLE accounts_new RENAME TO accounts")

@@ -24,8 +24,6 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.domain.model.USSDAccount
-import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalancesViewModel
@@ -62,7 +60,7 @@ class SimFragment : AbstractBalanceCheckerFragment() {
     }
 
     private fun observeBalances() {
-        collectLifecycleFlow(balancesViewModel.requestBalance) {
+        collectLifecycleFlow(balancesViewModel.requestedBalance) {
             attemptCallHover(it, HoverAction.BALANCE)
         }
 

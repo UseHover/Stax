@@ -14,7 +14,7 @@ fun TransactionListItem(transaction: TransactionHistoryItem) {
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
-			.clickable { goToDetail() }
+//			.clickable { goToDetail() }
 			.padding(13.dp)
 	) {
 
