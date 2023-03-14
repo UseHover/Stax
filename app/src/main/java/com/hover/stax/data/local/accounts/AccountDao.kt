@@ -25,7 +25,7 @@ import com.hover.stax.domain.model.Account
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AccountDao : com.hover.stax.storage.user.dao.BaseDao<Account> {
+interface AccountDao : BaseDao<Account> {
 
     @Query("SELECT * FROM accounts WHERE institution_type != 'telecom' ORDER BY alias ASC")
     fun getAllAccounts(): List<Account>
