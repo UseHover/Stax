@@ -65,7 +65,6 @@ class AccountDetailFragment :
     RequestsAdapter.SelectListener {
 
     private val viewModel: AccountDetailViewModel by sharedViewModel()
-    private val balancesViewModel: BalancesViewModel by sharedViewModel()
     private val futureViewModel: FutureViewModel by viewModel()
 
     private var transactionsAdapter: TransactionHistoryAdapter? = null

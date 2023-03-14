@@ -61,6 +61,9 @@
             android:id="@+id/action_navigation_home_to_accountDetailsFragment"
             app:destination="@id/accountDetailsFragment" />
         <action
+            android:id="@+id/action_navigation_home_to_usdc_account_details"
+            app:destination="@id/usdcAccountDetailsFragment" />
+        <action
             android:id="@+id/action_navigation_home_to_navigation_transfer"
             app:destination="@id/navigation_transfer" />
         <action
@@ -242,6 +245,16 @@
         <action
             android:id="@+id/action_accountDetailsFragment_to_scheduleDetailsFragment"
             app:destination="@id/scheduleDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/usdcAccountDetailsFragment"
+        android:name="com.hover.stax.accounts.USDCAccountDetailFragment"
+        android:label="USDCAccountDetailFragment"
+        tools:layout="@layout/fragment_usdc_account">
+        <argument
+            android:name="accountId"
+            app:argType="integer" />
     </fragment>
 
     <fragment

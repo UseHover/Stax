@@ -38,14 +38,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hover.stax.R
-import com.hover.stax.ui.theme.Background
-import com.hover.stax.ui.theme.Border
-import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.SecondaryBackground
+import com.hover.stax.ui.theme.*
 
 const val SECONDARY = 0
 const val PRIMARY = 1
 const val DISABLED = 2
+const val DESTRUCT = 3
 
 @Composable
 fun StaxButton(text: String, icon: Int?, buttonType: Int, modifier: Modifier? = Modifier, onClick: () -> Unit) {
@@ -85,7 +83,11 @@ fun StaxButtonColors(buttonType: Int) = ButtonDefaults.buttonColors(
     disabledBackgroundColor = SecondaryBackground)
 
 private fun backgroundColor(type: Int): Color {
-    return if (type == PRIMARY) { BrightBlue } else { Background }
+    return when (type) {
+        PRIMARY -> BrightBlue
+        DESTRUCT -> StaxStateRed
+        else -> Background
+    }
 }
 
 @Composable
@@ -101,6 +103,11 @@ fun SecondaryButton(text: String, modifier: Modifier? = Modifier, icon: Int? = n
 @Composable
 fun DisabledButton(text: String, icon: Int? = null, onClick: () -> Unit) {
     StaxButton(text = text, icon = icon, DISABLED, onClick = onClick)
+}
+
+@Composable
+fun DestructiveButton(text: String, icon: Int? = null, onClick: () -> Unit) {
+    StaxButton(text = text, icon = icon, DESTRUCT, onClick = onClick)
 }
 
 @Preview
@@ -119,4 +126,10 @@ fun SecondaryButtonPreview() {
 @Composable
 fun DisabledButtonPreview() {
     DisabledButton("Test Button", icon = R.drawable.ic_search) { }
+}
+
+@Preview
+@Composable
+fun DestructiveButtonPreview() {
+    DestructiveButton("Test Button", icon = R.drawable.ic_search) { }
 }

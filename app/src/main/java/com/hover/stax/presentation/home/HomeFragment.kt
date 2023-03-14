@@ -150,7 +150,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         if (account.type == USSD_TYPE)
             findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(account.id))
         else
-            findNavController()
+            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToUsdcAccountDetails(account.id))
     }
 
     private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)

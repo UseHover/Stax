@@ -34,12 +34,12 @@ class TransactionHistoryViewModel(
 ) : ViewModel() {
 
     private val allNonBountyTransaction: LiveData<List<StaxTransaction>> = repo.allNonBountyTransactions
-    var transactionHistoryItem: MediatorLiveData<List<TransactionHistoryItem>> = MediatorLiveData()
+    var transactionHistoryItems: MediatorLiveData<List<TransactionHistoryItem>> = MediatorLiveData()
     private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
 
     init {
-        transactionHistoryItem.addSource(allNonBountyTransaction, this::getTransactionHistory)
+        transactionHistoryItems.addSource(allNonBountyTransaction, this::getTransactionHistory)
         staxTransactions = repo.completeAndPendingTransferTransactions!!
         appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
     }
@@ -55,7 +55,7 @@ class TransactionHistoryViewModel(
                 }
                 history.add(TransactionHistoryItem(transaction, action, institutionName))
             }
-            transactionHistoryItem.postValue(history)
+            transactionHistoryItems.postValue(history)
         }
     }
 

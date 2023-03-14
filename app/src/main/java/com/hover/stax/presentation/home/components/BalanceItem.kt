@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
+import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSD_TYPE
 import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.presentation.add_accounts.components.SampleAccountProvider
@@ -44,16 +45,16 @@ import com.hover.stax.presentation.components.Logo
 import com.hover.stax.presentation.components.TimeStringGenerator
 
 @Composable
-fun BalanceItem(account: ActionableAccount, goToDetail: (ActionableAccount) -> Unit, refresh: (ActionableAccount) -> Unit) {
+fun BalanceItem(account: Account, goToDetail: () -> Unit, refresh: () -> Unit) {
     val size13 = dimensionResource(id = R.dimen.margin_13)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { goToDetail(account) }
+            .clickable { goToDetail() }
             .padding(13.dp)
     ) {
-        if (account.account.type == USSD_TYPE)
-            Logo(account.account.logoUrl, "Account Institution Logo")
+        if (account.type == USSD_TYPE)
+            Logo(account.logoUrl, "Account Institution Logo")
         else {
             Icon(
                 painterResource(R.drawable.stellar_logo),
@@ -63,7 +64,7 @@ fun BalanceItem(account: ActionableAccount, goToDetail: (ActionableAccount) -> U
         }
 
         Text(
-            text = account.account.userAlias,
+            text = account.userAlias,
             style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .weight(1f)
@@ -74,7 +75,7 @@ fun BalanceItem(account: ActionableAccount, goToDetail: (ActionableAccount) -> U
 
         Column(modifier = Modifier.align(Alignment.CenterVertically)) {
             Text(
-                text = account.account.latestBalance ?: " - ",
+                text = account.latestBalance ?: " - ",
                 modifier = Modifier.align(Alignment.End),
                 style = MaterialTheme.typography.subtitle2,
                 color = colorResource(id = R.color.offWhite)
@@ -82,9 +83,9 @@ fun BalanceItem(account: ActionableAccount, goToDetail: (ActionableAccount) -> U
 
             Spacer(modifier = Modifier.height(2.dp))
 
-            if (account.account.latestBalance != null)
+            if (account.latestBalance != null)
                 Text(
-                    text = TimeStringGenerator(account.account.latestBalanceTimestamp),
+                    text = TimeStringGenerator(account.latestBalanceTimestamp),
                     modifier = Modifier.align(Alignment.End),
                     color = colorResource(id = R.color.offWhite),
                     style = MaterialTheme.typography.caption
@@ -97,7 +98,7 @@ fun BalanceItem(account: ActionableAccount, goToDetail: (ActionableAccount) -> U
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(start = size13)
-                .clickable { refresh(account) }
+                .clickable { refresh() }
                 .size(32.dp)
         )
     }
@@ -111,11 +112,11 @@ fun BalanceItem(account: ActionableAccount, goToDetail: (ActionableAccount) -> U
 @Preview
 @Composable
 fun USSDBalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<ActionableAccount>) {
-    BalanceItem(accounts[0], {}, {})
+    BalanceItem(accounts[0].account, {}, {})
 }
 
 @Preview
 @Composable
 fun USDCBalanceItemPreview(@PreviewParameter(SampleAccountProvider::class) accounts: List<ActionableAccount>) {
-    BalanceItem(accounts[3], {}, {})
+    BalanceItem(accounts[3].account, {}, {})
 }
