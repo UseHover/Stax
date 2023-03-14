@@ -23,7 +23,7 @@ val SmallRadius = 4.dp
 val LargeRadius = 16.dp
 
 val Shapes = Shapes(
-    small = RoundedCornerShape(4.dp),
-    medium = RoundedCornerShape(4.dp),
-    large = RoundedCornerShape(0.dp)
+    small = RoundedCornerShape(3.dp),
+    medium = RoundedCornerShape(7.dp),
+    large = RoundedCornerShape(9.dp),
 )

@@ -10,6 +10,10 @@ sealed class PaymentScreens(val name: String) {
         val route = name
     }
 
+    object ReviewScreen : PaymentScreens("review-screen") {
+        val route = name
+    }
+
     object PaymentTypeScreen : PaymentScreens("payment-type-screen") {
         val route = name
     }

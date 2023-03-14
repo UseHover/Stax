@@ -17,8 +17,11 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.bottomSheet
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.hover.stax.accounts.AccountsViewModel
+import com.hover.stax.channels.Channel
+import com.hover.stax.domain.model.Account
 import com.hover.stax.send.PayWithScreen
 import com.hover.stax.send.PaymentTypeScreen
+import com.hover.stax.send.ReviewScreen
 import com.hover.stax.send.SendMoneyScreen
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
@@ -34,6 +37,9 @@ fun MainNavHost() {
     val accountsViewModel: AccountsViewModel = koinViewModel()
 
     val accountList by accountsViewModel.accountList.collectAsStateWithLifecycle()
+
+    accountsViewModel.demo(accountList.accounts.first())
+
     val actionList by accountsViewModel.institutionActions.observeAsState()
 
     ModalBottomSheetLayout(
@@ -74,11 +80,18 @@ fun MainNavHost() {
                 )
             }
 
+            bottomSheet(PaymentScreens.ReviewScreen.route) {
+                bottomSheetConfig.value = DefaultBottomSheetConfig
+                ReviewScreen(
+                    onClickBack = { navController.navigateUp() },
+                )
+            }
+
             bottomSheet(PaymentScreens.PaymentTypeScreen.route) {
                 bottomSheetConfig.value = DefaultBottomSheetConfig
                 PaymentTypeScreen(
                     onClickBack = { navController.navigateUp() },
-                    actions = actionList,
+                    actions = actionList ?: emptyList(),
                     onActionSelected = { action ->
                         Timber.d("Selected action: ${action.id}")
                     }

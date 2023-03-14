@@ -55,6 +55,15 @@ fun StaxTitle(
     }
 }
 
+@Composable
+fun StaxPrimaryButtonText(text: String, textAllCaps: Boolean = false) {
+    Text(
+        text = if (textAllCaps) text.uppercase() else text,
+        style = MaterialTheme.typography.button.copy(color = MaterialTheme.colors.onPrimary),
+        textAlign = TextAlign.Center
+    )
+}
+
 @Preview
 @Composable
 fun StaxContentTextPreview() {
