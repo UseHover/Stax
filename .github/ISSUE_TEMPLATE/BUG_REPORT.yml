@@ -38,6 +38,11 @@ body:
     attributes:
       label: Link to screenshots/screen recordings
       description: Paste a link to any screenshots or screen recordings for this issue. Use a Google Drive file if your video contains sensitive information.
+  - type: textarea
+    id: solution
+    attributes:
+      label: Suggested solution
+      description: Do you have an idea for how best to solve this problem? Please describe it!
   - type: input
     id: device
     attributes:
@@ -64,8 +69,6 @@ body:
       label: Config version
       description: What version of the config are you using? - Get this from the settings screen under App info
       placeholder: ex. 20221107062504
-    validations:
-      required: true
   - type: dropdown
     id: sim
     attributes:
@@ -78,14 +81,12 @@ body:
   - type: dropdown
     id: telco
     attributes:
-      label: Which telco are you using for this test?
+      label: Which telco are you using for this transaction?
       options:
       - Safaricom
       - Airtel
       - Telkom
       - Equitel
-    validations:
-      required: true
   - type: input
     id: user
     attributes:

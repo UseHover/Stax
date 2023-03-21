@@ -211,8 +211,14 @@ class SettingsFragment : Fragment() {
 
     private fun setUpAccountDetails() {
         loginViewModel.staxUser.observe(viewLifecycleOwner) { staxUser ->
-            if (staxUser == null) binding.accountCard.accountCard.visibility = GONE
-            else {
+            if (staxUser == null) {
+                with(binding.accountCard) {
+                    loggedInAccount.visibility = GONE
+                    loginAccount.visibility = VISIBLE
+                    loggedInHeader.text = getString(R.string.login_dialog_title)
+                    loginAccount.setOnClickListener { startGoogleLogin() }
+                }
+            } else {
                 binding.staxSupport.marketingOptIn.isChecked = staxUser.marketingOptedIn
                 if (staxUser.isMapper) binding.bountyCard.root.visibility = VISIBLE
 
@@ -222,8 +228,10 @@ class SettingsFragment : Fragment() {
                 }
 
                 with(binding.accountCard) {
-                    accountCard.visibility = VISIBLE
+                    loggedInAccount.visibility = VISIBLE
+                    loginAccount.visibility = GONE
                     loggedInAccount.text = getString(R.string.logged_in_as, staxUser.username)
+                    loggedInHeader.text = getString(R.string.logout)
                     accountLayout.setOnClickListener { showLogoutConfirmDialog() }
                 }
             }

@@ -52,7 +52,7 @@ class TransactionRepo(db: AppDatabase, hoverDb: HoverRoomDatabase) {
     val bountyTransactionList: List<StaxTransaction>
         get() = transactionDao.bountyTransactionList
 
-    fun loadFromHover(uuid: String): Transaction {
+    fun loadFromHover(uuid: String): Transaction? {
         return hoverTransactionDao.getTransactionByUUID(uuid)
     }
 

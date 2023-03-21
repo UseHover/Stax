@@ -54,7 +54,6 @@ interface AccountDao {
     @Query("SELECT * FROM usdc_accounts")
     fun getUsdcAccounts(): List<USDCAccount>
 
-
     @Query("SELECT * FROM ussd_accounts ORDER BY alias ASC")
     fun getLiveAccounts(): LiveData<List<USSDAccount>>
 
