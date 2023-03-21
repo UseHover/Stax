@@ -1,5 +1,6 @@
 package com.hover.stax.presentation.add_accounts.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,12 +24,14 @@ import com.hover.stax.presentation.components.SECONDARY
 import com.hover.stax.presentation.components.StaxButtonColors
 import com.hover.stax.ui.theme.BrightBlue
 import com.hover.stax.ui.theme.OffWhite
+import com.hover.stax.ui.theme.StaxStateRed
 
 @Composable
-fun InputPinScreen(pin: MutableState<String>, doneText: Int, doneAction: () -> Unit) {
+fun InputPinScreen(pin: MutableState<String>, doneText: Int, errorMessage: MutableState<Int>, doneAction: () -> Unit) {
 	Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
 		Column(modifier = Modifier
-			.fillMaxWidth().weight(1f, true), verticalArrangement = Arrangement.Bottom) {
+			.fillMaxWidth()
+			.weight(1f, true), verticalArrangement = Arrangement.Bottom) {
 			Row(
 				modifier = Modifier.fillMaxWidth(),
 				horizontalArrangement = Arrangement.Center
@@ -45,6 +49,11 @@ fun InputPinScreen(pin: MutableState<String>, doneText: Int, doneAction: () -> U
 			Divider(thickness = 1.dp, color = OffWhite, modifier = Modifier
 				.padding(horizontal = 89.dp)
 				.padding(vertical = 13.dp))
+			if (errorMessage.value != 0) {
+				Text(stringResource(id = errorMessage.value),
+					modifier = Modifier.fillMaxWidth(),
+					style = TextStyle(color = StaxStateRed, textAlign = TextAlign.Center, fontSize = 18.sp))
+			}
 		}
 		Row(modifier = Modifier
 			.fillMaxWidth()
@@ -146,9 +155,10 @@ fun removeLastDigit(editingPin: MutableState<String>) {
 	editingPin.value = editingPin.value.dropLast(1)
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun InputPinScreenPreview() {
 	val editingPin = remember { mutableStateOf("1234") }
-	InputPinScreen(pin = editingPin, R.string.btn_continue, {})
+	InputPinScreen(pin = editingPin, R.string.btn_continue, mutableStateOf(R.string.usdc_pin_error)) {}
 }

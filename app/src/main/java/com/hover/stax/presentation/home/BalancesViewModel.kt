@@ -18,18 +18,27 @@ package com.hover.stax.presentation.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.R
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.domain.model.USDCAccount
+import com.hover.stax.domain.model.USSD_TYPE
 import com.hover.stax.domain.use_case.ActionableAccountsUseCase
 import com.hover.stax.domain.use_case.ActionableAccount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import org.stellar.sdk.Server
+import org.stellar.sdk.responses.AccountResponse
 import timber.log.Timber
 
 class BalancesViewModel(
     application: Application,
-    private val actionableAccountsUseCase: ActionableAccountsUseCase
+    private val actionableAccountsUseCase: ActionableAccountsUseCase,
+    val accountRepo: AccountRepo
 ) : AndroidViewModel(application) {
+
+    val server = Server(application.getString(R.string.stellar_url))
 
     private val _accounts = MutableStateFlow<List<ActionableAccount>>(emptyList())
     val accounts = _accounts.asStateFlow()
@@ -51,20 +60,21 @@ class BalancesViewModel(
 
     fun requestBalance(account: ActionableAccount) = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("requesting balance for ${account.account}")
-        _requestedBalance.send(account)
+        if (account.account.type == USSD_TYPE)
+            _requestedBalance.send(account)
+        else
+            updateBalances(account.usdcAccount!!)
     }
-//
-//    private fun requestBalance(account: USDCAccount): USDCAccount {
-//        Timber.e("requesting usdc balance")
-//        AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.refresh_usdc_balance), getApplication())
-//        val server = Server("https://horizon-testnet.stellar.org")
-//        val accountNo: AccountResponse = server.accounts().account(account.accountNo)
-//
-//        for (balance in accountNo.balances) {
-//            if (balance.assetType == account.assetType && balance.assetCode == Optional.fromNullable(account.assetCode)) {
-//                account.updateBalance(balance.balance, null)
-//            }
-//        }
-//        return account
-//    }
+
+    private fun updateBalances(account: USDCAccount) = viewModelScope.launch(Dispatchers.IO) {
+        val updateBalancesResponse: AccountResponse = server.accounts().account(account.accountNo)
+        val accounts = accountRepo.getUsdcAccounts()
+
+        for (balance in updateBalancesResponse.balances) {
+            accounts.find { it.accountNo == account.accountNo && it.assetCode == account.assetCode }?.also {
+                it.updateBalance(balance.balance, null)
+                accountRepo.update(it)
+            }
+        }
+    }
 }

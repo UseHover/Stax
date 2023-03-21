@@ -20,6 +20,7 @@ import androidx.room.*
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.model.USSD_TYPE
 import com.hover.stax.storage.user.dao.BaseDao
 import kotlinx.coroutines.flow.Flow
 import java.util.*
@@ -40,11 +41,11 @@ interface AccountDao {
     }
 
     @Transaction
-    fun getAccount(id: Int): Account? {
-        var account: Account? = getUssdAccount(id) as Account
-        if (account == null)
-            account = getUsdcAccount(id) as Account
-        return account
+    fun getAccount(id: Int, type: String): Account? {
+        return if (type == USSD_TYPE)
+            getUssdAccount(id) as Account
+        else
+            getUsdcAccount(id) as Account
     }
 
     @Query("SELECT * FROM ussd_accounts ORDER BY alias ASC")
@@ -58,7 +59,7 @@ interface AccountDao {
     fun getLiveAccounts(): LiveData<List<USSDAccount>>
 
     @Query("SELECT * FROM usdc_accounts ORDER BY alias ASC")
-    fun getUSDCAccounts(): Flow<List<USDCAccount>>
+    fun getUSDCAccounts(): List<USDCAccount>
 
     @Query("SELECT * FROM ussd_accounts WHERE sim_subscription_id IN (:sim_subscriptionIds)")
     fun getAccountsBySubscribedSim(sim_subscriptionIds: IntArray): Flow<List<USSDAccount>>
@@ -98,6 +99,9 @@ interface AccountDao {
 
     @Update
     fun update(account: USSDAccount)
+
+    @Update
+    fun update(account: USDCAccount)
 
     @Delete
     fun delete(account: USSDAccount)

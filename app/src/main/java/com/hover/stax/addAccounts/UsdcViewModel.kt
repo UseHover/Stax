@@ -44,7 +44,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	val account = MutableSharedFlow<USDCAccount>()
 	val secret = MutableLiveData<String>()
 
-	private val _downloadEvent = Channel<Boolean>()
+	private val _downloadEvent = Channel<String?>()
 	val downloadEvent = _downloadEvent.receiveAsFlow()
 
 	private val _doneEvent = MutableStateFlow(false)
@@ -53,8 +53,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	private val _error = MutableStateFlow(-1)
 	val error = _error.asSharedFlow()
 
-	val server = Server("https://horizon-testnet.stellar.org")
-//	val server = Server(" https://horizon.stellar.org")
+	val server = Server(application.getString(R.string.stellar_url))
 
 	fun setPin(pin: String) {
 		initialPin.postValue(pin)
@@ -87,7 +86,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	}
 
 	private fun generateRemoteAccount(accountId: String) {
-		val friendbotUrl = "https://friendbot.stellar.org/?addr=$accountId"
+		val friendbotUrl = getApplication<Application>().getString(R.string.friendbot_url, accountId)
 		val response: InputStream = URL(friendbotUrl).openStream()
 		val body: String = Scanner(response, "UTF-8").useDelimiter("\\A").next()
 		Timber.e("SUCCESS! You have a new account :)\n$body")
@@ -96,28 +95,8 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 	private fun generateStaxAccountsForEachBalance(pair: StellarKeyPair) = viewModelScope.launch(Dispatchers.IO) {
 		val createAccountResponse: AccountResponse = server.accounts().account(pair.accountId)
 		sponsorAccount(pair)
-		val updateBalancesResponse: AccountResponse = server.accounts().account(pair.accountId)
-
-		for (balance in updateBalancesResponse.balances) {
-			createStaxAccount(pair, balance)
-		}
+		createAccounts(pair)
 		logUSDCAdded()
-	}
-
-	private suspend fun createStaxAccount(pair: StellarKeyPair, balance: AccountResponse.Balance) {
-		val acct = USDCAccount("Stellar USDC", "Stellar USDC", "logo", pair.accountId, -1, CRYPTO_TYPE, "Stellar color 1", "stellar color 2",
-			balance.assetType, balance.assetCode.orNull(), false)
-		acct.updateBalance(balance.balance, null)
-		encryptSecret(acct, confirmPin.value!!, String(pair.secretSeed))
-		Timber.e(
-			"Creating account: %s, Code: %s, Balance: %s%n",
-			balance.assetType,
-			balance.assetCode,
-			balance.balance
-		)
-
-		accountRepo.insert(acct)
-		account.emit(acct)
 	}
 
 	private fun sponsorAccount(userAccountPair: StellarKeyPair) {
@@ -151,6 +130,30 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 
 		val response: SubmitTransactionResponse? = server.submitTransaction(transaction)
 		Timber.e("got response for sponsorship transaction: %s", response)
+	}
+
+	suspend fun createAccounts(pair: StellarKeyPair) {
+		val updateBalancesResponse: AccountResponse = server.accounts().account(pair.accountId)
+
+		for (balance in updateBalancesResponse.balances) {
+			createStaxAccount(pair, balance)
+		}
+	}
+
+	private suspend fun createStaxAccount(pair: StellarKeyPair, balance: AccountResponse.Balance) {
+		val acct = USDCAccount("Stellar USDC", "Stellar USDC", "logo", pair.accountId, -1, CRYPTO_TYPE, "Stellar color 1", "stellar color 2",
+			balance.assetType, balance.assetCode.orNull(), false)
+		acct.updateBalance(balance.balance, null)
+		encryptSecret(acct, confirmPin.value!!, String(pair.secretSeed))
+		Timber.e(
+			"Creating account: %s, Code: %s, Balance: %s%n",
+			balance.assetType,
+			balance.assetCode,
+			balance.balance
+		)
+
+		accountRepo.insert(acct)
+		account.emit(acct)
 	}
 
 	private fun getHoverKeypair(): StellarKeyPair {
@@ -198,7 +201,7 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 		val key = SecretKeySpec(keyBytes, "AES");
 
 		val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-		val iv2 = ByteArray(cipher.getBlockSize())
+		val iv2 = ByteArray(cipher.blockSize)
 		random.nextBytes(iv2)
 		val ivParams = IvParameterSpec(iv2)
 		cipher.init(Cipher.ENCRYPT_MODE, key, ivParams)
@@ -206,6 +209,39 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 		account.encryptedKey = cipher.doFinal(secretAsBytes)
 		account.initializationVector = cipher.iv
 		account.salt = salt
+	}
+
+	fun decryptSecret(account: USDCAccount, pin: String): String? {
+		val iterationCount = 1000
+		val keyLength = 256
+
+		val keySpec = PBEKeySpec(pin.toCharArray(), account.salt, iterationCount, keyLength)
+		val keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
+		val keyBytes = keyFactory.generateSecret(keySpec).encoded
+		val key = SecretKeySpec(keyBytes, "AES");
+
+		val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+		val iv = IvParameterSpec(account.initializationVector)
+		cipher.init(Cipher.DECRYPT_MODE, key, iv)
+
+		return try {
+			val plaintext = cipher.doFinal(account.encryptedKey)
+			String(plaintext)
+		} catch(e: Exception) {
+			null
+		}
+	}
+
+	fun updateBalances(account: USDCAccount) = viewModelScope.launch(Dispatchers.IO) {
+		val updateBalancesResponse: AccountResponse = server.accounts().account(account.accountNo)
+		val accounts = accountRepo.getUsdcAccounts()
+
+		for (balance in updateBalancesResponse.balances) {
+			accounts.find { it.accountNo == account.accountNo && it.assetCode == account.assetCode }?.also {
+				it.updateBalance(balance.balance, null)
+				accountRepo.update(it)
+			}
+		}
 	}
 
 	private fun logUSDCAdded() {
@@ -220,8 +256,12 @@ class UsdcViewModel(application: Application, val accountRepo: AccountRepo) : An
 		clipboardManager.setPrimaryClip(clip)
 	}
 
+	fun downloadKey(decryptedKey: String) = viewModelScope.launch(Dispatchers.IO) {
+		_downloadEvent.send(decryptedKey)
+	}
+
 	fun downloadKey() = viewModelScope.launch(Dispatchers.IO) {
-		secret.value?.let { _downloadEvent.send(true) }
+		secret.value?.let { downloadKey(it) }
 	}
 
 	fun done() = viewModelScope.launch(Dispatchers.IO) {

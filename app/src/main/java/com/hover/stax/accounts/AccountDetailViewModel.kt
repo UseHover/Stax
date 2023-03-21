@@ -22,7 +22,10 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.data.local.channels.ChannelRepo
+import com.hover.stax.domain.model.CRYPTO_TYPE
+import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.model.USSD_TYPE
 import com.hover.stax.domain.use_case.AccountDetail
 import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.domain.use_case.GetAccountDetailsUseCase
@@ -83,15 +86,22 @@ class AccountDetailViewModel(
         }
     }
 
-    fun setAccount(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun setAccount(id: Int, type: String) = viewModelScope.launch(Dispatchers.IO) {
         Timber.e("Loading account $id")
-        _account.update { accountUseCase(id) }
+        _account.update { accountUseCase(id, type) }
     }
 
     fun updateAccountName(newName: String) = viewModelScope.launch(Dispatchers.IO) {
-        val a = account.value!!.ussdAccount!!
-        a.userAlias = newName
-        repo.update(a)
+        if (account.value?.account?.type == USSD_TYPE) {
+            val a = account.value!!.ussdAccount!!
+            a.userAlias = newName
+            repo.update(a)
+        } else if (account.value?.account?.type == CRYPTO_TYPE) {
+            val a = account.value!!.usdcAccount!!
+            a.userAlias = newName
+            repo.update(a)
+        }
+        account.value?.let { setAccount(it.account.id, it.account.type) }
     }
 
     fun updateAccountNumber(newNumber: String) = viewModelScope.launch(Dispatchers.IO) {
@@ -112,5 +122,10 @@ class AccountDetailViewModel(
                 it.isDefault = true
                 repo.update(it)
             }
+    }
+
+    fun removeAccount(account: USDCAccount) = viewModelScope.launch(Dispatchers.IO) {
+        repo.delete(account)
+        transactionRepo.deleteAccountTransactions(account.id)
     }
 }

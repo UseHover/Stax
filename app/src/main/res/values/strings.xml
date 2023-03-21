@@ -23,6 +23,8 @@
 	<string name="maathai_api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="users_endpoint" translatable="false">/stax_users</string>
+	<string name="stellar_url" translatable="false">https://horizon.stellar.org</string>
+	<string name="friendbot_url" translatable="false">https://friendbot.stellar.org/?addr=%1$s</string>
 	<string name="tips_table" translatable="false">financial_tips</string>
 
 	<string name="referee_endpoint" translatable="false">/set_referee</string>
@@ -99,6 +101,8 @@
 	<string name="skip_balance_btn">Skip balance check</string>
 	<string name="create_pin">Create a PIN for your USDC wallet</string>
 	<string name="confirm_pin">Re-enter your PIN to confirm</string>
+	<string name="enter_stellar_pin">Enter Stellar account PIN</string>
+	<string name="download_key">Download Key</string>
 	<string name="create_account">Create account</string>
 	<string name="account_added">Account added</string>
 
@@ -119,6 +123,10 @@
 	<string name="usdc_account_2_action">Download key to local storage</string>
 	<string name="key_downloaded">Key saved.</string>
 	<string name="key_download_error">Could not save key, please try again.</string>
+	<string name="usdc_pin_error">PIN error. Please check your PIN and retry.</string>
+	<string name="usdc_pin_length_error">Your PIN must be 4 characters or longer.</string>
+	<string name="usdc_pin_match_error">Your PIN did not match.</string>
+	<string name="currency_literal">Currency</string>
 
 	<!-- ONBOARDING VARIANT ZERO (DEFAULT)-->
 	<string name="stax_tagline">Move money without stress</string>
@@ -594,7 +602,7 @@
 	<string name="security_head">Secure with Stax</string>
 	<string name="removeaccount_dialoghead">Remove %1$s now</string>
 	<string name="btn_removeaccount">Remove account</string>
-	<string name="removeaccount_msg">You can add your account to Stax again at any time.</string>
+	<string name="removeaccount_msg">This will remove your account from Stax, but it will still exist at the issuing institution. You can add your account to Stax again at any time.</string>
 	<string name="toast_confirm_removepin">PIN removed successfully</string>
 	<string name="btn_savepin">Save PIN</string>
 	<string name="btn_editpin">Edit PIN</string>

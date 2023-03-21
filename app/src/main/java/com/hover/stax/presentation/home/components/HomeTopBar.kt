@@ -40,13 +40,13 @@ import com.hover.stax.utils.network.NetworkMonitor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopBar(@StringRes title: Int = 0, navTo: (dest: Int) -> Unit) {
+fun HomeTopBar(title: String?, navTo: ((dest: Int) -> Unit)?) {
     val hasNetwork by NetworkMonitor.StateLiveData.get().observeAsState(initial = true)
 
     CenterAlignedTopAppBar(
         title = {
             Row(modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
-                if (title != 0) { Text(stringResource(id = title), style = MaterialTheme.typography.h4) }
+                if (title != null) { Text(title, style = MaterialTheme.typography.h4) }
                 if (!hasNetwork) {
                     Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.padding(horizontal = 16.dp)) {
                         Icon(
@@ -66,11 +66,18 @@ fun HomeTopBar(@StringRes title: Int = 0, navTo: (dest: Int) -> Unit) {
                 }
             }
         },
-        actions = { IconButton(onClick = { navTo(R.id.action_global_NavigationSettings) }) {
-            Icon(painterResource(id = R.drawable.ic_settings),
-                stringResource(R.string.nav_settings), tint = OffWhite
-            )
-        } },
+        actions = {
+            if (navTo != null) {
+                IconButton(onClick = { navTo(R.id.action_global_NavigationSettings) }) {
+                    Icon(painterResource(id = R.drawable.ic_settings), stringResource(R.string.nav_settings), tint = OffWhite)
+                }
+            }
+        },
         colors = StaxTopBarDefaults()
     )
+}
+
+@Composable
+fun HomeTopBar(@StringRes title: Int = 0, navTo: (dest: Int) -> Unit) {
+    HomeTopBar(title = if (title == 0) null else stringResource(id = title), navTo = navTo)
 }

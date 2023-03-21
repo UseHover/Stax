@@ -32,8 +32,8 @@ class GetAccountDetailsUseCase(
 	private val defaultDispatcher: CoroutineDispatcher
 ) {
 
-	suspend operator fun invoke(id: Int): AccountDetail? = withContext(defaultDispatcher) {
-		val account = accountRepo.getAccount(id)
+	suspend operator fun invoke(id: Int, type: String): AccountDetail? = withContext(defaultDispatcher) {
+		val account = accountRepo.getAccount(id, type)
 
 		var result: AccountDetail? = null
 		if (account?.type == USSD_TYPE) {

@@ -1,11 +1,7 @@
 package com.hover.stax.presentation.components
 
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -15,19 +11,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
 
 @Composable
-fun StaxTextField(textField: TextFieldValue, placeholder: Int, startIcon: Int, onChange: (TextFieldValue) -> Unit) {
-	OutlinedTextField(
-		value = textField,
-		onValueChange = {
-			onChange(it)
-		},
-		label = { Text(text = stringResource(placeholder), style = MaterialTheme.typography.body1) },
-		singleLine = true,
-		leadingIcon = {
-			Icon(painterResource(startIcon), "", tint = colorResource(R.color.white))
-		},
-		colors = StaxTextFieldDefaults()
-	)
+fun StaxTextField(textField: TextFieldValue, placeholder: Int, startIcon: Int? = null, onChange: (TextFieldValue) -> Unit) {
+	if (startIcon != null) {
+		OutlinedTextField(
+			value = textField,
+			onValueChange = { onChange(it) },
+			label = {
+				Text(text = stringResource(placeholder), style = MaterialTheme.typography.body1)
+			},
+			singleLine = true,
+			colors = StaxTextFieldDefaults(),
+			leadingIcon = {
+				Icon(painterResource(startIcon), "", tint = colorResource(R.color.white))
+			})
+	} else {
+		OutlinedTextField(
+			value = textField,
+			onValueChange = { onChange(it) },
+			label = {
+				Text(text = stringResource(placeholder), style = MaterialTheme.typography.body1)
+			},
+			singleLine = true,
+			colors = StaxTextFieldDefaults())
+	}
 }
 
 @Preview
@@ -40,6 +46,12 @@ fun EmptyStaxTextFieldPreview() {
 @Composable
 fun FilledStaxTextFieldPreview() {
 	StaxTextField(TextFieldValue("Test value"), R.string.search, R.drawable.ic_search) { }
+}
+
+@Preview
+@Composable
+fun EmptyNoIconStaxTextFieldPreview() {
+	StaxTextField(TextFieldValue(""), R.string.search) { }
 }
 
 @Composable

@@ -46,7 +46,7 @@ const val DISABLED = 2
 const val DESTRUCT = 3
 
 @Composable
-fun StaxButton(text: String, icon: Int?, buttonType: Int, modifier: Modifier? = Modifier, onClick: () -> Unit) {
+fun StaxButton(text: String, icon: Int? = null, buttonType: Int, modifier: Modifier? = Modifier, onClick: () -> Unit) {
     Button(
         onClick = { onClick() },
         modifier = modifier ?: Modifier
@@ -106,8 +106,8 @@ fun DisabledButton(text: String, icon: Int? = null, onClick: () -> Unit) {
 }
 
 @Composable
-fun DestructiveButton(text: String, icon: Int? = null, onClick: () -> Unit) {
-    StaxButton(text = text, icon = icon, DESTRUCT, onClick = onClick)
+fun DestructiveButton(text: String, icon: Int? = null, modifier: Modifier? = null, onClick: () -> Unit) {
+    StaxButton(text = text, icon = icon, DESTRUCT, modifier = modifier, onClick = onClick)
 }
 
 @Preview

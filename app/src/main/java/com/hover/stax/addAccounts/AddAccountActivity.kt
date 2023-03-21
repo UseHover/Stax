@@ -52,8 +52,8 @@ class AddAccountActivity : AppCompatActivity() {
                         if (isDone) { finish() }
                 }}
                 launch {
-                    usdcViewModel.downloadEvent.collect { go ->
-                       if (go) { chooseFileLocation() }
+                    usdcViewModel.downloadEvent.collect {
+                       if (it != null) chooseFileLocation()
                     }}
                 launch {
                     usdcViewModel.doneEvent.collect { isDone ->

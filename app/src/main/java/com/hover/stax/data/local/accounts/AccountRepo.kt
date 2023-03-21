@@ -32,7 +32,7 @@ class AccountRepo(db: AppDatabase) {
 
     fun getAllLiveAccounts(): LiveData<List<USSDAccount>> = AccountDao.getLiveAccounts()
 
-    fun getUsdcAccounts(): Flow<List<USDCAccount>> = AccountDao.getUSDCAccounts()
+    fun getUsdcAccounts(): List<USDCAccount> = AccountDao.getUSDCAccounts()
 
     fun getAccountBySim(simSubscriptionId: Int): USSDAccount? =
         AccountDao.getAccountBySim(simSubscriptionId)
@@ -47,7 +47,7 @@ class AccountRepo(db: AppDatabase) {
 
     fun getDefaultAccount(): Account? = AccountDao.getDefaultAccount()
 
-    suspend fun getAccount(id: Int): Account? = AccountDao.getAccount(id)
+    suspend fun getAccount(id: Int, type: String): Account? = AccountDao.getAccount(id, type)
     suspend fun getUssdAccount(id: Int): USSDAccount? = AccountDao.getUssdAccount(id)
     suspend fun getUsdcAccount(id: Int): USDCAccount? = AccountDao.getUsdcAccount(id)
 
@@ -64,10 +64,11 @@ class AccountRepo(db: AppDatabase) {
     }
 
     fun insert(account: USSDAccount) = AccountDao.insert(account)
-
     fun insert(account: USDCAccount) = AccountDao.insert(account)
 
     fun update(account: USSDAccount) = AccountDao.update(account)
+    fun update(account: USDCAccount) = AccountDao.update(account)
 
-    suspend fun delete(account: USSDAccount) = AccountDao.delete(account)
+    fun delete(account: USSDAccount) = AccountDao.delete(account)
+    fun delete(account: USDCAccount) = AccountDao.delete(account)
 }

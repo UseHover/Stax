@@ -16,6 +16,7 @@
 package com.hover.stax.presentation.home
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,14 +29,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.hover.stax.R
 import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.presentation.home.components.*
 import com.hover.stax.ui.theme.StaxTheme
 import org.koin.androidx.compose.getViewModel
+import timber.log.Timber
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -63,6 +67,17 @@ fun HomeScreen(
 ) {
     val accounts by balancesViewModel.accounts.collectAsState()
 
+    val context = LocalContext.current
+
+    fun requestGoToAccount(a: ActionableAccount) {
+        homeViewModel.requestGoToAccount(a)
+    }
+
+    fun requestBalance(a: ActionableAccount) {
+        Toast.makeText(context, R.string.refresh_balance, Toast.LENGTH_LONG).show()
+        balancesViewModel.requestBalance(a)
+    }
+
     StaxTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             Scaffold(topBar = { HomeTopBar(0, navTo) }) {
@@ -89,13 +104,7 @@ fun HomeScreen(
     }
 }
 
-fun requestGoToAccount(a: ActionableAccount) {
-//    balancesViewModel.requestBalance(a)
-}
 
-fun requestBalance(a: ActionableAccount) {
-//    balancesViewModel.requestBalance(a)
-}
 
 @Preview
 @Composable

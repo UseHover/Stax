@@ -54,7 +54,7 @@ class TransactionHistoryAdapter(private val selectListener: SelectListener) : Li
         holder: HistoryViewHolder
     ) {
         holder.binding.liAmount.alpha = (if (t.status == Transaction.FAILED) 0.54 else 1.0).toFloat()
-        holder.binding.transactionItemLayout.setBackgroundColor(ContextCompat.getColor(holder.binding.root.context, t.getBackgroundColor()))
+        holder.binding.transactionItemLayout.setBackgroundColor(ContextCompat.getColor(holder.binding.root.context, t.getBackgroundColorInt()))
         holder.binding.liDetail.text = t.shortStatusExplain(a, institutionName, holder.itemView.context)
         holder.binding.liDetail.setCompoundDrawablesRelativeWithIntrinsicBounds(t.getIcon(), 0, 0, 0)
     }

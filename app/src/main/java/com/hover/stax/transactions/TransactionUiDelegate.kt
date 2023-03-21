@@ -16,11 +16,15 @@
 package com.hover.stax.transactions
 
 import android.content.Context
+import androidx.compose.ui.graphics.Color
 import androidx.core.text.HtmlCompat
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.transactionDetails.UssdCallResponse
+import com.hover.stax.ui.theme.SubtleStatusGreen
+import com.hover.stax.ui.theme.SubtleStatusRed
+import com.hover.stax.ui.theme.SubtleStatusYellow
 import com.hover.stax.utils.Utils
 
 interface TransactionUiDelegate {
@@ -34,13 +38,21 @@ interface TransactionUiDelegate {
         }
     }
 
-    fun getBackgroundColor(): Int {
+    fun getBackgroundColor(): Color {
         return when (transaction.status) {
-            Transaction.FAILED -> R.color.cardDarkRed
-            Transaction.PENDING -> if (transaction.isRecorded) R.color.pending_brown else R.color.cardDarkBlue
-            else -> R.color.muted_green
+            Transaction.FAILED -> SubtleStatusRed
+            Transaction.PENDING -> SubtleStatusYellow
+            else -> SubtleStatusGreen
         }
     }
+
+    fun getBackgroundColorInt(): Int {
+            return when (transaction.status) {
+                Transaction.FAILED -> R.color.cardDarkRed
+                Transaction.PENDING -> if (transaction.isRecorded) R.color.pending_brown else R.color.cardDarkBlue
+                else -> R.color.muted_green
+            }
+        }
 
     fun humanStatus(c: Context): String {
         return when (transaction.status) {

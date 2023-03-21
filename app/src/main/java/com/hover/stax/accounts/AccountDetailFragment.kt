@@ -35,6 +35,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USSDAccount
+import com.hover.stax.domain.model.USSD_TYPE
 import com.hover.stax.domain.use_case.AccountDetail
 import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -96,7 +97,7 @@ class AccountDetailFragment :
         setUpBalance()
         setUpManage()
 
-        viewModel.setAccount(args.accountId)
+        viewModel.setAccount(args.accountId, USSD_TYPE)
     }
 
     private fun setUpBalance() {

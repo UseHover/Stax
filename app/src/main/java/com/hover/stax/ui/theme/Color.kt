@@ -21,6 +21,12 @@ val BrightBlue = Color(0xFF0091E3)
 val OffWhite = Color(0xFFF1F1F4)
 val StaxStateRed = Color(0xFFF32345)
 
+val SubtleStatusRed = Color(0xFF5A120D)
+val SubtleStatusGreen = Color(0xFF2A3932)
+val SubtleStatusYellow = Color(0xFF8A6D14)
+val SubtleStatusBrown = Color(0xFF343734)
+val SubtleStatusBlue = Color(0xFF1D2735)
+
 
 //val ColorPrimary = Color(0xFF292E34)
 //val ColorPrimaryDark = Color(0xFF1E2329)

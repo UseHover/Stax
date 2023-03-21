@@ -63,7 +63,7 @@
 	<string name="start_load_screen" translatable="false">Visited load screen</string>
 	<string name="finish_load_screen" translatable="false">Complete load screen</string>
 	<string name="refresh_balance" translatable="false">Starting balance check</string>
-	<string name="refresh_usdc_balance" translatable="false">Starting USDC balance check</string>
+	<string name="refresh_usdc_balance" translatable="false">Refreshing Stellar account balance</string>
 	<string name="refresh_balance_failed" translatable="false">Failed to start balance check, account was null</string>
 	<string name="visit_screen" translatable="false">Visited %1$s screen</string>
 	<string name="visit_onboarding" translatable="false">Onboarding</string>
