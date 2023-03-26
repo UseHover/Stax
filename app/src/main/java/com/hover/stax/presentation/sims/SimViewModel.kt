@@ -46,13 +46,11 @@ class SimViewModel(private val listSimsUseCase: ListSimsUseCase, val application
                 fetchSims()
             }
         }
-
         loadSims()
     }
 
     private fun loadSims() {
         fetchSims()
-
         simReceiver?.let {
             LocalBroadcastManager.getInstance(application)
                 .registerReceiver(it, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))

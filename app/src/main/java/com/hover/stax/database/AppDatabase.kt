@@ -93,6 +93,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "stax.db"
                 )
+                    .enableMultiInstanceInvalidation()
                     .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
                     .addMigrations(
                         Migrations.M23_24,
