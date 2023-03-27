@@ -219,6 +219,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
             showBonusAmount(it.amount, action)
         }
+        binding.details.fromInstitutionValue.setTitle(action.from_institution_name)
         binding.statusInfo.institutionLogo.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo)
     }
 

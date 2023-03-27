@@ -86,9 +86,7 @@
     </TableRow>
 
     <TableRow
-            android:layout_marginTop="@dimen/margin_18"
-            android:layout_marginBottom="@dimen/margin_34">
-
+            android:layout_marginTop="@dimen/margin_18">
         <TextView
                 android:text="@string/type_label"
                 android:textColor="@color/offWhite"
@@ -100,6 +98,21 @@
                 android:textAlignment="viewEnd"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/fromInstitutionRow"
+        android:layout_marginTop="@dimen/margin_18">
+
+        <TextView
+            android:text="@string/from_institution"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
+
+        <com.hover.stax.views.Stax2LineItem
+            android:id="@+id/fromInstitutionValue"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd" />
     </TableRow>
 
     <TableRow
