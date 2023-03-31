@@ -1,7 +1,6 @@
 package com.hover.stax.addAccounts
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -25,9 +24,6 @@ import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
 
 class AddAccountActivity : AppCompatActivity() {
 
@@ -46,19 +42,23 @@ class AddAccountActivity : AppCompatActivity() {
                 launch {
                     viewModel.checkBalanceEvent.collect {
                         callHover(checkBalance, generateSessionBuilder(it.first, it.second))
-                }}
+                    } 
+                }
                 launch {
                     viewModel.doneEvent.collect { isDone ->
                         if (isDone) { finish() }
-                }}
+                    } 
+                }
                 launch {
                     usdcViewModel.downloadEvent.collect {
-                       if (it != null) chooseFileLocation()
-                    }}
+                        if (it != null) chooseFileLocation()
+                    } 
+                }
                 launch {
                     usdcViewModel.doneEvent.collect { isDone ->
                         if (isDone) { finish() }
-                }}
+                    } 
+                }
             }
         }
 
@@ -83,8 +83,14 @@ class AddAccountActivity : AppCompatActivity() {
         try {
             launcher.launch(b)
         } catch (e: Exception) {
-            runOnUiThread { UIHelper.flashAndReportMessage(this, getString(
-                R.string.error_running_action)) }
+            runOnUiThread {
+                UIHelper.flashAndReportMessage(
+                    this,
+                    getString(
+                        R.string.error_running_action
+                    )
+                )
+            }
             AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
         }
     }

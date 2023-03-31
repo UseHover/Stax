@@ -21,7 +21,6 @@ import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.model.USDCAccount
 import com.hover.stax.domain.model.USSDAccount
 import com.hover.stax.domain.model.USSD_TYPE
-import com.hover.stax.storage.user.dao.BaseDao
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 
@@ -33,11 +32,11 @@ interface AccountDao {
 
     @Transaction
     fun getAllAccounts(): List<Account> {
-        val accounts = LinkedList<Account>();
-        accounts.addAll(getUssdAccounts());
-        accounts.addAll(getUsdcAccounts());
+        val accounts = LinkedList<Account>()
+        accounts.addAll(getUssdAccounts())
+        accounts.addAll(getUsdcAccounts())
 //        Collections.sort(mediaItems, <you can add a comparator here>);
-        return accounts;
+        return accounts
     }
 
     @Transaction

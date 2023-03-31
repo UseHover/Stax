@@ -36,10 +36,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hover.stax.R
 import com.hover.stax.domain.use_case.ActionableAccount
-import com.hover.stax.presentation.home.components.*
+import com.hover.stax.presentation.home.components.BalancesList
+import com.hover.stax.presentation.home.components.BonusAd
+import com.hover.stax.presentation.home.components.EmptyBalance
+import com.hover.stax.presentation.home.components.FinancialTipScreen
+import com.hover.stax.presentation.home.components.HomeTopBar
+import com.hover.stax.presentation.home.components.MoveMoneyOptions
 import com.hover.stax.ui.theme.StaxTheme
 import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -86,14 +90,18 @@ fun HomeScreen(
                         EmptyBalance {
                             homeViewModel.requestAddAccount()
                         }
-                    } else { BonusAd(homeViewModel, homeClickFunctions) }
+                    } else {
+                        BonusAd(homeViewModel, homeClickFunctions)
+                    }
 
                     MoveMoneyOptions(homeClickFunctions, accounts)
 
-                    BalancesList(accounts = accounts,
+                    BalancesList(
+                        accounts = accounts,
                         { homeViewModel.requestAddAccount() },
                         ::requestGoToAccount,
-                        ::requestBalance)
+                        ::requestBalance
+                    )
 
                     Spacer(Modifier.height(34.dp))
 
@@ -103,8 +111,6 @@ fun HomeScreen(
         }
     }
 }
-
-
 
 @Preview
 @Composable

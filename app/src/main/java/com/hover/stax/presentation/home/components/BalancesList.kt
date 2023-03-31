@@ -27,7 +27,6 @@ import com.hover.stax.channels.Channel.TELECOM_TYPE
 import com.hover.stax.domain.use_case.ActionableAccount
 import com.hover.stax.presentation.add_accounts.components.SampleAccountProvider
 
-
 @Composable
 fun BalancesList(accounts: List<ActionableAccount>?, onClickNewAccount: () -> Unit, goToDetails: (ActionableAccount) -> Unit, refresh: (ActionableAccount) -> Unit) {
     if (!accounts.isNullOrEmpty()) {
@@ -37,7 +36,7 @@ fun BalancesList(accounts: List<ActionableAccount>?, onClickNewAccount: () -> Un
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                accounts.filter{ it.ussdAccount == null || it.ussdAccount.institutionType != TELECOM_TYPE}.forEach { account ->
+                accounts.filter { it.ussdAccount == null || it.ussdAccount.institutionType != TELECOM_TYPE }.forEach { account ->
                     BalanceItem(account.account, { goToDetails(account) }, { refresh(account) })
                 }
             }

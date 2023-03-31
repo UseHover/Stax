@@ -47,12 +47,12 @@ interface TransactionUiDelegate {
     }
 
     fun getBackgroundColorInt(): Int {
-            return when (transaction.status) {
-                Transaction.FAILED -> R.color.cardDarkRed
-                Transaction.PENDING -> if (transaction.isRecorded) R.color.pending_brown else R.color.cardDarkBlue
-                else -> R.color.muted_green
-            }
+        return when (transaction.status) {
+            Transaction.FAILED -> R.color.cardDarkRed
+            Transaction.PENDING -> if (transaction.isRecorded) R.color.pending_brown else R.color.cardDarkBlue
+            else -> R.color.muted_green
         }
+    }
 
     fun humanStatus(c: Context): String {
         return when (transaction.status) {

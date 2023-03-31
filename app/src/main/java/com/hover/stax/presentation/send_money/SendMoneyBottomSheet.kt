@@ -6,5 +6,4 @@ import androidx.compose.runtime.Composable
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SendMoneyBottomSheet() {
-    
 }

@@ -26,56 +26,60 @@ const val SUMMARY = "summary"
 @Composable
 fun CreateUsdcAccountScreen(viewModel: UsdcViewModel = getViewModel(), navController: NavController) {
 
-	val enterPin = remember { mutableStateOf("") }
-	val confirmPin = remember { mutableStateOf("") }
+    val enterPin = remember { mutableStateOf("") }
+    val confirmPin = remember { mutableStateOf("") }
 
-	val currentPage = remember { mutableStateOf(EXPLAIN) }
-	val errorMessage = remember { mutableStateOf(0) }
+    val currentPage = remember { mutableStateOf(EXPLAIN) }
+    val errorMessage = remember { mutableStateOf(0) }
 
-	Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-		Crossfade(targetState = currentPage.value) { page ->
-			when (page) {
-				EXPLAIN -> USDCExplainerScreen(currentPage) { navController.popBackStack() }
-				PIN1 -> PinEntryScreen(R.string.create_pin, enterPin, R.string.btn_continue, errorMessage,
-					doneAction = {
-						if (enterPin.value.length > 3) {
-							viewModel.setPin(enterPin.value)
-							errorMessage.value = 0
-							currentPage.value = PIN2
-						} else {
-							errorMessage.value = R.string.usdc_pin_length_error
-							enterPin.value = ""
-						}
-					},
-					backAction = { navController.popBackStack() })
-				PIN2 -> PinEntryScreen(R.string.confirm_pin, confirmPin, R.string.create_account, errorMessage,
-					doneAction = {
-						if (viewModel.confirmPin(confirmPin.value)) {
-							errorMessage.value = 0
-							viewModel.createAccount()
-							currentPage.value = SUMMARY
-						} else {
-							errorMessage.value = R.string.usdc_pin_match_error
-							confirmPin.value = ""
-						}
-					},
-					backAction = {
-						enterPin.value = ""
-						confirmPin.value = ""
-						currentPage.value = PIN1
-					})
-				SUMMARY -> UsdcAccountSummaryScreen(viewModel)
-			}
-		}
-	}
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+        Crossfade(targetState = currentPage.value) { page ->
+            when (page) {
+                EXPLAIN -> USDCExplainerScreen(currentPage) { navController.popBackStack() }
+                PIN1 -> PinEntryScreen(
+                    R.string.create_pin, enterPin, R.string.btn_continue, errorMessage,
+                    doneAction = {
+                        if (enterPin.value.length > 3) {
+                            viewModel.setPin(enterPin.value)
+                            errorMessage.value = 0
+                            currentPage.value = PIN2
+                        } else {
+                            errorMessage.value = R.string.usdc_pin_length_error
+                            enterPin.value = ""
+                        }
+                    },
+                    backAction = { navController.popBackStack() }
+                )
+                PIN2 -> PinEntryScreen(
+                    R.string.confirm_pin, confirmPin, R.string.create_account, errorMessage,
+                    doneAction = {
+                        if (viewModel.confirmPin(confirmPin.value)) {
+                            errorMessage.value = 0
+                            viewModel.createAccount()
+                            currentPage.value = SUMMARY
+                        } else {
+                            errorMessage.value = R.string.usdc_pin_match_error
+                            confirmPin.value = ""
+                        }
+                    },
+                    backAction = {
+                        enterPin.value = ""
+                        confirmPin.value = ""
+                        currentPage.value = PIN1
+                    }
+                )
+                SUMMARY -> UsdcAccountSummaryScreen(viewModel)
+            }
+        }
+    }
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun PinEntryScreen(title: Int, pin: MutableState<String>, doneText: Int, errorMessage: MutableState<Int>, doneAction: () -> Unit, backAction: () -> Unit) {
-	Scaffold(
-		topBar = { TallTopBar(stringResource(title), backAction) },
-	) {
-		InputPinScreen(pin, doneText, errorMessage, doneAction)
-	}
+    Scaffold(
+        topBar = { TallTopBar(stringResource(title), backAction) },
+    ) {
+        InputPinScreen(pin, doneText, errorMessage, doneAction)
+    }
 }

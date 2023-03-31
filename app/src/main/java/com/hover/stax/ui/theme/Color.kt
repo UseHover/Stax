@@ -27,7 +27,6 @@ val SubtleStatusYellow = Color(0xFF8A6D14)
 val SubtleStatusBrown = Color(0xFF343734)
 val SubtleStatusBlue = Color(0xFF1D2735)
 
-
 val ColorPrimary = Color(0xFF292E34)
 val ColorPrimaryDark = Color(0xFF1E2329)
 val Background = Color(0xFF1E2329)

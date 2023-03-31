@@ -18,7 +18,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-
 @ExperimentalCoroutinesApi
 class GetChannelBountiesUseCaseTest {
     private val bountyRepository = mockk<BountyRepository>(relaxed = true)
