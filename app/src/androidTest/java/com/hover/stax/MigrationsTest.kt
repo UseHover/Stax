@@ -18,6 +18,7 @@ package com.hover.stax
 import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.Migrations
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert
@@ -57,11 +58,11 @@ class MigrationsTest {
         val db = helper.createDatabase(TEST_DB, 50)
         db.execSQL(
             "INSERT INTO accounts (id, name, alias, logo_url, account_no, institutionId, " +
-                "institution_type, countryAlpha2, channelId, primary_color_hex, " +
-                "secondary_color_hex, isDefault, sim_subscription_id, institutionAccountName, " +
-                "latestBalance, latestBalanceTimestamp) " +
-                "VALUES ('1','M-PESA','M-PESA','https://stage.usehover.com/test-logo','','573732'," +
-                "'mmo','ke','662060','#39B54A','#FFFFFF','1','-1','','','1668429974096')"
+                    "institution_type, countryAlpha2, channelId, primary_color_hex, " +
+                    "secondary_color_hex, isDefault, sim_subscription_id, institutionAccountName, " +
+                    "latestBalance, latestBalanceTimestamp) " +
+                    "VALUES ('1','M-PESA','M-PESA','https://stage.usehover.com/test-logo','','573732'," +
+                    "'mmo','ke','662060','#39B54A','#FFFFFF','1','-1','','','1668429974096')"
         )
         db.close()
         val test = helper.runMigrationsAndValidate(TEST_DB, 51, true, Migrations.M50_51)
