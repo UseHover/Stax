@@ -26,7 +26,6 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.database.AppDatabase
 import com.hover.stax.transactions.StaxTransaction
 import java.io.IOException
 import java.util.concurrent.TimeUnit

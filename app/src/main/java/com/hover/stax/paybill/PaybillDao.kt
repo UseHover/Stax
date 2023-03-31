@@ -19,7 +19,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.hover.stax.storage.BaseDao
+import com.hover.stax.database.BaseDao
 import kotlinx.coroutines.flow.Flow
 
 @Dao

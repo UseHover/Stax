@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 52,
-    "identityHash": "8756113aaea0d9fa1da2862d807df714",
+    "identityHash": "4f5ae54d65579593f57976ff09849452",
     "entities": [
       {
         "tableName": "channels",
@@ -645,7 +645,7 @@
       },
       {
         "tableName": "paybills",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `business_name` TEXT, `business_no` TEXT, `account_no` TEXT, `action_id` TEXT DEFAULT '', `accountId` INTEGER NOT NULL, `logo_url` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, `channelId` INTEGER NOT NULL, `logo` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `business_name` TEXT, `business_no` TEXT, `account_no` TEXT, `action_id` TEXT DEFAULT '', `accountId` INTEGER NOT NULL, `logo_url` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, `channelId` INTEGER NOT NULL, `logo` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "name",
@@ -760,17 +760,6 @@
         ],
         "foreignKeys": [
           {
-            "table": "channels",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "channelId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
             "table": "accounts",
             "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
@@ -785,7 +774,7 @@
       },
       {
         "tableName": "merchants",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`business_name` TEXT, `till_no` TEXT NOT NULL, `action_id` TEXT DEFAULT '', `accountId` INTEGER NOT NULL, `channelId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `last_used_timestamp` INTEGER, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`business_name` TEXT, `till_no` TEXT NOT NULL, `action_id` TEXT DEFAULT '', `accountId` INTEGER NOT NULL, `channelId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `last_used_timestamp` INTEGER)",
         "fields": [
           {
             "fieldPath": "businessName",
@@ -857,19 +846,7 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_merchants_channelId` ON `${TABLE_NAME}` (`channelId`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "channels",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "channelId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "stax_users",
@@ -940,7 +917,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8756113aaea0d9fa1da2862d807df714')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4f5ae54d65579593f57976ff09849452')"
     ]
   }
 }

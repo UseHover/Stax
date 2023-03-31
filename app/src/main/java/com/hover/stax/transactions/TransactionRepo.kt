@@ -25,7 +25,6 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
-import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils

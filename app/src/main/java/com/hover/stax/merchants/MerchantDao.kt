@@ -18,7 +18,7 @@ package com.hover.stax.merchants
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
-import com.hover.stax.storage.BaseDao
+import com.hover.stax.database.BaseDao
 
 @Dao
 interface MerchantDao : BaseDao<Merchant> {

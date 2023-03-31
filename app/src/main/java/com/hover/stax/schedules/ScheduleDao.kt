@@ -20,7 +20,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Update
-import com.hover.stax.storage.BaseDao
+import com.hover.stax.database.BaseDao
 
 @Dao
 interface ScheduleDao : BaseDao<Schedule> {

@@ -26,7 +26,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.hover.stax.R
 import com.hover.stax.contacts.ContactDao
-import com.hover.stax.database.AppDatabase
 import com.hover.stax.home.MainActivity
 import com.hover.stax.schedules.Schedule.REQUEST_TYPE
 import java.util.concurrent.TimeUnit

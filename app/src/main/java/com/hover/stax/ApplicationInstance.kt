@@ -23,23 +23,21 @@ import com.appsflyer.AppsFlyerProperties
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
+import com.hover.stax.database.di.databaseModule
 import com.hover.stax.di.appModule
 import com.hover.stax.di.dataModule
 import com.hover.stax.di.datastoreModule
 import com.hover.stax.di.ktorModule
 import com.hover.stax.di.repositories
 import com.hover.stax.di.useCases
-import com.hover.stax.storage.channel.di.channelStorage
-import com.hover.stax.storage.sim.di.simInfoStorage
-import com.hover.stax.storage.user.di.userStorage
 import com.hover.stax.utils.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
-import java.util.*
-import kotlin.properties.Delegates
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
+import java.util.Locale
+import kotlin.properties.Delegates
 
 class ApplicationInstance : Application() {
 
@@ -71,7 +69,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + userStorage + channelStorage + simInfoStorage)
+            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + databaseModule)
         }
     }
 
@@ -87,7 +85,8 @@ class ApplicationInstance : Application() {
                 }
             }
 
-            override fun onConversionDataFail(errorMessage: String?) = Timber.d("Error getting conversion data: $errorMessage")
+            override fun onConversionDataFail(errorMessage: String?) =
+                Timber.d("Error getting conversion data: $errorMessage")
 
             override fun onAppOpenAttribution(data: MutableMap<String, String>?) {
                 data?.keys?.forEach {
@@ -95,13 +94,16 @@ class ApplicationInstance : Application() {
                 }
             }
 
-            override fun onAttributionFailure(errorMessage: String?) = Timber.d("Error onAttributionFailure : $errorMessage")
+            override fun onAttributionFailure(errorMessage: String?) =
+                Timber.d("Error onAttributionFailure : $errorMessage")
         }
 
         AppsFlyerLib.getInstance().apply {
             init(getString(R.string.appsflyer_key), conversionListener, this@ApplicationInstance)
 
-            if (AppsFlyerProperties.getInstance().getString(AppsFlyerProperties.APP_USER_ID) == null)
+            if (AppsFlyerProperties.getInstance()
+                .getString(AppsFlyerProperties.APP_USER_ID) == null
+            )
                 setCustomerUserId(Hover.getDeviceId(this@ApplicationInstance))
 
             start(this@ApplicationInstance)
