@@ -16,23 +16,29 @@
 package com.hover.stax.database
 
 import androidx.room.TypeConverter
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.util.ArrayList
 
 class Converters {
 
     @TypeConverter
-    fun fromArray(strings: ArrayList<String>?): String? {
-        if (strings == null) return null
-        val string = StringBuilder()
-        for (s in strings) string.append(s).append(",")
-        return string.toString()
-    }
+    fun fromArray(value: ArrayList<String>?): String? = Json.encodeToString(value)
+//    fun fromArray(strings: ArrayList<String>?): String? {
+//        if (strings == null) return null
+//        val string = StringBuilder()
+//        for (s in strings) string.append(s).append(",")
+//        return string.toString()
+//    }
 
     @TypeConverter
-    fun toArray(concatenatedStrings: String?): ArrayList<String> {
-        return if (concatenatedStrings != null) ArrayList(
-            listOf(
-                *concatenatedStrings.split(",").toTypedArray()
-            )
-        ) else ArrayList()
-    }
+    fun toArray(value: String?) = value?.let { Json.decodeFromString<ArrayList<String>>(it) }
+//    fun toArray(concatenatedStrings: String?): ArrayList<String> {
+//        return if (concatenatedStrings != null) ArrayList(
+//            listOf(
+//                *concatenatedStrings.split(",").toTypedArray()
+//            )
+//        ) else ArrayList()
+//    }
 }

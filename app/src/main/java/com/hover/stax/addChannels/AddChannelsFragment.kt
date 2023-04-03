@@ -34,7 +34,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
-import com.hover.stax.storage.channel.entity.Channel
+import com.hover.stax.database.channel.entity.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding

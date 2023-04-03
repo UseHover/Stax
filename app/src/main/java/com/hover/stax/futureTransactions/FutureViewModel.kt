@@ -23,8 +23,8 @@ import com.hover.stax.requests.Request
 import com.hover.stax.requests.RequestRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleRepo
-import com.hover.stax.storage.channel.entity.Channel
-import com.hover.stax.storage.channel.repository.ChannelRepository
+import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.channel.repository.ChannelRepository
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

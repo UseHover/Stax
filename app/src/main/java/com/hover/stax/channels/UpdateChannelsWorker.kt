@@ -23,9 +23,8 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkerParameters
 import com.hover.stax.R
-import com.hover.stax.storage.channel.repository.ChannelRepository
-import java.io.IOException
-import java.util.concurrent.TimeUnit
+import com.hover.stax.database.channel.repository.ChannelRepository
+import com.hover.stax.database.channel.repository.ChannelRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -35,6 +34,8 @@ import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class UpdateChannelsWorker(
     context: Context,
@@ -49,7 +50,7 @@ class UpdateChannelsWorker(
             val channelsJson = downloadChannels(url)
             if (channelsJson != null) {
                 val data: JSONArray = channelsJson.getJSONArray("data")
-                ChannelUtil.load(data, channelRepository, applicationContext)
+                ChannelRepositoryImpl.ChannelUtil.load(data, channelRepository, applicationContext)
                 Timber.v("Successfully Updated channels")
                 Result.success()
             } else {

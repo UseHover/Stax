@@ -17,8 +17,6 @@ package com.hover.stax.database.channel.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.hover.stax.database.BaseDao
@@ -65,9 +63,6 @@ interface ChannelDao : BaseDao<Channel> {
 
     @get:Query("SELECT COUNT(id) FROM channels WHERE institution_type == 'telecom' AND published = 1")
     val publishedTelecomDataCount: Int
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(channel: Channel?)
 
     @Update
     fun update(channel: Channel)

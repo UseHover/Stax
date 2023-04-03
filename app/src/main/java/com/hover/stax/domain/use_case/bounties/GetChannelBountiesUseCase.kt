@@ -21,7 +21,7 @@ import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.domain.model.Resource
 import com.hover.stax.domain.repository.BountyRepository
-import com.hover.stax.storage.channel.repository.ChannelRepository
+import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.transactions.TransactionRepo
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers

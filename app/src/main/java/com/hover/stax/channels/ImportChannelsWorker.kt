@@ -28,7 +28,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.hover.stax.R
-import com.hover.stax.storage.channel.repository.ChannelRepository
+import com.hover.stax.database.channel.repository.ChannelRepository
 import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -57,7 +57,8 @@ class ImportChannelsWorker(
             parseChannelJson()?.let {
                 val channelsJson = JSONObject(it)
                 val data: JSONArray = channelsJson.getJSONArray("data")
-                ChannelUtil.load(data, channelRepository, applicationContext)
+                // todo - fix me
+//                ChannelUtils.load(data, channelRepository, applicationContext)
 
                 Timber.i("Channels imported successfully")
                 Result.success()

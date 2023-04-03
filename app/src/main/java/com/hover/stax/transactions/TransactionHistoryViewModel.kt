@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.storage.channel.repository.ChannelRepository
+import com.hover.stax.database.channel.repository.ChannelRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

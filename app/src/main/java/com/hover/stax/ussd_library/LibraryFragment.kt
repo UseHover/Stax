@@ -29,7 +29,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.storage.channel.entity.Channel
+import com.hover.stax.database.channel.entity.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
 import com.hover.stax.presentation.home.components.TopBar

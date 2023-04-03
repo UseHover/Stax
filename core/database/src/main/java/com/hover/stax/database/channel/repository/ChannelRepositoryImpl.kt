@@ -28,7 +28,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 
-internal class ChannelRepositoryImpl(
+class ChannelRepositoryImpl(
     private val channelDao: ChannelDao,
     private val simInfoRepository: SimInfoRepository
 ) : ChannelRepository {

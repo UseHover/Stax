@@ -39,6 +39,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
+import com.hover.stax.database.AppDatabase
 
 class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 

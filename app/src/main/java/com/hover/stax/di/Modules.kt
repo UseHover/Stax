@@ -83,6 +83,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import com.hover.stax.database.AppDatabase
 
 const val TIMEOUT = 10_000
 

@@ -23,6 +23,8 @@ dependencies {
     // DI
     implementation(libs.bundles.koin)
 
+    implementation(libs.kotlinx.serialization)
+
     // Logging
     implementation(libs.timber)
 

@@ -16,6 +16,7 @@
 package com.hover.stax.contacts
 
 import androidx.lifecycle.LiveData
+import com.hover.stax.database.AppDatabase
 import com.hover.stax.utils.AnalyticsUtil
 
 class ContactRepo(db: AppDatabase) {
@@ -55,7 +56,11 @@ class ContactRepo(db: AppDatabase) {
                 try {
                     contactDao.insert(contact)
                 } catch (e: Exception) {
-                    AnalyticsUtil.logErrorAndReportToFirebase("ContactRepo", "failed to insert contact", e)
+                    AnalyticsUtil.logErrorAndReportToFirebase(
+                        "ContactRepo",
+                        "failed to insert contact",
+                        e
+                    )
                 }
             } else contactDao.updateStaxContact(contact)
         }

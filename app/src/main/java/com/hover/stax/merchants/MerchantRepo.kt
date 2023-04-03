@@ -16,6 +16,7 @@
 package com.hover.stax.merchants
 
 import androidx.lifecycle.LiveData
+import com.hover.stax.database.AppDatabase
 
 class MerchantRepo(db: AppDatabase) {
 

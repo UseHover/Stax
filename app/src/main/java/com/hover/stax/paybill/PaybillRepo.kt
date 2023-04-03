@@ -15,6 +15,7 @@
  */
 package com.hover.stax.paybill
 
+import com.hover.stax.database.AppDatabase
 import kotlinx.coroutines.flow.Flow
 
 class PaybillRepo(db: AppDatabase) {

@@ -25,6 +25,7 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.model.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
@@ -34,7 +35,8 @@ import timber.log.Timber
 class TransactionRepo(db: AppDatabase, hoverDb: HoverRoomDatabase) {
 
     private val transactionDao: TransactionDao = db.transactionDao()
-    private val hoverTransactionDao: com.hover.sdk.transactions.TransactionDao = hoverDb.transactionDao()
+    private val hoverTransactionDao: com.hover.sdk.transactions.TransactionDao =
+        hoverDb.transactionDao()
 
     val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction>>?
         get() = transactionDao.getCompleteAndPendingTransfers()
@@ -57,7 +59,13 @@ class TransactionRepo(db: AppDatabase, hoverDb: HoverRoomDatabase) {
 
     @SuppressLint("DefaultLocale")
     suspend fun hasTransactionLastMonth(): Boolean {
-        return transactionDao.getTransactionCount(String.format("%02d", DateUtils.lastMonth().first), DateUtils.lastMonth().second.toString())!! > 0
+        return transactionDao.getTransactionCount(
+            String.format(
+                "%02d",
+                DateUtils.lastMonth().first
+            ),
+            DateUtils.lastMonth().second.toString()
+        )!! > 0
     }
 
     fun getAccountTransactions(account: Account): LiveData<List<StaxTransaction>>? {
@@ -66,7 +74,11 @@ class TransactionRepo(db: AppDatabase, hoverDb: HoverRoomDatabase) {
 
     @SuppressLint("DefaultLocale")
     fun getSpentAmount(accountId: Int, month: Int, year: Int): LiveData<Double>? {
-        return transactionDao.getTotalAmount(accountId, String.format("%02d", month), year.toString())
+        return transactionDao.getTotalAmount(
+            accountId,
+            String.format("%02d", month),
+            year.toString()
+        )
     }
 
     @SuppressLint("DefaultLocale")
@@ -78,9 +90,11 @@ class TransactionRepo(db: AppDatabase, hoverDb: HoverRoomDatabase) {
         return transactionDao.getTransaction(uuid)
     }
 
-    fun getTransactionAsync(uuid: String): Flow<StaxTransaction> = transactionDao.getTransactionAsync(uuid)
+    fun getTransactionAsync(uuid: String): Flow<StaxTransaction> =
+        transactionDao.getTransactionAsync(uuid)
 
-    fun deleteAccountTransactions(accountId: Int) = transactionDao.deleteAccountTransactions(accountId)
+    fun deleteAccountTransactions(accountId: Int) =
+        transactionDao.deleteAccountTransactions(accountId)
 
     fun insertOrUpdateTransaction(
         intent: Intent,
@@ -93,18 +107,30 @@ class TransactionRepo(db: AppDatabase, hoverDb: HoverRoomDatabase) {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
                 Timber.e("Found t uuid: ${t?.uuid}")
                 if (t == null) {
-                    AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true)
+                    AnalyticsUtil.logAnalyticsEvent(
+                        c.getString(R.string.transaction_started),
+                        c,
+                        true
+                    )
                     t = StaxTransaction(intent, action, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
                 } else {
-                    AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
+                    AnalyticsUtil.logAnalyticsEvent(
+                        c.getString(R.string.transaction_completed),
+                        c,
+                        true
+                    )
                     t.update(intent, contact)
                     transactionDao.updateTransaction(t)
                 }
                 Timber.e("save t with uuid: %s", t?.uuid)
             } catch (e: Exception) {
-                AnalyticsUtil.logErrorAndReportToFirebase(TransactionRepo::class.java.simpleName, e.message, e)
+                AnalyticsUtil.logErrorAndReportToFirebase(
+                    TransactionRepo::class.java.simpleName,
+                    e.message,
+                    e
+                )
             }
         }
     }

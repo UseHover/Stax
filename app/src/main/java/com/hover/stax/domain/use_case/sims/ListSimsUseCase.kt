@@ -20,7 +20,7 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.storage.sim.repository.SimInfoRepository
+import com.hover.stax.database.sim.repository.SimInfoRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
