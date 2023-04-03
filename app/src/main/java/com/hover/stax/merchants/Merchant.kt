@@ -19,7 +19,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.hover.stax.channels.Channel
+import com.hover.stax.database.channel.entity.Channel
 import javax.annotation.Nullable
 
 @Entity(

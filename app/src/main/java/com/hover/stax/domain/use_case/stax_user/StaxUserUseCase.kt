@@ -15,8 +15,8 @@
  */
 package com.hover.stax.domain.use_case.stax_user
 
-import com.hover.stax.storage.user.entity.StaxUser
-import com.hover.stax.storage.user.repository.StaxUserRepository
+import com.hover.stax.database.user.entity.StaxUser
+import com.hover.stax.database.user.repository.StaxUserRepository
 
 class StaxUserUseCase(private val staxUserRepository: StaxUserRepository) {
 

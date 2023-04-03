@@ -19,7 +19,7 @@ import android.util.Base64
 import com.hover.stax.data.remote.dto.StaxUserDto
 import com.hover.stax.data.remote.dto.authorization.TokenData
 import com.hover.stax.data.remote.dto.toStaxUser
-import com.hover.stax.storage.user.entity.StaxUser
+import com.hover.stax.database.user.entity.StaxUser
 import java.io.UnsupportedEncodingException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
