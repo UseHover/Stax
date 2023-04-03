@@ -20,14 +20,15 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.hover.stax.channels.Channel
+import androidx.room.TypeConverters
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountDao
-import com.hover.stax.data.local.channels.ChannelDao
-import com.hover.stax.storage.user.dao.user.UserDao
+import com.hover.stax.database.channel.dao.ChannelDao
+import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.user.dao.UserDao
+import com.hover.stax.database.user.entity.StaxUser
 import com.hover.stax.domain.model.Account
-import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantDao
 import com.hover.stax.paybill.Paybill
@@ -57,7 +58,7 @@ import java.util.concurrent.Executors
         AutoMigration(from = 49, to = 50)
     ]
 )
-
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun channelDao(): ChannelDao

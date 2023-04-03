@@ -34,6 +34,11 @@ build-logic/build
 build-logic/.gradle
 build-logic/convention/build
 
+core/build
+core/network/build
+core/resources/build
+core/database/build
+
 #Fastlane
 fastlane/report.xml
 fastlane/README.md

@@ -8,22 +8,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
-import com.hover.stax.database.Converters;
 import com.hover.stax.utils.DateUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +28,6 @@ import java.util.UUID;
 import timber.log.Timber;
 
 @Entity(tableName = "stax_contacts", indices = {@Index(value = "id", unique = true), @Index(value = "phone_number", unique = true)})
-@TypeConverters({Converters.class})
 public class StaxContact {
     public final static String ID_KEY = "contact_id",
             RECIPIENT_PHONE_KEY = "recipientPhone", RECIPIENT_ACCOUNT_KEY = "recipientAccount", RECIPIENT_NAME_KEY = "recipientName",
@@ -127,14 +121,14 @@ public class StaxContact {
     @SuppressWarnings("unchecked")
     private static StaxContact checkOutKeys(Intent intent, String countryAlpha2, ContactRepo dr) {
         HashMap<String, String> outExtras = (HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-         if (outExtras != null && outExtras.containsKey(RECIPIENT_PHONE_KEY))
+        if (outExtras != null && outExtras.containsKey(RECIPIENT_PHONE_KEY))
             return getContactByPhoneValue(outExtras, RECIPIENT_PHONE_KEY, countryAlpha2, dr);
         else if (outExtras != null && outExtras.containsKey(RECIPIENT_ACCOUNT_KEY))
             return dr.getContactByPhone(outExtras.get(RECIPIENT_ACCOUNT_KEY));
         else if (outExtras != null && outExtras.containsKey(SENDER_PHONE_KEY))
-             return getContactByPhoneValue(outExtras, SENDER_PHONE_KEY, countryAlpha2, dr);
+            return getContactByPhoneValue(outExtras, SENDER_PHONE_KEY, countryAlpha2, dr);
         else if (outExtras != null && outExtras.containsKey(SENDER_ACCOUNT_KEY))
-             return dr.getContactByPhone(outExtras.get(SENDER_ACCOUNT_KEY));
+            return dr.getContactByPhone(outExtras.get(SENDER_ACCOUNT_KEY));
         return null;
     }
 

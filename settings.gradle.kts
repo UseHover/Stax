@@ -36,9 +36,8 @@ dependencyResolutionManagement {
 rootProject.name = "Stax"
 include(":app")
 
-include(":core")
 include(":core:network")
-include(":core:storage")
+include(":core:database")
 include(":core:resources")
 
 include(":features")

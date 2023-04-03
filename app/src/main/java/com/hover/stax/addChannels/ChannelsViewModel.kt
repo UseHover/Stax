@@ -20,47 +20,47 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.google.firebase.messaging.FirebaseMessaging
-import com.hover.sdk.api.ActionApi
-import com.hover.sdk.api.Hover
-import com.hover.sdk.sims.SimInfo
-import com.hover.stax.R
-import com.hover.stax.channels.Channel
-import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.data.local.SimRepo
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.channels.ChannelRepo
-import com.hover.stax.domain.model.Account
-import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Utils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel as KChannel
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.firebase.messaging.FirebaseMessaging
+import com.hover.sdk.api.ActionApi
+import com.hover.sdk.api.Hover
+import com.hover.sdk.sims.SimInfo
+import com.hover.stax.R
+import com.hover.stax.countries.CountryAdapter
+import com.hover.stax.data.local.accounts.AccountRepo
+import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.channel.repository.ChannelRepository
+import com.hover.stax.database.sim.repository.SimInfoRepository
+import com.hover.stax.domain.model.Account
+import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Utils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import kotlinx.coroutines.channels.Channel as KChannel
 
 class ChannelsViewModel(
     application: Application,
-    val repo: ChannelRepo,
-    val simRepo: SimRepo,
-    val accountRepo: AccountRepo,
+    private val channelRepository: ChannelRepository,
+    private val simRepository: SimInfoRepository,
+    private val accountRepo: AccountRepo,
     val actionRepo: ActionRepo
 ) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
-    val allChannels: LiveData<List<Channel>> = repo.publishedNonTelecomChannels
+    val allChannels: LiveData<List<Channel>> = channelRepository.publishedNonTelecomChannels
 
     var sims = MutableLiveData<List<SimInfo>>()
     var simCountryList: LiveData<List<String>> = MutableLiveData()
@@ -100,11 +100,14 @@ class ChannelsViewModel(
     }
 
     private fun loadSims() {
-        viewModelScope.launch(Dispatchers.IO) { sims.postValue(simRepo.getPresentSims()) }
+        viewModelScope.launch(Dispatchers.IO) { sims.postValue(simRepository.getPresentSims()) }
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(getApplication())
-                .registerReceiver(it, IntentFilter(Utils.getPackage(getApplication()).plus(".NEW_SIM_INFO_ACTION")))
+                .registerReceiver(
+                    it,
+                    IntentFilter(Utils.getPackage(getApplication()).plus(".NEW_SIM_INFO_ACTION"))
+                )
         }
 
         Hover.updateSimInfo(getApplication())
@@ -114,7 +117,7 @@ class ChannelsViewModel(
         simReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 viewModelScope.launch {
-                    sims.postValue(simRepo.getPresentSims())
+                    sims.postValue(simRepository.getPresentSims())
                 }
             }
         }
@@ -139,7 +142,7 @@ class ChannelsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (countryCodes.isNotEmpty()) {
                 for (code in countryCodes) {
-                    if (repo.getChannelsByCountry(code).isNotEmpty())
+                    if (channelRepository.getChannelsByCountry(code).isNotEmpty())
                         updateCountry(code)
                 }
             }
@@ -177,11 +180,18 @@ class ChannelsViewModel(
         val args = JSONObject()
 
         try {
-            args.put((getApplication() as Context).getString(R.string.added_channel_id), account.channelId)
+            args.put(
+                (getApplication() as Context).getString(R.string.added_channel_id),
+                account.channelId
+            )
         } catch (ignored: Exception) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.new_channel_selected), args, getApplication() as Context)
+        AnalyticsUtil.logAnalyticsEvent(
+            (getApplication() as Context).getString(R.string.new_channel_selected),
+            args,
+            getApplication() as Context
+        )
     }
 
     fun payWith(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
@@ -194,7 +204,7 @@ class ChannelsViewModel(
     }
 
     private fun createAccount(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        val channel = repo.getChannel(channelId)
+        val channel = channelRepository.getChannel(channelId)
         channel?.let { createAccounts(listOf(it)) }
 
         accountCreatedEvent.emit(true)
@@ -240,12 +250,13 @@ class ChannelsViewModel(
     }
 
     private fun runFilter(channels: List<Channel>, value: String?) {
-        filteredChannels.value = channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) }
+        filteredChannels.value =
+            channels.filter { standardizeString(it.toString()).contains(standardizeString(value)) }
     }
 
     fun updateChannel(channel: Channel) {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.update(channel)
+            channelRepository.update(channel)
         }
     }
 

@@ -26,7 +26,6 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.database.AppDatabase
 import com.hover.stax.transactions.StaxTransaction
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -40,6 +39,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
+import com.hover.stax.database.AppDatabase
 
 class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 

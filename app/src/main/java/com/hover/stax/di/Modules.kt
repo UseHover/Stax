@@ -26,22 +26,17 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.contacts.ContactRepo
-import com.hover.stax.data.local.SimRepo
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.data.local.parser.ParserRepo
 import com.hover.stax.data.remote.StaxApi
 import com.hover.stax.data.repository.AccountRepositoryImpl
 import com.hover.stax.data.repository.AuthRepositoryImpl
 import com.hover.stax.data.repository.BountyRepositoryImpl
-import com.hover.stax.data.repository.ChannelRepositoryImpl
 import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
-import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.repository.BountyRepository
-import com.hover.stax.domain.repository.ChannelRepository
 import com.hover.stax.domain.repository.FinancialTipsRepository
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
@@ -88,6 +83,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import com.hover.stax.database.AppDatabase
 
 const val TIMEOUT = 10_000
 
@@ -121,9 +117,10 @@ val dataModule = module {
     single { AppDatabase.getInstance(androidApplication()) }
     single { HoverRoomDatabase.getInstance(androidApplication()) }
     single { get<AppDatabase>().userDao() }
+    single { get<AppDatabase>().channelDao() }
+    single { get<HoverRoomDatabase>().simDao() }
 
     singleOf(::TransactionRepo)
-    singleOf(::ChannelRepo)
     singleOf(::ActionRepo)
     singleOf(::ContactRepo)
     singleOf(::AccountRepo)
@@ -132,7 +129,6 @@ val dataModule = module {
     singleOf(::PaybillRepo)
     singleOf(::MerchantRepo)
     singleOf(::ParserRepo)
-    singleOf(::SimRepo)
 
     singleOf(::StaxApi)
 }
@@ -180,7 +176,6 @@ val repositories = module {
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
 
     singleOf(::FinancialTipsRepositoryImpl) { bind<FinancialTipsRepository>() }
-    singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
 
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
 }

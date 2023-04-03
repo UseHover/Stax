@@ -21,10 +21,10 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.Account
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.Flow
 import org.json.JSONObject
@@ -33,7 +33,7 @@ import org.koin.core.component.inject
 
 class AccountRepositoryImpl(
     val accountRepo: AccountRepo,
-    private val channelRepo: ChannelRepo,
+    private val channelRepository: ChannelRepository,
     val actionRepo: ActionRepo
 ) :
     AccountRepository, PushNotificationTopicsInterface, KoinComponent {
@@ -45,7 +45,7 @@ class AccountRepositoryImpl(
 
     override suspend fun createAccount(sim: SimInfo): Account {
         var account = Account(generateSimBasedName(sim), generateSimBasedAlias(sim))
-        channelRepo.getTelecom(sim.osReportedHni)?.let {
+        channelRepository.getTelecom(sim.osReportedHni)?.let {
             account = Account(account.userAlias, it, false, sim.subscriptionId)
             accountRepo.insert(account)
         }

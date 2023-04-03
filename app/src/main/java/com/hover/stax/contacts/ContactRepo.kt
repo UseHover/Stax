@@ -56,7 +56,11 @@ class ContactRepo(db: AppDatabase) {
                 try {
                     contactDao.insert(contact)
                 } catch (e: Exception) {
-                    AnalyticsUtil.logErrorAndReportToFirebase("ContactRepo", "failed to insert contact", e)
+                    AnalyticsUtil.logErrorAndReportToFirebase(
+                        "ContactRepo",
+                        "failed to insert contact",
+                        e
+                    )
                 }
             } else contactDao.updateStaxContact(contact)
         }

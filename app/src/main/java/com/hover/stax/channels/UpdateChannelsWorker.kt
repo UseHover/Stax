@@ -17,34 +17,40 @@ package com.hover.stax.channels
 
 import android.content.Context
 import androidx.work.Constraints
+import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.hover.stax.R
-import com.hover.stax.database.AppDatabase
-import java.io.IOException
-import java.util.concurrent.TimeUnit
+import com.hover.stax.database.channel.repository.ChannelRepository
+import com.hover.stax.database.channel.repository.ChannelRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
-class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
+class UpdateChannelsWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params), KoinComponent {
 
     private val client = OkHttpClient()
-    private val channelDao = AppDatabase.getInstance(context).channelDao()
+    private val channelRepository: ChannelRepository by inject()
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         return try {
             val channelsJson = downloadChannels(url)
             if (channelsJson != null) {
                 val data: JSONArray = channelsJson.getJSONArray("data")
-                Channel.load(data, channelDao, applicationContext)
+                ChannelRepositoryImpl.ChannelUtil.load(data, channelRepository, applicationContext)
                 Timber.v("Successfully Updated channels")
                 Result.success()
             } else {
@@ -60,7 +66,9 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
         }
     }
 
-    private val url get() = applicationContext.getString(R.string.maathai_api_url).plus(applicationContext.getString(R.string.channels_endpoint))
+    private val url
+        get() = applicationContext.getString(R.string.maathai_api_url)
+            .plus(applicationContext.getString(R.string.channels_endpoint))
 
     private fun downloadChannels(url: String): JSONObject? {
         val request: Request = Request.Builder().url(url).build()
@@ -72,7 +80,8 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
         const val CHANNELS_WORK_ID = "CHANNELS"
         const val TAG = "UpdateChannelsWorker"
 
-        private val netConstraint = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        private val netConstraint =
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
 
         fun makeToil(): PeriodicWorkRequest {
             return PeriodicWorkRequest.Builder(UpdateChannelsWorker::class.java, 7, TimeUnit.DAYS)

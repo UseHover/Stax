@@ -7,12 +7,13 @@ room = "2.5.0"
 ktor = "2.2.2"
 glide = "4.14.2"
 androidGradlePlugin = "7.3.1"
-kotlin = "1.7.10"
+kotlin = "1.8.0"
 ktlint = "10.2.0"
 detekt = "1.18.0-RC2"
 spotless = "6.0.0"
 dokka = "1.7.10"
 serialization = "1.6.21"
+ksp = "1.8.0-1.0.9"
 
 [libraries]
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -42,7 +43,7 @@ lifecycle-runtime = "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 activity-compose = "androidx.activity:activity-compose:1.6.1"
 core-ktx = "androidx.core:core-ktx:1.9.0"
 lifecycle-viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
-kotlin-stdlib = "org.jetbrains.kotlin:kotlin-stdlib:1.0.0"
+kotlin-stdlib = "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
 lifecycle-common = "androidx.lifecycle:lifecycle-common-java8:2.5.1"
 splashscreen = "androidx.core:core-splashscreen:1.0.0"
 preference = "androidx.preference:preference-ktx:1.2.0"
@@ -57,9 +58,9 @@ uxcam = "com.uxcam:uxcam:3.5.1"
 koin = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
-room = { module = "androidx.room:room-ktx", version.ref = "room" }
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-test = { module = "androidx.room:room-testing", version.ref = "room" }
 
 auth = "com.google.android.gms:play-services-auth:20.4.1"
@@ -106,16 +107,17 @@ espresso = "androidx.test.espresso:espresso-core:3.5.1"
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
 [bundles]
 compose = ["compose-ui", "compose-material", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist"]
 google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "splashscreen", "preference", "legacy-support"]
 logging = ["timber", "amplitude", "appsflyer", "installreferrer", "uxcam"]
 koin = ["koin", "koin-compose"]
-room = ["room", "room-runtime"]
 network = ["ktor-client-core", "ktor-client-android", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization", "ktor-client", "kotlinx-serialization", "grpc"]
 image = ["glide", "coil"]
 hover = ["volley", "play-services", "picasso", "sentry"]
 test = ["junit", "robolectric", "test-core-ktx", "fixture", "truth", "mockk", "ktor-client-mock", "espresso", "compose-test"]
 
 [plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

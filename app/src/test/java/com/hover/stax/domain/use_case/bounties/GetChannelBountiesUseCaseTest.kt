@@ -1,23 +1,38 @@
+/*
+ * Copyright 2023 Stax
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.hover.stax.domain.use_case.bounties
 
 import com.google.common.truth.Truth
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
-import com.hover.stax.channels.Channel
+import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
 import com.hover.stax.domain.repository.BountyRepository
-import com.hover.stax.domain.repository.ChannelRepository
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionRepo
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-
 
 @ExperimentalCoroutinesApi
 class GetChannelBountiesUseCaseTest {

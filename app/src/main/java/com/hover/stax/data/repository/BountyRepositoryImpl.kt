@@ -16,7 +16,7 @@
 package com.hover.stax.data.repository
 
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.channels.Channel
+import com.hover.stax.database.channel.entity.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Bounty
