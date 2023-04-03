@@ -50,4 +50,7 @@ interface BaseDao<T> {
 
     @Delete
     suspend fun delete(item: T)
+
+    @Delete
+    suspend fun delete(items: List<T>)
 }
