@@ -99,6 +99,7 @@ test-core-ktx = "androidx.test:core-ktx:1.5.0"
 fixture = "com.appmattus.fixture:fixture:1.2.0"
 truth = "com.google.truth:truth:1.1.3"
 mockk = "io.mockk:mockk:1.13.2"
+arch-core-testing = "androidx.arch.core:core-testing:2.2.0"
 compose-test = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 
 junit-androidx = "androidx.test.ext:junit:1.1.5"
@@ -117,7 +118,7 @@ koin = ["koin", "koin-compose"]
 network = ["ktor-client-core", "ktor-client-android", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization", "ktor-client", "kotlinx-serialization", "grpc"]
 image = ["glide", "coil"]
 hover = ["volley", "play-services", "picasso", "sentry"]
-test = ["junit", "robolectric", "test-core-ktx", "fixture", "truth", "mockk", "ktor-client-mock", "espresso", "compose-test"]
+test = ["junit", "robolectric", "test-core-ktx", "fixture", "truth", "mockk", "ktor-client-mock", "espresso", "compose-test", "arch-core-testing"]
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
