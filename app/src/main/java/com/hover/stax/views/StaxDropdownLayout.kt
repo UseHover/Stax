@@ -34,7 +34,7 @@ open class StaxDropdownLayout(context: Context, attrs: AttributeSet) : AbstractS
     lateinit var autoCompleteTextView: AutoCompleteTextView
     private var hint: String? = null
     private var defaultText: String? = null
-    private var editable = false
+    private var inputType:String? = null
     private var imeOptions = 0
 
     @CallSuper
@@ -43,7 +43,7 @@ open class StaxDropdownLayout(context: Context, attrs: AttributeSet) : AbstractS
         try {
             hint = a.getString(R.styleable.StaxDropdownLayout_android_hint)
             defaultText = a.getString(R.styleable.StaxDropdownLayout_android_text)
-            editable = a.getBoolean(R.styleable.StaxDropdownLayout_android_editable, false)
+            inputType = a.getString(R.styleable.StaxDropdownLayout_android_inputType)
             imeOptions = a.getInt(R.styleable.StaxDropdownLayout_android_imeOptions, 0)
         } finally {
             a.recycle()
@@ -67,7 +67,7 @@ open class StaxDropdownLayout(context: Context, attrs: AttributeSet) : AbstractS
     private fun fillAttrs() {
         if (hint != null) (findViewById<View>(R.id.inputLayout) as TextInputLayout).hint = hint
         autoCompleteTextView.inputType =
-            if (editable) InputType.TYPE_TEXT_VARIATION_FILTER else InputType.TYPE_NULL
+            if (inputType !=null) InputType.TYPE_CLASS_PHONE else InputType.TYPE_NULL
         if (!defaultText.isNullOrEmpty()) autoCompleteTextView.setText(
             defaultText
         )

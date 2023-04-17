@@ -36,7 +36,7 @@
 
     <declare-styleable name="StaxDropdownLayout">
         <attr name="android:hint" />
-        <attr name="android:editable" />
+        <attr name="android:inputType" />
         <attr name="android:text" />
         <attr name="android:imeOptions" />
     </declare-styleable>
