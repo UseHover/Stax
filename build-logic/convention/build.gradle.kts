@@ -29,6 +29,10 @@ gradlePlugin {
             id = "stax.android.library.jacoco"
             implementationClass = "AndroidLibraryJacocoConventionPlugin"
         }
+        register("androidHilt") {
+            id = "stax.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
         register("androidRoom") {
             id = "stax.android.room"
             implementationClass = "AndroidRoomConventionPlugin"

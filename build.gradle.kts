@@ -10,6 +10,7 @@ plugins {
     id("com.diffplug.spotless") version "6.11.0"
     id("org.jetbrains.dokka") version "1.7.20"
     kotlin("plugin.serialization") version "1.6.21"
+    alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.org.jetbrains.kotlin.jvm) apply false
 }

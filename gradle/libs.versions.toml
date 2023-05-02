@@ -4,6 +4,7 @@ core = "1.10.3"
 koin = "3.2.0"
 kotlinxCoroutinesPlayServices = "1.6.4"
 room = "2.5.0"
+hilt = "2.45"
 ktor = "2.2.2"
 glide = "4.14.2"
 androidGradlePlugin = "7.3.1"
@@ -67,6 +68,10 @@ uxcam = "com.uxcam:uxcam:3.5.1"
 
 koin = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -141,5 +146,6 @@ test = ["junit", "robolectric", "test-core-ktx", "fixture", "truth", "mockk", "k
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version = "2.44.2" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin180" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }

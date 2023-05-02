@@ -33,13 +33,15 @@ import com.hover.stax.di.useCases
 import com.hover.stax.utils.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
+import dagger.hilt.android.HiltAndroidApp
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 import java.util.Locale
 import kotlin.properties.Delegates
 
-class ApplicationInstance : Application() {
+@HiltAndroidApp
+class Stax : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -68,7 +70,7 @@ class ApplicationInstance : Application() {
 
     private fun initDI() {
         startKoin {
-            androidContext(this@ApplicationInstance)
+            androidContext(this@Stax)
             modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + databaseModule)
         }
     }
@@ -99,14 +101,14 @@ class ApplicationInstance : Application() {
         }
 
         AppsFlyerLib.getInstance().apply {
-            init(getString(R.string.appsflyer_key), conversionListener, this@ApplicationInstance)
+            init(getString(R.string.appsflyer_key), conversionListener, this@Stax)
 
             if (AppsFlyerProperties.getInstance()
                 .getString(AppsFlyerProperties.APP_USER_ID) == null
             )
-                setCustomerUserId(Hover.getDeviceId(this@ApplicationInstance))
+                setCustomerUserId(Hover.getDeviceId(this@Stax))
 
-            start(this@ApplicationInstance)
+            start(this@Stax)
         }
     }
 

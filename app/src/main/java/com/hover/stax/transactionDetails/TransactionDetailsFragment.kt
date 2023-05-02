@@ -36,7 +36,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.ApplicationInstance
+import com.hover.stax.Stax
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
@@ -68,7 +68,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
     private var _binding: FragmentTransactionBinding? = null
     private val binding get() = _binding!!
 
-    private val retryCounter = ApplicationInstance.txnDetailsRetryCounter
+    private val retryCounter = Stax.txnDetailsRetryCounter
 
     private val args: TransactionDetailsFragmentArgs by navArgs()
 
