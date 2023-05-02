@@ -34,14 +34,22 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Stax"
+
 include(":app")
 
-include(":core:network")
-include(":core:database")
-include(":core:resources")
+include(":internal:network")
+include(":internal:database")
+include(":internal:resources")
 
 include(":features")
 include(":features:user-profile")
 include(":features:transactions")
 
 include(":hover.sdk")
+include(":internal:analytics")
+include(":internal:remoteconfig")
+include(":internal:sync")
+include(":internal:testing")
+include(":internal:ui")
+include(":internal:datastore")
+include(":internal:model")
