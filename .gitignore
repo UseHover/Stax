@@ -4,6 +4,7 @@
 /local.properties
 /.idea/caches
 /.idea/libraries
+/.idea/compiler.xml
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
@@ -34,10 +35,21 @@ build-logic/build
 build-logic/.gradle
 build-logic/convention/build
 
-core/build
-core/network/build
-core/resources/build
-core/database/build
+internal/build
+internal/analytics/build
+internal/database/build
+internal/datastore/build
+internal/model/build
+internal/network/build
+internal/remoteconfig/build
+internal/resources/build
+internal/sync/build
+internal/testing/build
+internal/ui/build
+
+features/build
+features/transactions/build
+features/user-profile/build
 
 #Fastlane
 fastlane/report.xml

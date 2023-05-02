@@ -14,6 +14,15 @@ spotless = "6.0.0"
 dokka = "1.7.10"
 serialization = "1.6.21"
 ksp = "1.8.0-1.0.9"
+agp = "7.3.1"
+kotlin180 = "1.8.0"
+core-ktx = "1.9.0"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+appcompat = "1.6.1"
+material = "1.8.0"
+org-jetbrains-kotlin-jvm = "1.8.0"
 
 [libraries]
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -80,6 +89,8 @@ phoenix = "com.jakewharton:process-phoenix:2.1.2"
 
 datastore = "androidx.datastore:datastore-preferences:1.0.0"
 
+datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
+
 libphonenumber = "com.googlecode.libphonenumber:libphonenumber:8.12.53"
 
 lingver = "com.github.YarikSOffice:lingver:1.3.0"
@@ -110,6 +121,12 @@ espresso = "androidx.test.espresso:espresso-core:3.5.1"
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+androidx-core-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+androidx-appcompat-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+com-google-android-material-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 compose = ["compose-ui", "compose-material", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist"]
@@ -123,3 +140,6 @@ test = ["junit", "robolectric", "test-core-ktx", "fixture", "truth", "mockk", "k
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin180" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }

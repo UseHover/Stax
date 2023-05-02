@@ -183,7 +183,7 @@ android {
 }
 
 dependencies {
-    implementation(project(path = ":core:database"))
+    implementation(project(path = ":internal:database"))
     // Modules
     implementation(project(path = ":features"))
 
