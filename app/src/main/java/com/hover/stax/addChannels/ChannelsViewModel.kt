@@ -35,9 +35,9 @@ import com.hover.stax.R
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
-import com.hover.stax.database.sim.repository.SimInfoRepository
+import com.hover.stax.data.sim.SimInfoRepository
 import com.hover.stax.domain.model.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
@@ -53,7 +53,7 @@ import kotlinx.coroutines.channels.Channel as KChannel
 class ChannelsViewModel(
     application: Application,
     private val channelRepository: ChannelRepository,
-    private val simRepository: SimInfoRepository,
+    private val simRepository: com.hover.stax.data.sim.SimInfoRepository,
     private val accountRepo: AccountRepo,
     val actionRepo: ActionRepo
 ) : AndroidViewModel(application),

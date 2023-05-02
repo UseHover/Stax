@@ -15,7 +15,31 @@
  */
 package com.hover.stax.database
 
+import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.hover.sdk.sims.SimInfoDao
+import com.hover.stax.database.converters.Converters
+import com.hover.stax.database.dao.ChannelDao
+import com.hover.stax.database.dao.UserDao
+import kotlinx.coroutines.channels.Channel
 
-@Suppress("UnnecessaryAbstractClass")
-abstract class StaxDatabase : RoomDatabase()
+@Database(
+    entities = [
+        Channel::class
+    ],
+    version = 1, // TODO - match previous database here
+    autoMigrations = [],
+    exportSchema = true,
+)
+@TypeConverters(
+    Converters::class
+)
+abstract class StaxDatabase : RoomDatabase() {
+
+    abstract fun channelDao(): ChannelDao
+
+    abstract fun simInfoDao(): SimInfoDao
+
+    abstract fun userDao(): UserDao
+}

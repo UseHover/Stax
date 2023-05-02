@@ -16,7 +16,8 @@
 package com.hover.stax.database.user.dao
 
 import com.google.common.truth.Truth.assertThat
-import com.hover.stax.database.user.entity.StaxUser
+import com.hover.stax.database.dao.UserDao
+import com.hover.stax.database.models.StaxUser
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coJustRun

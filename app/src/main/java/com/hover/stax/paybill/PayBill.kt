@@ -22,7 +22,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.domain.model.Account
-import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.models.Channel
 import javax.annotation.Nullable
 
 const val BUSINESS_NO = "businessNo"
