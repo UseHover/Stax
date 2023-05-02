@@ -16,6 +16,7 @@
 plugins {
     id("stax.android.library")
     id("stax.android.room")
+    id("stax.android.hilt")
 }
 
 dependencies {

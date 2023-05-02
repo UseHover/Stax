@@ -15,6 +15,7 @@
  */
 plugins {
     id("stax.android.library")
+    id("stax.android.hilt")
 }
 
 android {

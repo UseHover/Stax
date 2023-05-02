@@ -29,6 +29,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlinx-serialization")
     id("stax.android.room")
+    id("stax.android.hilt")
 }
 
 configurations.all {
