@@ -32,7 +32,7 @@ import com.hover.stax.data.remote.dto.UploadDto
 import com.hover.stax.data.remote.dto.UserUpdateDto
 import com.hover.stax.data.remote.dto.UserUploadDto
 import com.hover.stax.data.remote.dto.toStaxUser
-import com.hover.stax.storage.user.entity.StaxUser
+import com.hover.stax.database.user.entity.StaxUser
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.preferences.DefaultTokenProvider

@@ -854,5 +854,6 @@
     <string name="welcome">Welcome to Stax %1$s</string>
     <string name="welcome_back">Welcome back to Stax %1$s</string>
     <string name="signed_in_message">You are already signed in to Stax</string>
+    <string name="from_institution">Sender\'s institution</string>
 
 </resources>

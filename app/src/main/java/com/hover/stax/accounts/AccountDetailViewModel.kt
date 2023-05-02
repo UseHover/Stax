@@ -22,11 +22,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hover.stax.channels.Channel
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.data.local.channels.ChannelRepo
 import com.hover.stax.domain.model.Account
+import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryItem
 import com.hover.stax.transactions.TransactionRepo
@@ -38,7 +38,7 @@ class AccountDetailViewModel(
     val application: Application,
     val repo: AccountRepo,
     private val transactionRepo: TransactionRepo,
-    private val channelRepo: ChannelRepo,
+    private val channelRepository: ChannelRepository,
     val actionRepo: ActionRepo
 ) : ViewModel() {
 
@@ -54,7 +54,7 @@ class AccountDetailViewModel(
 
     init {
         account = Transformations.switchMap(id, repo::getLiveAccount)
-        channel = Transformations.switchMap(account) { it?.let { channelRepo.getLiveChannel(it.channelId) } }
+        channel = Transformations.switchMap(account) { it?.let { channelRepository.getLiveChannel(it.channelId) } }
         transactions = Transformations.switchMap(account) { it?.let { transactionRepo.getAccountTransactions(it) } }
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)

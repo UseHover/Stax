@@ -28,6 +28,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlin.android")
     id("kotlinx-serialization")
+    id("stax.android.room")
 }
 
 configurations.all {
@@ -41,7 +42,7 @@ configurations.all {
 }
 
 group = "com.hover"
-version = "1.19.6"
+version = "1.19.8"
 
 android {
 
@@ -53,7 +54,7 @@ android {
         applicationId = "com.hover.stax"
         minSdk = 21
         targetSdk = 33
-        versionCode = 216
+        versionCode = 218
         versionName = project.version.toString()
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -81,7 +82,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.0"
+        kotlinCompilerExtensionVersion = "1.4.0"
     }
 
     sourceSets {
@@ -182,8 +183,8 @@ android {
 }
 
 dependencies {
+    implementation(project(path = ":core:database"))
     // Modules
-    implementation(project(path = ":core"))
     implementation(project(path = ":features"))
 
     // Google
@@ -228,11 +229,6 @@ dependencies {
     // Images
     implementation(libs.bundles.image)
     kapt(libs.glide.compiler)
-
-    // Room
-    implementation(libs.bundles.room)
-    kapt(libs.room.compiler)
-    androidTestImplementation(libs.room.test)
 
     // DI
     implementation(libs.bundles.koin)

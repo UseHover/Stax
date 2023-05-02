@@ -12,6 +12,7 @@ java {
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {
@@ -27,6 +28,10 @@ gradlePlugin {
         register("androidLibraryJacoco") {
             id = "stax.android.library.jacoco"
             implementationClass = "AndroidLibraryJacocoConventionPlugin"
+        }
+        register("androidRoom") {
+            id = "stax.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
         }
     }
 }
