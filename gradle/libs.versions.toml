@@ -44,6 +44,7 @@ activity-compose = "androidx.activity:activity-compose:1.6.1"
 core-ktx = "androidx.core:core-ktx:1.9.0"
 lifecycle-viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
 kotlin-stdlib = "org.jetbrains.kotlin:kotlin-stdlib:1.8.10"
+kotlin-reflect = "org.jetbrains.kotlin:kotlin-reflect:1.8.10"
 lifecycle-common = "androidx.lifecycle:lifecycle-common-java8:2.5.1"
 splashscreen = "androidx.core:core-splashscreen:1.0.0"
 preference = "androidx.preference:preference-ktx:1.2.0"
@@ -112,7 +113,7 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 
 [bundles]
 compose = ["compose-ui", "compose-material", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist"]
-google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "splashscreen", "preference", "legacy-support"]
+google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "kotlin-reflect", "splashscreen", "preference", "legacy-support"]
 logging = ["timber", "amplitude", "appsflyer", "installreferrer", "uxcam"]
 koin = ["koin", "koin-compose"]
 network = ["ktor-client-core", "ktor-client-android", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization", "ktor-client", "kotlinx-serialization", "grpc"]
