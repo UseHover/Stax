@@ -5,6 +5,7 @@ koin = "3.2.0"
 kotlinxCoroutinesPlayServices = "1.6.4"
 room = "2.5.0"
 hilt = "2.45"
+hiltExt = "1.0.0"
 ktor = "2.2.2"
 glide = "4.14.2"
 androidGradlePlugin = "7.3.1"
@@ -14,6 +15,10 @@ detekt = "1.18.0-RC2"
 spotless = "6.0.0"
 dokka = "1.7.10"
 serialization = "1.6.21"
+androidxWork = "2.8.1"
+androidxStartup = "1.1.1"
+androidxTracing = "1.1.0"
+androidxLifecycle = "2.6.1"
 ksp = "1.8.0-1.0.9"
 agp = "7.3.1"
 kotlin180 = "1.8.0"
@@ -71,12 +76,22 @@ koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = 
 
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
+hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-test = { module = "androidx.room:room-testing", version.ref = "room" }
+
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
+
+androidx-tracing-ktx = { group = "androidx.tracing", name = "tracing-ktx", version.ref = "androidxTracing" }
+androidx-startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidxStartup" }
+
+androidx-work-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidxWork" }
+androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "androidxWork" }
 
 auth = "com.google.android.gms:play-services-auth:20.4.1"
 
