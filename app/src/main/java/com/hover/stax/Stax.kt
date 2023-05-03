@@ -31,6 +31,7 @@ import com.hover.stax.di.ktorModule
 import com.hover.stax.di.repositories
 import com.hover.stax.di.useCases
 import com.hover.stax.sync.initializers.Sync
+import com.hover.stax.remoteconfig.config.RemoteFeatureToggles
 import com.hover.stax.utils.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
@@ -39,10 +40,14 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 @HiltAndroidApp
 class Stax : Application() {
+
+    @Inject
+    lateinit var remoteFeatureToggles: RemoteFeatureToggles
 
     override fun onCreate() {
         super.onCreate()
@@ -61,6 +66,9 @@ class Stax : Application() {
 
         // Initialize Sync; the system responsible for keeping data in the app up to date.
         Sync.initialize(context = this)
+
+        // Sync remote feature flags
+        remoteFeatureToggles.sync()
     }
 
     private fun initFirebase() {

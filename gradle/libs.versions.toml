@@ -8,6 +8,7 @@ hilt = "2.45"
 hiltExt = "1.0.0"
 ktor = "2.2.2"
 glide = "4.14.2"
+firebaseBom = "31.5.0"
 androidGradlePlugin = "7.3.1"
 kotlin = "1.8.0"
 ktlint = "10.2.0"
@@ -94,6 +95,10 @@ androidx-work-ktx = { group = "androidx.work", name = "work-runtime-ktx", versio
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "androidxWork" }
 
 auth = "com.google.android.gms:play-services-auth:20.4.1"
+
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
