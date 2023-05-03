@@ -146,6 +146,6 @@ test = ["junit", "robolectric", "test-core-ktx", "fixture", "truth", "mockk", "k
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-hilt = { id = "com.google.dagger.hilt.android", version = "2.44.2" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref= "hilt" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin180" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
