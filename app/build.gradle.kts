@@ -185,7 +185,9 @@ android {
 
 dependencies {
     implementation(project(path = ":internal:database"))
+    implementation(project(path = ":internal:remoteconfig"))
     implementation(project(path = ":internal:sync"))
+
     // Modules
     implementation(project(path = ":features"))
 

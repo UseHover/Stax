@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-    id("stax.android.library")
-    id("stax.android.hilt")
-}
+package com.hover.stax.remoteconfig.config
 
-android {
-    namespace = "com.hover.stax.remoteconfig"
-}
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-dependencies {
+private const val FIVE = 5L
+private const val TWELVE = 12L
 
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.config)
+class RemoteConfigConfig @Inject constructor() {
 
-    // logging
-    implementation(libs.bundles.logging)
+    fun minimumFetchIntervalInSeconds(): Long {
+        return if (true) { // TODO - Check if is debug build here
+            TimeUnit.MINUTES.toSeconds(FIVE)
+        } else {
+            TimeUnit.HOURS.toSeconds(TWELVE)
+        }
+    }
 }
