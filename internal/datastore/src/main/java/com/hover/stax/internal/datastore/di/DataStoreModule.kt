@@ -25,7 +25,7 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun providesUserPreferencesDataStore(
+    fun providesLocalPreferencesDataStore(
         @ApplicationContext context: Context,
     ): DataStore<Preferences> =
         PreferenceDataStoreFactory.create(
