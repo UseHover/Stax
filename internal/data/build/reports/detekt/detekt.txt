@@ -1,1 +1,0 @@
-UnnecessaryAbstractClass - [DataModule] at /Users/jumaallan/Workspace/Hover/Stax/internal/data/src/main/java/com/hover/stax/data/di/DataModule.kt:15:16 - Signature=DataModule.kt$DataModule$DataModule
