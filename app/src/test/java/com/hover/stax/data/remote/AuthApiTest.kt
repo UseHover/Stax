@@ -36,7 +36,7 @@ import com.hover.stax.data.remote.dto.authorization.TokenRequest
 import com.hover.stax.data.remote.dto.authorization.TokenResponse
 import com.hover.stax.ktor.EnvironmentProvider
 import com.hover.stax.ktor.KtorClientFactory
-import com.hover.stax.internal.datastore.DefaultTokenProvider
+import com.hover.stax.datastore.DefaultTokenProvider
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondError

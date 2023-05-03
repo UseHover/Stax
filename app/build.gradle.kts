@@ -246,7 +246,6 @@ dependencies {
     "productionImplementation"(libs.hover)
 
     implementation(project(":internal:datastore"))
-
 }
 
 abstract class VersionTask : DefaultTask() {

@@ -17,8 +17,8 @@ package com.hover.stax.ktor
 
 import com.hover.stax.data.remote.dto.authorization.TokenRefresh
 import com.hover.stax.data.remote.dto.authorization.TokenResponse
-import com.hover.stax.internal.datastore.DefaultTokenProvider
-import com.hover.stax.internal.datastore.TokenProvider
+import com.hover.stax.datastore.DefaultTokenProvider
+import com.hover.stax.datastore.TokenProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine

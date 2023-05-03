@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="4.3">
+    <file
+        name="/Users/jumaallan/Workspace/Hover/Stax/internal/data/src/main/java/com/hover/stax/data/di/DataModule.kt">
+        <error line="15" column="16" severity="warning"
+            message="An abstract class without a concrete member can be refactored to an interface."
+            source="detekt.UnnecessaryAbstractClass" />
+    </file>
+</checkstyle>
