@@ -23,7 +23,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.models.Channel
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 import com.hover.stax.utils.UIHelper.loadImage

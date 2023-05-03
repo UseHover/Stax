@@ -25,7 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.hover.stax.data.local.accounts.AccountRepo
 import com.hover.stax.data.local.actions.ActionRepo
 import com.hover.stax.domain.model.Account
-import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryItem

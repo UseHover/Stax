@@ -24,10 +24,11 @@ import androidx.room.TypeConverters
 import com.hover.stax.contacts.ContactDao
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.data.local.accounts.AccountDao
-import com.hover.stax.database.channel.dao.ChannelDao
-import com.hover.stax.database.channel.entity.Channel
-import com.hover.stax.database.user.dao.UserDao
-import com.hover.stax.database.user.entity.StaxUser
+import com.hover.stax.database.dao.ChannelDao
+import com.hover.stax.database.models.Channel
+import com.hover.stax.database.converters.Converters
+import com.hover.stax.database.dao.UserDao
+import com.hover.stax.database.models.StaxUser
 import com.hover.stax.domain.model.Account
 import com.hover.stax.merchants.Merchant
 import com.hover.stax.merchants.MerchantDao

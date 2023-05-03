@@ -21,7 +21,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.hover.stax.database.BaseDao
+import com.hover.stax.database.dao.BaseDao
 
 @Dao
 interface RequestDao : BaseDao<Request> {

@@ -24,7 +24,7 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkerParameters
 import com.hover.stax.R
 import com.hover.stax.database.channel.repository.ChannelRepository
-import com.hover.stax.database.channel.repository.ChannelRepositoryImpl
+import com.hover.stax.data.channel.ChannelRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -50,7 +50,11 @@ class UpdateChannelsWorker(
             val channelsJson = downloadChannels(url)
             if (channelsJson != null) {
                 val data: JSONArray = channelsJson.getJSONArray("data")
-                ChannelRepositoryImpl.ChannelUtil.load(data, channelRepository, applicationContext)
+                com.hover.stax.data.channel.ChannelRepositoryImpl.ChannelUtil.load(
+                    data,
+                    channelRepository,
+                    applicationContext
+                )
                 Timber.v("Successfully Updated channels")
                 Result.success()
             } else {

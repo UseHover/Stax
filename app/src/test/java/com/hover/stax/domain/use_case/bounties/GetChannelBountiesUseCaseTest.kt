@@ -18,7 +18,7 @@ package com.hover.stax.domain.use_case.bounties
 import com.google.common.truth.Truth
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
-import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
