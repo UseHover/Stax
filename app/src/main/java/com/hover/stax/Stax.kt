@@ -30,6 +30,7 @@ import com.hover.stax.di.datastoreModule
 import com.hover.stax.di.ktorModule
 import com.hover.stax.di.repositories
 import com.hover.stax.di.useCases
+import com.hover.stax.sync.initializers.Sync
 import com.hover.stax.utils.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
@@ -57,6 +58,9 @@ class Stax : Application() {
         initFirebase()
 
         initAppsFlyer()
+
+        // Initialize Sync; the system responsible for keeping data in the app up to date.
+        Sync.initialize(context = this)
     }
 
     private fun initFirebase() {
@@ -104,7 +108,7 @@ class Stax : Application() {
             init(getString(R.string.appsflyer_key), conversionListener, this@Stax)
 
             if (AppsFlyerProperties.getInstance()
-                .getString(AppsFlyerProperties.APP_USER_ID) == null
+                    .getString(AppsFlyerProperties.APP_USER_ID) == null
             )
                 setCustomerUserId(Hover.getDeviceId(this@Stax))
 

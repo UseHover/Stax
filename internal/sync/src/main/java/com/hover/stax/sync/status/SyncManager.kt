@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-    id("stax.android.library")
-    id("stax.android.hilt")
-}
+package com.hover.stax.sync.status
 
-android {
-    namespace = "com.hover.stax.sync"
-}
+import kotlinx.coroutines.flow.Flow
 
-dependencies {
-    implementation(project(":internal:data"))
+/**
+ * Reports on if synchronization is in progress
+ */
+interface SyncManager {
 
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-
-    implementation(libs.androidx.tracing.ktx)
-    implementation(libs.androidx.startup)
-
-    api(libs.androidx.work.ktx)
-    api(libs.hilt.ext.work)
-
-    kapt(libs.hilt.ext.compiler)
+    val isSyncing: Flow<Boolean>
 }
