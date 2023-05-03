@@ -26,7 +26,6 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.database.di.databaseModule
 import com.hover.stax.di.appModule
 import com.hover.stax.di.dataModule
-import com.hover.stax.di.datastoreModule
 import com.hover.stax.di.ktorModule
 import com.hover.stax.di.repositories
 import com.hover.stax.di.useCases
@@ -71,7 +70,7 @@ class Stax : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@Stax)
-            modules(appModule + dataModule + ktorModule + datastoreModule + useCases + repositories + databaseModule)
+            modules(appModule + dataModule + ktorModule + useCases + repositories + databaseModule)
         }
     }
 

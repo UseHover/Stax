@@ -244,6 +244,9 @@ dependencies {
     "stagingImplementation"(project(":hover.sdk"))
     "stagingImplementation"(libs.bundles.hover)
     "productionImplementation"(libs.hover)
+
+    implementation(project(":internal:datastore"))
+
 }
 
 abstract class VersionTask : DefaultTask() {

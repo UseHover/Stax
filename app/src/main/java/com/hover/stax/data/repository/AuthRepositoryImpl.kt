@@ -29,8 +29,8 @@ import com.hover.stax.data.remote.dto.authorization.TokenRequest
 import com.hover.stax.data.remote.dto.authorization.TokenResponse
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.ktor.EnvironmentProvider
-import com.hover.stax.preferences.DefaultTokenProvider
-import com.hover.stax.preferences.TokenProvider
+import com.hover.stax.internal.datastore.DefaultTokenProvider
+import com.hover.stax.internal.datastore.TokenProvider
 import kotlinx.coroutines.flow.firstOrNull
 
 private const val AUTHORIZATION = "authorization_code"

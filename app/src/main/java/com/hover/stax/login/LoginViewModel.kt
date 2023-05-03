@@ -35,8 +35,8 @@ import com.hover.stax.data.remote.dto.toStaxUser
 import com.hover.stax.database.user.entity.StaxUser
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
-import com.hover.stax.preferences.DefaultTokenProvider
-import com.hover.stax.preferences.TokenProvider
+import com.hover.stax.internal.datastore.DefaultTokenProvider
+import com.hover.stax.internal.datastore.TokenProvider
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
