@@ -37,6 +37,7 @@ build-logic/convention/build
 
 internal/build
 internal/analytics/build
+internal/data/build
 internal/database/build
 internal/datastore/build
 internal/model/build

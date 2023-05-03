@@ -32,7 +32,7 @@ import com.hover.stax.paybill.BUSINESS_NAME
 import com.hover.stax.paybill.BUSINESS_NO
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.requests.RequestRepo
-import com.hover.stax.database.channel.entity.Channel
+import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.AnalyticsUtil

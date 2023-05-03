@@ -21,7 +21,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.hover.stax.database.BaseDao
+import com.hover.stax.database.dao.BaseDao
 import kotlinx.coroutines.flow.Flow
 
 @Dao

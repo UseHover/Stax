@@ -30,7 +30,7 @@ dependencies {
     implementation(libs.timber)
 
     // Hover Sdk
-    implementation(libs.hover)
+    api(libs.hover)
 
     // Tests
     testImplementation(libs.bundles.test)

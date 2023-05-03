@@ -21,8 +21,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.hover.stax.database.channel.entity.Channel
-import com.hover.stax.database.channel.entity.ChannelTypes
+import com.hover.stax.database.models.Channel
+import com.hover.stax.database.models.ChannelTypes
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
 
