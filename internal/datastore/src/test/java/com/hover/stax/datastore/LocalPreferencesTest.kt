@@ -49,14 +49,14 @@ class LocalPreferencesTest {
     }
 
     @Test
-    fun `WHEN putting a string by key THEN it should retrieve it using the same key`()= runTest{
+    fun `WHEN putting a string by key THEN it should retrieve it using the same key`() = runTest {
         val value = "test"
         preferences.putString(LocalPreferences.ENVIRONMENT, value)
         assertThat(value).isEqualTo(preferences.getString(LocalPreferences.ENVIRONMENT))
     }
 
     @Test
-    fun `WHEN clearing preferences THEN all previously saved key-value pairs should be removes`()= runTest {
+    fun `WHEN clearing preferences THEN all previously saved key-value pairs should be removes`() = runTest {
         preferences.putString(LocalPreferences.ENVIRONMENT, "test")
         preferences.clear()
         assertThat(preferences.getString(LocalPreferences.ENVIRONMENT)).isNull()
