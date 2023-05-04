@@ -23,4 +23,6 @@ android {
 }
 
 dependencies {
+    implementation(libs.datastore)
+    implementation(libs.kotlinx.coroutines.play.services)
 }

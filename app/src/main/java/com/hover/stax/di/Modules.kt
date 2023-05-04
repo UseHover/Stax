@@ -15,11 +15,6 @@
  */
 package com.hover.stax.di
 
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.SharedPreferencesMigration
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.preferencesDataStoreFile
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.accounts.AccountDetailViewModel
 import com.hover.stax.accounts.AccountsViewModel
@@ -34,6 +29,7 @@ import com.hover.stax.data.repository.AccountRepositoryImpl
 import com.hover.stax.data.repository.AuthRepositoryImpl
 import com.hover.stax.data.repository.BountyRepositoryImpl
 import com.hover.stax.data.repository.FinancialTipsRepositoryImpl
+import com.hover.stax.database.AppDatabase
 import com.hover.stax.domain.repository.AccountRepository
 import com.hover.stax.domain.repository.AuthRepository
 import com.hover.stax.domain.repository.BountyRepository
@@ -53,10 +49,6 @@ import com.hover.stax.merchants.MerchantRepo
 import com.hover.stax.merchants.MerchantViewModel
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.paybill.PaybillViewModel
-import com.hover.stax.preferences.DefaultSharedPreferences
-import com.hover.stax.preferences.DefaultTokenProvider
-import com.hover.stax.preferences.LocalPreferences
-import com.hover.stax.preferences.TokenProvider
 import com.hover.stax.presentation.bounties.BountyViewModel
 import com.hover.stax.presentation.financial_tips.FinancialTipsViewModel
 import com.hover.stax.presentation.home.BalancesViewModel
@@ -72,18 +64,14 @@ import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.transfers.TransferViewModel
 import io.ktor.client.engine.android.Android
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidApplication
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import com.hover.stax.database.AppDatabase
 
 const val TIMEOUT = 10_000
 
@@ -146,31 +134,10 @@ val ktorModule = module {
     }
 }
 
-val datastoreModule = module {
-    single {
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler(
-                produceNewData = { emptyPreferences() }
-            ),
-            migrations = listOf(
-                SharedPreferencesMigration(
-                    androidContext(),
-                    sharedPreferencesName = "stax.datastore"
-                )
-            ),
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { androidContext().preferencesDataStoreFile(name = "stax.datastore") }
-        )
-    }
-}
-
 val repositories = module {
     single(named("CoroutineDispatcher")) {
         Dispatchers.IO
     }
-
-    single<TokenProvider> { DefaultTokenProvider(get()) }
-    single<LocalPreferences> { DefaultSharedPreferences(androidApplication()) }
 
     single<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
     single<BountyRepository> { BountyRepositoryImpl(get(), get(named("CoroutineDispatcher"))) }
