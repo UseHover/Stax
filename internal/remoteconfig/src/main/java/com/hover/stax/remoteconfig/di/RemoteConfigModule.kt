@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.di
+package com.hover.stax.remoteconfig.di
 
-import com.hover.stax.data.channel.ChannelRepository
-import com.hover.stax.data.channel.ChannelRepositoryImpl
-import com.hover.stax.data.sim.SimInfoRepository
-import com.hover.stax.data.user.StaxUserRepository
-import com.hover.stax.data.user.StaxUserRepositoryImpl
-import dagger.Binds
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.hover.stax.remoteconfig.config.RemoteConfigConfig
+import com.hover.stax.remoteconfig.config.RemoteFeatureToggles
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule {
+object RemoteConfigModule {
 
-    @Binds
-    abstract fun bindsChannelRepository(channelRepositoryImpl: ChannelRepositoryImpl): ChannelRepository
-
-    @Binds
-    abstract fun bindsSimRepository(simRepositoryImpl: ChannelRepositoryImpl): SimInfoRepository
-
-    @Binds
-    abstract fun bindsUserRepository(staxUserRepositoryImpl: StaxUserRepositoryImpl): StaxUserRepository
+    @Provides
+    @Singleton
+    fun provideRemoteFeatureToggles(remoteConfigConfig: RemoteConfigConfig): RemoteFeatureToggles =
+        RemoteFeatureToggles(
+            remoteConfig = Firebase.remoteConfig,
+            configConfig = remoteConfigConfig
+        )
 }

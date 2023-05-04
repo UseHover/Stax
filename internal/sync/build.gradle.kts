@@ -23,4 +23,15 @@ android {
 }
 
 dependencies {
+    implementation(project(":internal:data"))
+
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    implementation(libs.androidx.tracing.ktx)
+    implementation(libs.androidx.startup)
+
+    api(libs.androidx.work.ktx)
+    api(libs.hilt.ext.work)
+
+    kapt(libs.hilt.ext.compiler)
 }
