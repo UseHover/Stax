@@ -21,24 +21,21 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.channel.ChannelRepository
-import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.database.models.Account
-import com.hover.stax.domain.model.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import org.json.JSONObject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
-class AccountRepositoryImpl(
+class AccountRepositoryImpl @Inject constructor(
     val accountRepo: AccountRepo,
     private val channelRepository: ChannelRepository,
-    val actionRepo: ActionRepo
+    val actionRepo: ActionRepo,
+    @ApplicationContext val context: Context
 ) :
-    AccountRepository, PushNotificationTopicsInterface, KoinComponent {
-
-    private val context: Context by inject()
+    AccountRepository, PushNotificationTopicsInterface {
 
     override val addedAccounts: Flow<List<Account>>
         get() = accountRepo.getAccounts()
@@ -56,9 +53,9 @@ class AccountRepositoryImpl(
 
     private fun generateSimBasedName(sim: SimInfo): String {
         return (
-            sim.operatorName ?: sim.networkOperatorName
+                sim.operatorName ?: sim.networkOperatorName
                 ?: ""
-            ) + "-" + sim.subscriptionId.toString()
+                ) + "-" + sim.subscriptionId.toString()
     }
 
     private fun generateSimBasedAlias(sim: SimInfo): String {

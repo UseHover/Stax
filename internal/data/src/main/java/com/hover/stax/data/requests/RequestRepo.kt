@@ -19,15 +19,16 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.hover.stax.R
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.database.StaxDatabase
 import com.hover.stax.database.dao.RequestDao
 import com.hover.stax.database.models.Request
 import com.hover.stax.utils.AnalyticsUtil
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
+import javax.inject.Inject
 
-class RequestRepo(db: StaxDatabase) {
-    private val requestDao: RequestDao = db.requestDao()
+class RequestRepo @Inject constructor(
+    private val requestDao: RequestDao
+) {
 
     val liveRequests: LiveData<List<Request>>
         get() = requestDao.liveUnmatched

@@ -16,14 +16,14 @@
 package com.hover.stax.data.accounts
 
 import androidx.lifecycle.LiveData
-import com.hover.stax.database.StaxDatabase
 import com.hover.stax.database.dao.AccountDao
 import com.hover.stax.database.models.Account
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class AccountRepo(db: StaxDatabase) {
-
-    private val accountDao: AccountDao = db.accountDao()
+class AccountRepo @Inject constructor(
+    private val accountDao: AccountDao
+) {
 
     fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
 

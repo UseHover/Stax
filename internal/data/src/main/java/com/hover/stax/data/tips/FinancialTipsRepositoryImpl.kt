@@ -24,9 +24,13 @@ import com.hover.stax.R
 import com.hover.stax.domain.model.FINANCIAL_TIP_ID
 import com.hover.stax.domain.model.FinancialTip
 import com.hover.stax.utils.Utils
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class FinancialTipsRepositoryImpl(val context: Context) : FinancialTipsRepository {
+class FinancialTipsRepositoryImpl @Inject constructor(
+    @ApplicationContext appContext: Context
+) : FinancialTipsRepository {
 
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }

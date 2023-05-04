@@ -16,13 +16,13 @@
 package com.hover.stax.data.merchant
 
 import androidx.lifecycle.LiveData
-import com.hover.stax.database.StaxDatabase
 import com.hover.stax.database.dao.MerchantDao
 import com.hover.stax.database.models.Merchant
+import javax.inject.Inject
 
-class MerchantRepo(db: StaxDatabase) {
-
-    private val merchantDao: MerchantDao = db.merchantDao()
+class MerchantRepo @Inject constructor(
+    private val merchantDao: MerchantDao
+) {
 
     val all: LiveData<List<Merchant>> = merchantDao.all
 

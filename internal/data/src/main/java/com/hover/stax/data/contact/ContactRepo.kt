@@ -17,14 +17,14 @@ package com.hover.stax.data.contact
 
 import androidx.lifecycle.LiveData
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.database.StaxDatabase
 import com.hover.stax.database.dao.ContactDao
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.utils.AnalyticsUtil
+import javax.inject.Inject
 
-class ContactRepo(db: StaxDatabase) {
-
-    private val contactDao: ContactDao = db.contactDao()
+class ContactRepo @Inject constructor(
+    private val contactDao: ContactDao
+) {
 
     val allContacts: LiveData<List<StaxContact>>
         get() = contactDao.all

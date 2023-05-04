@@ -34,10 +34,13 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
+import javax.inject.Inject
 
-class TransactionRepo(db: StaxDatabase, hoverDb: HoverRoomDatabase) {
+class TransactionRepo @Inject constructor(
+    private val transactionDao: TransactionDao,
+    hoverDb: HoverRoomDatabase
+) {
 
-    private val transactionDao: TransactionDao = db.transactionDao()
     private val hoverTransactionDao: com.hover.sdk.transactions.TransactionDao =
         hoverDb.transactionDao()
 

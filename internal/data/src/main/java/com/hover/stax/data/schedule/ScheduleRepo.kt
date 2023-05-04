@@ -17,12 +17,13 @@ package com.hover.stax.data.schedule
 
 import androidx.lifecycle.LiveData
 import com.hover.stax.database.AppDatabase
-import com.hover.stax.database.StaxDatabase
 import com.hover.stax.database.dao.ScheduleDao
 import com.hover.stax.database.models.Schedule
+import javax.inject.Inject
 
-class ScheduleRepo(db: StaxDatabase) {
-    private val scheduleDao: ScheduleDao = db.scheduleDao()
+class ScheduleRepo @Inject constructor(
+    private val scheduleDao: ScheduleDao
+) {
 
     val futureTransactions: LiveData<List<Schedule>>
         get() = scheduleDao.liveFuture

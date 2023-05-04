@@ -16,20 +16,19 @@
 package com.hover.stax.data.bounty
 
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.database.models.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.database.models.Channel
 import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
-import com.hover.stax.domain.repository.BountyRepository
-import com.hover.stax.transactions.StaxTransaction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BountyRepositoryImpl(
+class BountyRepositoryImpl @Inject constructor(
     val actionRepo: ActionRepo,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : BountyRepository {
@@ -41,7 +40,8 @@ class BountyRepositoryImpl(
         launch(coroutineDispatcher) {
             val actions = bountyActions
             val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
-            actions.asSequence().map { it.country_alpha2 }.distinct().sorted().toCollection(countryCodes)
+            actions.asSequence().map { it.country_alpha2 }.distinct().sorted()
+                .toCollection(countryCodes)
             send(countryCodes)
         }
     }
@@ -58,7 +58,10 @@ class BountyRepositoryImpl(
         return generateChannelBounties(channels, bounties)
     }
 
-    private fun getBounties(actions: List<HoverAction>, transactions: List<StaxTransaction>?): List<Bounty> {
+    private fun getBounties(
+        actions: List<HoverAction>,
+        transactions: List<StaxTransaction>?
+    ): List<Bounty> {
         val bounties: MutableList<Bounty> = ArrayList()
         val transactionList = transactions?.toMutableList() ?: mutableListOf()
 
@@ -70,7 +73,10 @@ class BountyRepositoryImpl(
         return bounties
     }
 
-    private fun generateChannelBounties(channels: List<Channel>, bounties: List<Bounty>): List<ChannelBounties> {
+    private fun generateChannelBounties(
+        channels: List<Channel>,
+        bounties: List<Bounty>
+    ): List<ChannelBounties> {
         if (channels.isEmpty() || bounties.isEmpty()) return emptyList()
 
         val openBounties = bounties.filter { it.action.bounty_is_open || it.transactionCount != 0 }

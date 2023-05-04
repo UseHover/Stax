@@ -15,14 +15,14 @@
  */
 package com.hover.stax.data.paybill
 
-import com.hover.stax.database.StaxDatabase
 import com.hover.stax.database.dao.PaybillDao
 import com.hover.stax.database.models.Paybill
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class PaybillRepo(db: StaxDatabase) {
-
-    private val paybillDao: PaybillDao = db.paybillDao()
+class PaybillRepo @Inject constructor(
+    private val paybillDao: PaybillDao
+) {
 
     val allBills: Flow<List<Paybill>> = paybillDao.allBills
 
