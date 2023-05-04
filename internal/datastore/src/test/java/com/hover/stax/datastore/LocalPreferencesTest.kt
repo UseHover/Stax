@@ -18,6 +18,7 @@ package com.hover.stax.datastore
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,27 +36,27 @@ class LocalPreferencesTest {
     }
 
     @Test
-    fun getString() {
+    fun `WHEN getting a saved string THEN it should return the same string that was saved `() = runTest {
         val value = "test"
         preferences.putString(LocalPreferences.ENVIRONMENT, value)
         assertThat(value).isEqualTo(preferences.getString(LocalPreferences.ENVIRONMENT))
     }
 
     @Test
-    fun getStringDefault() {
+    fun `WHEN trying to retrieve non existent key THEN default value is returned`() = runTest {
         assertThat(preferences.getString("unknown_key")).isNull()
         assertThat("default").isEqualTo(preferences.getString("unknown_key", "default"))
     }
 
     @Test
-    fun putString() {
+    fun `WHEN putting a string by key THEN it should retrieve it using the same key`()= runTest{
         val value = "test"
         preferences.putString(LocalPreferences.ENVIRONMENT, value)
         assertThat(value).isEqualTo(preferences.getString(LocalPreferences.ENVIRONMENT))
     }
 
     @Test
-    fun clear() {
+    fun `WHEN clearing preferences THEN all previously saved key-value pairs should be removes`()= runTest {
         preferences.putString(LocalPreferences.ENVIRONMENT, "test")
         preferences.clear()
         assertThat(preferences.getString(LocalPreferences.ENVIRONMENT)).isNull()
