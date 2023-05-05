@@ -1,7 +1,6 @@
 [versions]
 compose = "1.2.1"
 core = "1.10.3"
-koin = "3.2.0"
 kotlinxCoroutinesPlayServices = "1.6.4"
 room = "2.5.0"
 hilt = "2.45"
@@ -71,9 +70,6 @@ amplitude = "com.amplitude:android-sdk:3.35.1"
 appsflyer = "com.appsflyer:af-android-sdk:6.9.0"
 installreferrer = "com.android.installreferrer:installreferrer:2.2"
 uxcam = "com.uxcam:uxcam:3.5.1"
-
-koin = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
@@ -157,7 +153,6 @@ com-google-android-material-material = { group = "com.google.android.material", 
 compose = ["compose-ui", "compose-material", "compose-preview", "compose-material-icons", "compose-viewbinding", "compose-livedata", "compose-accompanist"]
 google = ["appcompat", "constraintlayout", "vectordrawable", "navigation-fragment", "navigation-ui", "lifecycle-extensions", "biometric", "material", "viewpager", "recyclerview", "work-runtime", "lifecycle-runtime", "activity-compose", "core-ktx", "lifecycle-viewmodel", "kotlin-stdlib", "kotlin-reflect", "splashscreen", "preference", "legacy-support"]
 logging = ["timber", "amplitude", "appsflyer", "installreferrer", "uxcam"]
-koin = ["koin", "koin-compose"]
 network = ["ktor-client-core", "ktor-client-android", "ktor-client-content-negotiation", "ktor-client-logging", "ktor-serialization", "ktor-client", "kotlinx-serialization", "grpc"]
 image = ["glide", "coil"]
 hover = ["volley", "play-services", "picasso", "sentry"]

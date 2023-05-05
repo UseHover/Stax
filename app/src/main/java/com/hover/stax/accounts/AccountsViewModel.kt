@@ -23,10 +23,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.domain.model.Account
-import com.hover.stax.schedules.Schedule
+import com.hover.stax.data.accounts.AccountRepo
+import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.database.models.Account
+import com.hover.stax.database.models.Schedule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

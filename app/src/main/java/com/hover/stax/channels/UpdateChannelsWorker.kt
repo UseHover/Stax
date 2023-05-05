@@ -23,8 +23,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkerParameters
 import com.hover.stax.R
-import com.hover.stax.database.channel.repository.ChannelRepository
-import com.hover.stax.data.channel.ChannelRepositoryImpl
+import com.hover.stax.data.channel.ChannelRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response

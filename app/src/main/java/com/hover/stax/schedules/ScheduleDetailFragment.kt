@@ -25,7 +25,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
-import com.hover.stax.contacts.StaxContact
+import com.hover.stax.database.models.Schedule
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentScheduleBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils

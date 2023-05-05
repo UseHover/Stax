@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.TextView
+import com.hover.stax.database.models.Merchant
 import com.hover.stax.databinding.StaxSpinner2lineBinding
 import java.util.*
 import kotlin.collections.ArrayList

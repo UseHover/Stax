@@ -38,7 +38,7 @@ import com.hover.stax.database.models.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.RequestServiceDialog

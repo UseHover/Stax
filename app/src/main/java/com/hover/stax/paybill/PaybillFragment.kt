@@ -26,9 +26,9 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.contacts.StaxContact
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.transfers.AbstractFormFragment

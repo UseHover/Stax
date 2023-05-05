@@ -122,7 +122,11 @@ class ChannelRepositoryImpl @Inject constructor(
             }
         }
 
-        suspend fun load(jsonArray: JSONArray, channelRepository: ChannelRepository, context: Context) {
+        suspend fun load(
+            jsonArray: JSONArray,
+            channelRepository: ChannelRepository,
+            context: Context
+        ) {
             for (i in 0 until jsonArray.length()) {
                 var channel = jsonArray.optJSONObject(i).optJSONObject("attributes")?.let {
                     channelRepository.getChannel(it.optInt("id"))

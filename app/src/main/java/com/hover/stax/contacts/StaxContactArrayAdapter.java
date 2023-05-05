@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.hover.stax.database.models.StaxContact;
 import com.hover.stax.databinding.StaxSpinner2lineBinding;
 
 import java.util.ArrayList;

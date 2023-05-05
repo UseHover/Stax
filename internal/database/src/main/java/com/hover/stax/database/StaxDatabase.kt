@@ -20,7 +20,14 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.hover.sdk.sims.SimInfoDao
 import com.hover.stax.database.converters.Converters
+import com.hover.stax.database.dao.AccountDao
 import com.hover.stax.database.dao.ChannelDao
+import com.hover.stax.database.dao.ContactDao
+import com.hover.stax.database.dao.MerchantDao
+import com.hover.stax.database.dao.PaybillDao
+import com.hover.stax.database.dao.RequestDao
+import com.hover.stax.database.dao.ScheduleDao
+import com.hover.stax.database.dao.TransactionDao
 import com.hover.stax.database.dao.UserDao
 import kotlinx.coroutines.channels.Channel
 
@@ -37,9 +44,23 @@ import kotlinx.coroutines.channels.Channel
 )
 abstract class StaxDatabase : RoomDatabase() {
 
+    abstract fun accountDao(): AccountDao
+
     abstract fun channelDao(): ChannelDao
 
+    abstract fun contactDao(): ContactDao
+
+    abstract fun merchantDao(): MerchantDao
+
+    abstract fun paybillDao(): PaybillDao
+
+    abstract fun requestDao(): RequestDao
+
+    abstract fun scheduleDao(): ScheduleDao
+
     abstract fun simInfoDao(): SimInfoDao
+
+    abstract fun transactionDao(): TransactionDao
 
     abstract fun userDao(): UserDao
 }

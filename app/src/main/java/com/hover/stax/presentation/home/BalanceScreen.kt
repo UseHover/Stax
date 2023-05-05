@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 import com.hover.stax.presentation.home.components.BalanceHeader
 import com.hover.stax.presentation.home.components.BalanceItem
 import com.hover.stax.presentation.home.components.EmptyBalance

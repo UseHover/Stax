@@ -16,7 +16,7 @@
 package com.hover.stax.presentation.home
 
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 import com.hover.stax.domain.model.FinancialTip
 
 data class HomeState(

@@ -22,8 +22,10 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.data.transactions.TransactionRepo
 import com.hover.stax.database.channel.repository.ChannelRepository
+import com.hover.stax.database.models.StaxTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

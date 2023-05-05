@@ -21,10 +21,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.contacts.ContactRepo
-import com.hover.stax.domain.model.Account
-import com.hover.stax.paybill.BUSINESS_NO
-import com.hover.stax.schedules.ScheduleRepo
+import com.hover.stax.data.contact.ContactRepo
+import com.hover.stax.data.merchant.MerchantRepo
+import com.hover.stax.database.models.Account
+import com.hover.stax.database.models.Merchant
+import com.hover.stax.database.models.BUSINESS_NO
+import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers

@@ -22,9 +22,9 @@ import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.domain.model.Bounty
 import com.hover.stax.domain.model.ChannelBounties
-import com.hover.stax.domain.repository.BountyRepository
-import com.hover.stax.transactions.StaxTransaction
-import com.hover.stax.transactions.TransactionRepo
+import com.hover.stax.data.bounty.BountyRepository
+import com.hover.stax.database.models.StaxTransaction
+import com.hover.stax.data.transactions.TransactionRepo
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -28,7 +28,6 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlin.android")
     id("kotlinx-serialization")
-    id("stax.android.room")
     id("stax.android.hilt")
 }
 
@@ -184,6 +183,7 @@ android {
 }
 
 dependencies {
+    implementation(project(path = ":internal:data"))
     implementation(project(path = ":internal:database"))
     implementation(project(path = ":internal:remoteconfig"))
     implementation(project(path = ":internal:sync"))
@@ -233,9 +233,6 @@ dependencies {
     // Images
     implementation(libs.bundles.image)
     kapt(libs.glide.compiler)
-
-    // DI
-    implementation(libs.bundles.koin)
 
     // Tests
     testImplementation(libs.bundles.test)

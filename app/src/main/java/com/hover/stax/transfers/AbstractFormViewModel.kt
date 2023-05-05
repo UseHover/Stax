@@ -22,10 +22,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hover.stax.R
-import com.hover.stax.contacts.ContactRepo
-import com.hover.stax.contacts.StaxContact
-import com.hover.stax.schedules.Schedule
-import com.hover.stax.schedules.ScheduleRepo
+import com.hover.stax.data.contact.ContactRepo
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.database.models.Schedule
+import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 
 abstract class AbstractFormViewModel(

@@ -17,7 +17,14 @@ package com.hover.stax.database.di
 
 import com.hover.sdk.sims.SimInfoDao
 import com.hover.stax.database.StaxDatabase
+import com.hover.stax.database.dao.AccountDao
 import com.hover.stax.database.dao.ChannelDao
+import com.hover.stax.database.dao.ContactDao
+import com.hover.stax.database.dao.MerchantDao
+import com.hover.stax.database.dao.PaybillDao
+import com.hover.stax.database.dao.RequestDao
+import com.hover.stax.database.dao.ScheduleDao
+import com.hover.stax.database.dao.TransactionDao
 import com.hover.stax.database.dao.UserDao
 import dagger.Module
 import dagger.Provides
@@ -29,14 +36,49 @@ import dagger.hilt.components.SingletonComponent
 object DaosModule {
 
     @Provides
+    fun providesAccountDao(
+        database: StaxDatabase,
+    ): AccountDao = database.accountDao()
+
+    @Provides
     fun providesChannelDao(
         database: StaxDatabase,
     ): ChannelDao = database.channelDao()
 
     @Provides
+    fun providesContactDao(
+        database: StaxDatabase,
+    ): ContactDao = database.contactDao()
+
+    @Provides
+    fun providesMerchantDao(
+        database: StaxDatabase,
+    ): MerchantDao = database.merchantDao()
+
+    @Provides
+    fun providesPaybillDao(
+        database: StaxDatabase,
+    ): PaybillDao = database.paybillDao()
+
+    @Provides
+    fun providesRequestDao(
+        database: StaxDatabase,
+    ): RequestDao = database.requestDao()
+
+    @Provides
+    fun providesScheduleDao(
+        database: StaxDatabase,
+    ): ScheduleDao = database.scheduleDao()
+
+    @Provides
     fun providesSimDao(
         database: StaxDatabase,
     ): SimInfoDao = database.simInfoDao()
+
+    @Provides
+    fun providesTransactionDao(
+        database: StaxDatabase,
+    ): TransactionDao = database.transactionDao()
 
     @Provides
     fun providesUserDao(

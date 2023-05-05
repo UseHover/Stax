@@ -18,7 +18,7 @@ package com.hover.stax.accounts
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.hover.stax.database.models.Channel
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 
 data class ChannelWithAccounts(
     @Embedded

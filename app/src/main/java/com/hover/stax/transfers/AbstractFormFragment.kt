@@ -37,8 +37,8 @@ import com.hover.stax.R
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.contacts.StaxContact
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.database.models.Account
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.permissions.PermissionUtils
@@ -196,7 +196,12 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private val contactPickerLauncher = registerForActivityResult(ActivityResultContracts.PickContact()) { data ->
-        val staxContact = data?.let { StaxContact(data, requireActivity()) }
+        val staxContact = data?.let {
+            StaxContact(
+                data,
+                requireActivity()
+            )
+        }
         staxContact?.id?.let {
             log(getString(R.string.contact_select_success))
             onContactSelected(staxContact)
