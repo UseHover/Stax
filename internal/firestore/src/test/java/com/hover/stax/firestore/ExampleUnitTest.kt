@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-    id("stax.android.library")
-    id("stax.android.hilt")
-}
+package com.hover.stax.firestore
 
-android {
-    namespace = "com.hover.stax.data"
-}
+import org.junit.Test
 
-dependencies {
-    implementation(project(path = ":internal:database"))
-    implementation(project(path = ":internal:datastore"))
-    implementation(project(path = ":internal:firestore"))
-    implementation(project(path = ":internal:model"))
-    implementation(project(path = ":internal:network"))
+import org.junit.Assert.*
 
-    implementation(libs.timber)
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+class ExampleUnitTest {
+    @Test
+    fun addition_isCorrect() {
+        assertEquals(4, 2 + 2)
+    }
 }

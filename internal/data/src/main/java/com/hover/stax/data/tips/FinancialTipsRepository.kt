@@ -16,8 +16,12 @@
 package com.hover.stax.data.tips
 
 import android.content.Context
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.hover.stax.data.R
 import com.hover.stax.model.FinancialTip
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface FinancialTipsRepository {
@@ -30,16 +34,14 @@ interface FinancialTipsRepository {
 }
 
 class FinancialTipsRepositoryImpl @Inject constructor(
-    @ApplicationContext appContext: Context
+    @ApplicationContext val context: Context,
+    private val db: FirebaseFirestore
 ) : FinancialTipsRepository {
-
-    val db = Firebase.firestore
-    val settings = firestoreSettings { isPersistenceEnabled = true }
 
     override suspend fun getTips(): List<FinancialTip> {
         val today = System.currentTimeMillis()
-
-        return db.collection(context.getString(R.string.tips_table))
+        val table = context.getString(R.string.tips_table)
+        return db.collection(table)
             .orderBy("date", Query.Direction.DESCENDING)
             .whereLessThanOrEqualTo("date", today / 1000)
             .limit(20)

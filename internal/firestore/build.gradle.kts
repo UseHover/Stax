@@ -19,15 +19,12 @@ plugins {
 }
 
 android {
-    namespace = "com.hover.stax.data"
+    namespace = "com.hover.stax.firestore"
 }
 
 dependencies {
-    implementation(project(path = ":internal:database"))
-    implementation(project(path = ":internal:datastore"))
-    implementation(project(path = ":internal:firestore"))
-    implementation(project(path = ":internal:model"))
-    implementation(project(path = ":internal:network"))
 
-    implementation(libs.timber)
+    // Firebase
+    api(platform(libs.firebase.bom))
+    api(libs.firebase.firestore)
 }
