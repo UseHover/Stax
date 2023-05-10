@@ -27,7 +27,7 @@ import com.hover.stax.R
 import com.hover.stax.data.accounts.AccountRepo
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.database.models.Account
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -58,13 +58,13 @@ class BalancesViewModel(
 
     fun requestBalance(account: Account?) {
         if (account == null) {
-            AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
                 (getApplication() as Context).getString(R.string.refresh_balance_failed),
                 getApplication()
             )
             Toast.makeText(getApplication(), R.string.refresh_balance_failed, Toast.LENGTH_LONG).show()
         } else {
-            AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
                 (getApplication() as Context).getString(R.string.refresh_balance),
                 getApplication()
             )

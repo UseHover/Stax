@@ -33,7 +33,7 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.RequestServiceDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -59,7 +59,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, LibraryFragment::class.java.simpleName), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, LibraryFragment::class.java.simpleName), requireActivity())
 
         initToolbar()
 

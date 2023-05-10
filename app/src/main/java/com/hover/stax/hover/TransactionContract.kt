@@ -21,7 +21,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import com.hover.stax.R
 
 import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -55,8 +55,8 @@ class TransactionContract : ActivityResultContract<HoverSession.Builder, Intent?
             data.put("actionId", hsb.action.id)
         } catch (ignored: JSONException) {
         }
-        AnalyticsUtil.logAnalyticsEvent(msg, data, context)
-        AnalyticsUtil.logAnalyticsEvent(hsb.activity.getString(R.string.start_load_screen), context)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(msg, data, context)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(hsb.activity.getString(R.string.start_load_screen), context)
         Timber.e(msg)
     }
 }

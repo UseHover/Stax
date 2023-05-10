@@ -26,8 +26,8 @@ import com.hover.stax.R
 import com.hover.stax.database.models.Request
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentRequestDetailBinding
-import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.core.DateUtils
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
@@ -94,7 +94,7 @@ class RequestDetailFragment : Fragment(), RequestSenderInterface {
 
     private fun setUpSummary(request: Request) {
         binding.summaryCard.requestMoneyCard.setTitle(request.description)
-        binding.summaryCard.dateValue.text = DateUtils.humanFriendlyDateTime(request.date_sent)
+        binding.summaryCard.dateValue.text = com.hover.stax.core.DateUtils.humanFriendlyDateTime(request.date_sent)
 
         if (!request.amount.isNullOrEmpty()) {
             binding.summaryCard.amountRow.visibility = View.VISIBLE

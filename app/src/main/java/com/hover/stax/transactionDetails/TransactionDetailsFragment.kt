@@ -46,10 +46,10 @@ import com.hover.stax.hover.BountyContract
 import com.hover.stax.database.models.Merchant
 import com.hover.stax.database.models.Paybill
 import com.hover.stax.database.models.StaxTransaction
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
-import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
-import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
+import com.hover.stax.core.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase
+import com.hover.stax.core.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.UIHelper.loadImage
@@ -328,7 +328,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
     private fun retryBounty() {
         viewModel.action.value?.let {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), requireContext())
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), requireContext())
             bounty.launch(it)
         }
     }

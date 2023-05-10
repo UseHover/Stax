@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.utils
+package com.hover.stax.core
 
 import android.content.Context
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.hover.stax.R
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs

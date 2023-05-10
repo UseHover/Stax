@@ -35,10 +35,10 @@ import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.splitCamelCase
+import com.hover.stax.core.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
@@ -469,7 +469,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                         text = getString(R.string.top_up_with, bonus.from_institution_name)
 
                         setOnClickListener {
-                            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
                             accountsViewModel.payWith(bonus.from_institution_id)
                         }
                     }

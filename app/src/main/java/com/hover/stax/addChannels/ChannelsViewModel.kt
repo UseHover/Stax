@@ -39,7 +39,7 @@ import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.database.models.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -186,7 +186,7 @@ class ChannelsViewModel(
         } catch (ignored: Exception) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
             (getApplication() as Context).getString(R.string.new_channel_selected),
             args,
             getApplication() as Context

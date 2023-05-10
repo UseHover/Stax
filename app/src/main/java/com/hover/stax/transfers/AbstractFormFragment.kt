@@ -43,7 +43,7 @@ import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.BalancesViewModel
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
@@ -114,7 +114,7 @@ abstract class AbstractFormFragment : Fragment() {
             launcher.launch(b)
         } catch (e: Exception) {
             requireActivity().runOnUiThread { UIHelper.flashAndReportMessage(requireContext(), getString(R.string.error_running_action)) }
-            AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
+            com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
         }
     }
 
@@ -178,7 +178,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun startContactPicker(c: Context) {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.try_contact_select), c)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.try_contact_select), c)
 
         if (PermissionUtils.hasContactPermission(c))
             contactPickerLauncher.launch(null)
@@ -250,5 +250,5 @@ abstract class AbstractFormFragment : Fragment() {
         super.onDestroy()
     }
 
-    private fun log(event: String) = AnalyticsUtil.logAnalyticsEvent(event, requireContext())
+    private fun log(event: String) = com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(event, requireContext())
 }

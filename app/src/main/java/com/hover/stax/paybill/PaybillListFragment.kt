@@ -28,7 +28,7 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.database.models.Paybill
 import com.hover.stax.databinding.FragmentPaybillListBinding
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
@@ -57,7 +57,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill_list)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill_list)), requireActivity())
         updatePaybills(paybillViewModel.savedPaybills.value)
         updateActions(accountsViewModel.institutionActions.value)
         startListeners()

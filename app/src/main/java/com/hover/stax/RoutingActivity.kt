@@ -48,7 +48,7 @@ import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.uxcam.OnVerificationListener
@@ -125,7 +125,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun logPushNotificationIfRequired() = intent.extras?.let {
         val fcmTitle = it.getString(FROM_FCM)
-        fcmTitle?.let { title -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
+        fcmTitle?.let { title -> com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
     }
 
     private fun initHover() {
@@ -283,7 +283,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
         } catch (e: NumberFormatException) {
-            AnalyticsUtil.logErrorAndReportToFirebase(RoutingActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
+            com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(RoutingActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
         }
 
         startActivity(intent)

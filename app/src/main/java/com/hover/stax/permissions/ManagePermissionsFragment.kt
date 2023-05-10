@@ -32,7 +32,7 @@ import androidx.fragment.app.Fragment
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.databinding.ManagePermissionsLayoutBinding
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import timber.log.Timber
 
@@ -149,7 +149,7 @@ class ManagePermissionsFragment : Fragment() {
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
             { permsToRequest() },
-            { AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), requireActivity()) }, requireActivity()
+            { com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), requireActivity()) }, requireActivity()
         )
     }
 

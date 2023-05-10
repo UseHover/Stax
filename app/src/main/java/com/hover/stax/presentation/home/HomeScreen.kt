@@ -44,7 +44,7 @@ import com.hover.stax.presentation.home.components.GuideCard
 import com.hover.stax.presentation.home.components.PrimaryFeatures
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -161,7 +161,7 @@ private fun clickedOnBonus(
     channelsViewModel: ChannelsViewModel,
     bonus: HoverAction
 ) {
-    AnalyticsUtil.logAnalyticsEvent(
+    com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
         context.getString(R.string.clicked_bonus_airtime_banner),
         context
     )

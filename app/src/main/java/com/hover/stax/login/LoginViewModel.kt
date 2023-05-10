@@ -37,7 +37,7 @@ import com.hover.stax.data.auth.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
 import com.hover.stax.datastore.DefaultTokenProvider
 import com.hover.stax.datastore.TokenProvider
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -152,12 +152,12 @@ class LoginViewModel(
             error.postValue(message)
         } else {
             signInClient.signOut().addOnCompleteListener {
-                AnalyticsUtil.logErrorAndReportToFirebase(
+                com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
                     LoginViewModel::class.java.simpleName,
                     message,
                     null
                 )
-                AnalyticsUtil.logAnalyticsEvent(message, getApplication())
+                com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(message, getApplication())
 
                 removeUser()
 
@@ -167,7 +167,7 @@ class LoginViewModel(
     }
 
     fun silentSignOut() = signInClient.signOut().addOnCompleteListener {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.logout), getApplication())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.logout), getApplication())
         removeUser()
     }
 

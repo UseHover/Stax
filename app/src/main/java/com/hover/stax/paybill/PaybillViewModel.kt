@@ -29,7 +29,7 @@ import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.database.models.Paybill
 import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -137,7 +137,7 @@ class PaybillViewModel(
             Timber.e(e)
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, getApplication())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, getApplication())
     }
 
     fun businessNoError(): String? {

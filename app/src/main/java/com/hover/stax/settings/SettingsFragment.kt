@@ -39,7 +39,7 @@ import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginScreenUiState
 import com.hover.stax.login.LoginUiState
 import com.hover.stax.login.LoginViewModel
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -80,7 +80,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_security)

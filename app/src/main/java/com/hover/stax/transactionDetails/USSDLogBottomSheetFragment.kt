@@ -25,7 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.UssdLogBottomsheetBinding
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.core.DateUtils
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -85,7 +85,7 @@ class USSDLogBottomSheetFragment : BottomSheetDialogFragment() {
     private fun updateWithSessionDetails(messages: List<UssdCallResponse>?, v: RecyclerView) {
         messages?.let {
             val t = viewModel.transaction.value!!
-            v.adapter = MessagesAdapter(it, DateUtils.humanFriendlyDateTime(t.initiated_at), DateUtils.humanFriendlyDateTime(t.updated_at))
+            v.adapter = MessagesAdapter(it, com.hover.stax.core.DateUtils.humanFriendlyDateTime(t.initiated_at), com.hover.stax.core.DateUtils.humanFriendlyDateTime(t.updated_at))
         }
     }
 

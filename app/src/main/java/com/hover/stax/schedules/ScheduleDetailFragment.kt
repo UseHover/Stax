@@ -28,8 +28,8 @@ import com.hover.stax.R
 import com.hover.stax.database.models.Schedule
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentScheduleBinding
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.core.AnalyticsUtil
+import com.hover.stax.core.DateUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
@@ -87,7 +87,7 @@ class ScheduleDetailFragment : Fragment() {
         } catch (ignored: JSONException) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext())
     }
 
     private fun setUpSummary(schedule: Schedule) {
@@ -95,13 +95,13 @@ class ScheduleDetailFragment : Fragment() {
 
         with(binding.summaryCard) {
             detailsAmount.text = Utils.formatAmount(schedule.amount)
-            detailsDate.text = DateUtils.humanFriendlyDateTime(schedule.start_date)
+            detailsDate.text = com.hover.stax.core.DateUtils.humanFriendlyDateTime(schedule.start_date)
 
             frequencyRow.visibility = if (schedule.frequency == Schedule.ONCE) View.GONE else View.VISIBLE
             detailsFrequency.text = schedule.humanFrequency(context)
 
             endRow.visibility = if (schedule.frequency == Schedule.ONCE || schedule.end_date == null) View.GONE else View.VISIBLE
-            detailsEnd.text = if (schedule.end_date != null) DateUtils.humanFriendlyDate(schedule.end_date) else ""
+            detailsEnd.text = if (schedule.end_date != null) com.hover.stax.core.DateUtils.humanFriendlyDate(schedule.end_date) else ""
 
             noteRow.visibility = if (schedule.note.isNullOrEmpty()) View.GONE else View.VISIBLE
             detailsReason.text = schedule.note

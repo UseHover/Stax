@@ -20,7 +20,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.SummarycardNontemplateItemsBinding
-import com.hover.stax.utils.splitCamelCase
+import com.hover.stax.core.splitCamelCase
 
 class NonStandardSummaryAdapter(private var items: LinkedHashMap<String, String>) : RecyclerView.Adapter<NonStandardSummaryAdapter.ViewHolder>() {
 

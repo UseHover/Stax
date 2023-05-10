@@ -29,7 +29,7 @@ import com.hover.stax.database.models.Request
 import com.hover.stax.database.models.Schedule
 import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.core.DateUtils
 import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -134,7 +134,7 @@ class NewRequestViewModel(
         requestee.value?.let { contact ->
             viewModelScope.launch {
                 if (!contact.accountNumber.isNullOrEmpty()) {
-                    contact.lastUsedTimestamp = DateUtils.now()
+                    contact.lastUsedTimestamp = com.hover.stax.core.DateUtils.now()
                     contactRepo.save(contact)
                 }
             }

@@ -26,7 +26,7 @@ import com.hover.stax.data.contact.ContactRepo
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.Schedule
 import com.hover.stax.data.schedule.ScheduleRepo
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 
 abstract class AbstractFormViewModel(
     application: Application,
@@ -52,7 +52,7 @@ abstract class AbstractFormViewModel(
     }
 
     fun saveSchedule(s: Schedule) {
-        AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.scheduled_complete, s.type), getApplication())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.scheduled_complete, s.type), getApplication())
         scheduleRepo.insert(s)
     }
 

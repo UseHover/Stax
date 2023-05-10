@@ -29,7 +29,7 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.BalancesViewModel
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -44,7 +44,7 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
         savedInstanceState: Bundle?
     ): View =
         ComposeView(requireContext()).apply {
-            AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
                 getString(R.string.visit_screen, getString(R.string.visit_sim)), requireContext()
             )
 

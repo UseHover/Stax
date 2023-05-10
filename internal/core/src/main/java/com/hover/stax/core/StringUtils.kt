@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.utils
+package com.hover.stax.core
 
 import android.text.TextUtils
 import java.util.*

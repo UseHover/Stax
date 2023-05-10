@@ -30,7 +30,7 @@ import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.database.models.Account
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -53,7 +53,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }

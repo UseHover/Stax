@@ -28,7 +28,7 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.hover.PERM_ACTIVITY
-import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

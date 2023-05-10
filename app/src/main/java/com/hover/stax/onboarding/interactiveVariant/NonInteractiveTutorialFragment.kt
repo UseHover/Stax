@@ -25,7 +25,7 @@ import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentNonInteractiveTutorialBinding
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 
 internal class NonInteractiveTutorialFragment : Fragment() {
 
@@ -46,7 +46,7 @@ internal class NonInteractiveTutorialFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_non_interactive_tutorial)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_non_interactive_tutorial)), requireActivity())
 
         setTopBarClicks()
         setContents()

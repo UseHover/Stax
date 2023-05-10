@@ -35,7 +35,7 @@ import com.hover.stax.data.paybill.PaybillRepo
 import com.hover.stax.data.requests.RequestRepo
 import com.hover.stax.database.models.Channel
 import com.hover.stax.data.transactions.TransactionRepo
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
@@ -82,11 +82,11 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                         updateRequests(intent)
                     }
                 } else if (actionId == null) {
-                    AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no action ID", context)
+                    com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no action ID", context)
                 }
             }
         } else {
-            AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no intent", context)
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent("TransactionReceiver received event with no intent", context)
         }
     }
 
@@ -212,7 +212,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                 if (a.institutionName == a.userAlias) a.userAlias = matcher.group(2)!!
 
                 accountRepo.saveAccount(a)
-            } catch (e: Exception) { AnalyticsUtil.logErrorAndReportToFirebase(TransactionReceiver::class.java.simpleName, "Failed to parse account list from USSD", e) }
+            } catch (e: Exception) { com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(TransactionReceiver::class.java.simpleName, "Failed to parse account list from USSD", e) }
         }
     }
 }

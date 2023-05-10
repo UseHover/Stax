@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.hover.stax.R
 import com.hover.stax.databinding.InputItemBinding
-import com.hover.stax.utils.splitCamelCase
+import com.hover.stax.core.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
 
 class NonStandardVariableAdapter(

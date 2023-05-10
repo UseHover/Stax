@@ -35,7 +35,7 @@ import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAI
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -128,7 +128,7 @@ abstract class AbstractGoogleAuthActivity :
     }
 
     private fun logAppUpdate(status: String) {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.force_update_status, status), this)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.force_update_status, status), this)
     }
 
     private fun getUpdateType(updateInfo: AppUpdateInfo): Int {

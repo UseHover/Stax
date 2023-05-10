@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.utils
+package com.hover.stax.core
 
 import android.content.Context
 import android.os.Bundle
@@ -24,7 +24,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
-import com.hover.stax.R
 import com.uxcam.UXCam
 import java.util.*
 import org.json.JSONException

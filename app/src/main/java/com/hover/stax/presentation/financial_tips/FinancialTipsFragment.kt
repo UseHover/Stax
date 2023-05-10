@@ -29,7 +29,7 @@ import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
 import org.json.JSONObject
@@ -115,7 +115,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 adapter = FinancialTipsAdapter(tips, this@FinancialTipsFragment)
             }
 
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())
         }
     }
 
@@ -184,7 +184,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             Timber.e(e)
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.shared_financial_tip), data, requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.shared_financial_tip), data, requireActivity())
     }
 
     private fun logTipRead(tip: FinancialTip, isFromDeeplink: Boolean) {
@@ -199,7 +199,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             Timber.e(e)
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.read_financial_tip), data, requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.read_financial_tip), data, requireActivity())
     }
 
     private fun showTipList() {

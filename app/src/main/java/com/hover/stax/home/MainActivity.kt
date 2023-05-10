@@ -35,7 +35,7 @@ import com.hover.stax.requests.SMS
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
@@ -107,7 +107,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         when {
             intent.hasExtra(REQUEST_LINK) -> createFromRequest(intent.getStringExtra(REQUEST_LINK)!!)
             intent.hasExtra(FinancialTipsFragment.TIP_ID) -> navHelper.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
-            else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
+            else -> com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
     }
 
@@ -115,7 +115,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         navHelper.checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P))
         addLoadingDialog()
         transferViewModel.load(link)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
     }
 
     private fun addLoadingDialog() {
@@ -130,10 +130,10 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
             sendSms(requestViewModel, this)
         } else if (requestCode == SMS) {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_smsperm))
         }
     }

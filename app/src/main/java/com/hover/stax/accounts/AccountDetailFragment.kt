@@ -38,8 +38,8 @@ import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.database.models.Request
 import com.hover.stax.database.models.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.core.AnalyticsUtil
+import com.hover.stax.core.DateUtils
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -82,7 +82,7 @@ class AccountDetailFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity())
 
         initRecyclerViews()
         setupObservers()
@@ -177,7 +177,7 @@ class AccountDetailFragment :
                         binding.amountsCard.setSubtitle(acct.institutionName)
                     if (acct.latestBalance != null) {
                         binding.balanceCard.balanceAmount.text = acct.latestBalance
-                        binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
+                        binding.balanceCard.balanceSubtitle.text = com.hover.stax.core.DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
                     binding.feesDescription.text = getString(R.string.fees_label, acct.institutionName)

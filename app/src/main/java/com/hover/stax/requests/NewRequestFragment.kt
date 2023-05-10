@@ -33,7 +33,7 @@ import com.hover.stax.databinding.FragmentRequestBinding
 import com.hover.stax.database.models.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
@@ -72,7 +72,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), requireActivity())
 
         init(binding.root)
 
@@ -274,7 +274,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun saveUnsent() {
         requestViewModel.saveRequest()
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.saved_unsent_request), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.saved_unsent_request), requireActivity())
         findNavController().popBackStack()
     }
 
