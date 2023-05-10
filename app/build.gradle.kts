@@ -185,8 +185,10 @@ android {
 dependencies {
     implementation(project(path = ":internal:data"))
     implementation(project(path = ":internal:database"))
+    implementation(project(path = ":internal:datastore"))
     implementation(project(path = ":internal:remoteconfig"))
     implementation(project(path = ":internal:sync"))
+    implementation(project(path = ":internal:ui"))
 
     // Modules
     implementation(project(path = ":features"))
@@ -244,8 +246,6 @@ dependencies {
     "stagingImplementation"(project(":hover.sdk"))
     "stagingImplementation"(libs.bundles.hover)
     "productionImplementation"(libs.hover)
-
-    implementation(project(":internal:datastore"))
 }
 
 abstract class VersionTask : DefaultTask() {

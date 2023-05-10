@@ -1,6 +1,7 @@
 package com.hover.stax.network.di
 
 import android.content.Context
+import com.hover.stax.datastore.LocalPreferences
 import com.hover.stax.datastore.TokenProvider
 import com.hover.stax.network.ktor.EnvironmentProvider
 import com.hover.stax.network.ktor.KtorClientFactory
@@ -28,8 +29,10 @@ object NetworkModule {
     @Singleton
     fun providesEnvironmentProvider(
         @ApplicationContext context: Context,
+        localPreferences: LocalPreferences
     ): EnvironmentProvider = EnvironmentProvider(
         context,
+        localPreferences
     )
 
     @Provides
