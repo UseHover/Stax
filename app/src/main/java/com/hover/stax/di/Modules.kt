@@ -137,13 +137,6 @@ val ktorModule = module {
 
     single { EnvironmentProvider(androidApplication(), get()) }
 
-    single {
-        KtorClientFactory(get(), get()).create(
-            Android.create {
-                connectTimeout = TIMEOUT
-            }
-        )
-    }
 }
 
 val datastoreModule = module {

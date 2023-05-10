@@ -19,6 +19,9 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":internal:datastore"))
+
     implementation(libs.core.ktx)
+
     api(libs.bundles.network)
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.ktor
+package com.hover.stax.network.ktor
 
 import android.content.Context
 import com.hover.stax.BuildConfig
