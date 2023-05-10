@@ -15,22 +15,22 @@
  */
 package com.hover.stax.domain.use_case.financial_tips
 
-import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.domain.model.Resource
+import com.hover.stax.model.FinancialTip
+import com.hover.stax.model.Resource
 import com.hover.stax.data.tips.FinancialTipsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class TipsUseCase(private val financialTipsRepository: FinancialTipsRepository) {
 
-    operator fun invoke(): Flow<Resource<List<FinancialTip>>> = flow {
+    operator fun invoke(): Flow<com.hover.stax.model.Resource<List<com.hover.stax.model.FinancialTip>>> = flow {
         try {
-            emit(Resource.Loading())
+            emit(com.hover.stax.model.Resource.Loading())
 
             val financialTips = financialTipsRepository.getTips()
-            emit(Resource.Success(financialTips))
+            emit(com.hover.stax.model.Resource.Success(financialTips))
         } catch (e: Exception) {
-            emit(Resource.Error("Error fetching tips"))
+            emit(com.hover.stax.model.Resource.Error("Error fetching tips"))
         }
     }
 

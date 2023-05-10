@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.domain.model
+package com.hover.stax.model.auth
 
-data class FinancialTip(
-    val id: String,
-    val title: String,
-    val content: String,
-    val snippet: String,
-    val date: Long?,
-    val shareCopy: String?,
-    val deepLink: String?
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class TokenResponse(
+    @SerialName("access_token")
+    val accessToken: String,
+    @SerialName("refresh_token")
+    val refreshToken: String? = null,
+    val scope: String,
+    @SerialName("created_at")
+    val createdAt: Int,
+    @SerialName("token_type")
+    val tokenType: String,
+    @SerialName("expires_in")
+    val expiresIn: Int
 )
-
-const val FINANCIAL_TIP_ID = "id"

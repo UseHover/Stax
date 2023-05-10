@@ -20,8 +20,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
-import com.hover.stax.domain.model.Bounty
-import com.hover.stax.domain.model.ChannelBounties
+import com.hover.stax.model.Bounty
+import com.hover.stax.model.ChannelBounties
 import com.hover.stax.data.bounty.BountyRepository
 import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.data.transactions.TransactionRepo
@@ -39,8 +39,8 @@ class GetChannelBountiesUseCaseTest {
     private val bountyRepository = mockk<BountyRepository>(relaxed = true)
     private val channelRepository = mockk<ChannelRepository>(relaxed = true)
     private val transactionRepo = mockk<TransactionRepo>(relaxed = true)
-    private val channelBounties = mockk<List<ChannelBounties>>(relaxed = true)
-    private val bountyAction = mockk<Bounty>(relaxed = true)
+    private val channelBounties = mockk<List<com.hover.stax.model.ChannelBounties>>(relaxed = true)
+    private val bountyAction = mockk<com.hover.stax.model.Bounty>(relaxed = true)
     private val staxTransaction = mockk<List<StaxTransaction>>(relaxed = true)
     private val channelList = mockk<List<Channel>>(relaxed = true)
     private val countryCode = "KE"

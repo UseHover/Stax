@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.remote.dto
+package com.hover.stax.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class UserUpdateDto(
-    @SerialName("stax_user")
-    val staxUser: UpdateDto
+data class FinancialTip(
+    val id: String,
+    val title: String,
+    val content: String,
+    val snippet: String,
+    val date: Long?,
+    val shareCopy: String?,
+    val deepLink: String?
 )
 
-@Serializable
-data class UpdateDto(
-    @SerialName("is_mapper")
-    val isMapper: Boolean? = null,
-    @SerialName("marketing_opted_in")
-    val marketingOptedIn: Boolean? = null,
-    @SerialName("email")
-    val email: String
-)
+const val FINANCIAL_TIP_ID = "id"

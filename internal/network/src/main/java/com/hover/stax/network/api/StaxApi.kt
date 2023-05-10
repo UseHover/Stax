@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.remote
+package com.hover.stax.network.api
 
-import com.hover.stax.BuildConfig
-import com.hover.stax.data.remote.dto.StaxUserDto
-import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.authorization.AuthRequest
-import com.hover.stax.data.remote.dto.authorization.AuthResponse
-import com.hover.stax.data.remote.dto.authorization.RevokeTokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenResponse
-import com.hover.stax.ktor.EnvironmentProvider
+import com.hover.stax.model.StaxUserDto
+import com.hover.stax.model.auth.UserUpdateDto
+import com.hover.stax.model.auth.UserUploadDto
+import com.hover.stax.model.auth.AuthRequest
+import com.hover.stax.model.auth.AuthResponse
+import com.hover.stax.model.auth.RevokeTokenRequest
+import com.hover.stax.model.auth.TokenRequest
+import com.hover.stax.model.auth.TokenResponse
+import com.hover.stax.network.ktor.EnvironmentProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import javax.inject.Inject
 
-class StaxApi(
+class StaxApi @Inject constructor(
     private val client: HttpClient,
     environmentProvider: EnvironmentProvider
 ) {

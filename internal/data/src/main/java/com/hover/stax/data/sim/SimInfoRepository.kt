@@ -16,7 +16,10 @@
 package com.hover.stax.data.sim
 
 import com.hover.sdk.sims.SimInfo
+import com.hover.sdk.sims.SimInfoDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
 interface SimInfoRepository {
 
@@ -25,4 +28,16 @@ interface SimInfoRepository {
     fun getPresentSims(): List<SimInfo>
 
     val flowAll: Flow<MutableList<SimInfo>>
+}
+
+class SimInfoRepositoryImpl @Inject constructor(
+    private val simInfoDao: SimInfoDao
+) : SimInfoRepository {
+
+    override fun getAll(): List<SimInfo> = simInfoDao.all
+
+    override fun getPresentSims(): List<SimInfo> = simInfoDao.present
+
+    override val flowAll: Flow<MutableList<SimInfo>>
+        get() = flowOf(simInfoDao.all)
 }

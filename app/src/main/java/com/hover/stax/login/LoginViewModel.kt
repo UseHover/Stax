@@ -27,11 +27,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
-import com.hover.stax.data.remote.dto.UpdateDto
-import com.hover.stax.data.remote.dto.UploadDto
-import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.toStaxUser
+import com.hover.stax.network.dto.UpdateDto
+import com.hover.stax.network.dto.UploadDto
+import com.hover.stax.network.dto.UserUpdateDto
+import com.hover.stax.network.dto.UserUploadDto
+import com.hover.stax.network.dto.toStaxUser
 import com.hover.stax.database.models.StaxUser
 import com.hover.stax.data.auth.AuthRepository
 import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
@@ -97,8 +97,8 @@ class LoginViewModel(
                     )
                 }.also {
                     val user = authRepository.uploadUserToStax(
-                        UserUploadDto(
-                            UploadDto(
+                        com.hover.stax.network.dto.UserUploadDto(
+                            com.hover.stax.network.dto.UploadDto(
                                 deviceId = Hover.getDeviceId(getApplication()),
                                 email = signInAccount.email,
                                 username = signInAccount.displayName,
@@ -118,8 +118,8 @@ class LoginViewModel(
     fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { email ->
         updateUser(
             email = email,
-            data = UserUpdateDto(
-                UpdateDto(
+            data = com.hover.stax.network.dto.UserUpdateDto(
+                com.hover.stax.network.dto.UpdateDto(
                     marketingOptedIn = optIn,
                     email = email
                 )
@@ -127,7 +127,7 @@ class LoginViewModel(
         )
     }
 
-    private fun updateUser(email: String, data: UserUpdateDto) = viewModelScope.launch {
+    private fun updateUser(email: String, data: com.hover.stax.network.dto.UserUpdateDto) = viewModelScope.launch {
         try {
             authRepository.updateUser(email, data)
             _loginState.value = LoginScreenUiState(LoginUiState.Success)

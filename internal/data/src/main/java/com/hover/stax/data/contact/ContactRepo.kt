@@ -22,38 +22,57 @@ import com.hover.stax.database.models.StaxContact
 import com.hover.stax.utils.AnalyticsUtil
 import javax.inject.Inject
 
-class ContactRepo @Inject constructor(
-    private val contactDao: ContactDao
-) {
+interface ContactRepository {
 
     val allContacts: LiveData<List<StaxContact>>
+
+    fun getContacts(ids: Array<String>): List<StaxContact>
+
+    fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>>
+
+    fun getContact(id: String?): StaxContact?
+
+    suspend fun getContactAsync(id: String?): StaxContact?
+
+    fun getContactByPhone(phone: String?): StaxContact?
+
+    fun getLiveContact(id: String?): LiveData<StaxContact>
+
+    fun save(contact: StaxContact)
+}
+
+class ContactRepo @Inject constructor(
+    private val contactDao: ContactDao
+) : ContactRepository {
+
+    override val allContacts: LiveData<List<StaxContact>>
         get() = contactDao.all
 
-    fun getContacts(ids: Array<String>): List<StaxContact> {
+    override fun getContacts(ids: Array<String>): List<StaxContact> {
         return contactDao[ids]
     }
 
-    fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>> {
+    override fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>> {
         return contactDao.getLive(ids)
     }
 
-    fun getContact(id: String?): StaxContact? {
+    override fun getContact(id: String?): StaxContact? {
         return contactDao[id]
     }
 
-    suspend fun getContactAsync(id: String?): StaxContact? {
+    override suspend fun getContactAsync(id: String?): StaxContact? {
         return contactDao.getAsync(id)
     }
 
-    fun getContactByPhone(phone: String?): StaxContact? {
+    override fun getContactByPhone(phone: String?): StaxContact? {
         return contactDao.getByPhone("%$phone%")
     }
 
-    fun getLiveContact(id: String?): LiveData<StaxContact> {
+    override fun getLiveContact(id: String?): LiveData<StaxContact> {
         return contactDao.getLive(id)
     }
 
-    fun save(contact: StaxContact) {
+    override fun save(contact: StaxContact) {
         AppDatabase.databaseWriteExecutor.execute {
             if (getContact(contact.id) == null && contact.accountNumber != null) {
                 try {

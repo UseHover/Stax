@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.domain.model
+package com.hover.stax.model
 
 import android.content.Context
 import com.hover.sdk.actions.HoverAction

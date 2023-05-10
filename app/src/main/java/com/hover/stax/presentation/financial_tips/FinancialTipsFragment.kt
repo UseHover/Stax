@@ -28,8 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
-import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.core.AnalyticsUtil
+import com.hover.stax.model.FinancialTip
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
 import org.json.JSONObject
@@ -101,7 +100,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         }
     }
 
-    private fun showFinancialTips(tips: List<FinancialTip>, id: String? = null) {
+    private fun showFinancialTips(tips: List<com.hover.stax.model.FinancialTip>, id: String? = null) {
         binding.empty.visibility = View.GONE
         binding.financialTips.visibility = View.VISIBLE
 
@@ -119,7 +118,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         }
     }
 
-    override fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean) {
+    override fun onTipSelected(tip: com.hover.stax.model.FinancialTip, isFromDeeplink: Boolean) {
         logTipRead(tip, isFromDeeplink)
 
         backPressedCallback.isEnabled = true
@@ -140,7 +139,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         binding.shareBtn.setOnClickListener { shareTip(tip) }
     }
 
-    private fun shareTip(tip: FinancialTip) {
+    private fun shareTip(tip: com.hover.stax.model.FinancialTip) {
         val shareCopy = if (tip.shareCopy != "null")
             tip.shareCopy
         else
@@ -173,7 +172,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         logTipShare(tip)
     }
 
-    private fun logTipShare(tip: FinancialTip) {
+    private fun logTipShare(tip: com.hover.stax.model.FinancialTip) {
         val data = JSONObject()
 
         try {
@@ -187,7 +186,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.shared_financial_tip), data, requireActivity())
     }
 
-    private fun logTipRead(tip: FinancialTip, isFromDeeplink: Boolean) {
+    private fun logTipRead(tip: com.hover.stax.model.FinancialTip, isFromDeeplink: Boolean) {
         val data = JSONObject()
 
         try {

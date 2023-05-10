@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.actions.ActionRepo
-import com.hover.stax.domain.model.Resource
+import com.hover.stax.model.Resource
 import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import kotlinx.coroutines.flow.Flow
@@ -59,24 +59,24 @@ class HomeViewModel(
 
     private fun getBonusList(countries: Array<String>) = viewModelScope.launch {
         bonusListToFlow(countries).collect { bonusList ->
-            if (bonusList is Resource.Success)
+            if (bonusList is com.hover.stax.model.Resource.Success)
                 _homeState.value = homeState.value?.copy(bonuses = bonusList.data ?: emptyList())
         }
     }
 
-    private fun bonusListToFlow(countries: Array<String>): Flow<Resource<List<HoverAction>>> = flow {
+    private fun bonusListToFlow(countries: Array<String>): Flow<com.hover.stax.model.Resource<List<HoverAction>>> = flow {
         Timber.e("Looking for bounties from: ${countries.contentToString()}")
         try {
-            emit(Resource.Loading())
+            emit(com.hover.stax.model.Resource.Loading())
 
-            emit(Resource.Success(actionRepo.getBonusActionsByCountry(countries)))
+            emit(com.hover.stax.model.Resource.Success(actionRepo.getBonusActionsByCountry(countries)))
         } catch (e: Exception) {
-            emit(Resource.Error("Error fetching tips"))
+            emit(com.hover.stax.model.Resource.Error("Error fetching tips"))
         }
     }
 
     private fun getFinancialTips() = tipsUseCase().onEach { result ->
-        if (result is Resource.Success)
+        if (result is com.hover.stax.model.Resource.Success)
             _homeState.value = homeState.value?.copy(financialTips = result.data ?: emptyList())
     }.launchIn(viewModelScope)
 

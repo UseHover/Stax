@@ -13,22 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.remote.dto.authorization
+package com.hover.stax.model.auth
 
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+
+/**
+ * Builds the user object used to create a user on Stax
+ */
+@Serializable
+data class UserUploadDto(
+    @SerialName("stax_user")
+    val staxUser: UploadDto
+)
 
 @Serializable
-data class TokenResponse(
-    @SerialName("access_token")
-    val accessToken: String,
-    @SerialName("refresh_token")
-    val refreshToken: String? = null,
-    val scope: String,
-    @SerialName("created_at")
-    val createdAt: Int,
-    @SerialName("token_type")
-    val tokenType: String,
-    @SerialName("expires_in")
-    val expiresIn: Int
+data class UploadDto(
+    @SerialName("device_id")
+    val deviceId: String,
+    @SerialName("email")
+    val email: String?,
+    @SerialName("username")
+    val username: String?,
+    @SerialName("token")
+    val token: String
 )

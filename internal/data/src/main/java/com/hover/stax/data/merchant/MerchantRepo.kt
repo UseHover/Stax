@@ -20,23 +20,40 @@ import com.hover.stax.database.dao.MerchantDao
 import com.hover.stax.database.models.Merchant
 import javax.inject.Inject
 
+interface MerchantRepository {
+
+    val all: LiveData<List<Merchant>>
+
+    fun get(id: Int): Merchant?
+
+    fun getMatching(tillNo: String, channelId: Int): Merchant?
+
+    fun getLiveMatching(tillNo: String, channelId: Int): LiveData<Merchant?>
+
+    fun save(merchant: Merchant)
+
+    suspend fun update(merchant: Merchant)
+
+    suspend fun delete(merchant: Merchant)
+}
+
 class MerchantRepo @Inject constructor(
     private val merchantDao: MerchantDao
-) {
+) : MerchantRepository {
 
-    val all: LiveData<List<Merchant>> = merchantDao.all
+    override val all: LiveData<List<Merchant>> = merchantDao.all
 
-    fun get(id: Int): Merchant? = merchantDao.getMerchant(id)
+    override fun get(id: Int): Merchant? = merchantDao.getMerchant(id)
 
-    fun getMatching(tillNo: String, channelId: Int): Merchant? =
+    override fun getMatching(tillNo: String, channelId: Int): Merchant? =
         merchantDao.getMerchantsByNo(tillNo, channelId)
 
-    fun getLiveMatching(tillNo: String, channelId: Int): LiveData<Merchant?> =
+    override fun getLiveMatching(tillNo: String, channelId: Int): LiveData<Merchant?> =
         merchantDao.getLiveMerchantsByNo(tillNo, channelId)
 
-    fun save(merchant: Merchant) = merchantDao.insert(merchant)
+    override fun save(merchant: Merchant) = merchantDao.insert(merchant)
 
-    suspend fun update(merchant: Merchant) = merchantDao.update(merchant)
+    override suspend fun update(merchant: Merchant) = merchantDao.update(merchant)
 
-    suspend fun delete(merchant: Merchant) = merchantDao.delete(merchant)
+    override suspend fun delete(merchant: Merchant) = merchantDao.delete(merchant)
 }

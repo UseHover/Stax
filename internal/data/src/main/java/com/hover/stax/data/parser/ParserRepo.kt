@@ -15,12 +15,18 @@
  */
 package com.hover.stax.data.parser
 
-import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.parsers.ParserDao
+import javax.inject.Inject
 
-class ParserRepo(sdkDb: HoverRoomDatabase) {
-    private val parserDao: ParserDao = sdkDb.parserDao()
+interface ParserRepository {
 
-    fun hasSMSParser(actionId: String): Boolean =
+    fun hasSMSParser(actionId: String): Boolean
+}
+
+class ParserRepo @Inject constructor(
+    private val parserDao: ParserDao
+) : ParserRepository {
+
+    override fun hasSMSParser(actionId: String): Boolean =
         parserDao.getSMSActionParsers(actionId).isNotEmpty()
 }

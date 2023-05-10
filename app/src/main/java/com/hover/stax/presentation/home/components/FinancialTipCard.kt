@@ -38,14 +38,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
-import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.model.FinancialTip
 import com.hover.stax.presentation.home.FinancialTipClickInterface
 import com.hover.stax.presentation.home.HomeViewModel
 
 @Composable
 fun FinancialTipCard(
     tipInterface: FinancialTipClickInterface?,
-    financialTip: FinancialTip,
+    financialTip: com.hover.stax.model.FinancialTip,
     homeViewModel: HomeViewModel?
 ) {
     val size13 = dimensionResource(id = R.dimen.margin_13)

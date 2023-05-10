@@ -27,7 +27,6 @@ import com.hover.sdk.api.Hover.getSMSMessageByUUID
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.data.contact.ContactRepo
 import com.hover.stax.database.models.StaxContact
-import com.hover.stax.data.accounts.AccountRepo
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.parser.ParserRepo
 import com.hover.stax.database.models.Account

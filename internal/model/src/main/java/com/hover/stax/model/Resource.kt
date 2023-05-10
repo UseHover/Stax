@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Stax
+ * Copyright 2022 Stax
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.user
+package com.hover.stax.model
 
-import com.hover.stax.database.dao.UserDao
-import com.hover.stax.database.models.StaxUser
-import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-
-class StaxUserRepositoryImpl @Inject constructor(
-    private val userDao: UserDao
-) : StaxUserRepository {
-
-    override fun getUserAsync(): Flow<StaxUser> = userDao.getUserAsync()
-
-    override suspend fun saveUser(user: StaxUser) = userDao.insertAsync(user)
-
-    override suspend fun deleteUser(user: StaxUser) = userDao.delete(user)
+sealed class Resource<T>(val data: T? = null, val message: String? = null) {
+    class Success<T>(data: T) : Resource<T>(data)
+    class Error<T>(message: String, data: T? = null) : Resource<T>(data, message)
+    class Loading<T>(data: T? = null) : Resource<T>(data)
 }

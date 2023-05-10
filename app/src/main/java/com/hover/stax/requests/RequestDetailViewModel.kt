@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.data.contact.ContactRepo
 import com.hover.stax.database.models.StaxContact
-import com.hover.stax.data.accounts.AccountRepo
 import com.hover.stax.data.requests.RequestRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Request

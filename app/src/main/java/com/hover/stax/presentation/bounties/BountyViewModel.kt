@@ -26,10 +26,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.domain.model.Bounty
-import com.hover.stax.domain.model.Resource
+import com.hover.stax.model.Bounty
+import com.hover.stax.model.Resource
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.data.sim.SimInfoRepository
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -100,14 +99,14 @@ class BountyViewModel(
         _country.value = countryCode
         bountiesUseCase.getBounties(countryCode).onEach { result ->
             when (result) {
-                is Resource.Loading -> _bountiesState.update { it.copy(loading = true) }
-                is Resource.Error -> _bountiesState.update { it.copy(loading = false, error = result.message!!) }
-                is Resource.Success -> _bountiesState.update { it.copy(loading = false, bounties = result.data!!) }
+                is com.hover.stax.model.Resource.Loading -> _bountiesState.update { it.copy(loading = true) }
+                is com.hover.stax.model.Resource.Error -> _bountiesState.update { it.copy(loading = false, error = result.message!!) }
+                is com.hover.stax.model.Resource.Success -> _bountiesState.update { it.copy(loading = false, bounties = result.data!!) }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun isSimPresent(bounty: Bounty): Boolean = bountiesUseCase.isSimPresent(bounty, sims.value)
+    fun isSimPresent(bounty: com.hover.stax.model.Bounty): Boolean = bountiesUseCase.isSimPresent(bounty, sims.value)
 
     fun handleBountyEvent(bountySelectEvent: BountySelectEvent?) = viewModelScope.launch {
         bountySelectEvent?.let { onBountySelectEvent.send(bountySelectEvent) }

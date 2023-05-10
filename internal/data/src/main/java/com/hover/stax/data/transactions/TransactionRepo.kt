@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
@@ -35,35 +34,59 @@ import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 import javax.inject.Inject
 
-class TransactionRepo @Inject constructor(
-    private val transactionDao: TransactionDao,
-    hoverDb: HoverRoomDatabase
-) {
-
-    private val hoverTransactionDao: com.hover.sdk.transactions.TransactionDao =
-        hoverDb.transactionDao()
+interface TransactionRepository {
 
     val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction>>?
-        get() = transactionDao.getCompleteAndPendingTransfers()
 
     val bountyTransactions: LiveData<List<StaxTransaction>>?
-        get() = transactionDao.bountyTransactions
 
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?
-        get() = transactionDao.transactionsForAppReview
 
     val allNonBountyTransactions: LiveData<List<StaxTransaction>>
-        get() = transactionDao.nonBountyTransactions
 
     val bountyTransactionList: List<StaxTransaction>
+
+    fun loadFromHover(uuid: String): Transaction?
+
+    suspend fun hasTransactionLastMonth(): Boolean
+
+    fun getAccountTransactions(account: Account): LiveData<List<StaxTransaction>>?
+
+    fun getSpentAmount(accountId: Int, month: Int, year: Int): LiveData<Double>?
+
+    fun getFees(accountId: Int, year: Int): LiveData<Double>?
+
+    fun getTransactionAsync(uuid: String): Flow<StaxTransaction>
+
+    fun deleteAccountTransactions(accountId: Int)
+}
+
+class TransactionRepo @Inject constructor(
+    private val transactionDao: TransactionDao,
+    private val hoverTransactionDao: com.hover.sdk.transactions.TransactionDao,
+) : TransactionRepository {
+
+    override val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction>>?
+        get() = transactionDao.getCompleteAndPendingTransfers()
+
+    override val bountyTransactions: LiveData<List<StaxTransaction>>?
+        get() = transactionDao.bountyTransactions
+
+    override val transactionsForAppReview: LiveData<List<StaxTransaction>>?
+        get() = transactionDao.transactionsForAppReview
+
+    override val allNonBountyTransactions: LiveData<List<StaxTransaction>>
+        get() = transactionDao.nonBountyTransactions
+
+    override val bountyTransactionList: List<StaxTransaction>
         get() = transactionDao.bountyTransactionList
 
-    fun loadFromHover(uuid: String): Transaction? {
+    override fun loadFromHover(uuid: String): Transaction? {
         return hoverTransactionDao.getTransactionByUUID(uuid)
     }
 
     @SuppressLint("DefaultLocale")
-    suspend fun hasTransactionLastMonth(): Boolean {
+    override suspend fun hasTransactionLastMonth(): Boolean {
         return transactionDao.getTransactionCount(
             String.format(
                 "%02d",
@@ -73,12 +96,12 @@ class TransactionRepo @Inject constructor(
         )!! > 0
     }
 
-    fun getAccountTransactions(account: Account): LiveData<List<StaxTransaction>>? {
+    override fun getAccountTransactions(account: Account): LiveData<List<StaxTransaction>>? {
         return transactionDao.getAccountTransactions(account.id)
     }
 
     @SuppressLint("DefaultLocale")
-    fun getSpentAmount(accountId: Int, month: Int, year: Int): LiveData<Double>? {
+    override fun getSpentAmount(accountId: Int, month: Int, year: Int): LiveData<Double>? {
         return transactionDao.getTotalAmount(
             accountId,
             String.format("%02d", month),
@@ -87,7 +110,7 @@ class TransactionRepo @Inject constructor(
     }
 
     @SuppressLint("DefaultLocale")
-    fun getFees(accountId: Int, year: Int): LiveData<Double>? {
+    override fun getFees(accountId: Int, year: Int): LiveData<Double>? {
         return transactionDao.getTotalFees(accountId, year.toString())
     }
 
@@ -95,10 +118,10 @@ class TransactionRepo @Inject constructor(
         return transactionDao.getTransaction(uuid)
     }
 
-    fun getTransactionAsync(uuid: String): Flow<StaxTransaction> =
+    override fun getTransactionAsync(uuid: String): Flow<StaxTransaction> =
         transactionDao.getTransactionAsync(uuid)
 
-    fun deleteAccountTransactions(accountId: Int) =
+    override fun deleteAccountTransactions(accountId: Int) =
         transactionDao.deleteAccountTransactions(accountId)
 
     fun insertOrUpdateTransaction(

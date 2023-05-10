@@ -15,10 +15,10 @@
  */
 package com.hover.stax.presentation.bounties
 
-import com.hover.stax.domain.model.ChannelBounties
+import com.hover.stax.model.ChannelBounties
 
 data class BountiesState(
     var loading: Boolean = false,
     var error: String = "",
-    var bounties: List<ChannelBounties> = emptyList()
+    var bounties: List<com.hover.stax.model.ChannelBounties> = emptyList()
 )

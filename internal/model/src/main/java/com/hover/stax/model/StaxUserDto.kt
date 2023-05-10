@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.remote.dto
+package com.hover.stax.model
 
-import com.hover.stax.database.models.StaxUser
+import com.hover.stax.network.dto.authorization.StaxUser
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 /**
  * Response returned from the server when a user logs in or updates their details.

@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.domain.model.FinancialTip
+import com.hover.stax.model.FinancialTip
 import com.hover.stax.presentation.home.components.BalanceHeader
 import com.hover.stax.presentation.home.components.BalanceItem
 import com.hover.stax.presentation.home.components.BonusCard
@@ -44,7 +44,6 @@ import com.hover.stax.presentation.home.components.GuideCard
 import com.hover.stax.presentation.home.components.PrimaryFeatures
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.core.AnalyticsUtil
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -174,7 +173,7 @@ private fun showKEFeatures(countryIsos: List<String>): Boolean =
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    val financialTip = FinancialTip(
+    val financialTip = com.hover.stax.model.FinancialTip(
         id = "1234",
         title = "Do you want to save money",
         content = "This is a test content here so lets see if its going to use ellipse overflow",

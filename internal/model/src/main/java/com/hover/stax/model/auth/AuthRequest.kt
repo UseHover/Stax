@@ -13,43 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.data.remote.dto.authorization
+package com.hover.stax.model.auth
 
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 @Serializable
-data class TokenRequest(
+data class AuthRequest(
     @SerialName("client_id")
     val clientId: String,
-    @SerialName("client_secret")
-    val clientSecret: String,
-    val code: String,
-    @SerialName("grant_type")
-    val grantType: String,
     @SerialName("redirect_uri")
-    val redirectUri: String
-)
-
-@Serializable
-data class TokenRefresh(
-    @SerialName("client_id")
-    val clientId: String,
-    @SerialName("client_secret")
-    val clientSecret: String,
-    @SerialName("refresh_token")
-    val refreshToken: String,
-    @SerialName("grant_type")
-    val grantType: String,
-    @SerialName("redirect_uri")
-    val redirectUri: String
-)
-
-@Serializable
-data class RevokeTokenRequest(
-    @SerialName("client_id")
-    val clientId: String,
-    @SerialName("client_secret")
-    val clientSecret: String,
+    val redirectUri: String,
+    @SerialName("response_type")
+    val responseType: String,
+    @SerialName("scope")
+    val scope: String,
+    @SerialName("stax_user")
+    val staxUser: StaxUser,
+    @SerialName("token")
     val token: String
+)
+
+@Serializable
+data class StaxUser(
+    @SerialName("device_id")
+    val deviceId: String
+)
+
+@Serializable
+data class AuthResponse(
+    @SerialName("redirect_uri")
+    val redirectUri: RedirectUri,
+    @SerialName("status")
+    val status: String
+)
+
+@Serializable
+data class RedirectUri(
+    @SerialName("code")
+    val code: String,
+    @SerialName("action")
+    val action: String
 )

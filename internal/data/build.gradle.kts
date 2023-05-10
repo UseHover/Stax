@@ -24,6 +24,9 @@ android {
 
 dependencies {
     implementation(project(path = ":internal:database"))
+    implementation(project(path = ":internal:datastore"))
+    implementation(project(path = ":internal:model"))
+    implementation(project(path = ":internal:network"))
 
     implementation(libs.timber)
 }
