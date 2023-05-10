@@ -20,12 +20,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.contacts.ContactRepo
-import com.hover.stax.contacts.PhoneHelper
-import com.hover.stax.contacts.StaxContact
-import com.hover.stax.requests.Request
-import com.hover.stax.requests.RequestRepo
-import com.hover.stax.schedules.ScheduleRepo
+import com.hover.stax.data.contact.ContactRepo
+import com.hover.stax.database.models.PhoneHelper
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.database.models.Request
+import com.hover.stax.data.requests.RequestRepo
+import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import com.yariksoffice.lingver.Lingver
@@ -58,7 +58,12 @@ class TransferViewModel(
 
     fun setRecipientNumber(str: String) {
         if (contact.value != null && contact.value.toString() == str) return
-        if (str.isEmpty()) { contact.value = StaxContact() } else { contact.value = StaxContact(str) }
+        if (str.isEmpty()) {
+            contact.value =
+                StaxContact()
+        } else {
+            contact.value = StaxContact(str)
+        }
     }
 
     private fun setRecipientSmartly(r: Request?, countryAlpha2: String?) =
@@ -70,7 +75,11 @@ class TransferViewModel(
                         countryAlpha2 ?: Lingver.getInstance().getLocale().country
                     )
                     val sc = contactRepo.getContactByPhone(formattedPhone)
-                    contact.postValue(sc ?: StaxContact(r.requester_number))
+                    contact.postValue(
+                        sc ?: StaxContact(
+                            r.requester_number
+                        )
+                    )
                     isLoading.postValue(false)
                 } catch (e: NumberFormatException) {
                     AnalyticsUtil.logErrorAndReportToFirebase(

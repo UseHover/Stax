@@ -20,7 +20,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.database.models.Channel
-import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.database.models.StaxTransaction
 import com.yariksoffice.lingver.Lingver
 import java.util.*
 

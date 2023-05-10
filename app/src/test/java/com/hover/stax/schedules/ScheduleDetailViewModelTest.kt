@@ -17,8 +17,10 @@ package com.hover.stax.schedules
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
-import com.hover.stax.contacts.ContactRepo
-import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.contact.ContactRepo
+import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.data.schedule.ScheduleRepo
+import com.hover.stax.database.models.Schedule
 import com.hover.stax.utils.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk

@@ -20,9 +20,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.domain.model.Resource
-import com.hover.stax.domain.repository.AccountRepository
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

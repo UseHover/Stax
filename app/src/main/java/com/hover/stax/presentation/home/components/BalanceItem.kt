@@ -44,7 +44,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.hover.stax.R
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.utils.DateUtils
 

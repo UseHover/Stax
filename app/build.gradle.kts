@@ -28,7 +28,6 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlin.android")
     id("kotlinx-serialization")
-    id("stax.android.room")
     id("stax.android.hilt")
 }
 
@@ -184,9 +183,12 @@ android {
 }
 
 dependencies {
+    implementation(project(path = ":internal:data"))
     implementation(project(path = ":internal:database"))
+    implementation(project(path = ":internal:datastore"))
     implementation(project(path = ":internal:remoteconfig"))
     implementation(project(path = ":internal:sync"))
+    implementation(project(path = ":internal:ui"))
 
     // Modules
     implementation(project(path = ":features"))
@@ -234,9 +236,6 @@ dependencies {
     implementation(libs.bundles.image)
     kapt(libs.glide.compiler)
 
-    // DI
-    implementation(libs.bundles.koin)
-
     // Tests
     testImplementation(libs.bundles.test)
 
@@ -247,8 +246,6 @@ dependencies {
     "stagingImplementation"(project(":hover.sdk"))
     "stagingImplementation"(libs.bundles.hover)
     "productionImplementation"(libs.hover)
-
-    implementation(project(":internal:datastore"))
 }
 
 abstract class VersionTask : DefaultTask() {

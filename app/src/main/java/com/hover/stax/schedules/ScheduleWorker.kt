@@ -25,10 +25,12 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.hover.stax.R
-import com.hover.stax.contacts.ContactDao
+import com.hover.stax.database.dao.ContactDao
 import com.hover.stax.database.AppDatabase
+import com.hover.stax.database.dao.ScheduleDao
+import com.hover.stax.database.models.Schedule
 import com.hover.stax.home.MainActivity
-import com.hover.stax.schedules.Schedule.REQUEST_TYPE
+import com.hover.stax.database.models.Schedule.REQUEST_TYPE
 import java.util.concurrent.TimeUnit
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

@@ -16,7 +16,7 @@
 package com.hover.stax.presentation.welcome.data
 
 import androidx.compose.runtime.Immutable
-import com.hover.stax.domain.model.StaxUser
+import com.hover.stax.database.models.StaxUser
 
 @Immutable
 sealed interface LoginUiState {

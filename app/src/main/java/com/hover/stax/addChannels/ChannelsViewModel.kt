@@ -33,12 +33,11 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.data.local.accounts.AccountRepo
-import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.accounts.AccountRepo
+import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
-import com.hover.stax.data.sim.SimInfoRepository
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils

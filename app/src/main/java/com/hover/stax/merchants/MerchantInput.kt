@@ -20,6 +20,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.AutoCompleteTextView
 import com.hover.stax.R
+import com.hover.stax.database.models.Merchant
 import com.hover.stax.databinding.MerchantInputBinding
 import com.hover.stax.views.AbstractAutocompleteInput
 import com.hover.stax.views.StaxDropdownLayout

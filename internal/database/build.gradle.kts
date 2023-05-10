@@ -21,8 +21,9 @@ plugins {
 
 dependencies {
 
-    // DI
-    implementation(libs.bundles.koin)
+    implementation(libs.libphonenumber)
+
+    implementation(libs.lingver)
 
     implementation(libs.kotlinx.serialization)
 

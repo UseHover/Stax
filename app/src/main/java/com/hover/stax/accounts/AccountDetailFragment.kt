@@ -29,14 +29,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalancesViewModel
-import com.hover.stax.requests.Request
-import com.hover.stax.schedules.Schedule
+import com.hover.stax.database.models.Request
+import com.hover.stax.database.models.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils

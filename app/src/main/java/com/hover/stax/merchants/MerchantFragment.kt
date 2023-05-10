@@ -25,7 +25,8 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.contacts.StaxContact
+import com.hover.stax.database.models.Merchant
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentMerchantBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract

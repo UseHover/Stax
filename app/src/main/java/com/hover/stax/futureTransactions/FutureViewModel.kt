@@ -19,12 +19,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hover.stax.requests.Request
-import com.hover.stax.requests.RequestRepo
-import com.hover.stax.schedules.Schedule
-import com.hover.stax.schedules.ScheduleRepo
+import com.hover.stax.data.channel.ChannelRepository
+import com.hover.stax.database.models.Request
+import com.hover.stax.data.requests.RequestRepo
+import com.hover.stax.database.models.Schedule
+import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.database.models.Channel
-import com.hover.stax.database.channel.repository.ChannelRepository
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

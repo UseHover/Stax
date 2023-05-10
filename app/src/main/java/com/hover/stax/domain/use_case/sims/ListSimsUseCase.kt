@@ -17,10 +17,9 @@ package com.hover.stax.domain.use_case.sims
 
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.sims.SimInfo
-import com.hover.stax.data.local.actions.ActionRepo
-import com.hover.stax.domain.model.Account
-import com.hover.stax.domain.repository.AccountRepository
-import com.hover.stax.data.sim.SimInfoRepository
+import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.database.models.Account
+import com.hover.stax.data.accounts.AccountRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 

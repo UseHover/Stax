@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
+import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.databinding.TransactionListItemBinding
 import com.hover.stax.transactions.TransactionHistoryAdapter.HistoryViewHolder
 import com.hover.stax.utils.DateUtils.humanFriendlyDate

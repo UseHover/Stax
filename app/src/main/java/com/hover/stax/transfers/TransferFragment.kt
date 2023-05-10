@@ -30,7 +30,7 @@ import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
-import com.hover.stax.contacts.StaxContact
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.hover.HoverSession

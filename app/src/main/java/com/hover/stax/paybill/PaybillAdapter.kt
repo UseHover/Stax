@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
+import com.hover.stax.database.models.Paybill
 import com.hover.stax.databinding.ItemPaybillSavedBinding
 import com.hover.stax.utils.GlideApp
 import com.hover.stax.utils.UIHelper.loadImage

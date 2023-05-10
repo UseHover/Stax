@@ -15,18 +15,27 @@
  */
 package com.hover.stax.database.di
 
-import com.hover.stax.database.channel.repository.ChannelRepository
-import com.hover.stax.database.channel.repository.ChannelRepositoryImpl
-import com.hover.stax.database.sim.repository.SimInfoRepository
-import com.hover.stax.database.sim.repository.SimInfoRepositoryImpl
-import com.hover.stax.database.user.repository.StaxUserRepository
-import com.hover.stax.database.user.repository.StaxUserRepositoryImpl
-import org.koin.core.module.dsl.bind
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
+import android.content.Context
+import androidx.room.Room
+import com.hover.stax.database.StaxDatabase
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-val databaseModule = module {
-    singleOf(::StaxUserRepositoryImpl) { bind<StaxUserRepository>() }
-    singleOf(::ChannelRepositoryImpl) { bind<ChannelRepository>() }
-    singleOf(::SimInfoRepositoryImpl) { bind<SimInfoRepository>() }
+@Module
+@InstallIn(SingletonComponent::class)
+object DatabaseModule {
+
+    @Provides
+    @Singleton
+    fun providesStaxDatabase(
+        @ApplicationContext context: Context,
+    ): StaxDatabase = Room.databaseBuilder(
+        context,
+        StaxDatabase::class.java,
+        "stax-database",
+    ).build()
 }

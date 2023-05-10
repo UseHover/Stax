@@ -21,9 +21,11 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.contacts.ContactRepo
-import com.hover.stax.contacts.StaxContact
-import com.hover.stax.data.local.actions.ActionRepo
+import com.hover.stax.data.contact.ContactRepo
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.data.schedule.ScheduleRepo
+import com.hover.stax.database.models.Schedule
 import kotlinx.coroutines.launch
 
 class ScheduleDetailViewModel(

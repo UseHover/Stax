@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.telephony.PhoneNumberUtils;
 
 import com.hover.stax.R;
-import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.database.models.StaxContact;
 import com.hover.stax.utils.AnalyticsUtil;
 
 import java.util.List;

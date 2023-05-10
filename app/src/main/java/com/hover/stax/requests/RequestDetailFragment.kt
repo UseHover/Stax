@@ -23,7 +23,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
-import com.hover.stax.contacts.StaxContact
+import com.hover.stax.database.models.Request
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentRequestDetailBinding
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.DateUtils

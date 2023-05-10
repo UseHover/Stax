@@ -23,20 +23,12 @@ import com.appsflyer.AppsFlyerProperties
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
-import com.hover.stax.database.di.databaseModule
-import com.hover.stax.di.appModule
-import com.hover.stax.di.dataModule
-import com.hover.stax.di.ktorModule
-import com.hover.stax.di.repositories
-import com.hover.stax.di.useCases
-import com.hover.stax.sync.initializers.Sync
 import com.hover.stax.remoteconfig.config.RemoteFeatureToggles
+import com.hover.stax.sync.initializers.Sync
 import com.hover.stax.utils.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.HiltAndroidApp
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -56,7 +48,6 @@ class Stax : Application() {
         }
 
         setLocale()
-        initDI()
 
         setLogger()
         initFirebase()
@@ -77,13 +68,6 @@ class Stax : Application() {
 
     private fun setLocale() {
         Lingver.init(this, Locale.getDefault())
-    }
-
-    private fun initDI() {
-        startKoin {
-            androidContext(this@Stax)
-            modules(appModule + dataModule + ktorModule + useCases + repositories + databaseModule)
-        }
     }
 
     private fun setLogger() {

@@ -20,7 +20,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
-import com.hover.stax.domain.model.Account
+import com.hover.stax.database.models.Account
 import com.hover.stax.utils.GlideApp
 
 class AccountsAdapter(var accounts: List<Account>) : RecyclerView.Adapter<AccountsAdapter.ViewHolder>() {

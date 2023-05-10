@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
-import com.hover.stax.contacts.StaxContact
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.Stax2lineitemBinding
 
 class Stax2LineItem(context: Context, attrs: AttributeSet?) : RelativeLayout(context, attrs) {

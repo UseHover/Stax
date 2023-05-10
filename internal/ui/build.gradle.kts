@@ -23,4 +23,9 @@ android {
 }
 
 dependencies {
+
+    // compose
+    implementation(libs.bundles.compose)
+    debugImplementation(libs.compose.tooling)
+    androidTestImplementation(libs.compose.ui.test)
 }

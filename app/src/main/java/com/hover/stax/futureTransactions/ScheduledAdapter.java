@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.databinding.TransactionListItemBinding;
-import com.hover.stax.schedules.Schedule;
+import com.hover.stax.database.models.Schedule;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
