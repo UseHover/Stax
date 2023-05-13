@@ -155,7 +155,7 @@ public class Schedule {
         }
     }
 
-    boolean isScheduledForToday() {
+    public boolean isScheduledForToday() {
         switch (frequency) {
             case DAILY:
                 return dateInRange();

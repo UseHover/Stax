@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.model
+package com.hover.stax.data.util
 
 import com.hover.stax.database.models.StaxUser
+import com.hover.stax.model.StaxUserDto
 
 /**
  * Mapper to convert a [StaxUserDto] to a [StaxUser].

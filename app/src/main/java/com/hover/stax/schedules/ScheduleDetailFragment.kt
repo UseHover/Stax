@@ -30,6 +30,7 @@ import com.hover.stax.core.Utils
 import com.hover.stax.database.models.Schedule
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentScheduleBinding
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
@@ -85,7 +86,7 @@ class ScheduleDetailFragment : Fragment() {
         } catch (ignored: JSONException) {
         }
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_schedule)

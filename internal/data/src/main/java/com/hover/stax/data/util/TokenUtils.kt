@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.core
+package com.hover.stax.data.util
 
 import android.util.Base64
-import com.hover.stax.data.remote.dto.StaxUserDto
-import com.hover.stax.data.remote.dto.authorization.TokenData
-import com.hover.stax.data.remote.dto.toStaxUser
 import com.hover.stax.database.models.StaxUser
-import java.io.UnsupportedEncodingException
+import com.hover.stax.model.StaxUserDto
+import com.hover.stax.model.auth.TokenData
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import timber.log.Timber
+import java.io.UnsupportedEncodingException
 
 object TokenUtils {
 

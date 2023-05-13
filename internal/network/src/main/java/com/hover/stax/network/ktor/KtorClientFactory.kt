@@ -17,6 +17,8 @@ package com.hover.stax.network.ktor
 
 import com.hover.stax.datastore.DefaultTokenProvider
 import com.hover.stax.datastore.TokenProvider
+import com.hover.stax.model.auth.TokenRefresh
+import com.hover.stax.model.auth.TokenResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -39,6 +41,8 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
+
+private const val REFRESH = "refresh_token"
 
 class KtorClientFactory(
     private val tokenProvider: TokenProvider,

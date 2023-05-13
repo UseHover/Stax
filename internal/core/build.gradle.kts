@@ -17,6 +17,7 @@ plugins {
     id("stax.android.library")
     id("stax.android.hilt")
     id("kotlin-kapt")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -29,4 +30,14 @@ dependencies {
     // Google
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)
+
+    implementation(libs.kotlinx.serialization)
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:31.2.2"))
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+
+    // logging
+    implementation(libs.bundles.logging)
 }
