@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.fragment.app.activityViewModels
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.database.models.Merchant
@@ -31,10 +32,8 @@ import com.hover.stax.databinding.FragmentMerchantBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.transfers.AbstractFormFragment
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
-import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
 class MerchantFragment : AbstractFormFragment() {
@@ -46,7 +45,7 @@ class MerchantFragment : AbstractFormFragment() {
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-        abstractFormViewModel = getSharedViewModel<MerchantViewModel>()
+        val abstractFormViewModel: MerchantViewModel by activityViewModels()
         viewModel = abstractFormViewModel as MerchantViewModel
         super.onCreate(savedInstanceState)
     }
@@ -57,7 +56,13 @@ class MerchantFragment : AbstractFormFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMerchantBinding.inflate(inflater, container, false)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_merchant)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_merchant)
+            ),
+            requireActivity()
+        )
         accountsViewModel.setType(HoverAction.MERCHANT)
         return binding.root
     }
@@ -83,7 +88,10 @@ class MerchantFragment : AbstractFormFragment() {
         accountsViewModel.activeAccount.observe(viewLifecycleOwner) { account ->
             account?.let { binding.summaryCard.accountValue.setTitle(it.toString()) }
             val err = accountsViewModel.errorCheck()
-            payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            payWithDropdown.setState(
+                err,
+                if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+            )
         }
     }
 
@@ -195,21 +203,34 @@ class MerchantFragment : AbstractFormFragment() {
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, afterCount: Int) {
-            viewModel.setMerchant(charSequence.toString(), payWithDropdown.getHighlightedAccount(), actionSelectViewModel.activeAction.value)
+            viewModel.setMerchant(
+                charSequence.toString(),
+                payWithDropdown.getHighlightedAccount(),
+                actionSelectViewModel.activeAction.value
+            )
         }
     }
 
     override fun validates(): Boolean {
         val accountError = accountsViewModel.errorCheck()
-        payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        payWithDropdown.setState(
+            accountError,
+            if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         val amountError = viewModel.amountErrors()
-        binding.editCard.amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        binding.editCard.amountInput.setState(
+            amountError,
+            if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         val actionError = actionSelectViewModel.errorCheck()
 
         val recipientError = viewModel.recipientErrors()
-        binding.editCard.merchantSelect.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        binding.editCard.merchantSelect.setState(
+            recipientError,
+            if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         return accountError == null && actionError == null && amountError == null && recipientError == null
     }

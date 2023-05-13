@@ -26,23 +26,22 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat.getColor
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
+import com.hover.stax.core.splitCamelCase
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.core.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
-import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
@@ -59,8 +58,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-        abstractFormViewModel = getSharedViewModel<TransferViewModel>()
-        transferViewModel = abstractFormViewModel as TransferViewModel
+        val abstractFormViewModel: TransferViewModel by activityViewModels()
+        transferViewModel = abstractFormViewModel
         super.onCreate(savedInstanceState)
     }
 
@@ -102,7 +101,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun setTitle() {
-        val titleRes = if (accountsViewModel.getActionType() == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
+        val titleRes =
+            if (accountsViewModel.getActionType() == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
         binding.editCard.root.setTitle(getString(titleRes))
         binding.summaryCard.root.setTitle(getString(titleRes))
     }
@@ -128,12 +128,17 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         accountsViewModel.activeAccount.observe(viewLifecycleOwner) { account ->
             account?.let {
                 binding.summaryCard.accountValue.setTitle(it.toString())
-                binding.summaryCard.feeLabel.text = getString(R.string.transfer_fee_label_who, it.toString())
+                binding.summaryCard.feeLabel.text =
+                    getString(R.string.transfer_fee_label_who, it.toString())
             }
 
             val err = accountsViewModel.errorCheck()
-            payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-            binding.editCard.actionSelect.visibility = if (account != null) View.VISIBLE else View.GONE
+            payWithDropdown.setState(
+                err,
+                if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+            )
+            binding.editCard.actionSelect.visibility =
+                if (account != null) View.VISIBLE else View.GONE
         }
     }
 
@@ -166,13 +171,19 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         Timber.e("action out params: %s", action.output_params)
         showVerifyRecipient(transferViewModel.contact.value, action)
         binding.summaryCard.verifyRecipientBtn.setOnClickListener { checkRecipient() }
-        binding.summaryCard.feeRow.visibility = if (action.output_params?.opt("fee") != null) View.VISIBLE else ViewGroup.GONE
+        binding.summaryCard.feeRow.visibility =
+            if (action.output_params?.opt("fee") != null) View.VISIBLE else ViewGroup.GONE
         setFeeState(null)
     }
 
     private fun setFeeState(amount: String?) {
         binding.summaryCard.feeValue.text = amount ?: getString(R.string.check_fee)
-        binding.summaryCard.feeValue.setTextColor(getColor(requireContext(), if (amount == null) R.color.stax_state_blue else R.color.offWhite))
+        binding.summaryCard.feeValue.setTextColor(
+            getColor(
+                requireContext(),
+                if (amount == null) R.color.stax_state_blue else R.color.offWhite
+            )
+        )
         binding.summaryCard.feeValue.setOnClickListener { if (amount == null) checkFee() else null }
     }
 
@@ -204,7 +215,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
     private fun observeNote() {
         transferViewModel.note.observe(viewLifecycleOwner) {
-            binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+            binding.summaryCard.noteRow.visibility =
+                if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
             binding.summaryCard.noteValue.text = it
         }
     }
@@ -239,7 +251,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         binding.editCard.amountInput.apply {
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
-                setInputState(hasFocus, this, transferViewModel.amountErrors(actionSelectViewModel.activeAction.value))
+                setInputState(
+                    hasFocus,
+                    this,
+                    transferViewModel.amountErrors(actionSelectViewModel.activeAction.value)
+                )
             }
         }
     }
@@ -267,14 +283,25 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
     private fun checkRecipient() {
         val hsb = generateSessionBuilder()
-        hsb.message(getString(R.string.check_recipient_for, transferViewModel.contact.value?.accountNumber))
+        hsb.message(
+            getString(
+                R.string.check_recipient_for,
+                transferViewModel.contact.value?.accountNumber
+            )
+        )
         hsb.stopAt("recipientName")
         callHover(retrieveData, hsb)
     }
 
     private fun checkFee() {
         val hsb = generateSessionBuilder()
-        hsb.message(getString(R.string.check_transfer_fee_for, transferViewModel.amount.value, hsb.action.from_institution_name))
+        hsb.message(
+            getString(
+                R.string.check_transfer_fee_for,
+                transferViewModel.amount.value,
+                hsb.action.from_institution_name
+            )
+        )
         hsb.stopAt("fee")
         callHover(retrieveData, hsb)
     }
@@ -307,7 +334,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             val showPopup = !it.hasName()
             it.updateNames(data)
             val dialog = StaxDialog(layoutInflater)
-                .setDialogMessage(getString(R.string.check_recipient_result, it.accountNumber, it.name))
+                .setDialogMessage(
+                    getString(
+                        R.string.check_recipient_result,
+                        it.accountNumber,
+                        it.name
+                    )
+                )
                 .setPosButton(R.string.btn_ok) { }
 
             if (showPopup)
@@ -352,16 +385,29 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
     override fun validates(): Boolean {
         val accountError = accountsViewModel.errorCheck()
-        payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        payWithDropdown.setState(
+            accountError,
+            if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         val amountError = transferViewModel.amountErrors(actionSelectViewModel.activeAction.value)
-        binding.editCard.amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        binding.editCard.amountInput.setState(
+            amountError,
+            if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         val actionError = actionSelectViewModel.errorCheck()
-        binding.editCard.actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        binding.editCard.actionSelect.setState(
+            actionError,
+            if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
-        val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
-        binding.editCard.contactSelect.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        val recipientError =
+            transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
+        binding.editCard.contactSelect.setState(
+            recipientError,
+            if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         val nonstandardErrors = validateNonStandardVars()
 
@@ -412,7 +458,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             for ((k, v) in actionSelectViewModel.nonStandardVariables.value!!) {
                 if (v.isNullOrEmpty()) {
                     binding.editCard.nonStandardVariables.findViewWithTag<StaxTextInput>(k)
-                        .setState(getString(R.string.enterValue_non_template_error, k.lowercase()), AbstractStatefulInput.ERROR)
+                        .setState(
+                            getString(R.string.enterValue_non_template_error, k.lowercase()),
+                            AbstractStatefulInput.ERROR
+                        )
                     return false
                 } else
                     binding.editCard.nonStandardVariables.findViewWithTag<StaxTextInput>(k)
@@ -431,8 +480,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
     private fun setRecipientHint(action: HoverAction) {
         binding.summaryCard.accountValue.setSubtitle(action.getNetworkSubtitle(requireContext()))
-        editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
-        binding.summaryCard.recipientRow.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
+        editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility =
+            if (action.requiresRecipient()) View.VISIBLE else View.GONE
+        binding.summaryCard.recipientRow.visibility =
+            if (action.requiresRecipient()) View.VISIBLE else View.GONE
 
         if (!action.requiresRecipient()) {
             binding.summaryCard.recipientValue.setContent(getString(R.string.self_choice), "")
@@ -455,7 +506,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 if (selected != null && selected.bonus_percent > 0) {
                     cardBonus.visibility = View.VISIBLE
                     title.text = getString(R.string.congratulations)
-                    message.text = getString(R.string.you_are_getting_extra_airtime, selected.bonus_percent)
+                    message.text =
+                        getString(R.string.you_are_getting_extra_airtime, selected.bonus_percent)
                     cta.visibility = View.GONE
                 } else if (actions?.any { a -> a.bonus_percent > 0 } != true) {
                     cardBonus.visibility = View.GONE
@@ -469,18 +521,26 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                         text = getString(R.string.top_up_with, bonus.from_institution_name)
 
                         setOnClickListener {
-                            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+                            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+                                getString(R.string.clicked_bonus_airtime_banner),
+                                requireActivity()
+                            )
                             accountsViewModel.payWith(bonus.from_institution_id)
                         }
                     }
-                } else { cardBonus.visibility = View.GONE }
+                } else {
+                    cardBonus.visibility = View.GONE
+                }
             }
         }
     }
 
     override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
-        updateBonusBanner(actionSelectViewModel.activeAction.value, accountsViewModel.bonusActions.value)
+        updateBonusBanner(
+            actionSelectViewModel.activeAction.value,
+            accountsViewModel.bonusActions.value
+        )
     }
 
     override fun onDestroyView() {

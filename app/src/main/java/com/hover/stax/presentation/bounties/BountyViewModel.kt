@@ -39,8 +39,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BountyViewModel(
+class BountyViewModel @Inject constructor(
     private val simRepository: com.hover.stax.data.sim.SimInfoRepository,
     private val bountiesUseCase: GetChannelBountiesUseCase,
     val application: Application

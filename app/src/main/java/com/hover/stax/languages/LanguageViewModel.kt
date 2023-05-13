@@ -20,8 +20,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hover.stax.R
 import com.yariksoffice.lingver.Lingver
+import javax.inject.Inject
 
-class LanguageViewModel(val application: Application) : ViewModel() {
+class LanguageViewModel @Inject constructor(
+    val application: Application
+) : ViewModel() {
 
     val languages = MutableLiveData<List<Lang>>()
 

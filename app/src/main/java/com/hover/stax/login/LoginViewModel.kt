@@ -43,8 +43,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class LoginViewModel(
+class LoginViewModel @Inject constructor(
     application: Application,
     private val staxUserUseCase: StaxUserUseCase,
     private val authRepository: AuthRepository,
@@ -97,7 +98,7 @@ class LoginViewModel(
                     )
                 }.also {
                     val user = authRepository.uploadUserToStax(
-                        com.hover.stax.network.dto.UserUploadDto(
+                        UserUploadDto(
                             com.hover.stax.network.dto.UploadDto(
                                 deviceId = Hover.getDeviceId(getApplication()),
                                 email = signInAccount.email,

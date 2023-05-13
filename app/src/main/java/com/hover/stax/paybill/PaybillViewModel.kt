@@ -20,6 +20,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.contact.ContactRepo
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.paybill.PaybillRepo
@@ -32,13 +33,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
+import javax.inject.Inject
 
-class PaybillViewModel(
+class PaybillViewModel @Inject constructor(
     application: Application,
     contactRepo: ContactRepo,
     val actionRepo: ActionRepo,
     private val billRepo: PaybillRepo,
-    val accountRepo: AccountRepo,
+    val accountRepo: AccountRepository,
     scheduleRepo: ScheduleRepo
 ) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 

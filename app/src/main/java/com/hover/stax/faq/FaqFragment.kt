@@ -22,27 +22,32 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentFaqBinding
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.network.NetworkMonitor
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
     private var _binding: FragmentFaqBinding? = null
     private val binding get() = _binding!!
 
-    private val faqViewModel: FaqViewModel by viewModel()
+    private val faqViewModel: FaqViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.FAQs)), requireContext())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.FAQs)
+            ),
+            requireContext()
+        )
         _binding = FragmentFaqBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -60,7 +65,9 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
         faqViewModel.faqLiveData.observe(viewLifecycleOwner) { faqs ->
             faqs?.let {
                 if (it.isEmpty()) {
-                    if (NetworkMonitor(requireActivity()).isNetworkConnected) updateLoadingStatus(Status.FAILED)
+                    if (NetworkMonitor(requireActivity()).isNetworkConnected) updateLoadingStatus(
+                        Status.FAILED
+                    )
                     else updateLoadingStatus(Status.FAILED_NO_INTERNET)
                 } else {
                     updateLoadingStatus(Status.SUCCESS)
@@ -96,6 +103,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
                 binding.responseText.visibility = View.GONE
                 binding.faqRecyclerView.visibility = View.VISIBLE
             }
+
             Status.LOADING -> showResponseText(R.string.loading)
             Status.FAILED -> showResponseText(R.string.loading_error)
             Status.FAILED_NO_INTERNET -> showResponseText(R.string.faq_internet_error)
@@ -108,7 +116,10 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
     override fun onTopicClicked(faq: FAQ) {
         binding.faqListCard.setTitle(faq.topic)
-        binding.faqContentId.text = HtmlCompat.fromHtml(getString(R.string.faq_content, faq.content, deviceId()), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.faqContentId.text = HtmlCompat.fromHtml(
+            getString(R.string.faq_content, faq.content, deviceId()),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
         binding.faqContentId.movementMethod = LinkMovementMethod.getInstance()
         setShowingContent(true)
     }

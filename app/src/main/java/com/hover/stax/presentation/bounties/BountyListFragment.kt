@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -41,14 +42,13 @@ import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class BountyListFragment : Fragment() {
 
     private lateinit var networkMonitor: NetworkMonitor
 
-    private val bountiesViewModel: BountyViewModel by viewModel()
+    private val bountiesViewModel: BountyViewModel by viewModels()
 
     private var _binding: FragmentBountyListBinding? = null
     private val binding get() = _binding!!

@@ -33,8 +33,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class SimViewModel(private val listSimsUseCase: ListSimsUseCase, val application: Application) : ViewModel() {
+class SimViewModel @Inject constructor(
+    private val listSimsUseCase: ListSimsUseCase,
+    val application: Application
+) : ViewModel() {
 
     private val _sims = MutableStateFlow<List<SimWithAccount>>(emptyList())
     val sims = _sims.asStateFlow()
@@ -53,7 +57,10 @@ class SimViewModel(private val listSimsUseCase: ListSimsUseCase, val application
         fetchSims()
         simReceiver?.let {
             LocalBroadcastManager.getInstance(application)
-                .registerReceiver(it, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))
+                .registerReceiver(
+                    it,
+                    IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION")
+                )
         }
         Hover.updateSimInfo(application)
     }

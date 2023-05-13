@@ -24,6 +24,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
+import com.hover.sdk.transactions.TransactionDao
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.database.models.StaxTransaction
@@ -39,9 +40,12 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
-import com.hover.stax.database.AppDatabase
+import javax.inject.Inject
 
 class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+
+    @Inject
+    private lateinit var transactionDao: TransactionDao
 
     companion object {
         const val TAG = "BountyTransactionWorker"
@@ -65,7 +69,6 @@ class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParam
     }
 
     private val client = OkHttpClient()
-    private val transactionDao = AppDatabase.getInstance(context).transactionDao()
 
     override fun doWork(): Result {
         try {

@@ -17,6 +17,7 @@ package com.hover.stax.home
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
@@ -35,20 +36,18 @@ import com.hover.stax.requests.SMS
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface {
 
     lateinit var navHelper: NavHelper
 
-    private val transferViewModel: TransferViewModel by viewModel()
-    private val requestViewModel: NewRequestViewModel by viewModel()
-    private val historyViewModel: TransactionHistoryViewModel by viewModel()
+    private val transferViewModel: TransferViewModel by viewModels()
+    private val requestViewModel: NewRequestViewModel by viewModels()
+    private val historyViewModel: TransactionHistoryViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
 

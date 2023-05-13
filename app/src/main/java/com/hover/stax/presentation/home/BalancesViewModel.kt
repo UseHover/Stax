@@ -24,6 +24,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.database.models.Account
 import kotlinx.coroutines.Dispatchers
@@ -32,11 +33,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BalancesViewModel(
+class BalancesViewModel @Inject constructor(
     application: Application,
     val actionRepo: ActionRepo,
-    val accountRepo: AccountRepo
+    val accountRepo: AccountRepository
 ) : AndroidViewModel(application) {
 
     var userRequestedBalanceAccount = MutableLiveData<Account?>()

@@ -15,24 +15,28 @@
  */
 package com.hover.stax.domain.use_case.financial_tips
 
+import com.hover.stax.data.tips.FinancialTipsRepository
 import com.hover.stax.model.FinancialTip
 import com.hover.stax.model.Resource
-import com.hover.stax.data.tips.FinancialTipsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class TipsUseCase(private val financialTipsRepository: FinancialTipsRepository) {
+class TipsUseCase @Inject constructor(
+    private val financialTipsRepository: FinancialTipsRepository
+) {
 
-    operator fun invoke(): Flow<com.hover.stax.model.Resource<List<com.hover.stax.model.FinancialTip>>> = flow {
-        try {
-            emit(com.hover.stax.model.Resource.Loading())
+    operator fun invoke(): Flow<com.hover.stax.model.Resource<List<com.hover.stax.model.FinancialTip>>> =
+        flow {
+            try {
+                emit(com.hover.stax.model.Resource.Loading())
 
-            val financialTips = financialTipsRepository.getTips()
-            emit(com.hover.stax.model.Resource.Success(financialTips))
-        } catch (e: Exception) {
-            emit(com.hover.stax.model.Resource.Error("Error fetching tips"))
+                val financialTips = financialTipsRepository.getTips()
+                emit(com.hover.stax.model.Resource.Success(financialTips))
+            } catch (e: Exception) {
+                emit(com.hover.stax.model.Resource.Error("Error fetching tips"))
+            }
         }
-    }
 
     fun getDismissedTipId(): String? = financialTipsRepository.getDismissedTipId()
 

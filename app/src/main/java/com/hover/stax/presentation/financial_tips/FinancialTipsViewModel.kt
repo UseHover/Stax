@@ -23,8 +23,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
-class FinancialTipsViewModel(private val tipsUseCase: TipsUseCase) : ViewModel() {
+class FinancialTipsViewModel @Inject constructor(
+    private val tipsUseCase: TipsUseCase
+) : ViewModel() {
 
     private val _tipsState = MutableStateFlow(FinancialTipsState())
     val tipsState = _tipsState.asStateFlow()

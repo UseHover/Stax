@@ -18,6 +18,7 @@ package com.hover.stax.login
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -35,10 +36,8 @@ import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAI
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 const val FORCED_VERSION = "force_update_app_version"
@@ -47,7 +46,7 @@ abstract class AbstractGoogleAuthActivity :
     AppCompatActivity(),
     StaxGoogleLoginInterface {
 
-    private val loginViewModel: LoginViewModel by viewModel()
+    private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
 
     private lateinit var updateManager: AppUpdateManager
@@ -128,7 +127,13 @@ abstract class AbstractGoogleAuthActivity :
     }
 
     private fun logAppUpdate(status: String) {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.force_update_status, status), this)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.force_update_status,
+                status
+            ),
+            this
+        )
     }
 
     private fun getUpdateType(updateInfo: AppUpdateInfo): Int {

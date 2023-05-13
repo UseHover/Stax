@@ -22,20 +22,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Channel
-import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryItem
 import com.hover.stax.data.transactions.TransactionRepo
 import java.util.Calendar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AccountDetailViewModel(
+class AccountDetailViewModel @Inject constructor(
     val application: Application,
-    val repo: AccountRepo,
+    val repo: AccountRepository,
     private val transactionRepo: TransactionRepo,
     private val channelRepository: ChannelRepository,
     val actionRepo: ActionRepo

@@ -28,11 +28,11 @@ import com.hover.stax.database.models.Merchant
 import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
-import com.hover.stax.core.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MerchantViewModel(
+class MerchantViewModel @Inject constructor(
     application: Application,
     contactRepo: ContactRepo,
     private val merchantRepo: MerchantRepo,

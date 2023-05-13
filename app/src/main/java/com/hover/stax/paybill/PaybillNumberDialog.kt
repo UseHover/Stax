@@ -21,12 +21,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.DialogPaybillNumberBinding
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class PaybillNumberDialog : DialogFragment() {
 
@@ -36,7 +36,7 @@ class PaybillNumberDialog : DialogFragment() {
     private lateinit var dialog: StaxDialog
     private lateinit var dialogView: View
 
-    private val viewModel: PaybillViewModel by sharedViewModel()
+    private val viewModel: PaybillViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         _binding = DialogPaybillNumberBinding.inflate(layoutInflater)

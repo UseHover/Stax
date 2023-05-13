@@ -47,14 +47,13 @@ import com.hover.stax.presentation.sims.components.SampleSimInfoProvider
 import com.hover.stax.presentation.sims.components.SimItem
 import com.hover.stax.ui.theme.StaxTheme
 import com.hover.stax.ui.theme.TextGrey
-import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SimScreen(
     refreshBalance: (Account) -> Unit,
     buyAirtime: (Account) -> Unit,
     navTo: (dest: Int) -> Unit,
-    simViewModel: SimViewModel = getViewModel()
+    simViewModel: SimViewModel = hiltViewModel()
 ) {
     val sims by simViewModel.sims.collectAsState()
 

@@ -17,6 +17,7 @@ package com.hover.stax.inapp_banner
 
 import android.content.Context
 import com.hover.sdk.permissions.PermissionHelper
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.utils.Utils
 import java.util.Calendar
 import java.util.Date
@@ -26,13 +27,13 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
+import javax.inject.Inject
 
-class BannerUtils(val context: Context) : KoinComponent {
+class BannerUtils(val context: Context) {
 
-    private val repo: AccountRepo by inject()
+    @Inject
+    private lateinit var repo: AccountRepository
 
     private val FIRST_WEEK = 1
     private val SECOND_WEEK = 2

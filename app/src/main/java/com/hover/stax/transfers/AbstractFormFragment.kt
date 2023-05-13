@@ -29,6 +29,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -37,13 +38,12 @@ import com.hover.stax.R
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.Account
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.presentation.home.BalancesViewModel
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
@@ -51,15 +51,14 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
-    private val balancesViewModel: BalancesViewModel by sharedViewModel()
-    val accountsViewModel: AccountsViewModel by sharedViewModel()
-    val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
+    private val balancesViewModel: BalancesViewModel by activityViewModels()
+    val accountsViewModel: AccountsViewModel by activityViewModels()
+    val actionSelectViewModel: ActionSelectViewModel by activityViewModels()
 
     var editCard: View? = null
     var summaryCard: StaxCardView? = null
@@ -85,7 +84,10 @@ abstract class AbstractFormFragment : Fragment() {
         fab.setOnClickListener { fabClicked() }
         payWithDropdown = root.findViewById(R.id.payWithDropdown)
         payWithDropdown.setListener(accountsViewModel)
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
     @CallSuper
@@ -100,27 +102,50 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun generateSessionBuilder(action: HoverAction): HoverSession.Builder {
-        return HoverSession.Builder(action, accountsViewModel.activeAccount.value!!, null, requireActivity())
+        return HoverSession.Builder(
+            action,
+            accountsViewModel.activeAccount.value!!,
+            null,
+            requireActivity()
+        )
     }
 
     private val checkBalance = registerForActivityResult(TransactionContract()) { data: Intent? ->
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
+            NavUtil.showTransactionDetailsFragment(
+                findNavController(),
+                data.extras!!.getString("uuid")!!
+            )
         }
     }
 
-    protected fun callHover(launcher: ActivityResultLauncher<HoverSession.Builder>, b: HoverSession.Builder) {
+    protected fun callHover(
+        launcher: ActivityResultLauncher<HoverSession.Builder>,
+        b: HoverSession.Builder
+    ) {
         try {
             launcher.launch(b)
         } catch (e: Exception) {
-            requireActivity().runOnUiThread { UIHelper.flashAndReportMessage(requireContext(), getString(R.string.error_running_action)) }
-            com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
+            requireActivity().runOnUiThread {
+                UIHelper.flashAndReportMessage(
+                    requireContext(),
+                    getString(R.string.error_running_action)
+                )
+            }
+            com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+                b.action.public_id,
+                getString(R.string.error_running_action_log),
+                e
+            )
         }
     }
 
     protected fun goToDeets(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
+            NavUtil.showTransactionDetailsFragment(
+                findNavController(),
+                data.extras!!.getString("uuid")!!
+            )
         }
     }
 
@@ -141,7 +166,10 @@ abstract class AbstractFormFragment : Fragment() {
             } else {
                 onSubmitForm()
             }
-        } else UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.toast_pleasefix))
+        } else UIHelper.flashAndReportMessage(
+            requireActivity(),
+            getString(R.string.toast_pleasefix)
+        )
     }
 
     abstract fun validates(): Boolean
@@ -161,7 +189,10 @@ abstract class AbstractFormFragment : Fragment() {
 
     fun setInputState(hasFocus: Boolean, input: StaxTextInput, errors: String?) {
         if (!hasFocus)
-            input.setState(errors, if (errors == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            input.setState(
+                errors,
+                if (errors == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+            )
         else
             input.setState(null, AbstractStatefulInput.NONE)
     }
@@ -173,12 +204,16 @@ abstract class AbstractFormFragment : Fragment() {
             accountsViewModel.getActionType() == HoverAction.P2P ||
                 accountsViewModel.getActionType() == HoverAction.MERCHANT ||
                 accountsViewModel.getActionType() == HoverAction.BILL -> getString(R.string.fab_transfernow)
+
             else -> getString(R.string.fab_submit)
         }
     }
 
     open fun startContactPicker(c: Context) {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.try_contact_select), c)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(R.string.try_contact_select),
+            c
+        )
 
         if (PermissionUtils.hasContactPermission(c))
             contactPickerLauncher.launch(null)
@@ -186,27 +221,34 @@ abstract class AbstractFormFragment : Fragment() {
             requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            log(getString(R.string.contact_perm_success))
-            contactPickerLauncher.launch(null)
-        } else {
-            showError(R.string.toast_error_contactperm, R.string.contact_perm_denied)
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                log(getString(R.string.contact_perm_success))
+                contactPickerLauncher.launch(null)
+            } else {
+                showError(R.string.toast_error_contactperm, R.string.contact_perm_denied)
+            }
         }
-    }
 
-    private val contactPickerLauncher = registerForActivityResult(ActivityResultContracts.PickContact()) { data ->
-        val staxContact = data?.let {
-            StaxContact(
-                data,
-                requireActivity()
-            )
+    private val contactPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.PickContact()) { data ->
+            val staxContact = data?.let {
+                StaxContact(
+                    data,
+                    requireActivity()
+                )
+            }
+            staxContact?.id?.let {
+                log(getString(R.string.contact_select_success))
+                onContactSelected(staxContact)
+            } ?: run {
+                showError(
+                    R.string.toast_error_contactselect,
+                    R.string.contact_select_error
+                )
+            }
         }
-        staxContact?.id?.let {
-            log(getString(R.string.contact_select_success))
-            onContactSelected(staxContact)
-        } ?: run { showError(R.string.toast_error_contactselect, R.string.contact_select_error) }
-    }
 
     private fun showError(userMsg: Int, logMsg: Int) {
         log(getString(logMsg))
@@ -250,5 +292,6 @@ abstract class AbstractFormFragment : Fragment() {
         super.onDestroy()
     }
 
-    private fun log(event: String) = com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(event, requireContext())
+    private fun log(event: String) =
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(event, requireContext())
 }

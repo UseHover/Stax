@@ -32,8 +32,9 @@ import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class TransferViewModel(
+class TransferViewModel @Inject constructor(
     application: Application,
     private val requestRepo: RequestRepo,
     contactRepo: ContactRepo,

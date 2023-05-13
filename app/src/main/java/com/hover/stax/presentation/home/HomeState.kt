@@ -22,6 +22,6 @@ import com.hover.stax.model.FinancialTip
 data class HomeState(
     val bonuses: List<HoverAction>? = null,
     val accounts: List<Account>? = null,
-    val financialTips: List<com.hover.stax.model.FinancialTip>? = null,
+    val financialTips: List<FinancialTip>? = null,
     val dismissedTipId: String = ""
 )

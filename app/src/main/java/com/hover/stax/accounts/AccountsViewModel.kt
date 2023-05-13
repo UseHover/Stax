@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Schedule
@@ -33,8 +34,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AccountsViewModel(application: Application, val repo: AccountRepo, val actionRepo: ActionRepo) :
+class AccountsViewModel @Inject constructor(
+    application: Application,
+    val repo: AccountRepository,
+    val actionRepo: ActionRepo
+) :
     AndroidViewModel(application),
     AccountDropdown.HighlightListener {
 
@@ -93,12 +99,16 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         loadActions(account, type.value!!)
     }
 
-    private fun loadActions(account: Account, type: String) = viewModelScope.launch(Dispatchers.IO) {
-        institutionActions.postValue(
-            if (type == HoverAction.P2P) actionRepo.getTransferActions(account.institutionId!!, account.countryAlpha2!!)
-            else actionRepo.getActions(account.institutionId, account.countryAlpha2!!, type)
-        )
-    }
+    private fun loadActions(account: Account, type: String) =
+        viewModelScope.launch(Dispatchers.IO) {
+            institutionActions.postValue(
+                if (type == HoverAction.P2P) actionRepo.getTransferActions(
+                    account.institutionId!!,
+                    account.countryAlpha2!!
+                )
+                else actionRepo.getActions(account.institutionId, account.countryAlpha2!!, type)
+            )
+        }
 
     private fun loadBonuses(account: Account?) {
         if (account?.countryAlpha2 == null || type.value.isNullOrEmpty()) return
@@ -109,9 +119,12 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         }
     }
 
-    fun setActiveAccount(accountId: Int?) = accountId?.let { activeAccount.postValue(accountList.value.accounts.find { it.id == accountId }) }
+    fun setActiveAccount(accountId: Int?) =
+        accountId?.let { activeAccount.postValue(accountList.value.accounts.find { it.id == accountId }) }
 
-    fun payWith(fromInstitutionId: Int) = accountList.value.accounts.firstOrNull { it.institutionId == fromInstitutionId }?.let { activeAccount.postValue(it) }
+    fun payWith(fromInstitutionId: Int) =
+        accountList.value.accounts.firstOrNull { it.institutionId == fromInstitutionId }
+            ?.let { activeAccount.postValue(it) }
 
     fun errorCheck(): String? {
         return when {
@@ -120,12 +133,14 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
                 R.string.no_actions_fielderror,
                 HoverAction.getHumanFriendlyType(getApplication(), type.value)
             )
+
             !isValidAccount() -> (getApplication() as Context).getString(R.string.channels_error_newaccount)
             else -> null
         }
     }
 
-    fun isValidAccount(): Boolean = activeAccount.value?.latestBalance != null || activeAccount.value?.institutionType != "bank"
+    fun isValidAccount(): Boolean =
+        activeAccount.value?.latestBalance != null || activeAccount.value?.institutionType != "bank"
 
     fun view(s: Schedule) {
         setType(s.type)
@@ -150,7 +165,12 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
             a.isDefault = true
             repo.update(a)
 
-            _defaultUpdateMsg.send((getApplication() as Context).getString(R.string.def_account_update_msg, account.userAlias))
+            _defaultUpdateMsg.send(
+                (getApplication() as Context).getString(
+                    R.string.def_account_update_msg,
+                    account.userAlias
+                )
+            )
         }
     }
 

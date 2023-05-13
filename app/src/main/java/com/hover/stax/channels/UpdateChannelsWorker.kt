@@ -30,19 +30,19 @@ import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class UpdateChannelsWorker(
     context: Context,
     params: WorkerParameters
-) : CoroutineWorker(context, params), KoinComponent {
+) : CoroutineWorker(context, params) {
 
     private val client = OkHttpClient()
-    private val channelRepository: ChannelRepository by inject()
+    @Inject
+    private lateinit var channelRepository: ChannelRepository
 
     override suspend fun doWork(): Result {
         return try {
