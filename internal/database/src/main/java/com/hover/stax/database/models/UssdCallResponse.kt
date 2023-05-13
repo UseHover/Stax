@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.transactionDetails
+package com.hover.stax.database.models
 
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction

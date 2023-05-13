@@ -26,6 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.UssdLogBottomsheetBinding
+import com.hover.stax.database.models.UssdCallResponse
 import com.hover.stax.utils.UIHelper
 
 class USSDLogBottomSheetFragment : BottomSheetDialogFragment() {

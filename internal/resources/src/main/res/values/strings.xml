@@ -382,17 +382,6 @@
     <string name="fab_transfernow">Send money now</string>
     <string name="fab_airtimenow">Buy airtime now</string>
     <string name="noworry_explain">You can review this info in the next step.</string>
-    <string name="descrip_multcontacts">%1$d contacts</string>
-
-    <string name="descrip_balance">%1$s balance</string>
-    <string name="descrip_airtime_sent">Sent %1$s airtime to %2$s</string>
-    <string name="descrip_transfer_sent">Send %1$s to %2$s</string>
-    <string name="descrip_transfer_received">received money from %1$s</string>
-    <string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
-    <string name="descrip_bill_paid">Paid %1$s to account %2$s at %3$s</string>
-    <string name="descrip_merchant_paid">Paid %1$s to %2$s</string>
-    <string name="descrip_recorded">Recorded USSD session on %1$s</string>
-    <string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
     <string name="descrip_long_airtime_send">buy %1$s airtime with %2$s for %3$s</string>
     <string name="descrip_long_transfer_send">send %1$s from %2$s to %3$s on %4$s</string>
@@ -420,7 +409,6 @@
     <string name="reqsave_msg">Looks like you haven\'t sent your request. Would you like to save it anyway?</string>
     <string name="toast_confirm_request">Your request has been saved.</string>
     <string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
-    <string name="descrip_request">Request to %1$s</string>
     <string name="requester_number_label">Account</string>
     <string name="request_error_recipient">Please enter a phone number.</string>
     <string name="requester_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
@@ -445,29 +433,8 @@
     <string name="repeatnum_label_opt">How many times? (optional)</string>
     <string name="repeatnum_label">How many times?</string>
     <string name="toast_confirm_schedule">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
-    <string-array name="frequency_choices">
-        <item>Every day</item>
-        <item>Every week</item>
-        <item>Every 2 weeks</item>
-        <item>Every month</item>
-    </string-array>
-    <string-array name="frequency_choices_values" translatable="false">
-        <item>0daily</item>
-        <item>1weekly</item>
-        <item>2biweekly</item>
-        <item>3monthly</item>
-    </string-array>
-    <string name="fab_schedule">Schedule</string>
 
-    <!-- Notifications -->
-    <string name="notify_default_title">User scheduled</string>
-    <string name="notify_default_channel_descrip">Show notifications to make transfers and requests scheduled by you.</string>
-    <string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
-    <string name="notify_transfer_cta">Transfer now</string>
-    <string name="notify_request">It\'s time to send a money request to %1$s with Stax.</string>
-    <string name="notify_request_cta">Send request</string>
-    <string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
-    <string name="notify_airtime_cta">Buy airtime</string>
+    <string name="fab_schedule">Schedule</string>
 
     <!-- Details -->
     <string name="pending_cardhead">Waiting for confirmation</string>

@@ -32,7 +32,7 @@ import com.hover.stax.databinding.FragmentMerchantBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.transfers.AbstractFormFragment
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import timber.log.Timber
 

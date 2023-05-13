@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.hover.stax.R
 import com.hover.stax.databinding.PrivacypolicyBinding
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 
 class PrivacyPolicyText(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
     var binding = PrivacypolicyBinding.inflate(LayoutInflater.from(context), this, true)

@@ -16,6 +16,7 @@
 plugins {
     id("stax.android.library")
     id("stax.android.hilt")
+    id("kotlin-kapt")
 }
 
 android {
@@ -23,4 +24,8 @@ android {
 }
 
 dependencies {
+
+    // Google
+    implementation(libs.bundles.google)
+    kapt(libs.lifecycle.common)
 }

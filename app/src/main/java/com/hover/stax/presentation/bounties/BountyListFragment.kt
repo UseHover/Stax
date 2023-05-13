@@ -34,12 +34,12 @@ import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.data.remote.workers.UpdateBountyTransactionsWorker
 import com.hover.stax.databinding.FragmentBountyListBinding
-import com.hover.stax.model.Bounty
 import com.hover.stax.hover.BountyContract
 import com.hover.stax.utils.NavUtil
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import com.hover.stax.utils.collectLifecycleFlow
-import com.hover.stax.utils.network.NetworkMonitor
+import com.hover.stax.core.network.NetworkMonitor
+import com.hover.stax.model.Bounty
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -146,11 +146,11 @@ class BountyListFragment : Fragment() {
         }
     }
 
-    private fun viewBountyDetail(b: com.hover.stax.model.Bounty) {
+    private fun viewBountyDetail(b: Bounty) {
         if (bountiesViewModel.isSimPresent(b)) showBountyDescDialog(b) else showSimErrorDialog(b)
     }
 
-    private fun showSimErrorDialog(b: com.hover.stax.model.Bounty) {
+    private fun showSimErrorDialog(b: Bounty) {
         dialog = StaxDialog(requireActivity())
             .setDialogTitle(getString(R.string.bounty_sim_err_header))
             .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
@@ -159,7 +159,7 @@ class BountyListFragment : Fragment() {
         dialog!!.showIt()
     }
 
-    private fun showBountyDescDialog(b: com.hover.stax.model.Bounty) {
+    private fun showBountyDescDialog(b: Bounty) {
         dialog = StaxDialog(requireActivity())
             .setDialogTitle(
                 getString(
@@ -172,7 +172,7 @@ class BountyListFragment : Fragment() {
         dialog!!.showIt()
     }
 
-    private fun startBounty(b: com.hover.stax.model.Bounty) {
+    private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
         com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_start_bounty), requireContext())
         bounty.launch(b.action)
@@ -184,7 +184,7 @@ class BountyListFragment : Fragment() {
         }
     }
 
-    private fun retrySimMatch(b: com.hover.stax.model.Bounty?) {
+    private fun retrySimMatch(b: Bounty?) {
         b?.let { viewBountyDetail(b) }
         Hover.updateSimInfo(requireActivity())
     }

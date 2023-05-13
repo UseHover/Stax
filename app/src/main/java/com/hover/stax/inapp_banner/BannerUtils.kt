@@ -18,7 +18,7 @@ package com.hover.stax.inapp_banner
 import android.content.Context
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.data.accounts.AccountRepository
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import java.util.Calendar
 import java.util.Date
 import kotlin.properties.Delegates

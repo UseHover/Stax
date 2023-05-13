@@ -29,10 +29,9 @@ import com.hover.stax.home.NAV_HOME
 import com.hover.stax.home.NAV_LINK_ACCOUNT
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 
 class OnBoardingActivity : AbstractGoogleAuthActivity() {
 

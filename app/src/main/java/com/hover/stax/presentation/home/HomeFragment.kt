@@ -34,7 +34,7 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.StaxDialog
 

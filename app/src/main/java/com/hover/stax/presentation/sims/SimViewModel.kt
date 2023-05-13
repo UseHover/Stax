@@ -26,7 +26,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.api.Hover
 import com.hover.stax.domain.use_case.sims.ListSimsUseCase
 import com.hover.stax.domain.use_case.sims.SimWithAccount
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

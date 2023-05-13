@@ -48,8 +48,7 @@ import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.components.SecondaryButton
 import com.hover.stax.presentation.components.StaxCard
 import com.hover.stax.ui.theme.TextGrey
-import com.hover.stax.core.DateUtils
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 
 @Composable
 internal fun SimItem(

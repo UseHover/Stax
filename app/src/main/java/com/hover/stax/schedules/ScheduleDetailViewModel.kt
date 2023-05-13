@@ -21,11 +21,11 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.data.contact.ContactRepo
-import com.hover.stax.database.models.StaxContact
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.database.models.Schedule
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.database.repo.ContactRepo
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,7 +46,8 @@ class ScheduleDetailViewModel @Inject constructor(
 
     fun setSchedule(id: Int) = viewModelScope.launch { schedule.postValue(repo.getSchedule(id)) }
 
-    private fun loadAction(s: Schedule?): LiveData<HoverAction> = if (s != null) actionRepo.getLiveAction(s.action_id) else MutableLiveData()
+    private fun loadAction(s: Schedule?): LiveData<HoverAction> =
+        if (s != null) actionRepo.getLiveAction(s.action_id) else MutableLiveData()
 
     private fun loadContacts(s: Schedule?): LiveData<List<StaxContact>> = if (s != null)
         contactRepo.getLiveContacts(s.recipient_ids.split(",").toTypedArray())

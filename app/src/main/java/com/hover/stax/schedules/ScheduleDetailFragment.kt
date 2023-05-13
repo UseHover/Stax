@@ -26,11 +26,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
+import com.hover.stax.core.Utils
 import com.hover.stax.database.models.Schedule
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentScheduleBinding
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException
@@ -144,7 +144,8 @@ class ScheduleDetailFragment : Fragment() {
 
     private fun setUpTestBtn(schedule: Schedule) {
         binding.testBtn.apply {
-            visibility = if (Utils.usingDebugVariant(requireActivity())) View.VISIBLE else View.GONE
+            visibility =
+                if (com.hover.stax.utils.Utils.usingDebugVariant(requireActivity())) View.VISIBLE else View.GONE
             setOnClickListener {
                 WorkManager.getInstance(requireActivity()).beginUniqueWork(
                     "TEST", ExistingWorkPolicy.REPLACE,

@@ -25,9 +25,9 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
-import com.hover.stax.R
-import com.hover.stax.utils.DateUtils.now
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.DateUtils.now
+import com.hover.stax.core.Utils
+import com.hover.stax.database.R
 import timber.log.Timber
 
 @Entity(tableName = "stax_transactions", indices = [Index(value = ["uuid"], unique = true)])

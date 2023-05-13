@@ -25,7 +25,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.sdk.api.Hover
 import com.hover.stax.remoteconfig.config.RemoteFeatureToggles
 import com.hover.stax.sync.initializers.Sync
-import com.hover.stax.utils.network.NetworkMonitor
+import com.hover.stax.core.network.NetworkMonitor
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.HiltAndroidApp

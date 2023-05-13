@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.database.models.Channel
 import com.hover.stax.databinding.LibraryListItemBinding
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 
 class LibraryChannelsAdapter(private val favoriteClickInterface: FavoriteClickInterface) : ListAdapter<Channel, LibraryChannelsAdapter.ViewHolder>(diffUtil) {
 

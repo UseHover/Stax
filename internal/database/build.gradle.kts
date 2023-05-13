@@ -20,6 +20,8 @@ plugins {
 }
 
 dependencies {
+    implementation(project(path = ":internal:core"))
+    implementation(project(path = ":internal:resources"))
 
     implementation(libs.libphonenumber)
 

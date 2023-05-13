@@ -8,8 +8,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.hover.sdk.actions.HoverAction;
-import com.hover.stax.R;
-import com.hover.stax.utils.DateUtils;
+import com.hover.stax.core.DateUtils;
+import com.hover.stax.database.R;
 
 import org.jetbrains.annotations.NotNull;
 

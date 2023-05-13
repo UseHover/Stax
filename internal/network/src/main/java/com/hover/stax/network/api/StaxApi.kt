@@ -26,7 +26,6 @@ import com.hover.stax.model.auth.TokenResponse
 import com.hover.stax.network.ktor.EnvironmentProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
@@ -59,7 +58,8 @@ class StaxApi @Inject constructor(
 
     suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto =
         client.post {
-            header("X-Stax-Version", BuildConfig.VERSION_NAME)
+            // TODO - Find a fix for me???
+//            header("X-Stax-Version", BuildConfig.VERSION_NAME)
             url("${BASE_URL}stax_users")
             setBody(userDTO)
         }.body()

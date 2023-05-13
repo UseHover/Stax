@@ -39,8 +39,8 @@ class GetChannelBountiesUseCaseTest {
     private val bountyRepository = mockk<BountyRepository>(relaxed = true)
     private val channelRepository = mockk<ChannelRepository>(relaxed = true)
     private val transactionRepo = mockk<TransactionRepo>(relaxed = true)
-    private val channelBounties = mockk<List<com.hover.stax.model.ChannelBounties>>(relaxed = true)
-    private val bountyAction = mockk<com.hover.stax.model.Bounty>(relaxed = true)
+    private val channelBounties = mockk<List<ChannelBounties>>(relaxed = true)
+    private val bountyAction = mockk<Bounty>(relaxed = true)
     private val staxTransaction = mockk<List<StaxTransaction>>(relaxed = true)
     private val channelList = mockk<List<Channel>>(relaxed = true)
     private val countryCode = "KE"

@@ -31,7 +31,7 @@ import com.hover.stax.model.ChannelBounties
 import com.hover.stax.presentation.bounties.BountyViewModel
 
 @Composable
-fun ChannelBountyCard(channelBounty: com.hover.stax.model.ChannelBounties, bountyViewModel: BountyViewModel) {
+fun ChannelBountyCard(channelBounty: ChannelBounties, bountyViewModel: BountyViewModel) {
     if (channelBounty.bounties.isNotEmpty())
         Column {
             Text(

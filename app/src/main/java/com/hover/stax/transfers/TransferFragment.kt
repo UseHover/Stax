@@ -38,7 +38,7 @@ import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput

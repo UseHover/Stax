@@ -19,7 +19,6 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.model.Bounty
 import com.hover.stax.model.ChannelBounties
-import com.hover.stax.model.Resource
 import com.hover.stax.data.bounty.BountyRepository
 import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.data.transactions.TransactionRepo
@@ -36,7 +35,7 @@ class GetChannelBountiesUseCase(
     private val transactionRepo: TransactionRepo
 ) {
 
-    fun getBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES): Flow<com.hover.stax.model.Resource<List<com.hover.stax.model.ChannelBounties>>> = flow {
+    fun getBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES): Flow<com.hover.stax.model.Resource<List<ChannelBounties>>> = flow {
         try {
             emit(com.hover.stax.model.Resource.Loading())
 
@@ -46,8 +45,8 @@ class GetChannelBountiesUseCase(
         }
     }
 
-    private suspend fun fetchBounties(countryCode: String): List<com.hover.stax.model.ChannelBounties> {
-        val channelBounties: Deferred<List<com.hover.stax.model.ChannelBounties>>
+    private suspend fun fetchBounties(countryCode: String): List<ChannelBounties> {
+        val channelBounties: Deferred<List<ChannelBounties>>
 
         coroutineScope {
             channelBounties = async(Dispatchers.IO) {
@@ -62,7 +61,7 @@ class GetChannelBountiesUseCase(
         return channelBounties.await()
     }
 
-    fun isSimPresent(bounty: com.hover.stax.model.Bounty, sims: List<SimInfo>): Boolean {
+    fun isSimPresent(bounty: Bounty, sims: List<SimInfo>): Boolean {
         if (sims.isEmpty()) return false
 
         sims.forEach { simInfo ->

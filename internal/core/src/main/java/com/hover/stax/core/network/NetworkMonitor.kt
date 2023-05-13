@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.utils.network
+package com.hover.stax.core.network
 
 import android.Manifest
 import android.content.Context
@@ -73,7 +73,7 @@ constructor(val context: Context) {
 
             @MainThread
             fun get(): StateLiveData {
-                instance = if (::instance.isInitialized) instance else StateLiveData()
+                instance = if (Companion::instance.isInitialized) instance else StateLiveData()
                 return instance
             }
         }

@@ -16,6 +16,7 @@
 package com.hover.stax.model.auth
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Builds the user object used to create a user on Stax

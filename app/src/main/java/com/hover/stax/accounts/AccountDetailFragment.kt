@@ -42,7 +42,7 @@ import com.hover.stax.presentation.home.BalancesViewModel
 import com.hover.stax.transactions.TransactionHistoryAdapter
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog

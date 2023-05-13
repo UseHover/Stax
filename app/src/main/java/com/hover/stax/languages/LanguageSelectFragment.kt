@@ -27,7 +27,7 @@ import androidx.navigation.fragment.findNavController
 import com.appsflyer.AppsFlyerLib
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentLanguageBinding
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import com.yariksoffice.lingver.Lingver
 
 const val LANGUAGE_CHECK = "Language"

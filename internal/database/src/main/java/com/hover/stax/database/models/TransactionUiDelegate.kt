@@ -19,9 +19,8 @@ import android.content.Context
 import androidx.core.text.HtmlCompat
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.R
-import com.hover.stax.transactionDetails.UssdCallResponse
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
+import com.hover.stax.database.R
 
 interface TransactionUiDelegate {
     val transaction: StaxTransaction

@@ -97,5 +97,5 @@ fun BountiesPreview() {
 
 sealed class BountySelectEvent {
     data class ViewTransactionDetail(val uuid: String) : BountySelectEvent()
-    data class ViewBountyDetail(val bounty: com.hover.stax.model.Bounty) : BountySelectEvent()
+    data class ViewBountyDetail(val bounty: Bounty) : BountySelectEvent()
 }

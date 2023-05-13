@@ -18,10 +18,10 @@ package com.hover.stax.notifications
 import android.content.Context
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
-import com.hover.stax.utils.Utils.alterFirebaseTopicState
-import com.hover.stax.utils.Utils.isFirebaseTopicInDefaultState
-import com.hover.stax.utils.Utils.removeFirebaseMessagingTopic
-import com.hover.stax.utils.Utils.setFirebaseMessagingTopic
+import com.hover.stax.core.Utils.alterFirebaseTopicState
+import com.hover.stax.core.Utils.isFirebaseTopicInDefaultState
+import com.hover.stax.core.Utils.removeFirebaseMessagingTopic
+import com.hover.stax.core.Utils.setFirebaseMessagingTopic
 
 interface PushNotificationTopicsInterface {
 

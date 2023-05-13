@@ -34,7 +34,7 @@ import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxCardView
