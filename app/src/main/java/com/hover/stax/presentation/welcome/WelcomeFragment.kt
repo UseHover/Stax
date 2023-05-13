@@ -50,7 +50,7 @@ class WelcomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_welcome)
@@ -62,7 +62,7 @@ class WelcomeFragment : Fragment() {
     }
 
     private fun onClickGetStarted() {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(R.string.clicked_getstarted),
             requireActivity()
         )
@@ -77,7 +77,7 @@ class WelcomeFragment : Fragment() {
             UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.signed_in_message))
             onClickGetStarted()
         } else {
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
                 getString(R.string.clicked_google_sign_in),
                 requireActivity()
             )

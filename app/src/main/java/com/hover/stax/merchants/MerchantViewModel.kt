@@ -21,12 +21,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.data.contact.ContactRepo
 import com.hover.stax.data.merchant.MerchantRepo
-import com.hover.stax.database.models.Account
-import com.hover.stax.database.models.Merchant
-import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.data.schedule.ScheduleRepo
+import com.hover.stax.database.models.Account
+import com.hover.stax.database.models.BUSINESS_NO
+import com.hover.stax.database.models.Merchant
+import com.hover.stax.database.repo.ContactRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,7 +63,10 @@ class MerchantViewModel @Inject constructor(
     }
 
     fun amountErrors(): String? {
-        return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
+        return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches(
+                "[0]+".toRegex()
+            )
+        ) null
         else getString(R.string.amount_fielderror)
     }
 

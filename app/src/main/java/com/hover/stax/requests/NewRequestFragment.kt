@@ -74,7 +74,7 @@ class NewRequestFragment :
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_new_request)
@@ -316,7 +316,7 @@ class NewRequestFragment :
 
     private fun saveUnsent() {
         requestViewModel.saveRequest()
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(R.string.saved_unsent_request),
             requireActivity()
         )

@@ -33,7 +33,7 @@ import javax.inject.Inject
 class BannerUtils(val context: Context) {
 
     @Inject
-    private lateinit var repo: AccountRepository
+    lateinit var repo: AccountRepository
 
     private val FIRST_WEEK = 1
     private val SECOND_WEEK = 2

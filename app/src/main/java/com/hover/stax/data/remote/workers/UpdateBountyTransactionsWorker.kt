@@ -24,12 +24,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
-import com.hover.sdk.transactions.TransactionDao
 import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.database.models.StaxTransaction
-import java.io.IOException
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,12 +37,15 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) :
+    Worker(context, workerParams) {
 
     @Inject
-    private lateinit var transactionDao: TransactionDao
+    lateinit var transactionDao: com.hover.stax.database.dao.TransactionDao
 
     companion object {
         const val TAG = "BountyTransactionWorker"
@@ -113,7 +113,12 @@ class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParam
 
     private fun getUrl(): String {
         val deviceId: String = Hover.getDeviceId(applicationContext)
-        return with(applicationContext) { getString(R.string.api_url) + getString(R.string.bounty_transactions_endpoint, deviceId) }
+        return with(applicationContext) {
+            getString(R.string.api_url) + getString(
+                R.string.bounty_transactions_endpoint,
+                deviceId
+            )
+        }
     }
 
     private fun downloadBountyResult(url: String): JSONObject {

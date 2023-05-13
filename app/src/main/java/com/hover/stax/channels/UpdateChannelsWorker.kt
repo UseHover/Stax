@@ -41,8 +41,9 @@ class UpdateChannelsWorker(
 ) : CoroutineWorker(context, params) {
 
     private val client = OkHttpClient()
+
     @Inject
-    private lateinit var channelRepository: ChannelRepository
+    lateinit var channelRepository: ChannelRepository
 
     override suspend fun doWork(): Result {
         return try {

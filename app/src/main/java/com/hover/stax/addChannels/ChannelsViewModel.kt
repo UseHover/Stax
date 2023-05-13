@@ -24,7 +24,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
@@ -32,14 +31,14 @@ import com.hover.sdk.api.ActionApi
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
+import com.hover.stax.core.Utils
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.channel.ChannelRepository
-import com.hover.stax.database.models.Channel
 import com.hover.stax.database.models.Account
+import com.hover.stax.database.models.Channel
 import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.core.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -84,7 +83,9 @@ class ChannelsViewModel @Inject constructor(
         setSimBroadcastReceiver()
         loadSims()
 
-        simCountryList = Transformations.map(sims, this::getCountriesAndFirebaseSubscriptions)
+        // TODO - FIX ME
+//        simCountryList = Transformations.map(sims, this::getCountriesAndFirebaseSubscriptions)
+//        simCountryList = sims.map { it.let { getCountriesAndFirebaseSubscriptions(it) } }
         countryChoice.addSource(simCountryList, this@ChannelsViewModel::onSimUpdate)
 
         countryChannels.apply {
@@ -186,7 +187,7 @@ class ChannelsViewModel @Inject constructor(
         } catch (ignored: Exception) {
         }
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             (getApplication() as Context).getString(R.string.new_channel_selected),
             args,
             getApplication() as Context

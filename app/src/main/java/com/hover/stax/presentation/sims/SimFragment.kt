@@ -43,7 +43,7 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
         savedInstanceState: Bundle?
     ): View =
         ComposeView(requireContext()).apply {
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
                 getString(R.string.visit_screen, getString(R.string.visit_sim)), requireContext()
             )
 

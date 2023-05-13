@@ -39,6 +39,7 @@ internal/analytics/build
 internal/data/build
 internal/database/build
 internal/datastore/build
+internal/firestore/build
 internal/model/build
 internal/network/build
 internal/remoteconfig/build

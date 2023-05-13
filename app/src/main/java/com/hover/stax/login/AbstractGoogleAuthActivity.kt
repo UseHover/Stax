@@ -127,7 +127,7 @@ abstract class AbstractGoogleAuthActivity :
     }
 
     private fun logAppUpdate(status: String) {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.force_update_status,
                 status

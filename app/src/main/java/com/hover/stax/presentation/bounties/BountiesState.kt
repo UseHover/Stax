@@ -15,7 +15,7 @@
  */
 package com.hover.stax.presentation.bounties
 
-import com.hover.stax.model.ChannelBounties
+import com.hover.stax.bounty.ChannelBounties
 
 data class BountiesState(
     var loading: Boolean = false,

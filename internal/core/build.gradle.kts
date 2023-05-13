@@ -16,8 +16,8 @@
 plugins {
     id("stax.android.library")
     id("stax.android.hilt")
-    id("kotlin-kapt")
     id("kotlinx-serialization")
+    id("kotlin-kapt")
 }
 
 android {

@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
-import com.hover.stax.model.ChannelBounties
+import com.hover.stax.bounty.ChannelBounties
 import com.hover.stax.presentation.bounties.BountyViewModel
 
 @Composable

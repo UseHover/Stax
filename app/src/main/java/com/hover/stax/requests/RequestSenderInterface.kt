@@ -26,12 +26,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
-import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Request
-import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
-import com.hover.stax.core.Utils.copyToClipboard
+import com.hover.stax.utils.Utils.copyToClipboard
 
 const val REQUEST_LINK = "request_link"
 const val SMS = 303
@@ -40,18 +40,36 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
 
     fun sendSms(requestViewModel: NewRequestViewModel, activity: Activity) {
         requestViewModel.saveRequest()
-        SmsSentObserver(this, listOf(requestViewModel.requestee.value), Handler(), requestViewModel.getApplication()).start()
-        sendSms(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), activity)
+        SmsSentObserver(
+            this,
+            listOf(requestViewModel.requestee.value),
+            Handler(),
+            requestViewModel.getApplication()
+        ).start()
+        sendSms(
+            requestViewModel.formulatedRequest.value,
+            listOf(requestViewModel.requestee.value),
+            activity
+        )
     }
 
     fun sendWhatsapp(requestViewModel: NewRequestViewModel, activity: Activity) {
         requestViewModel.saveRequest()
-        sendWhatsapp(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.activeAccount.value, activity)
+        sendWhatsapp(
+            requestViewModel.formulatedRequest.value,
+            listOf(requestViewModel.requestee.value),
+            requestViewModel.activeAccount.value,
+            activity
+        )
     }
 
     fun copyShareLink(view: View, requestViewModel: NewRequestViewModel, activity: Activity) {
         requestViewModel.saveRequest()
-        copyShareLink(requestViewModel.formulatedRequest.value, view.findViewById(R.id.copylink_share_selection), activity)
+        copyShareLink(
+            requestViewModel.formulatedRequest.value,
+            view.findViewById(R.id.copylink_share_selection),
+            activity
+        )
     }
 
     override fun onSmsSendEvent(sent: Boolean) {
@@ -81,7 +99,12 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
             return
         }
         logAnalyticsEvent(a.getString(R.string.clicked_send_whatsapp_request), a)
-        if (requestees.size == 1) sendWhatsAppToSingleContact(r, requestees.filterNotNull(), account, a) else sendWhatsAppToMultipleContacts(r.generateMessage(a), a)
+        if (requestees.size == 1) sendWhatsAppToSingleContact(
+            r,
+            requestees.filterNotNull(),
+            account,
+            a
+        ) else sendWhatsAppToMultipleContacts(r.generateMessage(a), a)
     }
 
     fun sendWhatsAppToSingleContact(
@@ -92,7 +115,10 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
     ) {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_VIEW
-        val whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, account) + "&text=" + r.generateMessage(a)
+        val whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(
+            requestees,
+            account
+        ) + "&text=" + r.generateMessage(a)
         sendIntent.data = Uri.parse(whatsapp)
         try {
             a.startActivityForResult(sendIntent, SMS)
@@ -121,12 +147,23 @@ interface RequestSenderInterface : SmsSentObserver.SmsSentListener {
             copyToClipboard(r.generateMessage(c), c) -> {
                 logAnalyticsEvent(c.getString(R.string.clicked_copylink_request), c)
                 copyBtn.isActivated = true
-                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(c, R.drawable.img_check), null, null)
+                copyBtn.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    ContextCompat.getDrawable(c, R.drawable.img_check),
+                    null,
+                    null
+                )
                 copyBtn.text = c.getString(R.string.link_copied_label)
             }
+
             else -> {
                 copyBtn.isActivated = false
-                copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(c, R.drawable.img_copy), null, null)
+                copyBtn.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    ContextCompat.getDrawable(c, R.drawable.img_copy),
+                    null,
+                    null
+                )
                 copyBtn.text = c.getString(R.string.copyLink_label)
             }
         }

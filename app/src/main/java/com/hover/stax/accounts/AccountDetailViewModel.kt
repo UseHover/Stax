@@ -19,20 +19,20 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.channel.ChannelRepository
+import com.hover.stax.data.transactions.TransactionRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Channel
 import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryItem
-import com.hover.stax.data.transactions.TransactionRepo
-import java.util.Calendar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 class AccountDetailViewModel @Inject constructor(
@@ -54,20 +54,25 @@ class AccountDetailViewModel @Inject constructor(
     private val calendar = Calendar.getInstance()
 
     init {
-        account = Transformations.switchMap(id, repo::getLiveAccount)
-        channel = Transformations.switchMap(account) { it?.let { channelRepository.getLiveChannel(it.channelId) } }
-        transactions = Transformations.switchMap(account) { it?.let { transactionRepo.getAccountTransactions(it) } }
-        spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
-        feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
+        account = id.switchMap(repo::getLiveAccount)
+        channel = account.switchMap { it.let { channelRepository.getLiveChannel(it.channelId) } }
+        transactions = account.switchMap { it.let { transactionRepo.getAccountTransactions(it) } }
+        spentThisMonth = id.switchMap(this::loadSpentThisMonth)
+        feesThisYear = id.switchMap(this::loadFeesThisYear)
         transactionHistoryItem.addSource(transactions, this::getTransactionHistory)
     }
 
     fun setAccount(accountId: Int) = id.postValue(accountId)
 
     private fun loadSpentThisMonth(id: Int): LiveData<Double>? =
-        transactionRepo.getSpentAmount(id, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))
+        transactionRepo.getSpentAmount(
+            id,
+            calendar.get(Calendar.MONTH) + 1,
+            calendar.get(Calendar.YEAR)
+        )
 
-    private fun loadFeesThisYear(id: Int): LiveData<Double>? = transactionRepo.getFees(id, calendar.get(Calendar.YEAR))
+    private fun loadFeesThisYear(id: Int): LiveData<Double>? =
+        transactionRepo.getFees(id, calendar.get(Calendar.YEAR))
 
     fun updateAccountName(newName: String) = viewModelScope.launch(Dispatchers.IO) {
         val a = account.value!!

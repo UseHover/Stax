@@ -40,6 +40,7 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.database.models.Account
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.RequestServiceDialog
 import com.hover.stax.views.StaxDialog
@@ -79,7 +80,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener, CountryA
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
 
         return binding.root

@@ -22,7 +22,7 @@ import com.hover.stax.database.models.Channel
 import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.model.Bounty
 import com.hover.stax.model.ChannelBounties
-import com.hover.stax.data.bounty.BountyRepository
+import com.hover.stax.bounty.BountyRepository
 import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.data.transactions.TransactionRepo
 import io.mockk.coEvery

@@ -46,7 +46,7 @@ internal class NonInteractiveTutorialFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_non_interactive_tutorial)), requireActivity())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_non_interactive_tutorial)), requireActivity())
 
         setTopBarClicks()
         setContents()

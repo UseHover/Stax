@@ -34,7 +34,6 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.core.Utils
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.StaxDialog
 
@@ -55,7 +54,7 @@ class HomeFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_home)
@@ -91,7 +90,10 @@ class HomeFragment :
             (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
 
         fun onClickedTermsAndConditions() =
-            Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
+            com.hover.stax.utils.Utils.openUrl(
+                getString(R.string.terms_and_condition_url),
+                requireContext()
+            )
 
         fun onClickedSettingsIcon() = navigateTo(HomeFragmentDirections.toSettingsFragment())
         fun onClickedRewards() = navigateTo(HomeFragmentDirections.actionGlobalRewardsFragment())

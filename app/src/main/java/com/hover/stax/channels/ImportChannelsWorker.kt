@@ -29,12 +29,12 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.hover.stax.R
 import com.hover.stax.data.channel.ChannelRepository
-import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 class ImportChannelsWorker(
@@ -43,7 +43,7 @@ class ImportChannelsWorker(
 ) : CoroutineWorker(context, params) {
 
     @Inject
-    private lateinit var channelRepository: ChannelRepository
+    lateinit var channelRepository: ChannelRepository
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(NOTIFICATION_ID, createNotification())
@@ -106,15 +106,18 @@ class ImportChannelsWorker(
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, context.getString(R.string.app_name), importance)
-            val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channel =
+                NotificationChannel(CHANNEL_ID, context.getString(R.string.app_name), importance)
+            val notificationManager: NotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
 
     companion object {
         private const val NOTIFICATION_ID = 981
-        private const val CHANNEL_ID = "ChannelsImport" // TODO update this after the merge with financial tips notifications // branch
+        private const val CHANNEL_ID =
+            "ChannelsImport" // TODO update this after the merge with financial tips notifications // branch
 
         fun channelsImportRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<ImportChannelsWorker>()

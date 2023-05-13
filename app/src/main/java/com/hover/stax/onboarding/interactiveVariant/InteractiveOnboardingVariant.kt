@@ -50,7 +50,7 @@ internal class InteractiveOnboardingVariant : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_interactive)), requireActivity())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_interactive)), requireActivity())
 
         setQuestionsClick()
         setSkipOnboardingClick()
@@ -95,11 +95,11 @@ internal class InteractiveOnboardingVariant : Fragment() {
             Timber.e(e)
         }
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_onboarding_question), data, requireActivity())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_onboarding_question), data, requireActivity())
     }
 
     private fun setSkipOnboardingClick() = binding.skipBtn.setOnClickListener {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_skip_tutorial), requireActivity())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_skip_tutorial), requireActivity())
         onboardingActivity.checkPermissionsAndNavigate()
     }
 

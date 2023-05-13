@@ -17,10 +17,11 @@ package com.hover.stax.data.requests
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.hover.stax.R
+import com.hover.stax.core.AnalyticsUtil
+import com.hover.stax.core.requests.Shortlink
+import com.hover.stax.data.R
 import com.hover.stax.database.dao.RequestDao
 import com.hover.stax.database.models.Request
-import com.hover.stax.utils.AnalyticsUtil
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 import javax.inject.Inject
@@ -83,7 +84,8 @@ class RequestRepo @Inject constructor(
             }
             return Request(e.decrypt(params.replace("[(]".toRegex(), "+")))
         } catch (e: NoSuchAlgorithmException) {
-            AnalyticsUtil.logErrorAndReportToFirebase(TAG, "decryption failure", e)
+            // TODO - Fix me
+//            AnalyticsUtil.logErrorAndReportToFirebase(TAG, "decryption failure", e)
         }
         return null
     }

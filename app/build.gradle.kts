@@ -22,13 +22,13 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("kotlin-android")
-    id("kotlin-kapt")
     id("com.google.firebase.firebase-perf")
     id("androidx.navigation.safeargs")
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlin.android")
     id("kotlinx-serialization")
     id("stax.android.hilt")
+    id("kotlin-kapt")
 }
 
 configurations.all {

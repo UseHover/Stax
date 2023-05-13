@@ -78,5 +78,3 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
         return Locale(Lingver.getInstance().getLanguage(), country_alpha2).displayCountry
     }
 }
-
-data class ChannelBounties(val channel: Channel, val bounties: List<Bounty>)

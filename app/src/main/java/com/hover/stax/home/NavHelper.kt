@@ -137,7 +137,7 @@ class NavHelper(val activity: AppCompatActivity) {
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
             { PermissionUtils.requestPerms(PERMS_REQ_CODE, activity) },
-            { com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
+            { com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
         )
     }
 }

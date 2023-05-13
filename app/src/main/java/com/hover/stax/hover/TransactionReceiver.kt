@@ -36,6 +36,8 @@ import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.database.models.Channel
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.repo.ContactRepo
+import com.hover.stax.utils.AnalyticsUtil
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,31 +45,32 @@ import timber.log.Timber
 import java.util.regex.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class TransactionReceiver : BroadcastReceiver() {
 
     @Inject
-    private lateinit var repo: TransactionRepo
+    lateinit var repo: TransactionRepo
 
     @Inject
-    private lateinit var actionRepo: ActionRepo
+    lateinit var actionRepo: ActionRepo
 
     @Inject
-    private lateinit var channelRepository: ChannelRepository
+    lateinit var channelRepository: ChannelRepository
 
     @Inject
-    private lateinit var accountRepo: AccountRepository
+    lateinit var accountRepo: AccountRepository
 
     @Inject
-    private lateinit var contactRepo: ContactRepo
+    lateinit var contactRepo: ContactRepo
 
     @Inject
-    private lateinit var billRepo: PaybillRepo
+    lateinit var billRepo: PaybillRepo
 
     @Inject
-    private lateinit var merchantRepo: MerchantRepo
+    lateinit var merchantRepo: MerchantRepo
 
     @Inject
-    private lateinit var requestRepo: RequestRepo
+    lateinit var requestRepo: RequestRepo
 
     private var channel: Channel? = null
     private var account: Account? = null
@@ -95,14 +98,14 @@ class TransactionReceiver : BroadcastReceiver() {
                         updateRequests(intent)
                     }
                 } else if (actionId == null) {
-                    com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+                    AnalyticsUtil.logAnalyticsEvent(
                         "TransactionReceiver received event with no action ID",
                         context
                     )
                 }
             }
         } else {
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            AnalyticsUtil.logAnalyticsEvent(
                 "TransactionReceiver received event with no intent",
                 context
             )
@@ -254,7 +257,7 @@ class TransactionReceiver : BroadcastReceiver() {
 
                 accountRepo.saveAccount(a)
             } catch (e: Exception) {
-                com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+                AnalyticsUtil.logErrorAndReportToFirebase(
                     TransactionReceiver::class.java.simpleName,
                     "Failed to parse account list from USSD",
                     e

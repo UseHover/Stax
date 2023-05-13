@@ -17,6 +17,7 @@ package com.hover.stax.database.di
 
 import android.content.Context
 import androidx.room.Room
+import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.database.StaxDatabase
 import dagger.Module
 import dagger.Provides
@@ -38,4 +39,10 @@ object DatabaseModule {
         StaxDatabase::class.java,
         "stax-database",
     ).build()
+
+    @Provides
+    @Singleton
+    fun providesHoverDatabase(
+        @ApplicationContext context: Context,
+    ): HoverRoomDatabase = HoverRoomDatabase.getInstance(context)
 }

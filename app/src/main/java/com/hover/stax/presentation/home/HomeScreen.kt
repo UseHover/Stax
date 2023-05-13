@@ -160,7 +160,7 @@ private fun clickedOnBonus(
     channelsViewModel: ChannelsViewModel,
     bonus: HoverAction
 ) {
-    com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+    com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
         context.getString(R.string.clicked_bonus_airtime_banner),
         context
     )

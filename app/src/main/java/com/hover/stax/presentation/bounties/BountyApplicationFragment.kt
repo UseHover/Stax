@@ -28,15 +28,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.databinding.FragmentBountyApplicationBinding
+import com.hover.stax.core.network.NetworkMonitor
 import com.hover.stax.database.models.StaxUser
+import com.hover.stax.databinding.FragmentBountyApplicationBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginScreenUiState
 import com.hover.stax.login.LoginUiState
 import com.hover.stax.login.LoginViewModel
-import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
-import com.hover.stax.core.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -64,7 +64,10 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.apply {
-            text = HtmlCompat.fromHtml(getString(R.string.bounty_email_stage_desc2), HtmlCompat.FROM_HTML_MODE_LEGACY)
+            text = HtmlCompat.fromHtml(
+                getString(R.string.bounty_email_stage_desc2),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
             movementMethod = LinkMovementMethod.getInstance()
         }
 
@@ -88,7 +91,12 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
                     text = getString(R.string.signed_in_as, staxUser.email)
                 }
             }
-            staxUser != null && staxUser.isMapper -> NavUtil.navigate(findNavController(), BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment())
+
+            staxUser != null && staxUser.isMapper -> NavUtil.navigate(
+                findNavController(),
+                BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
+            )
+
             else -> {
                 signedInDetails.visibility = View.GONE
                 btnSignIn.apply {
@@ -103,7 +111,11 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
         if (networkMonitor.isNetworkConnected) {
             startGoogleSignIn()
         } else {
-            showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
+            showDialog(
+                R.string.internet_required,
+                getString(R.string.internet_required_bounty_desc),
+                R.string.btn_ok
+            )
         }
     }
 
@@ -122,28 +134,33 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
                 hide()
                 complete()
             }
+
             else -> setProgressCompat(progress, true)
         }
     }
 
-    private fun updateLoginProgress(loginState: StateFlow<LoginScreenUiState>) = with(binding.progressIndicator) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                loginState.collect {
-                    when (it.loginState) {
-                        LoginUiState.Loading -> show()
-                        LoginUiState.Error -> hide()
-                        LoginUiState.Success -> {
-                            hide()
-                            complete()
+    private fun updateLoginProgress(loginState: StateFlow<LoginScreenUiState>) =
+        with(binding.progressIndicator) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    loginState.collect {
+                        when (it.loginState) {
+                            LoginUiState.Loading -> show()
+                            LoginUiState.Error -> hide()
+                            LoginUiState.Success -> {
+                                hide()
+                                complete()
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    private fun complete() = NavUtil.navigate(findNavController(), BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment())
+    private fun complete() = NavUtil.navigate(
+        findNavController(),
+        BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
+    )
 
     private fun showError(message: String) {
         updateProgress(-1)

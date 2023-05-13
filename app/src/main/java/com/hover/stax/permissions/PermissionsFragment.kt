@@ -28,7 +28,7 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.hover.PERM_ACTIVITY
-import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -43,7 +43,10 @@ class PermissionsFragment : DialogFragment() {
         helper = PermissionHelper(context)
         current = if (helper.hasOverlayPerm()) ACCESS else OVERLAY
 
-        logAnalyticsEvent(getString(if (current == OVERLAY) R.string.perms_overlay_dialog else R.string.perms_accessibility_dialog), requireContext())
+        logAnalyticsEvent(
+            getString(if (current == OVERLAY) R.string.perms_overlay_dialog else R.string.perms_accessibility_dialog),
+            requireContext()
+        )
 
         dialog = StaxPermissionDialog(requireActivity())
             .setDialogTitle(R.string.perm_dialoghead)
@@ -110,7 +113,8 @@ class PermissionsFragment : DialogFragment() {
         animateToStep2()
         dialog?.let {
             with(it) {
-                (view.findViewById<View>(R.id.progress_text) as TextView).text = getString(R.string.perm_progress_no_steps)
+                (view.findViewById<View>(R.id.progress_text) as TextView).text =
+                    getString(R.string.perm_progress_no_steps)
                 (view.findViewById<View>(R.id.progress_text) as TextView).textSize = 16f
                 view.findViewById<View>(R.id.progress_indicator).visibility = View.GONE
 //                setDialogMessage(getString(R.string.perm_accessibiltiy_dialogbody, arguments?.getString(REASON)))
@@ -125,23 +129,33 @@ class PermissionsFragment : DialogFragment() {
         dialog?.let {
             with(it) {
                 animateProgressTo(81)
-                (view.findViewById<View>(R.id.progress_text) as TextView).text = getString(R.string.perm_progress2)
-                (view.findViewById<View>(R.id.perm_message) as TextView).text = getString(R.string.permissions_accessibility_desc)
+                (view.findViewById<View>(R.id.progress_text) as TextView).text =
+                    getString(R.string.perm_progress2)
+                (view.findViewById<View>(R.id.perm_message) as TextView).text =
+                    getString(R.string.permissions_accessibility_desc)
                 setHelperIcon(R.drawable.ic_accessibility)
                 setPath(R.string.permissions_accessibility_path)
                 view.findViewById<View>(R.id.overlay_example).visibility = View.GONE
                 view.findViewById<View>(R.id.accessibility_example).visibility = View.VISIBLE
                 view.findViewById<View>(R.id.accessibility_more).visibility = View.VISIBLE
-                view.findViewById<View>(R.id.accessibility_more).setOnClickListener { toggleDataInfo(view, true) }
+                view.findViewById<View>(R.id.accessibility_more)
+                    .setOnClickListener { toggleDataInfo(view, true) }
                 setPosButton(R.string.perm_cta2) { requestAccessibility() }
             }
         }
     }
 
     private fun toggleDataInfo(v: View, show: Boolean) {
-        (v.findViewById<View>(R.id.accessibility_more) as TextView).setCompoundDrawablesWithIntrinsicBounds(getArrow(show), 0, 0, 0)
-        v.findViewById<View>(R.id.accessibility_data_info)?.visibility = if (show) View.VISIBLE else View.GONE
-        v.findViewById<View>(R.id.accessibility_more)?.setOnClickListener { toggleDataInfo(v, !show) }
+        (v.findViewById<View>(R.id.accessibility_more) as TextView).setCompoundDrawablesWithIntrinsicBounds(
+            getArrow(show),
+            0,
+            0,
+            0
+        )
+        v.findViewById<View>(R.id.accessibility_data_info)?.visibility =
+            if (show) View.VISIBLE else View.GONE
+        v.findViewById<View>(R.id.accessibility_more)
+            ?.setOnClickListener { toggleDataInfo(v, !show) }
     }
 
     private fun getArrow(show: Boolean): Int {
@@ -160,7 +174,10 @@ class PermissionsFragment : DialogFragment() {
     }
 
     private fun cancel() {
-        logAnalyticsEvent(getString(if (current == OVERLAY) R.string.perms_overlay_cancelled else R.string.perms_accessibility_cancelled), requireContext())
+        logAnalyticsEvent(
+            getString(if (current == OVERLAY) R.string.perms_overlay_cancelled else R.string.perms_accessibility_cancelled),
+            requireContext()
+        )
         dialog?.dismiss()
         requireActivity().apply {
             setResult(Activity.RESULT_CANCELED)
@@ -180,8 +197,12 @@ class PermissionsFragment : DialogFragment() {
         private const val REASON = "reason"
         private const val STARTWITH = "start_with"
 
-        fun newInstance(reason: String?, onlyAccessibility: Boolean): PermissionsFragment = PermissionsFragment().apply {
-            arguments = bundleOf(REASON to reason, STARTWITH to if (onlyAccessibility) ACCESS else OVERLAY)
-        }
+        fun newInstance(reason: String?, onlyAccessibility: Boolean): PermissionsFragment =
+            PermissionsFragment().apply {
+                arguments = bundleOf(
+                    REASON to reason,
+                    STARTWITH to if (onlyAccessibility) ACCESS else OVERLAY
+                )
+            }
     }
 }

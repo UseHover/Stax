@@ -27,17 +27,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
-import com.hover.stax.network.dto.UpdateDto
-import com.hover.stax.network.dto.UploadDto
-import com.hover.stax.network.dto.UserUpdateDto
-import com.hover.stax.network.dto.UserUploadDto
-import com.hover.stax.network.dto.toStaxUser
-import com.hover.stax.database.models.StaxUser
 import com.hover.stax.data.auth.AuthRepository
-import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
+import com.hover.stax.data.util.toStaxUser
+import com.hover.stax.database.models.StaxUser
 import com.hover.stax.datastore.DefaultTokenProvider
 import com.hover.stax.datastore.TokenProvider
-import com.hover.stax.core.AnalyticsUtil
+import com.hover.stax.domain.use_case.stax_user.StaxUserUseCase
+import com.hover.stax.model.auth.UpdateDto
+import com.hover.stax.model.auth.UploadDto
+import com.hover.stax.model.auth.UserUpdateDto
+import com.hover.stax.model.auth.UserUploadDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -99,7 +98,7 @@ class LoginViewModel @Inject constructor(
                 }.also {
                     val user = authRepository.uploadUserToStax(
                         UserUploadDto(
-                            com.hover.stax.network.dto.UploadDto(
+                            UploadDto(
                                 deviceId = Hover.getDeviceId(getApplication()),
                                 email = signInAccount.email,
                                 username = signInAccount.displayName,
@@ -119,8 +118,8 @@ class LoginViewModel @Inject constructor(
     fun optInMarketing(optIn: Boolean) = staxUser.value?.email?.let { email ->
         updateUser(
             email = email,
-            data = com.hover.stax.network.dto.UserUpdateDto(
-                com.hover.stax.network.dto.UpdateDto(
+            data = UserUpdateDto(
+                UpdateDto(
                     marketingOptedIn = optIn,
                     email = email
                 )
@@ -128,14 +127,15 @@ class LoginViewModel @Inject constructor(
         )
     }
 
-    private fun updateUser(email: String, data: com.hover.stax.network.dto.UserUpdateDto) = viewModelScope.launch {
-        try {
-            authRepository.updateUser(email, data)
-            _loginState.value = LoginScreenUiState(LoginUiState.Success)
-        } catch (e: Exception) {
-            _loginState.value = LoginScreenUiState(LoginUiState.Error)
+    private fun updateUser(email: String, data: UserUpdateDto) =
+        viewModelScope.launch {
+            try {
+                authRepository.updateUser(email, data)
+                _loginState.value = LoginScreenUiState(LoginUiState.Success)
+            } catch (e: Exception) {
+                _loginState.value = LoginScreenUiState(LoginUiState.Error)
+            }
         }
-    }
 
     private fun setUser(signInAccount: GoogleSignInAccount, idToken: String) {
         Timber.d("setting user: %s", signInAccount.email)
@@ -153,12 +153,12 @@ class LoginViewModel @Inject constructor(
             error.postValue(message)
         } else {
             signInClient.signOut().addOnCompleteListener {
-                com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+                com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase(
                     LoginViewModel::class.java.simpleName,
                     message,
                     null
                 )
-                com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(message, getApplication())
+                com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(message, getApplication())
 
                 removeUser()
 
@@ -168,7 +168,10 @@ class LoginViewModel @Inject constructor(
     }
 
     fun silentSignOut() = signInClient.signOut().addOnCompleteListener {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.logout), getApplication())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
+            getString(R.string.logout),
+            getApplication()
+        )
         removeUser()
     }
 
