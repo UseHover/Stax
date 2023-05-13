@@ -32,8 +32,7 @@ import androidx.fragment.app.Fragment
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.databinding.ManagePermissionsLayoutBinding
-import com.hover.stax.core.AnalyticsUtil
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import timber.log.Timber
 
 class ManagePermissionsFragment : Fragment() {

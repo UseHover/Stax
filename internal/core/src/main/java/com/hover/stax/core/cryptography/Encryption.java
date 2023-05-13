@@ -1,4 +1,4 @@
-package com.hover.stax.utils.paymentLinkCryptography;
+package com.hover.stax.core.cryptography;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;

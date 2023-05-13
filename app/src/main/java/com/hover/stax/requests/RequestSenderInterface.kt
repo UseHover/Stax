@@ -31,7 +31,7 @@ import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Request
 import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
-import com.hover.stax.utils.Utils.copyToClipboard
+import com.hover.stax.core.Utils.copyToClipboard
 
 const val REQUEST_LINK = "request_link"
 const val SMS = 303

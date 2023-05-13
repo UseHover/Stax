@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hover.stax.utils.paymentLinkCryptography;
+package com.hover.stax.core.cryptography;
 
 import android.os.Build;
 

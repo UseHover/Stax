@@ -29,6 +29,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.hover.stax.R
@@ -68,7 +69,11 @@ object UIHelper {
     fun flashAndReportError(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(message, context)
-        com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(context.getString(R.string.toast_err_tag), message, null)
+        com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+            context.getString(R.string.toast_err_tag),
+            message,
+            null
+        )
     }
 
     fun setMainLinearManagers(context: Context?): LinearLayoutManager {
@@ -86,37 +91,38 @@ object UIHelper {
         }
     }
 
-    fun ImageView.loadImage(fragment: Fragment, url: String) = GlideApp.with(fragment)
+    fun ImageView.loadImage(fragment: Fragment, url: String) = Glide.with(fragment)
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
         .override(80)
         .into(this)
 
-    fun ImageView.loadImage(context: Context, url: String) = GlideApp.with(context)
+    fun ImageView.loadImage(context: Context, url: String) = Glide.with(context)
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
         .override(80)
         .into(this)
 
-    fun ImageView.loadImage(context: Context, @DrawableRes iconId: Int) = GlideApp.with(context)
+    fun ImageView.loadImage(context: Context, @DrawableRes iconId: Int) = Glide.with(context)
         .load(iconId)
         .override(100)
         .into(this)
 
-    fun ImageButton.loadImage(context: Context, url: String) = GlideApp.with(context)
+    fun ImageButton.loadImage(context: Context, url: String) = Glide.with(context)
         .load(url)
         .placeholder(R.drawable.icon_bg_circle)
         .circleCrop()
         .into(this)
 
-    fun loadImage(context: Context, url: String?, target: CustomTarget<Drawable>) = GlideApp.with(context)
-        .load(url)
-        .placeholder(R.drawable.icon_bg_circle)
-        .circleCrop()
-        .override(context.resources.getDimensionPixelSize(R.dimen.logoDiam))
-        .into(target)
+    fun loadImage(context: Context, url: String?, target: CustomTarget<Drawable>) =
+        Glide.with(context)
+            .load(url)
+            .placeholder(R.drawable.icon_bg_circle)
+            .circleCrop()
+            .override(context.resources.getDimensionPixelSize(R.dimen.logoDiam))
+            .into(target)
 }
 
 fun <T> Fragment.collectLifecycleFlow(flow: Flow<T>, collector: FlowCollector<T>) {

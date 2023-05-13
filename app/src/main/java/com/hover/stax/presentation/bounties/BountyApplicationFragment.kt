@@ -36,7 +36,7 @@ import com.hover.stax.login.LoginUiState
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
-import com.hover.stax.utils.network.NetworkMonitor
+import com.hover.stax.core.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

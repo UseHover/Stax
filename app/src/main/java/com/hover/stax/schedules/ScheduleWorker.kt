@@ -15,6 +15,7 @@
  */
 package com.hover.stax.schedules
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -49,6 +50,7 @@ class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(contex
         return Result.success()
     }
 
+    @SuppressLint("MissingPermission")
     private fun notifyUser(s: Schedule) {
         val contacts = contactDao[s.recipient_ids.split(",").toTypedArray()]
         val builder = NotificationCompat.Builder(applicationContext, "DEFAULT")

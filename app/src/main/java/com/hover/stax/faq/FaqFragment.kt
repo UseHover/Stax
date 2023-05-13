@@ -27,7 +27,7 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentFaqBinding
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.network.NetworkMonitor
+import com.hover.stax.core.network.NetworkMonitor
 
 class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 

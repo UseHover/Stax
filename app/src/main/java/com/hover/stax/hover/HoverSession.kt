@@ -27,7 +27,7 @@ import com.hover.stax.database.models.ACCOUNT_ID
 import com.hover.stax.database.models.ACCOUNT_NAME
 import com.hover.stax.database.models.Account
 import com.hover.stax.settings.TEST_MODE
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber

@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.hover.stax.R
 import com.hover.stax.database.models.Account
 import com.hover.stax.domain.use_case.sims.SimWithAccount
@@ -85,7 +86,13 @@ fun SimScreen(
                         }
                     } else {
                         val comparator = Comparator { s1: SimWithAccount, s2: SimWithAccount ->
-                            return@Comparator if (s1.sim.slotIdx == -1) { 1 } else if (s2.sim.slotIdx == -1) { -1 } else { s1.sim.slotIdx - s2.sim.slotIdx }
+                            return@Comparator if (s1.sim.slotIdx == -1) {
+                                1
+                            } else if (s2.sim.slotIdx == -1) {
+                                -1
+                            } else {
+                                s1.sim.slotIdx - s2.sim.slotIdx
+                            }
                         }
 
                         items(sims.sortedWith(comparator)) { sim ->

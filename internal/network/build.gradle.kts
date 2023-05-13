@@ -25,4 +25,9 @@ dependencies {
     implementation(libs.core.ktx)
 
     api(libs.bundles.network)
+
+    implementation(libs.phoenix)
+
+    // logging
+    implementation(libs.bundles.logging)
 }

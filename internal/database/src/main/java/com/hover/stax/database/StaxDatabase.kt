@@ -29,11 +29,19 @@ import com.hover.stax.database.dao.RequestDao
 import com.hover.stax.database.dao.ScheduleDao
 import com.hover.stax.database.dao.TransactionDao
 import com.hover.stax.database.dao.UserDao
+import com.hover.stax.database.models.Account
+import com.hover.stax.database.models.Merchant
+import com.hover.stax.database.models.Paybill
+import com.hover.stax.database.models.Request
+import com.hover.stax.database.models.Schedule
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.database.models.StaxTransaction
+import com.hover.stax.database.models.StaxUser
 import kotlinx.coroutines.channels.Channel
 
 @Database(
     entities = [
-        Channel::class
+        Channel::class, StaxTransaction::class, StaxContact::class, Request::class, Schedule::class, Account::class, Paybill::class, Merchant::class, StaxUser::class
     ],
     version = 1, // TODO - match previous database here
     autoMigrations = [],

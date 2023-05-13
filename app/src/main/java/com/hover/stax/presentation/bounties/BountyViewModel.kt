@@ -26,10 +26,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.model.Bounty
-import com.hover.stax.model.Resource
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
-import com.hover.stax.utils.Utils.getPackage
+import com.hover.stax.core.Utils.getPackage
+import com.hover.stax.model.Bounty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -107,7 +106,7 @@ class BountyViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun isSimPresent(bounty: com.hover.stax.model.Bounty): Boolean = bountiesUseCase.isSimPresent(bounty, sims.value)
+    fun isSimPresent(bounty: Bounty): Boolean = bountiesUseCase.isSimPresent(bounty, sims.value)
 
     fun handleBountyEvent(bountySelectEvent: BountySelectEvent?) = viewModelScope.launch {
         bountySelectEvent?.let { onBountySelectEvent.send(bountySelectEvent) }

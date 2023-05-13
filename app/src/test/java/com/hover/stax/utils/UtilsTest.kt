@@ -15,6 +15,7 @@
  */
 package com.hover.stax.utils
 
+import com.hover.stax.core.Utils
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

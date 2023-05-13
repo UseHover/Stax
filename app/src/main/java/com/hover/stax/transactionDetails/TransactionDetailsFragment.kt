@@ -53,7 +53,8 @@ import com.hover.stax.hover.BountyContract
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.UIHelper.loadImage
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
+import com.hover.stax.database.models.UssdCallResponse
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber

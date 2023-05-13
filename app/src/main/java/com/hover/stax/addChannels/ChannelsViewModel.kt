@@ -39,7 +39,7 @@ import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.database.models.Channel
 import com.hover.stax.database.models.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

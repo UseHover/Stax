@@ -15,76 +15,78 @@
  */
 package com.hover.stax.data.contact
 
-import androidx.lifecycle.LiveData
-import com.hover.stax.database.AppDatabase
-import com.hover.stax.database.dao.ContactDao
-import com.hover.stax.database.models.StaxContact
-import com.hover.stax.utils.AnalyticsUtil
-import javax.inject.Inject
-
-interface ContactRepository {
-
-    val allContacts: LiveData<List<StaxContact>>
-
-    fun getContacts(ids: Array<String>): List<StaxContact>
-
-    fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>>
-
-    fun getContact(id: String?): StaxContact?
-
-    suspend fun getContactAsync(id: String?): StaxContact?
-
-    fun getContactByPhone(phone: String?): StaxContact?
-
-    fun getLiveContact(id: String?): LiveData<StaxContact>
-
-    fun save(contact: StaxContact)
-}
-
-class ContactRepo @Inject constructor(
-    private val contactDao: ContactDao
-) : ContactRepository {
-
-    override val allContacts: LiveData<List<StaxContact>>
-        get() = contactDao.all
-
-    override fun getContacts(ids: Array<String>): List<StaxContact> {
-        return contactDao[ids]
-    }
-
-    override fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>> {
-        return contactDao.getLive(ids)
-    }
-
-    override fun getContact(id: String?): StaxContact? {
-        return contactDao[id]
-    }
-
-    override suspend fun getContactAsync(id: String?): StaxContact? {
-        return contactDao.getAsync(id)
-    }
-
-    override fun getContactByPhone(phone: String?): StaxContact? {
-        return contactDao.getByPhone("%$phone%")
-    }
-
-    override fun getLiveContact(id: String?): LiveData<StaxContact> {
-        return contactDao.getLive(id)
-    }
-
-    override fun save(contact: StaxContact) {
-        AppDatabase.databaseWriteExecutor.execute {
-            if (getContact(contact.id) == null && contact.accountNumber != null) {
-                try {
-                    contactDao.insert(contact)
-                } catch (e: Exception) {
-                    AnalyticsUtil.logErrorAndReportToFirebase(
-                        "ContactRepo",
-                        "failed to insert contact",
-                        e
-                    )
-                }
-            } else contactDao.updateStaxContact(contact)
-        }
-    }
-}
+// TODO - please delete the repo inside database and use this
+//
+// import androidx.lifecycle.LiveData
+// import com.hover.stax.database.AppDatabase
+// import com.hover.stax.database.dao.ContactDao
+// import com.hover.stax.database.models.StaxContact
+// import com.hover.stax.utils.AnalyticsUtil
+// import javax.inject.Inject
+//
+// interface ContactRepository {
+//
+//    val allContacts: LiveData<List<StaxContact>>
+//
+//    fun getContacts(ids: Array<String>): List<StaxContact>
+//
+//    fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>>
+//
+//    fun getContact(id: String?): StaxContact?
+//
+//    suspend fun getContactAsync(id: String?): StaxContact?
+//
+//    fun getContactByPhone(phone: String?): StaxContact?
+//
+//    fun getLiveContact(id: String?): LiveData<StaxContact>
+//
+//    fun save(contact: StaxContact)
+// }
+//
+// class ContactRepo @Inject constructor(
+//    private val contactDao: ContactDao
+// ) : ContactRepository {
+//
+//    override val allContacts: LiveData<List<StaxContact>>
+//        get() = contactDao.all
+//
+//    override fun getContacts(ids: Array<String>): List<StaxContact> {
+//        return contactDao[ids]
+//    }
+//
+//    override fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>> {
+//        return contactDao.getLive(ids)
+//    }
+//
+//    override fun getContact(id: String?): StaxContact? {
+//        return contactDao[id]
+//    }
+//
+//    override suspend fun getContactAsync(id: String?): StaxContact? {
+//        return contactDao.getAsync(id)
+//    }
+//
+//    override fun getContactByPhone(phone: String?): StaxContact? {
+//        return contactDao.getByPhone("%$phone%")
+//    }
+//
+//    override fun getLiveContact(id: String?): LiveData<StaxContact> {
+//        return contactDao.getLive(id)
+//    }
+//
+//    override fun save(contact: StaxContact) {
+//        AppDatabase.databaseWriteExecutor.execute {
+//            if (getContact(contact.id) == null && contact.accountNumber != null) {
+//                try {
+//                    contactDao.insert(contact)
+//                } catch (e: Exception) {
+//                    AnalyticsUtil.logErrorAndReportToFirebase(
+//                        "ContactRepo",
+//                        "failed to insert contact",
+//                        e
+//                    )
+//                }
+//            } else contactDao.updateStaxContact(contact)
+//        }
+//    }
+// }

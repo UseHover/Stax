@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Stax
+ * Copyright 2023 Stax
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,158 +22,20 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
+import com.hover.stax.core.AnalyticsUtil
+import com.hover.stax.core.Utils
 import com.hover.stax.permissions.PermissionUtils
-import java.text.DecimalFormat
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 
 object Utils {
-
-    private const val SHARED_PREFS = "staxprefs"
-    private const val SDK_PREFS = "_hoversdk"
-
-    private fun getSharedPrefs(context: Context): SharedPreferences {
-        return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE)
-    }
-
-    fun getSdkPrefs(context: Context): SharedPreferences {
-        return context.getSharedPreferences(getPackage(context) + SDK_PREFS, Context.MODE_PRIVATE)
-    }
-
-    fun saveString(key: String?, value: String?, c: Context) {
-        val editor = getSharedPrefs(c).edit()
-        editor.putString(key, value)
-        editor.apply()
-    }
-
-    fun getString(key: String?, c: Context): String? {
-        return getSharedPrefs(c).getString(key, "")
-    }
-
-    fun removeString(key: String, context: Context) {
-        getSharedPrefs(context).edit().apply {
-            remove(key)
-            apply()
-        }
-    }
-
-    fun getBoolean(key: String?, c: Context, returnTrueDefault: Boolean = false): Boolean {
-        return getSharedPrefs(c).getBoolean(key, returnTrueDefault)
-    }
-
-    fun saveInt(key: String?, value: Int, c: Context) {
-        val editor = getSharedPrefs(c).edit()
-        editor.putInt(key, value)
-        editor.apply()
-    }
-
-    fun saveBoolean(key: String?, value: Boolean, c: Context) {
-        val editor = getSharedPrefs(c).edit()
-        editor.putBoolean(key, value)
-        editor.apply()
-    }
-
-    fun getInt(key: String?, c: Context?): Int {
-        return getSharedPrefs(c!!).getInt(key, 0)
-    }
-
-    fun getLong(key: String?, c: Context?): Long {
-        return getSharedPrefs(c!!).getLong(key, 0)
-    }
-
-    fun saveLong(key: String?, value: Long, c: Context?) {
-        val editor = getSharedPrefs(c!!).edit()
-        editor.putLong(key, value)
-        editor.apply()
-    }
-
-    fun isFirebaseTopicInDefaultState(topic: String?, c: Context): Boolean {
-        return getSharedPrefs(c).getBoolean(topic, true)
-    }
-
-    fun alterFirebaseTopicState(topic: String?, c: Context) {
-        val editor = getSharedPrefs(c).edit()
-        editor.putBoolean(topic, false)
-        editor.apply()
-    }
-
-    @JvmStatic
-    fun getPackage(c: Context): String {
-        return try {
-            c.applicationContext.packageName
-        } catch (e: NullPointerException) {
-            "fail"
-        }
-    }
-
-    @JvmStatic
-    fun getAppName(c: Context?): String {
-        return if (c != null && c.applicationContext.applicationInfo != null)
-            c.applicationContext.applicationInfo.loadLabel(c.packageManager).toString()
-        else "Hover"
-    }
-
-    @JvmStatic
-    fun formatAmount(number: String?): String {
-        return when (number) {
-            "0" -> "00"
-            null -> "--"
-            else -> try {
-                formatAmount(amountToDouble(number))
-            } catch (e: Exception) {
-                number
-            }
-        }
-    }
-
-    @JvmStatic
-    fun formatAmount(number: Double?): String {
-        return try {
-            val formatter = DecimalFormat("#,##0.00")
-            formatter.maximumFractionDigits = 2
-            formatter.format(number)
-        } catch (e: Exception) {
-            number.toString()
-        }
-    }
-
-    @JvmStatic
-    fun formatAmountForUSSD(number: Double?): String {
-        return try {
-            val formatter = DecimalFormat("###0.##")
-            formatter.maximumFractionDigits = 2
-            formatter.minimumFractionDigits = 0
-            formatter.format(number)
-        } catch (e: Exception) {
-            number.toString()
-        }
-    }
-
-    @JvmStatic
-    fun amountToDouble(amount: String?): Double? {
-        try {
-            return amount?.replace(",".toRegex(), "")?.toDouble()
-        } catch (e: NumberFormatException) { return null }
-    }
-
-    @JvmStatic
-    fun formatPercent(number: Int): String {
-        return try {
-            val formatter = DecimalFormat("##0")
-            formatter.maximumFractionDigits = 0
-            formatter.format(number)
-        } catch (e: Exception) {
-            number.toString()
-        }
-    }
 
     fun usingDebugVariant(c: Context): Boolean {
         return getBuildConfigValue(c, "DEBUG") as Boolean
@@ -181,7 +43,7 @@ object Utils {
 
     private fun getBuildConfigValue(context: Context, fieldName: String): Any? {
         try {
-            val clazz = Class.forName(getPackage(context) + ".BuildConfig")
+            val clazz = Class.forName(Utils.getPackage(context) + ".BuildConfig")
             val field = clazz.getField(fieldName)
             return field[null]
         } catch (e: Exception) {
@@ -213,7 +75,8 @@ object Utils {
     @JvmStatic
     fun showSoftKeyboard(context: Context, view: View) {
         if (view.requestFocus()) {
-            val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputMethodManager =
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
@@ -245,18 +108,29 @@ object Utils {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
             Timber.e("Activity not found")
-            UIHelper.flashAndReportMessage(context, context.getString(R.string.email_client_not_found))
+            UIHelper.flashAndReportMessage(
+                context,
+                context.getString(R.string.email_client_not_found)
+            )
         }
     }
 
     fun shareStax(activity: Activity, shareMessage: String? = null) {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
+        AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
 
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareMessage ?: activity.getString(R.string.share_msg))
-        activity.startActivity(Intent.createChooser(sharingIntent, activity.getString(R.string.share_explain)))
+        sharingIntent.putExtra(
+            Intent.EXTRA_TEXT,
+            shareMessage ?: activity.getString(R.string.share_msg)
+        )
+        activity.startActivity(
+            Intent.createChooser(
+                sharingIntent,
+                activity.getString(R.string.share_explain)
+            )
+        )
     }
 
     fun openStaxPlaystorePage(activity: Activity) {
@@ -266,7 +140,16 @@ object Utils {
         try {
             activity.startActivity(goToMarket)
         } catch (e: ActivityNotFoundException) {
-            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activity.baseContext.getString(R.string.stax_url_playstore_review_link))))
+            activity.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(
+                        activity.baseContext.getString(
+                            R.string.stax_url_playstore_review_link
+                        )
+                    )
+                )
+            )
         }
     }
 
@@ -278,9 +161,12 @@ object Utils {
         } catch (ignored: JSONException) {
         }
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
+        AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
 
-        val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {
+        val dialIntent = Intent(
+            Intent.ACTION_CALL,
+            Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))
+        ).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 

@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("kotlin")
+    id("stax.android.library")
+    id("stax.android.hilt")
+    id("kotlinx-serialization")
+}
+
+android {
+    namespace = "com.hover.stax.model"
 }
 
 dependencies {
-    implementation(project(path = ":internal:core"))
 
     implementation(libs.datetime)
+    implementation(libs.kotlinx.serialization)
 }

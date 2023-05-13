@@ -16,6 +16,7 @@
 package com.hover.stax.model.auth
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserUpdateDto(

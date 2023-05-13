@@ -37,10 +37,6 @@ rootProject.name = "Stax"
 
 include(":app")
 
-include(":internal:network")
-include(":internal:database")
-include(":internal:resources")
-
 include(":features")
 include(":features:user-profile")
 include(":features:transactions")
@@ -51,6 +47,9 @@ include(":internal:remoteconfig")
 include(":internal:sync")
 include(":internal:testing")
 include(":internal:ui")
+include(":internal:network")
+include(":internal:database")
+include(":internal:resources")
 include(":internal:datastore")
 include(":internal:model")
 include(":internal:data")

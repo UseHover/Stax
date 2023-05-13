@@ -20,16 +20,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.hover.stax.R
 import com.hover.stax.database.models.Paybill
 import com.hover.stax.databinding.ItemPaybillSavedBinding
-import com.hover.stax.utils.GlideApp
 import com.hover.stax.utils.UIHelper.loadImage
 
-class PaybillAdapter(private val paybills: List<Paybill>, private val clickListener: ClickListener) : RecyclerView.Adapter<PaybillAdapter.PaybillViewHolder>() {
+class PaybillAdapter(
+    private val paybills: List<Paybill>,
+    private val clickListener: ClickListener
+) : RecyclerView.Adapter<PaybillAdapter.PaybillViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaybillViewHolder {
-        val binding = ItemPaybillSavedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemPaybillSavedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PaybillViewHolder(binding, clickListener)
     }
 
@@ -46,13 +50,19 @@ class PaybillAdapter(private val paybills: List<Paybill>, private val clickListe
 
         fun bindItems(paybill: Paybill) {
             binding.nickname.text = paybill.toString()
-            binding.accountNumber.text = binding.root.context.getString(R.string.account_no_detail, paybill.accountNo)
+            binding.accountNumber.text =
+                binding.root.context.getString(R.string.account_no_detail, paybill.accountNo)
 
             if (paybill.logo != 0) {
                 binding.billLogo.visibility = View.GONE
                 binding.iconLayout.visibility = View.VISIBLE
-                GlideApp.with(binding.root.context).clear(binding.billLogo)
-                binding.billIcon.setImageDrawable(ContextCompat.getDrawable(binding.billIcon.context, paybill.logo))
+                Glide.with(binding.root.context).clear(binding.billLogo)
+                binding.billIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        binding.billIcon.context,
+                        paybill.logo
+                    )
+                )
             } else {
                 binding.iconLayout.visibility = View.GONE
                 binding.billLogo.visibility = View.VISIBLE

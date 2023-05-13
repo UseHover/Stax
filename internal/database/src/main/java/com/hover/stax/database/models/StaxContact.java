@@ -17,7 +17,9 @@ import androidx.room.PrimaryKey;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
+import com.hover.stax.core.DateUtils;
 import com.hover.stax.database.R;
+import com.hover.stax.database.repo.ContactRepo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -169,7 +171,7 @@ public class StaxContact {
     private boolean isSamePhone(StaxContact other) {
         try {
             PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-            return phoneUtil.isNumberMatch(accountNumber, other.accountNumber) != MatchType.NO_MATCH;
+            return phoneUtil.isNumberMatch(accountNumber, other.accountNumber) != PhoneNumberUtil.MatchType.NO_MATCH;
         } catch (Exception e) {
             return false;
         }

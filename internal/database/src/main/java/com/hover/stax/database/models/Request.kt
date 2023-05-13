@@ -21,11 +21,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.hover.stax.R
-import com.hover.stax.utils.DateUtils.now
-import com.hover.stax.utils.Utils.formatAmount
-import com.hover.stax.utils.paymentLinkCryptography.Base64
-import com.hover.stax.utils.paymentLinkCryptography.Encryption
+import com.hover.stax.core.DateUtils.now
+import com.hover.stax.core.Utils.formatAmount
+import com.hover.stax.core.cryptography.Base64
+import com.hover.stax.core.cryptography.Encryption
+import com.hover.stax.database.R
 import com.yariksoffice.lingver.Lingver
 import timber.log.Timber
 

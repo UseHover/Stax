@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.databinding.TransactionListItemBinding;
 import com.hover.stax.database.models.Schedule;
-import com.hover.stax.utils.Utils;
+import com.hover.stax.core.Utils;
 
 import java.util.List;
 

@@ -21,10 +21,10 @@ import android.content.Intent
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
+import com.hover.stax.core.Utils
 import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.channel.ChannelRepository
-import com.hover.stax.data.contact.ContactRepo
 import com.hover.stax.data.merchant.MerchantRepo
 import com.hover.stax.data.paybill.PaybillRepo
 import com.hover.stax.data.requests.RequestRepo
@@ -35,7 +35,7 @@ import com.hover.stax.database.models.BUSINESS_NAME
 import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.database.models.Channel
 import com.hover.stax.database.models.StaxContact
-import com.hover.stax.utils.Utils
+import com.hover.stax.database.repo.ContactRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -25,7 +25,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionMessagesItemsBinding
 import com.hover.stax.transactionDetails.MessagesAdapter.TransactionMessageViewHolder
-import com.hover.stax.utils.Utils.dial
+import com.hover.stax.core.Utils.dial
+import com.hover.stax.database.models.UssdCallResponse
 
 class MessagesAdapter internal constructor(
     private val messagesList: List<UssdCallResponse>?,

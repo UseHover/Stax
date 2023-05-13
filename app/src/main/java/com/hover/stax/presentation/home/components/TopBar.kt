@@ -34,7 +34,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
-import com.hover.stax.utils.network.NetworkMonitor
+import com.hover.stax.core.network.NetworkMonitor
 
 @Composable
 fun TopBar(@StringRes title: Int = R.string.app_name, navTo: (dest: Int) -> Unit) {

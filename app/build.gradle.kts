@@ -187,7 +187,9 @@ dependencies {
     implementation(project(path = ":internal:data"))
     implementation(project(path = ":internal:database"))
     implementation(project(path = ":internal:datastore"))
+    implementation(project(path = ":internal:model"))
     implementation(project(path = ":internal:remoteconfig"))
+    implementation(project(path = ":internal:resources"))
     implementation(project(path = ":internal:sync"))
     implementation(project(path = ":internal:ui"))
 
@@ -221,6 +223,8 @@ dependencies {
 
     // Auth
     implementation(libs.auth)
+
+    implementation(libs.android.hilt.navigation.compose)
 
     // Networking
     implementation(libs.bundles.network)

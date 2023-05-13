@@ -20,14 +20,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.data.contact.ContactRepo
-import com.hover.stax.database.models.PhoneHelper
-import com.hover.stax.database.models.StaxContact
-import com.hover.stax.database.models.Request
 import com.hover.stax.data.requests.RequestRepo
 import com.hover.stax.data.schedule.ScheduleRepo
-import com.hover.stax.core.AnalyticsUtil
-import com.hover.stax.core.DateUtils
+import com.hover.stax.database.models.PhoneHelper
+import com.hover.stax.database.models.Request
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.database.repo.ContactRepo
 import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,7 +92,11 @@ class TransferViewModel @Inject constructor(
 
     fun amountErrors(a: HoverAction?): String? {
         val regex = a?.getStepByVar(HoverAction.AMOUNT_KEY)?.optString("valid_response_regex")
-        return if ((amount.value.isNullOrEmpty() || !amount.value!!.matches("[\\d.]+".toRegex()) || amount.value!!.matches("[0]+".toRegex())) ||
+        return if ((
+            amount.value.isNullOrEmpty() || !amount.value!!.matches("[\\d.]+".toRegex()) || amount.value!!.matches(
+                    "[0]+".toRegex()
+                )
+            ) ||
             (!regex.isNullOrEmpty() && !amount.value!!.matches(regex.toRegex()))
         ) getString(R.string.amount_fielderror)
         else null
@@ -102,7 +104,10 @@ class TransferViewModel @Inject constructor(
 
     fun recipientErrors(a: HoverAction?): String? {
         return when {
-            (a != null && a.requiresRecipient() && (contact.value == null || contact.value?.accountNumber.isNullOrEmpty())) -> getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
+            (a != null && a.requiresRecipient() && (contact.value == null || contact.value?.accountNumber.isNullOrEmpty())) -> getString(
+                if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account
+            )
+
             else -> null
         }
     }
@@ -138,7 +143,10 @@ class TransferViewModel @Inject constructor(
             setRecipientSmartly(r, r.requester_country_alpha2)
             setAmount(r.amount)
             setNote(r.note)
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), getApplication())
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+                getString(R.string.loaded_request_link),
+                getApplication()
+            )
         }
     }
 

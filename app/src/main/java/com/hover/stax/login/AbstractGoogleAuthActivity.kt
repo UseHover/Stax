@@ -37,7 +37,7 @@ import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.core.Utils
 import timber.log.Timber
 
 const val FORCED_VERSION = "force_update_app_version"

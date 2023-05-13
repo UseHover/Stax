@@ -15,8 +15,8 @@
  */
 package com.hover.stax.model
 
-import com.hover.stax.network.dto.authorization.StaxUser
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Response returned from the server when a user logs in or updates their details.
@@ -62,19 +62,3 @@ data class Attributes(
     @SerialName("total_points")
     val totalPoints: Int
 )
-
-/**
- * Mapper to convert a [StaxUserDto] to a [StaxUser].
- */
-fun StaxUserDto.toStaxUser(): StaxUser {
-    return StaxUser(
-        id = data.attributes.id,
-        username = data.attributes.username,
-        email = data.attributes.email,
-        isMapper = data.attributes.isVerifiedMapper,
-        marketingOptedIn = data.attributes.marketingOptedIn,
-        transactionCount = data.attributes.transactionCount,
-        bountyTotal = data.attributes.bountyTotal,
-        totalPoints = data.attributes.totalPoints,
-    )
-}

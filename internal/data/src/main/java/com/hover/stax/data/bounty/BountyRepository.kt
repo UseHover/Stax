@@ -37,7 +37,7 @@ interface BountyRepository {
         actions: List<HoverAction>,
         transactions: List<StaxTransaction>?,
         channels: List<Channel>
-    ): List<ChannelBounties>
+    ): List<com.hover.stax.model.ChannelBounties>
 }
 
 class BountyRepositoryImpl @Inject constructor(
@@ -62,7 +62,7 @@ class BountyRepositoryImpl @Inject constructor(
         actions: List<HoverAction>,
         transactions: List<StaxTransaction>?,
         channels: List<Channel>
-    ): List<ChannelBounties> {
+    ): List<com.hover.stax.model.ChannelBounties> {
         if (actions.isEmpty()) return emptyList()
 
         val bounties = getBounties(actions, transactions)
@@ -73,13 +73,13 @@ class BountyRepositoryImpl @Inject constructor(
     private fun getBounties(
         actions: List<HoverAction>,
         transactions: List<StaxTransaction>?
-    ): List<Bounty> {
-        val bounties: MutableList<Bounty> = ArrayList()
+    ): List<com.hover.stax.model.Bounty> {
+        val bounties: MutableList<com.hover.stax.model.Bounty> = ArrayList()
         val transactionList = transactions?.toMutableList() ?: mutableListOf()
 
         for (action in actions) {
             val filteredTransactions = transactionList.filter { it.action_id == action.public_id }
-            bounties.add(Bounty(action, filteredTransactions))
+            bounties.add(com.hover.stax.model.Bounty(action, filteredTransactions))
         }
 
         return bounties
@@ -87,8 +87,8 @@ class BountyRepositoryImpl @Inject constructor(
 
     private fun generateChannelBounties(
         channels: List<Channel>,
-        bounties: List<Bounty>
-    ): List<ChannelBounties> {
+        bounties: List<com.hover.stax.model.Bounty>
+    ): List<com.hover.stax.model.ChannelBounties> {
         if (channels.isEmpty() || bounties.isEmpty()) return emptyList()
 
         val openBounties = bounties.filter { it.action.bounty_is_open || it.transactionCount != 0 }
@@ -96,7 +96,10 @@ class BountyRepositoryImpl @Inject constructor(
         val channelBounties = channels.filter { c ->
             openBounties.any { it.action.channel_id == c.id }
         }.map { channel ->
-            ChannelBounties(channel, openBounties.filter { it.action.channel_id == channel.id })
+            com.hover.stax.model.ChannelBounties(
+                channel,
+                openBounties.filter { it.action.channel_id == channel.id }
+            )
         }
 
         return channelBounties
