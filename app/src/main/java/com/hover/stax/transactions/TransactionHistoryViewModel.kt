@@ -18,8 +18,8 @@ package com.hover.stax.transactions
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.actions.ActionRepo
@@ -45,8 +45,9 @@ class TransactionHistoryViewModel @Inject constructor(
     init {
         transactionHistoryItem.addSource(allNonBountyTransaction, this::getTransactionHistory)
         staxTransactions = repo.completeAndPendingTransferTransactions!!
-        appReviewLiveData =
-            Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
+        appReviewLiveData = repo.transactionsForAppReview?.map { showAppReview(it) }!!
+//        appReviewLiveData =
+//            Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) } // TODO - FIX ME
     }
 
     private fun getTransactionHistory(transactions: List<StaxTransaction>) {

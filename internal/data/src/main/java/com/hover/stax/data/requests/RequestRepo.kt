@@ -17,7 +17,6 @@ package com.hover.stax.data.requests
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.core.requests.Shortlink
 import com.hover.stax.data.R
 import com.hover.stax.database.dao.RequestDao

@@ -132,7 +132,7 @@ abstract class AbstractFormFragment : Fragment() {
                     getString(R.string.error_running_action)
                 )
             }
-            com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+            com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase(
                 b.action.public_id,
                 getString(R.string.error_running_action_log),
                 e
@@ -210,7 +210,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun startContactPicker(c: Context) {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(R.string.try_contact_select),
             c
         )
@@ -293,5 +293,5 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun log(event: String) =
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(event, requireContext())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(event, requireContext())
 }

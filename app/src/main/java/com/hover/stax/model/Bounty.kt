@@ -18,7 +18,6 @@ package com.hover.stax.model
 import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.database.models.Channel
 import com.hover.stax.database.models.StaxTransaction
 import com.yariksoffice.lingver.Lingver
 import java.util.*

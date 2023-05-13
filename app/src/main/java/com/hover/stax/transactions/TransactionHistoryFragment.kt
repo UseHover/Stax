@@ -42,7 +42,7 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_transaction_history)

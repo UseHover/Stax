@@ -47,7 +47,8 @@ internal class InteractiveTutorialFragment : Fragment() {
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_interactive_tutorial)
-            ), requireActivity()
+            ),
+            requireActivity()
         )
 
         setTopBarClicks()
@@ -101,8 +102,8 @@ internal class InteractiveTutorialFragment : Fragment() {
 
     private fun isNoneApply(): Boolean {
         return !binding.variant2Checkbox1.isChecked &&
-                !binding.variant2Checkbox2.isChecked &&
-                !binding.variant2Checkbox3.isChecked
+            !binding.variant2Checkbox2.isChecked &&
+            !binding.variant2Checkbox3.isChecked
     }
 
     override fun onDestroyView() {

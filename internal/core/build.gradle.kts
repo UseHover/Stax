@@ -26,8 +26,8 @@ android {
 
 dependencies {
     implementation(project(path = ":internal:resources"))
-    
-    // Google
+
+// Google
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)
 

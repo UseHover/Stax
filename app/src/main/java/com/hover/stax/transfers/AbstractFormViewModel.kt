@@ -56,7 +56,8 @@ abstract class AbstractFormViewModel(
             (getApplication() as Context).getString(
                 R.string.scheduled_complete,
                 s.type
-            ), getApplication()
+            ),
+            getApplication()
         )
         scheduleRepo.insert(s)
     }

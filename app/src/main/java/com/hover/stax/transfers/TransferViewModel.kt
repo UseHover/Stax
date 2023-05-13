@@ -81,7 +81,7 @@ class TransferViewModel @Inject constructor(
                     )
                     isLoading.postValue(false)
                 } catch (e: NumberFormatException) {
-                    com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+                    com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase(
                         TransferViewModel::class.java.simpleName, e.message!!, e
                     )
                 }
@@ -143,7 +143,7 @@ class TransferViewModel @Inject constructor(
             setRecipientSmartly(r, r.requester_country_alpha2)
             setAmount(r.amount)
             setNote(r.note)
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
                 getString(R.string.loaded_request_link),
                 getApplication()
             )

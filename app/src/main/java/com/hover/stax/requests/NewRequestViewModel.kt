@@ -86,10 +86,10 @@ class NewRequestViewModel @Inject constructor(
 
     fun validAmount(): Boolean =
         (
-                !amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches(
-                    "[0]+".toRegex()
-                )
-                )
+            !amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches(
+                "[0]+".toRegex()
+            )
+            )
 
     fun requesteeErrors(): String? {
         return if (!requestee.value?.accountNumber.isNullOrEmpty())

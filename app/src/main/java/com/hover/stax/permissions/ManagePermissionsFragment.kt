@@ -44,11 +44,11 @@ class ManagePermissionsFragment : Fragment() {
     private val grantResults = arrayOf(PackageManager.PERMISSION_DENIED, PackageManager.PERMISSION_GRANTED)
 
     private val requestSMSPermLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grantResults ->
-            if (grantResults.containsValue(false))
-                Timber.i("SMS permissions denied")
-            else
-                Timber.i("SMS permissions granted")
-        }
+        if (grantResults.containsValue(false))
+            Timber.i("SMS permissions denied")
+        else
+            Timber.i("SMS permissions granted")
+    }
 
     private val requestPhonePermLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grantResults ->
         if (grantResults.containsValue(false))
@@ -133,7 +133,7 @@ class ManagePermissionsFragment : Fragment() {
 
     private fun shouldOpenSettings(permissions: List<String>): Boolean {
         return grantResults.contains(ContextCompat.checkSelfPermission(requireActivity(), permissions[0])) ||
-                grantResults.contains(ContextCompat.checkSelfPermission(requireActivity(), permissions[1]))
+            grantResults.contains(ContextCompat.checkSelfPermission(requireActivity(), permissions[1]))
     }
 
     private fun openAppDetailSettings() {

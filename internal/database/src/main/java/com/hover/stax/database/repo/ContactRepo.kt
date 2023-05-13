@@ -16,7 +16,6 @@
 package com.hover.stax.database.repo
 
 import androidx.lifecycle.LiveData
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.database.dao.ContactDao
 import com.hover.stax.database.models.StaxContact
 import javax.inject.Inject

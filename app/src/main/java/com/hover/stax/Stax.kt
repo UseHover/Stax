@@ -99,7 +99,7 @@ class Stax : Application() {
             init(getString(R.string.appsflyer_key), conversionListener, this@Stax)
 
             if (AppsFlyerProperties.getInstance()
-                    .getString(AppsFlyerProperties.APP_USER_ID) == null
+                .getString(AppsFlyerProperties.APP_USER_ID) == null
             )
                 setCustomerUserId(Hover.getDeviceId(this@Stax))
 

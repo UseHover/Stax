@@ -73,8 +73,8 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
             { PermissionUtils.requestPerms(NAV_HOME, this) }, {
-                com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this)
-            }, this
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this)
+        }, this
         )
     }
 

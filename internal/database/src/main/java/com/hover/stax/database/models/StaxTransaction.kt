@@ -203,11 +203,11 @@ data class StaxTransaction(
 
     val canRetry: Boolean
         get() = isRecorded || (
-                (
-                        transaction_type == HoverAction.P2P || transaction_type == HoverAction.AIRTIME ||
-                                transaction_type == HoverAction.BALANCE
-                        ) && isFailed
-                )
+            (
+                transaction_type == HoverAction.P2P || transaction_type == HoverAction.AIRTIME ||
+                    transaction_type == HoverAction.BALANCE
+                ) && isFailed
+            )
 
     val isFailed: Boolean
         get() = status == Transaction.FAILED

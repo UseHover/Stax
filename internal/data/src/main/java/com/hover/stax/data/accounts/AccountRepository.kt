@@ -129,9 +129,9 @@ class AccountRepositoryImpl @Inject constructor(
 
     private fun generateSimBasedName(sim: SimInfo): String {
         return (
-                sim.operatorName ?: sim.networkOperatorName
+            sim.operatorName ?: sim.networkOperatorName
                 ?: ""
-                ) + "-" + sim.subscriptionId.toString()
+            ) + "-" + sim.subscriptionId.toString()
     }
 
     private fun generateSimBasedAlias(sim: SimInfo): String {

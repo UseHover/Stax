@@ -136,7 +136,7 @@ private fun emailStax(simWithAccount: SimWithAccount, context: Context) {
         simWithAccount.sim.networkOperator ?: "Null",
         simWithAccount.sim.countryIso ?: "Null"
     )
-com.hover.stax.utils.Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody)
+    com.hover.stax.utils.Utils.openEmail(R.string.sim_card_support_request_emailSubject, context, emailBody)
 }
 
 @Composable

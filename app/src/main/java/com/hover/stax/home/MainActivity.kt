@@ -82,8 +82,8 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     }
 
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {
-            if (it) StaxAppReview.launchStaxReview(this@MainActivity)
-        }
+        if (it) StaxAppReview.launchStaxReview(this@MainActivity)
+    }
 
     private fun checkForRequest(intent: Intent) {
         if (intent.hasExtra(REQUEST_LINK)) {

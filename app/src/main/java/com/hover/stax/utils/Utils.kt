@@ -28,9 +28,9 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
-import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.core.Utils
 import com.hover.stax.permissions.PermissionUtils
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -116,7 +116,7 @@ object Utils {
     }
 
     fun shareStax(activity: Activity, shareMessage: String? = null) {
-        AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
+        logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
 
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
@@ -161,7 +161,7 @@ object Utils {
         } catch (ignored: JSONException) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
+        logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
 
         val dialIntent = Intent(
             Intent.ACTION_CALL,

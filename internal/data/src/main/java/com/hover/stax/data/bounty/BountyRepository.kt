@@ -15,21 +15,21 @@
  */
 package com.hover.stax.data.bounty
 // TODO - Please use me
-//import com.hover.sdk.actions.HoverAction
-//import com.hover.stax.data.actions.ActionRepo
-//import com.hover.stax.database.models.Channel
-//import com.hover.stax.database.models.StaxTransaction
-//import com.hover.stax.model.Bounty
-//import com.hover.stax.model.ChannelBounties
-//import kotlinx.coroutines.CoroutineDispatcher
-//import kotlinx.coroutines.flow.Flow
-//import kotlinx.coroutines.flow.channelFlow
-//import kotlinx.coroutines.launch
-//import javax.inject.Inject
+// import com.hover.sdk.actions.HoverAction
+// import com.hover.stax.data.actions.ActionRepo
+// import com.hover.stax.database.models.Channel
+// import com.hover.stax.database.models.StaxTransaction
+// import com.hover.stax.model.Bounty
+// import com.hover.stax.model.ChannelBounties
+// import kotlinx.coroutines.CoroutineDispatcher
+// import kotlinx.coroutines.flow.Flow
+// import kotlinx.coroutines.flow.channelFlow
+// import kotlinx.coroutines.launch
+// import javax.inject.Inject
 //
-//data class ChannelBounties(val channel: Channel, val bounties: List<Bounty>)
+// data class ChannelBounties(val channel: Channel, val bounties: List<Bounty>)
 //
-//interface BountyRepository {
+// interface BountyRepository {
 //
 //    val bountyActions: List<HoverAction>
 //
@@ -40,12 +40,12 @@ package com.hover.stax.data.bounty
 //        transactions: List<StaxTransaction>?,
 //        channels: List<Channel>
 //    ): List<ChannelBounties>
-//}
+// }
 //
-//class BountyRepositoryImpl @Inject constructor(
+// class BountyRepositoryImpl @Inject constructor(
 //    val actionRepo: ActionRepo,
 //    private val coroutineDispatcher: CoroutineDispatcher
-//) : BountyRepository {
+// ) : BountyRepository {
 //
 //    override val bountyActions: List<HoverAction>
 //        get() = actionRepo.bounties
@@ -106,4 +106,4 @@ package com.hover.stax.data.bounty
 //
 //        return channelBounties
 //    }
-//}
+// }
