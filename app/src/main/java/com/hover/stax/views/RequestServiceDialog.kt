@@ -26,7 +26,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.hover.stax.R
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import org.json.JSONObject
 
 open class RequestServiceDialog(private var ctx: Context, private var mView: View) : AlertDialog(ctx) {
@@ -82,7 +82,7 @@ open class RequestServiceDialog(private var ctx: Context, private var mView: Vie
             data.put("shortCode", shortCodeValue)
 
             if (validates()) {
-                AnalyticsUtil.logAnalyticsEvent(ctx.getString(R.string.requested_new_channel), data, ctx)
+                com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(ctx.getString(R.string.requested_new_channel), data, ctx)
                 dialog?.dismiss()
                 showSuccessDialog()
             }

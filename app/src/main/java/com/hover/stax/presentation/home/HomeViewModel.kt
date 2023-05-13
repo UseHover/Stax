@@ -20,18 +20,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
-import com.hover.stax.data.actions.ActionRepo
-import com.hover.stax.domain.model.Resource
 import com.hover.stax.data.accounts.AccountRepository
+import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
+import com.hover.stax.model.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class HomeViewModel(
+class HomeViewModel @Inject constructor(
     private val accountsRepo: AccountRepository,
     private val actionRepo: ActionRepo,
     private val tipsUseCase: TipsUseCase
@@ -59,29 +60,37 @@ class HomeViewModel(
 
     private fun getBonusList(countries: Array<String>) = viewModelScope.launch {
         bonusListToFlow(countries).collect { bonusList ->
-            if (bonusList is Resource.Success)
+            if (bonusList is com.hover.stax.model.Resource.Success)
                 _homeState.value = homeState.value?.copy(bonuses = bonusList.data ?: emptyList())
         }
     }
 
-    private fun bonusListToFlow(countries: Array<String>): Flow<Resource<List<HoverAction>>> = flow {
-        Timber.e("Looking for bounties from: ${countries.contentToString()}")
-        try {
-            emit(Resource.Loading())
+    private fun bonusListToFlow(countries: Array<String>): Flow<com.hover.stax.model.Resource<List<HoverAction>>> =
+        flow {
+            Timber.e("Looking for bounties from: ${countries.contentToString()}")
+            try {
+                emit(com.hover.stax.model.Resource.Loading())
 
-            emit(Resource.Success(actionRepo.getBonusActionsByCountry(countries)))
-        } catch (e: Exception) {
-            emit(Resource.Error("Error fetching tips"))
+                emit(
+                    com.hover.stax.model.Resource.Success(
+                        actionRepo.getBonusActionsByCountry(
+                            countries
+                        )
+                    )
+                )
+            } catch (e: Exception) {
+                emit(com.hover.stax.model.Resource.Error("Error fetching tips"))
+            }
         }
-    }
 
     private fun getFinancialTips() = tipsUseCase().onEach { result ->
-        if (result is Resource.Success)
+        if (result is com.hover.stax.model.Resource.Success)
             _homeState.value = homeState.value?.copy(financialTips = result.data ?: emptyList())
     }.launchIn(viewModelScope)
 
     private fun getDismissedFinancialTips() {
-        _homeState.value = homeState.value?.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
+        _homeState.value =
+            homeState.value?.copy(dismissedTipId = tipsUseCase.getDismissedTipId() ?: "")
     }
 
     fun dismissTip(id: String) {

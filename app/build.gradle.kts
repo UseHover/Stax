@@ -183,6 +183,7 @@ android {
 }
 
 dependencies {
+    implementation(project(path = ":internal:core"))
     implementation(project(path = ":internal:data"))
     implementation(project(path = ":internal:database"))
     implementation(project(path = ":internal:datastore"))

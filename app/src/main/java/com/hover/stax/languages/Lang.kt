@@ -17,7 +17,7 @@ package com.hover.stax.languages
 
 import android.content.Context
 import com.hover.stax.R
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.yariksoffice.lingver.Lingver
 import java.util.*
 import org.json.JSONException
@@ -54,7 +54,7 @@ class Lang(val code: String) {
                 Timber.e(e.localizedMessage)
             }
 
-            AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.selected_language), data, c)
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.selected_language), data, c)
         }
     }
 }

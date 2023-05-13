@@ -24,21 +24,20 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
-import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.model.FinancialTip
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
-    private val viewModel: FinancialTipsViewModel by viewModel()
+    private val viewModel: FinancialTipsViewModel by viewModels()
     private val args: FinancialTipsFragmentArgs by navArgs()
 
     private var _binding: FragmentWellnessBinding? = null
@@ -67,7 +66,10 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         viewModel.getTips()
 
         startObserver()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
     private fun initViews() {
@@ -82,16 +84,19 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 binding.progressIndicator.show()
                 binding.empty.visibility = View.GONE
             }
+
             it.tips.isEmpty() && !it.isLoading -> {
                 binding.progressIndicator.hide()
                 binding.empty.visibility = View.VISIBLE
                 binding.financialTips.visibility = View.GONE
                 binding.financialTipsDetail.visibility = View.GONE
             }
+
             it.tips.isNotEmpty() -> {
                 binding.progressIndicator.hide()
                 showFinancialTips(it.tips, args.tipId)
             }
+
             it.error.isNotEmpty() -> {
                 binding.progressIndicator.hide()
                 binding.empty.visibility = View.VISIBLE
@@ -101,7 +106,10 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         }
     }
 
-    private fun showFinancialTips(tips: List<FinancialTip>, id: String? = null) {
+    private fun showFinancialTips(
+        tips: List<com.hover.stax.model.FinancialTip>,
+        id: String? = null
+    ) {
         binding.empty.visibility = View.GONE
         binding.financialTips.visibility = View.VISIBLE
 
@@ -115,11 +123,14 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 adapter = FinancialTipsAdapter(tips, this@FinancialTipsFragment)
             }
 
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+                getString(R.string.visited_financial_tips),
+                requireActivity()
+            )
         }
     }
 
-    override fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean) {
+    override fun onTipSelected(tip: com.hover.stax.model.FinancialTip, isFromDeeplink: Boolean) {
         logTipRead(tip, isFromDeeplink)
 
         backPressedCallback.isEnabled = true
@@ -140,7 +151,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         binding.shareBtn.setOnClickListener { shareTip(tip) }
     }
 
-    private fun shareTip(tip: FinancialTip) {
+    private fun shareTip(tip: com.hover.stax.model.FinancialTip) {
         val shareCopy = if (tip.shareCopy != "null")
             tip.shareCopy
         else
@@ -173,7 +184,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         logTipShare(tip)
     }
 
-    private fun logTipShare(tip: FinancialTip) {
+    private fun logTipShare(tip: com.hover.stax.model.FinancialTip) {
         val data = JSONObject()
 
         try {
@@ -184,10 +195,14 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             Timber.e(e)
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.shared_financial_tip), data, requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(R.string.shared_financial_tip),
+            data,
+            requireActivity()
+        )
     }
 
-    private fun logTipRead(tip: FinancialTip, isFromDeeplink: Boolean) {
+    private fun logTipRead(tip: com.hover.stax.model.FinancialTip, isFromDeeplink: Boolean) {
         val data = JSONObject()
 
         try {
@@ -199,7 +214,11 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             Timber.e(e)
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.read_financial_tip), data, requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(R.string.read_financial_tip),
+            data,
+            requireActivity()
+        )
     }
 
     private fun showTipList() {

@@ -21,7 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.stax.R
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.Utils
 
 const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
@@ -29,7 +29,7 @@ const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
 internal object StaxAppReview {
 
     fun launchStaxReview(activity: Activity) {
-        AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.visited_rating_review_screen), activity)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.visited_rating_review_screen), activity)
         launchReviewDialog(activity)
     }
 

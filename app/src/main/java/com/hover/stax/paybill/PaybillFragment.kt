@@ -22,23 +22,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
-import com.hover.stax.database.models.Account
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.hover.TransactionContract
 import com.hover.stax.transfers.AbstractFormFragment
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
-import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
 class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectListener {
@@ -50,7 +49,7 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-        abstractFormViewModel = getSharedViewModel<PaybillViewModel>()
+        val abstractFormViewModel: PaybillViewModel by activityViewModels()
         viewModel = abstractFormViewModel as PaybillViewModel
         super.onCreate(savedInstanceState)
     }
@@ -67,7 +66,13 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_paybill)
+            ),
+            requireActivity()
+        )
         init(binding.root)
     }
 
@@ -89,9 +94,21 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     }
 
     private fun setInputListeners() = with(binding.saveCard) {
-        setInputListener(binding.editCard.accountNoInput, { s -> viewModel.setAccountNumber(s) }, { viewModel.accountNoError() })
-        setInputListener(binding.editCard.amountInput, { s -> viewModel.setAmount(s) }, { viewModel.amountError() })
-        setInputListener(billNameInput, { s -> viewModel.setNickname(s) }, { viewModel.nameError() })
+        setInputListener(
+            binding.editCard.accountNoInput,
+            { s -> viewModel.setAccountNumber(s) },
+            { viewModel.accountNoError() }
+        )
+        setInputListener(
+            binding.editCard.amountInput,
+            { s -> viewModel.setAmount(s) },
+            { viewModel.amountError() }
+        )
+        setInputListener(
+            billNameInput,
+            { s -> viewModel.setNickname(s) },
+            { viewModel.nameError() }
+        )
         saveBill.setOnCheckedChangeListener { _, isChecked -> viewModel.setSave(isChecked) }
         saveAmount.setOnCheckedChangeListener { _, isChecked -> viewModel.setSaveAmount(isChecked) }
         billIcon.setOnClickListener { toggleIconChooser(true) }
@@ -124,7 +141,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private fun toggleIconChooser(show: Boolean) = with(binding) {
         binding.saveCard.root.visibility = if (show) View.GONE else View.VISIBLE
         binding.fab.visibility = if (show) View.GONE else View.VISIBLE
-        binding.paybillIconsLayout.cardPaybillIcons.visibility = if (show) View.VISIBLE else View.GONE
+        binding.paybillIconsLayout.cardPaybillIcons.visibility =
+            if (show) View.VISIBLE else View.GONE
     }
 
     override fun onSelectIcon(id: Int) {
@@ -144,7 +162,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             viewModel.hasEditedSaved() -> showUpdatePaybillConfirmation()
             viewModel.selectedPaybill.value?.isSaved == true -> viewModel.setEditing(false)
             else -> {
-                viewModel.savePaybill(accountsViewModel.activeAccount.value, actionSelectViewModel.activeAction.value)
+                viewModel.savePaybill(
+                    accountsViewModel.activeAccount.value,
+                    actionSelectViewModel.activeAction.value
+                )
                 UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_save_success)
             }
         }
@@ -173,7 +194,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
     private fun observeActions() {
         accountsViewModel.institutionActions.observe(viewLifecycleOwner) {
             val err = accountsViewModel.errorCheck()
-            payWithDropdown.setState(err, if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            payWithDropdown.setState(
+                err,
+                if (err == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+            )
         }
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
@@ -230,8 +254,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         viewModel.nickname.observe(viewLifecycleOwner) {
             binding.saveCard.billNameInput.setText(it)
             if (!it.isNullOrEmpty()) binding.summaryCard.nameValue.text = it
-            binding.summaryCard.nameLabel.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
-            binding.summaryCard.nameValue.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+            binding.summaryCard.nameLabel.visibility =
+                if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+            binding.summaryCard.nameValue.visibility =
+                if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
         }
     }
 
@@ -291,7 +317,8 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         with(accountsViewModel) {
             val actions = institutionActions.value
             val activeAction = actionSelectViewModel.activeAction.value
-            val actionToRun = activeAction ?: actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
+            val actionToRun = activeAction
+                ?: actions?.firstOrNull { it.from_institution_id == it.to_institution_id }
 
             if (!actions.isNullOrEmpty() && activeAccount.value != null) {
                 val hsb = generateSessionBuilder(actionToRun!!, activeAccount.value!!)
@@ -304,7 +331,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
         }
     }
 
-    private fun generateSessionBuilder(action: HoverAction, account: Account): HoverSession.Builder {
+    private fun generateSessionBuilder(
+        action: HoverAction,
+        account: Account
+    ): HoverSession.Builder {
         return HoverSession.Builder(
             action, payWithDropdown.getHighlightedAccount() ?: account,
             viewModel.wrapExtras(), requireActivity()
@@ -323,7 +353,10 @@ class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectLi
             .setPosButton(R.string.btn_update) { _ ->
                 if (activity != null) {
                     viewModel.updatePaybill(it)
-                    UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_update_success)
+                    UIHelper.flashAndReportMessage(
+                        requireActivity(),
+                        R.string.paybill_update_success
+                    )
                     viewModel.setEditing(false)
                 }
             }

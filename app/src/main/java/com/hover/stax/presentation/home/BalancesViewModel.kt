@@ -24,21 +24,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.data.accounts.AccountRepo
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.database.models.Account
-import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BalancesViewModel(
+class BalancesViewModel @Inject constructor(
     application: Application,
     val actionRepo: ActionRepo,
-    val accountRepo: AccountRepo
+    val accountRepo: AccountRepository
 ) : AndroidViewModel(application) {
 
     var userRequestedBalanceAccount = MutableLiveData<Account?>()
@@ -58,13 +58,13 @@ class BalancesViewModel(
 
     fun requestBalance(account: Account?) {
         if (account == null) {
-            AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
                 (getApplication() as Context).getString(R.string.refresh_balance_failed),
                 getApplication()
             )
             Toast.makeText(getApplication(), R.string.refresh_balance_failed, Toast.LENGTH_LONG).show()
         } else {
-            AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
                 (getApplication() as Context).getString(R.string.refresh_balance),
                 getApplication()
             )

@@ -21,21 +21,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.database.models.StaxUser
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WelcomeFragment : Fragment() {
 
     private var dialog: StaxDialog? = null
-    private val loginViewModel: LoginViewModel by viewModel()
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,14 +50,26 @@ class WelcomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_welcome)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_welcome)
+            ),
+            requireActivity()
+        )
 
         observeLoginProgress()
     }
 
     private fun onClickGetStarted() {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_getstarted), requireActivity())
-        NavUtil.navigate(findNavController(), WelcomeFragmentDirections.toInteractiveOnboardingFragment())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(R.string.clicked_getstarted),
+            requireActivity()
+        )
+        NavUtil.navigate(
+            findNavController(),
+            WelcomeFragmentDirections.toInteractiveOnboardingFragment()
+        )
     }
 
     private fun onClickLogin() {
@@ -66,7 +77,10 @@ class WelcomeFragment : Fragment() {
             UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.signed_in_message))
             onClickGetStarted()
         } else {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_google_sign_in), requireActivity())
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+                getString(R.string.clicked_google_sign_in),
+                requireActivity()
+            )
             (requireActivity() as OnBoardingActivity).signIn()
         }
     }

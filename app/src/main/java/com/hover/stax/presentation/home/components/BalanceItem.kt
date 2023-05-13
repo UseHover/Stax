@@ -46,7 +46,7 @@ import coil.request.ImageRequest
 import com.hover.stax.R
 import com.hover.stax.database.models.Account
 import com.hover.stax.presentation.home.BalanceTapListener
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.core.DateUtils
 
 @Composable
 fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, context: Context) {
@@ -99,7 +99,7 @@ fun BalanceItem(staxAccount: Account, balanceTapListener: BalanceTapListener?, c
 
                 if (staxAccount.latestBalance != null)
                     Text(
-                        text = DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),
+                        text = com.hover.stax.core.DateUtils.timeAgo(context, staxAccount.latestBalanceTimestamp),
                         modifier = Modifier.align(Alignment.End),
                         color = colorResource(id = R.color.offWhite),
                         style = MaterialTheme.typography.caption

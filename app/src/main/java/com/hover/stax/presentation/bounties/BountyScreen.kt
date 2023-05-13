@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -32,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.hover.stax.R
-import com.hover.stax.domain.model.Bounty
+import com.hover.stax.model.Bounty
 import com.hover.stax.presentation.bounties.components.ChannelBountiesCardPreview
 import com.hover.stax.presentation.bounties.components.ChannelBountyCard
 import com.hover.stax.presentation.bounties.components.CountryDropdown
@@ -98,5 +97,5 @@ fun BountiesPreview() {
 
 sealed class BountySelectEvent {
     data class ViewTransactionDetail(val uuid: String) : BountySelectEvent()
-    data class ViewBountyDetail(val bounty: Bounty) : BountySelectEvent()
+    data class ViewBountyDetail(val bounty: com.hover.stax.model.Bounty) : BountySelectEvent()
 }

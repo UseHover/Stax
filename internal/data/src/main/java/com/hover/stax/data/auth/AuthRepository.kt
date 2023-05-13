@@ -15,11 +15,26 @@
  */
 package com.hover.stax.data.auth
 
-import com.hover.stax.data.remote.dto.StaxUserDto
-import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.authorization.AuthResponse
-import com.hover.stax.data.remote.dto.authorization.TokenResponse
+import android.content.Context
+import com.hover.sdk.api.Hover
+import com.hover.stax.datastore.DefaultTokenProvider
+import com.hover.stax.datastore.TokenProvider
+import com.hover.stax.model.StaxUserDto
+import com.hover.stax.model.auth.AuthRequest
+import com.hover.stax.model.auth.AuthResponse
+import com.hover.stax.model.auth.RevokeTokenRequest
+import com.hover.stax.model.auth.StaxUser
+import com.hover.stax.model.auth.TokenRequest
+import com.hover.stax.model.auth.TokenResponse
+import com.hover.stax.model.auth.UserUpdateDto
+import com.hover.stax.model.auth.UserUploadDto
+import com.hover.stax.network.api.StaxApi
+import com.hover.stax.network.ktor.EnvironmentProvider
+import kotlinx.coroutines.flow.firstOrNull
+
+private const val AUTHORIZATION = "authorization_code"
+private const val RESPONSE_TYPE = "code"
+private const val SCOPE = "read write"
 
 interface AuthRepository {
 
@@ -32,4 +47,55 @@ interface AuthRepository {
     suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto
 
     suspend fun updateUser(email: String, userDTO: UserUpdateDto): StaxUserDto
+}
+
+class AuthRepositoryImpl(
+    private val context: Context,
+    private val staxApi: StaxApi,
+    private val tokenProvider: TokenProvider,
+    private val environmentProvider: EnvironmentProvider
+) : AuthRepository {
+
+    override suspend fun authorizeClient(idToken: String): AuthResponse {
+        val authRequest = AuthRequest(
+            clientId = environmentProvider.get().clientId,
+            redirectUri = environmentProvider.get().redirectUri,
+            responseType = RESPONSE_TYPE,
+            scope = SCOPE,
+            staxUser = StaxUser(
+                deviceId = Hover.getDeviceId(context)
+            ),
+            token = idToken,
+        )
+
+        return staxApi.authorize(authRequest)
+    }
+
+    override suspend fun fetchTokenInfo(code: String): TokenResponse {
+        val tokenRequest = TokenRequest(
+            clientId = environmentProvider.get().clientId,
+            clientSecret = environmentProvider.get().clientSecret,
+            code = code,
+            grantType = AUTHORIZATION,
+            redirectUri = environmentProvider.get().redirectUri
+        )
+
+        return staxApi.fetchToken(tokenRequest)
+    }
+
+    override suspend fun revokeToken() {
+        val revokeToken = RevokeTokenRequest(
+            clientId = environmentProvider.get().clientId,
+            clientSecret = environmentProvider.get().clientSecret,
+            token = tokenProvider.fetch(DefaultTokenProvider.ACCESS_TOKEN).firstOrNull().toString()
+        )
+
+        staxApi.revokeToken(revokeToken)
+    }
+
+    override suspend fun uploadUserToStax(userDTO: UserUploadDto): StaxUserDto =
+        staxApi.uploadUserToStax(userDTO = userDTO)
+
+    override suspend fun updateUser(email: String, userDTO: UserUpdateDto): StaxUserDto =
+        staxApi.updateUser(email = email, userDTO = userDTO)
 }

@@ -29,8 +29,9 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class FutureViewModel(
+class FutureViewModel @Inject constructor(
     private val repo: RequestRepo,
     private val channelRepository: ChannelRepository,
     private val scheduleRepo: ScheduleRepo

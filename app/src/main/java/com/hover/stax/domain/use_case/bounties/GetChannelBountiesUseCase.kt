@@ -17,9 +17,9 @@ package com.hover.stax.domain.use_case.bounties
 
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.domain.model.Bounty
-import com.hover.stax.domain.model.ChannelBounties
-import com.hover.stax.domain.model.Resource
+import com.hover.stax.model.Bounty
+import com.hover.stax.model.ChannelBounties
+import com.hover.stax.model.Resource
 import com.hover.stax.data.bounty.BountyRepository
 import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.data.transactions.TransactionRepo
@@ -36,18 +36,18 @@ class GetChannelBountiesUseCase(
     private val transactionRepo: TransactionRepo
 ) {
 
-    fun getBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES): Flow<Resource<List<ChannelBounties>>> = flow {
+    fun getBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES): Flow<com.hover.stax.model.Resource<List<com.hover.stax.model.ChannelBounties>>> = flow {
         try {
-            emit(Resource.Loading())
+            emit(com.hover.stax.model.Resource.Loading())
 
-            emit(Resource.Success(fetchBounties(countryCode)))
+            emit(com.hover.stax.model.Resource.Success(fetchBounties(countryCode)))
         } catch (e: Exception) {
-            emit(Resource.Error("Error loading bounties"))
+            emit(com.hover.stax.model.Resource.Error("Error loading bounties"))
         }
     }
 
-    private suspend fun fetchBounties(countryCode: String): List<ChannelBounties> {
-        val channelBounties: Deferred<List<ChannelBounties>>
+    private suspend fun fetchBounties(countryCode: String): List<com.hover.stax.model.ChannelBounties> {
+        val channelBounties: Deferred<List<com.hover.stax.model.ChannelBounties>>
 
         coroutineScope {
             channelBounties = async(Dispatchers.IO) {
@@ -62,7 +62,7 @@ class GetChannelBountiesUseCase(
         return channelBounties.await()
     }
 
-    fun isSimPresent(bounty: Bounty, sims: List<SimInfo>): Boolean {
+    fun isSimPresent(bounty: com.hover.stax.model.Bounty, sims: List<SimInfo>): Boolean {
         if (sims.isEmpty()) return false
 
         sims.forEach { simInfo ->

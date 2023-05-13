@@ -36,6 +36,7 @@ import org.json.JSONObject
 import timber.log.Timber
 
 object Utils {
+
     private const val SHARED_PREFS = "staxprefs"
     private const val SDK_PREFS = "_hoversdk"
 
@@ -249,7 +250,7 @@ object Utils {
     }
 
     fun shareStax(activity: Activity, shareMessage: String? = null) {
-        AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
 
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
@@ -277,7 +278,7 @@ object Utils {
         } catch (ignored: JSONException) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
 
         val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK

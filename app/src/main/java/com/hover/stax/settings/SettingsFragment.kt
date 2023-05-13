@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -32,14 +33,13 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.AccountsViewModel
-import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.database.models.Account
+import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginScreenUiState
 import com.hover.stax.login.LoginUiState
 import com.hover.stax.login.LoginViewModel
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -47,8 +47,6 @@ import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.getViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 const val TEST_MODE = "test_mode"
 
@@ -60,8 +58,8 @@ class SettingsFragment : Fragment() {
     private var accountAdapter: ArrayAdapter<Account>? = null
     private var clickCounter = 0
 
-    private val accountsViewModel: AccountsViewModel by sharedViewModel()
-    private val loginViewModel: LoginViewModel by sharedViewModel()
+    private val accountsViewModel: AccountsViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
 
     private var dialog: StaxDialog? = null
 
@@ -80,7 +78,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_security)
@@ -137,7 +135,7 @@ class SettingsFragment : Fragment() {
 
     private fun setUpChooseLang() {
         val selectLangBtn = binding.languageCard.selectLanguageBtn
-        val languageVM = getViewModel<LanguageViewModel>()
+        val languageVM: LanguageViewModel by activityViewModels()
         languageVM.languages.observe(viewLifecycleOwner) { langs ->
             langs.forEach {
                 if (it.isSelected()) selectLangBtn.text = it.name
@@ -398,6 +396,7 @@ class SettingsFragment : Fragment() {
                         LoginUiState.Success -> {
                             binding.staxSupport.contactCard.hideProgressIndicator()
                         }
+
                         else -> {}
                     }
                 }

@@ -17,8 +17,7 @@ package com.hover.stax.inapp_banner
 
 import android.content.Context
 import com.hover.sdk.permissions.PermissionHelper
-import com.hover.stax.data.accounts.AccountRepo
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.utils.Utils
 import java.util.Calendar
 import java.util.Date
@@ -28,13 +27,13 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
+import javax.inject.Inject
 
-class BannerUtils(val context: Context) : KoinComponent {
+class BannerUtils(val context: Context) {
 
-    private val repo: AccountRepo by inject()
+    @Inject
+    private lateinit var repo: AccountRepository
 
     private val FIRST_WEEK = 1
     private val SECOND_WEEK = 2
@@ -77,7 +76,7 @@ class BannerUtils(val context: Context) : KoinComponent {
     private fun isPermissionCampaignValid() = !Utils.getBoolean(PERM_CLICKED, context) && areCampaignsUnlocked() && hasNoAccounts()
     private fun areCampaignsUnlocked(): Boolean = Utils.getInt(APP_SESSIONS, context) >= 3
 
-    private fun setGeneralLastImpressionDate() = Utils.saveLong(GENERAL_LAST_IMP_DATE, DateUtils.today(), context)
+    private fun setGeneralLastImpressionDate() = Utils.saveLong(GENERAL_LAST_IMP_DATE, com.hover.stax.core.DateUtils.today(), context)
     private fun generalLastImpressionDate() = Utils.getLong(GENERAL_LAST_IMP_DATE, context)
 
     private fun withinDuration(mainDate: Date, dateStart: Date, dateEnd: Date) = mainDate in dateStart..dateEnd
@@ -103,7 +102,7 @@ class BannerUtils(val context: Context) : KoinComponent {
     }
 
     private fun updateImpressionMeta(banner: Banner, bannerId: Int, isNewCampaign: Boolean) {
-        with(DateUtils.today()) {
+        with(com.hover.stax.core.DateUtils.today()) {
             when (bannerId) {
                 Banner.GIST -> setLastGistImpressionDate(this)
                 Banner.UPVOTE -> setLastUpvoteImpressionDate(this)
@@ -118,17 +117,17 @@ class BannerUtils(val context: Context) : KoinComponent {
 
     private fun enforceCampaignLimit(bannerId: Int): Int {
         fun isNewCampaign(): Boolean = bannerId != lastBanner()
-        fun hasAnyCampaignMadeToday(): Boolean = DateUtils.todayDate() == DateUtils.getDate(generalLastImpressionDate())
+        fun hasAnyCampaignMadeToday(): Boolean = com.hover.stax.core.DateUtils.todayDate() == com.hover.stax.core.DateUtils.getDate(generalLastImpressionDate())
         return if (isNewCampaign() && hasAnyCampaignMadeToday()) 0 else bannerId
     }
 
     private fun permissionQualifies(): Boolean = !(PermissionHelper(context).hasBasicPerms() && PermissionHelper(context).hasHardPerms())
-    private fun roundUpNewsQualifies(): Boolean = DateUtils.todayDate() == DateUtils.getDate(
+    private fun roundUpNewsQualifies(): Boolean = com.hover.stax.core.DateUtils.todayDate() == com.hover.stax.core.DateUtils.getDate(
         Calendar.THURSDAY, FIRST_WEEK
     )
 
     private fun gistQualifies(): Boolean {
-        with(DateUtils) {
+        with(com.hover.stax.core.DateUtils) {
             return if (withinDuration(todayDate(), beginningOfTheMonth(), getDate(SECOND_WEEK))) {
                 !withinDuration(getDate(lastGistImpressionDate()), beginningOfTheMonth(), getDate(SECOND_WEEK))
             } else {
@@ -138,7 +137,7 @@ class BannerUtils(val context: Context) : KoinComponent {
     }
 
     private fun upvoteQualifies(): Boolean {
-        with(DateUtils) {
+        with(com.hover.stax.core.DateUtils) {
             return when {
                 withinDuration(todayDate(), beginningOfTheMonth(), getDate(FIRST_WEEK)) -> {
                     !withinDuration(getDate(lastUpvoteImpressionDate()), beginningOfTheMonth(), getDate(FIRST_WEEK))
@@ -157,7 +156,7 @@ class BannerUtils(val context: Context) : KoinComponent {
     private fun researchQualifies(hasTransactionLastMonth: Boolean): Boolean {
         if (!hasTransactionLastMonth) return false
         else
-            with(DateUtils) {
+            with(com.hover.stax.core.DateUtils) {
                 fun hasImpressionSince(earliestDate: Date): Boolean = withinDuration(getDate(lastUpvoteImpressionDate()), earliestDate, todayDate())
 
                 return if (hasClickedResearchBanner()) !hasImpressionSince(twoMonthsAgo())

@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -48,7 +49,6 @@ import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.uxcam.OnVerificationListener
@@ -57,15 +57,17 @@ import com.uxcam.datamodel.UXConfig
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 const val FRAGMENT_DIRECT = "fragment_direct"
 const val FROM_FCM = "from_notification"
 
-class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
+class RoutingActivity :
+    AppCompatActivity(),
+    BiometricChecker.AuthListener,
+    PushNotificationTopicsInterface {
 
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by viewModels()
     private lateinit var remoteConfig: FirebaseRemoteConfig
     private lateinit var workManager: WorkManager
     private var hasAccounts = false
@@ -121,21 +123,36 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         joinNoRequestMoneyGroup(this)
     }
 
-    private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
+    private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp))
+        .enableForegroundTracking(application)
 
     private fun logPushNotificationIfRequired() = intent.extras?.let {
         val fcmTitle = it.getString(FROM_FCM)
-        fcmTitle?.let { title -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
+        fcmTitle?.let { title ->
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+                getString(
+                    R.string.clicked_push_notification,
+                    title
+                ),
+                this
+            )
+        }
     }
 
     private fun initHover() {
         Hover.initialize(this)
-        Hover.setBranding(getString(R.string.app_name), R.drawable.named_stax_logo, R.mipmap.ic_launcher_round, this)
+        Hover.setBranding(
+            getString(R.string.app_name),
+            R.drawable.named_stax_logo,
+            R.mipmap.ic_launcher_round,
+            this
+        )
         Hover.setPermissionActivity(PERM_ACTIVITY, this)
     }
 
     private fun initRemoteConfigs() {
-        val configSettings = FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(3600).build()
+        val configSettings =
+            FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(3600).build()
         remoteConfig.apply {
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
@@ -164,13 +181,22 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             UXCam.addVerificationListener(object : OnVerificationListener {
                 override fun onVerificationSuccess() {
                     FirebaseCrashlytics.getInstance()
-                        .setCustomKey(getString(R.string.uxcam_session_url), UXCam.urlForCurrentSession())
+                        .setCustomKey(
+                            getString(R.string.uxcam_session_url),
+                            UXCam.urlForCurrentSession()
+                        )
 
                     val eventProperties = JSONObject()
                     val userProperties = JSONObject()
                     try {
-                        eventProperties.put(getString(R.string.uxcam_session_url), UXCam.urlForCurrentSession())
-                        userProperties.put(getString(R.string.uxcam_session_url), UXCam.urlForCurrentUser())
+                        eventProperties.put(
+                            getString(R.string.uxcam_session_url),
+                            UXCam.urlForCurrentSession()
+                        )
+                        userProperties.put(
+                            getString(R.string.uxcam_session_url),
+                            UXCam.urlForCurrentUser()
+                        )
                     } catch (exception: JSONException) {
                     }
 
@@ -199,7 +225,11 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(getString(R.string.default_notification_channel_id), getString(R.string.notify_default_title), importance)
+            val channel = NotificationChannel(
+                getString(R.string.default_notification_channel_id),
+                getString(R.string.notify_default_title),
+                importance
+            )
             channel.description = getString(R.string.notify_default_channel_descrip)
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
@@ -213,11 +243,19 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun startChannelWorkers(wm: WorkManager) {
         wm.enqueue(ImportChannelsWorker.channelsImportRequest())
-        wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil())
+        wm.enqueueUniquePeriodicWork(
+            UpdateChannelsWorker.TAG,
+            ExistingPeriodicWorkPolicy.KEEP,
+            UpdateChannelsWorker.makeToil()
+        )
     }
 
     private fun startScheduleWorker(wm: WorkManager) {
-        wm.enqueueUniquePeriodicWork(ScheduleWorker::class.java.simpleName, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil())
+        wm.enqueueUniquePeriodicWork(
+            ScheduleWorker::class.java.simpleName,
+            ExistingPeriodicWorkPolicy.KEEP,
+            ScheduleWorker.makeToil()
+        )
     }
 
     private fun chooseNavigation(intent: Intent) {
@@ -234,6 +272,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
                         goToMainActivity(it)
                 }
             }
+
             isForFulfilRequest(intent) -> goToFulfillRequestActivity(intent)
             isForSettingsScreen(intent) -> goToSettings()
             else -> goToMainActivity(null)
@@ -244,14 +283,23 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun goToFinancialTips() {
         val tipId = Uri.parse(intent.getStringExtra("redirect")).getQueryParameter("id")
-        startActivity(Intent(this, MainActivity::class.java).putExtra(FinancialTipsFragment.TIP_ID, tipId))
+        startActivity(
+            Intent(this, MainActivity::class.java).putExtra(
+                FinancialTipsFragment.TIP_ID,
+                tipId
+            )
+        )
         finish()
     }
 
     private fun validateUser() = lifecycleScope.launchWhenStarted {
         when {
             !hasPassedOnboarding() -> goToOnBoardingActivity()
-            hasAccounts -> BiometricChecker(this@RoutingActivity, this@RoutingActivity).startAuthentication(null)
+            hasAccounts -> BiometricChecker(
+                this@RoutingActivity,
+                this@RoutingActivity
+            ).startAuthentication(null)
+
             else -> {
                 if (redirectToFinancialTips())
                     goToFinancialTips()
@@ -267,9 +315,15 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun goToFulfillRequestActivity(intent: Intent) {
-        startActivity(Intent(this, MainActivity::class.java).putExtra(REQUEST_LINK, intent.data.toString()))
+        startActivity(
+            Intent(this, MainActivity::class.java).putExtra(
+                REQUEST_LINK,
+                intent.data.toString()
+            )
+        )
         finish()
     }
+
     private fun goToSettings() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(FRAGMENT_DIRECT, R.id.navigation_settings)
@@ -283,30 +337,40 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
         } catch (e: NumberFormatException) {
-            AnalyticsUtil.logErrorAndReportToFirebase(RoutingActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
+            com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+                RoutingActivity::class.java.simpleName,
+                getString(R.string.firebase_fcm_redirect_format_err),
+                e
+            )
         }
 
         startActivity(intent)
         finish()
     }
 
-    override fun onAuthError(error: String) = runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_auth)) }
+    override fun onAuthError(error: String) =
+        runOnUiThread { UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_auth)) }
 
     override fun onAuthSuccess(action: HoverAction?) = chooseNavigation(intent)
 
     private fun redirectionIsExternal(redirectTo: String): Boolean = redirectTo.contains("https")
 
-    private fun isToRedirectFromMainActivity(intent: Intent): Boolean = intent.extras?.getString(FRAGMENT_DIRECT) != null
+    private fun isToRedirectFromMainActivity(intent: Intent): Boolean =
+        intent.extras?.getString(FRAGMENT_DIRECT) != null
 
     private fun isForFulfilRequest(intent: Intent): Boolean = hasDeepLink("pay")
 
-    private fun openUrl(url: String) = startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)))
+    private fun openUrl(url: String) =
+        startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)))
 
-    private fun hasPassedOnboarding(): Boolean = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, this)
+    private fun hasPassedOnboarding(): Boolean =
+        Utils.getBoolean(OnBoardingActivity::class.java.simpleName, this)
 
     private fun isForSettingsScreen(intent: Intent): Boolean = hasDeepLink("share")
 
-    private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
+    private fun redirectToFinancialTips(): Boolean =
+        intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!
+            .contains(getString(R.string.deeplink_financial_tips))
 
     private fun hasDeepLink(expectedPath: String): Boolean {
         val parameters: List<String> = intent.data?.pathSegments ?: emptyList()

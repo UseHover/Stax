@@ -20,40 +20,48 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.database.models.Account
+import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.StaxDialog
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterface, BalanceTapListener {
+class HomeFragment :
+    AbstractBalanceCheckerFragment(),
+    FinancialTipClickInterface,
+    BalanceTapListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
-    private val balancesViewModel: BalancesViewModel by sharedViewModel()
-    private val homeViewModel: HomeViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by activityViewModels()
+    private val balancesViewModel: BalancesViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_home)
+            ),
+            requireContext()
+        )
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -70,11 +78,21 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     private fun getHomeClickFunctions(): HomeClickFunctions {
         fun onSendMoneyClicked() = navigateTo(getTransferDirection(HoverAction.P2P))
         fun onBuyAirtimeClicked() = navigateTo(getTransferDirection(HoverAction.AIRTIME))
-        fun onBuyGoodsClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment())
-        fun onPayBillClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
-        fun onRequestMoneyClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())
-        fun onClickedAddNewAccount() = (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
-        fun onClickedTermsAndConditions() = Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
+        fun onBuyGoodsClicked() =
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment())
+
+        fun onPayBillClicked() =
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
+
+        fun onRequestMoneyClicked() =
+            navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())
+
+        fun onClickedAddNewAccount() =
+            (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
+
+        fun onClickedTermsAndConditions() =
+            Utils.openUrl(getString(R.string.terms_and_condition_url), requireContext())
+
         fun onClickedSettingsIcon() = navigateTo(HomeFragmentDirections.toSettingsFragment())
         fun onClickedRewards() = navigateTo(HomeFragmentDirections.actionGlobalRewardsFragment())
 
@@ -108,7 +126,12 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     private fun observeForBonus() {
         collectLifecycleFlow(channelsViewModel.accountEventFlow) {
             if (homeViewModel.homeState.value?.bonuses?.isNotEmpty() == true)
-                navigateTo(getTransferDirection(HoverAction.AIRTIME, homeViewModel.homeState.value?.bonuses?.first()?.from_institution_id.toString()))
+                navigateTo(
+                    getTransferDirection(
+                        HoverAction.AIRTIME,
+                        homeViewModel.homeState.value?.bonuses?.first()?.from_institution_id.toString()
+                    )
+                )
         }
     }
 
@@ -133,7 +156,14 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {
-        action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
+        action?.let {
+            account?.let {
+                callHover(
+                    checkBalance,
+                    generateSessionBuilder(account, action)
+                )
+            }
+        }
     }
 
     private fun askToCheckBalance(account: Account) {
@@ -143,12 +173,14 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         dialog.showIt()
     }
 
-    private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
+    private fun navigateTo(navDirections: NavDirections) =
+        (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 
     private fun navigateTo(dest: Int) = findNavController().navigate(dest)
 
     override fun onTipClicked(tipId: String?) {
-        val destination = HomeFragmentDirections.actionNavigationHomeToWellnessFragment().apply { setTipId(tipId) }
+        val destination = HomeFragmentDirections.actionNavigationHomeToWellnessFragment()
+            .apply { setTipId(tipId) }
         NavUtil.navigate(findNavController(), destination)
     }
 
@@ -157,7 +189,11 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     }
 
     override fun onTapBalanceDetail(accountId: Int) {
-        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
+        findNavController().navigate(
+            HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(
+                accountId
+            )
+        )
     }
 
     override fun onDestroyView() {

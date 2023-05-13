@@ -18,7 +18,6 @@ package com.hover.stax.data.requests
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.hover.stax.R
-import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.dao.RequestDao
 import com.hover.stax.database.models.Request
 import com.hover.stax.utils.AnalyticsUtil
@@ -26,21 +25,38 @@ import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 import javax.inject.Inject
 
-class RequestRepo @Inject constructor(
-    private val requestDao: RequestDao
-) {
+interface RequestRepository {
 
     val liveRequests: LiveData<List<Request>>
+
+    fun getLiveRequests(channelId: Int): LiveData<List<Request>>
+
+    val requests: List<Request>
+
+    fun getRequest(id: Int): Request?
+
+    fun insert(request: Request?)
+
+    fun update(request: Request?)
+
+    fun delete(request: Request?)
+}
+
+class RequestRepo @Inject constructor(
+    private val requestDao: RequestDao
+) : RequestRepository {
+
+    override val liveRequests: LiveData<List<Request>>
         get() = requestDao.liveUnmatched
 
-    fun getLiveRequests(channelId: Int): LiveData<List<Request>> {
+    override fun getLiveRequests(channelId: Int): LiveData<List<Request>> {
         return requestDao.getLiveUnmatchedByChannel(channelId)
     }
 
-    val requests: List<Request>
+    override val requests: List<Request>
         get() = requestDao.unmatched
 
-    fun getRequest(id: Int): Request? {
+    override fun getRequest(id: Int): Request? {
         return requestDao[id]
     }
 
@@ -72,16 +88,16 @@ class RequestRepo @Inject constructor(
         return null
     }
 
-    fun insert(request: Request?) {
-        AppDatabase.databaseWriteExecutor.execute { requestDao.insertRequest(request) }
+    override fun insert(request: Request?) {
+        requestDao.insertRequest(request)
     }
 
-    fun update(request: Request?) {
-        AppDatabase.databaseWriteExecutor.execute { requestDao.updateRequest(request) }
+    override fun update(request: Request?) {
+        requestDao.updateRequest(request)
     }
 
-    fun delete(request: Request?) {
-        AppDatabase.databaseWriteExecutor.execute { requestDao.deleteRequest(request) }
+    override fun delete(request: Request?) {
+        requestDao.deleteRequest(request)
     }
 
     companion object {

@@ -33,13 +33,12 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.data.accounts.AccountRepo
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.database.models.Channel
-import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.database.models.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -47,13 +46,14 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel as KChannel
 
-class ChannelsViewModel(
+class ChannelsViewModel @Inject constructor(
     application: Application,
     private val channelRepository: ChannelRepository,
     private val simRepository: com.hover.stax.data.sim.SimInfoRepository,
-    private val accountRepo: AccountRepo,
+    private val accountRepo: AccountRepository,
     val actionRepo: ActionRepo
 ) : AndroidViewModel(application),
     PushNotificationTopicsInterface {
@@ -186,7 +186,7 @@ class ChannelsViewModel(
         } catch (ignored: Exception) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
             (getApplication() as Context).getString(R.string.new_channel_selected),
             args,
             getApplication() as Context

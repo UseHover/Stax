@@ -24,7 +24,7 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.views.StaxDialog
 import timber.log.Timber
 

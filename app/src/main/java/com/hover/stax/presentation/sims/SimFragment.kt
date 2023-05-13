@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
@@ -29,14 +30,12 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalanceTapListener
 import com.hover.stax.presentation.home.BalancesViewModel
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.collectLifecycleFlow
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
 
-    private val balancesViewModel: BalancesViewModel by sharedViewModel()
+    private val balancesViewModel: BalancesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +43,7 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
         savedInstanceState: Bundle?
     ): View =
         ComposeView(requireContext()).apply {
-            AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
                 getString(R.string.visit_screen, getString(R.string.visit_sim)), requireContext()
             )
 
@@ -73,7 +72,14 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
     }
 
     private fun attemptCallHover(account: Account?, action: HoverAction?) {
-        action?.let { account?.let { callHover(checkBalance, generateSessionBuilder(account, action)) } }
+        action?.let {
+            account?.let {
+                callHover(
+                    checkBalance,
+                    generateSessionBuilder(account, action)
+                )
+            }
+        }
     }
 
     private fun navigateTo(dest: Int) = findNavController().navigate(dest)

@@ -15,8 +15,10 @@
  */
 package com.hover.stax.data.user
 
+import com.hover.stax.database.dao.UserDao
 import com.hover.stax.database.models.StaxUser
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 interface StaxUserRepository {
 
@@ -25,4 +27,15 @@ interface StaxUserRepository {
     suspend fun saveUser(user: StaxUser)
 
     suspend fun deleteUser(user: StaxUser)
+}
+
+class StaxUserRepositoryImpl @Inject constructor(
+    private val userDao: UserDao
+) : StaxUserRepository {
+
+    override fun getUserAsync(): Flow<StaxUser> = userDao.getUserAsync()
+
+    override suspend fun saveUser(user: StaxUser) = userDao.insertAsync(user)
+
+    override suspend fun deleteUser(user: StaxUser) = userDao.delete(user)
 }

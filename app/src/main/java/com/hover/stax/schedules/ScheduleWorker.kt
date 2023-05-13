@@ -26,23 +26,22 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.hover.stax.R
 import com.hover.stax.database.dao.ContactDao
-import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.dao.ScheduleDao
 import com.hover.stax.database.models.Schedule
-import com.hover.stax.home.MainActivity
 import com.hover.stax.database.models.Schedule.REQUEST_TYPE
-import java.util.concurrent.TimeUnit
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import com.hover.stax.home.MainActivity
+import java.util.concurrent.*
+import javax.inject.Inject
 
 const val SCHEDULE_REQUEST = 204
 
-class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(context, params), KoinComponent {
+class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
 
-    private val appDb: AppDatabase by inject()
+    @Inject
+    lateinit var scheduleDao: ScheduleDao
 
-    private var scheduleDao: ScheduleDao = appDb.scheduleDao()
-    private var contactDao: ContactDao = appDb.contactDao()
+    @Inject
+    lateinit var contactDao: ContactDao
 
     override fun doWork(): Result {
         val scheduled = scheduleDao.future
@@ -56,7 +55,10 @@ class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(contex
             .setSmallIcon(R.mipmap.ic_launcher_round)
             .setContentTitle(s.title(applicationContext))
             .setContentText(s.notificationMsg(applicationContext, contacts))
-            .setStyle(NotificationCompat.BigTextStyle().bigText(s.notificationMsg(applicationContext, contacts)))
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(s.notificationMsg(applicationContext, contacts))
+            )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setOnlyAlertOnce(true)
@@ -75,13 +77,20 @@ class ScheduleWorker(context: Context, params: WorkerParameters) : Worker(contex
             putExtra(REQUEST_TYPE, s.type == REQUEST_TYPE)
         }
 
-        return PendingIntent.getActivity(applicationContext, SCHEDULE_REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(
+            applicationContext,
+            SCHEDULE_REQUEST,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     companion object {
 
-        fun makeToil(): PeriodicWorkRequest = PeriodicWorkRequest.Builder(ScheduleWorker::class.java, 24, TimeUnit.HOURS).build()
+        fun makeToil(): PeriodicWorkRequest =
+            PeriodicWorkRequest.Builder(ScheduleWorker::class.java, 24, TimeUnit.HOURS).build()
 
-        fun makeWork(): OneTimeWorkRequest = OneTimeWorkRequest.Builder(ScheduleWorker::class.java).build()
+        fun makeWork(): OneTimeWorkRequest =
+            OneTimeWorkRequest.Builder(ScheduleWorker::class.java).build()
     }
 }

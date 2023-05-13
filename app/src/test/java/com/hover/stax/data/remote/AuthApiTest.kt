@@ -23,17 +23,17 @@ import com.appmattus.kotlinfixture.decorator.optional.NeverOptionalStrategy
 import com.appmattus.kotlinfixture.decorator.optional.optionalStrategy
 import com.appmattus.kotlinfixture.kotlinFixture
 import com.google.common.truth.Truth.assertThat
-import com.hover.stax.data.remote.dto.Attributes
-import com.hover.stax.data.remote.dto.Data
-import com.hover.stax.data.remote.dto.StaxUserDto
-import com.hover.stax.data.remote.dto.UserUpdateDto
-import com.hover.stax.data.remote.dto.UserUploadDto
-import com.hover.stax.data.remote.dto.authorization.AuthRequest
-import com.hover.stax.data.remote.dto.authorization.AuthResponse
-import com.hover.stax.data.remote.dto.authorization.RedirectUri
-import com.hover.stax.data.remote.dto.authorization.RevokeTokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenRequest
-import com.hover.stax.data.remote.dto.authorization.TokenResponse
+import com.hover.stax.network.dto.Attributes
+import com.hover.stax.network.dto.Data
+import com.hover.stax.network.dto.StaxUserDto
+import com.hover.stax.network.dto.UserUpdateDto
+import com.hover.stax.network.dto.UserUploadDto
+import com.hover.stax.network.dto.authorization.AuthRequest
+import com.hover.stax.network.dto.authorization.AuthResponse
+import com.hover.stax.network.dto.authorization.RedirectUri
+import com.hover.stax.network.dto.authorization.RevokeTokenRequest
+import com.hover.stax.network.dto.authorization.TokenRequest
+import com.hover.stax.network.dto.authorization.TokenResponse
 import com.hover.stax.ktor.EnvironmentProvider
 import com.hover.stax.ktor.KtorClientFactory
 import com.hover.stax.datastore.DefaultTokenProvider
@@ -60,17 +60,17 @@ class AuthApiTest {
     private var testDataStore: DataStore<Preferences> = mockk(relaxed = true)
     private var environmentProvider: EnvironmentProvider = mockk(relaxed = true)
 
-    private val userDTO = fixture<UserUploadDto>()
+    private val userDTO = fixture<com.hover.stax.network.dto.UserUploadDto>()
 
     @Test(expected = ServerResponseException::class)
     fun `test server error is thrown when a server exception occurs`() {
-        val authRequest = fixture<AuthRequest>()
+        val authRequest = fixture<com.hover.stax.network.dto.authorization.AuthRequest>()
         val mockEngine = MockEngine {
             delay(500)
             respondError(HttpStatusCode.InternalServerError)
         }
 
-        val api = StaxApi(
+        val api = com.hover.stax.network.api.StaxApi(
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
@@ -83,9 +83,9 @@ class AuthApiTest {
 
     @Test
     fun `test authorization is successful when google token is correct`() {
-        val authRequest = fixture<AuthRequest>()
-        val authResponse = AuthResponse(
-            redirectUri = RedirectUri(
+        val authRequest = fixture<com.hover.stax.network.dto.authorization.AuthRequest>()
+        val authResponse = com.hover.stax.network.dto.authorization.AuthResponse(
+            redirectUri = com.hover.stax.network.dto.authorization.RedirectUri(
                 code = "76233958-77a5-43fc-9b3f-ca2d0d0ce54f",
                 action = "896fa22f-d273-475b-80ee-e7553d9f9a15"
             ),
@@ -108,7 +108,7 @@ class AuthApiTest {
             )
         }
 
-        val api = StaxApi(
+        val api = com.hover.stax.network.api.StaxApi(
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
@@ -123,8 +123,8 @@ class AuthApiTest {
 
     @Test
     fun `test token request is successful when authorization code is correct`() {
-        val tokenRequest = fixture<TokenRequest>()
-        val tokenResponse = TokenResponse(
+        val tokenRequest = fixture<com.hover.stax.network.dto.authorization.TokenRequest>()
+        val tokenResponse = com.hover.stax.network.dto.authorization.TokenResponse(
             accessToken = "eyJpc3MiOiJTdGF4IE1vYmlsZSIsImlhdCI6MTY2MTc4NTkxMSwianRpIjoiZDFiYmEwZGItOWNiOC00OWUxLWEzNTItODk3NzYxMDhjYWZkIiwidXNlciI6IntcImRhdGFcIjp7X",
             refreshToken = "A3_rBRCZUtL3i0h-y2_HWtw1icW9ZUaeH9Fq7R42GXg",
             scope = "write",
@@ -150,7 +150,7 @@ class AuthApiTest {
             )
         }
 
-        val api = StaxApi(
+        val api = com.hover.stax.network.api.StaxApi(
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
@@ -165,7 +165,7 @@ class AuthApiTest {
 
     @Test
     fun `test token revoke is successful when revoke token is correct`() {
-        val tokenRevoke = fixture<RevokeTokenRequest>()
+        val tokenRevoke = fixture<com.hover.stax.network.dto.authorization.RevokeTokenRequest>()
 
         val response = """{}""".trimIndent()
 
@@ -177,7 +177,7 @@ class AuthApiTest {
             )
         }
 
-        val api = StaxApi(
+        val api = com.hover.stax.network.api.StaxApi(
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
@@ -192,9 +192,9 @@ class AuthApiTest {
 
     @Test
     fun `test upload user is successful when passing correct user details`() {
-        val staxUserDto = StaxUserDto(
-            data = Data(
-                attributes = Attributes(
+        val staxUserDto = com.hover.stax.network.dto.StaxUserDto(
+            data = com.hover.stax.network.dto.Data(
+                attributes = com.hover.stax.network.dto.Attributes(
                     bountyTotal = 0,
                     refereeId = null,
                     devices = listOf(
@@ -250,7 +250,7 @@ class AuthApiTest {
             )
         }
 
-        val api = StaxApi(
+        val api = com.hover.stax.network.api.StaxApi(
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
@@ -270,7 +270,7 @@ class AuthApiTest {
             respondError(HttpStatusCode.InternalServerError)
         }
 
-        val api = StaxApi(
+        val api = com.hover.stax.network.api.StaxApi(
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider
@@ -283,11 +283,11 @@ class AuthApiTest {
 
     @Test
     fun `test update user is successful when passing correct user details`() {
-        val userDTO = fixture<UserUpdateDto>()
+        val userDTO = fixture<com.hover.stax.network.dto.UserUpdateDto>()
         val email = fixture<String>()
-        val staxUserDto = StaxUserDto(
-            data = Data(
-                attributes = Attributes(
+        val staxUserDto = com.hover.stax.network.dto.StaxUserDto(
+            data = com.hover.stax.network.dto.Data(
+                attributes = com.hover.stax.network.dto.Attributes(
                     bountyTotal = 0,
                     refereeId = null,
                     devices = listOf(
@@ -343,7 +343,7 @@ class AuthApiTest {
             )
         }
 
-        val api = StaxApi(
+        val api = com.hover.stax.network.api.StaxApi(
             KtorClientFactory(
                 DefaultTokenProvider(testDataStore),
                 environmentProvider

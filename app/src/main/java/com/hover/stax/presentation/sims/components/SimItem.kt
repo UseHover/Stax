@@ -48,7 +48,7 @@ import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.components.SecondaryButton
 import com.hover.stax.presentation.components.StaxCard
 import com.hover.stax.ui.theme.TextGrey
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.core.DateUtils
 import com.hover.stax.utils.Utils
 
 @Composable
@@ -74,7 +74,7 @@ internal fun SimItem(
                 Text(
                     text = stringResource(
                         id = R.string.as_of,
-                        DateUtils.humanFriendlyDateTime(simWithAccount.account.latestBalanceTimestamp)
+                        com.hover.stax.core.DateUtils.humanFriendlyDateTime(simWithAccount.account.latestBalanceTimestamp)
                     ),
                     color = TextGrey,
                     style = MaterialTheme.typography.body1

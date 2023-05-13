@@ -29,6 +29,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -36,34 +37,32 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.Stax
 import com.hover.stax.R
-import com.hover.stax.database.models.StaxContact
-import com.hover.stax.databinding.FragmentTransactionBinding
+import com.hover.stax.Stax
+import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase
+import com.hover.stax.core.DateUtils.humanFriendlyDateTime
 import com.hover.stax.database.models.Account
-import com.hover.stax.hover.AbstractBalanceCheckerFragment
-import com.hover.stax.hover.BountyContract
 import com.hover.stax.database.models.Merchant
 import com.hover.stax.database.models.Paybill
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.StaxTransaction
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
-import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
-import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
+import com.hover.stax.databinding.FragmentTransactionBinding
+import com.hover.stax.hover.AbstractBalanceCheckerFragment
+import com.hover.stax.hover.BountyContract
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.UIHelper.loadImage
 import com.hover.stax.utils.Utils
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 const val UUID = "uuid"
 
 class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
-    private val viewModel: TransactionDetailsViewModel by viewModel()
+    private val viewModel: TransactionDetailsViewModel by viewModels()
 
     private var _binding: FragmentTransactionBinding? = null
     private val binding get() = _binding!!
@@ -96,7 +95,10 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         startObservers()
         setListeners()
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
@@ -109,15 +111,32 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         binding.transactionDetailsCard.setOnClickIcon { handleBackNavigation() }
 
         binding.transactionHeader.viewLogText.setOnClickListener { showUSSDLog() }
-        with(binding.details.detailsStaxUuid.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
-        with(binding.details.confirmCodeCopy.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
+        with(binding.details.detailsStaxUuid.content) {
+            setOnClickListener {
+                Utils.copyToClipboard(
+                    this.text.toString(),
+                    requireContext()
+                )
+            }
+        }
+        with(binding.details.confirmCodeCopy.content) {
+            setOnClickListener {
+                Utils.copyToClipboard(
+                    this.text.toString(),
+                    requireContext()
+                )
+            }
+        }
     }
 
     private fun handleBackNavigation() {
         val isBounty = viewModel.transaction.value?.isRecorded ?: false
 
         if (isBounty) findNavController().popBackStack()
-        else NavUtil.navigate(findNavController(), TransactionDetailsFragmentDirections.actionTxnDetailsFragmentToNavigationHistory())
+        else NavUtil.navigate(
+            findNavController(),
+            TransactionDetailsFragmentDirections.actionTxnDetailsFragmentToNavigationHistory()
+        )
     }
 
     private fun showUSSDLog() {
@@ -126,7 +145,8 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
     }
 
     private fun startObservers() = with(viewModel) {
-        val txnObserver = Observer<Transaction> { t -> Timber.e("Updating transaction messages ${t?.uuid}") }
+        val txnObserver =
+            Observer<Transaction> { t -> Timber.e("Updating transaction messages ${t?.uuid}") }
 
         transaction.observe(viewLifecycleOwner) { showTransaction(it) }
         action.observe(viewLifecycleOwner) { it?.let { updateAction(it) } }
@@ -158,12 +178,19 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
     }
 
     private fun updateHeader(transaction: StaxTransaction) = with(binding.transactionHeader) {
-        binding.transactionDetailsCard.setTitle(HoverAction.getHumanFriendlyType(requireContext(), transaction.transaction_type))
+        binding.transactionDetailsCard.setTitle(
+            HoverAction.getHumanFriendlyType(
+                requireContext(),
+                transaction.transaction_type
+            )
+        )
         if (shouldShowNewBalance(transaction)) {
             mainMessage.text = getString(R.string.new_balance, "", transaction.displayBalance)
         }
         statusText.text = transaction.title(requireContext())
-        if (statusText.text.toString().length > 9) { statusText.gravity = Gravity.START }
+        if (statusText.text.toString().length > 9) {
+            statusText.gravity = Gravity.START
+        }
         statusIcon.setImageResource(transaction.getIcon())
     }
 
@@ -175,7 +202,8 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
         typeValue.text = transaction.toString(requireContext())
         viewModel.action.value?.let {
-            categoryValue.text = transaction.shortStatusExplain(viewModel.action.value, "", requireContext())
+            categoryValue.text =
+                transaction.shortStatusExplain(viewModel.action.value, "", requireContext())
         }
 
         statusValue.apply {
@@ -194,17 +222,22 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
     private fun setVisibleFields(transaction: StaxTransaction) {
         transaction.transaction_type
-        binding.transactionHeader.mainMessage.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
+        binding.transactionHeader.mainMessage.visibility =
+            if (shouldShowNewBalance(transaction)) VISIBLE else GONE
         binding.statusInfo.root.visibility = if (transaction.isSuccessful) GONE else VISIBLE
         binding.statusInfo.institutionLogo.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.details.categoryRow.visibility = if (transaction.isFailed) VISIBLE else GONE
-        binding.details.paidWithRow.visibility = if (transaction.isRecorded || transaction.amount == null) GONE else VISIBLE
+        binding.details.paidWithRow.visibility =
+            if (transaction.isRecorded || transaction.amount == null) GONE else VISIBLE
         if (transaction.isRecorded) binding.details.recipInstitutionRow.visibility = GONE
         binding.details.amountRow.visibility = if (transaction.amount != null) VISIBLE else GONE
         binding.details.feeRow.visibility = if (transaction.fee == null) GONE else VISIBLE
-        binding.details.balanceRow.visibility = if (shouldShowNewBalance(transaction)) VISIBLE else GONE
-        binding.details.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
-        binding.details.confirmCodeRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else VISIBLE
+        binding.details.balanceRow.visibility =
+            if (shouldShowNewBalance(transaction)) VISIBLE else GONE
+        binding.details.recipientRow.visibility =
+            if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
+        binding.details.confirmCodeRow.visibility =
+            if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else VISIBLE
     }
 
     private fun updateAction(action: HoverAction) {
@@ -212,19 +245,30 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         if (action.isOnNetwork) binding.details.recipInstitutionRow.visibility = GONE
         else binding.details.institutionValue.setTitle(action.to_institution_name)
         viewModel.transaction.value?.let {
-            val msg = it.longStatus(action, viewModel.messages.value?.last(), viewModel.sms.value, viewModel.isExpectingSMS.value ?: false, requireContext())
-            binding.statusInfo.longDescription.text = HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            val msg = it.longStatus(
+                action,
+                viewModel.messages.value?.last(),
+                viewModel.sms.value,
+                viewModel.isExpectingSMS.value ?: false,
+                requireContext()
+            )
+            binding.statusInfo.longDescription.text =
+                HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
             binding.details.categoryValue.text = it.shortStatusExplain(action, "", requireContext())
             if (action.transaction_type == HoverAction.BILL)
                 binding.details.institutionValue.setSubtitle(Paybill.extractBizNumber(action))
             showBonusAmount(it.amount, action)
         }
         binding.details.fromInstitutionValue.setTitle(action.from_institution_name)
-        binding.statusInfo.institutionLogo.loadImage(requireContext(), getString(R.string.root_url) + action.from_institution_logo)
+        binding.statusInfo.institutionLogo.loadImage(
+            requireContext(),
+            getString(R.string.root_url) + action.from_institution_logo
+        )
     }
 
     private fun showBonusAmount(amount: Double?, action: HoverAction) = with(binding.details) {
-        bonusRow.visibility = if (amount != null && amount > 0 && action.bonus_percent > 0) VISIBLE else GONE
+        bonusRow.visibility =
+            if (amount != null && amount > 0 && action.bonus_percent > 0) VISIBLE else GONE
         if (amount != null)
             bonusAmount.text = (amount * action.bonus_percent / 100).toString()
     }
@@ -244,7 +288,8 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
                     viewModel.isExpectingSMS.value ?: false,
                     requireContext()
                 )
-                binding.statusInfo.longDescription.text = HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                binding.statusInfo.longDescription.text =
+                    HtmlCompat.fromHtml(msg, HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
         }
     }
@@ -260,12 +305,13 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         updateRecipient(merchant?.businessName, merchant?.tillNo)
     }
 
-    private fun updateRecipient(title: String?, sub: String?) = with(binding.details.recipientValue) {
-        if (!title.isNullOrEmpty() || !sub.isNullOrEmpty()) {
-            visibility = VISIBLE
-            setContent(title, sub)
-        } else visibility = GONE
-    }
+    private fun updateRecipient(title: String?, sub: String?) =
+        with(binding.details.recipientValue) {
+            if (!title.isNullOrEmpty() || !sub.isNullOrEmpty()) {
+                visibility = VISIBLE
+                setContent(title, sub)
+            } else visibility = GONE
+        }
 
     private fun addRetryOrSupportButton(transaction: StaxTransaction) {
         if (transaction.isRecorded)
@@ -278,7 +324,8 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         binding.statusInfo.btnRetry.visibility = if (transaction.canRetry) VISIBLE else GONE
     }
 
-    private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
+    private fun shouldContactSupport(id: String): Boolean =
+        if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
 
     private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {
         contactSupportTextView.setText(R.string.email_support)
@@ -301,7 +348,10 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
     private fun retry(transaction: StaxTransaction) {
         updateRetryCounter(transaction.action_id)
         if (transaction.transaction_type == HoverAction.BALANCE) {
-            callHover(checkBalance, generateSessionBuilder(viewModel.account.value!!, viewModel.action.value!!))
+            callHover(
+                checkBalance,
+                generateSessionBuilder(viewModel.account.value!!, viewModel.action.value!!)
+            )
         } else if (transaction.transaction_type == HoverAction.P2P || transaction.transaction_type == HoverAction.AIRTIME)
             navToTransferDetail(transaction)
 //        else if (transaction.transaction_type == HoverAction.BILL)
@@ -312,8 +362,11 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
     private fun navToTransferDetail(transaction: StaxTransaction) {
         NavUtil.navigateTransfer(
-            findNavController(), transaction.transaction_type,
-            transaction.accountId.toString(), Utils.formatAmountForUSSD(transaction.amount), transaction.counterparty_id
+            findNavController(),
+            transaction.transaction_type,
+            transaction.accountId.toString(),
+            Utils.formatAmountForUSSD(transaction.amount),
+            transaction.counterparty_id
         )
     }
 
@@ -328,14 +381,20 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
     private fun retryBounty() {
         viewModel.action.value?.let {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), requireContext())
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+                getString(R.string.clicked_retry_bounty_session),
+                requireContext()
+            )
             bounty.launch(it)
         }
     }
 
     private val bounty = registerForActivityResult(BountyContract()) { data: Intent? ->
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            NavUtil.showTransactionDetailsFragment(findNavController(), data.extras!!.getString("uuid")!!)
+            NavUtil.showTransactionDetailsFragment(
+                findNavController(),
+                data.extras!!.getString("uuid")!!
+            )
         }
     }
 
@@ -343,9 +402,21 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         val isTransactionSuccessful = !transaction.isRecorded && transaction.isSuccessful
 
         val shareMessage = when (transaction.transaction_type) {
-            HoverAction.AIRTIME -> getString(R.string.airtime_purchase_message, getString(R.string.share_link))
-            HoverAction.BALANCE -> getString(R.string.check_balance_message, getString(R.string.share_link))
-            HoverAction.P2P -> getString(R.string.send_money_message, getString(R.string.share_link))
+            HoverAction.AIRTIME -> getString(
+                R.string.airtime_purchase_message,
+                getString(R.string.share_link)
+            )
+
+            HoverAction.BALANCE -> getString(
+                R.string.check_balance_message,
+                getString(R.string.share_link)
+            )
+
+            HoverAction.P2P -> getString(
+                R.string.send_money_message,
+                getString(R.string.share_link)
+            )
+
             else -> getString(R.string.share_msg)
         }
 
@@ -363,7 +434,12 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
             binding.shareLayout.bottomSheet.visibility = VISIBLE
             binding.shareLayout.bottomSheet.animation = animation
-            binding.shareLayout.shareBtn.setOnClickListener { Utils.shareStax(requireActivity(), shareMessage) }
+            binding.shareLayout.shareBtn.setOnClickListener {
+                Utils.shareStax(
+                    requireActivity(),
+                    shareMessage
+                )
+            }
         }
 
         bottomSheetBehavior.state = updatedState
@@ -379,9 +455,17 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         try {
             data.put("uuid", uuid)
         } catch (e: JSONException) {
-            logErrorAndReportToFirebase(TransactionDetailsFragment::class.java.simpleName, e.message!!, e)
+            logErrorAndReportToFirebase(
+                TransactionDetailsFragment::class.java.simpleName,
+                e.message!!,
+                e
+            )
         }
 
-        logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data, requireContext())
+        logAnalyticsEvent(
+            getString(R.string.visit_screen, getString(R.string.visit_transaction)),
+            data,
+            requireContext()
+        )
     }
 }

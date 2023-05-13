@@ -28,7 +28,7 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 
 const val NAV_HOME = 600
@@ -137,7 +137,7 @@ class NavHelper(val activity: AppCompatActivity) {
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
             { PermissionUtils.requestPerms(PERMS_REQ_CODE, activity) },
-            { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
+            { com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
         )
     }
 }

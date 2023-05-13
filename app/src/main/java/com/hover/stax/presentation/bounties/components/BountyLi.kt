@@ -37,13 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hover.stax.R
-import com.hover.stax.domain.model.Bounty
+import com.hover.stax.model.Bounty
 import com.hover.stax.presentation.bounties.BountySelectEvent
 import com.hover.stax.presentation.bounties.BountyViewModel
 import com.hover.stax.ui.theme.Brutalista
 
 @Composable
-fun BountyLi(bounty: Bounty, bountyViewModel: BountyViewModel) {
+fun BountyLi(bounty: com.hover.stax.model.Bounty, bountyViewModel: BountyViewModel) {
     val context = LocalContext.current
     val margin8 = dimensionResource(id = R.dimen.margin_8)
     val margin13 = dimensionResource(id = R.dimen.margin_13)
@@ -95,7 +95,7 @@ fun BountyLi(bounty: Bounty, bountyViewModel: BountyViewModel) {
     }
 }
 
-private fun getColor(bounty: Bounty): Int {
+private fun getColor(bounty: com.hover.stax.model.Bounty): Int {
     return when {
         bounty.hasSuccessfulTransactions() -> R.color.muted_green
         bounty.isLastTransactionFailed() -> R.color.stax_bounty_red_bg
@@ -105,7 +105,7 @@ private fun getColor(bounty: Bounty): Int {
     }
 }
 
-private fun getMsg(bounty: Bounty): Int {
+private fun getMsg(bounty: com.hover.stax.model.Bounty): Int {
     return when {
         bounty.hasSuccessfulTransactions() -> R.string.done
         bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> R.string.bounty_transaction_failed
@@ -115,7 +115,7 @@ private fun getMsg(bounty: Bounty): Int {
     }
 }
 
-private fun getIcon(bounty: Bounty): Int {
+private fun getIcon(bounty: com.hover.stax.model.Bounty): Int {
     return when {
         bounty.hasSuccessfulTransactions() -> R.drawable.ic_check
         bounty.isLastTransactionFailed() -> R.drawable.ic_error
@@ -124,7 +124,7 @@ private fun getIcon(bounty: Bounty): Int {
     }
 }
 
-private fun isOpen(bounty: Bounty): Boolean {
+private fun isOpen(bounty: com.hover.stax.model.Bounty): Boolean {
     return when {
         bounty.hasSuccessfulTransactions() -> false
         bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> false
@@ -135,7 +135,7 @@ private fun isOpen(bounty: Bounty): Boolean {
     }
 }
 
-private fun getTapAction(bounty: Bounty): BountySelectEvent? {
+private fun getTapAction(bounty: com.hover.stax.model.Bounty): BountySelectEvent? {
     return when {
         bounty.hasSuccessfulTransactions() ->
             BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid)

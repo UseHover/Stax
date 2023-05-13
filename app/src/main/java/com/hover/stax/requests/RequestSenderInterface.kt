@@ -29,7 +29,7 @@ import com.hover.stax.R
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Request
-import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
 import com.hover.stax.utils.Utils.copyToClipboard
 

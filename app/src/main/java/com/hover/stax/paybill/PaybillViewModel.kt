@@ -20,8 +20,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.contact.ContactRepo
-import com.hover.stax.data.accounts.AccountRepo
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.paybill.PaybillRepo
 import com.hover.stax.database.models.Account
@@ -29,18 +29,18 @@ import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.database.models.Paybill
 import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
-import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
+import javax.inject.Inject
 
-class PaybillViewModel(
+class PaybillViewModel @Inject constructor(
     application: Application,
     contactRepo: ContactRepo,
     val actionRepo: ActionRepo,
     private val billRepo: PaybillRepo,
-    val accountRepo: AccountRepo,
+    val accountRepo: AccountRepository,
     scheduleRepo: ScheduleRepo
 ) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
 
@@ -137,7 +137,7 @@ class PaybillViewModel(
             Timber.e(e)
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, getApplication())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, getApplication())
     }
 
     fun businessNoError(): String? {

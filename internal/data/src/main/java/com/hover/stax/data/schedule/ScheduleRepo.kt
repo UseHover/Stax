@@ -16,35 +16,49 @@
 package com.hover.stax.data.schedule
 
 import androidx.lifecycle.LiveData
-import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.dao.ScheduleDao
 import com.hover.stax.database.models.Schedule
 import javax.inject.Inject
 
-class ScheduleRepo @Inject constructor(
-    private val scheduleDao: ScheduleDao
-) {
+interface ScheduleRepository {
 
     val futureTransactions: LiveData<List<Schedule>>
+
+    fun getFutureTransactions(channelId: Int): LiveData<List<Schedule>>
+
+    fun getSchedule(id: Int): Schedule?
+
+    fun insert(schedule: Schedule?)
+
+    fun update(schedule: Schedule?)
+
+    fun delete(schedule: Schedule?)
+}
+
+class ScheduleRepo @Inject constructor(
+    private val scheduleDao: ScheduleDao
+) : ScheduleRepository {
+
+    override val futureTransactions: LiveData<List<Schedule>>
         get() = scheduleDao.liveFuture
 
-    fun getFutureTransactions(channelId: Int): LiveData<List<Schedule>> {
+    override fun getFutureTransactions(channelId: Int): LiveData<List<Schedule>> {
         return scheduleDao.getLiveFutureByChannelId(channelId)
     }
 
-    fun getSchedule(id: Int): Schedule? {
+    override fun getSchedule(id: Int): Schedule? {
         return scheduleDao.get(id)
     }
 
-    fun insert(schedule: Schedule?) {
-        AppDatabase.databaseWriteExecutor.execute { schedule?.let { scheduleDao.insert(schedule) } }
+    override fun insert(schedule: Schedule?) {
+        schedule?.let { scheduleDao.insert(schedule) }
     }
 
-    fun update(schedule: Schedule?) {
-        AppDatabase.databaseWriteExecutor.execute { scheduleDao.updateSchedule(schedule) }
+    override fun update(schedule: Schedule?) {
+        scheduleDao.updateSchedule(schedule)
     }
 
-    fun delete(schedule: Schedule?) {
-        AppDatabase.databaseWriteExecutor.execute { scheduleDao.deleteSchedule(schedule) }
+    override fun delete(schedule: Schedule?) {
+        scheduleDao.deleteSchedule(schedule)
     }
 }

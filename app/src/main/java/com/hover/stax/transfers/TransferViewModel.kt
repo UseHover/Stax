@@ -26,14 +26,15 @@ import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.Request
 import com.hover.stax.data.requests.RequestRepo
 import com.hover.stax.data.schedule.ScheduleRepo
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.core.AnalyticsUtil
+import com.hover.stax.core.DateUtils
 import com.yariksoffice.lingver.Lingver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class TransferViewModel(
+class TransferViewModel @Inject constructor(
     application: Application,
     private val requestRepo: RequestRepo,
     contactRepo: ContactRepo,
@@ -82,7 +83,7 @@ class TransferViewModel(
                     )
                     isLoading.postValue(false)
                 } catch (e: NumberFormatException) {
-                    AnalyticsUtil.logErrorAndReportToFirebase(
+                    com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
                         TransferViewModel::class.java.simpleName, e.message!!, e
                     )
                 }
@@ -137,7 +138,7 @@ class TransferViewModel(
             setRecipientSmartly(r, r.requester_country_alpha2)
             setAmount(r.amount)
             setNote(r.note)
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), getApplication())
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), getApplication())
         }
     }
 
@@ -150,7 +151,7 @@ class TransferViewModel(
                 } else {
                     sc
                 }
-                c.lastUsedTimestamp = DateUtils.now()
+                c.lastUsedTimestamp = com.hover.stax.core.DateUtils.now()
                 contactRepo.save(c)
                 contact.postValue(c)
             }

@@ -23,19 +23,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.data.transactions.TransactionRepo
-import com.hover.stax.database.channel.repository.ChannelRepository
 import com.hover.stax.database.models.StaxTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TransactionHistoryViewModel(
+class TransactionHistoryViewModel @Inject constructor(
     private val repo: TransactionRepo,
     private val actionRepo: ActionRepo,
     private val channelRepository: ChannelRepository
 ) : ViewModel() {
 
-    private val allNonBountyTransaction: LiveData<List<StaxTransaction>> = repo.allNonBountyTransactions
+    private val allNonBountyTransaction: LiveData<List<StaxTransaction>> =
+        repo.allNonBountyTransactions
     var transactionHistoryItem: MediatorLiveData<List<TransactionHistoryItem>> = MediatorLiveData()
     private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
@@ -43,7 +45,8 @@ class TransactionHistoryViewModel(
     init {
         transactionHistoryItem.addSource(allNonBountyTransaction, this::getTransactionHistory)
         staxTransactions = repo.completeAndPendingTransferTransactions!!
-        appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
+        appReviewLiveData =
+            Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
     }
 
     private fun getTransactionHistory(transactions: List<StaxTransaction>) {

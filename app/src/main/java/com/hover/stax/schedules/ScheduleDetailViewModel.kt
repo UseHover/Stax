@@ -27,8 +27,9 @@ import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.database.models.Schedule
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ScheduleDetailViewModel(
+class ScheduleDetailViewModel @Inject constructor(
     val repo: ScheduleRepo,
     val actionRepo: ActionRepo,
     val contactRepo: ContactRepo

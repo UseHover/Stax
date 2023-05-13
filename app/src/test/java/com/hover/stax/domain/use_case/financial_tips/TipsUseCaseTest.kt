@@ -16,8 +16,8 @@
 package com.hover.stax.domain.use_case.financial_tips
 
 import com.google.common.truth.Truth.assertThat
-import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.domain.model.Resource
+import com.hover.stax.model.FinancialTip
+import com.hover.stax.model.Resource
 import com.hover.stax.data.tips.FinancialTipsRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -42,7 +42,7 @@ class TipsUseCaseTest {
     @Test
     fun `invoke should emit Resource Loading then Success with tips from the repository`() = runBlocking {
         val fakeTips = listOf(
-            FinancialTip(
+            com.hover.stax.model.FinancialTip(
                 id = "1234",
                 title = "fakeTitle",
                 content = "fakeContent",
@@ -51,7 +51,7 @@ class TipsUseCaseTest {
                 shareCopy = "fakeCopy",
                 deepLink = "fakeLink"
             ),
-            FinancialTip(
+            com.hover.stax.model.FinancialTip(
                 id = "4321",
                 title = "randomTitle",
                 content = "randomContent",
@@ -64,9 +64,9 @@ class TipsUseCaseTest {
         coEvery { financialTipsRepository.getTips() } returns fakeTips
         val result = testSubject.invoke().toList()
         assertThat(result.size).isEqualTo(2)
-        assertThat(result[0] is Resource.Loading).isTrue()
-        assertThat(result[1] is Resource.Success).isTrue()
-        assertThat(fakeTips).isEqualTo((result[1] as Resource.Success).data)
+        assertThat(result[0] is com.hover.stax.model.Resource.Loading).isTrue()
+        assertThat(result[1] is com.hover.stax.model.Resource.Success).isTrue()
+        assertThat(fakeTips).isEqualTo((result[1] as com.hover.stax.model.Resource.Success).data)
     }
 
     @Test
@@ -74,9 +74,9 @@ class TipsUseCaseTest {
         coEvery { financialTipsRepository.getTips() } throws Exception("Error fetching tips")
         val result = testSubject.invoke().toList()
         assertThat(result.size).isEqualTo(2)
-        assertThat(result[0] is Resource.Loading).isTrue()
-        assertThat(result[1] is Resource.Error).isTrue()
-        assertThat("Error fetching tips").isEqualTo((result[1] as Resource.Error).message)
+        assertThat(result[0] is com.hover.stax.model.Resource.Loading).isTrue()
+        assertThat(result[1] is com.hover.stax.model.Resource.Error).isTrue()
+        assertThat("Error fetching tips").isEqualTo((result[1] as com.hover.stax.model.Resource.Error).message)
     }
 
     @Test

@@ -20,18 +20,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.UssdLogBottomsheetBinding
-import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class USSDLogBottomSheetFragment : BottomSheetDialogFragment() {
 
-    private val viewModel: TransactionDetailsViewModel by viewModel()
+    private val viewModel: TransactionDetailsViewModel by viewModels()
 
     private var _binding: UssdLogBottomsheetBinding? = null
     private val binding get() = _binding!!
@@ -59,9 +58,18 @@ class USSDLogBottomSheetFragment : BottomSheetDialogFragment() {
     private fun setCardTitle() {
         viewModel.action.observe(viewLifecycleOwner) {
             if (it != null) {
-                val type = HoverAction.getHumanFriendlyType(context, viewModel.transaction.value!!.transaction_type)
+                val type = HoverAction.getHumanFriendlyType(
+                    context,
+                    viewModel.transaction.value!!.transaction_type
+                )
                 binding.messagesCard.apply {
-                    setTitle(getString(R.string.session_fullDesc_cardhead, it.from_institution_name, type))
+                    setTitle(
+                        getString(
+                            R.string.session_fullDesc_cardhead,
+                            it.from_institution_name,
+                            type
+                        )
+                    )
                     setIcon(getString(R.string.root_url) + it.from_institution_logo)
                 }
             }
@@ -72,7 +80,12 @@ class USSDLogBottomSheetFragment : BottomSheetDialogFragment() {
         val messagesView = binding.convoRecyclerView
         messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         messagesView.setHasFixedSize(true)
-        viewModel.messages.observe(viewLifecycleOwner) { updateWithSessionDetails(it, messagesView) }
+        viewModel.messages.observe(viewLifecycleOwner) {
+            updateWithSessionDetails(
+                it,
+                messagesView
+            )
+        }
     }
 
     private fun createSmsMessagesRecyclerView() {
@@ -85,16 +98,21 @@ class USSDLogBottomSheetFragment : BottomSheetDialogFragment() {
     private fun updateWithSessionDetails(messages: List<UssdCallResponse>?, v: RecyclerView) {
         messages?.let {
             val t = viewModel.transaction.value!!
-            v.adapter = MessagesAdapter(it, DateUtils.humanFriendlyDateTime(t.initiated_at), DateUtils.humanFriendlyDateTime(t.updated_at))
+            v.adapter = MessagesAdapter(
+                it,
+                com.hover.stax.core.DateUtils.humanFriendlyDateTime(t.initiated_at),
+                com.hover.stax.core.DateUtils.humanFriendlyDateTime(t.updated_at)
+            )
         }
     }
 
     companion object {
         const val UUID = "uuid"
 
-        fun newInstance(uuid: String): USSDLogBottomSheetFragment = USSDLogBottomSheetFragment().apply {
-            arguments = bundleOf(UUID to uuid)
-        }
+        fun newInstance(uuid: String): USSDLogBottomSheetFragment =
+            USSDLogBottomSheetFragment().apply {
+                arguments = bundleOf(UUID to uuid)
+            }
     }
 
     override fun onDestroyView() {

@@ -22,14 +22,13 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.appsflyer.AppsFlyerLib
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentLanguageBinding
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import com.yariksoffice.lingver.Lingver
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val LANGUAGE_CHECK = "Language"
 
@@ -39,7 +38,7 @@ class LanguageSelectFragment : Fragment() {
     private var _binding: FragmentLanguageBinding? = null
     private val binding get() = _binding!!
 
-    private val languageViewModel: LanguageViewModel by viewModel()
+    private val languageViewModel: LanguageViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +53,7 @@ class LanguageSelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_language)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_language)), requireActivity())
 
         selectedCode = Lingver.getInstance().getLanguage()
 

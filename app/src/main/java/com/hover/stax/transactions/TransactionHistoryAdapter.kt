@@ -27,7 +27,7 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.databinding.TransactionListItemBinding
 import com.hover.stax.transactions.TransactionHistoryAdapter.HistoryViewHolder
-import com.hover.stax.utils.DateUtils.humanFriendlyDate
+import com.hover.stax.core.DateUtils.humanFriendlyDate
 
 class TransactionHistoryAdapter(private val selectListener: SelectListener) : ListAdapter<TransactionHistoryItem, HistoryViewHolder>(diffUtil) {
 

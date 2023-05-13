@@ -17,8 +17,7 @@ import androidx.room.PrimaryKey;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
-import com.hover.stax.R;
-import com.hover.stax.utils.DateUtils;
+import com.hover.stax.database.R;
 
 import java.util.ArrayList;
 import java.util.Collections;

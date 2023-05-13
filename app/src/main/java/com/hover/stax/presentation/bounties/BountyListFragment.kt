@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -33,23 +34,21 @@ import com.hover.stax.R
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.data.remote.workers.UpdateBountyTransactionsWorker
 import com.hover.stax.databinding.FragmentBountyListBinding
-import com.hover.stax.domain.model.Bounty
+import com.hover.stax.model.Bounty
 import com.hover.stax.hover.BountyContract
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class BountyListFragment : Fragment() {
 
     private lateinit var networkMonitor: NetworkMonitor
 
-    private val bountiesViewModel: BountyViewModel by viewModel()
+    private val bountiesViewModel: BountyViewModel by viewModels()
 
     private var _binding: FragmentBountyListBinding? = null
     private val binding get() = _binding!!
@@ -61,7 +60,7 @@ class BountyListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
 
         _binding = FragmentBountyListBinding.inflate(inflater, container, false)
         return binding.root
@@ -105,7 +104,7 @@ class BountyListFragment : Fragment() {
         Hover.updateActionConfigs(
             object : Hover.DownloadListener {
                 override fun onError(p0: String?) {
-                    AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
+                    com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
                 }
 
                 override fun onSuccess(p0: ArrayList<HoverAction>?) {
@@ -147,11 +146,11 @@ class BountyListFragment : Fragment() {
         }
     }
 
-    private fun viewBountyDetail(b: Bounty) {
+    private fun viewBountyDetail(b: com.hover.stax.model.Bounty) {
         if (bountiesViewModel.isSimPresent(b)) showBountyDescDialog(b) else showSimErrorDialog(b)
     }
 
-    private fun showSimErrorDialog(b: Bounty) {
+    private fun showSimErrorDialog(b: com.hover.stax.model.Bounty) {
         dialog = StaxDialog(requireActivity())
             .setDialogTitle(getString(R.string.bounty_sim_err_header))
             .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
@@ -160,7 +159,7 @@ class BountyListFragment : Fragment() {
         dialog!!.showIt()
     }
 
-    private fun showBountyDescDialog(b: Bounty) {
+    private fun showBountyDescDialog(b: com.hover.stax.model.Bounty) {
         dialog = StaxDialog(requireActivity())
             .setDialogTitle(
                 getString(
@@ -173,9 +172,9 @@ class BountyListFragment : Fragment() {
         dialog!!.showIt()
     }
 
-    private fun startBounty(b: Bounty) {
+    private fun startBounty(b: com.hover.stax.model.Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_start_bounty), requireContext())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_start_bounty), requireContext())
         bounty.launch(b.action)
     }
 
@@ -185,7 +184,7 @@ class BountyListFragment : Fragment() {
         }
     }
 
-    private fun retrySimMatch(b: Bounty?) {
+    private fun retrySimMatch(b: com.hover.stax.model.Bounty?) {
         b?.let { viewBountyDetail(b) }
         Hover.updateSimInfo(requireActivity())
     }

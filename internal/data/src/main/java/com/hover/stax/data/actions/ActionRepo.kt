@@ -18,33 +18,66 @@ package com.hover.stax.data.actions
 import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverActionDao
-import com.hover.sdk.database.HoverRoomDatabase
+import javax.inject.Inject
 
-class ActionRepo(sdkDb: HoverRoomDatabase) {
+interface ActionRepository {
 
-    private val actionDao: HoverActionDao = sdkDb.actionDao()
+    fun getAction(public_id: String): HoverAction?
 
-    fun getAction(public_id: String): HoverAction? {
+    fun getLiveAction(public_id: String?): LiveData<HoverAction>
+
+    fun getFirstAction(institutionId: Int, countryCode: String, type: String): HoverAction?
+
+    fun getTransferActions(institutionId: Int, countryCode: String): List<HoverAction>
+
+    fun getActions(institutionId: Int, countryCode: String, type: String?): List<HoverAction>
+
+    fun getActionsByRecipientInstitution(
+        recipientInstitutionId: Int,
+        countryCode: String,
+        type: String
+    ): List<HoverAction>
+
+    fun getBonusActionsByCountry(countries: Array<String>): List<HoverAction>
+
+    fun getBonusActionsByCountryAndType(country: String, type: String): List<HoverAction>
+
+    val bounties: List<HoverAction>
+}
+
+class ActionRepo @Inject constructor(
+    private val actionDao: HoverActionDao
+) : ActionRepository {
+
+    override fun getAction(public_id: String): HoverAction? {
         return actionDao.getAction(public_id)
     }
 
-    fun getLiveAction(public_id: String?): LiveData<HoverAction> {
+    override fun getLiveAction(public_id: String?): LiveData<HoverAction> {
         return actionDao.getLiveAction(public_id)
     }
 
-    fun getFirstAction(institutionId: Int, countryCode: String, type: String): HoverAction? {
+    override fun getFirstAction(
+        institutionId: Int,
+        countryCode: String,
+        type: String
+    ): HoverAction? {
         return actionDao.getFirstAction(institutionId, countryCode, type)
     }
 
-    fun getTransferActions(institutionId: Int, countryCode: String): List<HoverAction> {
+    override fun getTransferActions(institutionId: Int, countryCode: String): List<HoverAction> {
         return actionDao.getTransferActions(institutionId, countryCode)
     }
 
-    fun getActions(institutionId: Int, countryCode: String, type: String?): List<HoverAction> {
+    override fun getActions(
+        institutionId: Int,
+        countryCode: String,
+        type: String?
+    ): List<HoverAction> {
         return actionDao.getActions(institutionId, countryCode, type)
     }
 
-    fun getActionsByRecipientInstitution(
+    override fun getActionsByRecipientInstitution(
         recipientInstitutionId: Int,
         countryCode: String,
         type: String
@@ -52,13 +85,13 @@ class ActionRepo(sdkDb: HoverRoomDatabase) {
         return actionDao.getActionsByRecipientInstitution(recipientInstitutionId, countryCode, type)
     }
 
-    fun getBonusActionsByCountry(countries: Array<String>): List<HoverAction> {
+    override fun getBonusActionsByCountry(countries: Array<String>): List<HoverAction> {
         return actionDao.getBonusActions(countries)
     }
 
-    fun getBonusActionsByCountryAndType(country: String, type: String): List<HoverAction> {
+    override fun getBonusActionsByCountryAndType(country: String, type: String): List<HoverAction> {
         return actionDao.getBonusActionsByType(country, type)
     }
 
-    val bounties: List<HoverAction> get() = actionDao.bounties
+    override val bounties: List<HoverAction> get() = actionDao.bounties
 }

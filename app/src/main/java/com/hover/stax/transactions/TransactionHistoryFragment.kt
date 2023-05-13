@@ -19,24 +19,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.getValue
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionCardHistoryBinding
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectListener {
 
     private var _binding: TransactionCardHistoryBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: TransactionHistoryViewModel by viewModel()
+    private val viewModel: TransactionHistoryViewModel by viewModels()
     private var transactionsAdapter: TransactionHistoryAdapter? = null
 
     override fun onCreateView(
@@ -44,7 +42,13 @@ class TransactionHistoryFragment : Fragment(), TransactionHistoryAdapter.SelectL
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction_history)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_transaction_history)
+            ),
+            requireActivity()
+        )
         _binding = TransactionCardHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }

@@ -20,21 +20,36 @@ import com.hover.stax.database.models.Paybill
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+interface PaybillRepository {
+
+    val allBills: Flow<List<Paybill>>
+
+    fun getMatching(bizNo: String, channelId: Int): Paybill?
+
+    fun getPaybills(accountId: Int): Flow<List<Paybill>>
+
+    fun save(paybill: Paybill)
+
+    suspend fun update(paybill: Paybill)
+
+    suspend fun delete(paybill: Paybill)
+}
+
 class PaybillRepo @Inject constructor(
     private val paybillDao: PaybillDao
-) {
+) : PaybillRepository {
 
-    val allBills: Flow<List<Paybill>> = paybillDao.allBills
+    override val allBills: Flow<List<Paybill>> = paybillDao.allBills
 
-    fun getMatching(bizNo: String, channelId: Int): Paybill? =
+    override fun getMatching(bizNo: String, channelId: Int): Paybill? =
         paybillDao.getPaybill(bizNo, channelId)
 
-    fun getPaybills(accountId: Int): Flow<List<Paybill>> =
+    override fun getPaybills(accountId: Int): Flow<List<Paybill>> =
         paybillDao.getPaybillsByAccount(accountId)
 
-    fun save(paybill: Paybill) = paybillDao.insert(paybill)
+    override fun save(paybill: Paybill) = paybillDao.insert(paybill)
 
-    suspend fun update(paybill: Paybill) = paybillDao.update(paybill)
+    override suspend fun update(paybill: Paybill) = paybillDao.update(paybill)
 
-    suspend fun delete(paybill: Paybill) = paybillDao.delete(paybill)
+    override suspend fun delete(paybill: Paybill) = paybillDao.delete(paybill)
 }

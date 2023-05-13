@@ -20,24 +20,24 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.contact.ContactRepo
-import com.hover.stax.database.models.StaxContact
-import com.hover.stax.data.accounts.AccountRepo
 import com.hover.stax.data.requests.RequestRepo
+import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Request
 import com.hover.stax.database.models.Schedule
-import com.hover.stax.data.schedule.ScheduleRepo
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.transfers.AbstractFormViewModel
-import com.hover.stax.utils.DateUtils
-import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
+import javax.inject.Inject
 
-class NewRequestViewModel(
+class NewRequestViewModel @Inject constructor(
     application: Application,
     val repo: RequestRepo,
-    val accountRepo: AccountRepo,
+    val accountRepo: AccountRepository,
     contactRepo: ContactRepo,
     scheduleRepo: ScheduleRepo
 ) : AbstractFormViewModel(application, contactRepo, scheduleRepo) {
@@ -84,7 +84,12 @@ class NewRequestViewModel(
 
     fun setNote(n: String?) = note.postValue(n)
 
-    fun validAmount(): Boolean = (!amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches("[0]+".toRegex()))
+    fun validAmount(): Boolean =
+        (
+            !amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches(
+                "[0]+".toRegex()
+            )
+            )
 
     fun requesteeErrors(): String? {
         return if (!requestee.value?.accountNumber.isNullOrEmpty())
@@ -93,9 +98,11 @@ class NewRequestViewModel(
             getString(R.string.request_error_recipient)
     }
 
-    fun accountError(): String? = if (activeAccount.value != null) null else getString(R.string.accounts_error_noselect)
+    fun accountError(): String? =
+        if (activeAccount.value != null) null else getString(R.string.accounts_error_noselect)
 
-    fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else getString(R.string.requester_number_fielderror)
+    fun requesterAcctNoError(): String? =
+        if (!requesterNumber.value.isNullOrEmpty()) null else getString(R.string.requester_number_fielderror)
 
     fun validNote(): Boolean = !note.value.isNullOrEmpty()
 
@@ -134,7 +141,7 @@ class NewRequestViewModel(
         requestee.value?.let { contact ->
             viewModelScope.launch {
                 if (!contact.accountNumber.isNullOrEmpty()) {
-                    contact.lastUsedTimestamp = DateUtils.now()
+                    contact.lastUsedTimestamp = com.hover.stax.core.DateUtils.now()
                     contactRepo.save(contact)
                 }
             }

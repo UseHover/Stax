@@ -28,11 +28,11 @@ import com.hover.stax.database.models.Merchant
 import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.transfers.AbstractFormViewModel
-import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MerchantViewModel(
+class MerchantViewModel @Inject constructor(
     application: Application,
     contactRepo: ContactRepo,
     private val merchantRepo: MerchantRepo,
@@ -86,7 +86,7 @@ class MerchantViewModel(
     fun saveMerchant() {
         merchant.value?.let { merchant ->
             viewModelScope.launch(Dispatchers.IO) {
-                merchant.lastUsedTimestamp = DateUtils.now()
+                merchant.lastUsedTimestamp = com.hover.stax.core.DateUtils.now()
                 merchantRepo.save(merchant)
             }
         }

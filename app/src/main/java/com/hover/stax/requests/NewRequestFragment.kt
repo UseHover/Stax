@@ -24,26 +24,28 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.contacts.ContactInput
+import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
-import com.hover.stax.database.models.Account
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
-import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import timber.log.Timber
 
-class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface, RequestSenderInterface {
+class NewRequestFragment :
+    AbstractFormFragment(),
+    PushNotificationTopicsInterface,
+    RequestSenderInterface {
 
     private lateinit var requestViewModel: NewRequestViewModel
 
@@ -61,8 +63,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-        abstractFormViewModel = getSharedViewModel<NewRequestViewModel>()
-        requestViewModel = abstractFormViewModel as NewRequestViewModel
+        val abstractFormViewModel: NewRequestViewModel by activityViewModels()
+        requestViewModel = abstractFormViewModel
         super.onCreate(savedInstanceState)
     }
 
@@ -72,7 +74,13 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_new_request)
+            ),
+            requireActivity()
+        )
 
         init(binding.root)
 
@@ -125,18 +133,27 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         with(requestViewModel) {
             amount.observe(viewLifecycleOwner) {
-                binding.summaryCard.amountRow.visibility = if (validAmount()) View.VISIBLE else View.GONE
+                binding.summaryCard.amountRow.visibility =
+                    if (validAmount()) View.VISIBLE else View.GONE
                 binding.summaryCard.amountValue.text = it?.let { Utils.formatAmount(it) }
             }
 
             requesterNumber.observe(viewLifecycleOwner) { accountValue.setSubtitle(it) }
             activeAccount.observe(viewLifecycleOwner) { updateAcctNo(it?.accountNo) }
 
-            recentContacts.observe(viewLifecycleOwner) { it?.let { contacts -> requesteeInput.setRecent(contacts, requireActivity()) } }
+            recentContacts.observe(viewLifecycleOwner) {
+                it?.let { contacts ->
+                    requesteeInput.setRecent(
+                        contacts,
+                        requireActivity()
+                    )
+                }
+            }
             isEditing.observe(viewLifecycleOwner) { showEdit(it) }
 
             note.observe(viewLifecycleOwner) {
-                binding.summaryCard.noteRow.visibility = if (validNote()) View.VISIBLE else View.GONE
+                binding.summaryCard.noteRow.visibility =
+                    if (validNote()) View.VISIBLE else View.GONE
                 binding.summaryCard.noteValue.text = it
             }
 
@@ -158,7 +175,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         requesteeInput.setSelected(contact)
     }
 
-    private fun setSummaryCardBackButton() = binding.summaryCard.root.setOnClickIcon { requestViewModel.setEditing(true) }
+    private fun setSummaryCardBackButton() =
+        binding.summaryCard.root.setOnClickIcon { requestViewModel.setEditing(true) }
 
     private fun updateAcctNo(accountNo: String?) {
         requesterNumberInput.setText(accountNo)
@@ -167,12 +185,13 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     private fun startListeners() {
         amountInput.addTextChangedListener(amountWatcher)
         requesterNumberInput.addTextChangedListener(receivingAccountNumberWatcher)
-        requesterNumberInput.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            if (!hasFocus) requesterNumberInput.setState(
-                null,
-                if (requestViewModel.requesterAcctNoError() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE
-            )
-        }
+        requesterNumberInput.onFocusChangeListener =
+            OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+                if (!hasFocus) requesterNumberInput.setState(
+                    null,
+                    if (requestViewModel.requesterAcctNoError() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE
+                )
+            }
         noteInput.addTextChangedListener(noteWatcher)
 
         requesteeInput.apply {
@@ -187,8 +206,19 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun setClickListeners() = with(binding.shareCard) {
         smsShareSelection.setOnClickListener { sendSms(requestViewModel, requireActivity()) }
-        whatsappShareSelection.setOnClickListener { sendWhatsapp(requestViewModel, requireActivity()) }
-        copylinkShareSelection.setOnClickListener { copyShareLink(it, requestViewModel, requireActivity()) }
+        whatsappShareSelection.setOnClickListener {
+            sendWhatsapp(
+                requestViewModel,
+                requireActivity()
+            )
+        }
+        copylinkShareSelection.setOnClickListener {
+            copyShareLink(
+                it,
+                requestViewModel,
+                requireActivity()
+            )
+        }
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -239,13 +269,22 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     override fun validates(): Boolean {
         val accountError = requestViewModel.accountError()
-        payWithDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        payWithDropdown.setState(
+            accountError,
+            if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         val requesterAcctNoError = requestViewModel.requesterAcctNoError()
-        requesterNumberInput.setState(requesterAcctNoError, if (requesterAcctNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        requesterNumberInput.setState(
+            requesterAcctNoError,
+            if (requesterAcctNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         val recipientError = requestViewModel.requesteeErrors()
-        requesteeInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        requesteeInput.setState(
+            recipientError,
+            if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
 
         return accountError == null && requesterAcctNoError == null && recipientError == null
     }
@@ -255,7 +294,10 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 when {
-                    !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> requestViewModel.setEditing(true)
+                    !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> requestViewModel.setEditing(
+                        true
+                    )
+
                     !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value != null -> askAreYouSure()
                     else -> findNavController().popBackStack()
                 }
@@ -274,7 +316,10 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun saveUnsent() {
         requestViewModel.saveRequest()
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.saved_unsent_request), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(R.string.saved_unsent_request),
+            requireActivity()
+        )
         findNavController().popBackStack()
     }
 

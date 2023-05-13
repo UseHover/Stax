@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -28,20 +29,21 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.database.models.Paybill
 import com.hover.stax.databinding.FragmentPaybillListBinding
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillActionsAdapter.PaybillActionsClickListener {
+class PaybillListFragment :
+    Fragment(),
+    PaybillAdapter.ClickListener,
+    PaybillActionsAdapter.PaybillActionsClickListener {
 
     private var _binding: FragmentPaybillListBinding? = null
     private val binding get() = _binding!!
 
-    private val accountsViewModel: AccountsViewModel by sharedViewModel()
-    private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
-    private val paybillViewModel: PaybillViewModel by sharedViewModel()
+    private val accountsViewModel: AccountsViewModel by activityViewModels()
+    private val actionSelectViewModel: ActionSelectViewModel by activityViewModels()
+    private val paybillViewModel: PaybillViewModel by activityViewModels()
 
     private var dialog: StaxDialog? = null
 
@@ -57,7 +59,13 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill_list)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_paybill_list)
+            ),
+            requireActivity()
+        )
         updatePaybills(paybillViewModel.savedPaybills.value)
         updateActions(accountsViewModel.institutionActions.value)
         startListeners()
@@ -65,10 +73,18 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     }
 
     private fun startListeners() {
-        binding.contentLayout.setOnClickIcon { NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment()) }
+        binding.contentLayout.setOnClickIcon {
+            NavUtil.navigate(
+                findNavController(),
+                PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment()
+            )
+        }
 
         binding.newPaybill.newPaybillCard.setOnClickListener {
-            PaybillNumberDialog().show(childFragmentManager, PaybillNumberDialog::class.java.simpleName)
+            PaybillNumberDialog().show(
+                childFragmentManager,
+                PaybillNumberDialog::class.java.simpleName
+            )
         }
     }
 
@@ -86,7 +102,10 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
 
         binding.popularList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-            adapter = PaybillActionsAdapter(actions.filter { it.getVarValue(BUSINESS_NO) != BUSINESS_NO }, this@PaybillListFragment)
+            adapter = PaybillActionsAdapter(
+                actions.filter { it.getVarValue(BUSINESS_NO) != BUSINESS_NO },
+                this@PaybillListFragment
+            )
         }
     }
 
@@ -128,7 +147,10 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
             .setPosButton(R.string.btn_delete) {
                 if (activity != null) {
                     paybillViewModel.deletePaybill(paybill)
-                    UIHelper.flashAndReportMessage(requireActivity(), R.string.paybill_delete_success)
+                    UIHelper.flashAndReportMessage(
+                        requireActivity(),
+                        R.string.paybill_delete_success
+                    )
                 }
             }
         dialog!!.showIt()

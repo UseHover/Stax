@@ -28,11 +28,14 @@ import com.hover.sdk.actions.HoverAction.PHONE_KEY
 import com.hover.sdk.actions.HoverAction.PIN_KEY
 import com.hover.stax.R
 import com.hover.stax.database.models.ACCOUNT_NAME
+import javax.inject.Inject
 
 const val RECIPIENT_INSTITUTION = "recipientInstitution"
 
 @Suppress("WildcardImport")
-class ActionSelectViewModel(application: Application) : AndroidViewModel(application) {
+class ActionSelectViewModel @Inject constructor(
+    application: Application
+) : AndroidViewModel(application) {
 
     val filteredActions = MutableLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction?>()
@@ -52,7 +55,8 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
 
     fun setActions(actions: List<HoverAction>) = filteredActions.postValue(actions)
 
-    fun setActiveAction(actionId: String?) = actionId?.let { setActiveAction(filteredActions.value?.find { it.public_id == actionId }) }
+    fun setActiveAction(actionId: String?) =
+        actionId?.let { setActiveAction(filteredActions.value?.find { it.public_id == actionId }) }
 
     fun setActiveAction(action: HoverAction?) = action?.let { activeAction.postValue(it) }
 
@@ -73,7 +77,15 @@ class ActionSelectViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun isStandardVariable(key: String): Boolean {
-        return key in listOf(PHONE_KEY, ACCOUNT_KEY, AMOUNT_KEY, NOTE_KEY, PIN_KEY, RECIPIENT_INSTITUTION, ACCOUNT_NAME)
+        return key in listOf(
+            PHONE_KEY,
+            ACCOUNT_KEY,
+            AMOUNT_KEY,
+            NOTE_KEY,
+            PIN_KEY,
+            RECIPIENT_INSTITUTION,
+            ACCOUNT_NAME
+        )
     }
 
     fun updateNonStandardVariables(key: String, value: String) {

@@ -19,5 +19,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(path = ":internal:core"))
+
     implementation(libs.datetime)
 }

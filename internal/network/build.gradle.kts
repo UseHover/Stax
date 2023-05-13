@@ -20,6 +20,7 @@ plugins {
 
 dependencies {
     implementation(project(":internal:datastore"))
+    implementation(project(":internal:model"))
 
     implementation(libs.core.ktx)
 

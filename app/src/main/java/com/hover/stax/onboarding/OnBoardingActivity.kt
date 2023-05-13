@@ -29,7 +29,7 @@ import com.hover.stax.home.NAV_HOME
 import com.hover.stax.home.NAV_LINK_ACCOUNT
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.core.AnalyticsUtil
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -57,7 +57,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
         navController = navHostFragment.navController
     }
 
-    private fun logEvents() = AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this)
+    private fun logEvents() = com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this)
 
     private fun navigateNextScreen() {
         if (hasPassedOnboarding()) checkPermissionsAndNavigate()
@@ -74,7 +74,7 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
             { PermissionUtils.requestPerms(NAV_HOME, this) }, {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this)
+            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this)
         }, this
         )
     }

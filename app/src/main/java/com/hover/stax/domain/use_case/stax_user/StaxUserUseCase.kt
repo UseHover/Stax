@@ -15,10 +15,13 @@
  */
 package com.hover.stax.domain.use_case.stax_user
 
-import com.hover.stax.database.models.StaxUser
 import com.hover.stax.data.user.StaxUserRepository
+import com.hover.stax.database.models.StaxUser
+import javax.inject.Inject
 
-class StaxUserUseCase(private val staxUserRepository: StaxUserRepository) {
+class StaxUserUseCase @Inject constructor(
+    private val staxUserRepository: StaxUserRepository
+) {
 
     val user = staxUserRepository.getUserAsync()
 

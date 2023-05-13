@@ -20,17 +20,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.contact.ContactRepo
-import com.hover.stax.database.models.StaxContact
-import com.hover.stax.data.accounts.AccountRepo
 import com.hover.stax.data.requests.RequestRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Request
+import com.hover.stax.database.models.StaxContact
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RequestDetailViewModel(
-    val repo: AccountRepo,
+class RequestDetailViewModel @Inject constructor(
+    val repo: AccountRepository,
     private val requestRepo: RequestRepo,
     val contactRepo: ContactRepo
 ) : ViewModel() {

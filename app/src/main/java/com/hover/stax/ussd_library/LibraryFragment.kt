@@ -25,23 +25,25 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.database.models.Channel
 import com.hover.stax.countries.CountryAdapter
+import com.hover.stax.database.models.Channel
 import com.hover.stax.databinding.FragmentLibraryBinding
 import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.RequestServiceDialog
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChannelsAdapter.FavoriteClickInterface {
+class LibraryFragment :
+    Fragment(),
+    CountryAdapter.SelectListener,
+    LibraryChannelsAdapter.FavoriteClickInterface {
 
-    private val viewModel: ChannelsViewModel by viewModel()
+    private val viewModel: ChannelsViewModel by viewModels()
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
@@ -59,7 +61,13 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, LibraryFragment::class.java.simpleName), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                LibraryFragment::class.java.simpleName
+            ),
+            requireActivity()
+        )
 
         initToolbar()
 
@@ -86,11 +94,24 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
 
     private fun setObservers() {
         with(viewModel) {
-            channelCountryList.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, countryChoice.value) } }
+            channelCountryList.observe(viewLifecycleOwner) {
+                it?.let {
+                    binding.countryDropdown.updateChoices(
+                        it,
+                        countryChoice.value
+                    )
+                }
+            }
             sims.observe(viewLifecycleOwner) { Timber.e("${this@LibraryFragment.javaClass.simpleName} Loaded ${it?.size} sims") }
             simCountryList.observe(viewLifecycleOwner) { Timber.e("${this@LibraryFragment.javaClass.simpleName} Loaded ${it?.size} hnis") }
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
-            countryChoice.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
+            countryChoice.observe(viewLifecycleOwner) {
+                it?.let {
+                    binding.countryDropdown.setDropdownValue(
+                        it
+                    )
+                }
+            }
         }
     }
 
@@ -126,7 +147,10 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener, LibraryChanne
     }
 
     private fun showEmptyState() {
-        val content = resources.getString(R.string.no_accounts_found_desc, viewModel.filterQuery.value ?: getString(R.string.empty_channel_placeholder))
+        val content = resources.getString(
+            R.string.no_accounts_found_desc,
+            viewModel.filterQuery.value ?: getString(R.string.empty_channel_placeholder)
+        )
         binding.emptyState.noAccountFoundDesc.apply {
             text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
             movementMethod = LinkMovementMethod.getInstance()

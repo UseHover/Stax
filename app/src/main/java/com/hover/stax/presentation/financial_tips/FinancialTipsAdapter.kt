@@ -19,11 +19,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.ItemWellnessTipsBinding
-import com.hover.stax.domain.model.FinancialTip
-import com.hover.stax.utils.DateUtils
+import com.hover.stax.model.FinancialTip
 import java.util.*
 
-class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListener: SelectListener) : RecyclerView.Adapter<FinancialTipsAdapter.ViewHolder>() {
+class FinancialTipsAdapter(private val tips: List<com.hover.stax.model.FinancialTip>, val selectListener: SelectListener) : RecyclerView.Adapter<FinancialTipsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemWellnessTipsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -38,9 +37,9 @@ class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListe
 
     inner class ViewHolder(val binding: ItemWellnessTipsBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun setItems(tip: FinancialTip) {
+        fun setItems(tip: com.hover.stax.model.FinancialTip) {
             tip.date?.let {
-                binding.date.text = DateUtils.humanFriendlyDate(it)
+                binding.date.text = com.hover.stax.core.DateUtils.humanFriendlyDate(it)
             }
             binding.title.text = tip.title
             binding.snippet.text = tip.snippet
@@ -50,6 +49,6 @@ class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListe
     }
 
     interface SelectListener {
-        fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean = false)
+        fun onTipSelected(tip: com.hover.stax.model.FinancialTip, isFromDeeplink: Boolean = false)
     }
 }

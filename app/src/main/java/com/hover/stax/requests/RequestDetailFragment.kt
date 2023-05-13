@@ -20,25 +20,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
+import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.database.models.Request
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentRequestDetailBinding
-import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
-import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RequestDetailFragment : Fragment(), RequestSenderInterface {
 
-    private val viewModel: RequestDetailViewModel by viewModel()
+    private val viewModel: RequestDetailViewModel by viewModels()
     private val args: RequestDetailFragmentArgs by navArgs()
     private var _binding: FragmentRequestDetailBinding? = null
     private var dialog: StaxDialog? = null
@@ -56,7 +55,13 @@ class RequestDetailFragment : Fragment(), RequestSenderInterface {
         } catch (ignored: JSONException) {
         }
 
-        logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data, requireContext())
+        logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_request_detail)
+            ),
+            data, requireContext()
+        )
 
         _binding = FragmentRequestDetailBinding.inflate(inflater, container, false)
         return binding.root
@@ -74,7 +79,8 @@ class RequestDetailFragment : Fragment(), RequestSenderInterface {
         }
 
         viewModel.account.observe(viewLifecycleOwner) {
-            binding.summaryCard.requesterAccountRow.visibility = if (it != null) View.VISIBLE else View.GONE
+            binding.summaryCard.requesterAccountRow.visibility =
+                if (it != null) View.VISIBLE else View.GONE
             it?.let { (view.findViewById(R.id.requesterValue) as Stax2LineItem).setTitle(it.userAlias) }
         }
 
@@ -94,7 +100,8 @@ class RequestDetailFragment : Fragment(), RequestSenderInterface {
 
     private fun setUpSummary(request: Request) {
         binding.summaryCard.requestMoneyCard.setTitle(request.description)
-        binding.summaryCard.dateValue.text = DateUtils.humanFriendlyDateTime(request.date_sent)
+        binding.summaryCard.dateValue.text =
+            com.hover.stax.core.DateUtils.humanFriendlyDateTime(request.date_sent)
 
         if (!request.amount.isNullOrEmpty()) {
             binding.summaryCard.amountRow.visibility = View.VISIBLE
@@ -102,9 +109,12 @@ class RequestDetailFragment : Fragment(), RequestSenderInterface {
         } else
             binding.summaryCard.amountRow.visibility = View.GONE
 
-        if (!request.requester_number.isNullOrEmpty()) binding.summaryCard.requesterValue.setSubtitle(request.requester_number)
+        if (!request.requester_number.isNullOrEmpty()) binding.summaryCard.requesterValue.setSubtitle(
+            request.requester_number
+        )
 
-        binding.summaryCard.noteRow.visibility = if (request.note.isNullOrEmpty()) View.GONE else View.VISIBLE
+        binding.summaryCard.noteRow.visibility =
+            if (request.note.isNullOrEmpty()) View.GONE else View.VISIBLE
         binding.summaryCard.noteValue.text = request.note
         binding.cancelBtn.setOnClickListener { showConfirmDialog() }
     }
@@ -117,7 +127,10 @@ class RequestDetailFragment : Fragment(), RequestSenderInterface {
                 .setNegButton(R.string.btn_back) {}
                 .setPosButton(R.string.btn_cancelreq) {
                     viewModel.deleteRequest()
-                    flashAndReportMessage(requireActivity(), getString(R.string.toast_confirm_cancelreq))
+                    flashAndReportMessage(
+                        requireActivity(),
+                        getString(R.string.toast_confirm_cancelreq)
+                    )
                     NavHostFragment.findNavController(this@RequestDetailFragment).popBackStack()
                 }
                 .isDestructive
@@ -128,9 +141,28 @@ class RequestDetailFragment : Fragment(), RequestSenderInterface {
 
     private fun initShareButtons() {
         if (activity != null) {
-            binding.shareCard.smsShareSelection.setOnClickListener { sendSms(viewModel.request.value, viewModel.recipients.value, requireActivity()) }
-            binding.shareCard.whatsappShareSelection.setOnClickListener { sendWhatsapp(viewModel.request.value, viewModel.recipients.value, viewModel.account.value, requireActivity()) }
-            binding.shareCard.copylinkShareSelection.setOnClickListener { copyShareLink(viewModel.request.value, binding.shareCard.copylinkShareSelection, requireActivity()) }
+            binding.shareCard.smsShareSelection.setOnClickListener {
+                sendSms(
+                    viewModel.request.value,
+                    viewModel.recipients.value,
+                    requireActivity()
+                )
+            }
+            binding.shareCard.whatsappShareSelection.setOnClickListener {
+                sendWhatsapp(
+                    viewModel.request.value,
+                    viewModel.recipients.value,
+                    viewModel.account.value,
+                    requireActivity()
+                )
+            }
+            binding.shareCard.copylinkShareSelection.setOnClickListener {
+                copyShareLink(
+                    viewModel.request.value,
+                    binding.shareCard.copylinkShareSelection,
+                    requireActivity()
+                )
+            }
         }
     }
 

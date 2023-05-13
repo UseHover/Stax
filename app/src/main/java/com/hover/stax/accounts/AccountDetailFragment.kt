@@ -24,22 +24,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
-import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.database.models.Account
+import com.hover.stax.database.models.Request
+import com.hover.stax.database.models.Schedule
+import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.presentation.home.BalancesViewModel
-import com.hover.stax.database.models.Request
-import com.hover.stax.database.models.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -47,8 +47,6 @@ import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInput
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AccountDetailFragment :
     AbstractBalanceCheckerFragment(),
@@ -56,9 +54,9 @@ class AccountDetailFragment :
     ScheduledAdapter.SelectListener,
     RequestsAdapter.SelectListener {
 
-    private val viewModel: AccountDetailViewModel by sharedViewModel()
-    private val balancesViewModel: BalancesViewModel by sharedViewModel()
-    private val futureViewModel: FutureViewModel by viewModel()
+    private val viewModel: AccountDetailViewModel by activityViewModels()
+    private val balancesViewModel: BalancesViewModel by activityViewModels()
+    private val futureViewModel: FutureViewModel by viewModels()
 
     private var transactionsAdapter: TransactionHistoryAdapter? = null
     private var requestsAdapter: RequestsAdapter? = null
@@ -82,7 +80,13 @@ class AccountDetailFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_channel)
+            ),
+            requireActivity()
+        )
 
         initRecyclerViews()
         setupObservers()
@@ -94,8 +98,18 @@ class AccountDetailFragment :
 
     private fun setUpBalance() {
         binding.balanceCard.root.cardElevation = 0F
-        binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
+        binding.balanceCard.balanceChannelName.setTextColor(
+            ContextCompat.getColor(
+                requireActivity(),
+                R.color.offWhite
+            )
+        )
+        binding.balanceCard.balanceAmount.setTextColor(
+            ContextCompat.getColor(
+                requireActivity(),
+                R.color.offWhite
+            )
+        )
         binding.balanceCard.balanceRefreshIcon.setOnClickListener { onTapBalanceRefresh(viewModel.account.value) }
     }
 
@@ -110,7 +124,12 @@ class AccountDetailFragment :
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            toggleButtonHighlight(binding.manageCard.nicknameInput, binding.manageCard.nicknameSaveBtn, charSequence.toString(), viewModel.account.value?.userAlias)
+            toggleButtonHighlight(
+                binding.manageCard.nicknameInput,
+                binding.manageCard.nicknameSaveBtn,
+                charSequence.toString(),
+                viewModel.account.value?.userAlias
+            )
         }
     }
 
@@ -118,7 +137,12 @@ class AccountDetailFragment :
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            toggleButtonHighlight(binding.manageCard.accountNumberInput, binding.manageCard.accountSaveBtn, charSequence.toString(), viewModel.account.value?.accountNo)
+            toggleButtonHighlight(
+                binding.manageCard.accountNumberInput,
+                binding.manageCard.accountSaveBtn,
+                charSequence.toString(),
+                viewModel.account.value?.accountNo
+            )
         }
     }
 
@@ -138,11 +162,21 @@ class AccountDetailFragment :
     }
 
     private fun updateNickname() {
-        validateInput(binding.manageCard.nicknameInput, viewModel.account.value?.userAlias, R.string.account_name_error, viewModel::updateAccountName)
+        validateInput(
+            binding.manageCard.nicknameInput,
+            viewModel.account.value?.userAlias,
+            R.string.account_name_error,
+            viewModel::updateAccountName
+        )
     }
 
     private fun updateAccountNumber() {
-        validateInput(binding.manageCard.accountNumberInput, viewModel.account.value?.accountNo, R.string.account_number_error, viewModel::updateAccountNumber)
+        validateInput(
+            binding.manageCard.accountNumberInput,
+            viewModel.account.value?.accountNo,
+            R.string.account_number_error,
+            viewModel::updateAccountNumber
+        )
     }
 
     private fun validateInput(
@@ -177,10 +211,13 @@ class AccountDetailFragment :
                         binding.amountsCard.setSubtitle(acct.institutionName)
                     if (acct.latestBalance != null) {
                         binding.balanceCard.balanceAmount.text = acct.latestBalance
-                        binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
-                    } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
+                        binding.balanceCard.balanceSubtitle.text =
+                            com.hover.stax.core.DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
+                    } else binding.balanceCard.balanceSubtitle.text =
+                        getString(R.string.refresh_balance_desc)
 
-                    binding.feesDescription.text = getString(R.string.fees_label, acct.institutionName)
+                    binding.feesDescription.text =
+                        getString(R.string.fees_label, acct.institutionName)
                     binding.detailsCard.officialName.text = acct.userAlias
 
                     binding.manageCard.nicknameInput.setText(acct.userAlias, false)
@@ -193,11 +230,17 @@ class AccountDetailFragment :
 
             channel.observe(viewLifecycleOwner) { c ->
                 binding.detailsCard.shortcodeBtn.text = getString(R.string.dial_btn, c.rootCode)
-                binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
+                binding.detailsCard.shortcodeBtn.setOnClickListener {
+                    Utils.dial(
+                        c.rootCode,
+                        requireContext()
+                    )
+                }
             }
 
             transactionHistoryItem.observe(viewLifecycleOwner) {
-                binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
+                binding.historyCard.noHistory.visibility =
+                    if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
                 transactionsAdapter!!.submitList(it)
             }
 
@@ -213,7 +256,12 @@ class AccountDetailFragment :
 
     private fun observeBalanceCheck() {
         collectLifecycleFlow(balancesViewModel.balanceAction) { action ->
-            viewModel.account.value?.let { callHover(checkBalance, generateSessionBuilder(it, action)) }
+            viewModel.account.value?.let {
+                callHover(
+                    checkBalance,
+                    generateSessionBuilder(it, action)
+                )
+            }
         }
     }
 
@@ -234,7 +282,10 @@ class AccountDetailFragment :
     private fun removeAccount(account: Account) {
         viewModel.removeAccount(account)
         NavHostFragment.findNavController(this).popBackStack()
-        UIHelper.flashAndReportMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))
+        UIHelper.flashAndReportMessage(
+            requireActivity(),
+            resources.getString(R.string.toast_confirm_acctremoved)
+        )
     }
 
     private fun initRecyclerViews() {
@@ -277,11 +328,17 @@ class AccountDetailFragment :
     }
 
     override fun viewRequestDetail(id: Int) {
-        NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToRequestDetailsFragment(id))
+        NavUtil.navigate(
+            findNavController(),
+            AccountDetailFragmentDirections.actionAccountDetailsFragmentToRequestDetailsFragment(id)
+        )
     }
 
     override fun viewScheduledDetail(id: Int) {
-        NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id))
+        NavUtil.navigate(
+            findNavController(),
+            AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id)
+        )
     }
 
     override fun viewTransactionDetail(uuid: String?) {

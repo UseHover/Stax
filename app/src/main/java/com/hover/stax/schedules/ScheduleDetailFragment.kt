@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.work.ExistingWorkPolicy
@@ -28,19 +29,16 @@ import com.hover.stax.R
 import com.hover.stax.database.models.Schedule
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentScheduleBinding
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ScheduleDetailFragment : Fragment() {
 
-    private val viewModel: ScheduleDetailViewModel by viewModel()
+    private val viewModel: ScheduleDetailViewModel by viewModels()
     private val args: ScheduleDetailFragmentArgs by navArgs()
 
     private var _binding: FragmentScheduleBinding? = null
@@ -87,7 +85,13 @@ class ScheduleDetailFragment : Fragment() {
         } catch (ignored: JSONException) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext())
+        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_schedule)
+            ),
+            data, requireContext()
+        )
     }
 
     private fun setUpSummary(schedule: Schedule) {
@@ -95,13 +99,19 @@ class ScheduleDetailFragment : Fragment() {
 
         with(binding.summaryCard) {
             detailsAmount.text = Utils.formatAmount(schedule.amount)
-            detailsDate.text = DateUtils.humanFriendlyDateTime(schedule.start_date)
+            detailsDate.text =
+                com.hover.stax.core.DateUtils.humanFriendlyDateTime(schedule.start_date)
 
-            frequencyRow.visibility = if (schedule.frequency == Schedule.ONCE) View.GONE else View.VISIBLE
+            frequencyRow.visibility =
+                if (schedule.frequency == Schedule.ONCE) View.GONE else View.VISIBLE
             detailsFrequency.text = schedule.humanFrequency(context)
 
-            endRow.visibility = if (schedule.frequency == Schedule.ONCE || schedule.end_date == null) View.GONE else View.VISIBLE
-            detailsEnd.text = if (schedule.end_date != null) DateUtils.humanFriendlyDate(schedule.end_date) else ""
+            endRow.visibility =
+                if (schedule.frequency == Schedule.ONCE || schedule.end_date == null) View.GONE else View.VISIBLE
+            detailsEnd.text =
+                if (schedule.end_date != null) com.hover.stax.core.DateUtils.humanFriendlyDate(
+                    schedule.end_date
+                ) else ""
 
             noteRow.visibility = if (schedule.note.isNullOrEmpty()) View.GONE else View.VISIBLE
             detailsReason.text = schedule.note
@@ -122,7 +132,10 @@ class ScheduleDetailFragment : Fragment() {
             .setNegButton(R.string.btn_back) {}
             .setPosButton(R.string.btn_canceltrans) {
                 viewModel.deleteSchedule()
-                UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.toast_confirm_cancelfuture))
+                UIHelper.flashAndReportMessage(
+                    requireActivity(),
+                    getString(R.string.toast_confirm_cancelfuture)
+                )
                 findNavController().popBackStack()
             }
             .isDestructive
@@ -139,7 +152,10 @@ class ScheduleDetailFragment : Fragment() {
                 ).enqueue()
 
                 if (!schedule.isScheduledForToday)
-                    UIHelper.flashAndReportMessage(requireActivity(), "Shouldn't show notification; not scheduled for today")
+                    UIHelper.flashAndReportMessage(
+                        requireActivity(),
+                        "Shouldn't show notification; not scheduled for today"
+                    )
             }
         }
     }

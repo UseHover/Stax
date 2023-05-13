@@ -25,27 +25,28 @@ import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
 import com.hover.sdk.transactions.Transaction
-import com.hover.stax.data.contact.ContactRepo
-import com.hover.stax.database.models.StaxContact
-import com.hover.stax.data.accounts.AccountRepo
+import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
+import com.hover.stax.data.contact.ContactRepo
+import com.hover.stax.data.merchant.MerchantRepo
 import com.hover.stax.data.parser.ParserRepo
+import com.hover.stax.data.transactions.TransactionRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Merchant
-import com.hover.stax.data.merchant.MerchantRepo
+import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.StaxTransaction
-import com.hover.stax.data.transactions.TransactionRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
+import javax.inject.Inject
 
-class TransactionDetailsViewModel(
+class TransactionDetailsViewModel @Inject constructor(
     application: Application,
     val repo: TransactionRepo,
     val actionRepo: ActionRepo,
     val contactRepo: ContactRepo,
-    val accountRepo: AccountRepo,
+    val accountRepo: AccountRepository,
     private val parserRepo: ParserRepo,
     private val merchantRepo: MerchantRepo
 ) : AndroidViewModel(application) {

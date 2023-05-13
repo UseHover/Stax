@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.TransactionListItemBinding
 import com.hover.stax.futureTransactions.RequestsAdapter.RequestsViewHolder
 import com.hover.stax.database.models.Request
-import com.hover.stax.utils.DateUtils.humanFriendlyDate
+import com.hover.stax.core.DateUtils.humanFriendlyDate
 import com.hover.stax.utils.Utils.formatAmount
 
 class RequestsAdapter(
