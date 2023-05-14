@@ -37,7 +37,6 @@ import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.core.Utils
 import com.hover.stax.views.StaxDialog
 import timber.log.Timber
 
