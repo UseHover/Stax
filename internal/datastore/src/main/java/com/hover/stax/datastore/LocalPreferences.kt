@@ -16,6 +16,8 @@
 package com.hover.stax.datastore
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 interface LocalPreferences {
 
@@ -30,8 +32,8 @@ interface LocalPreferences {
     fun clear()
 }
 
-class DefaultSharedPreferences(
-    private val context: Context
+class DefaultSharedPreferences @Inject constructor(
+    @ApplicationContext val context: Context
 ) : LocalPreferences {
 
     companion object {

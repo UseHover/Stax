@@ -21,6 +21,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequest
@@ -29,21 +30,21 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.hover.stax.R
 import com.hover.stax.data.channel.ChannelRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.IOException
-import javax.inject.Inject
 
-class ImportChannelsWorker(
-    val context: Context,
-    params: WorkerParameters
+@HiltWorker
+class ImportChannelsWorker @AssistedInject constructor(
+    @Assisted val context: Context,
+    @Assisted params: WorkerParameters,
+    @Assisted val channelRepository: ChannelRepository
 ) : CoroutineWorker(context, params) {
-
-    @Inject
-    lateinit var channelRepository: ChannelRepository
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         return ForegroundInfo(NOTIFICATION_ID, createNotification())

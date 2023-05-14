@@ -30,7 +30,9 @@ import com.hover.stax.model.auth.UserUpdateDto
 import com.hover.stax.model.auth.UserUploadDto
 import com.hover.stax.network.api.StaxApi
 import com.hover.stax.network.ktor.EnvironmentProvider
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.firstOrNull
+import javax.inject.Inject
 
 private const val AUTHORIZATION = "authorization_code"
 private const val RESPONSE_TYPE = "code"
@@ -49,8 +51,8 @@ interface AuthRepository {
     suspend fun updateUser(email: String, userDTO: UserUpdateDto): StaxUserDto
 }
 
-class AuthRepositoryImpl(
-    private val context: Context,
+class AuthRepositoryImpl @Inject constructor(
+    @ApplicationContext val context: Context,
     private val staxApi: StaxApi,
     private val tokenProvider: TokenProvider,
     private val environmentProvider: EnvironmentProvider

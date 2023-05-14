@@ -15,15 +15,14 @@
  */
 package com.hover.stax.addChannels
 
-import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
@@ -39,6 +38,8 @@ import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Channel
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -48,13 +49,15 @@ import org.json.JSONObject
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel as KChannel
 
+@HiltViewModel
 class ChannelsViewModel @Inject constructor(
-    application: Application,
+    @ApplicationContext val context: Context,
     private val channelRepository: ChannelRepository,
     private val simRepository: com.hover.stax.data.sim.SimInfoRepository,
     private val accountRepo: AccountRepository,
     val actionRepo: ActionRepo
-) : AndroidViewModel(application),
+) : ViewModel(),
+// ) : AndroidViewModel(application), // TODO - FX ME
     PushNotificationTopicsInterface {
 
     val accounts: LiveData<List<Account>> = accountRepo.getAllLiveAccounts()
@@ -103,14 +106,14 @@ class ChannelsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) { sims.postValue(simRepository.getPresentSims()) }
 
         simReceiver?.let {
-            LocalBroadcastManager.getInstance(getApplication())
+            LocalBroadcastManager.getInstance(context)
                 .registerReceiver(
                     it,
-                    IntentFilter(Utils.getPackage(getApplication()).plus(".NEW_SIM_INFO_ACTION"))
+                    IntentFilter(Utils.getPackage(context).plus(".NEW_SIM_INFO_ACTION"))
                 )
         }
 
-        Hover.updateSimInfo(getApplication())
+        Hover.updateSimInfo(context)
     }
 
     private fun setSimBroadcastReceiver() {
@@ -176,21 +179,21 @@ class ChannelsViewModel @Inject constructor(
     }
 
     private fun logChoice(account: Account) {
-        joinChannelGroup(account.channelId, getApplication() as Context)
+        joinChannelGroup(account.channelId, context)
         val args = JSONObject()
 
         try {
             args.put(
-                (getApplication() as Context).getString(R.string.added_channel_id),
+                context.getString(R.string.added_channel_id),
                 account.channelId
             )
         } catch (ignored: Exception) {
         }
 
         com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
-            (getApplication() as Context).getString(R.string.new_channel_selected),
+            context.getString(R.string.new_channel_selected),
             args,
-            getApplication() as Context
+            context
         )
     }
 
@@ -217,7 +220,7 @@ class ChannelsViewModel @Inject constructor(
             Account(channel, defaultAccount == null && index == 0, -1)
         }.onEach {
             logChoice(it)
-            ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, getApplication())
+            ActionApi.scheduleActionConfigUpdate(it.countryAlpha2, 24, context)
         }
 
         val accountIds = accountRepo.insert(accounts)
@@ -269,7 +272,7 @@ class ChannelsViewModel @Inject constructor(
     override fun onCleared() {
         try {
             simReceiver?.let {
-                LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(it)
+                LocalBroadcastManager.getInstance(context).unregisterReceiver(it)
             }
         } catch (ignored: Exception) {
         }

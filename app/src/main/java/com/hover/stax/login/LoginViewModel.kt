@@ -15,11 +15,10 @@
  */
 package com.hover.stax.login
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -37,6 +36,8 @@ import com.hover.stax.model.auth.UpdateDto
 import com.hover.stax.model.auth.UploadDto
 import com.hover.stax.model.auth.UserUpdateDto
 import com.hover.stax.model.auth.UserUploadDto
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -44,12 +45,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+@HiltViewModel
 class LoginViewModel @Inject constructor(
-    application: Application,
+    @ApplicationContext val context: Context,
     private val staxUserUseCase: StaxUserUseCase,
     private val authRepository: AuthRepository,
     private val tokenProvider: TokenProvider
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     lateinit var signInClient: GoogleSignInClient
 
@@ -77,7 +79,7 @@ class LoginViewModel @Inject constructor(
             setUser(account, account.idToken!!)
         } catch (e: ApiException) {
             Timber.e(e, "Google sign in failed")
-            onError((getApplication() as Context).getString(R.string.login_google_err))
+            onError(context.getString(R.string.login_google_err))
         }
     }
 
@@ -99,7 +101,7 @@ class LoginViewModel @Inject constructor(
                     val user = authRepository.uploadUserToStax(
                         UserUploadDto(
                             UploadDto(
-                                deviceId = Hover.getDeviceId(getApplication()),
+                                deviceId = Hover.getDeviceId(context),
                                 email = signInAccount.email,
                                 username = signInAccount.displayName,
                                 token = response.accessToken
@@ -158,7 +160,7 @@ class LoginViewModel @Inject constructor(
                     message,
                     null
                 )
-                com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(message, getApplication())
+                com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(message, context)
 
                 removeUser()
 
@@ -170,7 +172,7 @@ class LoginViewModel @Inject constructor(
     fun silentSignOut() = signInClient.signOut().addOnCompleteListener {
         com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(R.string.logout),
-            getApplication()
+            context
         )
         removeUser()
     }
@@ -180,6 +182,6 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun getString(id: Int): String {
-        return (getApplication() as Context).getString(id)
+        return context.getString(id)
     }
 }
