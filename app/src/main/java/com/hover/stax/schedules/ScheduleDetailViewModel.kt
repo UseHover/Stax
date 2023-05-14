@@ -17,8 +17,8 @@ package com.hover.stax.schedules
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.actions.ActionRepo
@@ -40,8 +40,8 @@ class ScheduleDetailViewModel @Inject constructor(
     var contacts: LiveData<List<StaxContact>> = MutableLiveData()
 
     init {
-        action = Transformations.switchMap(schedule, this::loadAction)
-        contacts = Transformations.switchMap(schedule, this::loadContacts)
+        action = schedule.switchMap(this::loadAction)
+        contacts = schedule.switchMap(this::loadContacts)
     }
 
     fun setSchedule(id: Int) = viewModelScope.launch { schedule.postValue(repo.getSchedule(id)) }

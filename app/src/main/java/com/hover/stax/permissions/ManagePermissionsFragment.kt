@@ -148,7 +148,7 @@ class ManagePermissionsFragment : Fragment() {
         PermissionUtils.showInformativeBasicPermissionDialog(
             0,
             { permsToRequest() },
-            { com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), requireActivity()) }, requireActivity()
+            { com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), requireActivity()) }, requireActivity()
         )
     }
 

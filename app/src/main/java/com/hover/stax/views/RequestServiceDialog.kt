@@ -82,7 +82,7 @@ open class RequestServiceDialog(private var ctx: Context, private var mView: Vie
             data.put("shortCode", shortCodeValue)
 
             if (validates()) {
-                com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(ctx.getString(R.string.requested_new_channel), data, ctx)
+                com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(ctx.getString(R.string.requested_new_channel), data, ctx)
                 dialog?.dismiss()
                 showSuccessDialog()
             }

@@ -521,7 +521,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                         text = getString(R.string.top_up_with, bonus.from_institution_name)
 
                         setOnClickListener {
-                            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+                            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
                                 getString(R.string.clicked_bonus_airtime_banner),
                                 requireActivity()
                             )

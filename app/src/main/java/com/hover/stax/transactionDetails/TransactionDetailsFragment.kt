@@ -39,22 +39,22 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.Stax
-import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
-import com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.core.DateUtils.humanFriendlyDateTime
+import com.hover.stax.core.Utils
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Merchant
 import com.hover.stax.database.models.Paybill
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.StaxTransaction
+import com.hover.stax.database.models.UssdCallResponse
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.hover.AbstractBalanceCheckerFragment
 import com.hover.stax.hover.BountyContract
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.UIHelper.loadImage
-import com.hover.stax.core.Utils
-import com.hover.stax.database.models.UssdCallResponse
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -114,7 +114,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         binding.transactionHeader.viewLogText.setOnClickListener { showUSSDLog() }
         with(binding.details.detailsStaxUuid.content) {
             setOnClickListener {
-                Utils.copyToClipboard(
+                com.hover.stax.utils.Utils.copyToClipboard(
                     this.text.toString(),
                     requireContext()
                 )
@@ -122,7 +122,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
         }
         with(binding.details.confirmCodeCopy.content) {
             setOnClickListener {
-                Utils.copyToClipboard(
+                com.hover.stax.utils.Utils.copyToClipboard(
                     this.text.toString(),
                     requireContext()
                 )
@@ -334,7 +334,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
             resetTryAgainCounter(id)
             val deviceId = Hover.getDeviceId(requireContext())
             val subject = "Stax Transaction failure - support id- {$deviceId}"
-            Utils.openEmail(subject, requireActivity())
+            com.hover.stax.utils.Utils.openEmail(subject, requireActivity())
         }
     }
 
@@ -382,7 +382,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
 
     private fun retryBounty() {
         viewModel.action.value?.let {
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
                 getString(R.string.clicked_retry_bounty_session),
                 requireContext()
             )
@@ -436,7 +436,7 @@ class TransactionDetailsFragment : AbstractBalanceCheckerFragment() {
             binding.shareLayout.bottomSheet.visibility = VISIBLE
             binding.shareLayout.bottomSheet.animation = animation
             binding.shareLayout.shareBtn.setOnClickListener {
-                Utils.shareStax(
+                com.hover.stax.utils.Utils.shareStax(
                     requireActivity(),
                     shareMessage
                 )

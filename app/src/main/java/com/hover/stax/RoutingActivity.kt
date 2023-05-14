@@ -39,6 +39,7 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.addChannels.ChannelsViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
+import com.hover.stax.core.Utils
 import com.hover.stax.home.MainActivity
 import com.hover.stax.hover.PERM_ACTIVITY
 import com.hover.stax.inapp_banner.BannerUtils
@@ -49,11 +50,12 @@ import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.REQUEST_LINK
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.core.Utils
 import com.uxcam.OnVerificationListener
 import com.uxcam.UXCam
 import com.uxcam.datamodel.UXConfig
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
@@ -62,6 +64,7 @@ import timber.log.Timber
 const val FRAGMENT_DIRECT = "fragment_direct"
 const val FROM_FCM = "from_notification"
 
+@AndroidEntryPoint
 class RoutingActivity :
     AppCompatActivity(),
     BiometricChecker.AuthListener,
@@ -129,7 +132,7 @@ class RoutingActivity :
     private fun logPushNotificationIfRequired() = intent.extras?.let {
         val fcmTitle = it.getString(FROM_FCM)
         fcmTitle?.let { title ->
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            AnalyticsUtil.logAnalyticsEvent(
                 getString(
                     R.string.clicked_push_notification,
                     title
@@ -337,7 +340,7 @@ class RoutingActivity :
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
         } catch (e: NumberFormatException) {
-            com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+            AnalyticsUtil.logErrorAndReportToFirebase(
                 RoutingActivity::class.java.simpleName,
                 getString(R.string.firebase_fcm_redirect_format_err),
                 e

@@ -41,7 +41,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.FAQs)

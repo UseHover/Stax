@@ -67,7 +67,7 @@ class AccountsViewModel @Inject constructor(
     }
 
     private fun fetchAccounts() = viewModelScope.launch {
-        repo.getAccounts().collect { a ->
+        repo.addedAccounts.collect { a ->
             _accounts.update { it.copy(accounts = a) }
 
             setActiveAccountIfNull(a)

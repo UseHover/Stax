@@ -22,14 +22,11 @@ import androidx.lifecycle.LiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
-import com.hover.stax.R
-import com.hover.stax.database.AppDatabase
+import com.hover.stax.core.DateUtils
 import com.hover.stax.database.dao.TransactionDao
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.StaxTransaction
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 import javax.inject.Inject
@@ -124,42 +121,43 @@ class TransactionRepo @Inject constructor(
     override fun deleteAccountTransactions(accountId: Int) =
         transactionDao.deleteAccountTransactions(accountId)
 
+    // TODO - FIX ME
     fun insertOrUpdateTransaction(
         intent: Intent,
         action: HoverAction,
         contact: StaxContact,
         c: Context
     ) {
-        AppDatabase.databaseWriteExecutor.execute {
-            try {
-                var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
-                Timber.e("Found t uuid: ${t?.uuid}")
-                if (t == null) {
-                    AnalyticsUtil.logAnalyticsEvent(
-                        c.getString(R.string.transaction_started),
-                        c,
-                        true
-                    )
-                    t = StaxTransaction(intent, action, contact, c)
-                    transactionDao.insert(t)
-                    t = transactionDao.getTransaction(t.uuid)
-                } else {
-                    AnalyticsUtil.logAnalyticsEvent(
-                        c.getString(R.string.transaction_completed),
-                        c,
-                        true
-                    )
-                    t.update(intent, contact)
-                    transactionDao.updateTransaction(t)
-                }
-                Timber.e("save t with uuid: %s", t?.uuid)
-            } catch (e: Exception) {
-                AnalyticsUtil.logErrorAndReportToFirebase(
-                    TransactionRepo::class.java.simpleName,
-                    e.message,
-                    e
-                )
+//        AppDatabase.databaseWriteExecutor.execute {
+        try {
+            var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
+            Timber.e("Found t uuid: ${t?.uuid}")
+            if (t == null) {
+//                AnalyticsUtil.logAnalyticsEvent(
+//                    c.getString(R.string.transaction_started),
+//                    c,
+//                    true
+//                )
+                t = StaxTransaction(intent, action, contact, c)
+                transactionDao.insert(t)
+                t = transactionDao.getTransaction(t.uuid)
+            } else {
+//                AnalyticsUtil.logAnalyticsEvent(
+//                    c.getString(R.string.transaction_completed),
+//                    c,
+//                    true
+//                )
+                t.update(intent, contact)
+                transactionDao.updateTransaction(t)
             }
+            Timber.e("save t with uuid: %s", t?.uuid)
+        } catch (e: Exception) {
+//            AnalyticsUtil.logErrorAndReportToFirebase(
+//                TransactionRepo::class.java.simpleName,
+//                e.message,
+//                e
+//            )
         }
+//        }
     }
 }

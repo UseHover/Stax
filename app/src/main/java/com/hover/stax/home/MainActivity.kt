@@ -37,7 +37,6 @@ import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.core.Utils
 import com.hover.stax.views.StaxDialog
 import timber.log.Timber
 
@@ -96,7 +95,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
             val toWhere = intent.extras!!.getInt(FRAGMENT_DIRECT, 0)
 
             if (toWhere == NAV_EMAIL_CLIENT)
-                Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(this)), this)
+                com.hover.stax.utils.Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(this)), this)
             else
                 navHelper.checkPermissionsAndNavigate(toWhere)
         }
@@ -106,7 +105,8 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         when {
             intent.hasExtra(REQUEST_LINK) -> createFromRequest(intent.getStringExtra(REQUEST_LINK)!!)
             intent.hasExtra(FinancialTipsFragment.TIP_ID) -> navHelper.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
-            else -> com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
+
+            else -> com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
     }
 
@@ -114,7 +114,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         navHelper.checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P))
         addLoadingDialog()
         transferViewModel.load(link)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
     }
 
     private fun addLoadingDialog() {
@@ -129,10 +129,10 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
             sendSms(requestViewModel, this)
         } else if (requestCode == SMS) {
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_smsperm))
         }
     }

@@ -24,12 +24,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
-import com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.core.Utils
 import com.hover.stax.database.models.Request
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.databinding.FragmentRequestDetailBinding
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper.flashAndReportMessage
-import com.hover.stax.core.Utils
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxDialog
 import org.json.JSONException

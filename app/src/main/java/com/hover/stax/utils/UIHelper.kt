@@ -49,7 +49,7 @@ object UIHelper {
         val s = Snackbar.make(view, message!!, Snackbar.LENGTH_LONG)
         s.anchorView = view
         s.show()
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(message, view.context)
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(message, view.context)
     }
 
     fun flashAndReportMessage(context: Context, messageRes: Int) {
@@ -58,7 +58,7 @@ object UIHelper {
 
     fun flashAndReportMessage(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(message, context)
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(message, context)
     }
 
     fun flashAndReportError(context: Context, messageRes: Int) {
@@ -68,8 +68,8 @@ object UIHelper {
 
     fun flashAndReportError(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(message, context)
-        com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(message, context)
+        com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase(
             context.getString(R.string.toast_err_tag),
             message,
             null

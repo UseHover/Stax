@@ -22,9 +22,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
-import com.hover.stax.core.Utils
 
-abstract class AbstractAutocompleteInput(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+abstract class AbstractAutocompleteInput(context: Context, attrs: AttributeSet) :
+    LinearLayout(context, attrs) {
 
     abstract var inputLayout: StaxDropdownLayout
     abstract var autocomplete: AutoCompleteTextView
@@ -32,7 +32,7 @@ abstract class AbstractAutocompleteInput(context: Context, attrs: AttributeSet) 
     protected fun initUI() {
         autocomplete.apply {
             setOnFocusChangeListener { _, hasFocus -> setState(hasFocus) }
-            setOnClickListener { Utils.showSoftKeyboard(context, it) }
+            setOnClickListener { com.hover.stax.utils.Utils.showSoftKeyboard(context, it) }
             imeOptions = EditorInfo.IME_ACTION_DONE
         }
     }

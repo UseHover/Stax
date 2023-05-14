@@ -18,7 +18,6 @@ package com.hover.stax.login
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -35,10 +34,11 @@ import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_T
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.core.Utils
 import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.core.Utils
 import timber.log.Timber
+import javax.inject.Inject
 
 const val FORCED_VERSION = "force_update_app_version"
 
@@ -46,7 +46,8 @@ abstract class AbstractGoogleAuthActivity :
     AppCompatActivity(),
     StaxGoogleLoginInterface {
 
-    private val loginViewModel: LoginViewModel by viewModels()
+    @Inject
+    lateinit var loginViewModel: LoginViewModel
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
 
     private lateinit var updateManager: AppUpdateManager
@@ -127,7 +128,7 @@ abstract class AbstractGoogleAuthActivity :
     }
 
     private fun logAppUpdate(status: String) {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.force_update_status,
                 status
@@ -163,10 +164,10 @@ abstract class AbstractGoogleAuthActivity :
         ).apply {
             setAction(getString(R.string.restart)) {
                 updateManager.completeUpdate(); installListener?.let {
-                    updateManager.unregisterListener(
-                        it
-                    )
-                }
+                updateManager.unregisterListener(
+                    it
+                )
+            }
             }
             setActionTextColor(
                 ContextCompat.getColor(

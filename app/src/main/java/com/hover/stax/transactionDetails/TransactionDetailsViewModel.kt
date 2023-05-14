@@ -20,7 +20,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover.getSMSMessageByUUID
@@ -67,17 +67,17 @@ class TransactionDetailsViewModel @Inject constructor(
     var bonusAmt: MediatorLiveData<Int> = MediatorLiveData()
 
     init {
-        account = Transformations.switchMap(transaction) { getLiveAccount(it) }
-        action = Transformations.switchMap(transaction) { getLiveAction(it) }
-        contact = Transformations.switchMap(transaction) { getLiveContact(it) }
-        merchant = Transformations.switchMap(transaction) { getLiveMerchant(it) }
+        account = transaction.switchMap(this::getLiveAccount)
+        action = transaction.switchMap(this::getLiveAction)
+        contact = transaction.switchMap(this::getLiveContact)
+//        merchant = transaction.switchMap { it?.let { getLiveMerchant(it) } } TODO - FIX ME
 
         messages.apply {
             addSource(transaction) { loadMessages(it) }
             addSource(action) { loadMessages(it) }
         }
 
-        sms = Transformations.map(transaction) { it?.let { loadSms(it) } }
+//        sms = transaction.map { it?.let { loadSms(it) } } TODO - FIX ME
         isExpectingSMS.addSource(transaction, this::setExpectingSMS)
     }
 

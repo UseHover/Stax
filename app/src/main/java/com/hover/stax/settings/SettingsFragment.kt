@@ -78,7 +78,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_security)
@@ -104,7 +104,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setUpShare() {
-        binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
+        binding.shareCard.shareText.setOnClickListener { com.hover.stax.utils.Utils.shareStax(requireActivity()) }
     }
 
     private fun setUpManagePermissions() {
@@ -171,7 +171,7 @@ class SettingsFragment : Fragment() {
         with(binding.appInfoCard.details) {
             this.appVersionInfo.text = getString(R.string.app_version_info, appVersion)
             this.appVersionInfo.setOnClickListener {
-                Utils.copyToClipboard(
+                com.hover.stax.utils.Utils.copyToClipboard(
                     appVersion,
                     requireContext()
                 )
@@ -179,7 +179,7 @@ class SettingsFragment : Fragment() {
 
             this.configVersionInfo.text = getString(R.string.config_info, configVersion)
             this.configVersionInfo.setOnClickListener {
-                Utils.copyToClipboard(
+                com.hover.stax.utils.Utils.copyToClipboard(
                     configVersion,
                     requireContext()
                 )
@@ -187,7 +187,7 @@ class SettingsFragment : Fragment() {
 
             this.versionCodeInfo.text = getString(R.string.version_code_info, versionCode)
             this.versionCodeInfo.setOnClickListener {
-                Utils.copyToClipboard(
+                com.hover.stax.utils.Utils.copyToClipboard(
                     versionCode,
                     requireContext()
                 )
@@ -195,7 +195,7 @@ class SettingsFragment : Fragment() {
 
             this.deviceIdInfo.text = getString(R.string.device_id_info, deviceId)
             this.deviceIdInfo.setOnClickListener {
-                Utils.copyToClipboard(
+                com.hover.stax.utils.Utils.copyToClipboard(
                     deviceId,
                     requireContext()
                 )
@@ -235,19 +235,19 @@ class SettingsFragment : Fragment() {
     private fun setUpSupport() {
         with(binding.staxSupport) {
             twitterContact.setOnClickListener {
-                Utils.openUrl(
+                com.hover.stax.utils.Utils.openUrl(
                     getString(R.string.stax_twitter_url),
                     requireActivity()
                 )
             }
             requestFeature.setOnClickListener {
-                Utils.openUrl(
+                com.hover.stax.utils.Utils.openUrl(
                     getString(R.string.stax_nolt_url),
                     requireActivity()
                 )
             }
             contactSupport.setOnClickListener {
-                Utils.openEmail(
+                com.hover.stax.utils.Utils.openEmail(
                     getString(
                         R.string.stax_emailing_subject,
                         Hover.getDeviceId(requireActivity())
@@ -280,7 +280,7 @@ class SettingsFragment : Fragment() {
                 )
             }
             learnStax.setOnClickListener {
-                Utils.openUrl(
+                com.hover.stax.utils.Utils.openUrl(
                     getString(R.string.stax_medium_url),
                     requireActivity()
                 )

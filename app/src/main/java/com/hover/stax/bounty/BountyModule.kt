@@ -13,36 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.database.di
+package com.hover.stax.bounty
 
-import android.content.Context
-import androidx.room.Room
-import com.hover.sdk.database.HoverRoomDatabase
-import com.hover.stax.database.StaxDatabase
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DatabaseModule {
+abstract class BountyModule {
 
-    @Provides
-    @Singleton
-    fun providesStaxDatabase(
-        @ApplicationContext context: Context,
-    ): StaxDatabase = Room.databaseBuilder(
-        context,
-        StaxDatabase::class.java,
-        "stax-database",
-    ).build()
-
-    @Provides
-    @Singleton
-    fun providesHoverDatabase(
-        @ApplicationContext context: Context,
-    ): HoverRoomDatabase = HoverRoomDatabase.getInstance(context)
+    @Binds
+    abstract fun bindsBountyRepository(bountyRepositoryImpl: BountyRepositoryImpl): BountyRepository
 }

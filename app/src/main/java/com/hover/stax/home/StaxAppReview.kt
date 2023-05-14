@@ -28,7 +28,7 @@ const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
 internal object StaxAppReview {
 
     fun launchStaxReview(activity: Activity) {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.visited_rating_review_screen), activity)
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.visited_rating_review_screen), activity)
         launchReviewDialog(activity)
     }
 

@@ -23,10 +23,15 @@ android {
 }
 
 dependencies {
+    implementation(project(path = ":internal:core"))
     implementation(project(path = ":internal:database"))
     implementation(project(path = ":internal:datastore"))
     implementation(project(path = ":internal:model"))
     implementation(project(path = ":internal:network"))
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:31.2.2"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     implementation(libs.timber)
 }

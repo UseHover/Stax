@@ -18,7 +18,9 @@ package com.hover.stax.network.ktor
 import android.content.Context
 import com.hover.stax.datastore.LocalPreferences
 import com.jakewharton.processphoenix.ProcessPhoenix
+import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
+import javax.inject.Inject
 
 private const val ENVIRONMENT = "env"
 
@@ -32,8 +34,8 @@ private const val STAGING_CLIENT_ID = "O7bvQSxNE-IJhxHLUK3mk3TuHOmrioLsHZNtbQB4h
 private const val STAGING_CLIENT_SECRET = "20htHa1bQ-k0Vdb3H6yKaPYFD2Lt9EJpGq0qHoH4m14"
 private const val STAGING_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob"
 
-class EnvironmentProvider(
-    private val context: Context,
+class EnvironmentProvider @Inject constructor(
+    @ApplicationContext val context: Context,
     private val preferences: LocalPreferences
 ) {
 

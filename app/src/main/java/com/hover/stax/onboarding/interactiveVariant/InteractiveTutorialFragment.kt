@@ -24,7 +24,6 @@ import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentInteractiveTutorialBinding
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.core.AnalyticsUtil
 import org.json.JSONObject
 import timber.log.Timber
 
@@ -44,7 +43,13 @@ internal class InteractiveTutorialFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_interactive_tutorial)), requireActivity())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
+            getString(
+                R.string.visit_screen,
+                getString(R.string.visit_interactive_tutorial)
+            ),
+            requireActivity()
+        )
 
         setTopBarClicks()
         setContinueClick()
@@ -53,7 +58,10 @@ internal class InteractiveTutorialFragment : Fragment() {
     private fun setTopBarClicks() {
         binding.backButton.setOnClickListener { findNavController().popBackStack() }
         binding.skipTutorial.setOnClickListener {
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_skip_tutorial), requireActivity())
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
+                getString(R.string.clicked_skip_tutorial),
+                requireActivity()
+            )
             (activity as OnBoardingActivity).checkPermissionsAndNavigate()
         }
     }
@@ -64,9 +72,13 @@ internal class InteractiveTutorialFragment : Fragment() {
     }
 
     private fun logOptionsSelected() {
-        if (isNoneApply()) com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.none_apply), requireActivity())
+        if (isNoneApply()) com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
+            getString(R.string.none_apply),
+            requireActivity()
+        )
         else logCheckBoxSelections()
     }
+
     private fun logCheckBoxSelections() {
         val checkBox1 = binding.variant2Checkbox1
         val checkBox2 = binding.variant2Checkbox2
@@ -81,7 +93,11 @@ internal class InteractiveTutorialFragment : Fragment() {
             Timber.e(e)
         }
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.interacted_with_tutorial), data, requireActivity())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
+            getString(R.string.interacted_with_tutorial),
+            data,
+            requireActivity()
+        )
     }
 
     private fun isNoneApply(): Boolean {

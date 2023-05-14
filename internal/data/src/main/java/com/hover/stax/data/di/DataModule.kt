@@ -21,12 +21,8 @@ import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.actions.ActionRepository
 import com.hover.stax.data.auth.AuthRepository
 import com.hover.stax.data.auth.AuthRepositoryImpl
-import com.hover.stax.data.bounty.BountyRepository
-import com.hover.stax.data.bounty.BountyRepositoryImpl
 import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.data.channel.ChannelRepositoryImpl
-import com.hover.stax.data.contact.ContactRepo
-import com.hover.stax.data.contact.ContactRepository
 import com.hover.stax.data.merchant.MerchantRepo
 import com.hover.stax.data.merchant.MerchantRepository
 import com.hover.stax.data.parser.ParserRepository
@@ -44,6 +40,8 @@ import com.hover.stax.data.transactions.TransactionRepo
 import com.hover.stax.data.transactions.TransactionRepository
 import com.hover.stax.data.user.StaxUserRepository
 import com.hover.stax.data.user.StaxUserRepositoryImpl
+import com.hover.stax.database.repo.ContactRepo
+import com.hover.stax.database.repo.ContactRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -61,9 +59,6 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindsAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
-
-    @Binds
-    abstract fun bindsBountyRepository(bountyRepositoryImpl: BountyRepositoryImpl): BountyRepository
 
     @Binds
     abstract fun bindsChannelRepository(channelRepositoryImpl: ChannelRepositoryImpl): ChannelRepository

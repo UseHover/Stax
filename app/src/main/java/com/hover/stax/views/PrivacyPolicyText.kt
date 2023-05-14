@@ -27,6 +27,6 @@ class PrivacyPolicyText(context: Context, attrs: AttributeSet) : FrameLayout(con
     var binding = PrivacypolicyBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
-        binding.privacyPolicyText.setOnClickListener { Utils.openUrl(R.string.privacy_policy_link, this.context) }
+        binding.privacyPolicyText.setOnClickListener { com.hover.stax.utils.Utils.openUrl(R.string.privacy_policy_link, this.context) }
     }
 }

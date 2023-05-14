@@ -50,7 +50,7 @@ abstract class AbstractBalanceCheckerFragment : Fragment() {
                     )
                 )
             }
-            com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
+            com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase(b.action.public_id, getString(R.string.error_running_action_log), e)
         }
     }
 }

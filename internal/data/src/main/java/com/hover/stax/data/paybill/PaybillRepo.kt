@@ -49,7 +49,9 @@ class PaybillRepo @Inject constructor(
 
     override fun save(paybill: Paybill) = paybillDao.insert(paybill)
 
-    override suspend fun update(paybill: Paybill) = paybillDao.update(paybill)
+    override suspend fun update(paybill: Paybill) {
+        paybillDao.update(paybill)
+    }
 
     override suspend fun delete(paybill: Paybill) = paybillDao.delete(paybill)
 }

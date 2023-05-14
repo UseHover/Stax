@@ -21,17 +21,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
 import com.hover.stax.data.accounts.AccountRepository
-import com.hover.stax.data.contact.ContactRepo
 import com.hover.stax.data.requests.RequestRepo
 import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.Request
 import com.hover.stax.database.models.Schedule
 import com.hover.stax.database.models.StaxContact
+import com.hover.stax.database.repo.ContactRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Collections
 import javax.inject.Inject
 
 class NewRequestViewModel @Inject constructor(

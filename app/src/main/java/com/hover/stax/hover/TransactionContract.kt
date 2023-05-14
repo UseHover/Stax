@@ -55,8 +55,8 @@ class TransactionContract : ActivityResultContract<HoverSession.Builder, Intent?
             data.put("actionId", hsb.action.id)
         } catch (ignored: JSONException) {
         }
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(msg, data, context)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(hsb.activity.getString(R.string.start_load_screen), context)
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(msg, data, context)
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(hsb.activity.getString(R.string.start_load_screen), context)
         Timber.e(msg)
     }
 }

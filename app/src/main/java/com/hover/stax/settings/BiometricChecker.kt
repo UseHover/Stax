@@ -63,7 +63,7 @@ class BiometricChecker(private val authListener: AuthListener, val activity: App
 
     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
         super.onAuthenticationSucceeded(result)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             activity.getString(R.string.biometrics_succeeded),
             activity.baseContext
         )
@@ -75,7 +75,7 @@ class BiometricChecker(private val authListener: AuthListener, val activity: App
         if (errorCode == BiometricPrompt.ERROR_NO_BIOMETRICS)
             authListener.onAuthError(errString.toString())
         else
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
                 activity.getString(R.string.biometrics_not_setup),
                 activity.baseContext
             )
@@ -83,7 +83,7 @@ class BiometricChecker(private val authListener: AuthListener, val activity: App
 
     override fun onAuthenticationFailed() {
         super.onAuthenticationFailed()
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
             activity.getString(R.string.biometrics_failed),
             activity.baseContext
         )

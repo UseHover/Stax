@@ -53,7 +53,9 @@ class MerchantRepo @Inject constructor(
 
     override fun save(merchant: Merchant) = merchantDao.insert(merchant)
 
-    override suspend fun update(merchant: Merchant) = merchantDao.update(merchant)
+    override suspend fun update(merchant: Merchant) {
+        merchantDao.update(merchant)
+    }
 
     override suspend fun delete(merchant: Merchant) = merchantDao.delete(merchant)
 }

@@ -45,7 +45,7 @@ class LibraryChannelsAdapter(private val favoriteClickInterface: FavoriteClickIn
                 liTitle.text = channel.name
                 liButton.apply {
                     text = liButton.context.getString(R.string.dial_btn, channel.rootCode)
-                    setOnClickListener { Utils.dial(channel.rootCode, binding.root.context) }
+                    setOnClickListener { com.hover.stax.utils.Utils.dial(channel.rootCode, binding.root.context) }
                 }
             }
         }

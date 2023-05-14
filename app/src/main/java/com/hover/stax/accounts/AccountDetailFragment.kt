@@ -43,6 +43,7 @@ import com.hover.stax.transactions.TransactionHistoryAdapter
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.core.Utils
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
@@ -80,7 +81,7 @@ class AccountDetailFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(
+        AnalyticsUtil.logAnalyticsEvent(
             getString(
                 R.string.visit_screen,
                 getString(R.string.visit_channel)
@@ -231,7 +232,7 @@ class AccountDetailFragment :
             channel.observe(viewLifecycleOwner) { c ->
                 binding.detailsCard.shortcodeBtn.text = getString(R.string.dial_btn, c.rootCode)
                 binding.detailsCard.shortcodeBtn.setOnClickListener {
-                    Utils.dial(
+                    com.hover.stax.utils.Utils.dial(
                         c.rootCode,
                         requireContext()
                     )

@@ -16,8 +16,8 @@
 plugins {
     id("stax.android.library")
     id("stax.android.hilt")
-    id("kotlin-kapt")
     id("kotlinx-serialization")
+    id("kotlin-kapt")
 }
 
 android {
@@ -26,8 +26,8 @@ android {
 
 dependencies {
     implementation(project(path = ":internal:resources"))
-    
-    // Google
+
+// Google
     implementation(libs.bundles.google)
     kapt(libs.lifecycle.common)
 

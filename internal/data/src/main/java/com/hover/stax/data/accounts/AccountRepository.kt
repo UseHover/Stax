@@ -19,6 +19,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.hover.sdk.api.ActionApi
 import com.hover.sdk.sims.SimInfo
+import com.hover.stax.data.R
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.database.dao.AccountDao
@@ -70,8 +71,10 @@ class AccountRepositoryImpl @Inject constructor(
     private val channelRepository: ChannelRepository,
     val actionRepo: ActionRepo,
     @ApplicationContext val context: Context
-) :
-    AccountRepository, PushNotificationTopicsInterface {
+) : AccountRepository {
+
+    // TODO -FIX ME
+//    AccountRepository, PushNotificationTopicsInterface {
 
     override fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
 
@@ -138,8 +141,9 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun getAccountBySim(simSubscriptionId: Int): Account? =
         accountDao.getAccountBySim(simSubscriptionId)
 
+    // TODO -FIX ME
     private fun logChoice(account: Account) {
-        joinChannelGroup(account.channelId, context)
+//        joinChannelGroup(account.channelId, context)
         val args = JSONObject()
 
         try {
@@ -147,6 +151,6 @@ class AccountRepositoryImpl @Inject constructor(
         } catch (ignored: Exception) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.new_sim_channel), args, context)
+//        AnalyticsUtil.logAnalyticsEvent(context.getString(R.string.new_sim_channel), args, context)
     }
 }

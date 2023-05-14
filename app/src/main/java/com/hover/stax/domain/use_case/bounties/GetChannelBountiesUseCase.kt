@@ -16,12 +16,12 @@
 package com.hover.stax.domain.use_case.bounties
 
 import com.hover.sdk.sims.SimInfo
+import com.hover.stax.bounty.BountyRepository
+import com.hover.stax.bounty.ChannelBounties
 import com.hover.stax.countries.CountryAdapter
-import com.hover.stax.model.Bounty
-import com.hover.stax.model.ChannelBounties
-import com.hover.stax.data.bounty.BountyRepository
 import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.data.transactions.TransactionRepo
+import com.hover.stax.model.Bounty
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -35,15 +35,16 @@ class GetChannelBountiesUseCase(
     private val transactionRepo: TransactionRepo
 ) {
 
-    fun getBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES): Flow<com.hover.stax.model.Resource<List<ChannelBounties>>> = flow {
-        try {
-            emit(com.hover.stax.model.Resource.Loading())
+    fun getBounties(countryCode: String = CountryAdapter.CODE_ALL_COUNTRIES): Flow<com.hover.stax.model.Resource<List<ChannelBounties>>> =
+        flow {
+            try {
+                emit(com.hover.stax.model.Resource.Loading())
 
-            emit(com.hover.stax.model.Resource.Success(fetchBounties(countryCode)))
-        } catch (e: Exception) {
-            emit(com.hover.stax.model.Resource.Error("Error loading bounties"))
+                emit(com.hover.stax.model.Resource.Success(fetchBounties(countryCode)))
+            } catch (e: Exception) {
+                emit(com.hover.stax.model.Resource.Error("Error loading bounties"))
+            }
         }
-    }
 
     private suspend fun fetchBounties(countryCode: String): List<ChannelBounties> {
         val channelBounties: Deferred<List<ChannelBounties>>
@@ -65,7 +66,10 @@ class GetChannelBountiesUseCase(
         if (sims.isEmpty()) return false
 
         sims.forEach { simInfo ->
-            for (i in 0 until bounty.action.hni_list.length()) if (bounty.action.hni_list.optString(i) == simInfo.osReportedHni) return true
+            for (i in 0 until bounty.action.hni_list.length()) if (bounty.action.hni_list.optString(
+                    i
+                ) == simInfo.osReportedHni
+            ) return true
         }
 
         return false

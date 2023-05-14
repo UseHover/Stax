@@ -20,8 +20,8 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.core.Utils.alterFirebaseTopicState
 import com.hover.stax.core.Utils.isFirebaseTopicInDefaultState
-import com.hover.stax.core.Utils.removeFirebaseMessagingTopic
-import com.hover.stax.core.Utils.setFirebaseMessagingTopic
+import com.hover.stax.utils.Utils.removeFirebaseMessagingTopic
+import com.hover.stax.utils.Utils.setFirebaseMessagingTopic
 
 interface PushNotificationTopicsInterface {
 
@@ -30,13 +30,21 @@ interface PushNotificationTopicsInterface {
     }
 
     fun joinNoUsageGroup(c: Context) {
-        if (isFirebaseTopicInDefaultState(c.getString(R.string.firebase_topic_no_usage_activity), c)) {
+        if (isFirebaseTopicInDefaultState(
+                c.getString(R.string.firebase_topic_no_usage_activity),
+                c
+            )
+        ) {
             setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_no_usage_activity))
         }
     }
 
     fun joinNoRequestMoneyGroup(c: Context) {
-        if (isFirebaseTopicInDefaultState(c.getString(R.string.firebase_topic_no_request_money), c)) {
+        if (isFirebaseTopicInDefaultState(
+                c.getString(R.string.firebase_topic_no_request_money),
+                c
+            )
+        ) {
             setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_no_request_money))
         }
     }
@@ -46,11 +54,17 @@ interface PushNotificationTopicsInterface {
     }
 
     fun joinBountyCountryGroup(countryCode: String?, c: Context) {
-        setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_bounty_in_country, countryCode?.uppercase()))
+        setFirebaseMessagingTopic(
+            c.getString(
+                R.string.firebase_topic_bounty_in_country,
+                countryCode?.uppercase()
+            )
+        )
     }
 
     fun joinChannelGroup(channelId: Int, c: Context) {
-        FirebaseMessaging.getInstance().subscribeToTopic(c.getString(R.string.firebase_topic_channel, channelId))
+        FirebaseMessaging.getInstance()
+            .subscribeToTopic(c.getString(R.string.firebase_topic_channel, channelId))
     }
 
     fun joinRequestMoneyGroup(c: Context) {

@@ -54,7 +54,7 @@ class Lang(val code: String) {
                 Timber.e(e.localizedMessage)
             }
 
-            com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.selected_language), data, c)
+            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.selected_language), data, c)
         }
     }
 }

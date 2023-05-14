@@ -16,8 +16,16 @@
 package com.hover.stax.data.tips
 
 import android.content.Context
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
+import com.google.firebase.ktx.Firebase
+import com.hover.stax.core.Utils
+import com.hover.stax.data.R
+import com.hover.stax.model.FINANCIAL_TIP_ID
 import com.hover.stax.model.FinancialTip
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface FinancialTipsRepository {
@@ -30,7 +38,7 @@ interface FinancialTipsRepository {
 }
 
 class FinancialTipsRepositoryImpl @Inject constructor(
-    @ApplicationContext appContext: Context
+    @ApplicationContext val context: Context
 ) : FinancialTipsRepository {
 
     val db = Firebase.firestore

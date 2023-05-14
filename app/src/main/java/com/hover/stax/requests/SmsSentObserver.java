@@ -1,5 +1,7 @@
 package com.hover.stax.requests;
 
+import static com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -9,7 +11,6 @@ import android.os.Handler;
 import android.telephony.PhoneNumberUtils;
 
 import com.hover.stax.R;
-import com.hover.stax.core.AnalyticsUtil;
 import com.hover.stax.database.models.StaxContact;
 
 import java.util.List;
@@ -69,7 +70,7 @@ public class SmsSentObserver extends ContentObserver {
                         wasSent = true;
                         callBack();
 
-                        AnalyticsUtil.logAnalyticsEvent(successMsg, context);
+                        logAnalyticsEvent(successMsg, context);
 
                         break;
                     }

@@ -22,14 +22,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hover.stax.R
-import com.hover.stax.data.contact.ContactRepo
-import com.hover.stax.database.models.StaxContact
-import com.hover.stax.database.models.Schedule
 import com.hover.stax.data.schedule.ScheduleRepo
-import com.hover.stax.core.AnalyticsUtil
-import javax.inject.Inject
+import com.hover.stax.database.models.Schedule
+import com.hover.stax.database.models.StaxContact
+import com.hover.stax.database.repo.ContactRepo
+import com.hover.stax.utils.AnalyticsUtil
 
-abstract class AbstractFormViewModel @Inject constructor(
+abstract class AbstractFormViewModel(
     application: Application,
     val contactRepo: ContactRepo,
     private val scheduleRepo: ScheduleRepo
@@ -53,7 +52,13 @@ abstract class AbstractFormViewModel @Inject constructor(
     }
 
     fun saveSchedule(s: Schedule) {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent((getApplication() as Context).getString(R.string.scheduled_complete, s.type), getApplication())
+        AnalyticsUtil.logAnalyticsEvent(
+            (getApplication() as Context).getString(
+                R.string.scheduled_complete,
+                s.type
+            ),
+            getApplication()
+        )
         scheduleRepo.insert(s)
     }
 
@@ -62,5 +67,7 @@ abstract class AbstractFormViewModel @Inject constructor(
     }
 
     @CallSuper
-    open fun reset() { isEditing.postValue(true) }
+    open fun reset() {
+        isEditing.postValue(true)
+    }
 }

@@ -60,7 +60,7 @@ class BountyListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
 
         _binding = FragmentBountyListBinding.inflate(inflater, container, false)
         return binding.root
@@ -104,7 +104,7 @@ class BountyListFragment : Fragment() {
         Hover.updateActionConfigs(
             object : Hover.DownloadListener {
                 override fun onError(p0: String?) {
-                    com.hover.stax.core.AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
+                    com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
                 }
 
                 override fun onSuccess(p0: ArrayList<HoverAction>?) {
@@ -173,8 +173,8 @@ class BountyListFragment : Fragment() {
     }
 
     private fun startBounty(b: Bounty) {
-        Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_start_bounty), requireContext())
+        com.hover.stax.utils.Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_start_bounty), requireContext())
         bounty.launch(b.action)
     }
 

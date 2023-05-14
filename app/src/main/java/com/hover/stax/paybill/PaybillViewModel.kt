@@ -21,13 +21,13 @@ import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.data.accounts.AccountRepository
-import com.hover.stax.data.contact.ContactRepo
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.paybill.PaybillRepo
+import com.hover.stax.data.schedule.ScheduleRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.database.models.Paybill
-import com.hover.stax.data.schedule.ScheduleRepo
+import com.hover.stax.database.repo.ContactRepo
 import com.hover.stax.transfers.AbstractFormViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,8 +79,13 @@ class PaybillViewModel @Inject constructor(
         deSelectPaybill()
         Timber.e("selecting paybill by action: %s", action.to_institution_name)
         val paybill = Paybill(
-            "", action.to_institution_name, Paybill.extractBizNumber(action), null, action.public_id,
-            0, getString(R.string.root_url).plus(action.to_institution_logo)
+            "",
+            action.to_institution_name,
+            Paybill.extractBizNumber(action),
+            null,
+            action.public_id,
+            0,
+            getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
     }
@@ -137,7 +142,11 @@ class PaybillViewModel @Inject constructor(
             Timber.e(e)
         }
 
-        com.hover.stax.core.AnalyticsUtil.logAnalyticsEvent(getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, getApplication())
+        com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
+            getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill),
+            data,
+            getApplication()
+        )
     }
 
     fun businessNoError(): String? {
@@ -149,7 +158,10 @@ class PaybillViewModel @Inject constructor(
 
     fun amountError(): String? {
         Timber.e("amount: %s", amount.value)
-        return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
+        return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches(
+                "[0]+".toRegex()
+            )
+        ) null
         else getString(R.string.amount_fielderror)
     }
 
@@ -190,7 +202,15 @@ class PaybillViewModel @Inject constructor(
             val accountNo = accountNumber.value
 
             if (account != null && action != null) {
-                val payBill = Paybill(nickname.value!!, action.to_institution_name, businessNo!!, accountNo, action.public_id, account.id, getIcon(account)).apply {
+                val payBill = Paybill(
+                    nickname.value!!,
+                    action.to_institution_name,
+                    businessNo!!,
+                    accountNo,
+                    action.public_id,
+                    account.id,
+                    getIcon(account)
+                ).apply {
                     isSaved = true
                     logo = iconDrawable.value ?: 0
                     channelId = account.channelId

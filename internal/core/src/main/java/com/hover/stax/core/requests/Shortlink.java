@@ -1,4 +1,4 @@
-package com.hover.stax.requests;
+package com.hover.stax.core.requests;
 
 import java.util.HashMap;
 import java.util.Map;
