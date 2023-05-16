@@ -38,7 +38,6 @@ import com.hover.stax.core.Utils
 import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.utils.UIHelper
 import timber.log.Timber
-import javax.inject.Inject
 
 const val FORCED_VERSION = "force_update_app_version"
 
@@ -46,8 +45,7 @@ abstract class AbstractGoogleAuthActivity :
     AppCompatActivity(),
     StaxGoogleLoginInterface {
 
-    @Inject
-    lateinit var loginViewModel: LoginViewModel
+    private lateinit var loginViewModel: LoginViewModel
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
 
     private lateinit var updateManager: AppUpdateManager
@@ -55,6 +53,9 @@ abstract class AbstractGoogleAuthActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        loginViewModel = provideAuthenticationViewModel()
+
         initGoogleAuth()
         setLoginObserver()
 
@@ -81,6 +82,8 @@ abstract class AbstractGoogleAuthActivity :
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
         this.staxGoogleLoginInterface = staxGoogleLoginInterface
     }
+
+    abstract fun provideAuthenticationViewModel(): LoginViewModel
 
     private fun initGoogleAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
