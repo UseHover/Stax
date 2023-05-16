@@ -17,11 +17,8 @@ package com.hover.stax.login
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -35,10 +32,8 @@ import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAI
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.core.Utils
-import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.utils.UIHelper
 import timber.log.Timber
-import javax.inject.Inject
 
 const val FORCED_VERSION = "force_update_app_version"
 
@@ -46,8 +41,8 @@ abstract class AbstractGoogleAuthActivity :
     AppCompatActivity(),
     StaxGoogleLoginInterface {
 
-    @Inject
-    lateinit var loginViewModel: LoginViewModel
+    protected abstract fun provideLoginViewModel(): LoginViewModel
+
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
 
     private lateinit var updateManager: AppUpdateManager
@@ -55,8 +50,6 @@ abstract class AbstractGoogleAuthActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initGoogleAuth()
-        setLoginObserver()
 
         updateManager = AppUpdateManagerFactory.create(this)
 
@@ -81,34 +74,6 @@ abstract class AbstractGoogleAuthActivity :
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
         this.staxGoogleLoginInterface = staxGoogleLoginInterface
     }
-
-    private fun initGoogleAuth() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.google_server_client_id)).requestEmail().build()
-        loginViewModel.signInClient = GoogleSignIn.getClient(this, gso)
-    }
-
-    private fun setLoginObserver() = with(loginViewModel) {
-        error.observe(this@AbstractGoogleAuthActivity) {
-            it?.let { staxGoogleLoginInterface.googleLoginFailed() }
-        }
-
-        googleUser.observe(this@AbstractGoogleAuthActivity) {
-            it?.let { staxGoogleLoginInterface.googleLoginSuccessful() }
-        }
-    }
-
-    fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
-
-    private val loginForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                loginViewModel.signIntoGoogle(result.data)
-            } else {
-                Timber.e("Google sign in failed")
-                staxGoogleLoginInterface.googleLoginFailed()
-            }
-        }
 
     private fun checkForUpdates() {
         val updateInfoTask = updateManager.appUpdateInfo
@@ -164,10 +129,10 @@ abstract class AbstractGoogleAuthActivity :
         ).apply {
             setAction(getString(R.string.restart)) {
                 updateManager.completeUpdate(); installListener?.let {
-                updateManager.unregisterListener(
-                    it
-                )
-            }
+                    updateManager.unregisterListener(
+                        it
+                    )
+                }
             }
             setActionTextColor(
                 ContextCompat.getColor(
@@ -189,10 +154,6 @@ abstract class AbstractGoogleAuthActivity :
                 checkForUpdates()
             }
         }
-    }
-
-    override fun googleLoginSuccessful() {
-        if (loginViewModel.staxUser.value?.isMapper == true) BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
     }
 
     override fun googleLoginFailed() {

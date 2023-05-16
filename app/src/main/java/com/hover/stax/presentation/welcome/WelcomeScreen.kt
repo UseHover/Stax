@@ -37,7 +37,7 @@ import com.hover.stax.presentation.welcome.components.ContinueButton
 import com.hover.stax.presentation.welcome.components.FeatureCard
 import com.hover.stax.presentation.welcome.components.GoogleSignInButton
 import com.hover.stax.presentation.welcome.components.WelcomeHeader
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.StaxTheme
 
 @Composable
 fun WelcomeScreen(

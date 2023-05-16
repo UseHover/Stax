@@ -17,8 +17,12 @@ package com.hover.stax.home
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.permissions.PermissionHelper
@@ -27,7 +31,10 @@ import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.login.AbstractGoogleAuthActivity
+import com.hover.stax.login.LoginViewModel
+import com.hover.stax.login.StaxGoogleLoginInterface
 import com.hover.stax.notifications.PushNotificationTopicsInterface
+import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.REQUEST_LINK
@@ -38,10 +45,21 @@ import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface {
 
+    private lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
+
+    override fun provideLoginViewModel(): LoginViewModel {
+        val loginViewModel: LoginViewModel by viewModels()
+        return loginViewModel
+    }
     lateinit var navHelper: NavHelper
 
     private val transferViewModel: TransferViewModel by viewModels()
@@ -52,12 +70,16 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loginViewModel = provideLoginViewModel()
+        staxGoogleLoginInterface = this
+        viewModelFactory = ViewModelProvider.AndroidViewModelFactory.getInstance(application)
 
         navHelper = NavHelper(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         navHelper.setUpNav()
-
+        initGoogleAuth()
+        setLoginObserver()
         initFromIntent()
         checkForRequest(intent)
         checkForFragmentDirection(intent)
@@ -100,7 +122,33 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
                 navHelper.checkPermissionsAndNavigate(toWhere)
         }
     }
+    private fun initGoogleAuth() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_server_client_id)).requestEmail().build()
+        loginViewModel.signInClient = GoogleSignIn.getClient(this, gso)
+    }
 
+    private fun setLoginObserver() = with(loginViewModel) {
+        error.observe(this@MainActivity) {
+            it?.let { staxGoogleLoginInterface.googleLoginFailed() }
+        }
+
+        googleUser.observe(this@MainActivity) {
+            it?.let { staxGoogleLoginInterface.googleLoginSuccessful() }
+        }
+    }
+
+    fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
+
+    private val loginForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                loginViewModel.signIntoGoogle(result.data)
+            } else {
+                Timber.e("Google sign in failed")
+                staxGoogleLoginInterface.googleLoginFailed()
+            }
+        }
     private fun initFromIntent() {
         when {
             intent.hasExtra(REQUEST_LINK) -> createFromRequest(intent.getStringExtra(REQUEST_LINK)!!)
@@ -135,6 +183,10 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
             com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashAndReportMessage(this, getString(R.string.toast_error_smsperm))
         }
+    }
+
+    override fun googleLoginSuccessful() {
+        if (loginViewModel.staxUser.value?.isMapper == true) BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
     }
 
     override fun onAuthError(error: String) {

@@ -29,11 +29,13 @@ import com.hover.stax.database.models.Schedule
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.repo.ContactRepo
 import com.hover.stax.transfers.AbstractFormViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Collections
 import javax.inject.Inject
 
+@HiltViewModel
 class NewRequestViewModel @Inject constructor(
     application: Application,
     val repo: RequestRepo,

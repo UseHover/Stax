@@ -29,7 +29,7 @@ import com.hover.stax.database.models.Account
 import com.hover.stax.presentation.home.components.BalanceHeader
 import com.hover.stax.presentation.home.components.BalanceItem
 import com.hover.stax.presentation.home.components.EmptyBalance
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.StaxTheme
 
 interface BalanceTapListener {
     fun onTapBalanceRefresh(account: Account?)

@@ -28,10 +28,12 @@ import com.hover.stax.database.models.BUSINESS_NO
 import com.hover.stax.database.models.Merchant
 import com.hover.stax.database.repo.ContactRepo
 import com.hover.stax.transfers.AbstractFormViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class MerchantViewModel @Inject constructor(
     application: Application,
     contactRepo: ContactRepo,

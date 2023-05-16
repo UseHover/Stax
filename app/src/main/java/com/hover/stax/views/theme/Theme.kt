@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hover.stax.ui.theme
+package com.hover.stax.views.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import com.hover.stax.views.theme.CardViewColor
+import com.hover.stax.views.theme.ColorPrimary
+import com.hover.stax.views.theme.ColorPrimaryDark
+import com.hover.stax.views.theme.OffWhite
+import com.hover.stax.views.theme.StaxStateRed
+import com.hover.stax.views.theme.mainBackground
 
 private val DarkColorPalette = darkColors(
     primary = ColorPrimary,

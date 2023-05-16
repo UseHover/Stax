@@ -17,6 +17,7 @@ package com.hover.stax.database.di
 
 import com.hover.sdk.actions.HoverActionDao
 import com.hover.sdk.database.HoverRoomDatabase
+import com.hover.sdk.parsers.ParserDao
 import com.hover.sdk.sims.SimInfoDao
 import com.hover.stax.database.StaxDatabase
 import com.hover.stax.database.dao.AccountDao
@@ -96,4 +97,9 @@ object DaosModule {
     fun providesHoverActionDao(
         database: HoverRoomDatabase,
     ): HoverActionDao = database.actionDao()
+
+    @Provides
+    fun providesParserDao(
+        database: HoverRoomDatabase,
+    ): ParserDao = database.parserDao()
 }

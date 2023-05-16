@@ -40,7 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
-import com.hover.stax.ui.theme.BrightBlue
+import com.hover.stax.views.theme.BrightBlue
 
 @Composable
 fun VerticalImageTextView(

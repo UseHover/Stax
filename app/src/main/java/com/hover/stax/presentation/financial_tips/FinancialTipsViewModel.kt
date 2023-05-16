@@ -19,12 +19,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.model.Resource
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+@HiltViewModel
 class FinancialTipsViewModel @Inject constructor(
     private val tipsUseCase: TipsUseCase
 ) : ViewModel() {

@@ -27,6 +27,7 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.domain.use_case.sims.ListSimsUseCase
 import com.hover.stax.domain.use_case.sims.SimWithAccount
 import com.hover.stax.core.Utils
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +35,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-
+@HiltViewModel
 class SimViewModel @Inject constructor(
     private val listSimsUseCase: ListSimsUseCase,
     val application: Application

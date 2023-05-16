@@ -37,7 +37,7 @@ import com.hover.stax.presentation.bounties.components.ChannelBountiesCardPrevie
 import com.hover.stax.presentation.bounties.components.ChannelBountyCard
 import com.hover.stax.presentation.bounties.components.CountryDropdown
 import com.hover.stax.presentation.bounties.components.CountryDropdownPreview
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.StaxTheme
 
 const val CODE_ALL_COUNTRIES = "00"
 

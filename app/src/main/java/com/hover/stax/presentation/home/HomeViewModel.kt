@@ -23,7 +23,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.domain.use_case.financial_tips.TipsUseCase
-import com.hover.stax.model.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+@HiltViewModel
 class HomeViewModel @Inject constructor(
     private val accountsRepo: AccountRepository,
     private val actionRepo: ActionRepo,

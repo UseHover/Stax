@@ -31,7 +31,7 @@ import com.hover.stax.presentation.rewards.components.PointsHeader
 import com.hover.stax.presentation.rewards.components.RecentPointsHeader
 import com.hover.stax.presentation.rewards.components.RewardActions
 import com.hover.stax.presentation.rewards.components.RewardsHistoryItem
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.StaxTheme
 
 @Composable
 fun RewardsScreen() {
