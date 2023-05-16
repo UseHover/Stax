@@ -61,9 +61,8 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         val loginViewModel: LoginViewModel by viewModels()
         return loginViewModel
     }
-    lateinit var navHelper: NavHelper
 
-    private val loginViewModel : LoginViewModel by viewModels()
+    lateinit var navHelper: NavHelper
 
     private val transferViewModel: TransferViewModel by viewModels()
     private val requestViewModel: NewRequestViewModel by viewModels()
@@ -143,7 +142,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         }
     }
 
-    fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
+    fun signInUser() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
 
     private val loginForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
