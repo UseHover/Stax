@@ -25,7 +25,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionCardHistoryBinding
 import com.hover.stax.presentation.home.components.TopBar
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.StaxTheme
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 

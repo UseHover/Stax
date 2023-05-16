@@ -33,8 +33,9 @@ import com.hover.stax.views.StaxDialog
 
 class WelcomeFragment : Fragment() {
 
+    // TODO - FIX THIS
     private var dialog: StaxDialog? = null
-    private val loginViewModel: LoginViewModel by viewModels()
+//    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +45,10 @@ class WelcomeFragment : Fragment() {
         ComposeView(requireContext()).apply {
             id = R.id.welcomeFragment
             setContent {
-                WelcomeScreen({ onClickGetStarted() }, { onClickLogin() }, showExploreButton = true)
+                WelcomeScreen({ onClickGetStarted() }, {
+//                    onClickLogin()
+                    onClickGetStarted()
+                                                       }, showExploreButton = true)
             }
         }
 
@@ -58,7 +62,7 @@ class WelcomeFragment : Fragment() {
             requireActivity()
         )
 
-        observeLoginProgress()
+//        observeLoginProgress()
     }
 
     private fun onClickGetStarted() {
@@ -72,28 +76,28 @@ class WelcomeFragment : Fragment() {
         )
     }
 
-    private fun onClickLogin() {
-        if (loginViewModel.staxUser.value != null) {
-            UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.signed_in_message))
-            onClickGetStarted()
-        } else {
-            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
-                getString(R.string.clicked_google_sign_in),
-                requireActivity()
-            )
-            (requireActivity() as MainActivity).signIn()
-        }
-    }
-
-    private fun observeLoginProgress() = with(loginViewModel) {
-        error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
-        staxUser.observe(viewLifecycleOwner) {
-            if (it != null) {
-                showWelcomeMessage(it)
-                onClickGetStarted()
-            }
-        }
-    }
+//    private fun onClickLogin() {
+//        if (loginViewModel.staxUser.value != null) {
+//            UIHelper.flashAndReportMessage(requireActivity(), getString(R.string.signed_in_message))
+//            onClickGetStarted()
+//        } else {
+//            com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(
+//                getString(R.string.clicked_google_sign_in),
+//                requireActivity()
+//            )
+//            (requireActivity() as MainActivity).signIn()
+//        }
+//    }
+//
+//    private fun observeLoginProgress() = with(loginViewModel) {
+//        error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
+//        staxUser.observe(viewLifecycleOwner) {
+//            if (it != null) {
+//                showWelcomeMessage(it)
+//                onClickGetStarted()
+//            }
+//        }
+//    }
 
     private fun showError(message: String) {
         dialog = StaxDialog(requireActivity())

@@ -18,7 +18,7 @@ package com.hover.stax.presentation.welcome
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.StaxTheme
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

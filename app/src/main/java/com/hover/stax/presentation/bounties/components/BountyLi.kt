@@ -40,7 +40,7 @@ import com.hover.stax.R
 import com.hover.stax.model.Bounty
 import com.hover.stax.presentation.bounties.BountySelectEvent
 import com.hover.stax.presentation.bounties.BountyViewModel
-import com.hover.stax.ui.theme.Brutalista
+import com.hover.stax.views.theme.Brutalista
 
 @Composable
 fun BountyLi(bounty: Bounty, bountyViewModel: BountyViewModel) {

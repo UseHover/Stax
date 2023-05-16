@@ -37,9 +37,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hover.stax.R
-import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.BrightBlue
+import com.hover.stax.views.theme.OffWhite
+import com.hover.stax.views.theme.StaxTheme
 
 @Composable
 fun ActionItem(points: Int, action: String, onClick: () -> Unit) {

@@ -36,10 +36,10 @@ import androidx.compose.ui.unit.dp
 import com.hover.stax.R
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NavHelper
-import com.hover.stax.ui.theme.ColorSurface
-import com.hover.stax.ui.theme.DarkGray
-import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.ColorSurface
+import com.hover.stax.views.theme.DarkGray
+import com.hover.stax.views.theme.OffWhite
+import com.hover.stax.views.theme.StaxTheme
 
 @Composable
 internal fun LinkSimCard(@StringRes id: Int, stringArg: String = "") {

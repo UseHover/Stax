@@ -24,8 +24,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.ColorPrimaryDark
+import com.hover.stax.views.theme.BrightBlue
+import com.hover.stax.views.theme.ColorPrimaryDark
 
 // TODO change the button text to "Continue without signing in" or "Explore Stax"
 @Composable

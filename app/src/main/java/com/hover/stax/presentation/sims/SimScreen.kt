@@ -46,8 +46,8 @@ import com.hover.stax.presentation.home.components.TopBar
 import com.hover.stax.presentation.sims.components.LinkSimCard
 import com.hover.stax.presentation.sims.components.SampleSimInfoProvider
 import com.hover.stax.presentation.sims.components.SimItem
-import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.ui.theme.TextGrey
+import com.hover.stax.views.theme.StaxTheme
+import com.hover.stax.views.theme.TextGrey
 
 @Composable
 fun SimScreen(

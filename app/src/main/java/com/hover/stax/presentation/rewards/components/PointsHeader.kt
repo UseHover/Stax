@@ -39,9 +39,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hover.stax.R
-import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.StaxTheme
-import com.hover.stax.ui.theme.TextColorDark
+import com.hover.stax.views.theme.BrightBlue
+import com.hover.stax.views.theme.StaxTheme
+import com.hover.stax.views.theme.TextColorDark
 
 @Composable
 fun PointsHeader(points: Int, onClickRedeem: () -> Unit) {
