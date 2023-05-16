@@ -20,6 +20,8 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.database.models.Channel
 import com.hover.stax.database.models.StaxTransaction
+import com.hover.stax.di.Dispatcher
+import com.hover.stax.di.StaxDispatchers
 import com.hover.stax.model.Bounty
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -44,7 +46,7 @@ interface BountyRepository {
 
 class BountyRepositoryImpl @Inject constructor(
     val actionRepo: ActionRepo,
-    private val coroutineDispatcher: CoroutineDispatcher
+    @Dispatcher(StaxDispatchers.IO) private val coroutineDispatcher: CoroutineDispatcher
 ) : BountyRepository {
 
     override val bountyActions: List<HoverAction>
