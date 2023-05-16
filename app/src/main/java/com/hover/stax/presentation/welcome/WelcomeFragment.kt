@@ -30,7 +30,9 @@ import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WelcomeFragment : Fragment() {
 
     private var dialog: StaxDialog? = null

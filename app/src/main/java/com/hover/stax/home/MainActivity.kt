@@ -18,6 +18,7 @@ package com.hover.stax.home
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
@@ -27,6 +28,7 @@ import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.login.AbstractGoogleAuthActivity
+import com.hover.stax.login.LoginViewModel
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.presentation.financial_tips.FinancialTipsFragment
 import com.hover.stax.requests.NewRequestViewModel
@@ -38,11 +40,15 @@ import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface {
 
     lateinit var navHelper: NavHelper
+
+    private val loginViewModel : LoginViewModel by viewModels()
 
     private val transferViewModel: TransferViewModel by viewModels()
     private val requestViewModel: NewRequestViewModel by viewModels()
@@ -75,6 +81,8 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         super.onResume()
         navHelper.setUpNav()
     }
+
+    override fun provideAuthenticationViewModel(): LoginViewModel = loginViewModel
 
     fun checkPermissionsAndNavigate(navDirections: NavDirections) {
         navHelper.checkPermissionsAndNavigate(navDirections)
