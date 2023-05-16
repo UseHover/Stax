@@ -129,10 +129,10 @@ abstract class AbstractGoogleAuthActivity :
         ).apply {
             setAction(getString(R.string.restart)) {
                 updateManager.completeUpdate(); installListener?.let {
-                updateManager.unregisterListener(
-                    it
-                )
-            }
+                    updateManager.unregisterListener(
+                        it
+                    )
+                }
             }
             setActionTextColor(
                 ContextCompat.getColor(

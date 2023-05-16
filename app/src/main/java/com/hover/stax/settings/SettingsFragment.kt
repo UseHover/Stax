@@ -36,7 +36,6 @@ import com.hover.stax.accounts.AccountsViewModel
 import com.hover.stax.database.models.Account
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.languages.LanguageViewModel
-import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.LoginScreenUiState
 import com.hover.stax.login.LoginUiState
 import com.hover.stax.login.LoginViewModel

@@ -27,7 +27,6 @@ import com.hover.stax.database.models.Request
 import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.repo.ContactRepo
 import com.yariksoffice.lingver.Lingver
-import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
