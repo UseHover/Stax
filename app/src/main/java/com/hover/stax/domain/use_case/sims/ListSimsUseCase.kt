@@ -20,8 +20,11 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.data.accounts.AccountRepository
+import com.hover.stax.di.Dispatcher
+import com.hover.stax.di.StaxDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 data class SimWithAccount(
     val sim: SimInfo,
@@ -30,11 +33,11 @@ data class SimWithAccount(
     val airtimeActions: List<HoverAction?> = emptyList()
 )
 
-class ListSimsUseCase(
+class ListSimsUseCase @Inject constructor(
     private val simRepository: com.hover.stax.data.sim.SimInfoRepository,
     private val accountRepository: AccountRepository,
     private val actionRepository: ActionRepo,
-    private val defaultDispatcher: CoroutineDispatcher
+    @Dispatcher(StaxDispatchers.IO) private val defaultDispatcher: CoroutineDispatcher
 ) {
 
     suspend operator fun invoke(): List<SimWithAccount> = withContext(defaultDispatcher) {

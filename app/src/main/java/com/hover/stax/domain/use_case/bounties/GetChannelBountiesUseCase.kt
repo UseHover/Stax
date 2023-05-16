@@ -28,8 +28,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class GetChannelBountiesUseCase(
+class GetChannelBountiesUseCase @Inject constructor(
     private val channelRepository: ChannelRepository,
     private val bountyRepository: BountyRepository,
     private val transactionRepo: TransactionRepo

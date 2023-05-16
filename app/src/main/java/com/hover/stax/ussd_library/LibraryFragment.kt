@@ -33,7 +33,7 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.database.models.Channel
 import com.hover.stax.databinding.FragmentLibraryBinding
 import com.hover.stax.presentation.home.components.TopBar
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.StaxTheme
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.RequestServiceDialog
 import timber.log.Timber

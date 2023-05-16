@@ -16,10 +16,12 @@
 package com.hover.stax.transactionDetails
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
@@ -36,21 +38,23 @@ import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.database.models.UssdCallResponse
 import com.hover.stax.database.repo.ContactRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
 import javax.inject.Inject
-
+@HiltViewModel
 class TransactionDetailsViewModel @Inject constructor(
-    application: Application,
+    @ApplicationContext val context: Context,
     val repo: TransactionRepo,
     val actionRepo: ActionRepo,
     val contactRepo: ContactRepo,
     val accountRepo: AccountRepository,
     private val parserRepo: ParserRepo,
     private val merchantRepo: MerchantRepo
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     val transaction = MutableLiveData<StaxTransaction>()
     var account: LiveData<Account> = MutableLiveData()
@@ -134,7 +138,7 @@ class TransactionDetailsViewModel @Inject constructor(
     private fun generateSmsConvo(smsArr: JSONArray): ArrayList<UssdCallResponse> {
         val smses = ArrayList<UssdCallResponse>()
         for (i in 0 until smsArr.length()) {
-            val sms = getSMSMessageByUUID(smsArr.optString(i), getApplication())
+            val sms = getSMSMessageByUUID(smsArr.optString(i), context)
             Timber.e(sms.uuid)
             smses.add(
                 UssdCallResponse(

@@ -36,12 +36,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hover.stax.ui.theme.Border
-import com.hover.stax.ui.theme.BrightBlue
-import com.hover.stax.ui.theme.ColorPrimary
-import com.hover.stax.ui.theme.OffWhite
-import com.hover.stax.ui.theme.TextGrey
-import com.hover.stax.ui.theme.mainBackground
+import com.hover.stax.views.theme.Border
+import com.hover.stax.views.theme.BrightBlue
+import com.hover.stax.views.theme.ColorPrimary
+import com.hover.stax.views.theme.OffWhite
+import com.hover.stax.views.theme.TextGrey
+import com.hover.stax.views.theme.mainBackground
 
 const val SECONDARY = 0
 const val PRIMARY = 1

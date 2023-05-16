@@ -17,6 +17,7 @@ package com.hover.stax.presentation.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.format.DateUtils
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,7 +35,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.addChannels.ChannelsViewModel
-import com.hover.stax.model.FinancialTip
 import com.hover.stax.presentation.home.components.BalanceHeader
 import com.hover.stax.presentation.home.components.BalanceItem
 import com.hover.stax.presentation.home.components.BonusCard
@@ -43,7 +43,7 @@ import com.hover.stax.presentation.home.components.FinancialTipCard
 import com.hover.stax.presentation.home.components.GuideCard
 import com.hover.stax.presentation.home.components.PrimaryFeatures
 import com.hover.stax.presentation.home.components.TopBar
-import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.views.theme.StaxTheme
 
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
@@ -137,7 +137,7 @@ fun HomeScreen(
                         homeState?.financialTips?.let { financialTips ->
                             item {
                                 financialTips.firstOrNull {
-                                    android.text.format.DateUtils.isToday(it.date!!)
+                                    DateUtils.isToday(it.date!!)
                                 }?.let {
                                     if (homeState?.dismissedTipId != it.id)
                                         FinancialTipCard(

@@ -17,11 +17,8 @@ package com.hover.stax.login
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -35,7 +32,6 @@ import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAI
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.core.Utils
-import com.hover.stax.presentation.bounties.BountyApplicationFragmentDirections
 import com.hover.stax.utils.UIHelper
 import timber.log.Timber
 
@@ -46,6 +42,9 @@ abstract class AbstractGoogleAuthActivity :
     StaxGoogleLoginInterface {
 
     private lateinit var loginViewModel: LoginViewModel
+
+    protected abstract fun provideLoginViewModel(): LoginViewModel
+
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
 
     private lateinit var updateManager: AppUpdateManager
@@ -112,7 +111,7 @@ abstract class AbstractGoogleAuthActivity :
                 staxGoogleLoginInterface.googleLoginFailed()
             }
         }
-
+        
     private fun checkForUpdates() {
         val updateInfoTask = updateManager.appUpdateInfo
 
@@ -167,10 +166,10 @@ abstract class AbstractGoogleAuthActivity :
         ).apply {
             setAction(getString(R.string.restart)) {
                 updateManager.completeUpdate(); installListener?.let {
-                updateManager.unregisterListener(
-                    it
-                )
-            }
+                    updateManager.unregisterListener(
+                        it
+                    )
+                }
             }
             setActionTextColor(
                 ContextCompat.getColor(
@@ -192,10 +191,6 @@ abstract class AbstractGoogleAuthActivity :
                 checkForUpdates()
             }
         }
-    }
-
-    override fun googleLoginSuccessful() {
-        if (loginViewModel.staxUser.value?.isMapper == true) BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
     }
 
     override fun googleLoginFailed() {

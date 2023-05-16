@@ -47,7 +47,7 @@ import com.hover.stax.presentation.components.DisabledButton
 import com.hover.stax.presentation.components.PrimaryButton
 import com.hover.stax.presentation.components.SecondaryButton
 import com.hover.stax.presentation.components.StaxCard
-import com.hover.stax.ui.theme.TextGrey
+import com.hover.stax.views.theme.TextGrey
 import com.hover.stax.core.Utils
 
 @Composable

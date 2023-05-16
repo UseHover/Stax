@@ -24,8 +24,8 @@ import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.hover.stax.ui.theme.Border
-import com.hover.stax.ui.theme.mainBackground
+import com.hover.stax.views.theme.Border
+import com.hover.stax.views.theme.mainBackground
 
 @Composable
 fun StaxCard(content: @Composable ColumnScope.() -> Unit) {

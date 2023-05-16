@@ -41,6 +41,9 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
 
     private lateinit var binding: OnboardingLayoutBinding
     private lateinit var navController: NavController
+    override fun provideLoginViewModel(): LoginViewModel {
+        TODO("Not yet implemented")
+    }
 
     private val loginViewModel: LoginViewModel by viewModels()
 
@@ -94,6 +97,10 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         PermissionUtils.logPermissionsGranted(grantResults, this)
         checkPermissionsAndNavigate()
+    }
+
+    override fun googleLoginSuccessful() {
+        TODO("Not yet implemented")
     }
 
     private fun navigateToMainActivity() {

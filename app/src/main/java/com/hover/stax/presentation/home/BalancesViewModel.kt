@@ -15,12 +15,11 @@
  */
 package com.hover.stax.presentation.home
 
-import android.app.Application
 import android.content.Context
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -28,6 +27,8 @@ import com.hover.stax.data.accounts.AccountRepository
 import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.database.models.Account
 import com.hover.stax.utils.AnalyticsUtil
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -36,11 +37,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class BalancesViewModel @Inject constructor(
-    application: Application,
+    @ApplicationContext val context: Context,
     val actionRepo: ActionRepo,
     private val accountRepo: AccountRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     var userRequestedBalanceAccount = MutableLiveData<Account?>()
 
@@ -60,14 +62,14 @@ class BalancesViewModel @Inject constructor(
     fun requestBalance(account: Account?) {
         if (account == null) {
             AnalyticsUtil.logAnalyticsEvent(
-                (getApplication() as Context).getString(R.string.refresh_balance_failed),
-                getApplication()
+                context.getString(R.string.refresh_balance_failed),
+                context
             )
-            Toast.makeText(getApplication(), R.string.refresh_balance_failed, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, R.string.refresh_balance_failed, Toast.LENGTH_LONG).show()
         } else {
             AnalyticsUtil.logAnalyticsEvent(
-                (getApplication() as Context).getString(R.string.refresh_balance),
-                getApplication()
+                (context as Context).getString(R.string.refresh_balance),
+                context
             )
             userRequestedBalanceAccount.value = account
             startBalanceActionFor(userRequestedBalanceAccount.value)
@@ -77,8 +79,18 @@ class BalancesViewModel @Inject constructor(
     private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
         if (account == null) return@launch
 
-        val action = actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE)
-        action?.let { _balanceAction.emit(action) } ?: run { _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action)) }
+        val action = actionRepo.getFirstAction(
+            account.institutionId,
+            account.countryAlpha2,
+            HoverAction.BALANCE
+        )
+        action?.let { _balanceAction.emit(action) } ?: run {
+            _actionRunError.send(
+                context.getString(
+                    R.string.error_running_action
+                )
+            )
+        }
     }
 
     private fun getAccounts() = viewModelScope.launch {

@@ -29,6 +29,7 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.domain.use_case.bounties.GetChannelBountiesUseCase
 import com.hover.stax.core.Utils.getPackage
 import com.hover.stax.model.Bounty
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +40,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+@HiltViewModel
 class BountyViewModel @Inject constructor(
     private val simRepository: com.hover.stax.data.sim.SimInfoRepository,
     private val bountiesUseCase: GetChannelBountiesUseCase,
