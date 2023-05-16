@@ -36,12 +36,13 @@ import com.hover.stax.database.models.StaxContact
 import com.hover.stax.database.models.StaxTransaction
 import com.hover.stax.database.models.UssdCallResponse
 import com.hover.stax.database.repo.ContactRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
 import javax.inject.Inject
-
+@HiltViewModel
 class TransactionDetailsViewModel @Inject constructor(
     application: Application,
     val repo: TransactionRepo,

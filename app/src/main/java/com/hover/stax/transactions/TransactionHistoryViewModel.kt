@@ -26,10 +26,12 @@ import com.hover.stax.data.actions.ActionRepo
 import com.hover.stax.data.channel.ChannelRepository
 import com.hover.stax.data.transactions.TransactionRepo
 import com.hover.stax.database.models.StaxTransaction
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class TransactionHistoryViewModel @Inject constructor(
     private val repo: TransactionRepo,
     private val actionRepo: ActionRepo,
