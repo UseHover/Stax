@@ -17,8 +17,11 @@ package com.hover.stax.login
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -41,6 +44,8 @@ abstract class AbstractGoogleAuthActivity :
     AppCompatActivity(),
     StaxGoogleLoginInterface {
 
+    private lateinit var loginViewModel: LoginViewModel
+
     protected abstract fun provideLoginViewModel(): LoginViewModel
 
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
@@ -50,6 +55,11 @@ abstract class AbstractGoogleAuthActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        loginViewModel = provideAuthenticationViewModel()
+
+        initGoogleAuth()
+        setLoginObserver()
 
         updateManager = AppUpdateManagerFactory.create(this)
 
@@ -75,6 +85,36 @@ abstract class AbstractGoogleAuthActivity :
         this.staxGoogleLoginInterface = staxGoogleLoginInterface
     }
 
+    abstract fun provideAuthenticationViewModel(): LoginViewModel
+
+    private fun initGoogleAuth() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_server_client_id)).requestEmail().build()
+        loginViewModel.signInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    private fun setLoginObserver() = with(loginViewModel) {
+        error.observe(this@AbstractGoogleAuthActivity) {
+            it?.let { staxGoogleLoginInterface.googleLoginFailed() }
+        }
+
+        googleUser.observe(this@AbstractGoogleAuthActivity) {
+            it?.let { staxGoogleLoginInterface.googleLoginSuccessful() }
+        }
+    }
+
+    fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
+
+    private val loginForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                loginViewModel.signIntoGoogle(result.data)
+            } else {
+                Timber.e("Google sign in failed")
+                staxGoogleLoginInterface.googleLoginFailed()
+            }
+        }
+        
     private fun checkForUpdates() {
         val updateInfoTask = updateManager.appUpdateInfo
 

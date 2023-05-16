@@ -19,6 +19,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -60,6 +61,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         val loginViewModel: LoginViewModel by viewModels()
         return loginViewModel
     }
+
     lateinit var navHelper: NavHelper
 
     private val transferViewModel: TransferViewModel by viewModels()
@@ -97,6 +99,8 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         super.onResume()
         navHelper.setUpNav()
     }
+
+    override fun provideAuthenticationViewModel(): LoginViewModel = loginViewModel
 
     fun checkPermissionsAndNavigate(navDirections: NavDirections) {
         navHelper.checkPermissionsAndNavigate(navDirections)
@@ -138,7 +142,7 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         }
     }
 
-    fun signIn() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
+    fun signInUser() = loginForResult.launch(loginViewModel.signInClient.signInIntent)
 
     private val loginForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

@@ -376,7 +376,7 @@ class SettingsFragment : Fragment() {
     private fun startGoogleLogin() {
         binding.staxSupport.contactCard.showProgressIndicator()
         optInMarketing = true
-        (requireActivity() as MainActivity).signIn()
+        (requireActivity() as MainActivity).signInUser()
     }
 
     private fun marketingOptIn(optedIn: Boolean) {

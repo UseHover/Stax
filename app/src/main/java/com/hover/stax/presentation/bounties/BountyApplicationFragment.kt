@@ -122,7 +122,7 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
     private fun startGoogleSignIn() {
         logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
         updateProgress(0)
-        (activity as MainActivity).signIn()
+        (activity as MainActivity).signInUser()
     }
 
     // TODO - delete me

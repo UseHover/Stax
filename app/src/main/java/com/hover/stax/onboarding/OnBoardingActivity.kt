@@ -17,6 +17,7 @@ package com.hover.stax.onboarding
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.hover.sdk.permissions.PermissionHelper
@@ -33,7 +34,9 @@ import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.core.Utils
 import com.hover.stax.login.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OnBoardingActivity : AbstractGoogleAuthActivity() {
 
     private lateinit var binding: OnboardingLayoutBinding
@@ -41,6 +44,8 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
     override fun provideLoginViewModel(): LoginViewModel {
         TODO("Not yet implemented")
     }
+
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         UIHelper.setFullscreenView(this)
@@ -54,6 +59,8 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
         navigateNextScreen()
         setGoogleLoginInterface(this)
     }
+
+    override fun provideAuthenticationViewModel(): LoginViewModel = loginViewModel
 
     private fun setupNavigation() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_onboarding) as NavHostFragment
