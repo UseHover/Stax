@@ -43,6 +43,7 @@ import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.core.Utils
+import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.collectLifecycleFlow
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.flow.StateFlow
@@ -376,7 +377,7 @@ class SettingsFragment : Fragment() {
     private fun startGoogleLogin() {
         binding.staxSupport.contactCard.showProgressIndicator()
         optInMarketing = true
-        (requireActivity() as AbstractGoogleAuthActivity).signIn()
+        (requireActivity() as MainActivity).signIn()
     }
 
     private fun marketingOptIn(optedIn: Boolean) {

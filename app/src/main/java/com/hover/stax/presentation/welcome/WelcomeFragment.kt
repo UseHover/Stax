@@ -25,8 +25,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.database.models.StaxUser
+import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginViewModel
-import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
@@ -81,7 +81,7 @@ class WelcomeFragment : Fragment() {
                 getString(R.string.clicked_google_sign_in),
                 requireActivity()
             )
-            (requireActivity() as OnBoardingActivity).signIn()
+            (requireActivity() as MainActivity).signIn()
         }
     }
 

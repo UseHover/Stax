@@ -32,11 +32,15 @@ import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.core.Utils
+import com.hover.stax.login.LoginViewModel
 
 class OnBoardingActivity : AbstractGoogleAuthActivity() {
 
     private lateinit var binding: OnboardingLayoutBinding
     private lateinit var navController: NavController
+    override fun provideLoginViewModel(): LoginViewModel {
+        TODO("Not yet implemented")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         UIHelper.setFullscreenView(this)
@@ -86,6 +90,10 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         PermissionUtils.logPermissionsGranted(grantResults, this)
         checkPermissionsAndNavigate()
+    }
+
+    override fun googleLoginSuccessful() {
+        TODO("Not yet implemented")
     }
 
     private fun navigateToMainActivity() {
