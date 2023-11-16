@@ -88,8 +88,11 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
                     visibility = View.VISIBLE
                     text = getString(R.string.signed_in_as, staxUser.email)
                 }
+                NavUtil.navigate(
+                    findNavController(),
+                    BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
+                )
             }
-            staxUser != null && staxUser.isMapper -> NavUtil.navigate(findNavController(), BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment())
             else -> {
                 signedInDetails.visibility = View.GONE
                 btnSignIn.apply {
