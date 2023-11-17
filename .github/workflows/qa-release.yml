@@ -74,6 +74,8 @@ jobs:
         uses: rickstaa/action-create-tag@v1
         with:
           tag: "v${{steps.get_version.outputs.APP_VERSION}}"
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Send Slack Notification
         uses: Ilshidur/action-slack@2.0.2
