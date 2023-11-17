@@ -28,17 +28,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyApplicationBinding
-import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginScreenUiState
 import com.hover.stax.login.LoginUiState
 import com.hover.stax.login.LoginViewModel
+import com.hover.stax.storage.user.entity.StaxUser
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -88,8 +87,8 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
                     visibility = View.VISIBLE
                     text = getString(R.string.signed_in_as, staxUser.email)
                 }
+                NavUtil.navigate(findNavController(), BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment())
             }
-            staxUser != null && staxUser.isMapper -> NavUtil.navigate(findNavController(), BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment())
             else -> {
                 signedInDetails.visibility = View.GONE
                 btnSignIn.apply {
