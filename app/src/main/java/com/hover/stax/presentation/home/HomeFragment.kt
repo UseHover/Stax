@@ -70,6 +70,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     private fun getHomeClickFunctions(): HomeClickFunctions {
         fun onSendMoneyClicked() = navigateTo(getTransferDirection(HoverAction.P2P))
         fun onBuyAirtimeClicked() = navigateTo(getTransferDirection(HoverAction.AIRTIME))
+        fun onBuyDataClicked() = navigateTo(getTransferDirection(HoverAction.BUY_DATA))
         fun onBuyGoodsClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToMerchantFragment())
         fun onPayBillClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
         fun onRequestMoneyClicked() = navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationRequest())
@@ -81,6 +82,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
         return HomeClickFunctions(
             onSendMoneyClicked = { onSendMoneyClicked() },
             onBuyAirtimeClicked = { onBuyAirtimeClicked() },
+            onBuyDataClicked = { onBuyDataClicked() },
             onBuyGoodsClicked = { onBuyGoodsClicked() },
             onPayBillClicked = { onPayBillClicked() },
             onRequestMoneyClicked = { onRequestMoneyClicked() },
@@ -153,7 +155,7 @@ class HomeFragment : AbstractBalanceCheckerFragment(), FinancialTipClickInterfac
     }
 
     override fun onTapBalanceRefresh(account: Account?) {
-        balancesViewModel.requestBalance(account)
+        balancesViewModel.requestAction(account, HoverAction.BALANCE)
     }
 
     override fun onTapBalanceDetail(accountId: Int) {

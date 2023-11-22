@@ -56,27 +56,27 @@ class BalancesViewModel(
         getAccounts()
     }
 
-    fun requestBalance(account: Account?) {
+    fun requestAction(account: Account?, type: String) {
         if (account == null) {
             AnalyticsUtil.logAnalyticsEvent(
-                (getApplication() as Context).getString(R.string.refresh_balance_failed),
+                (getApplication() as Context).getString(R.string.action_failed, type),
                 getApplication()
             )
-            Toast.makeText(getApplication(), R.string.refresh_balance_failed, Toast.LENGTH_LONG).show()
+            Toast.makeText(getApplication(), (getApplication() as Context).getString(R.string.action_failed, type), Toast.LENGTH_LONG).show()
         } else {
             AnalyticsUtil.logAnalyticsEvent(
-                (getApplication() as Context).getString(R.string.refresh_balance),
+                (getApplication() as Context).getString(R.string.action_starting, type),
                 getApplication()
             )
             userRequestedBalanceAccount.value = account
-            startBalanceActionFor(userRequestedBalanceAccount.value)
+            startActionFor(userRequestedBalanceAccount.value, type)
         }
     }
 
-    private fun startBalanceActionFor(account: Account?) = viewModelScope.launch(Dispatchers.IO) {
+    private fun startActionFor(account: Account?, type: String) = viewModelScope.launch(Dispatchers.IO) {
         if (account == null) return@launch
 
-        val action = actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE)
+        val action = actionRepo.getFirstAction(account.institutionId, account.countryAlpha2, type)
         action?.let { _balanceAction.emit(action) } ?: run { _actionRunError.send((getApplication() as Context).getString(R.string.error_running_action)) }
     }
 

@@ -16,12 +16,7 @@
 package com.hover.stax.presentation.sims.components
 
 import android.content.Context
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -55,7 +50,10 @@ import com.hover.stax.utils.Utils
 internal fun SimItem(
     simWithAccount: SimWithAccount,
     refreshBalance: (Account) -> Unit,
-    buyAirtime: (Account) -> Unit
+    buyAirtime: (Account) -> Unit,
+    dataBalance: (Account) -> Unit,
+    buyData: (Account) -> Unit,
+    borrow: (Account) -> Unit
 ) {
     StaxCard {
         val context = LocalContext.current
@@ -92,17 +90,59 @@ internal fun SimItem(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        if (simWithAccount.account.channelId == -1) {
-            SecondaryButton(
-                context.getString(R.string.email_support), null,
-                onClick = { emailStax(simWithAccount, context) }
-            )
-        } else {
-            val bonus = getBonus(simWithAccount.airtimeActions)
-            SecondaryButton(
-                getAirtimeButtonLabel(bonus, context), getAirtimeButtonIcon(bonus),
-                onClick = { buyAirtime(simWithAccount.account) }
-            )
+        Row(
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),
+            verticalAlignment = Alignment.CenterVertically
+
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+
+                if (simWithAccount.account.channelId == -1) {
+                    SecondaryButton(
+                        context.getString(R.string.email_support), null,
+                        onClick = { emailStax(simWithAccount, context) }
+                    )
+                } else {
+                    val bonus = getBonus(simWithAccount.airtimeActions)
+                    SecondaryButton(
+                        getAirtimeButtonLabel(bonus, context), null,
+                        onClick = { buyAirtime(simWithAccount.account) }
+                    )
+                }
+            }
+
+            Column(modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.End) {
+                SecondaryButton(
+                    context.getString(R.string.cta_borrow),
+                    null,
+                    onClick = { borrow(simWithAccount.account) }
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.margin_13)),
+            verticalAlignment = Alignment.CenterVertically
+
+        ) {
+
+            Column(modifier = Modifier.weight(1f)) {
+                SecondaryButton(
+                    context.getString(R.string.cta_data_balance),
+                    null,
+                    onClick = { dataBalance(simWithAccount.account) }
+                )
+            }
+
+            Column(modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.End) {
+                SecondaryButton(
+                    context.getString(R.string.cta_buy_data),
+                    null,
+                    onClick = { buyData(simWithAccount.account) }
+                )
+            }
         }
     }
 }

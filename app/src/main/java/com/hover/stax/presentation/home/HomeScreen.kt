@@ -49,6 +49,7 @@ import com.hover.stax.utils.AnalyticsUtil
 data class HomeClickFunctions(
     val onSendMoneyClicked: () -> Unit,
     val onBuyAirtimeClicked: () -> Unit,
+    val onBuyDataClicked: () -> Unit,
     val onBuyGoodsClicked: () -> Unit,
     val onPayBillClicked: () -> Unit,
     val onRequestMoneyClicked: () -> Unit,
@@ -109,6 +110,7 @@ fun HomeScreen(
                             PrimaryFeatures(
                                 onSendMoneyClicked = homeClickFunctions.onSendMoneyClicked,
                                 onBuyAirtimeClicked = homeClickFunctions.onBuyAirtimeClicked,
+                                onBuyDataClicked = homeClickFunctions.onBuyDataClicked,
                                 onBuyGoodsClicked = homeClickFunctions.onBuyGoodsClicked,
                                 onPayBillClicked = homeClickFunctions.onPayBillClicked,
                                 onRequestMoneyClicked = homeClickFunctions.onRequestMoneyClicked,
@@ -210,6 +212,7 @@ fun HomeScreenPreview() {
                             PrimaryFeatures(
                                 onSendMoneyClicked = { },
                                 onBuyAirtimeClicked = { },
+                                onBuyDataClicked = { },
                                 onBuyGoodsClicked = { },
                                 onPayBillClicked = { },
                                 onRequestMoneyClicked = {},

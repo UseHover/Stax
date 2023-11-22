@@ -133,9 +133,10 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun fabClicked() {
-        if (accountsViewModel.activeAccount.value != null && !accountsViewModel.isValidAccount())
-            askToCheckBalance(accountsViewModel.activeAccount.value!!)
-        else if (validates()) {
+//        if (accountsViewModel.activeAccount.value != null && !accountsViewModel.isValidAccount())
+//            askToCheckBalance(accountsViewModel.activeAccount.value!!)
+//        else
+        if (validates()) {
             if (abstractFormViewModel.isEditing.value == true) {
                 onFinishForm()
             } else {
@@ -155,7 +156,7 @@ abstract class AbstractFormFragment : Fragment() {
             .setDialogTitle(R.string.finish_adding_title)
             .setDialogMessage(getString(R.string.finish_adding_desc, account.userAlias))
             .setNegButton(R.string.btn_cancel, null)
-            .setPosButton(R.string.connect_cta) { balancesViewModel.requestBalance(account) }
+            .setPosButton(R.string.connect_cta) { balancesViewModel.requestAction(account, HoverAction.BALANCE) }
         dialog.showIt()
     }
 
@@ -170,6 +171,7 @@ abstract class AbstractFormFragment : Fragment() {
         return when {
             isEditing -> getString(R.string.btn_continue)
             accountsViewModel.getActionType() == HoverAction.AIRTIME -> getString(R.string.fab_airtimenow)
+            accountsViewModel.getActionType() == HoverAction.BUY_DATA -> getString(R.string.fab_datanow)
             accountsViewModel.getActionType() == HoverAction.P2P ||
                 accountsViewModel.getActionType() == HoverAction.MERCHANT ||
                 accountsViewModel.getActionType() == HoverAction.BILL -> getString(R.string.fab_transfernow)

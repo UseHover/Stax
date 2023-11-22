@@ -145,6 +145,9 @@
     <string name="welcome_to">Welcome to</string>
     <string name="cta_transfer">Send money</string>
     <string name="cta_airtime">Buy airtime</string>
+    <string name="cta_buy_data">Buy data</string>
+    <string name="cta_data_balance">Data balance</string>
+    <string name="cta_borrow">Borrow airtime</string>
     <string name="cta_request">Request money</string>
     <string name="cta_paybill">Pay a bill</string>
     <string name="cta_paybill_linebreak">Pay\n a bill</string>
@@ -381,6 +384,7 @@
 
     <string name="fab_transfernow">Send money now</string>
     <string name="fab_airtimenow">Buy airtime now</string>
+    <string name="fab_datanow">Buy data now</string>
     <string name="noworry_explain">You can review this info in the next step.</string>
     <string name="descrip_multcontacts">%1$d contacts</string>
 

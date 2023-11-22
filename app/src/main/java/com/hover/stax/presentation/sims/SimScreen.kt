@@ -54,6 +54,9 @@ fun SimScreen(
     refreshBalance: (Account) -> Unit,
     buyAirtime: (Account) -> Unit,
     navTo: (dest: Int) -> Unit,
+    refreshDataBalance: (Account) -> Unit,
+    buyData: (Account) -> Unit,
+    borrow: (Account) -> Unit,
     simViewModel: SimViewModel = getViewModel()
 ) {
     val sims by simViewModel.sims.collectAsState()
@@ -92,7 +95,7 @@ fun SimScreen(
                         items(sims.sortedWith(comparator)) { sim ->
                             // Don't show removed SIM cards that we don't support, it is confusing
                             if (sim.account.channelId != -1 || sim.sim.slotIdx != -1)
-                                SimItem(sim, refreshBalance, buyAirtime)
+                                SimItem(sim, refreshBalance, buyAirtime, refreshDataBalance, buyData, borrow)
                         }
                     }
                 }
@@ -135,7 +138,7 @@ private fun SimScreenPreview(
                     itemsIndexed(sims) { index, sim ->
                         SimItem(
                             simWithAccount = sim,
-                            { }, { }
+                            { }, { }, { }, { }, { }
                         )
                     }
                 }

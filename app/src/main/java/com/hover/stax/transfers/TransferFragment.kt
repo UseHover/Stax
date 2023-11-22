@@ -102,7 +102,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun setTitle() {
-        val titleRes = if (accountsViewModel.getActionType() == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
+        val titleRes = when(accountsViewModel.getActionType()) {
+            HoverAction.AIRTIME -> R.string.cta_airtime
+            HoverAction.BUY_DATA -> R.string.cta_buy_data
+            else -> R.string.cta_transfer
+        }
         binding.editCard.root.setTitle(getString(titleRes))
         binding.summaryCard.root.setTitle(getString(titleRes))
     }
@@ -447,40 +451,41 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun updateBonusBanner(selected: HoverAction?, actions: List<HoverAction>?) {
-        if (args.transactionType == HoverAction.AIRTIME) {
-
-            with(binding.bonusLayout) {
-                learnMore.movementMethod = LinkMovementMethod.getInstance()
-
-                if (selected != null && selected.bonus_percent > 0) {
-                    cardBonus.visibility = View.VISIBLE
-                    title.text = getString(R.string.congratulations)
-                    message.text = getString(R.string.you_are_getting_extra_airtime, selected.bonus_percent)
-                    cta.visibility = View.GONE
-                } else if (actions?.any { a -> a.bonus_percent > 0 } != true) {
-                    cardBonus.visibility = View.GONE
-                } else if (transferViewModel.isEditing.value == true) {
-                    cardBonus.visibility = View.VISIBLE
-                    val bonus = actions.first { a -> a.bonus_percent > 0 }
-                    title.text = getString(R.string.get_extra_airtime)
-                    message.text = bonus.bonus_message
-                    cta.apply {
-                        visibility = View.VISIBLE
-                        text = getString(R.string.top_up_with, bonus.from_institution_name)
-
-                        setOnClickListener {
-                            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
-                            accountsViewModel.payWith(bonus.from_institution_id)
-                        }
-                    }
-                } else { cardBonus.visibility = View.GONE }
-            }
-        }
+        binding.bonusLayout.cardBonus.visibility = View.GONE
+//        if (args.transactionType == HoverAction.AIRTIME) {
+//
+//            with(binding.bonusLayout) {
+//                learnMore.movementMethod = LinkMovementMethod.getInstance()
+//
+//                if (selected != null && selected.bonus_percent > 0) {
+//                    cardBonus.visibility = View.VISIBLE
+//                    title.text = getString(R.string.congratulations)
+//                    message.text = getString(R.string.you_are_getting_extra_airtime, selected.bonus_percent)
+//                    cta.visibility = View.GONE
+//                } else if (actions?.any { a -> a.bonus_percent > 0 } != true) {
+//                    cardBonus.visibility = View.GONE
+//                } else if (transferViewModel.isEditing.value == true) {
+//                    cardBonus.visibility = View.VISIBLE
+//                    val bonus = actions.first { a -> a.bonus_percent > 0 }
+//                    title.text = getString(R.string.get_extra_airtime)
+//                    message.text = bonus.bonus_message
+//                    cta.apply {
+//                        visibility = View.VISIBLE
+//                        text = getString(R.string.top_up_with, bonus.from_institution_name)
+//
+//                        setOnClickListener {
+//                            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bonus_airtime_banner), requireActivity())
+//                            accountsViewModel.payWith(bonus.from_institution_id)
+//                        }
+//                    }
+//                } else { cardBonus.visibility = View.GONE }
+//            }
+//        }
     }
 
     override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
-        updateBonusBanner(actionSelectViewModel.activeAction.value, accountsViewModel.bonusActions.value)
+//        updateBonusBanner(actionSelectViewModel.activeAction.value, accountsViewModel.bonusActions.value)
     }
 
     override fun onDestroyView() {

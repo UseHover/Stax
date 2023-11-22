@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.hover.sdk.actions.HoverAction.BALANCE
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.domain.model.Account
@@ -218,7 +219,7 @@ class AccountDetailFragment :
     }
 
     private fun onTapBalanceRefresh(account: Account?) {
-        balancesViewModel.requestBalance(account)
+        balancesViewModel.requestAction(account, BALANCE)
     }
 
     private fun setUpRemoveAccount(account: Account) {

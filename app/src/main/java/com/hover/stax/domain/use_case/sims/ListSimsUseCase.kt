@@ -28,7 +28,8 @@ data class SimWithAccount(
     val sim: SimInfo,
     val account: Account,
     val balanceAction: HoverAction?,
-    val airtimeActions: List<HoverAction?> = emptyList()
+    val airtimeActions: List<HoverAction?> = emptyList(),
+    val dataActions: List<HoverAction?> = emptyList()
 )
 
 class ListSimsUseCase(
@@ -45,6 +46,7 @@ class ListSimsUseCase(
             var account = accountRepository.getAccountBySim(sim.subscriptionId)
             var balanceAct: HoverAction? = null
             var airtimeActs: List<HoverAction> = emptyList()
+            var dataActs: List<HoverAction> = emptyList()
 
             if (account == null)
                 account = accountRepository.createAccount(sim)
@@ -52,8 +54,9 @@ class ListSimsUseCase(
             if (account.channelId != -1) {
                 balanceAct = actionRepository.getFirstAction(account.institutionId, account.countryAlpha2, HoverAction.BALANCE)
                 airtimeActs = actionRepository.getActionsByRecipientInstitution(account.institutionId, account.countryAlpha2, HoverAction.AIRTIME)
+                dataActs = actionRepository.getActionsByRecipientInstitution(account.institutionId, account.countryAlpha2, HoverAction.BUY_DATA)
             }
-            result.add(SimWithAccount(sim, account, balanceAct, airtimeActs))
+            result.add(SimWithAccount(sim, account, balanceAct, airtimeActs, dataActs))
         }
         result
     }

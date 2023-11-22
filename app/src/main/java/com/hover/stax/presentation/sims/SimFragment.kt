@@ -50,9 +50,12 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
 
             setContent {
                 SimScreen(
-                    refreshBalance = { acct -> balancesViewModel.requestBalance(acct) },
+                    refreshBalance = { acct -> balancesViewModel.requestAction(acct, HoverAction.BALANCE) },
                     buyAirtime = { navigateTo(SimFragmentDirections.toTransferFragment(HoverAction.AIRTIME)) },
-                    navTo = { dest -> navigateTo(dest) }
+                    navTo = { dest -> navigateTo(dest) },
+                    refreshDataBalance = { acct -> balancesViewModel.requestAction(acct, HoverAction.DATA_BALANCE) },
+                    buyData = { acct -> balancesViewModel.requestAction(acct, HoverAction.BUY_DATA) },
+                    borrow = { acct -> balancesViewModel.requestAction(acct, HoverAction.BORROW_AIRTIME) },
                 )
             }
         }
@@ -82,7 +85,7 @@ class SimFragment : AbstractBalanceCheckerFragment(), BalanceTapListener {
         (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 
     override fun onTapBalanceRefresh(account: Account?) {
-        balancesViewModel.requestBalance(account)
+        balancesViewModel.requestAction(account, HoverAction.BALANCE)
     }
 
     override fun onTapBalanceDetail(accountId: Int) {}

@@ -28,6 +28,7 @@ import com.hover.stax.R
 fun PrimaryFeatures(
     onSendMoneyClicked: () -> Unit,
     onBuyAirtimeClicked: () -> Unit,
+    onBuyDataClicked: () -> Unit,
     onBuyGoodsClicked: () -> Unit,
     onPayBillClicked: () -> Unit,
     onRequestMoneyClicked: () -> Unit,
@@ -48,6 +49,11 @@ fun PrimaryFeatures(
             onItemClick = onBuyAirtimeClicked,
             drawable = R.drawable.ic_system_upate_24,
             stringRes = R.string.cta_airtime
+        )
+        VerticalImageTextView(
+            onItemClick = onBuyDataClicked,
+            drawable = R.drawable.ic_data,
+            stringRes = R.string.cta_buy_data
         )
         if (showKenyaFeatures) {
             VerticalImageTextView(
