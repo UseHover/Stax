@@ -18,6 +18,8 @@ package com.hover.stax.hover
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
@@ -37,7 +39,7 @@ import com.hover.stax.requests.RequestRepo
 import com.hover.stax.transactions.TransactionRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
-import java.util.regex.Pattern
+import com.google.code.regexp.Pattern;
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -190,24 +192,30 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     }
 
     private suspend fun parseAccounts(ussdAccountList: String) {
-        val pattern = Pattern.compile("^([\\d]{1,2})[>):.\\s]+(.+)\$", Pattern.MULTILINE)
+        val patternRegex = action!!.account_list_regex ?: "^([\\d]{1,2})[>):.\\s]+(?<accountName>.+)\$"
+        val pattern = Pattern.compile(patternRegex, Pattern.MULTILINE)
         val matcher = pattern.matcher(ussdAccountList)
 
         while (matcher.find()) {
             try {
                 val accounts = accountRepo.getAccountsByChannel(channel!!.id)
-                if (accounts.any { it.institutionAccountName == matcher.group(2)!! }) { break }
+                val accountName = matcher.group("accountName")!!
 
                 val a = if (account != null && account!!.institutionAccountName == null) {
                     account!!
                 } else if (accounts.any { it.institutionAccountName == null }) {
                     accounts.first { it.institutionAccountName == null }
                 } else {
-                    Account(matcher.group(2)!!, channel!!, false, account?.simSubscriptionId ?: -1)
+                    Account(accountName, channel!!, false, account?.simSubscriptionId ?: -1)
                 }
 
-                a.institutionAccountName = matcher.group(2)!!
-                if (a.institutionName == a.userAlias) a.userAlias = matcher.group(2)!!
+                a.institutionAccountName = accountName
+                if (a.institutionName == a.userAlias) a.userAlias = accountName
+
+                val balance = matcher.group("balance")
+                if (!balance.isNullOrEmpty()) {
+                    a.updateBalance(balance)
+                }
 
                 accountRepo.saveAccount(a)
             } catch (e: Exception) { AnalyticsUtil.logErrorAndReportToFirebase(TransactionReceiver::class.java.simpleName, "Failed to parse account list from USSD", e) }

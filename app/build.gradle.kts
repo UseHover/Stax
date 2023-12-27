@@ -247,6 +247,8 @@ dependencies {
     "stagingImplementation"(project(":hover.sdk"))
     "stagingImplementation"(libs.bundles.hover)
     "productionImplementation"(libs.hover)
+
+    implementation(files("libs/named-regexp.jar"))
 }
 
 abstract class VersionTask : DefaultTask() {

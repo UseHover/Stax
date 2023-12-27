@@ -108,6 +108,11 @@ data class Account(
         }
     }
 
+    fun updateBalance(balance: String) {
+        latestBalance = balance
+        latestBalanceTimestamp = now()
+    }
+
     fun getAccountNameExtra(): String {
         return institutionAccountName ?: "1"
     }
