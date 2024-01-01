@@ -76,13 +76,13 @@ fun BountyLi(bounty: Bounty, bountyViewModel: BountyViewModel) {
                 style = if (isOpen(bounty)) MaterialTheme.typography.body1 else strikeThrough
             )
 
-            Text(
-                text = stringResource(R.string.bounty_amount_with_currency, bounty.action.bounty_amount),
-                modifier = Modifier
-                    .padding(top = margin8, bottom = margin8),
-                style = if (isOpen(bounty)) MaterialTheme.typography.body1 else strikeThrough,
-                fontWeight = FontWeight.Medium
-            )
+//            Text(
+//                text = stringResource(R.string.bounty_amount_with_currency, bounty.action.bounty_amount),
+//                modifier = Modifier
+//                    .padding(top = margin8, bottom = margin8),
+//                style = if (isOpen(bounty)) MaterialTheme.typography.body1 else strikeThrough,
+//                fontWeight = FontWeight.Medium
+//            )
         }
 
         if (getMsg(bounty) != 0)
@@ -97,55 +97,58 @@ fun BountyLi(bounty: Bounty, bountyViewModel: BountyViewModel) {
 
 private fun getColor(bounty: Bounty): Int {
     return when {
-        bounty.hasSuccessfulTransactions() -> R.color.muted_green
-        bounty.isLastTransactionFailed() -> R.color.stax_bounty_red_bg
-        !bounty.action.bounty_is_open -> R.color.lighter_grey
-        bounty.transactionCount > 0 -> R.color.pending_brown
+//        bounty.hasSuccessfulTransactions() -> R.color.muted_green
+//        bounty.isLastTransactionFailed() -> R.color.stax_bounty_red_bg
+//        !bounty.action.bounty_is_open -> R.color.lighter_grey
+//        bounty.transactionCount > 0 -> R.color.pending_brown
         else -> R.color.colorSurface
     }
 }
 
 private fun getMsg(bounty: Bounty): Int {
-    return when {
-        bounty.hasSuccessfulTransactions() -> R.string.done
-        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> R.string.bounty_transaction_failed
-        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open -> R.string.bounty_transaction_failed_try_again
-        bounty.transactionCount > 0 -> R.string.bounty_pending_short_desc
-        else -> 0
-    }
+    return 0
+//    return when {
+//        bounty.hasSuccessfulTransactions() -> R.string.done
+//        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> R.string.bounty_transaction_failed
+//        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open -> R.string.bounty_transaction_failed_try_again
+//        bounty.transactionCount > 0 -> R.string.bounty_pending_short_desc
+//        else -> 0
+//    }
 }
 
 private fun getIcon(bounty: Bounty): Int {
-    return when {
-        bounty.hasSuccessfulTransactions() -> R.drawable.ic_check
-        bounty.isLastTransactionFailed() -> R.drawable.ic_error
-        bounty.transactionCount > 0 -> R.drawable.ic_warning
-        else -> 0
-    }
+    return 0
+//    return when {
+//        bounty.hasSuccessfulTransactions() -> R.drawable.ic_check
+//        bounty.isLastTransactionFailed() -> R.drawable.ic_error
+//        bounty.transactionCount > 0 -> R.drawable.ic_warning
+//        else -> 0
+//    }
 }
 
 private fun isOpen(bounty: Bounty): Boolean {
-    return when {
-        bounty.hasSuccessfulTransactions() -> false
-        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> false
-        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open -> true
-        !bounty.action.bounty_is_open -> false
-        bounty.transactionCount > 0 -> true
-        else -> true
-    }
+    return true
+//    return when {
+//        bounty.hasSuccessfulTransactions() -> false
+//        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open -> false
+//        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open -> true
+//        !bounty.action.bounty_is_open -> false
+//        bounty.transactionCount > 0 -> true
+//        else -> true
+//    }
 }
 
 private fun getTapAction(bounty: Bounty): BountySelectEvent? {
     return when {
-        bounty.hasSuccessfulTransactions() ->
-            BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid)
-        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open ->
-            BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid)
-        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open ->
-            BountySelectEvent.ViewBountyDetail(bounty)
-        !bounty.action.bounty_is_open -> null
-        bounty.transactionCount > 0 ->
-            BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid)
+//        bounty.hasSuccessfulTransactions() ->
+//            BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid)
+//        bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open ->
+//            BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid)
+//        bounty.isLastTransactionFailed() && bounty.action.bounty_is_open ->
+//            BountySelectEvent.ViewBountyDetail(bounty)
+//        !bounty.action.bounty_is_open -> null
+//        bounty.transactionCount > 0 ->
+//            BountySelectEvent.ViewTransactionDetail(bounty.transactions.last().uuid)
         else -> BountySelectEvent.ViewBountyDetail(bounty)
     }
 }
@@ -174,13 +177,13 @@ fun BountyCardPreview() {
                 style = MaterialTheme.typography.body1
             )
 
-            Text(
-                text = "USD $1",
-                modifier = Modifier
-                    .padding(top = margin8, bottom = margin8),
-                style = MaterialTheme.typography.body1,
-                fontWeight = FontWeight.Medium
-            )
+//            Text(
+//                text = "USD $1",
+//                modifier = Modifier
+//                    .padding(top = margin8, bottom = margin8),
+//                style = MaterialTheme.typography.body1,
+//                fontWeight = FontWeight.Medium
+//            )
         }
 
         SpannableImageTextView(

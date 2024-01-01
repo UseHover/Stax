@@ -684,9 +684,7 @@
 
     <string name="available_flows">FLUX DISPONIBLES</string>
 
-    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
-
-    <string name="bounty_claim_explained">Pour réclamer %1$d $USD, %2$s.\n\nDès que vous aurez terminé, nous vous enverrons un courriel pour collecter les informations nécessaires au paiement. Vous serez payé en 1 à 5 jours ouvrables </string>
+    <string name="bounty_claim_title">%1$s - %2$s</string>
 
     <string name="start_USSD_Flow">Démarrer le flux USSD</string>
 

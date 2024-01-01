@@ -63,10 +63,10 @@ class BountyApplicationFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
-        binding.instructions.apply {
-            text = HtmlCompat.fromHtml(getString(R.string.bounty_email_stage_desc2), HtmlCompat.FROM_HTML_MODE_LEGACY)
-            movementMethod = LinkMovementMethod.getInstance()
-        }
+//        binding.instructions.apply {
+//            text = HtmlCompat.fromHtml(getString(R.string.bounty_email_stage_desc2), HtmlCompat.FROM_HTML_MODE_LEGACY)
+//            movementMethod = LinkMovementMethod.getInstance()
+//        }
 
         startObservers()
     }

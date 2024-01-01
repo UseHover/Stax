@@ -76,13 +76,14 @@ class LoginViewModel(
             val account = task.getResult(ApiException::class.java)!!
             setUser(account, account.idToken!!)
         } catch (e: ApiException) {
-            Timber.e(e, "Google sign in failed")
+            Timber.e(e, e.message)
             onError((getApplication() as Context).getString(R.string.login_google_err))
         }
     }
 
     private fun loginUser(token: String, signInAccount: GoogleSignInAccount) =
         viewModelScope.launch {
+            Timber.e("logging in...")
             try {
                 val authorization = authRepository.authorizeClient(token)
                 val response = authRepository.fetchTokenInfo(authorization.redirectUri.code)
@@ -110,7 +111,7 @@ class LoginViewModel(
                     _loginState.value = LoginScreenUiState(LoginUiState.Success)
                 }
             } catch (e: Exception) {
-                Timber.e("Login failed $e")
+                Timber.e(e, "Login failed ${e.message}")
                 _loginState.value = LoginScreenUiState(LoginUiState.Error)
             }
         }

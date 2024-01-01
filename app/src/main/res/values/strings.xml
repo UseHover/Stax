@@ -534,7 +534,7 @@
     <string name="share_msg">Check out Stax, an app that automates USSD. https://play.google.com/store/apps/details?id=com.hover.stax</string>
     <string name="connect_accounts">Connect your accounts</string>
 
-    <string name="login_google_err">An error occurred while signing in to Google. Please try again.</string>
+    <string name="login_google_err">Error signing in to Google.</string>
     <string name="referral_text">Your code:</string>
     <string name="referral_label">Agent\'s code</string>
     <string name="privacy_policy_label">By using Stax App, you\'ve read our privacy policy and agree to the terms of service. Click to read</string>
@@ -639,11 +639,11 @@
 
     <!-- BOUNTY -->
     <string name="nav_bounty">Bounty</string>
-    <string name="bounty_title">💸 Money Mapper</string>
-    <string name="bounty_msg">Stax will pay you USD $1 - $5 to go through a USSD flow.</string>
+    <string name="bounty_title">USSD Recorder</string>
+    <string name="bounty_msg">You can help make USSD more reliable by recording USSD sessions.</string>
     <string name="get_started">Get started</string>
-    <string name="bounty_email_stage_title">Welcome to Money Mapper</string>
-    <string name="bounty_email_stage_desc1">Stax wants to make USSD easier to use for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Money Mappers have the opportunity to earn USD $1 - $5 for every USSD transaction successfully completed. Please follow the instructions below to apply.</string>
+    <string name="bounty_email_stage_title">Welcome to USSD Recorder</string>
+    <string name="bounty_email_stage_desc1">Stax wants to make USSD easier to use for everyone. We need to record USSD sessions to measure their performance and reliability. You can help us by recording your sessions. Your data will only be used for research purposes, no personally identifiable information will be shared with anyone.</string>
     <string name="bounty_email_stage_desc2"><![CDATA[<b>1.</b> Sign in below with your Google account. <br><br> <b>2.</b> Fill out the <font color=#0091E3><u><a href="https://stax.me/blog/apply-to-become-a-verified-stax-money-mapper-1/">application form</a></u></font>. <br><br> <b>3.</b> You will receive an email notification when your application is accepted. <br><br> <b>4.</b> Come back to this screen to find the list of bounties and start earning money!]]></string>
     <string name="signed_in_as">Signed into Google account %1$s</string>
     <string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
@@ -676,8 +676,8 @@
     <string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
     <string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
     <string name="available_flows">AVAILABLE FLOWS</string>
-    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
-    <string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 7–10 business days </string>
+    <string name="bounty_claim_title">%1$s - %2$s</string>
+    <string name="bounty_claim_explained">This will dial the shortcode and record the USSD session. When you see the USSD menu please %1$s</string>
     <string name="start_USSD_Flow">Start USSD Flow</string>
     <string name="checking_your_flow">Checking your flow</string>
     <string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>

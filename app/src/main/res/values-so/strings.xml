@@ -540,8 +540,7 @@
     <string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
     <string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
     <string name="available_flows">SOCODKA LA HELI KARO</string>
-    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
-    <string name="bounty_claim_explained">Si aad u dalbato USD $%1$d, %2$s.\n\n Isla marka aad dhammayso, waxaanu kuu soo diri doonaa iimayl si aad u ururiso macluumaadka lacag bixinta. Waxa lagu siin doonaa 7–10 maalmood oo shaqo gudahood</string>
+    <string name="bounty_claim_title">%1$s - %2$s</string>
     <string name="start_USSD_Flow">Billow khariidaynta USSD-ga</string>
     <string name="checking_your_flow">Waxaa la xaqiijinyaa socdaalkaaga</string>
     <string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>

@@ -64,7 +64,6 @@ class MainActivity : AbstractGoogleAuthActivity(), BiometricChecker.AuthListener
         checkForRequest(intent)
         checkForFragmentDirection(intent)
         observeForAppReview()
-        setGoogleLoginInterface(this)
     }
 
     override fun onNewIntent(intent: Intent?) {

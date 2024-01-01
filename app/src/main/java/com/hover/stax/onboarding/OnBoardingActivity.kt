@@ -49,7 +49,6 @@ class OnBoardingActivity : AbstractGoogleAuthActivity() {
 
         setupNavigation()
         navigateNextScreen()
-        setGoogleLoginInterface(this)
     }
 
     private fun setupNavigation() {

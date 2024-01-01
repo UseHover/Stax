@@ -684,9 +684,7 @@
 
     <string name="available_flows">MITIRIRIKO INAYOPATIKANA</string>
 
-    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
-
-    <string name="bounty_claim_explained">Ili kudai USD $%1$d, %2$s.\n\nMara tu utakapomaliza, tutakutumia barua pepe kukusanya habari kwa malipo. Utalipwa katika siku 1-5 za biashara</string>
+    <string name="bounty_claim_title">%1$s - %2$s</string>
 
     <string name="start_USSD_Flow">Anza Mtiririko wa USSD</string>
 

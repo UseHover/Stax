@@ -639,9 +639,7 @@
 
     <string name="available_flows">ሊገኙ የሚችሉ ፍሰቶች</string>
 
-    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
-
-    <string name="bounty_claim_explained">$ %1$d ዶላር ለመጠየቅ ፣ %2$s።\n\nልክ እንደጨረሱ ለክፍያ መረጃ ለመሰብሰብ ኢሜይል እንልክልዎታለን። በ1-5 የሥራ ቀናት ውስጥ ይከፈልዎታል </string>
+    <string name="bounty_claim_title">%1$s - %2$s</string>
 
     <string name="bounty_error_none">ምንም ጉርሻዎች የሉም። እባክዎ ቆይተው እንደገና ያረጋግጡ።</string>
 

@@ -43,12 +43,9 @@ import timber.log.Timber
 
 const val FORCED_VERSION = "force_update_app_version"
 
-abstract class AbstractGoogleAuthActivity :
-    AppCompatActivity(),
-    StaxGoogleLoginInterface {
+abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
 
     private val loginViewModel: LoginViewModel by viewModel()
-    private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
 
     private lateinit var updateManager: AppUpdateManager
     private var installListener: InstallStateUpdatedListener? = null
@@ -78,10 +75,6 @@ abstract class AbstractGoogleAuthActivity :
         }
     }
 
-    fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
-        this.staxGoogleLoginInterface = staxGoogleLoginInterface
-    }
-
     private fun initGoogleAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.google_server_client_id)).requestEmail().build()
@@ -90,11 +83,11 @@ abstract class AbstractGoogleAuthActivity :
 
     private fun setLoginObserver() = with(loginViewModel) {
         error.observe(this@AbstractGoogleAuthActivity) {
-            it?.let { staxGoogleLoginInterface.googleLoginFailed() }
+            it?.let { googleLoginFailed() }
         }
 
         googleUser.observe(this@AbstractGoogleAuthActivity) {
-            it?.let { staxGoogleLoginInterface.googleLoginSuccessful() }
+            it?.let { googleLoginSuccessful() }
         }
     }
 
@@ -106,7 +99,7 @@ abstract class AbstractGoogleAuthActivity :
                 loginViewModel.signIntoGoogle(result.data)
             } else {
                 Timber.e("Google sign in failed")
-                staxGoogleLoginInterface.googleLoginFailed()
+                googleLoginFailed()
             }
         }
 
@@ -185,11 +178,11 @@ abstract class AbstractGoogleAuthActivity :
         }
     }
 
-    override fun googleLoginSuccessful() {
+    private fun googleLoginSuccessful() {
         if (loginViewModel.staxUser.value?.isMapper == true) BountyApplicationFragmentDirections.actionBountyApplicationFragmentToBountyListFragment()
     }
 
-    override fun googleLoginFailed() {
+    private fun googleLoginFailed() {
         UIHelper.flashAndReportMessage(this, R.string.login_google_err)
     }
 

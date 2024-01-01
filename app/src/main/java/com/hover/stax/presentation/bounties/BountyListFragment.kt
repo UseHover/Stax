@@ -165,10 +165,10 @@ class BountyListFragment : Fragment() {
             .setDialogTitle(
                 getString(
                     R.string.bounty_claim_title, b.action.root_code,
-                    HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type), b.action.bounty_amount
+                    HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type)
                 )
             )
-            .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(requireActivity())))
+            .setDialogMessage(getString(R.string.bounty_claim_explained, b.getInstructions(requireActivity())))
             .setPosButton(R.string.start_USSD_Flow) { startBounty(b) }
         dialog!!.showIt()
     }

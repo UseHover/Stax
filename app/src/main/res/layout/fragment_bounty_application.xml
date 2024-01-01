@@ -39,17 +39,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                    android:id="@+id/instructions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_16"
-                    android:lineSpacingExtra="1.5dp"
-                    android:layout_marginHorizontal="@dimen/margin_16"
-                    android:text="@string/bounty_email_stage_desc2"
-                    android:textSize="@dimen/text_16"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/intro" />
+<!--            <TextView-->
+<!--                    android:id="@+id/instructions"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="@dimen/margin_16"-->
+<!--                    android:lineSpacingExtra="1.5dp"-->
+<!--                    android:layout_marginHorizontal="@dimen/margin_16"-->
+<!--                    android:text="@string/bounty_email_stage_desc2"-->
+<!--                    android:textSize="@dimen/text_16"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/intro" />-->
 
             <TextView
                     android:id="@+id/signedInDetails"
@@ -66,7 +66,7 @@
                     android:textAllCaps="false"
                     app:layout_constraintBottom_toTopOf="@id/progressIndicator"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/instructions" />
+                    app:layout_constraintTop_toBottomOf="@id/intro" />
 
             <LinearLayout
                     android:id="@+id/btnSignIn"
@@ -80,7 +80,7 @@
                     android:padding="@dimen/margin_13"
                     app:layout_constraintBottom_toTopOf="@id/progressIndicator"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/instructions">
+                    app:layout_constraintTop_toBottomOf="@id/intro">
 
                 <ImageView
                         android:layout_width="@dimen/margin_24"

@@ -72,12 +72,12 @@ class BountyRepositoryImpl(
     private fun generateChannelBounties(channels: List<Channel>, bounties: List<Bounty>): List<ChannelBounties> {
         if (channels.isEmpty() || bounties.isEmpty()) return emptyList()
 
-        val openBounties = bounties.filter { it.action.bounty_is_open || it.transactionCount != 0 }
+//        val openBounties = bounties.filter { it.action.bounty_is_open || it.transactionCount != 0 }
 
         val channelBounties = channels.filter { c ->
-            openBounties.any { it.action.channel_id == c.id }
+            bounties.any { it.action.channel_id == c.id }
         }.map { channel ->
-            ChannelBounties(channel, openBounties.filter { it.action.channel_id == channel.id })
+            ChannelBounties(channel, bounties.filter { it.action.channel_id == channel.id })
         }
 
         return channelBounties
