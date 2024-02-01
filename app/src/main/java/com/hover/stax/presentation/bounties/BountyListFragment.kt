@@ -83,6 +83,7 @@ class BountyListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        Hover.initialize(requireContext())
         forceUserToBeOnline()
     }
 

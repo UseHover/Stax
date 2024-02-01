@@ -139,7 +139,7 @@ class ChannelsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (countryCodes.isNotEmpty()) {
                 for (code in countryCodes) {
-                    if (repo.getChannelsByCountry(code).isNotEmpty())
+                    if (!code.isNullOrEmpty() && repo.getChannelsByCountry(code).isNotEmpty())
                         updateCountry(code)
                 }
             }

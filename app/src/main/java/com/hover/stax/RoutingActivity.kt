@@ -86,15 +86,13 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
         }
 
-        lifecycleScope.launch {
-            initAmplitude()
-            logPushNotificationIfRequired()
-            initHover()
-            initFirebaseMessagingTopics()
-            updateBannerSessionCounter()
-            initUxCam()
-            registerUXCamPushNotification()
-        }
+        initAmplitude()
+        logPushNotificationIfRequired()
+        initHover()
+        initFirebaseMessagingTopics()
+        updateBannerSessionCounter()
+        initUxCam()
+        registerUXCamPushNotification()
 
         createNotificationChannel()
         startWorkers()
